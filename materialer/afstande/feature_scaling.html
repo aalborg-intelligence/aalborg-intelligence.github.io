@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Det er ikke altid helt klart, hvordan man skal bestemme afstanden mellem to datapunkter, hvis koordinaterne i hvert datapunkter beskriver vidt forskellige ting. Vi vil her se nærmere på, hvilke problemer, der kan opstå, hvis man ikke tænker sig om – og hvad man kan gøre for at løse dem.">
+<meta name="description" content="Hvis de data, man arbejder med, måler vidt forskellige ting – måske endda på vidt forskellige skalaer – så vil man som oftest have brug for at “justere” data, så de er på samme skala.">
 
-<title>AI - Aalborg Intelligence - Feature scaling</title>
+<title>AI - Aalborg Intelligence - Feature-skalering</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -4619,7 +4619,7 @@ return!"\t\n\x0B\f\r                　\u2028\u2029
   <ul>
   <li><a href="#afstand-med-hovedet-under-armen" id="toc-afstand-med-hovedet-under-armen" class="nav-link active" data-scroll-target="#afstand-med-hovedet-under-armen">Afstand med hovedet under armen</a></li>
   <li><a href="#første-naive-tilgang-min-max-skalering" id="toc-første-naive-tilgang-min-max-skalering" class="nav-link" data-scroll-target="#første-naive-tilgang-min-max-skalering">Første naive tilgang: Min-Max skalering</a></li>
-  <li><a href="#mindre-naivt-mere-bøvlet-feature-scaling" id="toc-mindre-naivt-mere-bøvlet-feature-scaling" class="nav-link" data-scroll-target="#mindre-naivt-mere-bøvlet-feature-scaling">Mindre naivt, mere bøvlet: Feature scaling</a></li>
+  <li><a href="#mindre-naivt-mere-bøvlet-feature-skaling" id="toc-mindre-naivt-mere-bøvlet-feature-skaling" class="nav-link" data-scroll-target="#mindre-naivt-mere-bøvlet-feature-skaling">Mindre naivt, mere bøvlet: Feature-skaling</a></li>
   <li><a href="#eksempel-min-max-og-feature-skalering" id="toc-eksempel-min-max-og-feature-skalering" class="nav-link" data-scroll-target="#eksempel-min-max-og-feature-skalering">Eksempel: Min-max og feature skalering</a></li>
   </ul>
 </nav>
@@ -4633,7 +4633,7 @@ return!"\t\n\x0B\f\r                　\u2028\u2029
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Feature scaling</h1>
+<h1 class="title">Feature-skalering</h1>
   <div class="quarto-categories">
     <div class="quarto-category">A-niveau</div>
   </div>
@@ -4641,7 +4641,7 @@ return!"\t\n\x0B\f\r                　\u2028\u2029
 
 <div>
   <div class="description">
-    <p>Det er ikke altid helt klart, hvordan man skal bestemme afstanden mellem to datapunkter, hvis koordinaterne i hvert datapunkter beskriver vidt forskellige ting. Vi vil her se nærmere på, hvilke problemer, der kan opstå, hvis man ikke tænker sig om – og hvad man kan gøre for at løse dem.</p>
+    Hvis de data, man arbejder med, måler vidt forskellige ting – måske endda på vidt forskellige skalaer – så vil man som oftest have brug for at “justere” data, så de er på samme skala.
   </div>
 </div>
 
@@ -4658,8 +4658,9 @@ return!"\t\n\x0B\f\r                　\u2028\u2029
 
 <section id="afstand-med-hovedet-under-armen" class="level2">
 <h2 class="anchored" data-anchor-id="afstand-med-hovedet-under-armen">Afstand med hovedet under armen</h2>
+<p>Det er ikke altid helt klart, hvordan man skal bestemme afstanden mellem to datapunkter, hvis koordinaterne i hvert datapunkter beskriver vidt forskellige ting. Vi vil her se nærmere på, hvilke problemer, der kan opstå, hvis man ikke tænker sig om – og hvad man kan gøre for at løse dem.</p>
 <p>Lad os forestille os, at data består af vægt og højde for nogle personer, så hvert datapunkt er på formen <span class="math display">\[(v,h)\]</span> hvor <span class="math inline">\(v\)</span> er den pågældende persons vægt og <span class="math inline">\(h\)</span> er højden. Her er det faktisk ikke klart, hvad afstanden mellem to punkter <span class="math inline">\((v_1,h_1)\)</span> og <span class="math inline">\((v_2,h_2)\)</span> skal være. Altså, hvornår to punkter ligger tæt på hinanden.</p>
-<p>Et første bud kunne være at bestemme den <a href="../../materialer/afstande/AfstandeMellemPunkteriPlanen.html">euklidske afstand</a> mellem de to punkter – det der bare svarer til at bruge Pythagoras. Gør vi det får vi følgende afstandsmål mellem punkterne <span class="math inline">\((v_1,h_1)\)</span> og <span class="math inline">\((v_2,h_2)\)</span>:</p>
+<p>Et første bud kunne være at bestemme den <a href="../../materialer/afstande/AfstandeMellemPunkteriPlanen.html#sec-euklidisk_afstand">euklidske afstand</a> mellem de to punkter – det der bare svarer til at bruge Pythagoras. Gør vi det får vi følgende afstandsmål mellem punkterne <span class="math inline">\((v_1,h_1)\)</span> og <span class="math inline">\((v_2,h_2)\)</span>:</p>
 <p><span class="math display">\[\sqrt{(v_2-v_1)^2+(h_2-h_1)^2}\]</span></p>
 <p>Vi prøver at regne lidt på det, og forestiller os, at tre personer er givet som datapunkter i nedenstående tabel.</p>
 <table class="table">
@@ -4782,17 +4783,17 @@ return!"\t\n\x0B\f\r                　\u2028\u2029
 <p><span class="math display">\[\sqrt{\left(\frac{x_2-a}{b-a}-\frac{x_1-a}{b-a}\right)^2 +\left(\frac{y_2-c}{d-c}-\frac{y_1-c}{d-c}\right)^2}=\sqrt{\left(\frac{x_2-x_1}{b-a}\right)^2+\left(\frac{y_2-y_1}{d-c}\right)^2}\]</span></p>
 <p>Bemærk, at det præcis er afstandsmålet i (<a href="#eq-min_max_skalering">1</a>), som vi startede ud med.</p>
 </section>
-<section id="mindre-naivt-mere-bøvlet-feature-scaling" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="mindre-naivt-mere-bøvlet-feature-scaling">Mindre naivt, mere bøvlet: Feature scaling</h2>
+<section id="mindre-naivt-mere-bøvlet-feature-skaling" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="mindre-naivt-mere-bøvlet-feature-skaling">Mindre naivt, mere bøvlet: Feature-skaling</h2>
 <p>Den skalering vi har præsenteret i (<a href="#eq-norm">2</a>) benytter ikke som sådan information om data, men kun om den mindste og største værdi, som henholdsvis <span class="math inline">\(x\)</span>- og <span class="math inline">\(y\)</span>-værdierne ligger imellem (nemlig <span class="math inline">\(a\)</span> og <span class="math inline">\(b\)</span> for <span class="math inline">\(x\)</span>-værdierne og <span class="math inline">\(c\)</span> og <span class="math inline">\(d\)</span> for <span class="math inline">\(y\)</span>-værdierne).</p>
-<p>Et alternativ til dette er at bruge <em>alle</em> data til at bestemme skaleringen (og ikke kun den største og den mindste værdi). Dette kaldes for <em>feature scaling</em>, når vi arbejder med perceptroner eller neurale netværk.</p>
+<p>Et alternativ til dette er at bruge <em>alle</em> data til at bestemme skaleringen (og ikke kun den største og den mindste værdi). Dette kaldes for <em>feature-skaling</em>, når vi arbejder med perceptroner eller neurale netværk.</p>
 <p>Hvis de data, der skal læres fra – det vil sige træningsdata – er <span class="math display">\[(x_1,y_1), (x_2,y_2),\ldots, (x_n,y_n)\]</span> så skalerer vi langs førsteaksen ved, at</p>
 <ul>
 <li><p>udregne et estimat for middelværdien af <span class="math inline">\(x\)</span>: <span id="eq-middel"><span class="math display">\[\bar{x}=\frac{x_1 + x_2 + \cdots + x_n}{n}=\frac{\Sigma_{i=1}^nx_i}{n} \tag{3}\]</span></span></p></li>
 <li><p>og et estimat for denne variabels spredning: <span id="eq-spredning"><span class="math display">\[s_x=\sqrt{\frac{\Sigma_{i=1}^n(x_i-\bar{x})^2}{n-1}} \tag{4}\]</span></span></p></li>
 </ul>
-<p>Feature scaling af <span class="math inline">\(x_i\)</span> er da <span id="eq-feature_scaling_x"><span class="math display">\[\hat{x}_i=\frac{x_i-\bar{x}}{s_x} \tag{5}\]</span></span></p>
-<p>Tilsvarende estimeres middelværdi og spredning for <span class="math inline">\(y\)</span> og feature scaling udregnes: <span id="eq-feature_scaling_y"><span class="math display">\[\hat{y}_i= \frac{y_i-\bar{y}}{s_y} \tag{6}\]</span></span></p>
+<p>Feature-skaling af <span class="math inline">\(x_i\)</span> er da <span id="eq-feature_scaling_x"><span class="math display">\[\hat{x}_i=\frac{x_i-\bar{x}}{s_x} \tag{5}\]</span></span></p>
+<p>Tilsvarende estimeres middelværdi og spredning for <span class="math inline">\(y\)</span> og feature-skaling udregnes: <span id="eq-feature_scaling_y"><span class="math display">\[\hat{y}_i= \frac{y_i-\bar{y}}{s_y} \tag{6}\]</span></span></p>
 <p>Resultatet af at lave denne feature skalering af punkterne fra <a href="#fig-min_max_skalering">figur 1</a> ses i <a href="#fig-feature_scaling">figur 3</a>.</p>
 <div id="fig-feature_scaling" class="quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="figure page-columns page-full">
