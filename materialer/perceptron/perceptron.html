@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Aalborg Intelligence">
 <meta name="description" content="Forløberen til kunstige neurale netværk er perceptroner, som du kan læse mere om her.">
 
 <title>AI - Aalborg Intelligence - Perceptroner</title>
@@ -4572,6 +4571,9 @@ return!"\t\n\x0B\f\r                　\u2028\u2029
 
 
 <style type="text/css">
+.example {
+font-style: italic;
+}
 </style>
 </head>
 
@@ -4679,12 +4681,6 @@ return!"\t\n\x0B\f\r                　\u2028\u2029
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Aalborg Intelligence </p>
-          </div>
-  </div>
     
   
     
@@ -4840,9 +4836,9 @@ o = \begin{cases}
 </div>
 <p>Man siger også, at man på baggrund af inputværdierne kan lave en klassificering (eller kategorisering). Det betyder, at vi på baggrund af inputværdierne kan beregne, om vi er i kategorien &quot;Blå blok&quot; (<span class="math inline">\(o=1\)</span>) eller i kategorien &quot;Rød blok&quot; (<span class="math inline">\(o=-1\)</span>). Grafisk svarer det til, at man indtegner sit <span class="math inline">\((x_1, x_2)\)</span>-punkt i koordinatsystemet i <a href="#fig-punkter_kandidattest_graf2">figur 3</a> og ser så på om punkt ligger over eller under linjen (ligger det over skal vi stemme blå blok).</p>
 <div id="exm-Rosenblatts" class="theorem example">
-<p><span class="theorem-title"><strong>Eksempel 1 </strong></span><em>Lad os sige at en vælger hverken er enig eller uenig i, at indkomstskatten skal sættes ned. Det vil sige, at <span class="math inline">\(x_1=0\)</span>. Samtidig er denne vælger meget enig i, at danske virksomheder ikke skal pålægges en CO2-afgift. Altså er <span class="math inline">\(x_2=2\)</span>. Vi udregner nu: <span class="math display">\[
+<p><span class="theorem-title"><strong>Eksempel 1 </strong></span>Lad os sige at en vælger hverken er enig eller uenig i, at indkomstskatten skal sættes ned. Det vil sige, at <span class="math inline">\(x_1=0\)</span>. Samtidig er denne vælger meget enig i, at danske virksomheder ikke skal pålægges en CO2-afgift. Altså er <span class="math inline">\(x_2=2\)</span>. Vi udregner nu: <span class="math display">\[
 -1.5+1.2 \cdot x_1+x_2=-1.5+1.2 \cdot 0+2=0.5
-\]</span> Og da denne værdi er større end <span class="math inline">\(0\)</span>, sætter vi <span class="math inline">\(o=1\)</span>. Det vil sige, at vi vil anbefale denne vælger at stemme blå blok.</em></p>
+\]</span> Og da denne værdi er større end <span class="math inline">\(0\)</span>, sætter vi <span class="math inline">\(o=1\)</span>. Det vil sige, at vi vil anbefale denne vælger at stemme blå blok.</p>
 </div>
 <p>Det er da smart! Og det her er faktisk lige præcis idéen bag perceptroner, som den amerikanske psykolog Frank Rosenblatt foreslog helt tilbage i <span class="math inline">\(1958\)</span>. Den klassiske perceptron er defineret ved, at perceptronen kan modtage input <span class="math display">\[
 \begin{aligned}
@@ -5037,9 +5033,9 @@ w_0 = -0.5, w_1 = 1.5, w_2=-0.5
 </div>
 <p>Det skal bemærkes, at hvis man vælger nogle andre startværdier af vægtene <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span> end <span class="math inline">\(0.5\)</span>, så vil man som oftest også ende med nogle nye slutværdier af vægtene! Man vil stadig få en linje, som kan skille de blå punkter fra de røde punkter – det er bare en anden linje, som kan det samme! Hvis vi f.eks. som startværdier havde valgt <span class="math inline">\(w_0=-1.5, w_1=1.2\)</span> og <span class="math inline">\(w_2=1\)</span> (det svarer til vores eget oprindelige skøn - den sorte linje ovenfor), så vil alle træningseksemplerne allerede være klassificeret korrekt, dermed vil ingen af vægtene på noget tidspunkt blive opdateret (fordi fejlen hele tiden vil være 0), og vi vil i det tilfælde ende med den sorte linje som output fra algoritmen.</p>
 <div id="exm-Rosenblatts2" class="theorem example page-columns page-full">
-<p><span class="theorem-title"><strong>Eksempel 2 </strong></span><em>Vi vil nu se på, hvilken betydning de nye vægte får for vælgeren i <a href="#exm-Rosenblatts">eksempel 1</a>. Vi har stadig, at <span class="math inline">\(x_1=0\)</span> og <span class="math inline">\(x_2=2\)</span>. Vi udregner nu med de nye vægte: <span class="math display">\[
+<p><span class="theorem-title"><strong>Eksempel 2 </strong></span>Vi vil nu se på, hvilken betydning de nye vægte får for vælgeren i <a href="#exm-Rosenblatts">eksempel 1</a>. Vi har stadig, at <span class="math inline">\(x_1=0\)</span> og <span class="math inline">\(x_2=2\)</span>. Vi udregner nu med de nye vægte: <span class="math display">\[
 -0.5+1.5 \cdot x_1-0.5 \cdot x_2=-0.5+1.5 \cdot 0-0.5 \cdot 2=-1.5
-\]</span> Nu har vi en værdi, som er mindre end <span class="math inline">\(0\)</span>, og derfor sætter vi <span class="math inline">\(o=-1\)</span>. Det vil sige, at vores anbefaling til denne vælger nu vil være at stemme på rød blok! Det kan måske virke overraskende, men <a href="#fig-punkter_kandidattest_graf4">figur 6</a> illustrerer hvorfor, vi ikke får det samme i de to tilfælde.</em></p>
+\]</span> Nu har vi en værdi, som er mindre end <span class="math inline">\(0\)</span>, og derfor sætter vi <span class="math inline">\(o=-1\)</span>. Det vil sige, at vores anbefaling til denne vælger nu vil være at stemme på rød blok! Det kan måske virke overraskende, men <a href="#fig-punkter_kandidattest_graf4">figur 6</a> illustrerer hvorfor, vi ikke får det samme i de to tilfælde.</p>
 <div class="cell page-columns page-full">
 <div class="cell-output-display page-columns page-full">
 <div id="fig-punkter_kandidattest_graf4" class="quarto-figure quarto-figure-center anchored page-columns page-full">
@@ -5050,7 +5046,7 @@ w_0 = -0.5, w_1 = 1.5, w_2=-0.5
 </div>
 </div>
 </div>
-<p><em>Det sorte punkt i <span class="math inline">\((0,2)\)</span> repræsenterer vælgerens svar på de to spørgsmål. Her kan vi se, at punktet ligger over den sorte linje svarende til, at vi med denne klassificering anbefaler vælgeren at stemme på blå blok. Samtidig ligger punktet til venstre for den grønne linje og bruges denne linje til klassificering, vil vi nu anbefale vælgeren at stemme på rød blok.</em></p>
+<p>Det sorte punkt i <span class="math inline">\((0,2)\)</span> repræsenterer vælgerens svar på de to spørgsmål. Her kan vi se, at punktet ligger over den sorte linje svarende til, at vi med denne klassificering anbefaler vælgeren at stemme på blå blok. Samtidig ligger punktet til venstre for den grønne linje og bruges denne linje til klassificering, vil vi nu anbefale vælgeren at stemme på rød blok.</p>
 </div>
 <p>Men hvorfor virker skidtet? Altså hvorfor kan perceptron learning algoritmen bruges til at adskille de røde punkter fra de blå? Det er ikke umiddelbart oplagt, at denne måde at opdatere vægtene på, ender med at give os en linje, som kan separerer de blå punkter fra de røde. Så lad os prøve at se lidt på, hvorfor det kan give mening.</p>
 <p>Vi har allerede i vores eksempel set, at hvis de vægte, vi står med nu, korrekt kan klassificere vores træningsdata – det vil sige, at <span class="math inline">\(t=o\)</span>, så bliver fejlen <span class="math display">\[
@@ -5332,9 +5328,9 @@ w_0 =-0.0769 , w_1=0.6410, w_2=-0.0598
 </div>
 <p>Bemærk, at til forskel fra perceptron learning algoritmen så ender man med de samme værdier af vægtene, selvom man vælger andre startværdier. Det er fordi, vi finder et globalt minimum for tabsfunktionen, som er uafhængig af det punkt, hvor vi starter med at lede. Det svarer til, at ligegyldigt hvor du bliver placeret i landskabet i <a href="#fig-tabsfunktion">figur 9</a>, så vil du til sidst ende i dalen, hvis du hele tiden går små skridt i den negative gradients retning.</p>
 <div id="exm-Rosenblatts3" class="theorem example">
-<p><span class="theorem-title"><strong>Eksempel 3 </strong></span><em>Vi ser igen på <a href="#exm-Rosenblatts">eksempel 1</a> og <a href="#exm-Rosenblatts2">eksempel 2</a>, hvor <span class="math inline">\(x_1=0\)</span> og <span class="math inline">\(x_2=1\)</span>. Baseret på vægtene fra gradientnedstigning, får vi: <span class="math display">\[
+<p><span class="theorem-title"><strong>Eksempel 3 </strong></span>Vi ser igen på <a href="#exm-Rosenblatts">eksempel 1</a> og <a href="#exm-Rosenblatts2">eksempel 2</a>, hvor <span class="math inline">\(x_1=0\)</span> og <span class="math inline">\(x_2=1\)</span>. Baseret på vægtene fra gradientnedstigning, får vi: <span class="math display">\[
 -0.0769+0.6410 \cdot x_1 -0.0598 \cdot x_2=-0.0769+0.6410 \cdot 0 -0.0598 \cdot 1=-0.1367
-\]</span> Da denne værdi er mindre end <span class="math inline">\(0\)</span>, sætter vi <span class="math inline">\(o=-1\)</span>. Altså er vi tilbage til at befale vælgeren at stemme på rød blok.</em></p>
+\]</span> Da denne værdi er mindre end <span class="math inline">\(0\)</span>, sætter vi <span class="math inline">\(o=-1\)</span>. Altså er vi tilbage til at befale vælgeren at stemme på rød blok.</p>
 </div>
 </section>
 <section id="forskel-på-perceptron-learning-og-gradientnedstigning" class="level2">
