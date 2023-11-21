@@ -4823,7 +4823,7 @@ P(A\mid B)=  \frac{P(B\mid A)\cdot P(A)}{P(B)}
 P(Y = 0 \mid \mathbf{X} = \mathbf{x}) &gt; P(Y = 1 \mid \mathbf{X} = \mathbf{x}) \Leftrightarrow
 \frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})} &gt; 1.
 \end{aligned}
-\]</span> Her vi dog nødt til at antage, at <span class="math display">\[P(Y = 1 \mid \mathbf{X} = \mathbf{x})\neq 0,\]</span> så vi ikke kommer til at dividere med <span class="math inline">\(0\)</span>.</p>
+\]</span> Her er vi dog nødt til at antage, at <span class="math display">\[P(Y = 1 \mid \mathbf{X} = \mathbf{x})\neq 0,\]</span> så vi ikke kommer til at dividere med <span class="math inline">\(0\)</span>.</p>
 <p>Bruger vi denne omskrivning, kan vi udtrykke den binære Bayes klassifikation i (<a href="#eq-binar_bayes_klassifikation1">2</a>) på denne måde:</p>
 <p><span id="eq-binar_bayes_klassifikation2"><span class="math display">\[ C(\mathbf{x}) = \begin{cases}
 0 &amp; \textrm{hvis } \frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})} &gt; 1 \\
@@ -4860,7 +4860,7 @@ P(B\mid C) = \frac{P(C\mid B)P(B)}{P(C)},
 &amp;\textrm{Prior sandsynlighed: } &amp;P(Y = y)
 \end{aligned}
 \]</span></p>
-<p>Vi kan sammenfatte udtrykket i (<a href="#eq-forhold_posterior_ssh">4</a>) det således til det såkaldte <em>posterior forhold</em>: <span class="math display">\[
+<p>Vi kan sammenfatte udtrykket i (<a href="#eq-forhold_posterior_ssh">4</a>) til det såkaldte <em>posterior forhold</em>: <span class="math display">\[
 \underbrace{\frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})}}_\text{Posterior forhold} =
 \underbrace{\frac{P(\mathbf{X} = \mathbf{x} \mid Y = 0)}{P(\mathbf{X} = \mathbf{x} \mid Y = 1)}}_\text{Likelihood forhold} \cdot
 \underbrace{\frac{P(Y = 0)}{P(Y = 1)}}_\text{Prior forhold}
@@ -4880,11 +4880,11 @@ P(X_1 = x_1, X_2 = x_2, \dots, X_q = x_q \mid Y = y)\\
 &amp;= P(X_1 = x_1\mid Y = y)P(X_2 = x_2\mid Y = y)\cdots P(X_q = x_q \mid Y = y)\\
 &amp;= \prod_{i=1}^q P(X_i = x_i\mid Y = y),
 \end{aligned}
-\]</span> hvor <span class="math inline">\(\prod\)</span>-symbolet i sidste linje betyder, at vi tager produktet af alle faktorerne på formen <span class="math inline">\(P(X_i = x_i\mid Y = y)\)</span> fra <span class="math inline">\(i=1\)</span> op til <span class="math inline">\(q\)</span> – altså præcist det som står i linjen over. Det minder således om sum-tegnet <span class="math display">\[\sum_{i=1}^n x_i = x_1 + x_2 + \cdots + x_n,\]</span> men blot for gange i stedet for addition.</p>
+\]</span> hvor <span class="math inline">\(\prod\)</span>-symbolet i sidste linje betyder, at vi tager produktet af alle faktorerne på formen <span class="math inline">\(P(X_i = x_i\mid Y = y)\)</span> fra <span class="math inline">\(i=1\)</span> op til <span class="math inline">\(q\)</span> – altså præcist det som står i linjen over. Det minder således om sum-tegnet <span class="math display">\[\sum_{i=1}^n x_i = x_1 + x_2 + \cdots + x_n,\]</span> men blot for multiplikation i stedet for addition.</p>
 </section>
 <section id="posterior-forholdet-score-og-vægte" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="posterior-forholdet-score-og-vægte">Posterior forholdet, score og vægte</h2>
-<p>Samler vi nu udtrykkene, som indgår i vores posterior forhold i (<a href="#eq-forhold_posterior_ssh">4</a>), samtidig med at vi antager, at <span class="math inline">\(X_1, X_2, \cdots, X_q\)</span> er uafhængige af hinanden giver <span class="math inline">\(Y\)</span>, får vi nedenstående:</p>
+<p>Samler vi nu udtrykkene, som indgår i vores posterior forhold i (<a href="#eq-forhold_posterior_ssh">4</a>), samtidig med at vi antager, at <span class="math inline">\(X_1, X_2, \cdots, X_q\)</span> er uafhængige af hinanden givet <span class="math inline">\(Y\)</span>, får vi nedenstående:</p>
 <p><span class="math display">\[
 \begin{aligned}
 \frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})} &amp;=
@@ -4903,7 +4903,7 @@ P(X_1 = x_1, X_2 = x_2, \dots, X_q = x_q \mid Y = y)\\
 \end{aligned}
 \tag{5}\]</span></span></p>
 <p>hvor vi har brugt logaritmeregnereglen <span class="math display">\[\ln(a\cdot b) = \ln(a) + \ln(b)\]</span> gentagende gange.</p>
-<p>Vi minder om, at forholdet mellem <span class="math inline">\(P(Y = 0 \mid \mathbf{X} = \mathbf{x})\)</span> og <span class="math inline">\(P(Y = 1 \mid \mathbf{X} = \mathbf{x})\)</span> var af særlig interesse omkring værdien 1 – se (<a href="#eq-binar_bayes_klassifikation2">3</a>). Når forholdet er <span class="math inline">\(1\)</span> betyder det, at de to klasser er lige sandsynlige givet <span class="math inline">\(\mathbf{x}\)</span>. Endvidere, når forholdet var er <span class="math inline">\(1\)</span>, er <span class="math inline">\(Y=0\)</span> mere sandsynlig end <span class="math inline">\(Y=1\)</span>, og når det er under <span class="math inline">\(1\)</span>, er det omvendte tilfældet.</p>
+<p>Vi minder om, at forholdet mellem <span class="math inline">\(P(Y = 0 \mid \mathbf{X} = \mathbf{x})\)</span> og <span class="math inline">\(P(Y = 1 \mid \mathbf{X} = \mathbf{x})\)</span> er af særlig interesse omkring værdien 1 – se (<a href="#eq-binar_bayes_klassifikation2">3</a>). Når forholdet er <span class="math inline">\(1\)</span> betyder det, at de to klasser er lige sandsynlige givet <span class="math inline">\(\mathbf{x}\)</span>. Endvidere, når forholdet er over <span class="math inline">\(1\)</span>, er <span class="math inline">\(Y=0\)</span> mere sandsynlig end <span class="math inline">\(Y=1\)</span>, og når det er under <span class="math inline">\(1\)</span>, er det omvendte tilfældet.</p>
 <p>Lad os nu se på hvilken effekt det får, at vi ikke længere ser direkte på det posterior forhold <span class="math display">\[ \frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})}\]</span> men i stedet på logaritmen af det posterior forhold <span class="math display">\[ \ln \left ( \frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})}\right )\]</span></p>
 <p>I <a href="#fig-ln">figur 1</a> nedenfor er grafen for logaritmefunktionen tegnet for <span class="math inline">\(x\in ]0, 10].\)</span></p>
 <div id="fig-ln" class="quarto-figure quarto-figure-center anchored page-columns page-full">
@@ -4914,24 +4914,34 @@ P(X_1 = x_1, X_2 = x_2, \dots, X_q = x_q \mid Y = y)\\
 </div>
 <p>Vi ved, at <span class="math inline">\(\ln(1) = 0\)</span> (hvilket også kan ses på grafen i <a href="#fig-ln">figur 1</a>), samt at for <span class="math inline">\(x&lt;1\)</span> er <span class="math inline">\(\ln(x)&lt;0\)</span>, mens for <span class="math inline">\(x&gt;1\)</span> er <span class="math inline">\(\ln(x)&gt;0\)</span>.</p>
 <p>Så når vi ser på <span class="math display">\[\ln \left(\frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})}\right)\]</span> bliver det vigtige nu, om denne størrelse er positiv eller negativ.</p>
-<p>Lad os derfor indføre <span class="math inline">\(S\)</span> som en <em>score</em>, der er lig med logaritmen til posterior forholdet: <span class="math display">\[
+<p>Lad os derfor indføre <span class="math inline">\(S\)</span> som en <em>score</em>, der er lig med logaritmen til posterior forholdet:</p>
+<p><span id="eq-scoreS"><span class="math display">\[
 S = \ln \left(\frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})}\right)
-\]</span> Den binære Bayes klassifikation i (<a href="#eq-binar_bayes_klassifikation2">3</a>) kan derfor i stedet skrives ved hjælp af scoren <span class="math inline">\(S\)</span> på denne måde:</p>
+\tag{6}\]</span></span></p>
+<p>Den binære Bayes klassifikation i (<a href="#eq-binar_bayes_klassifikation2">3</a>) kan derfor i stedet skrives ved hjælp af scoren <span class="math inline">\(S\)</span> på denne måde:</p>
 <p><span id="eq-binar_bayes_klassifikation3"><span class="math display">\[ C(\mathbf{x}) = \begin{cases}
 0 &amp; \textrm{hvis } \ S&gt;0  \\
 1 &amp; \textrm{ellers} \\
-\end{cases} \tag{6}\]</span></span></p>
+\end{cases} \tag{7}\]</span></span></p>
 <p>Vi ved således, at hvis <span class="math inline">\(S&gt;0\)</span>, så klassificerer vi <span class="math inline">\(\mathbf{x}\)</span>, som <span class="math inline">\(C(x)=0\)</span> og ellers <span class="math inline">\(C(x)=1\)</span>.</p>
-<p>Indfører vi ligeledes bidragene til <span class="math inline">\(S\)</span> som <span class="math inline">\(w_0\)</span> og <span class="math inline">\(w_i(x_i)\)</span> således <span class="math display">\[
+<p>Sammenholder vi definitionen af <span class="math inline">\(S\)</span> i (<a href="#eq-scoreS">6</a>) med udtrykket i (<a href="#eq-posterior_forhold_ln">5</a>), ser vi, at <span class="math inline">\(S\)</span> også kan skrives som</p>
+<p><span id="eq-scoreS2"><span class="math display">\[
+\begin{aligned}
+S &amp;= \ln \left(\frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})}\right) \\&amp;=
+\ln \left(\frac{P(Y = 0)}{P(Y = 1)}\right) +
+\sum_{i=1}^q \ln \left(\frac{P(X_i = x_i \mid Y = 0)}{P(X_i = x_i \mid Y = 1)}\right),
+\end{aligned}
+\tag{8}\]</span></span></p>
+<p>Indfører vi nu bidragene til <span class="math inline">\(S\)</span> som <span class="math inline">\(w_0\)</span> og <span class="math inline">\(w_i(x_i)\)</span> således <span class="math display">\[
 w_0 = \ln \left(\frac{P(Y = 0)}{P(Y = 1)}\right)
 \quad\text{og}\quad
 w_i(x_i) = \ln \left(\frac{P(X_i = x_i \mid Y = 0)}{P(X_i = x_i \mid Y = 1)}\right)
-\]</span> kan vi således skrive udtrykket for <span class="math inline">\(S\)</span> i (<a href="#eq-posterior_forhold_ln">5</a>) som <span id="eq-score_ved_vaegte"><span class="math display">\[
+\]</span> kan vi skrive udtrykket for <span class="math inline">\(S\)</span> i (<a href="#eq-scoreS2">8</a>) som <span id="eq-score_ved_vaegte"><span class="math display">\[
 S = w_0 + \sum_{i = 1}^q w_i(x_i),
-\tag{7}\]</span></span> hvor det tydeliggøres, at hvis <span class="math inline">\(w_i(x_i)&gt;0\)</span>, så understøtter bidraget fra den <span class="math inline">\(i\)</span>’te oplysning <span class="math inline">\(x_i\)</span>, at <span class="math inline">\(Y=0\)</span> og ellers hvis <span class="math inline">\(w_i(x_i)&lt;0\)</span> at <span class="math inline">\(Y=1\)</span>. Denne egenskab gør, at man også kan omtale <span class="math inline">\(w_i(x_i)\)</span> som en slags “bevismæssig” vægt.</p>
+\tag{9}\]</span></span> hvor det tydeliggøres, at hvis <span class="math inline">\(w_i(x_i)&gt;0\)</span>, så understøtter bidraget fra den <span class="math inline">\(i\)</span>’te oplysning <span class="math inline">\(x_i\)</span>, at <span class="math inline">\(Y=0\)</span> og ellers hvis <span class="math inline">\(w_i(x_i)&lt;0\)</span> at <span class="math inline">\(Y=1\)</span>. Denne egenskab gør, at man også kan omtale <span class="math inline">\(w_i(x_i)\)</span> som en slags “bevismæssig” vægt.</p>
 <section id="vægten-w_0" class="level3">
 <h3 class="anchored" data-anchor-id="vægten-w_0">Vægten <span class="math inline">\(w_0\)</span></h3>
-<p>Vi har altså set i (<a href="#eq-posterior_forhold_ln">5</a>) og (<a href="#eq-score_ved_vaegte">7</a>), hvordan vi kan omskrive forholdet mellem posterior sandsynlighederne for de to klasser <span class="math inline">\(Y=0\)</span> og <span class="math inline">\(Y=1\)</span> til en sum af bidrag.</p>
+<p>Vi har altså set i (<a href="#eq-posterior_forhold_ln">5</a>) og (<a href="#eq-score_ved_vaegte">9</a>), hvordan vi kan omskrive forholdet mellem posterior sandsynlighederne for de to klasser <span class="math inline">\(Y=0\)</span> og <span class="math inline">\(Y=1\)</span> til en sum af bidrag.</p>
 <p>Det første led <span class="math inline">\(w_0\)</span> afhænger ikke af nogen information <span class="math inline">\(x_i\)</span>, og vi har tidligere omtalt disse sandsynligheder som <em>prior</em> sandsynligheder. Man kan sige, at det er vores umiddelbare bud på hvad <span class="math inline">\(Y\)</span> er, uden at vi kender noget som helst til informationerne i <span class="math inline">\(\mathbf{x}\)</span>.</p>
 <p>Når vi går fra vores <em>model</em>, som vi har udledt i det foregående, til at skulle implementere den i en specifik anvendelse, bliver vi derfor nødt til at estimere de parametre, som indgår i modellen. For <span class="math inline">\(w_0\)</span> betyder det, at vi skal estimere både <span class="math inline">\(P(Y=0)\)</span> og <span class="math inline">\(P(Y=1)\)</span>. Her vil det være oplagt blot at estimere <span class="math inline">\(P(Y=0)\)</span> og <span class="math inline">\(P(Y=1)\)</span> ud fra træningsdata ved helt simpelt at bestemme andelen, som stemmer på henholdsvis rød og blå, hvorefter vi kan beregne <span class="math display">\[
 w_0 = \ln \left(\frac{P(Y = 0)}{P(Y = 1)}\right)\]</span></p>
@@ -5139,7 +5149,7 @@ P(Z = r) = {n \choose r}p^r(1-p)^{n-r} = \frac{n!}{(n-r)!r!}p^r(1-p)^{n-r}
 </tbody>
 </table>
 <p>Tidligere havde vi indset, at når <span class="math inline">\(w_i(x_i)&gt;0\)</span>, så understøtter bidraget fra den <span class="math inline">\(i\)</span>’te oplysning <span class="math inline">\(x_i\)</span>, at <span class="math inline">\(Y=0\)</span> (altså at stemme på rød blok). I tabellen ovenfor ses det derfor, at oplysningerne kvinde, ung, Sjælland og anden bopæl gør det mere sandsynligt med en stemme på rød blok, mens oplysningerne mand, ældre og Jylland gør det mere sandsynligt med en stemme på blå blok.</p>
-<p>Vi kan nu beregnes scoren <span class="math inline">\(S\)</span> for en kvinde, som er ældre og fra Sjælland, altså hvor <span class="math inline">\(x=(kvinde,ældre,Sjælland)\)</span>. <span class="math display">\[\begin{equation}
+<p>Vi kan nu beregne scoren <span class="math inline">\(S\)</span> for en kvinde, som er ældre og fra Sjælland, altså hvor <span class="math inline">\(x=(kvinde,ældre,Sjælland)\)</span>. <span class="math display">\[\begin{equation}
 \begin{split}
 S &amp;  = w_0 + \sum_{i = 1}^q w_i(x_i)=w_0+w_1(kvinde)+w_2(ældre)+w_3(Sjælland) \\
 &amp; =0.074+0.127+(-0.175)+0.086=0.11
