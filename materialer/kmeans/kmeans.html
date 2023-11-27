@@ -4674,14 +4674,19 @@ font-style: italic;
 <div class="page-columns page-full"><p>Givet et heltal <span class="math inline">\(k\)</span>, så ønsker vi at opdele de <span class="math inline">\(n\)</span> observationer <span class="math inline">\(\vec{x_1}, \vec{x_2},....,\vec{x_n}\)</span> i <span class="math inline">\(k\)</span> grupper, som vi kalder for <span class="math inline">\(S_1,S_2,....,S_k\)</span>. Antallet af observationer i gruppen<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> <span class="math inline">\(S_i\)</span> betegnes med <span class="math inline">\(|S_i|\)</span>.</p><div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup> En gruppe <span class="math inline">\(S_i\)</span> er egentlig en mængde, og <span class="math inline">\(|S_i|\)</span> er kardinaliteten af denne mængde – altså antallet af elementer i mængden.</p></li></div></div>
 <p>Hele idéen i <span class="math inline">\(K\)</span>-means metoden er, at det skal være sådan, at observationerne i samme gruppe ligger tæt på hinanden. Det er også sådan, at vi har farvet punkterne til højre i <a href="#fig-kmeansbil">figur 1</a>.</p>
 <p>Hvis man skal oversætte det til matematik, så betyder det, at vi ønsker at minimere følgende sum (som vi kalder for <span class="math inline">\(SUMPAR\)</span>)</p>
-<p><span class="math display">\[SUMPAR=\sum_{i=1}^{k}\frac{1}{|S_i|}\sum_{\vec p\in S_i}\sum_{\vec q\in S_i}\|\vec p-\vec q\|^2\]</span> Det ser måske lidt voldsomt ud, men lad os prøve at nedbryde ovenstående lidt. Vi forestiller os, at vi har de <span class="math inline">\(k\)</span> grupper <span class="math inline">\(S_1, S_2, \dots , S_k\)</span>. Udtrykket</p>
-<p><span class="math display">\[ \|\vec p- \vec q\|^2 \]</span> er den kvadrerede afstand mellem to punkter repræsenteret ved stedvektorerne <span class="math inline">\(\vec p\)</span> og <span class="math inline">\(\vec q\)</span>. Det vil sige, den <a href="../../materialer/afstande/AfstandeMellemPunkteriPlanen.html#sec-euklidisk_afstand">euklidiske afstand</a> mellem <span class="math inline">\(\vec p\)</span> og <span class="math inline">\(\vec q\)</span> opløftet i anden. Men her er vi kun interesseret i at se på kvadrerede afstande mellem punkter i samme gruppe. Derfor lægger vi kun kvadrerede afstand samme, hvis <span class="math inline">\(\vec p\)</span> og <span class="math inline">\(\vec q\)</span> er i samme gruppe – alstå <span class="math inline">\(\vec p\in S_i\)</span> og <span class="math inline">\(\vec q \in S_i\)</span>. Det er udtrykt i</p>
-<p><span class="math display">\[ \sum_{\vec p\in S_i}\sum_{\vec q\in S_i}\|\vec p-\vec q\|^2 \]</span></p>
-<p>Nu kan der være nogle grupper med mange punkter og andre grupper med få punkter. For at tage højde for det dividerer vi ovenstående udtryk med antallet af punkter i gruppe <span class="math inline">\(S_i\)</span>: <span class="math inline">\(|S_i|\)</span>. Dette giver os en gennemsnitlig kvadreret afstand fra et punkt <span class="math inline">\(\vec p\)</span> til alle andre punkter <span class="math inline">\(\vec q\)</span> i samme gruppe som <span class="math inline">\(\vec p\)</span>. Gør vi det, får vi</p>
+<p><span class="math display">\[SUMPAR=\sum_{i=1}^{k}\frac{1}{|S_i|}\sum_{\vec p\in S_i}\sum_{\vec q\in S_i}\|\vec p-\vec q\|^2\]</span> Det ser måske lidt voldsomt ud, men lad os prøve at nedbryde ovenstående lidt. Vi forestiller os, at vi har de <span class="math inline">\(k\)</span> grupper <span class="math inline">\(S_1, S_2, \dots , S_k\)</span>. Vi ser først på et punkt <span class="math inline">\(\vec p \in S_i\)</span>. Den kvadrerede afstand til et andet punkt <span class="math inline">\(\vec q\)</span> i samme gruppe er givet ved udtrykket</p>
+<p><span class="math display">\[
+\|\vec p- \vec q\|^2
+\]</span></p>
+<p>Det vil sige, den <a href="../../materialer/afstande/AfstandeMellemPunkteriPlanen.html#sec-euklidisk_afstand">euklidiske afstand</a> mellem <span class="math inline">\(\vec p\)</span> og <span class="math inline">\(\vec q\)</span> opløftet i anden. Den <em>gennemsnitlige</em> kvadrerede afstand til alle punkter i samme gruppe <span class="math inline">\(S_i\)</span> vil derfor være</p>
+<p><span class="math display">\[\frac{1}{|S_i|} \sum_{\vec q \in S_i} \|\vec p- \vec q\|^2 \]</span></p>
+<p>Det er altså den gennemsnitlige kvadrerede afstand fra ét punkt <span class="math inline">\(\vec p\)</span> til alle andre punkter i samme gruppe. Vi vil nu lægge alle disse gennemsnitlige kvadrerede afstande sammen for <em>alle</em> punkter i <span class="math inline">\(S_i\)</span>. Gør vi det får vi:</p>
+<p><span class="math display">\[ \sum_{\vec p\in S_i}\frac{1}{|S_i|}\sum_{\vec q\in S_i}\|\vec p-\vec q\|^2 \]</span></p>
+<div class="page-columns page-full"><p>Da størrelsen <span class="math inline">\(\frac{1}{|S_i|}\)</span> indgår i alle led i den yderste sum, kan vi sætte <span class="math inline">\(\frac{1}{|S_i|}\)</span> uden for det yderste sumtegn<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Derfor kan vi omskrive ovenstående til</p><div class="no-row-height column-margin column-container"><li id="fn2"><p><sup>2</sup> Det svarer bare til at sætte uden for en parentes.</p></li></div></div>
 <p><span class="math display">\[
 \frac{1}{|S_i|}\sum_{\vec p\in S_i}\sum_{\vec q\in S_i}\|\vec p-\vec q\|^2
 \]</span></p>
-<p>Det her vil vi gerne gøre for alle grupper og derfor ender vi samlet set med</p>
+<p>Det her vil vi gerne gøre for alle grupper, og derfor ender vi samlet set med</p>
 <p><span id="eq-SUMPAR"><span class="math display">\[
 SUMPAR=\sum_{i=1}^{k}\frac{1}{|S_i|}\sum_{\vec p\in S_i}\sum_{\vec q\in S_i}\|\vec p-\vec q\|^2
 \tag{1}\]</span></span></p>
@@ -4721,7 +4726,7 @@ SUMMIDT=\sum_{i=1}^{k}\sum_{\vec p\in S_i}\|\vec p-\vec{\mu_i}\|^2
 <li><p>Gruppe 1 med punkterne <span class="math inline">\((3,9)\)</span> og <span class="math inline">\((7,11)\)</span>.</p></li>
 <li><p>Gruppe 2 med punkterne <span class="math inline">\((10,30)\)</span>, <span class="math inline">\((17,34)\)</span>, <span class="math inline">\((12,27)\)</span> og <span class="math inline">\((11,32)\)</span>.</p></li>
 </ul>
-<div class="page-columns page-full"><p>Som nævnt tidligere kan vi tænke på hvert punkt som stedvektoren til punktet.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Vi kan nu finde midterpunktet for den første gruppe:</p><div class="no-row-height column-margin column-container"><li id="fn2"><p><sup>2</sup> Husk at et punkt og stedvektoren til punktet har samme koordinater.</p></li></div></div>
+<div class="page-columns page-full"><p>Som nævnt tidligere kan vi tænke på hvert punkt som stedvektoren til punktet.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> Vi kan nu finde midterpunktet for den første gruppe:</p><div class="no-row-height column-margin column-container"><li id="fn3"><p><sup>3</sup> Husk at et punkt og stedvektoren til punktet har samme koordinater.</p></li></div></div>
 <p><span class="math display">\[\vec{\mu_1}=\frac{1}{|S_1|}\sum_{\vec p\in S_1}\vec p = \frac{\begin{pmatrix}
 3 \\ 9\end{pmatrix} + \begin{pmatrix}
 7 \\ 11\end{pmatrix}}{2}= \frac{\begin{pmatrix}
@@ -5039,19 +5044,22 @@ d=\sqrt{(3-8.33)^2+(9-22.0)^2}=14.05
 <p>For at komme videre med ovenstående vælger vi at se på dobbeltsummen</p>
 <div class="page-columns page-full"><p><span class="math display">\[
 \sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\vec p\cdot \vec q
-\]</span> Den inderste sum afhænger ikke af <span class="math inline">\(\vec p\)</span> og derfor kan <span class="math inline">\(\vec p\)</span> sættes uden for sumtegnet<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>:</p><div class="no-row-height column-margin column-container"><li id="fn3"><p><sup>3</sup> Husk på at den distributive regel også gælder for vektorer: <span class="math inline">\(\vec a \cdot \vec b + \vec a \cdot \vec c = \vec a \cdot \left (\vec b + \vec c \right)\)</span></p></li></div></div>
+\]</span> Den inderste sum afhænger ikke af <span class="math inline">\(\vec p\)</span> og derfor kan <span class="math inline">\(\vec p\)</span> sættes uden for sumtegnet<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>:</p><div class="no-row-height column-margin column-container"><li id="fn4"><p><sup>4</sup> Husk på at den distributive regel også gælder for vektorer: <span class="math inline">\(\vec a \cdot \vec b + \vec a \cdot \vec c = \vec a \cdot \left (\vec b + \vec c \right)\)</span></p></li></div></div>
 <p><span class="math display">\[
 \sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\vec p\cdot \vec q = \sum_{\vec p\in S_a}\vec p\cdot \left (\sum_{\vec q\in S_a} \vec q \right )
 \]</span></p>
 <p>Fra valget af <span class="math inline">\(\vec{\mu_a}\)</span> ved vi fra (<a href="#eq-midtpunkt">4</a>), at <span class="math inline">\(|S_a|\cdot \vec{\mu_{a}}=\sum_{\vec q \in S_a} \vec q\)</span>. Bruger vi det får vi</p>
-<p><span class="math display">\[
+<div class="page-columns page-full"><p><span class="math display">\[
 \sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\vec p\cdot \vec q = \sum_{\vec p\in S_a}\vec p\cdot |S_a|\cdot \vec{\mu_{a}}
-\]</span> Sætter vi <span class="math inline">\(|S_a|\cdot \vec{\mu_{a}}\)</span> uden for den inderste sum og udnytter ovenstående én gang til, får vi:</p>
+\]</span> Sætter vi <span class="math inline">\(|S_a|\cdot \vec{\mu_{a}}\)</span> uden for summmen<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> og udnytter ovenstående én gang til, får vi:</p><div class="no-row-height column-margin column-container"><li id="fn5"><p><sup>5</sup> Bemærk, at vi igen her benytter den distributive regel for vektorer.</p></li></div></div>
 <p><span class="math display">\[\begin{align}
 \sum_{\vec p\in S_a}\sum_{\vec q\in S_a} \vec p\cdot \vec q &amp;= |S_a|\cdot \vec{\mu_{a}} \cdot \left ( \sum_{\vec p\in S_a}\vec p \right ) \\
-&amp;= |S_a|\cdot \vec{\mu_{a}} \cdot |S_a|\cdot \vec{\mu_{a}} \\
-&amp;= |S_a|^2 \cdot \| \vec{\mu_{a}} \|^2
+&amp;= \left ( |S_a|\cdot \vec{\mu_{a}} \right ) \cdot \left ( |S_a|\cdot \vec{\mu_{a}} \right )
 \end{align}\]</span></p>
+<div class="page-columns page-full"><p>Vi har nu et prikprodukt mellem to vektorer, som hver især er ganget med en skalar (her <span class="math inline">\(|S_a|\)</span>). Bruger vi den kommutative lov<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> for at gange med en skalar, får vi</p><div class="no-row-height column-margin column-container"><li id="fn6"><p><sup>6</sup> Den kommutative lov siger, at <span class="math inline">\(k \cdot (\vec a \cdot \vec b) = (k \cdot\vec a) \cdot (\vec b) = (\vec a ) \cdot (k \cdot\vec b)\)</span></p></li></div></div>
+<p><span class="math display">\[
+\sum_{\vec p\in S_a}\sum_{\vec q\in S_a} \vec p\cdot \vec q = |S_a|^2 \cdot \| \vec{\mu_{a}} \|^2
+\]</span></p>
 <p>Det må derfor betyde, at <span class="math display">\[
 |S_a|^2\cdot \|\vec{\mu_a}\|^2-\sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\vec p\cdot \vec q=0 \quad \Leftrightarrow  \quad
 2 \cdot |S_a|^2\cdot \|\vec{\mu_a}\|^2-2\cdot\sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\vec p\cdot \vec q=0
