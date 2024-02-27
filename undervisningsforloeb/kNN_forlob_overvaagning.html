@@ -5364,7 +5364,50 @@ Bonusopgave (svær og kan springes over): Hvilke muligheder er der?
 </section>
 <section id="data-mining-i-orange" class="level3">
 <h3 class="anchored" data-anchor-id="data-mining-i-orange">Data mining i Orange</h3>
-<p>Her til sidst skal vi lege lidt med et program, som hedder <a href="https://orangedatamining.com/">Orange</a>. For at gøre det får vi brug for de <a href="kNN_forlob_overvaagning_filer/data/Træningsdata.xlsx">træningsdata</a> og <a href="kNN_forlob_overvaagning_filer/data/Testdata.xlsx">testdata</a>, som vi har brugt i det foregående.</p>
+<p>Her til sidst skal vi lege lidt med et program, som hedder <a href="https://orangedatamining.com/">Orange</a>. Du kan få hjælp til at installere programmet <a href="https://www.youtube.com/watch?v=g8-wIwVfAw0">her</a>.</p>
+<p>Start med at se denne video:</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/jxo4Xx5x4ac" title frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 7: kNN i Orange baseret på features
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Installer Orange.</li>
+<li>Opbyg modellen, som det er vist i videoen ovenfor. For at gøre det får du brug for de <a href="kNN_forlob_overvaagning_filer/data/Træningsdata.xlsx">træningsdata</a> og <a href="kNN_forlob_overvaagning_filer/data/Testdata.xlsx">testdata</a>, som vi har brugt i det foregående.</li>
+<li>Prøv at ændre på værdien af <span class="math inline">\(k\)</span> (<span class="math inline">\(k=1, 2, 3, 4, 5\)</span>) og se om du i Orange kan genskabe resultaterne fra opgave 6.</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Det er også muligt at bruge <em>kNN</em> uden selv at udvælge features. I stedet kan man bruge billederne fra tabellen i opgave 2 direkte. Se her hvordan man gør det:</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/A_8bR6rbIo0" title frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 8: kNN i Orange baseret på billeder
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Find selv på en værdi som du gerne vil prædiktere ud fra billeder.</li>
+<li>Tag billeder som kan bruges som træningsdata og opbyg en model, som det er vist i videoen ovenfor.</li>
+</ul>
+</div>
+</div>
+</div>
 
 
 </section>
@@ -5451,6 +5494,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/aalborg-intelligence\.ai");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+    var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
