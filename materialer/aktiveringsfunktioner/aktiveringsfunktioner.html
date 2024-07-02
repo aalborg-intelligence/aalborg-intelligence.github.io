@@ -4918,11 +4918,12 @@ font-style: italic;
     <h2 id="toc-title">Indhold</h2>
    
   <ul>
-  <li><a href="#aktiveringsfunktioner-targetværdier-og-tabsfunktion" id="toc-aktiveringsfunktioner-targetværdier-og-tabsfunktion" class="nav-link active" data-scroll-target="#aktiveringsfunktioner-targetværdier-og-tabsfunktion">Aktiveringsfunktioner, targetværdier og tabsfunktion</a></li>
+  <li><a href="#tabsfunktion-targetværdier-og-aktiveringsfunktioner" id="toc-tabsfunktion-targetværdier-og-aktiveringsfunktioner" class="nav-link active" data-scroll-target="#tabsfunktion-targetværdier-og-aktiveringsfunktioner">Tabsfunktion, targetværdier og aktiveringsfunktioner</a></li>
   <li><a href="#sigmoid" id="toc-sigmoid" class="nav-link" data-scroll-target="#sigmoid">Sigmoid</a></li>
   <li><a href="#softsign" id="toc-softsign" class="nav-link" data-scroll-target="#softsign">Softsign</a></li>
   <li><a href="#hyperbolsk-tangens" id="toc-hyperbolsk-tangens" class="nav-link" data-scroll-target="#hyperbolsk-tangens">Hyperbolsk tangens</a></li>
   <li><a href="#relu" id="toc-relu" class="nav-link" data-scroll-target="#relu">ReLU</a></li>
+  <li><a href="#overblik" id="toc-overblik" class="nav-link" data-scroll-target="#overblik">Overblik</a></li>
   </ul>
 </nav>
 </nav>
@@ -4957,16 +4958,60 @@ font-style: italic;
 </header>
 
 
-<section id="aktiveringsfunktioner-targetværdier-og-tabsfunktion" class="level2">
-<h2 class="anchored" data-anchor-id="aktiveringsfunktioner-targetværdier-og-tabsfunktion">Aktiveringsfunktioner, targetværdier og tabsfunktion</h2>
-</section>
+<section id="tabsfunktion-targetværdier-og-aktiveringsfunktioner" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="tabsfunktion-targetværdier-og-aktiveringsfunktioner">Tabsfunktion, targetværdier og aktiveringsfunktioner</h2>
+<p>Når en <a href="../../materialer/perceptron/perceptron.html">perceptron</a>, en <a href="../../materialer/sigmoid_neuron/sigmoid_neuron.html">Sigmoid neuron</a> eller et helt generelt <a href="../../materialer/neurale_net/neurale_net.html">kunstigt neuralt netværk</a> trænes, så sker det som regel ved, at man forsøger at minimere en tabsfunktion <span class="math inline">\(E\)</span>.</p>
+<p>En <strong>tabsfunktion</strong> har til formål at &quot;måle&quot; hvor god en AI model<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> er. En tabsfunktion <span class="math inline">\(E\)</span> har altid den egenskab, at <span class="math inline">\(E \geq 0\)</span>, og at en lille værdi af <span class="math inline">\(E\)</span> svarer til en god model (der er et lille tab), mens en stor værdi af <span class="math inline">\(E\)</span> svarer til en mindre god model. Derfor vælger man den model, som giver den mindste værdi af tabsfunktionen.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup> Med AI model tænker vi her på en perceptron, en Sigmoid neuron, et kunstigt neuralt netværk eller en anden form for funktion, som kan bruges til at prædiktere et eller andet.</p></div></div><p>De fleste AI modeller – for eksempel et kunstigt neuralt netværk – bestemmes ved hjælp af <em>træningsdata</em>. Her har man givet en række <em>inputværdier</em> <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> på baggrund af hvilke, man ønsker at prædiktere en såkaldt <strong>targetværdi</strong> <span class="math inline">\(t\)</span>.</p>
+<p>Lad os tage et eksempel fra den virkelige verden. Vi vil gerne på baggrund af en blodprøve kunne prædiktere om en patient har kræft eller ej. Her kan inputværdierne være forskellige ting, man måler i blodet (spørg en biologilærer om hvad det kunne være). Targetværdien <span class="math inline">\(t\)</span> kan antage to værdier:</p>
+<p><span class="math display">\[
+t=
+\begin{cases}
+1 &amp; \textrm{hvis patienten har kræft} \\
+0 &amp; \textrm{hvis patienten ikke har kræft} \\
+\end{cases}
+\]</span> Man kunne også have valgt: <span class="math display">\[
+t=
+\begin{cases}
+1 &amp; \textrm{hvis patienten har kræft} \\
+-1 &amp; \textrm{hvis patienten ikke har kræft} \\
+\end{cases}
+\]</span> Eller noget helt tredje! Det kommer vi tilbage til senere. Lad os for nu sige at vi vælger den første mulighed, hvor <span class="math inline">\(t \in \{0,1\}\)</span>.</p>
+<p>At bestemme, om targetværdien er <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span>, beror på faglig ekspertise indenfor det genstandsfelt, hvor AI modellen skal anvendes. I eksemplet med kræft vil det for eksempel beror på forskellige diagnostiske tests, som en læge kan bruge til at vurdere om patienten har kræft<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup> Måske er disse tests først taget et stykke tid efter blodprøven, fordi det ikke er muligt at stille diagnose på tidspunktet for blodprøven. I så fald kan man måske være heldig at få udviklet en AI model, som kan prædiktere kræft <em>tidligere</em> end med gængse metoder.</p></div></div><p>Man &quot;fodrer&quot; så sin AI algoritme med en hel masse inputværdier med tilhørende targetværdier og finder så den AI model, som giver den mindste værdi af tabsfunktionen. Det kaldes for <em>supervised learning</em>.</p>
+<p>En AI model er dybest set &quot;bare&quot; en mere eller mindre kompliceret funktion, som afhænger af en række vægte <span class="math inline">\(w_0, w_1, \dots, w_p\)</span>, som bruges til at vægte inputværdierne på en sådan måde, at modellen bliver god til at prædiktere det, den er trænet på. For store kunstige neurale netværk – for eksempel de store sprogmodeller – taler vi om milliarder af vægte!</p>
+<p>Vi kan altså tænke på en AI model, som en funktion <span class="math inline">\(f\)</span>, der afhænger af vægtene <span class="math inline">\(w_0, w_1, \dots, w_p\)</span>:</p>
+<p><span class="math display">\[
+f(w_0, w_1, \dots, w_p)
+\]</span> Funktionen afhænger selvfølgelig også af hele træningsdatasættet, men eftersom det er vægtene, man skal justere, alt imens træningsdata er fastlagt, vil vi blot tænke på <span class="math inline">\(f\)</span> som en funktion af vægtene.</p>
+<p>Vi forestiller os nu, at vi har bestemt minimum for tabsfunktionen og dermed fundet de værdier af vægtene, som minimerer tabsfunktionen. Det er nu disse værdier, som giver os vores endelige AI model. Spørgsmålet er, hvordan den bruges til prædiktion. Det kommer her:</p>
+<p>Ofte vil værdimængden for <span class="math inline">\(f\)</span> være <span class="math inline">\((0,1)\)</span>. Det betyder, at vi kan tolke værdien af <span class="math inline">\(f\)</span> som en sandsynlighed. Vi forestiller os, at vi får et nyt sæt af inputværdier – for eksempel målingerne fra en ny blodprøve, og vi vil gerne finde ud af, om patienten har kræft eller ej. Disse værdier &quot;sendes&quot; nu ind i funktionen <span class="math inline">\(f\)</span> og ud kommer en ouputværdi, som vi vil kalde for <span class="math inline">\(o\)</span>. Værdien af <span class="math inline">\(o\)</span> betragtes nu som sandsynligheden for at den rigtige targetværdi er <span class="math inline">\(1\)</span>. Det kunne for eksempel være sådan her:</p>
+<p><span class="math display">\[
+\textrm{prædiktion}=
+\begin{cases}
+\textrm{patienten har kræft} &amp; \textrm{hvis } o \geq 0,5 \\
+\textrm{patienten har ikke kræft} &amp; \textrm{hvis } o &lt; 0,5 \\
+\end{cases}
+\]</span></p>
+<p>Men hvis det skal give mening, så kræver det altså, at vi har fundet de værdier af vægtene, som gør, at denne prædiktion rent faktisk bliver god.</p>
+<p>Vi har hele tiden sagt, at det gør vi ved at minimere tabsfunktionen, men det kræver jo, at vi har en tabsfunktion. Ofte kan man bruge denne <strong>tabsfunktion</strong>:</p>
+<p><span id="eq-tabsfunktion"><span class="math display">\[
+E = \frac{1}{2} \sum \left (t-o \right)^2,
+\tag{1}\]</span></span></p>
+<p>hvor der summeres over alle træningsdata. For det første kan vi se, at <span class="math inline">\(E \geq 0\)</span>, fordi der er tale om en kvadreret sum. For det andet kan vi se, at hvis AI modellen er god, så vil <span class="math inline">\(o\)</span> være tæt på <span class="math inline">\(1\)</span>, når <span class="math inline">\(t=1\)</span> og <span class="math inline">\(o\)</span> vil være tæt på <span class="math inline">\(0\)</span>, når <span class="math inline">\(t=0\)</span>. Det betyder, at de kvadrerede forskelle <span class="math inline">\((t-o)^2\)</span> i det tilfælde vil være små, og dermed vil tabsfunktionen også være lille. Altså lever <span class="math inline">\(E\)</span> op til de krav, vi stiller til en tabsfunktion.</p>
+<p>Outputværdien <span class="math inline">\(o\)</span> beregnes ofte som</p>
+<p><span class="math display">\[
+o = f(w_0+w_1x_1+w_2x_2+\cdots+w_nx_n),
+\]</span></p>
+<p>hvor <span class="math inline">\(f\)</span> er den funktion, som vi kalder for en <strong>aktiveringsfunktion</strong>. For perceptroner og Sigmoid neuroner svarer <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> direkte til inputværdierne, som AI modellen i sidste ende skal virke på. I et kunstig neuralt netværk er det mere kompliceret, men ovenstående er korrekt, hvis man tænker på <span class="math inline">\(x_1, x_2, \dots, x_n\)</span>, som de værdier neuronerne i det sidste skjulte lag sender videre til outputlaget.</p>
+<p>Hvis tabsfunktionen i (<a href="#eq-tabsfunktion" class="quarto-xref">1</a>) skal give mening, så kan vi nu se, at hvis targetværdien <span class="math inline">\(t \in \{0,1\}\)</span>, så bør værdimængden for <span class="math inline">\(f\)</span> tilsvarende være <span class="math inline">\((0,1)\)</span>. Mens hvis <span class="math inline">\(t \in \{-1,1\}\)</span>, så bør<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> værdimængden for <span class="math inline">\(f\)</span> tilsvarende være <span class="math inline">\((-1,1)\)</span>. Forestiller man sig, at targetværdien er huspriser – det vil sige, at <span class="math inline">\(t \in (0,\infty)\)</span> – ja så vil det give mening, at også outputværdien <span class="math inline">\(o \in (0,\infty)\)</span>. Det vigtige er altså, at værdimængden for aktiveringsfunktionen er på samme skala som targetværdierne.</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup> Når en perceptron trænes ved hjælp af Adaline, er dette faktisk ikke tilfældet. Her er targetværdien <span class="math inline">\(t \in \{-1,1\}\)</span>, mens outputværdien <span class="math inline">\(o \in \mathbb{R}\)</span>. Det giver faktisk nogle problemer, som er beskrevet i noten om <a href="../../materialer/sigmoid_neuron/sigmoid_neuron.html">Sigmoid neuroner</a>.</p></div></div></section>
 <section id="sigmoid" class="level2">
 <h2 class="anchored" data-anchor-id="sigmoid">Sigmoid</h2>
 </section>
 <section id="softsign" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="softsign">Softsign</h2>
-<p>Sigmoid-funktionen er ét bud på en aktiveringsfunktion, men man kan sagtens bruge andre aktiveringsfunktioner. Det vigtige er, at værdimængden for aktiveringsfunktionen er på samme skala som targetværdierne.</p>
-<p>En ofte anvendt aktiveringsfunktion er <em>softsign</em>-funktion med forskrift</p>
+<p><em>Softsign</em>-funktionen har forskrift</p>
 <p><span class="math display">\[
 f(x)=\frac{x}{1+|x|}
 \]</span> Grafen for <span class="math inline">\(f\)</span> ses i <a href="#fig-softsign" class="quarto-xref">figur 1</a>.</p>
@@ -4988,7 +5033,7 @@ f(x) =
 \\
 \frac{x}{1-x} &amp; \textrm{hvis } x &lt; 0 \\
 \end{cases}
-\tag{1}\]</span></span></p>
+\tag{2}\]</span></span></p>
 <p>For det første ser vi, at <span class="math inline">\(f(0)=0/(1+0)=0\)</span> og <span class="math inline">\(f(x) \rightarrow 0\)</span>, når <span class="math inline">\(x\)</span> nærmer sig <span class="math inline">\(0\)</span> både fra højre og venstre. Det betyder, at <span class="math inline">\(f\)</span> <em>er</em> kontinuert i <span class="math inline">\(0\)</span>.</p>
 <p>Vi ser også, at for store positve værdier af <span class="math inline">\(x\)</span> vil <span class="math display">\[
 f(x)= \frac{x}{1+x} \approx \frac{x}{x}=1
@@ -5006,7 +5051,7 @@ f(x) \rightarrow -1 \quad \textrm{når} \quad x \rightarrow - \infty
 E(w_0, w_1, &amp;\dots, w_n) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
 f(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2,
 \end{aligned}
-\]</span> hvor <span class="math inline">\(f\)</span> altså er softsign-funktionen. Når de nye opdateringsregler for vægtene skal udledes, får vi brug for at differentiere aktiveringsfunktionen. Ved at bruge definitionen i (<a href="#eq-def_softsign" class="quarto-xref">1</a>) kan man vise, at <span class="math inline">\(f\)</span> også er differentiabel med afledt funktion <span class="math display">\[
+\]</span> hvor <span class="math inline">\(f\)</span> altså er softsign-funktionen. Når de nye opdateringsregler for vægtene skal udledes, får vi brug for at differentiere aktiveringsfunktionen. Ved at bruge definitionen i (<a href="#eq-def_softsign" class="quarto-xref">2</a>) kan man vise, at <span class="math inline">\(f\)</span> også er differentiabel med afledt funktion <span class="math display">\[
 f&#39;(x)=\frac{1}{\left ( 1+ |x| \right )^2}
 \]</span></p>
 <p>Beviset for dette samt udledningen af de nye opdateringsregler overlades trygt til læseren. <span class="emoji" data-emoji="blush">😊</span></p>
@@ -5020,9 +5065,13 @@ f&#39;(x)=1-f(|x|)=1-|f(x)|.
 </section>
 <section id="relu" class="level2">
 <h2 class="anchored" data-anchor-id="relu">ReLU</h2>
+</section>
+<section id="overblik" class="level2">
+<h2 class="anchored" data-anchor-id="overblik">Overblik</h2>
 
 
 </section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
