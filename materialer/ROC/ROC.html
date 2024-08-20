@@ -4917,8 +4917,7 @@ font-style: italic;
     <h2 id="toc-title">Indhold</h2>
    
   <ul>
-  <li><a href="#fejlklassifikationsraten" id="toc-fejlklassifikationsraten" class="nav-link active" data-scroll-target="#fejlklassifikationsraten">Fejlklassifikationsraten</a></li>
-  <li><a href="#sensitivitet-og-specificitet" id="toc-sensitivitet-og-specificitet" class="nav-link" data-scroll-target="#sensitivitet-og-specificitet">Sensitivitet og specificitet</a></li>
+  <li><a href="#sensitivitet-og-specificitet" id="toc-sensitivitet-og-specificitet" class="nav-link active" data-scroll-target="#sensitivitet-og-specificitet">Sensitivitet og specificitet</a></li>
   <li><a href="#roc-kurver" id="toc-roc-kurver" class="nav-link" data-scroll-target="#roc-kurver">ROC-kurver</a></li>
   <li><a href="#auc" id="toc-auc" class="nav-link" data-scroll-target="#auc">AUC</a></li>
   <li><a href="#forskellige-overvejelser" id="toc-forskellige-overvejelser" class="nav-link" data-scroll-target="#forskellige-overvejelser">Forskellige overvejelser</a>
@@ -4957,8 +4956,6 @@ font-style: italic;
 </header>
 
 
-<section id="fejlklassifikationsraten" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="fejlklassifikationsraten">Fejlklassifikationsraten</h2>
 <p>Når man skal vælge en god algoritme til at prædiktere klasser, har man brug for at kunne sammenligne, hvor godt forskellige algoritmer prædikterer. Man er derfor nødt til at have et mål for, hvor god en algoritme er til at forudsige klasser. Det mest oplagte er at tælle, hvor mange observationer algoritmen klassificerer forkert. Man kan så beregne, hvor stor en andel af alle observationerne, der klassificeres forkert. Denne andel kaldes <em>fejlklassifikationsraten</em>. Det er dog ikke altid det bedste mål at bruge. Det handler denne note om.</p>
 <p>Som eksempel ser vi på et lille dataeksempel med <span class="math inline">\(20\)</span> datapunkter, der kan have klasserne rød og blå, hvor rød er meget sjældnere end blå. Desuden er der målt en inputvariabel <span class="math inline">\(x\)</span>. Vi ønsker at finde en algoritme, der kan prædiktere farven på en observation på baggrund af <span class="math inline">\(x\)</span>. Datapunkternes klasser og <span class="math inline">\(x\)</span>-værdier er angivet på <a href="#fig-data_eksempel" class="quarto-xref">figur 1</a>. Ud fra figuren kunne det godt se ud til, at sandsynligheden for den røde klasse stiger, når <span class="math inline">\(x\)</span> stiger. Der er dog også flest blå med meget høje <span class="math inline">\(x\)</span>-værdier.</p>
 <div class="cell page-columns page-full">
@@ -5113,7 +5110,6 @@ Tabel 1: Fejlklassifikationer for forskellige tærskelværdier <span class="mat
 </div>
 <p>Den laveste fejlklassifikationsrate får vi ved at vælge <span class="math inline">\(t=20\)</span>, sådan at <em>alle</em> observationer prædikteres til at være blå. Men hvis vi er ude på at identificere de sjældne røde, så er sådan en test jo ikke meget værd, fordi vi aldrig vil prædiktere nogle observationer som røde. I ovenstående eksempel kunne man i stedet have valgt at sætte <span class="math inline">\(t=12\)</span>. Så får man ganske vist <span class="math inline">\(5\)</span> fejlklassifikationer i stedet for <span class="math inline">\(3\)</span>. Til gengæld finder man alle de røde. Det virker som et mere fornuftigt valg i vores eksempel.</p>
 <p>Hvordan vælger man så den bedste tærskelværdi? Det vil sige, hvordan finder man en god balance mellem ikke at lave for mange fejl og samtidig fange så mange som muligt fra den sjældne klasse? Her får vi brug for et mål for, hvor godt algoritmen prædikterer hver af de to klasser. Sensitivitet og specificitet er sådanne mål.</p>
-</section>
 <section id="sensitivitet-og-specificitet" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="sensitivitet-og-specificitet">Sensitivitet og specificitet</h2>
 <p>Lad os igen se på situationen, hvor vi har en prædiktionsalgoritme, der prædikterer klasserne rød og blå. For at få et overblik over, hvor godt algoritmen prædikterer, kan man lave en <em>confusion matrix</em>, som skitseret på <a href="#fig-confusion" class="quarto-xref">figur 3</a>, hvor et positivt resultat svarer til klassen rød<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Diagonalen (de grønne celler) svarer til observationer, der er klassificeret korrekt. En god algoritme skal have så mange observationer som muligt på diagonalen.</p>
