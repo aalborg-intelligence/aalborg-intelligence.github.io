@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="En introduktion til retningsafledede og gradientnedstigning.">
 
 <title>Retningsafledede og gradientnedstigning – AI - Aalborg Intelligence</title>
 <style>
@@ -4937,11 +4936,6 @@ font-style: italic;
 <h1 class="title">Retningsafledede og gradientnedstigning</h1>
 </div>
 
-<div>
-  <div class="description">
-    En introduktion til retningsafledede og gradientnedstigning.
-  </div>
-</div>
 
 
 <div class="quarto-title-meta">
@@ -4956,6 +4950,7 @@ font-style: italic;
 </header>
 
 
+<p>Denne note giver en introduktion til retningsafledede og gradientnedstigning.</p>
 <section id="introduktion" class="level1">
 <h1>Introduktion</h1>
 <p>I det almindelige gymnasiepensum indgår nogle vigtige begreber indenfor infinitesimalregningen for funktioner af én variable. For funktioner af én variabel siges en funktion <span class="math inline">\(f\)</span> at være kontinuert i et punkt <span class="math inline">\(x_{0}\)</span>, hvis funktionsværdien <span class="math inline">\(f(x)\)</span> nærmer sig funktionsværdien <span class="math inline">\(f(x_{0})\)</span> når <span class="math inline">\(x\)</span> nærmer sig <span class="math inline">\(x_{0}\)</span>. Det vil sige, at</p>
@@ -4987,15 +4982,15 @@ font-style: italic;
 \]</span></p>
 <p>Man bruger det til at definere de to første ordens partielle afledede for en funktion <span class="math inline">\(f\)</span> af to variable <span class="math display">\[
 \begin{aligned}
-&amp;\lim_{h \rightarrow 0} \frac{f\left( x_{0} + h,y_{0} \right) - f(x_{0},y_{0})}{h} = f_{x}^{&#39;}(x_{0},y_{0})\\
-&amp;\lim_{h \rightarrow 0} \frac{f\left( x_{0},y_{0} + h \right) - f(x_{0},y_{0})}{h} = f_{y}^{&#39;}(x_{0},y_{0})
+&amp;\lim_{h \rightarrow 0} \frac{f\left( x_{0} + h,y_{0} \right) - f(x_{0},y_{0})}{h} = f_x(x_{0},y_{0})\\
+&amp;\lim_{h \rightarrow 0} \frac{f\left( x_{0},y_{0} + h \right) - f(x_{0},y_{0})}{h} = f_y(x_{0},y_{0})
 \end{aligned}
 \]</span> hvis grænserne eksisterer. Her tager man et skridt <span class="math inline">\(h\)</span> i enten <span class="math inline">\(x\)</span>-aksens eller <span class="math inline">\(y\)</span>-aksens retning ud fra punktet <span class="math inline">\((x_{0},y_{0})\)</span> og beregner en hældning af grafen i den retning ved hjælp af en grænseværdi af sekanthældninger for snitfunktionerne <span class="math inline">\(f(x,y_{0})\)</span> og <span class="math inline">\(f(x_{0},y)\)</span>, som hver for sig er almindelige funktioner af én variabel, da man kun ændrer enten <span class="math inline">\(x\)</span>-koordinaten eller <span class="math inline">\(y\)</span>-koordinaten.</p>
 <p>Gradientvektoren defineres som vektoren med de partielle afledede som koordinater:</p>
 <p><span class="math display">\[
 \nabla f\left( x_{0},y_{0} \right) = \begin{pmatrix}
-f_{x}^{&#39;}\left( x_{0},y_{0} \right) \\
-f_{y}^{&#39;}\left( x_{0},y_{0} \right) \\
+f_x\left( x_{0},y_{0} \right) \\
+f_y\left( x_{0},y_{0} \right) \\
 \end{pmatrix}
 \]</span></p>
 <p>I noten om <a href="../../materialer/funktioner_af_flere_variable/funktioner_af_flere_variable.html">funktioner af flere variable</a> har vi skrevet, at denne vektor angiver den retning, man skal bevæge sig væk fra punktet <span class="math inline">\((x_{0},y_{0})\)</span>, for at funktionsværdierne <span class="math inline">\(f(x,y)\)</span> vokser mest muligt. Vi vil i det følgende se nærmere på denne egenskab og bruge den til at løse optimeringsproblemer numerisk.</p>
@@ -5014,7 +5009,7 @@ u_{2} \\
 D_{\vec{u}}f\left( x_{0},y_{0} \right) = \lim_{h \rightarrow 0}\frac{f\left( x_{0} + hu_{1},y_{0} + hu_{2} \right) - f(x_{0},y_{0})}{h}
 \tag{1}\]</span></span></p>
 <p>hvis grænsen eksisterer.</p>
-<p>Bemærk, at hvis <span class="math inline">\(\vec{u}\)</span> peger i <span class="math inline">\(x\)</span>-aksens retning, så bliver den retningsafledede til <span class="math inline">\(f_{x}^{&#39;}(x_{0},y_{0})\)</span>, og hvis den peger i <span class="math inline">\(y\)</span>-aksens retning, bliver den til <span class="math inline">\(f_{y}^{&#39;}(x_{0},y_{0})\)</span>. Man udregner en sekanthældning ved at tage et skridt <span class="math inline">\(h\)</span> i <span class="math inline">\(\vec{u}\)</span>’s retning og dividere den fundne funktionstilvækst med <span class="math inline">\(h\)</span>. Derefter lader man <span class="math inline">\(h\)</span> gå mod 0. Det giver hældningen af grafen for <span class="math inline">\(f\)</span> i punktet <span class="math inline">\((x_{0},y_{0})\)</span> i retningen <span class="math inline">\(\vec{u}\)</span>.</p>
+<p>Bemærk, at hvis <span class="math inline">\(\vec{u}\)</span> peger i <span class="math inline">\(x\)</span>-aksens retning, så bliver den retningsafledede til <span class="math inline">\(f_x(x_{0},y_{0})\)</span>, og hvis den peger i <span class="math inline">\(y\)</span>-aksens retning, bliver den til <span class="math inline">\(f_y(x_{0},y_{0})\)</span>. Man udregner en sekanthældning ved at tage et skridt <span class="math inline">\(h\)</span> i <span class="math inline">\(\vec{u}\)</span>’s retning og dividere den fundne funktionstilvækst med <span class="math inline">\(h\)</span>. Derefter lader man <span class="math inline">\(h\)</span> gå mod 0. Det giver hældningen af grafen for <span class="math inline">\(f\)</span> i punktet <span class="math inline">\((x_{0},y_{0})\)</span> i retningen <span class="math inline">\(\vec{u}\)</span>.</p>
 <p>Idéen med den retningsafledede er illustreret i figuren nedenfor. Til venstre ses en repræsentant for <span class="math inline">\(\vec u\)</span> i <span class="math inline">\(xy\)</span>-planen. Man kan ændre på den retning, som <span class="math inline">\(\vec u\)</span> peger i, ved at trække i skyderen. Til højre ses grafen for en funktion <span class="math inline">\(f\)</span> af to variable, hvor et punkt <span class="math inline">\(P(x_0,y_0,f(x_0,y_0))\)</span> på grafen er indtegnet. Samtidig vises den snitkurve som fås, hvis man på grafen i punktet <span class="math inline">\(P\)</span> bevæger sig langs en linje i retningen <span class="math inline">\(\vec u\)</span>. Denne snitkurve har i punktet <span class="math inline">\(P\)</span> en tangent, som også er indtegnet, og denne tangents hældning vil netop svarer til størrelsen af den retningsafledede <span class="math inline">\(D_{\vec{u}}f\left( x_{0},y_{0} \right)\)</span>. Hvis man ændrer på den retning, som <span class="math inline">\(\vec u\)</span> peger i, kan man se, hvordan størrelsen af den retningsafledede ændrer sig.</p>
 
 <meta name="viewport" content="width=device-width,initial-scale=1">
