@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Retningsafledede og gradientnedstigning – AI - Aalborg Intelligence</title>
+<title>Gradientnedstigning – AI - Aalborg Intelligence</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -4852,7 +4852,12 @@ font-style: italic;
 .description {
 font-style: italic;
 }
-</style>
+.purpose {
+border: 0px;
+border-radius: 10px;
+padding: 15px;
+background-color: lightskyblue;
+}</style>
 </head>
 
 <body class="floating nav-fixed slimcontent">
@@ -4917,9 +4922,8 @@ font-style: italic;
     <h2 id="toc-title">Indhold</h2>
    
   <ul>
-  <li><a href="#introduktion" id="toc-introduktion" class="nav-link active" data-scroll-target="#introduktion">Introduktion</a></li>
-  <li><a href="#retningsafledede" id="toc-retningsafledede" class="nav-link" data-scroll-target="#retningsafledede">Retningsafledede</a></li>
-  <li><a href="#optimering" id="toc-optimering" class="nav-link" data-scroll-target="#optimering">Optimering</a></li>
+  <li><a href="#retningsafledede" id="toc-retningsafledede" class="nav-link active" data-scroll-target="#retningsafledede">Retningsafledede</a></li>
+  <li><a href="#optimering-ved-hjælp-af-gradientnedstigning" id="toc-optimering-ved-hjælp-af-gradientnedstigning" class="nav-link" data-scroll-target="#optimering-ved-hjælp-af-gradientnedstigning">Optimering ved hjælp af gradientnedstigning</a></li>
   <li><a href="#træning-af-neurale-netværk" id="toc-træning-af-neurale-netværk" class="nav-link" data-scroll-target="#træning-af-neurale-netværk">Træning af neurale netværk</a></li>
   </ul>
 </nav>
@@ -4933,7 +4937,7 @@ font-style: italic;
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Retningsafledede og gradientnedstigning</h1>
+<h1 class="title">Gradientnedstigning</h1>
 </div>
 
 
@@ -4950,66 +4954,36 @@ font-style: italic;
 </header>
 
 
-<p>Denne note giver en introduktion til retningsafledede og gradientnedstigning.</p>
-<section id="introduktion" class="level1">
-<h1>Introduktion</h1>
-<p>I det almindelige gymnasiepensum indgår nogle vigtige begreber indenfor infinitesimalregningen for funktioner af én variable. For funktioner af én variabel siges en funktion <span class="math inline">\(f\)</span> at være kontinuert i et punkt <span class="math inline">\(x_{0}\)</span>, hvis funktionsværdien <span class="math inline">\(f(x)\)</span> nærmer sig funktionsværdien <span class="math inline">\(f(x_{0})\)</span> når <span class="math inline">\(x\)</span> nærmer sig <span class="math inline">\(x_{0}\)</span>. Det vil sige, at</p>
-<p><span class="math display">\[
-\lim_{x \rightarrow x_{0}}{f\left( x \right) = f(x_{0})}
-\]</span></p>
-<p>Funktionen <span class="math inline">\(f\)</span> siges at være differentiabel i <span class="math inline">\(x_{0}\)</span>, hvis hældningen af sekanterne gennem de to punkter <span class="math inline">\((x_{0},f\left( x_{0} \right))\)</span> og <span class="math inline">\((x,f\left( x \right))\)</span> på grafen for <span class="math inline">\(f\)</span> nærmer sig et fast tal <span class="math inline">\(f&#39;(x_{0})\)</span>, når <span class="math inline">\(x\)</span> nærmer sig <span class="math inline">\(x_{0}\)</span>:</p>
-<p><span class="math display">\[
-\lim_{x \rightarrow x_{0}}{\frac{f\left( x \right) - f(x_{0})}{x - x_{0}} = f&#39;(x_{0})}
-\]</span></p>
-<p>Intuitivt kan man tænke på egenskaben kontinuitet i et punkt, som at grafen for funktionen ikke har et spring i punktet, og på egenskaben differentiabilitet i et punkt, som at grafen for funktionen hverken har spring eller knæk i punktet.</p>
-<!-- Se @fig-fkt_kont_diff, @fig-fkt_kont, og @fig-fkt_ingen_af_delene.  -->
-<!-- ![Grafen for en funktion som både er kontinuert og differentiabel i punktet $P$.](images/fkt_kont_diff.png){#fig-fkt_kont_diff} -->
-<!-- ![Grafen for en funktion som er kontinuert, men *ikke* differentiabel i punktet $P$ (grafen har et "knæk" i $P$, og funktionen kan derfor ikke være differentiabel i $P$).](images/fkt_kont.png){#fig-fkt_kont} -->
-<!-- ![Grafen for en funktion som hverken er kontinuert eller differentiabel i punktet $P$ (grafen har et "spring" i $P$, og funktionen kan derfor hverken være kontinuert eller differentiabel i $P$).](images/fkt_ingen_af_delene.png){#fig-fkt_ingen_af_delene} -->
-<p>Hældningen <span class="math inline">\(f&#39;(x_{0})\)</span> i punktet <span class="math inline">\((x_{0},f\left( x_{0} \right))\)</span> på grafen er så en grænseværdi af nogle sekanthældninger, som hver for sig er gennemsnitshældninger for et mindre og mindre stykke af grafen. Har man studeret grænseværdibegrebet lidt nærmere, ved man, at den intuitive fortolkning ikke er særligt præcis og heller ikke helt rigtig, men alligevel er denne fortolkning god til at give en forståelse af gymnasiematematikken.</p>
-<p>For <a href="../../materialer/funktioner_af_flere_variable/funktioner_af_flere_variable.html">funktioner af to variable</a> siges en funktion <span class="math inline">\(f\)</span> at være kontinuert i et punkt <span class="math inline">\({(x}_{0},y_{0})\)</span>, hvis funktionsværdien <span class="math inline">\(f(x,y)\)</span> nærmer sig funktionsværdien <span class="math inline">\(f(x_{0},y_{0})\)</span>, når <span class="math inline">\((x,y)\)</span> nærmer sig <span class="math inline">\({(x}_{0},y_{0})\)</span>:</p>
-<p><span class="math display">\[
-\lim_{(x,y) \rightarrow (x_{0},y_{0})}{f\left( x,y \right) = f(x_{0},y_{0})}
-\]</span></p>
-<p>Definitionen er direkte overført fra den tilsvarende definition for funktioner af én variabel. Det virker jo umiddelbart meget fornuftigt, men der er faktisk lidt at tænke over. Det kan du læse mere om <a href="../../materialer/gradientnedstigning/kontinuitet.html">her</a>.</p>
-<p>Desværre kan man <em>ikke</em> tilsvarende genbruge differentiabilitetsbegrebet fra funktioner af én variabel på denne måde</p>
-<p><span class="math display">\[
-\lim_{(x,y) \rightarrow (x_{0},y_{0})}{\frac{f\left( x,y \right) - f\left( x_{0},y_{0} \right)}{\left( x,y \right) - {(x}_{0},y_{0})} = f&#39;(x_{0},y_{0})}
-\]</span></p>
-<p>Her giver brøken på venstre side repræsenterende sekanthældningen <em>ikke mening</em>, da man ikke kan dividere med et punkt eller en vektor. I stedet tager man udgangspunkt i en alternativ definition af differentiabilitet for funktioner af én variabel, hvor man har kaldt skridtet fra <span class="math inline">\(x_{0}\)</span> til <span class="math inline">\(x\)</span> for <span class="math inline">\(h\)</span>:</p>
-<p><span class="math display">\[
-\lim_{h \rightarrow 0}{\frac{f\left( x_{0} + h \right) - f(x_{0})}{h} = f&#39;(x_{0})}
-\]</span></p>
-<p>Man bruger det til at definere de to første ordens partielle afledede for en funktion <span class="math inline">\(f\)</span> af to variable <span class="math display">\[
-\begin{aligned}
-&amp;\lim_{h \rightarrow 0} \frac{f\left( x_{0} + h,y_{0} \right) - f(x_{0},y_{0})}{h} = f_x(x_{0},y_{0})\\
-&amp;\lim_{h \rightarrow 0} \frac{f\left( x_{0},y_{0} + h \right) - f(x_{0},y_{0})}{h} = f_y(x_{0},y_{0})
-\end{aligned}
-\]</span> hvis grænserne eksisterer. Her tager man et skridt <span class="math inline">\(h\)</span> i enten <span class="math inline">\(x\)</span>-aksens eller <span class="math inline">\(y\)</span>-aksens retning ud fra punktet <span class="math inline">\((x_{0},y_{0})\)</span> og beregner en hældning af grafen i den retning ved hjælp af en grænseværdi af sekanthældninger for snitfunktionerne <span class="math inline">\(f(x,y_{0})\)</span> og <span class="math inline">\(f(x_{0},y)\)</span>, som hver for sig er almindelige funktioner af én variabel, da man kun ændrer enten <span class="math inline">\(x\)</span>-koordinaten eller <span class="math inline">\(y\)</span>-koordinaten.</p>
-<p>Gradientvektoren defineres som vektoren med de partielle afledede som koordinater:</p>
+<p>I denne note vil vi forklare hvad gradientnedstigning går ud på, og hvordan gradientnedstigning kan bruges i forbindelse med at bestemme minimum eller maksimum for en funktion.</p>
+<p>Vi vil her nøjes med at se på en funktion <span class="math inline">\(f(x,y)\)</span> af to variable. I noten om <a href="../../materialer/funktioner_af_flere_variable/funktioner_af_flere_variable.html">funktioner af flere variable</a> har vi skrevet, at gradientvektoren</p>
 <p><span class="math display">\[
 \nabla f\left( x_{0},y_{0} \right) = \begin{pmatrix}
 f_x\left( x_{0},y_{0} \right) \\
 f_y\left( x_{0},y_{0} \right) \\
 \end{pmatrix}
 \]</span></p>
-<p>I noten om <a href="../../materialer/funktioner_af_flere_variable/funktioner_af_flere_variable.html">funktioner af flere variable</a> har vi skrevet, at denne vektor angiver den retning, man skal bevæge sig væk fra punktet <span class="math inline">\((x_{0},y_{0})\)</span>, for at funktionsværdierne <span class="math inline">\(f(x,y)\)</span> vokser mest muligt. Vi vil i det følgende se nærmere på denne egenskab og bruge den til at løse optimeringsproblemer numerisk.</p>
-</section>
+<p>angiver den retning, man skal bevæge sig væk fra punktet <span class="math inline">\((x_{0},y_{0})\)</span>, for at funktionsværdierne <span class="math inline">\(f(x,y)\)</span> vokser mest muligt. Det er denne egenskab, som vi vil bevise her og forklare, hvordan den kan bruges til at bestemme maksimum eller minimum for en funktion. For at gøre det må vi starte med at definere de såkaldte <strong>retningsafledede</strong>.</p>
 <section id="retningsafledede" class="level1">
 <h1>Retningsafledede</h1>
-<p>Vi vil nu se på væksten i andre retninger end blot i aksernes retning. Vi angiver retningen med en enhedsvektor - det vil sige en vektor med længde 1:</p>
+<p>Når vi står i et punkt <span class="math inline">\((x_{0},y_{0})\)</span> og gerne vil undersøge i hvilken retning funktionsværdien vokser mest, så kunne vi jo starte med at udregne de to partielle afledede</p>
+<p><span class="math display">\[
+f_x( x_{0},y_{0}) \quad \textrm{og} \quad f_y( x_{0},y_{0}).
+\]</span></p>
+<p>Disse to størrelser angiver væksthastigheden i henholdsvis <span class="math inline">\(x\)</span>- og <span class="math inline">\(y\)</span>-aksens retning. Men der er ingen, som siger, at det lige præcis er i en af de to retninger, at funktionsværdien vokser mest. Det kunne lige så godt være i en hvilken som helst anden retning.</p>
+<p>Vi vil her angive den retning i <span class="math inline">\(xy\)</span>-planen, som vi nu vil bevæge os i med en enhedsvektor – det vil sige en vektor med længde 1:</p>
 <p><span class="math display">\[
 \vec{u} = \begin{pmatrix}
 u_{1} \\
 u_{2} \\
 \end{pmatrix}
 \]</span> hvor altså <span class="math inline">\(\lvert \vec u \rvert = 1\)</span>.</p>
-<p>Vi definerer nu den retningsafledede af <span class="math inline">\(f\)</span> i punktet <span class="math inline">\((x_{0},y_{0})\)</span> i retningen <span class="math inline">\(\vec{u}\)</span> ved</p>
+<p>Vi definerer nu den <strong>retningsafledede</strong> af <span class="math inline">\(f\)</span> i punktet <span class="math inline">\((x_{0},y_{0})\)</span> i retningen <span class="math inline">\(\vec{u}\)</span> ved</p>
 <p><span id="eq-retningsafledede"><span class="math display">\[
 D_{\vec{u}}f\left( x_{0},y_{0} \right) = \lim_{h \rightarrow 0}\frac{f\left( x_{0} + hu_{1},y_{0} + hu_{2} \right) - f(x_{0},y_{0})}{h}
 \tag{1}\]</span></span></p>
-<p>hvis grænsen eksisterer.</p>
-<p>Bemærk, at hvis <span class="math inline">\(\vec{u}\)</span> peger i <span class="math inline">\(x\)</span>-aksens retning, så bliver den retningsafledede til <span class="math inline">\(f_x(x_{0},y_{0})\)</span>, og hvis den peger i <span class="math inline">\(y\)</span>-aksens retning, bliver den til <span class="math inline">\(f_y(x_{0},y_{0})\)</span>. Man udregner en sekanthældning ved at tage et skridt <span class="math inline">\(h\)</span> i <span class="math inline">\(\vec{u}\)</span>’s retning og dividere den fundne funktionstilvækst med <span class="math inline">\(h\)</span>. Derefter lader man <span class="math inline">\(h\)</span> gå mod 0. Det giver hældningen af grafen for <span class="math inline">\(f\)</span> i punktet <span class="math inline">\((x_{0},y_{0})\)</span> i retningen <span class="math inline">\(\vec{u}\)</span>.</p>
+<p>hvis ellers grænsen eksisterer.</p>
+<p>Bemærk, at hvis <span class="math inline">\(\vec{u}\)</span> peger i <span class="math inline">\(x\)</span>-aksens retning, så bliver den retningsafledede til <span class="math inline">\(f_x(x_{0},y_{0})\)</span>, og hvis den peger i <span class="math inline">\(y\)</span>-aksens retning, bliver den til <span class="math inline">\(f_y(x_{0},y_{0})\)</span>.</p>
+<p>Af definitionen kan man se, at man udregner en sekanthældning ved at tage et skridt <span class="math inline">\(h\)</span> i <span class="math inline">\(\vec{u}\)</span>’s retning og dividere den fundne funktionstilvækst med <span class="math inline">\(h\)</span>. Derefter lader man <span class="math inline">\(h\)</span> gå mod 0. Det giver hældningen af grafen for <span class="math inline">\(f\)</span> i punktet <span class="math inline">\((x_{0},y_{0})\)</span> i retningen <span class="math inline">\(\vec{u}\)</span>. Og dermed altså væksthastigheden for <span class="math inline">\(f\)</span> i retningen <span class="math inline">\(\vec{u}\)</span>.</p>
 <p>Idéen med den retningsafledede er illustreret i figuren nedenfor. Til venstre ses en repræsentant for <span class="math inline">\(\vec u\)</span> i <span class="math inline">\(xy\)</span>-planen. Man kan ændre på den retning, som <span class="math inline">\(\vec u\)</span> peger i, ved at trække i skyderen. Til højre ses grafen for en funktion <span class="math inline">\(f\)</span> af to variable, hvor et punkt <span class="math inline">\(P(x_0,y_0,f(x_0,y_0))\)</span> på grafen er indtegnet. Samtidig vises den snitkurve som fås, hvis man på grafen i punktet <span class="math inline">\(P\)</span> bevæger sig langs en linje i retningen <span class="math inline">\(\vec u\)</span>. Denne snitkurve har i punktet <span class="math inline">\(P\)</span> en tangent, som også er indtegnet, og denne tangents hældning vil netop svarer til størrelsen af den retningsafledede <span class="math inline">\(D_{\vec{u}}f\left( x_{0},y_{0} \right)\)</span>. Hvis man ændrer på den retning, som <span class="math inline">\(\vec u\)</span> peger i, kan man se, hvordan størrelsen af den retningsafledede ændrer sig.</p>
 
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -5186,7 +5160,7 @@ window.onload = function() {
 </div>
 <p>Det viser sig, at man kan udregne de retningsafledede med et prikprodukt:</p>
 <p><span class="math display">\[
-D_{\vec{u}}f\left( x_{0},y_{0} \right) = \nabla f(x_{0},y_{0}) \cdot \vec{u}
+D_{\vec{u}}f\left( x_{0},y_{0} \right) = \nabla f(x_{0},y_{0}) \cdot \vec{u}.
 \]</span></p>
 <p>Vi vil nedenfor argumentere for formlen, men lad os først se på konsekvenserne af den. Vi ved fra almindelig vektorregning, at</p>
 <p><span class="math display">\[
@@ -5216,8 +5190,9 @@ D_{\vec{u}}f\left( x_{0},y_{0} \right) = \nabla f(x_{0},y_{0}) \cdot \vec{u}
 \]</span></p>
 <p>kan du vælge enten at læse et bevis, som baserer sig på <a href="../../materialer/gradientnedstigning/bevis_geometrisk_argument.html">geometriske argumenter</a> eller <a href="../../materialer/gradientnedstigning/bevis_vha_middelvaerdisaetningen.html">et bevis som er baseret på middelværdisætningen</a>.</p>
 </section>
-<section id="optimering" class="level1 page-columns page-full">
-<h1>Optimering</h1>
+<section id="optimering-ved-hjælp-af-gradientnedstigning" class="level1 page-columns page-full">
+<h1>Optimering ved hjælp af gradientnedstigning</h1>
+<p>Vi vil nu se på, hvordan gradienten kan bruges til at bestemme maksimum eller minimum for en funktion.</p>
 <p>Betragt en funktion <span class="math inline">\(f\)</span> givet ved forskriften <span class="math display">\[
 f\left( x,y \right) = \left( \left( x - 5 \right)^{2} + 3 \right) \cdot \left( 5 + \left( y - 10 \right)^{2} \right) + 30
 \]</span></p>
