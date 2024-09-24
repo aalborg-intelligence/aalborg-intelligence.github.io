@@ -4959,13 +4959,13 @@ background-color: lightskyblue;
   <ul class="collapse">
   <li><a href="#video-perceptron-learning-algoritmen" id="toc-video-perceptron-learning-algoritmen" class="nav-link" data-scroll-target="#video-perceptron-learning-algoritmen">VIDEO: Perceptron Learning Algoritmen</a></li>
   </ul></li>
-  <li><a href="#sec-ADALINE" id="toc-sec-ADALINE" class="nav-link" data-scroll-target="#sec-ADALINE">Det kan gøres smartere med “Adaline”</a>
+  <li><a href="#sec-ADALINE" id="toc-sec-ADALINE" class="nav-link" data-scroll-target="#sec-ADALINE">Det kan gøres smartere med ADALINE</a>
   <ul class="collapse">
-  <li><a href="#video-perceptron-learning-versus-adaline" id="toc-video-perceptron-learning-versus-adaline" class="nav-link" data-scroll-target="#video-perceptron-learning-versus-adaline">VIDEO: Perceptron Learning versus Adaline</a></li>
+  <li><a href="#video-perceptron-learning-versus-adaline" id="toc-video-perceptron-learning-versus-adaline" class="nav-link" data-scroll-target="#video-perceptron-learning-versus-adaline">VIDEO: Perceptron Learning versus ADALINE</a></li>
   <li><a href="#sec-ADALINE_gradientnedstigning" id="toc-sec-ADALINE_gradientnedstigning" class="nav-link" data-scroll-target="#sec-ADALINE_gradientnedstigning">Gradientnedstigning</a></li>
   <li><a href="#eksempel-på-gradientnedstigning" id="toc-eksempel-på-gradientnedstigning" class="nav-link" data-scroll-target="#eksempel-på-gradientnedstigning">Eksempel på gradientnedstigning</a></li>
   <li><a href="#forskel-på-perceptron-learning-og-gradientnedstigning" id="toc-forskel-på-perceptron-learning-og-gradientnedstigning" class="nav-link" data-scroll-target="#forskel-på-perceptron-learning-og-gradientnedstigning">Forskel på perceptron learning og gradientnedstigning</a></li>
-  <li><a href="#video-adaline" id="toc-video-adaline" class="nav-link" data-scroll-target="#video-adaline">VIDEO: Adaline</a></li>
+  <li><a href="#video-adaline" id="toc-video-adaline" class="nav-link" data-scroll-target="#video-adaline">VIDEO: ADALINE</a></li>
   </ul></li>
   <li><a href="#det-kan-gøres-endnu-smartere-med-simple-neurale-netværk" id="toc-det-kan-gøres-endnu-smartere-med-simple-neurale-netværk" class="nav-link" data-scroll-target="#det-kan-gøres-endnu-smartere-med-simple-neurale-netværk">Det kan gøres <em>endnu</em> smartere med simple neurale netværk!</a></li>
   <li><a href="#videre-læsning" id="toc-videre-læsning" class="nav-link" data-scroll-target="#videre-læsning">Videre læsning</a></li>
@@ -5454,7 +5454,7 @@ y_{new} &lt; y_{old}
 </section>
 </section>
 <section id="sec-ADALINE" class="level1 page-columns page-full">
-<h1>Det kan gøres smartere med “Adaline”</h1>
+<h1>Det kan gøres smartere med ADALINE</h1>
 <p>Det er faktisk lidt noget rod. Altså det her med, at perceptron learning algoritmen ikke kan finde meningsfulde værdier af vægtene, hvis de røde og de blå punkter ikke kan adskilles af en ret linje. Det er der to grunde til:</p>
 <ol type="1">
 <li><p>Hvis der er små fejl i data – eksempelvis en targetværdi der er forkert. Et eksempel herpå ses i figur <a href="#fig-punkter_graf4_5-1" class="quarto-xref">figur 7</a>. Her er et enkelt datapunkt fejlagtigt farvet rødt. Denne ene fejl får den konsekvens,at datapunkterne ikke længere er lineært separable. Perceptron learning algoritmen vil derfor ikke konvergere. Her ville det være smart med en algoritme, som vil give et fornuftigt svar, selvom der er små fejl i datasættet.</p></li>
@@ -5524,8 +5524,8 @@ error = t-o=1-(-1)=2
 &amp;\text{Tilfælde 1:} \quad error = 1-(-0.1)=1.1 \\
 &amp;\text{Tilfælde 2:} \quad error = 1-(-5000)=5001
 \end{aligned}
-\]</span> Her bliver det meget tydeligt, at fejlen er lille i tilfælde 1 og stor i tilfælde 2. Hvis vi skal tage højde for det i vores opdateringsalgoritme, så må vi altså væk fra den meget simple måde, at definere fejlen på og i stedet se på fejlen som: <span class="math inline">\(error = t - (w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)\)</span>. Dette er præcis, hvad man gør i ADAPTIVE LINEAR neuroner (Adaline).</p>
-<p>For at forstå læringsalgoritmen i Adaline må vi først indføre en tabsfunktion, som skal give et samlet mål for, hvor god/dårlig perceptronen klassificerer alle træningsdata for givne værdier af vægtene. Men først er vi nødt til at indføre lidt ny notation, så vi kan skelne de forskellige træningsdata fra hinanden. Antag, at vi har <span class="math inline">\(M\)</span> træningseksempler. Så vil vi opskrive de <span class="math inline">\(M\)</span> træningseksempler på denne måde: <span class="math display">\[
+\]</span> Her bliver det meget tydeligt, at fejlen er lille i tilfælde 1 og stor i tilfælde 2. Hvis vi skal tage højde for det i vores opdateringsalgoritme, så må vi altså væk fra den meget simple måde, at definere fejlen på og i stedet se på fejlen som: <span class="math inline">\(error = t - (w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)\)</span>. Dette er præcis, hvad man gør i ADAPTIVE LINEAR neuroner (ADALINE).</p>
+<p>For at forstå læringsalgoritmen i ADALINE må vi først indføre en tabsfunktion, som skal give et samlet mål for, hvor god/dårlig perceptronen klassificerer alle træningsdata for givne værdier af vægtene. Men først er vi nødt til at indføre lidt ny notation, så vi kan skelne de forskellige træningsdata fra hinanden. Antag, at vi har <span class="math inline">\(M\)</span> træningseksempler. Så vil vi opskrive de <span class="math inline">\(M\)</span> træningseksempler på denne måde: <span class="math display">\[
 \begin{aligned}
 &amp;\text{Træningseksempel 1:} \quad (x_{1,1}, x_{1,2}, \dots, x_{1,n}, t_1) \\
 &amp;  \quad \quad \quad \quad \vdots \\
@@ -5549,8 +5549,8 @@ w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n},
 \end{aligned}
 \]</span> som perceptronen beregner, <em>inden</em> vi finder den endelig outputværdi <span class="math inline">\(o\)</span> ved at benytte (<a href="#eq-output_perceptron" class="quarto-xref">2</a>). Denne forskel kan være både positiv og negativ – og et stort positivt tal er lige så &quot;slemt&quot;, som det tilsvarende negative tal. Derfor sætter man forskellen i anden for at slippe af med fortegnene. Endelig lægger vi alle de kvadrerede fejlled fra alle de <span class="math inline">\(M\)</span> træningsdata sammen (og ganger med en halv – det er ikke så afgørende – du ser lige om lidt hvorfor). Hvis vores perceptron med de nuværende værdier af vægtene er god til at klassificere alle træningseksemplerne, så vil vores tabsfunktion give en lille værdi og omvendt, hvis perceptronen er dårlig til at klassificere, vil tabsfunktionen give en stor værdi. Se det er faktisk hele humlen. Vi skal finde de værdier af vægtene <span class="math inline">\(w_0, w_1, \dots, w_n\)</span>, som minimerer tabsfunktionen!</p>
 <section id="video-perceptron-learning-versus-adaline" class="level2">
-<h2 class="anchored" data-anchor-id="video-perceptron-learning-versus-adaline">VIDEO: Perceptron Learning versus Adaline</h2>
-<p>I denne video forklarer vi idéen bag Adaline og indfører tabsfunktionen.</p>
+<h2 class="anchored" data-anchor-id="video-perceptron-learning-versus-adaline">VIDEO: Perceptron Learning versus ADALINE</h2>
+<p>I denne video forklarer vi idéen bag ADALINE og indfører tabsfunktionen.</p>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/QF3WRIe5v6U" title frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 </section>
 <section id="sec-ADALINE_gradientnedstigning" class="level2 page-columns page-full">
@@ -5697,21 +5697,21 @@ Figur 10: Ilustration af svaret på spørgsmål 1 (<span class="math inline">\(
 <p>Der er flere forskelle på perceptron learning algoritmen og gradientnedstigning. Vi har allerede været inde på, at perceptron learning algoritmen går i kuk, hvis data ikke er lineært separable, som i <a href="#fig-punkter_graf4_5-2" class="quarto-xref">figur 8</a>. Mere formelt vil perceptron learning algoritmen ikke konvergere. I det tilfælde vil gradientnedstigning alligevel komme med et bud på værdier af vægtene, som kan bruges til at kategorisere træningsdata, selvom alle træningsdata ikke vil blive klassificeret korrekt (fordi de netop ikke er lineært separable). En anden forskel ligger i hvornår vægtene opdateres. I perceptron learning algoritmen opdateres vægtene efter <em>hvert</em> træningseksempel. I gradientnedstigning bruger man <em>alle</em> træningsdata for at lave en enkelt opdatering af vægtene. Hvis man har mange træningsdata, kan det godt blive lidt tungt. Så kan man i stedet for vælge at bruge et mindre, tilfældigt udvalg af data (for eksempel <span class="math inline">\(10\%\)</span>) til hver opdatering og så til næste opdatering bruge et nyt tilfældigt udvalg af data. Denne fremgangsmåde kaldes for <em>stokastisk gradientnedstigning</em>. En anden mulighed er at lave <em>online</em> gradientnedstigning, hvor man opdaterer vægtene for hvert træningseksempel, som i perceptron learning algoritmen. Selvom det kun er en tilnærmelse til rigtig gradientnedstigning, så har det alligevel en række fordele: 1) Det er meget hurtigere at opdatere vægtene. 2) I nogle anvendelser vil man have brug for løbende at opdatere vægtene på baggrund af nye træningsdata. I stedet for at gemme alle de mange træningsdata kan man bare opdatere vægtene, hver gang man får et nyt træningseksempel til rådighed og så eventuelt slette træningseksemplet igen, når vægtene er blevet opdateret. Det er både hurtigere og mere pladsbesparende.</p>
 </section>
 <section id="video-adaline" class="level2">
-<h2 class="anchored" data-anchor-id="video-adaline">VIDEO: Adaline</h2>
-<p>I denne video forklarer vi, hvad gradientnedstigning går ud på, og hvordan gradientnedstigning bruges til at opdatere vægtene i Adaline.</p>
+<h2 class="anchored" data-anchor-id="video-adaline">VIDEO: ADALINE</h2>
+<p>I denne video forklarer vi, hvad gradientnedstigning går ud på, og hvordan gradientnedstigning bruges til at opdatere vægtene i ADALINE.</p>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/4YMzpNP4wnA" title frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 </section>
 </section>
 <section id="det-kan-gøres-endnu-smartere-med-simple-neurale-netværk" class="level1">
 <h1>Det kan gøres <em>endnu</em> smartere med simple neurale netværk!</h1>
-<p>I det foregående har vi set på, hvordan Adaline algoritmen forsøger at minimere tabsfunktionen</p>
+<p>I det foregående har vi set på, hvordan ADALINE algoritmen forsøger at minimere tabsfunktionen</p>
 <p><span class="math display">\[
 \begin{aligned}
 E(w_0, w_1, \dots, w_n) = \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
 (w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2.
 \end{aligned}
 \]</span></p>
-<p>Det virker som en besnærende god idé! Men faktisk er denne tabsfunktion ikke altid super smart. Dét problem – og en løsning på det – kan du læse meget mere om i noten om <a href="../simple_neurale_net/simple_neurale_net.qmd">simple neurale netværk</a>.</p>
+<p>Det virker som en besnærende god idé! Men faktisk er denne tabsfunktion ikke altid super smart. Dét problem – og en løsning på det – kan du læse meget mere om i noten om <a href="../../materialer/simple_neurale_net/simple_neurale_net.html">simple neurale netværk</a>.</p>
 </section>
 <section id="videre-læsning" class="level1">
 <h1>Videre læsning</h1>
