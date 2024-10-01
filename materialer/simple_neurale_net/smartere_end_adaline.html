@@ -5157,18 +5157,22 @@ E(w_0, w_1, &amp;\dots, w_n) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
 \end{aligned}
 \tag{3}\]</span></span></p>
 <p>Bemærk, at problemet med de to skalaer nu er løst. Targetværdien er enten <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span> samtidig med, at <span class="math inline">\(\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})\)</span> også ligger mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>. Vi sammenligner altså ikke længere pærer med bananer! Den &quot;perceptron&quot;, som minimerer tabsfunktionen i (<a href="#eq-ny_tabsfunktion" class="quarto-xref">3</a>), er netop det, vi kalder for et <strong>simpelt neuralt netværk</strong>.</p>
-<p>I noten om <a href="../../materialer/simple_neurale_net/simple_neurale_net.html">simple neurale netværk</a> beskrev vi, hvordan vi kan tænke på værdi</p>
+<p>I noten om <a href="../../materialer/simple_neurale_net/simple_neurale_net.html">simple neurale netværk</a> beskrev vi, hvordan vi kan tænke på outputværdien</p>
 <p><span class="math display">\[
-\sigma(w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)
+o = \sigma(w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)
 \]</span></p>
 <p>som en sandsynlighed for at punktet <span class="math inline">\(P(x_1, x_2, \dots, x_n)\)</span> er blåt. Det gjorde vi på denne måde:</p>
 <p><span id="eq-pred"><span class="math display">\[
 \textrm{Nyt punkt }=
 \begin{cases}
-\textrm{blåt} &amp; \textrm{hvis } \sigma(w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n) \geq 0.5\\
-\textrm{rødt} &amp; \textrm{hvis } \sigma(w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n) &lt; 0.5\\
+\textrm{blåt} &amp; \textrm{hvis } o \geq 0.5\\
+\textrm{rødt} &amp; \textrm{hvis } o &lt; 0.5\\
 \end{cases}
 \tag{4}\]</span></span></p>
+<p>hvor</p>
+<p><span class="math display">\[
+o = \sigma(w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n).
+\]</span></p>
 <p>Vi argumenterede også for, at skillelinjen, for hvornår et punkt <span class="math inline">\((x_1, x_2, \dots, x_n)\)</span> er blåt eller rødt, kan beskrives ved ligningen</p>
 <p><span class="math display">\[
 w_0 + w_1 \cdot x_{1} + \cdots + w_n \cdot x_{n} = 0
@@ -5199,7 +5203,7 @@ Figur 9: Fuldt optrukket linje svarer til ADALINE – stiplet linje svarer til 
 <p>Vægtene fra det simple neurale netværk i det sidste eksempel er <span class="math inline">\(w_0=-6.046\)</span>, <span class="math inline">\(w_1=-16.69\)</span> og <span class="math inline">\(w_2=10.94\)</span> svarende til linjen med ligning <span class="math display">\[
 -6.046 - 16.69x_1+10.94x_2=0
 \]</span> Udregner vi <span class="math display">\[
-\sigma(-6.046 - 16.69x_1+10.94x_2)
+o = \sigma(-6.046 - 16.69x_1+10.94x_2)
 \]</span> får vi altså sandsynligheden for at et punkt er blåt. Gør vi det fås resultatet i nedenstående tabel:</p>
 <table class="caption-top table">
 <thead>
@@ -5255,7 +5259,7 @@ Figur 9: Fuldt optrukket linje svarer til ADALINE – stiplet linje svarer til 
 </tr>
 </tbody>
 </table>
-<p>Der er her fin overensstemmelse mellem targetværdien og den beregnede sandsynlighed. Læg også mærke til at det ekstreme punkt har en beregnet sandsynlighed på <span class="math inline">\(0.00\)</span> og dermed bliver prædikteret til klart at være et <em>ikke</em> blåt – det vil sige et rødt – punkt.</p>
+<p>Der er her fin overensstemmelse mellem targetværdien og den beregnede sandsynlighed (outputværdien <span class="math inline">\(o\)</span>). Læg også mærke til at det ekstreme punkt har en beregnet sandsynlighed på <span class="math inline">\(0.00\)</span> og dermed bliver prædikteret til klart at være et <em>ikke</em> blåt – det vil sige et rødt – punkt.</p>
 
 
 </section>
