@@ -91,7 +91,7 @@ fig
 # -0.2975679652 -0.0374751270  0.0007693097 
 ```
 
-For at forudsige -- eller med et fint ord: at **prædiktere** -- om tilbudet aktiveres eller ej, vil vi prøve, om vi kan beregne en værdi $o$ ($o$ kaldes også for **outputværdien**), som kunne være et bud på sandsynligheden for, at en kunde med en given alder og et givent forbrug vil aktivere tilbudet. En måde at modellere en sandsynligheden på er at bruge en såkaldt **sigmoid**-funktion. Forskriften for sigmoid-funktionen er
+For at forudsige -- eller med et fint ord: at **prædiktere** -- om tilbudet aktiveres eller ej, vil vi prøve, om vi kan beregne en værdi $o$ ($o$ kaldes også for **outputværdien**), som kunne være et bud på sandsynligheden for, at en kunde med en given alder og et givent forbrug vil aktivere tilbudet. En måde at modellere en sandsynlighed på er at bruge en såkaldt **sigmoid**-funktion. Forskriften for sigmoid-funktionen er
 
 $$
 \sigma(x)=\frac{1}{1+e^{-x}}
@@ -109,7 +109,7 @@ $$
 
 Da værdimængden er $(0,1)$, kan sigmoid-funktionen netop bruges til at modellere sandsynligheden for om tilbudet aktiveres. Spørgsmålet er nu, hvordan man gør det.
 
-For det første skal sigmoid-funktionen selvfølgelig på en eller anden måde afhænge af vores inputværdier $x_1$ og $x_2$. Det kan man gøre på mange måder, men en ofte anvendt metode er, at \"sende\" en linearkombination af inputværdierne ind i sigmoid-funktionen, så outputværdien $o$ beregnes sådan her:
+For det første skal sigmoid-funktionen selvfølgelig på en eller anden måde afhænge af vores inputværdier $x_1$ og $x_2$. Det kan man gøre på mange måder, men en ofte anvendt metode er, at \"sende\" en linearkombination[^4] af inputværdierne ind i sigmoid-funktionen, så outputværdien $o$ beregnes sådan her:
 
 $$
 o = \sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2).
@@ -245,7 +245,7 @@ $$
 \end{aligned}
 $$
 
-Nu kaldte vi jo $\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2)$ for outputværdien $o$ (se (@eq-output)). For at gøre ovenstående lidt mere læsevenligt vil vi derfor kalde outputværdien hørende til det $m$'te træningseksempel for $o_m$:
+I eksemplet med Good Food app'en kaldte vi $\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2)$ for outputværdien $o$ (se (@eq-output)). På samme måde kan vi at gøre ovenstående lidt mere læsevenligt ved at kalde outputværdien hørende til det $m$'te træningseksempel for $o_m$:
 
 $$
 o_m = \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})
@@ -295,7 +295,7 @@ hvor $o_m = \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})$.
 
 :::
 
-I praktisk vil man som sagt blive ved med at opdatere vægtene, indtil værdien af tabsfunktionen ikke ændrer sig særlig meget. 
+I praksis vil man som sagt blive ved med at opdatere vægtene, indtil værdien af tabsfunktionen ikke ændrer sig særlig meget. 
 
 Når vi på den måde har bestemt værdien af vægtene, kan vi bruge outputværdien $o$ til at forudsige, om en kunde vil aktivere tilbudet eller ej. Det vil vi gøre på denne måde:
 
@@ -320,7 +320,7 @@ $$
 \sigma(w_0 + w_1\cdot x_1 + \cdots + w_n \cdot x_n) = 0.5.
 $$
 
-Ser på definitionen af sigmoid-funktionen i (@eq-sigmoid) svarer det til, at 
+Ser vi på definitionen af sigmoid-funktionen i (@eq-sigmoid) svarer det til, at 
 
 $$
 \frac{1}{1+e^{-(w_0 + w_1\cdot x_1 + \cdots + w_n \cdot x_n)}} = 0.5.
@@ -544,4 +544,6 @@ I tabellen herunder finder du et samlet overblik over perceptron learning algori
 [^2]: Som i perceptron learning algoritmen er det ikke så afgørende om det lige præcis er $\pm 1$. Det vigtige er bare, at targetværdierne er symmetriske omkring $0$ (så det kunne for eksempel også være $\pm \frac{1}{2}$ eller $\pm 2$).
 
 [^3]: Der er faktisk ingen, som siger, at vi skal skære ved $0.5$. Hvis man er i gang med at screene for en meget alvorlig sygdom, som det er vigtigt at opdage hurtigt, kunne der være god grund til at vælge en lavere værdi end $0.5$. 
+
+[^4]: En linearkombination af $x_1$ og $x_2$ betyder bare $w_0 + w_1 \cdot x_1 + w_2 \cdot x_2$, hvor $w_0, w_1$ og $w_2$ er konstanter.
 
