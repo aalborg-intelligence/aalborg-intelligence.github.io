@@ -5002,7 +5002,7 @@ Figur 1: Punkter med en targetværdi på <span class="math inline">\(1\)</span>
 </figcaption>
 </figure>
 </div>
-<p>Det er tydeligt, at punkterne er lineært separabel og den indtegnede linje er også den som ADALINE giver<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Du kan selv prøve <a href="https://apps01.math.aau.dk/adaline/">ADALINE her</a>. De estimerede vægte er <span class="math inline">\(w_0=-0.9346, w_1=-2.838\)</span> og <span class="math inline">\(w_2=1.668\)</span>.Det vil sige, at den indtegnede linje har ligning</p>
+<p>Det er tydeligt, at punkterne er lineært separable og den indtegnede linje er også den som ADALINE giver<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Du kan selv prøve <a href="https://apps01.math.aau.dk/adaline/">ADALINE her</a>. De estimerede vægte er <span class="math inline">\(w_0=-0.9346, w_1=-2.838\)</span> og <span class="math inline">\(w_2=1.668\)</span>.Det vil sige, at den indtegnede linje har ligning</p>
 <div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup> Her er alle startvægte sat til <span class="math inline">\(0\)</span>, learning rate er på <span class="math inline">\(0.1\)</span>, stop-kriterie er på <span class="math inline">\(0.000001\)</span> og maksimalt antal iterationer er sat til <span class="math inline">\(50000\)</span>.</p></div></div><p><span class="math display">\[
 -0.9346-2.838 x_1 + 1.668x_2=0
 \]</span></p>
@@ -5047,12 +5047,12 @@ Figur 3: Et nyt rødt punkt er indtegnet og den linje, som ADALINE finder.
 </div>
 <p>Det er jo ikke ligefrem super overbevisende. Data er lineært separabel og alligevel kan ADALINE ikke finde ud af at finde en ret linje, som kan adskille de røde punkter fra de blå!</p>
 <p>Hvis vi skal forstå, hvad der sker, må vi se lidt nærmere på den tabsfunktion, som ADALINE forsøger at mininere. Fra <a href="../../materialer/perceptron/perceptron.html#sec-ADALINE">afsnittet om ADALINE</a> ved vi, at tabsfunktionen<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> er</p>
-<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup> Bemærk her, at det ikke er afgørende, at der er ganget med <span class="math inline">\(1/2\)</span> – det viser sig bare smartere senere.</p></div></div><p><span class="math display">\[
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup> Bemærk her, at det ikke er afgørende, at der er ganget med <span class="math inline">\(1/2\)</span> – det viser sig bare smartere senere.</p></div></div><p><span id="eq-tabsfuntion"><span class="math display">\[
 \begin{aligned}
 E(w_0, w_1, &amp;\dots, w_n)\\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
 (w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2
 \end{aligned}
-\]</span></p>
+\tag{1}\]</span></span></p>
 <p>hvor det <span class="math inline">\(m\)</span>’te træningseksempel er <span class="math display">\[(x_{m,1}, x_{m,2}, \dots, x_{m,n}, t_m)\]</span></p>
 <p>Det vil sige, at det <span class="math inline">\(m\)</span>’te træningseksempel giver et bidrag til tabsfunktionen på</p>
 <p><span class="math display">\[
@@ -5073,8 +5073,8 @@ Figur 4: Punkter med en targetværdi på <span class="math inline">\(1\)</span>
 </figcaption>
 </figure>
 </div>
-<p>Det ses nu på <a href="#fig-eks1_2" class="quarto-xref">figur 4</a>, at blå punkter, som ligger tæt på den blå stiplede linje, bidrager mindst til tabsfunktionen, mens røde punkter, som ligger tæt på den røde stiplede linje, ligeledes bidrager mindst til tabsfunktionen. Den samlede værdi af tabsfunktionen er her <span class="math inline">\(0.75\)</span>.</p>
-<p>Laver vi nu samme øvelse med det ekstra punkt fås resultat i <a href="#fig-eks2_4" class="quarto-xref">figur 5</a>.</p>
+<p>Det ses nu på <a href="#fig-eks1_2" class="quarto-xref">figur 4</a>, at blå punkter, som ligger tæt på den blå stiplede linje, bidrager mindst til tabsfunktionen, mens røde punkter, som ligger tæt på den røde stiplede linje, ligeledes bidrager mindst til tabsfunktionen. Den samlede værdi af tabsfunktionen<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> er her <span class="math inline">\(0.75\)</span>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup> Værdien udregnes ved at lægge alle bidragene sammen og gange med <span class="math inline">\(\frac{1}{2}\)</span>. Jævnfør udtrykket for tabsfunktionen i (<a href="#eq-tabsfuntion" class="quarto-xref">1</a>).</p></div></div><p>Laver vi nu samme øvelse med det ekstra punkt fås resultat i <a href="#fig-eks2_4" class="quarto-xref">figur 5</a>.</p>
 <div id="fig-eks2_4" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-eks2_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -5114,9 +5114,9 @@ Figur 6: I alt syv punkter sammen med den sorte linje, som ADALINE giver basere
 <p>Det vil sige, at udtrykket i tælleren <span class="math inline">\(|w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}|\)</span> bliver et mål for hvor langt væk punktet <span class="math inline">\(P(x_{m,1}, x_{m,2}, \dots, x_{m,n})\)</span> ligger fra linjen. Det forklarer, hvordan et <em>ekstremt</em> punkt kan give et meget stort bidrag til tabsfunktionen:</p>
 <p><span id="eq-bidrag_til_tabsfunktion"><span class="math display">\[
 \left ( t- (w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2
-\tag{1}\]</span></span></p>
-<p>Hvis punktet ligger langt væk fra den linje, som måske umiddelbart ser fornuftig ud, så vil punktet give et stort bidrag til tabsfunktionen, fordi værdien af <span class="math inline">\(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}\)</span> bliver stor, og dermed vil bidraget til tabsfunktionen i (<a href="#eq-bidrag_til_tabsfunktion" class="quarto-xref">1</a>) også blive stort!</p>
-<p>Alt det her leder os frem til, at valget af tabsfunktion måske i virkeligheden ikke er super smart. Problemet opstår grundlæggende, fordi targetværdien <span class="math inline">\(t\)</span> og udtrykket i den inderste parentes i (<a href="#eq-bidrag_til_tabsfunktion" class="quarto-xref">1</a>) er på to helt vidt forskellige skalaer. Targetværdien er enten <span class="math inline">\(-1\)</span> eller <span class="math inline">\(1\)</span>, mens udtrykket <span class="math inline">\(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}\)</span> kan antage en hvilken som helst reel værdi – en værdi som kan blive vældig stor, hvis punktet <span class="math inline">\(P(x_{m,1}, x_{m,2}, \dots, x_{m,n})\)</span> ligger langt væk fra linjen. Derfor bliver ADALINE nødt til at tvinge linjen med ligningen</p>
+\tag{2}\]</span></span></p>
+<p>Hvis punktet ligger langt væk fra den linje, som måske umiddelbart ser fornuftig ud, så vil punktet give et stort bidrag til tabsfunktionen, fordi værdien af <span class="math inline">\(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}\)</span> bliver stor, og dermed vil bidraget til tabsfunktionen i (<a href="#eq-bidrag_til_tabsfunktion" class="quarto-xref">2</a>) også blive stort!</p>
+<p>Alt det her leder os frem til, at valget af tabsfunktion måske i virkeligheden ikke er super smart. Problemet opstår grundlæggende, fordi targetværdien <span class="math inline">\(t\)</span> og udtrykket i den inderste parentes i (<a href="#eq-bidrag_til_tabsfunktion" class="quarto-xref">2</a>) er på to helt vidt forskellige skalaer. Targetværdien er enten <span class="math inline">\(-1\)</span> eller <span class="math inline">\(1\)</span>, mens udtrykket <span class="math inline">\(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}\)</span> kan antage en hvilken som helst reel værdi – en værdi som kan blive vældig stor, hvis punktet <span class="math inline">\(P(x_{m,1}, x_{m,2}, \dots, x_{m,n})\)</span> ligger langt væk fra linjen. Derfor bliver ADALINE nødt til at tvinge linjen med ligningen</p>
 <p><span class="math display">\[
 w_0 + w_1 \cdot x_{1} + \cdots + w_n \cdot x_{n}=0
 \]</span></p>
@@ -5125,7 +5125,7 @@ w_0 + w_1 \cdot x_{1} + \cdots + w_n \cdot x_{n}=0
 <p>Helt grundlæggende handler problemet om, at targetværdi <span class="math inline">\(t,\)</span> og det udtryk, som vi beregner på baggrund af punktet <span class="math inline">\(P(x_{m,1}, x_{m,2}, \dots, x_{m,n})\)</span>, skal være på samme skala. I det simple neurale netværk brugte vi sigmoid-funktionen <span class="math inline">\(\sigma\)</span>, som aktiveringsfunktion. Forskriften for sigmoid-funktionen er:</p>
 <p><span id="eq-sigmoid"><span class="math display">\[
 \sigma(x)=\frac{1}{1+e^{-x}}
-\tag{2}\]</span></span></p>
+\tag{3}\]</span></span></p>
 <p>og grafen ses i <a href="#fig-sigmoid" class="quarto-xref">figur 7</a>.</p>
 <div id="fig-sigmoid" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
@@ -5155,8 +5155,8 @@ t=
 E(w_0, w_1, &amp;\dots, w_n) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
 \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2
 \end{aligned}
-\tag{3}\]</span></span></p>
-<p>Bemærk, at problemet med de to skalaer nu er løst. Targetværdien er enten <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span> samtidig med, at <span class="math inline">\(\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})\)</span> også ligger mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>. Vi sammenligner altså ikke længere pærer med bananer! Den &quot;perceptron&quot;, som minimerer tabsfunktionen i (<a href="#eq-ny_tabsfunktion" class="quarto-xref">3</a>), er netop det, vi kalder for et <strong>simpelt neuralt netværk</strong>.</p>
+\tag{4}\]</span></span></p>
+<p>Bemærk, at problemet med de to skalaer nu er løst. Targetværdien er enten <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span> samtidig med, at <span class="math inline">\(\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})\)</span> også ligger mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>. Vi sammenligner altså ikke længere pærer med bananer! Den &quot;perceptron&quot;, som minimerer tabsfunktionen i (<a href="#eq-ny_tabsfunktion" class="quarto-xref">4</a>), er netop det, vi kalder for et <strong>simpelt neuralt netværk</strong>.</p>
 <p>I noten om <a href="../../materialer/simple_neurale_net/simple_neurale_net.html">simple neurale netværk</a> beskrev vi, hvordan vi kan tænke på outputværdien</p>
 <p><span class="math display">\[
 o = \sigma(w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)
@@ -5168,7 +5168,7 @@ o = \sigma(w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)
 \textrm{blåt} &amp; \textrm{hvis } o \geq 0.5\\
 \textrm{rødt} &amp; \textrm{hvis } o &lt; 0.5\\
 \end{cases}
-\tag{4}\]</span></span></p>
+\tag{5}\]</span></span></p>
 <p>hvor</p>
 <p><span class="math display">\[
 o = \sigma(w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n).

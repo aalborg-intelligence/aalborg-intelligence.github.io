@@ -5010,7 +5010,7 @@ Figur 1: Fiktivt datasæt som viser 100 Good Food kunders alder og forbrug. Hve
 </div>
 </div>
 </div>
-<p>For at forudsige – eller med et fint ord: at <strong>prædiktere</strong> – om tilbudet aktiveres eller ej, vil vi prøve, om vi kan beregne en værdi <span class="math inline">\(o\)</span> (<span class="math inline">\(o\)</span> kaldes også for <strong>outputværdien</strong>), som kunne være et bud på sandsynligheden for, at en kunde med en given alder og et givent forbrug vil aktivere tilbudet. En måde at modellere en sandsynligheden på er at bruge en såkaldt <strong>sigmoid</strong>-funktion. Forskriften for sigmoid-funktionen er</p>
+<p>For at forudsige – eller med et fint ord: at <strong>prædiktere</strong> – om tilbudet aktiveres eller ej, vil vi prøve, om vi kan beregne en værdi <span class="math inline">\(o\)</span> (<span class="math inline">\(o\)</span> kaldes også for <strong>outputværdien</strong>), som kunne være et bud på sandsynligheden for, at en kunde med en given alder og et givent forbrug vil aktivere tilbudet. En måde at modellere en sandsynlighed på er at bruge en såkaldt <strong>sigmoid</strong>-funktion. Forskriften for sigmoid-funktionen er</p>
 <p><span id="eq-sigmoid"><span class="math display">\[
 \sigma(x)=\frac{1}{1+e^{-x}}
 \tag{1}\]</span></span></p>
@@ -5030,8 +5030,8 @@ Figur 2: Grafen for sigmoid-funktionen med forskrift <span class="math inline">
 \sigma: \mathbb{R} \rightarrow (0,1).
 \]</span></p>
 <p>Da værdimængden er <span class="math inline">\((0,1)\)</span>, kan sigmoid-funktionen netop bruges til at modellere sandsynligheden for om tilbudet aktiveres. Spørgsmålet er nu, hvordan man gør det.</p>
-<p>For det første skal sigmoid-funktionen selvfølgelig på en eller anden måde afhænge af vores inputværdier <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span>. Det kan man gøre på mange måder, men en ofte anvendt metode er, at &quot;sende&quot; en linearkombination af inputværdierne ind i sigmoid-funktionen, så outputværdien <span class="math inline">\(o\)</span> beregnes sådan her:</p>
-<p><span id="eq-output"><span class="math display">\[
+<p>For det første skal sigmoid-funktionen selvfølgelig på en eller anden måde afhænge af vores inputværdier <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span>. Det kan man gøre på mange måder, men en ofte anvendt metode er, at &quot;sende&quot; en linearkombination<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> af inputværdierne ind i sigmoid-funktionen, så outputværdien <span class="math inline">\(o\)</span> beregnes sådan her:</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup> En linearkombination af <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> betyder bare <span class="math inline">\(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2\)</span>, hvor <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span> er konstanter.</p></div></div><p><span id="eq-output"><span class="math display">\[
 o = \sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2).
 \tag{2}\]</span></span></p>
 <p>Her kaldes <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span> for vægte, og opgaven bliver nu, at finde værdier af disse vægte sådan, at outputværdien <span class="math inline">\(o\)</span> for givne værdier af <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> bliver god til at modellere sandsynligheden for, om tilbudet aktiveres eller ej.</p>
@@ -5128,7 +5128,7 @@ w_n \leftarrow &amp; w_n - \eta \cdot \frac{\partial E }{\partial w_n} \\
 &amp;- \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \cdot \\ &amp; (1-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots  + w_n \cdot x_{m,n} )) \cdot x_{m,i}
 \end{aligned}
 \]</span></p>
-<p>Nu kaldte vi jo <span class="math inline">\(\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2)\)</span> for outputværdien <span class="math inline">\(o\)</span> (se (<a href="#eq-output" class="quarto-xref">2</a>)). For at gøre ovenstående lidt mere læsevenligt vil vi derfor kalde outputværdien hørende til det <span class="math inline">\(m\)</span>’te træningseksempel for <span class="math inline">\(o_m\)</span>:</p>
+<p>I eksemplet med Good Food app’en kaldte vi <span class="math inline">\(\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2)\)</span> for outputværdien <span class="math inline">\(o\)</span> (se (<a href="#eq-output" class="quarto-xref">2</a>)). På samme måde kan vi at gøre ovenstående lidt mere læsevenligt ved at kalde outputværdien hørende til det <span class="math inline">\(m\)</span>’te træningseksempel for <span class="math inline">\(o_m\)</span>:</p>
 <p><span class="math display">\[
 o_m = \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})
 \]</span></p>
@@ -5173,7 +5173,7 @@ w_n \leftarrow &amp; w_n + \eta \cdot \sum_{m=1}^{M} \left (t_m-o_m \right) \cdo
 <p>hvor <span class="math inline">\(o_m = \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})\)</span>.</p>
 </div>
 </div>
-<p>I praktisk vil man som sagt blive ved med at opdatere vægtene, indtil værdien af tabsfunktionen ikke ændrer sig særlig meget.</p>
+<p>I praksis vil man som sagt blive ved med at opdatere vægtene, indtil værdien af tabsfunktionen ikke ændrer sig særlig meget.</p>
 <p>Når vi på den måde har bestemt værdien af vægtene, kan vi bruge outputværdien <span class="math inline">\(o\)</span> til at forudsige, om en kunde vil aktivere tilbudet eller ej. Det vil vi gøre på denne måde:</p>
 <p><span id="eq-pred"><span class="math display">\[
 \textrm{Kunden aktiverer tilbudet: }
@@ -5190,7 +5190,7 @@ o = \sigma(w_0 + w_1\cdot x_1 + \cdots + w_n \cdot x_n).
 <p><span class="math display">\[
 \sigma(w_0 + w_1\cdot x_1 + \cdots + w_n \cdot x_n) = 0.5.
 \]</span></p>
-<p>Ser på definitionen af sigmoid-funktionen i (<a href="#eq-sigmoid" class="quarto-xref">1</a>) svarer det til, at</p>
+<p>Ser vi på definitionen af sigmoid-funktionen i (<a href="#eq-sigmoid" class="quarto-xref">1</a>) svarer det til, at</p>
 <p><span class="math display">\[
 \frac{1}{1+e^{-(w_0 + w_1\cdot x_1 + \cdots + w_n \cdot x_n)}} = 0.5.
 \]</span></p>
@@ -5253,8 +5253,8 @@ o = \sigma (-0.298 - 0.0375\cdot x_1 + 0.000769\cdot x_2) &gt; 0.5.
 <p>I alle tilfælde har vi at gøre med træningsdata, som består af en række inputværdier <span class="math inline">\(x_1, x_2, \cdots, x_n\)</span> med en tilhørende targetværdi <span class="math inline">\(t\)</span>. Ønsket i alle tilfælde er også, at kunne beregne en outputværdi <span class="math inline">\(o\)</span>, som skal bruges til at prædiktere targetværdien i fremtidige data.</p>
 <section id="perceptron-learning-algoritmen" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="perceptron-learning-algoritmen">Perceptron learning algoritmen</h3>
-<p>I perceptron learning algortimen kan targetværdien<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> antage værdierne <span class="math inline">\(-1\)</span> og <span class="math inline">\(1\)</span>:</p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup> I virkeligheden er det ikke så afgørende her. Men i forhold til de opdateringsregler, som vi præsenterer her, skal targetværdierne bare være symmetriske omkring <span class="math inline">\(0\)</span>.</p></div></div><p><span class="math display">\[
+<p>I perceptron learning algortimen kan targetværdien<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> antage værdierne <span class="math inline">\(-1\)</span> og <span class="math inline">\(1\)</span>:</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup> I virkeligheden er det ikke så afgørende her. Men i forhold til de opdateringsregler, som vi præsenterer her, skal targetværdierne bare være symmetriske omkring <span class="math inline">\(0\)</span>.</p></div></div><p><span class="math display">\[
 t \in \{-1,1\}.
 \]</span> Outputværdien <span class="math inline">\(o\)</span> defineres ved <span class="math display">\[
 \begin{aligned}
@@ -5304,8 +5304,8 @@ t \in \{0,1\}.
 <p><span class="math display">\[
 o = \sigma(w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n).
 \]</span></p>
-<p>Hvis vi sammenligner med reglen i (<a href="#eq-pred" class="quarto-xref">4</a>) vil vi sige, at hvis denne outputværdi <span class="math inline">\(o \geq 0.5\)</span>, så vil vi prædiktere<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, at den ukendte targetværdi er <span class="math inline">\(1\)</span> og <span class="math inline">\(0\)</span> ellers. Her kan man altså tænke på <span class="math inline">\(o\)</span>, som sandsynligheden for, at den ukendte targetværdi er <span class="math inline">\(1\)</span>.</p>
-<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup> Der er faktisk ingen, som siger, at vi skal skære ved <span class="math inline">\(0.5\)</span>. Hvis man er i gang med at screene for en meget alvorlig sygdom, som det er vigtigt at opdage hurtigt, kunne der være god grund til at vælge en lavere værdi end <span class="math inline">\(0.5\)</span>.</p></div></div><p>I det simple neurale netværk er tabsfunktionen <span id="eq-tabsfunktion_sigmoid"><span class="math display">\[
+<p>Hvis vi sammenligner med reglen i (<a href="#eq-pred" class="quarto-xref">4</a>) vil vi sige, at hvis denne outputværdi <span class="math inline">\(o \geq 0.5\)</span>, så vil vi prædiktere<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, at den ukendte targetværdi er <span class="math inline">\(1\)</span> og <span class="math inline">\(0\)</span> ellers. Her kan man altså tænke på <span class="math inline">\(o\)</span>, som sandsynligheden for, at den ukendte targetværdi er <span class="math inline">\(1\)</span>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup> Der er faktisk ingen, som siger, at vi skal skære ved <span class="math inline">\(0.5\)</span>. Hvis man er i gang med at screene for en meget alvorlig sygdom, som det er vigtigt at opdage hurtigt, kunne der være god grund til at vælge en lavere værdi end <span class="math inline">\(0.5\)</span>.</p></div></div><p>I det simple neurale netværk er tabsfunktionen <span id="eq-tabsfunktion_sigmoid"><span class="math display">\[
 \begin{aligned}
 E(w_0, w_1, &amp;\dots, w_n) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
 \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2
