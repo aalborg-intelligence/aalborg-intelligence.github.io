@@ -5107,16 +5107,16 @@ Figur 6: I alt syv punkter sammen med den sorte linje, som ADALINE giver basere
 <p><span class="math display">\[
 \textrm{dist}(P,l)=\frac{|a x_1 + b y_1 +c|}{\sqrt{a^2+b^2}}
 \]</span></p>
-<p>Denne afstandsformel kan generaliseres, så afstanden fra et punkt <span class="math inline">\(P(x_{m,1}, x_{m,2}, \dots, x_{m,n})\)</span> (i et <span class="math inline">\(n\)</span>-dimensionalt rum!) til linjen <span class="math inline">\(l\)</span> med ligning <span class="math inline">\(w_0+w_1 x_1 + w_2 x_2 + \cdots + w_n x_n=0\)</span> er:</p>
+<p>Denne afstandsformel kan generaliseres, så afstanden fra et punkt <span class="math inline">\(P(x_{m,1}, x_{m,2}, \dots, x_{m,n})\)</span> (i et <span class="math inline">\(n\)</span>-dimensionalt rum!) til planen <span class="math inline">\(\alpha\)</span> med ligning <span class="math inline">\(w_0+w_1 x_1 + w_2 x_2 + \cdots + w_n x_n=0\)</span> er:</p>
 <p><span class="math display">\[
-\textrm{dist}(P,l)=\frac{|w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}|}{\sqrt{w_1^2 + w_2^2 + \cdots + w_n^2}}
+\textrm{dist}(P,\alpha)=\frac{|w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}|}{\sqrt{w_1^2 + w_2^2 + \cdots + w_n^2}}
 \]</span></p>
-<p>Det vil sige, at udtrykket i tælleren <span class="math inline">\(|w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}|\)</span> bliver et mål for hvor langt væk punktet <span class="math inline">\(P(x_{m,1}, x_{m,2}, \dots, x_{m,n})\)</span> ligger fra linjen. Det forklarer, hvordan et <em>ekstremt</em> punkt kan give et meget stort bidrag til tabsfunktionen:</p>
+<p>Det vil sige, at udtrykket i tælleren <span class="math inline">\(|w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}|\)</span> bliver et mål for hvor langt væk punktet <span class="math inline">\(P(x_{m,1}, x_{m,2}, \dots, x_{m,n})\)</span> ligger fra planen. Det forklarer, hvordan et <em>ekstremt</em> punkt kan give et meget stort bidrag til tabsfunktionen:</p>
 <p><span id="eq-bidrag_til_tabsfunktion"><span class="math display">\[
 \left ( t- (w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2
 \tag{2}\]</span></span></p>
-<p>Hvis punktet ligger langt væk fra den linje, som måske umiddelbart ser fornuftig ud, så vil punktet give et stort bidrag til tabsfunktionen, fordi værdien af <span class="math inline">\(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}\)</span> bliver stor, og dermed vil bidraget til tabsfunktionen i (<a href="#eq-bidrag_til_tabsfunktion" class="quarto-xref">2</a>) også blive stort!</p>
-<p>Alt det her leder os frem til, at valget af tabsfunktion måske i virkeligheden ikke er super smart. Problemet opstår grundlæggende, fordi targetværdien <span class="math inline">\(t\)</span> og udtrykket i den inderste parentes i (<a href="#eq-bidrag_til_tabsfunktion" class="quarto-xref">2</a>) er på to helt vidt forskellige skalaer. Targetværdien er enten <span class="math inline">\(-1\)</span> eller <span class="math inline">\(1\)</span>, mens udtrykket <span class="math inline">\(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}\)</span> kan antage en hvilken som helst reel værdi – en værdi som kan blive vældig stor, hvis punktet <span class="math inline">\(P(x_{m,1}, x_{m,2}, \dots, x_{m,n})\)</span> ligger langt væk fra linjen. Derfor bliver ADALINE nødt til at tvinge linjen med ligningen</p>
+<p>Hvis punktet ligger langt væk fra den plan, som måske umiddelbart ser fornuftig ud, så vil punktet give et stort bidrag til tabsfunktionen, fordi værdien af <span class="math inline">\(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}\)</span> bliver stor, og dermed vil bidraget til tabsfunktionen i (<a href="#eq-bidrag_til_tabsfunktion" class="quarto-xref">2</a>) også blive stort!</p>
+<p>Alt det her leder os frem til, at valget af tabsfunktion måske i virkeligheden ikke er super smart. Problemet opstår grundlæggende, fordi targetværdien <span class="math inline">\(t\)</span> og udtrykket i den inderste parentes i (<a href="#eq-bidrag_til_tabsfunktion" class="quarto-xref">2</a>) er på to helt vidt forskellige skalaer. Targetværdien er enten <span class="math inline">\(-1\)</span> eller <span class="math inline">\(1\)</span>, mens udtrykket <span class="math inline">\(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}\)</span> kan antage en hvilken som helst reel værdi – en værdi som kan blive vældig stor, hvis punktet <span class="math inline">\(P(x_{m,1}, x_{m,2}, \dots, x_{m,n})\)</span> ligger langt væk fra planen. Derfor bliver ADALINE nødt til at tvinge planen med ligningen</p>
 <p><span class="math display">\[
 w_0 + w_1 \cdot x_{1} + \cdots + w_n \cdot x_{n}=0
 \]</span></p>
@@ -5177,7 +5177,7 @@ o = \sigma(w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n).
 <p><span class="math display">\[
 w_0 + w_1 \cdot x_{1} + \cdots + w_n \cdot x_{n} = 0
 \]</span></p>
-<p>Tabsfunktionen i simple neurale netværk giver os altså stadigvæk en ret linje, som kan bruges til at adskille de røde punkter fra de blå.</p>
+<p>Tabsfunktionen i simple neurale netværk giver os altså stadigvæk en plan, som kan bruges til at adskille de røde punkter fra de blå.</p>
 <p>Lad os prøve først at illustrere det med datasættet bestående af de seks punkter i <a href="#fig-eks1" class="quarto-xref">figur 1</a>. Resultat af at bruge ADALINE (fuldt optrukket linje) og et simpelt neuralt netværk (stiplet linje) ses i <a href="#fig-eks1_sigmoid" class="quarto-xref">figur 8</a>. Det er her tydeligt, at begge metoder kan bruges til at finde en linje, som adskiller de blå punkter fra de røde, og der er i det hele taget ikke den store forskel på de to metoder.</p>
 <div id="fig-eks1_sigmoid" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
