@@ -40,7 +40,7 @@ execute:
 ### Forudsætninger og tidsforbrug
 Forløbet kræver kendskab til:
 
-+ Polynomiel regression
++ Polynomiel regression.
 
 
 **Tidsforbrug:** ca. 90 minutter.
@@ -51,27 +51,55 @@ Forløbet kræver kendskab til:
 
 ### Formål
 
-I dette forløb skal du lære om begreberne overfitting og krydsvalidering ved at lave en række opgaver med brug af polynomiel regression. Du kan læse mere om dette i denne note 
-[krydsvalidering](../materialer/krydsvalidering/krydsvalidering.qmd)
-, men kendskab til notens indhold er ikke en forudsætning. 
+I dette forløb skal du lære om begreberne overfitting og krydsvalidering ved at lave en række opgaver med brug af polynomiel regression. Du kan læse mere om 
+[krydsvalidering i denne note](../materialer/krydsvalidering/krydsvalidering.qmd), men kendskab til notens indhold er ikke en forudsætning. 
 
 :::
 
 ## Introduktion
 
-Man vil ofte gerne ud fra kendte observationer i en stikprøve kunne forudsige værdier af fremtidige observationer fra den population, som stikprøven er fra. Dette kaldes prediktion. I virkeligheden vil man ofte have en stikprøve med 100 eller flere observationer, men for at undgå alt for mange beregninger, nøjes vi her med 8, selvom det i praksis er alt for lidt.
+Man vil ofte gerne ud fra kendte observationer i en stikprøve kunne forudsige værdier af fremtidige observationer fra den population, som stikprøven er fra. Dette kaldes prædiktion. I virkeligheden vil man ofte have en stikprøve med 100 eller flere observationer, men for at undgå alt for mange beregninger, nøjes vi her med 8, selvom det i praksis er alt for lidt.
 
-I dette eksempel vil vi se på populationen ”danske gymnasieelever”, hvor vi, indrømmet fjollet, vil undersøge, om der en sammenhæng mellem den uafhængige variabel ”antal biografbesøg det seneste år” og den afhængige variabel ”antal venner på de sociale medier”. Vi lader som om, at vi har indsamlet en stikprøve med 8 gymnasielever med følgende resultat:
+I dette eksempel vil vi se på populationen ”danske gymnasieelever”, hvor vi -- indrømmet fjollet -- vil undersøge, om der en sammenhæng mellem den uafhængige variabel ”antal biografbesøg det seneste år” og den afhængige variabel ”antal venner på de sociale medier”. Vi lader som om, at vi har indsamlet en stikprøve med 8 gymnasielever med følgende resultat:
 
-$Bio = [1, 2, 3, 4, 5, 6, 7, 8]$
+| Antal biografbesøg det seneste år | Antal venner på de sociale medier |
+|:------:|:------:|
+| $1$ | $14$ |
+| $2$ | $27$ |
+| $3$ | $11$ |
+| $4$ | $19$ |
+| $5$ | $27$ |
+| $6$ | $24$ |
+| $7$ | $12$ |
+| $8$ | $39$ |
 
-$Venner = [14, 27, 11, 19, 27, 24, 12, 39]$
+<!-- $Bio = [1, 2, 3, 4, 5, 6, 7, 8]$ -->
+<!-- $Venner = [14, 27, 11, 19, 27, 24, 12, 39]$ -->
 
 Vi ønsker ud fra disse data at opstille en model, som for nye observationer kan forudsige, hvor mange venner på de sociale medier en gymnasieelev har, hvis man kender antal biografbesøg.
 
-Når man opstiller en model, kan man nogle gange bygge på en forventning eller fysisk model, men andre gange har man som udgangspunkt ikke nogen bestemt ide, hvilket er tilfældet her. Vi vil derfor forsøge at modellere data vha. et polynomium, hvor vi så skal undersøge, hvilken grad af polynomiet, der ser ud til at kunne klare opgaven bedst. Her ses f.eks. resultatet af regression med et 3. gradspolynomium.
+Når man opstiller en model, kan man nogle gange bygge på en forventning eller fysisk model, men andre gange har man som udgangspunkt ikke nogen bestemt idé, hvilket er tilfældet her. Vi vil derfor forsøge at modellere data ved hjælp af et polynomium, hvor vi så skal undersøge, hvilken grad af polynomiet, der ser ud til at kunne klare opgaven bedst. Her ses for eksempel resultatet af regression med et 3. gradspolynomium.
 
-![3. gradsregression på alle 8 datapunkter.](OverfitPoly_filer/3gradsregression.png){#fig-3grads}
+<!-- ![3. gradsregression på alle 8 datapunkter.](OverfitPoly_filer/3gradsregression.png){#fig-3grads} -->
+
+```{r degree2, fig.width=4, fig.height=4}
+#| echo: false
+#| fig-cap: Datasættet fra tabellen hvor der er udført 3. gradsregression.
+#| label: fig-3grads
+library(ggplot2)
+x<-(1:8) # x-værdierne
+y<-c(14, 27, 11, 19, 27, 24, 12, 39) # y-værdierne
+dat <- data.frame(Biograf=x, Venner=y)
+par(mar=c(4,4,1,1))
+model<-lm(y ~ x + I(x^2) + I(x^3))
+x1 <- (1:80)/10
+fig <- ggplot(dat, aes(Biograf, Venner)) + theme_minimal() +
+  geom_point(size = 2) + geom_smooth(method='lm', formula= y ~ x + I(x^2) + I(x^3), se = FALSE)
+fig
+#plot(x,y,pch=16,ylab="y",axes=TRUE,xlim=c(0,9),ylim=c(10,40))
+#lines(x1,predict(model,data.frame(x=x1)),col="red")
+```
+
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ## Opgave 1
@@ -81,16 +109,17 @@ Når man opstiller en model, kan man nogle gange bygge på en forventning eller 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ## Opgave 2
-*	Lav lineær regression samt polynomiel regression fra 2. grads til 7. grads på stikprøvens data. 
-*	Tegn for hver regression punktplottet og grafen for resultatet af regression sammen, hvis dit CAS- værktøj ikke gør det af sig selv.  
+*	Lav lineær regression samt polynomiel regression fra 2. til 7. grad på stikprøvens data. 
+*	Tegn for hver regression punktplottet og grafen for resultatet af regression sammen (hvis dit CAS-værktøj ikke gør det af sig selv).  
 *	Hvilket polynomium passer bedst til de 8 punkter?
 
-Svaret bør ikke være overraskende. Desto højere grad af polynomium, desto bedre kan grafen tilpasse sig punkterne. Når graden bliver antallet af punkter minus 1, altså her graden 7, passer grafen perfekt til alle punkterne. Men betyder det så også, at det fundne 7. gradspolynomium passer godt til fremtidige observationer og dermed til at prediktere, hvor mange venner på de sociale medier andre elever har ud fra antal biografbesøg? Det vil vi undersøge nærmere i resten af forløbet.
 :::
+
+Svaret på opgave 2 bør ikke være overraskende. Desto højere grad af polynomium, desto bedre kan grafen tilpasse sig punkterne. Når graden bliver antallet af punkter minus 1, altså her graden 7, passer grafen perfekt til alle punkterne. Men betyder det så også, at det fundne 7. gradspolynomium passer godt til fremtidige observationer og dermed til at prædiktere, hvor mange venner på de sociale medier andre elever har ud fra antal biografbesøg? Det vil vi undersøge nærmere i resten af forløbet.
 
 ## Krydsvalidering
 
-Den metode, vi vil anvende, kaldes for krydsvalidering. Vi vil lave regressionen ud fra 6 af de 8 punkter og beregne, hvor godt resultatet heraf passer med de sidste 2 punkter – vi lader så at sige som om, at vi skal prediktere værdien for de 2 sidste punkter. Det vil vi gøre 4 gange – første gang anvendes punkt 1 og 2 ikke i regressionen, anden gang anvendes punkt 3 og 4 ikke, så anvendes 5 og 6 ikke og til sidst anvendes 7 og 8 ikke. 
+Den metode, vi vil anvende, kaldes for krydsvalidering. Vi vil lave regressionen ud fra 6 af de 8 punkter og beregne, hvor godt resultatet heraf passer med de sidste 2 punkter – vi lader så at sige som om, at vi skal prædiktere værdien for de 2 sidste punkter. Det vil vi gøre 4 gange – første gang anvendes punkt 1 og 2 ikke i regressionen, anden gang anvendes punkt 3 og 4 ikke, så anvendes 5 og 6 ikke og til sidst anvendes 7 og 8 ikke. 
 
 Her er vist et eksempel, lavet med Maple, men det samme kan gøres i andre værktøjer, hvor punkt 3 og 4 er fjernet inden regressionen, og den lodrette afstand fra hver af de to punkter til grafen er beregnet.
 
@@ -100,10 +129,10 @@ Som det ses af figuren, ligger det 3. punkt ca. 24 under grafen fra regressionen
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ## Opgave 3
-Hvis I er flere grupper, kan I nu passende dele opgaven op, så grupperne laver beregningerne for forskellige gradtal, gruppe 1 laver for 1. grads, gruppe 2 for 2. grads osv. op til 5. grads. (højere er ikke muligt, da der kun er 6 punkter). Hvis din gruppe er hurtigt færdig, så lav endeligt beregningerne for flere grader.
+Hvis I er flere grupper, kan I nu passende dele opgaven op, så grupperne laver beregningerne for forskellige gradtal, gruppe 1 laver for 1. grads, gruppe 2 for 2. grads og så videre op til 5. grads. (højere er ikke muligt, da der kun er 6 punkter). Hvis din gruppe er hurtigt færdig, så lav endeligt beregningerne for flere grader.
 
 *	Lav 1., 2. 3., 4. eller 5. gradsregression ud fra 6 af punkter, idet du ikke medtager de to første punkter.
-*	Tegn grafen fra regression og alle 8 punkter i samme koordinatsystem for visuelt at illustrere, hvor godt eller skidt de 2 punkter er predikteret af regressionen, som vist i eksemplet.
+*	Tegn grafen fra regression og alle 8 punkter i samme koordinatsystem for visuelt at illustrere, hvor godt eller skidt de 2 punkter er prædikteret af regressionen, som vist i eksemplet.
 *	Beregn den lodrette afstand mellem grafen og hver af de 2 punkter, som ikke var med i regression. Disse kaldes for residualer, så lad os kalde dem for $r_1$ og $r_2$. Skriv værdierne i en tabel som den nedenfor.
 
     | Residual	| $r_1$ |	$r_2$ |	$r_3$ |	$r_4$ |	$r_5$ |	$r_6$ |	$r_7$ |	$r_8$ |
