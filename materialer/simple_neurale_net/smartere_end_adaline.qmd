@@ -136,21 +136,21 @@ $$
 \textrm{dist}(P,l)=\frac{|a x_1 + b y_1 +c|}{\sqrt{a^2+b^2}}
 $$
 
-Denne afstandsformel kan generaliseres, så afstanden fra et punkt $P(x_{m,1}, x_{m,2}, \dots, x_{m,n})$ (i et $n$-dimensionalt rum!) til linjen $l$ med ligning $w_0+w_1 x_1 + w_2 x_2 + \cdots + w_n x_n=0$ er:
+Denne afstandsformel kan generaliseres, så afstanden fra et punkt $P(x_{m,1}, x_{m,2}, \dots, x_{m,n})$ (i et $n$-dimensionalt rum!) til planen $\alpha$ med ligning $w_0+w_1 x_1 + w_2 x_2 + \cdots + w_n x_n=0$ er:
 
 $$
-\textrm{dist}(P,l)=\frac{|w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}|}{\sqrt{w_1^2 + w_2^2 + \cdots + w_n^2}}
+\textrm{dist}(P,\alpha)=\frac{|w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}|}{\sqrt{w_1^2 + w_2^2 + \cdots + w_n^2}}
 $$
 
-Det vil sige, at udtrykket i tælleren $|w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}|$ bliver et mål for hvor langt væk punktet $P(x_{m,1}, x_{m,2}, \dots, x_{m,n})$ ligger fra linjen. Det forklarer, hvordan et *ekstremt* punkt kan give et meget stort bidrag til tabsfunktionen:
+Det vil sige, at udtrykket i tælleren $|w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}|$ bliver et mål for hvor langt væk punktet $P(x_{m,1}, x_{m,2}, \dots, x_{m,n})$ ligger fra planen. Det forklarer, hvordan et *ekstremt* punkt kan give et meget stort bidrag til tabsfunktionen:
 
 $$
 \left ( t- (w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2
 $$ {#eq-bidrag_til_tabsfunktion}
 
-Hvis punktet ligger langt væk fra den linje, som måske umiddelbart ser fornuftig ud, så vil punktet give et stort bidrag til tabsfunktionen, fordi værdien af $w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}$ bliver stor, og dermed vil bidraget til tabsfunktionen i (@eq-bidrag_til_tabsfunktion) også blive stort!
+Hvis punktet ligger langt væk fra den plan, som måske umiddelbart ser fornuftig ud, så vil punktet give et stort bidrag til tabsfunktionen, fordi værdien af $w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}$ bliver stor, og dermed vil bidraget til tabsfunktionen i (@eq-bidrag_til_tabsfunktion) også blive stort!
 
-Alt det her leder os frem til, at valget af tabsfunktion måske i virkeligheden ikke er super smart. Problemet opstår grundlæggende, fordi targetværdien $t$ og udtrykket i den inderste parentes i (@eq-bidrag_til_tabsfunktion) er på to helt vidt forskellige skalaer. Targetværdien er enten $-1$ eller $1$, mens udtrykket $w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}$ kan antage en hvilken som helst reel værdi -- en værdi som kan blive vældig stor, hvis punktet $P(x_{m,1}, x_{m,2}, \dots, x_{m,n})$ ligger langt væk fra linjen. Derfor bliver ADALINE nødt til at tvinge linjen med ligningen 
+Alt det her leder os frem til, at valget af tabsfunktion måske i virkeligheden ikke er super smart. Problemet opstår grundlæggende, fordi targetværdien $t$ og udtrykket i den inderste parentes i (@eq-bidrag_til_tabsfunktion) er på to helt vidt forskellige skalaer. Targetværdien er enten $-1$ eller $1$, mens udtrykket $w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}$ kan antage en hvilken som helst reel værdi -- en værdi som kan blive vældig stor, hvis punktet $P(x_{m,1}, x_{m,2}, \dots, x_{m,n})$ ligger langt væk fra planen. Derfor bliver ADALINE nødt til at tvinge planen med ligningen 
 
 $$
 w_0 + w_1 \cdot x_{1} + \cdots + w_n \cdot x_{n}=0
@@ -225,7 +225,7 @@ $$
 w_0 + w_1 \cdot x_{1} + \cdots + w_n \cdot x_{n} = 0
 $$
 
-Tabsfunktionen i simple neurale netværk giver os altså stadigvæk en ret linje, som kan bruges til at adskille de røde punkter fra de blå.
+Tabsfunktionen i simple neurale netværk giver os altså stadigvæk en plan, som kan bruges til at adskille de røde punkter fra de blå.
 
 Lad os prøve først at illustrere det med datasættet bestående af de seks punkter i @fig-eks1. Resultat af at bruge ADALINE (fuldt optrukket linje) og et simpelt neuralt netværk (stiplet linje) ses i @fig-eks1_sigmoid. Det er her tydeligt, at begge metoder kan bruges til at finde en linje, som adskiller de blå punkter fra de røde, og der er i det hele taget ikke den store forskel på de to metoder.
 

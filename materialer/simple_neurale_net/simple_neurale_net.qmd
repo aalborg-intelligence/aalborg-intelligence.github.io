@@ -91,7 +91,7 @@ fig
 # -0.2975679652 -0.0374751270  0.0007693097 
 ```
 
-For at forudsige -- eller med et fint ord: at **prædiktere** -- om tilbudet aktiveres eller ej, vil vi prøve, om vi kan beregne en værdi $o$ ($o$ kaldes også for **outputværdien**), som kunne være et bud på sandsynligheden for, at en kunde med en given alder og et givent forbrug vil aktivere tilbudet. En måde at modellere en sandsynlighed på er at bruge en såkaldt **sigmoid**-funktion. Forskriften for sigmoid-funktionen er
+For at forudsige -- eller med et fint ord: at **prædiktere** -- om tilbudet aktiveres eller ej, vil vi prøve, om vi kan beregne en værdi $o$ ($o$ kaldes også for **outputværdien**), som kunne være et bud på sandsynligheden for, at en kunde med en given alder og et givent forbrug vil aktivere tilbudet[^5]. En måde at modellere en sandsynlighed på er at bruge en såkaldt **sigmoid**-funktion. Forskriften for sigmoid-funktionen er
 
 $$
 \sigma(x)=\frac{1}{1+e^{-x}}
@@ -161,7 +161,7 @@ Det generelle simple neurale netværk kan illustreres sådan her:
 
 ![Grafisk illustration af et generelt simpelt neuralt netværk med $n$ inputvariable.](images/simplet_netvaerk2.png){width=75% #fig-simplet_netvaerk2}
 
-Samtidig forestiller vi os, at vi har $M$ træningsdata. Det vil sige, $M$ forskellige sæt af inputværdier med tilhørende targetværdi. Det kan opskrives sådan her:
+Samtidig forestiller vi os, at vi har $M$ træningsdata. Det vil sige, $M$ forskellige træningseksempler bestående af inputværdier med tilhørende targetværdi. Det kan opskrives sådan her:
 
 $$
 \begin{aligned}
@@ -195,7 +195,7 @@ w_n \leftarrow & w_n - \eta \cdot \frac{\partial E }{\partial w_n} \\
 \end{aligned}
 $$
 
-hvor $\eta$ (udtales \"eta\") kaldes for en *learning rate*. Det er $\eta$, som bestemmer hvor stort et skridt i gradientens retning, vi tager. Pilene til venstre illustrerer opdatering af vægtene.
+hvor $\eta$ (udtales \"eta\") kaldes for en *learning rate*. Det er $\eta$, som bestemmer hvor stort et skridt i gradientens retning, vi tager. Den konkrete værdi af $\eta$ sættes til et lille tal større end $0$. Det kunne for eksempel være $0.01$, men her må man prøve sig lidt frem. Pilene til venstre illustrerer opdatering af vægtene.
 
 For at foretage opdateringerne har vi altså brug for at bestemme den partielle afledede for hver af vægtene. Den partielle afledede for den $i$'te vægt kan findes ved at bruge sum- og kædereglen:
 
@@ -226,12 +226,14 @@ $$
 \qquad \frac{\partial}{\partial w_i} \left (w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n} \right)
 \end{aligned}
 $$
+
 Nu er
+
 $$
 \frac{\partial}{\partial w_i} \left (w_0 + w_1 \cdot x_{m,1} + \cdots + w_i \cdot x_{m,i} + \cdots  + w_n \cdot x_{m,n} \right) = x_{m,i}
-$$
+$$ {#eq-partial_wi}
 
-Så
+når $i \in \{1, 2, \dots, n\}$. Så
 $$
 \begin{aligned}
 \frac{\partial}{\partial w_i} (t_m -
@@ -282,13 +284,13 @@ $$
 \end{aligned}
 $$
 
-Dette gælder for $i \in \{1, 2, \dots, n \}$. Når $i=0$ er det ikke svært at overbevise sig selv om, at
+Dette gælder for $i \in \{1, 2, \dots, n \}$. Når $i=0$ kan det fra (@eq-partial_wi) ses, at den partielle med hensyn til $w_0$ bliver $1$. Derfor er det ikke svært at overbevise sig selv om, at
 
 $$
 \frac{\partial E}{\partial w_0} = - \sum_{m=1}^{M} \left (t_m-o_m \right) \cdot o_m\cdot (1-o_m) \cdot 1
 $$
 
-Derfor ender vi med:
+Vi ender således med:
 
 ::: {.callout-note collapse="false" appearance="minimal"} 
 ## Opdateringsregler for simple neurale netværk
@@ -352,7 +354,7 @@ I vores eksempel om Good Food app'en havde vi kun to inputværdier. Det betyder,
 $$
 w_0 + w_1\cdot x_1 + w_2 \cdot x_2 = 0.
 $$
-Det er lige præcis ligningen for en ret linje. Hvis vi i vores eksempel prøver at finde vægtene ved hjælp af gradientnedstigning, som beskrevet ovenfor, så ender vi med
+Det er lige præcis ligningen for en ret linje i et $(x_1,x_2)$-koordinatsystem. Hvis vi i vores eksempel prøver at finde vægtene ved hjælp af gradientnedstigning, som beskrevet ovenfor, så ender vi med
 
 $$
 w_0 = -0.298, \quad  w_1 = -0.0375 \quad \textrm{ og } \quad  w_2=0.000769 
@@ -392,6 +394,8 @@ fig + geom_abline(slope=-w1/w2,intercept=-w0/w2,size=1)
 # -0.2975679652 -0.0374751270  0.0007693097 
 ```
 
+Bemærk her, at den indtegnede linje er rigtig god til at adskille de røde punkter fra de blå i træningsdatasættet. Det betyder ikke nødvendigvis, at denne linje har samme gode prædiktive egenskab for et datasæt bestående af nye kunder.  
+
 Det vil nu være sådan, at for alle punkter $(x_1,x_2)$, som ligger over linjen i @fig-alder_vs_forbrug2, vil
 
 $$
@@ -403,6 +407,56 @@ o = \sigma (-0.298 - 0.0375\cdot x_1 + 0.000769\cdot x_2) > 0.5.
 $$
 Ifølge (@eq-pred) betyder det, at for alle punkter, som ligger over linjen, vil vi prædiktere, at den tilhørende kunde, vil aktivere tilbudet. Og det omvendte gælder så selvfølgelig for alle punkter, som ligger under linjen: her vil vi prædiktere, at de tilhørende kunder *ikke* aktiverer tilbudet.
 
+Lad os se på et eksempel.
+
+:::{#exm-good_food}
+
+Kunderne Hans og Gerda har downloadet Good Foods app. Hans er 50 år og har et forbrug på 3500 kroner. Gerda er derimod 65 år og med et forbrug på 2800 kroner. 
+
+Vi vil nu beregne outputværdien $o$ for hver af de to kunder. Det gør vi ved at indsætte i:
+$$
+o = \sigma (-0.298 - 0.0375\cdot x_1 + 0.000769\cdot x_2).
+$$
+Da får vi
+$$
+\begin{aligned}
+&\textrm{Hans:} \quad \quad &o=\sigma (-0.298 - 0.0375\cdot 50 + 0.000769\cdot 3500) = 0.627 \\
+&\textrm{Gerda:} \quad \quad &o=\sigma (-0.298 - 0.0375\cdot 65 + 0.000769\cdot 2800) = 0.358
+\end{aligned}
+$$
+
+Ifølge vores model er der altså en sandsynlighed på $62.7 \%$ for, at Hans vil aktivere tilbudet, mens den tilsvarende sandsynlighed for Gerda er på $35.8 \%$. Vores bedste bud vil derfor være at prædiktere, at Hans vil aktivere tilbudet, mens Gerda ikke vil. Vi vælger derfor at vise det pågældende tilbud til Hans, men ikke til Gerda.
+
+```{r}
+#| echo: false
+#| message: false
+#| fig-cap: Datasættet fra @fig-alder_vs_forbrug2. Desuden er de to punkter, som repræsenterer kunderne Hans og Gerda indtegnet.
+#| label: fig-alder_vs_forbrug_eks
+w0 <-  -0.2975679652
+w1 <- -0.0374751270
+w2 <- 0.0007693097
+fig + geom_abline(slope=-w1/w2,intercept=-w0/w2,size=1) +  geom_point(aes(x=50,y=3500),colour="black",size=2, shape=19) + geom_point(aes(x=65,y=2800),colour="black",size=2, shape=19) + geom_label(
+    label="Hans", 
+    x=45,
+    y=3500,
+    label.padding = unit(0.55, "lines"), # Rectangle size around label
+    label.size = 0.35,
+    color = "black",
+    fill="lightgray"
+  ) + geom_label(
+    label="Gerda", 
+    x=70.5,
+    y=2800,
+    label.padding = unit(0.55, "lines"), # Rectangle size around label
+    label.size = 0.35,
+    color = "black",
+    fill="lightgray"
+  )
+
+```
+
+På @fig-alder_vs_forbrug_eks ses de to punkter $(50,3500)$ og $(65,2800)$, som repræsenterer Hans og Gerda indtegnet. Her ses det også, at Hans' punkt ligger over linjen (svarende til at vi mener, at han vil aktivere tilbudet), mens Gerdas punkt ligger under linjen (svarende til at vi ikke mener, at hun vil aktivere tilbudet).
+:::
 
 
 ## Aktiviteringsfunktioner
@@ -415,7 +469,7 @@ Hvis du har læst noten om [perceptroner](../perceptron/perceptron.qmd) er du bl
 
 ## Overblik
 
-Perceptron learning algoritmen, ADALINE og simple neurale netværk -- det kan være svært at holde tungen lige i munden. Hvad er forskellene, og hvordan peger det videre hen mod de helt generelle [kunstige neurale netværk](../neurale_net/neurale_net.qmd). Vi vil i dette afsnit prøve at skabe det overblik.
+Perceptron learning algoritmen, ADALINE og simple neurale netværk -- det kan være svært at holde tungen lige i munden. Hvad er forskellene, og hvordan peger det videre hen mod de helt generelle [kunstige neurale netværk](../neurale_net/neurale_net.qmd). Vi vil i dette afsnit prøve at skabe det overblik. Du kan læse med, hvis du vil nørde lidt videre -- men du kan også springe afsnittet over!
 
 I alle tilfælde har vi at gøre med træningsdata, som består af en række inputværdier $x_1, x_2, \cdots, x_n$ med en tilhørende targetværdi $t$. Ønsket i alle tilfælde er også, at kunne beregne en outputværdi $o$, som skal bruges til at prædiktere targetværdien i fremtidige data. 
 
@@ -439,10 +493,16 @@ $$
 Denne outputværdi kan selvsagt ikke fortolkes som en sandsynlighed, men blot som en angivelse af, om vi forventer, at et nyt punkt er rødt eller blåt (altså om den ukendte targetværdi er $-1$ eller $1$).
 
 Der er ikke knyttet nogen tabsfunktion til perceptron learning algoritmen, men den $i$'te vægt opdateres på denne måde:
+
+::: {.callout-note collapse="false" appearance="minimal"} 
+## Opdateringsregler -- Perceptron Learning Algoritmen
+
+Vægtene opdateres således -- ét træningseksempel ad gangen:
 $$
 w_i \leftarrow w_i +  \eta \cdot  (t-o) \cdot x_i
 $$
-
+for $i \in \{0, 1, 2, \dots, n\}$, hvis vi sætter $x_0=1$.
+:::
 ### ADALINE
 I ADALINE er targetværdierne igen $-1$ eller $1$:
 $$
@@ -471,11 +531,16 @@ $$ {#eq-tab_ADALINE}
 
 Gør man det, bliver opdateringsreglerne
 
+::: {.callout-note collapse="false" appearance="minimal"} 
+## Opdateringsregler -- ADALINE
+
+Vægtene opdateres således:
 $$
 w_i \leftarrow w_i + \eta \cdot  \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \cdot \left (x_{m,i} \right).
+(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \cdot \left (x_{m,i} \right)
 $$
-
+for $i \in \{0, 1, 2, \dots, n\}$, hvis vi sætter $x_{m,0}=1$ for alle værdier af $m$.
+:::
 
 ### Simple neurale netværk
 
@@ -504,18 +569,29 @@ $$ {#eq-tabsfunktion_sigmoid}
 
 hvor $o_m = \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})$.
 
-Opdateringsreglen for den $i$'te vægt er:
-$$
-w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} \left (t_m-o_m \right) \cdot o_m\cdot (1-o_m) \cdot x_{m,i}.
-$$
+Opdateringsreglen er:
 
+::: {.callout-note collapse="false" appearance="minimal"} 
+## Opdateringsregler -- Simpelt neuralt netværk
+Vægtene opdateres således:
+$$
+w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} \left (t_m-o_m \right) \cdot o_m\cdot (1-o_m) \cdot x_{m,i}
+$$
+for $i \in \{0, 1, 2, \dots, n\}$, hvis vi sætter $x_{m,0}=1$ for alle værdier af $m$ og hvor 
+$$
+o_m = \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}).
+$$
+:::
+
+Læg mærke til at i Perceptron Learning Algoritmen er opdateringen af vægtene baseret på ét træningseksempel, mens det i ADALINE og det simple neurale netværk er baseret på hele træningsdatasættet.
 
 Ser vi på tabsfunktionen for ADALINE i (@eq-tab_ADALINE) og sammenligner den med tabsfunktionen for det simple neurale netværk i (@eq-tabsfunktion_sigmoid), kan vi se, at i ADALINE bruges sigmoid-funktionen ikke som aktiveringsfunktion. I stedet bruges den funktion $f$, som man kalder for **identiteten**. Den har forskrift
 $$
 f(x)=x.
 $$
 
-Forskellen på ADALINE og det simple neurale netværk er altså, at aktivieringsfunktionen i ADALINE er identiteten, mens den i det simple neurale netværk er sigmoid-funktionen.
+Forskellen på ADALINE og det simple neurale netværk er altså, at aktivieringsfunktionen i ADALINE er identiteten, mens den i det simple neurale netværk er sigmoid-funktionen. Den helt store fordel ved det, kan du [læse mere om her](smartere_end_adaline.qmd).
+
 
 
 ### Generelle neurale netværk
@@ -557,3 +633,4 @@ I tabellen herunder finder du et samlet overblik over perceptron learning algori
 
 [^4]: En linearkombination af $x_1$ og $x_2$ betyder bare $w_0 + w_1 \cdot x_1 + w_2 \cdot x_2$, hvor $w_0, w_1$ og $w_2$ er konstanter.
 
+[^5]: Læg mærke til at det er en sandsynlighed, som vi forsøger at beregne. Man kan sagtens forestille sig to kunder på præcis samme alder og med præcis samme forbrug, hvor den ene vil aktivere tilbudet, mens den anden ikke vil. Vi kan altså ikke forudsige nøjagtigt, hvad en given kunde vil gøre -- men vi kan måske være heldig at komme med et godt bud på sandsynligheden for, at en bestemt kunden vil aktivere tilbudet. 
