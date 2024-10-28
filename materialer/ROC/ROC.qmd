@@ -392,8 +392,17 @@ Man kan så gå ind i @tbl-sensitivitet og lede efter et godt $t$, hvor både se
 #| label: fig-roc
 sen<-c(rep(1,12),rep(2/3,3),rep(1/3,2),rep(0,3))
 spe<-c((1:12)/17,12/17,13/17 ,14/17, (14:15)/17,(15:17)/17)
-plot(1-spe,sen,type="l",xlab="1 - specificitet",ylab="sensitivitet")
-abline(0,1)
+# plot(1-spe,sen,type="l",xlab="1 - specificitet",ylab="sensitivitet")
+# abline(0,1)
+dat <- data.frame(tærskelværdi = 1:20, sensitivitet = round(sen, 3), specificitet = round(spe, 3))
+library(ggplot2)
+p <- dat |> 
+  ggplot(aes(x = 1-specificitet, y = sensitivitet, text = tærskelværdi)) +
+  geom_point() +
+  geom_path() +
+  geom_abline(slope = 1, intercept = 0) +
+  theme_bw()
+plotly::ggplotly(p)
 ```
 
 Vi vil gerne have både sensitivitet og specificitet til at være så tæt på $1$ som muligt. Det betyder derfor, at vi gerne vil have $1-\textrm{specificitet}$ så tæt på $0$ som muligt. Vi søger derfor samlet set et punkt på ROC-kurven, der ligger tæt på punktet $(0,1)$. Ud fra ROC-kurven kunne punktet $(0.176,0.667)$ ligne et godt bud. Ifølge @tbl-sensitivitet svarer det til en tærskelværdi på $t=15$.
