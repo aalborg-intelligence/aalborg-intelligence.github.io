@@ -40,7 +40,7 @@ Vi vil her beskrive **simple neurale netværk** (også kaldt for **Sigmoid neuro
 
 ## Medlemsapp til Good Food
 
-Lad os tage udgangspunkt i et fiktivt eksempel. Vi forestiller os, at dagligvare kæden Good Food er ved at udvikle en ny medlemsapp, som kunderne kan hente og bruge til at aktivere forskellige tilbud, når de handler i Good Food. Når kunderne opretter en profil i app'en, oplyser de deres navn, fødselsdato og køn. Samtidig registrer app'en løbende, hvilke køb kunden foretager, hvilken ugedag de handler med videre. For at undgå at app'en bliver for uoverskuelig for kunderne, skal app'en kun vise et begrænset udvalg af tilbud, som kunden kan aktivere. For eksempel skal en midaldrende mand, som i den seneste måned har købt for 10000 kr. i app'en, have vist nogle andre tilbud end en teenagepige, som kun sjældent handler i Good Food.
+Lad os tage udgangspunkt i et fiktivt eksempel. Vi forestiller os, at dagligvarekæden Good Food er ved at udvikle en ny medlemsapp, som kunderne kan hente og bruge til at aktivere forskellige tilbud, når de handler i Good Food. Når kunderne opretter en profil i app'en, oplyser de deres navn, fødselsdato og køn. Samtidig registrer app'en løbende, hvilke køb kunden foretager, hvilken ugedag de handler med videre. For at undgå at app'en bliver for uoverskuelig for kunderne, skal app'en kun vise et begrænset udvalg af tilbud, som kunden kan aktivere. For eksempel skal en midaldrende mand, som i den seneste måned har købt for 10000 kr. i app'en, have vist nogle andre tilbud end en teenagepige, som kun sjældent handler i Good Food.
 
 ![](images/dagligvarer.jpg){width=75% fig-align='center'}
 
@@ -55,19 +55,19 @@ Disse to værdier $x_1$ og $x_2$ kaldes for inputværdier. Samtidig har de i en 
 $$
 t=
 \begin{cases}
-1 & \textrm{hvis tilbudet aktiveres} \\
-0 & \textrm{hvis tilbudet ikke aktiveres} \\
+1 & \textrm{hvis tilbuddet aktiveres} \\
+0 & \textrm{hvis tilbuddet ikke aktiveres} \\
 \end{cases}
 $$
 
 Værdien $t$ kaldes for en **targetværdi**, fordi det er denne værdi, vi gerne i fremtiden vil kunne forudsige baseret på kundens alder og forbrug. Hvis Good Food kan forudsige, om en given kunde med stor sandsynlighed vil aktivere et bestemt tilbud, så vil det være en god idé at vise lige præcis dét tilbud fremfor et alternativ, som kunden måske er mindre tilbøjelig til at aktivere.
 
-Et datasæt, som for hver kunde består af inputværdierne $x_1$, $x_2$ og den tilhørende targetværdi $t$, kaldes for et **træningsdatasæt**. I @fig-alder_vs_forbrug ses et fiktivt eksempel på sådan et træningsdatasæt. Her er et punkt farvet rødt, hvis targetværdien er $1$ (det vil sige, at tilbudet er aktiveret) og blåt, hvis targetværdien er $0$ (og tilbudet er ikke aktiveret).
+Et datasæt, som for hver kunde består af inputværdierne $x_1$, $x_2$ og den tilhørende targetværdi $t$, kaldes for et **træningsdatasæt**. I @fig-alder_vs_forbrug ses et fiktivt eksempel på sådan et træningsdatasæt. Her er et punkt farvet rødt, hvis targetværdien er $1$ (det vil sige, at tilbuddet er aktiveret) og blåt, hvis targetværdien er $0$ (og tilbuddet er ikke aktiveret).
 
 ```{r}
 #| echo: false
 #| message: false
-#| fig-cap: Fiktivt datasæt som viser 100 Good Food kunders alder og forbrug. Hvert punkt, som repræsenterer en kunde, er farvet rødt, hvis kunden har aktiveret tilbudet og blåt ellers.
+#| fig-cap: Fiktivt datasæt som viser 100 Good Food kunders alder og forbrug. Hvert punkt, som repræsenterer en kunde, er farvet rødt, hvis kunden har aktiveret tilbuddet og blåt ellers.
 #| label: fig-alder_vs_forbrug
 library(ggplot2)
 N <- 100
@@ -91,7 +91,7 @@ fig
 # -0.2975679652 -0.0374751270  0.0007693097 
 ```
 
-For at forudsige -- eller med et fint ord: at **prædiktere** -- om tilbudet aktiveres eller ej, vil vi prøve, om vi kan beregne en værdi $o$ ($o$ kaldes også for **outputværdien**), som kunne være et bud på sandsynligheden for, at en kunde med en given alder og et givent forbrug vil aktivere tilbudet[^5]. En måde at modellere en sandsynlighed på er at bruge en såkaldt **sigmoid**-funktion. Forskriften for sigmoid-funktionen er
+For at forudsige -- eller med et fint ord: at **prædiktere** -- om tilbuddet aktiveres eller ej, vil vi prøve, om vi kan beregne en værdi $o$ ($o$ kaldes også for **outputværdien**), som kunne være et bud på sandsynligheden for, at en kunde med en given alder og et givent forbrug vil aktivere tilbuddet[^5]. En måde at modellere en sandsynlighed på er at bruge en såkaldt **sigmoid**-funktion. Forskriften for sigmoid-funktionen er
 
 $$
 \sigma(x)=\frac{1}{1+e^{-x}}
@@ -107,7 +107,7 @@ $$
 \sigma: \mathbb{R} \rightarrow (0,1).
 $$
 
-Da værdimængden er $(0,1)$, kan sigmoid-funktionen netop bruges til at modellere sandsynligheden for om tilbudet aktiveres. Spørgsmålet er nu, hvordan man gør det.
+Da værdimængden er $(0,1)$, kan sigmoid-funktionen netop bruges til at modellere sandsynligheden for om tilbuddet aktiveres. Spørgsmålet er nu, hvordan man gør det.
 
 For det første skal sigmoid-funktionen selvfølgelig på en eller anden måde afhænge af vores inputværdier $x_1$ og $x_2$. Det kan man gøre på mange måder, men en ofte anvendt metode er, at \"sende\" en linearkombination[^4] af inputværdierne ind i sigmoid-funktionen, så outputværdien $o$ beregnes sådan her:
 
@@ -121,9 +121,9 @@ Grafisk kan det illustreres sådan her:
 
 ![Grafisk illustration af et simpelt neuralt netværk i eksemplet om Good Food app'en.](images/simplet_netvaerk1.png){width=75% #fig-simplet_netvaerk1}
 
-Opgaven bliver nu, at finde værdier af disse vægte sådan, at outputværdien $o$ for givne værdier af $x_1$ og $x_2$ bliver god til at modellere sandsynligheden for, om tilbudet aktiveres eller ej. 
+Opgaven bliver nu, at finde værdier af disse vægte sådan, at outputværdien $o$ for givne værdier af $x_1$ og $x_2$ bliver god til at modellere sandsynligheden for, om tilbuddet aktiveres eller ej. 
 
-Det er her, at træningsdata kommer i spil, fordi vi for en lang række af inputværdier $x_1$ og $x_2$ jo faktisk  ved, om tilbudet  blev aktiveret eller ej (husk på at den oplysning er gemt i targetværdien $t$). 
+Det er her, at træningsdata kommer i spil, fordi vi for en lang række af inputværdier $x_1$ og $x_2$ jo faktisk  ved, om tilbuddet  blev aktiveret eller ej (husk på at den oplysning er gemt i targetværdien $t$). 
 
 Forestil dig for en stund at vi på en eller anden måde har bestemt værdier af $w_0, w_1$ og $w_2$. Vi kan nu sammenligne værdien af $o$ (vores pt bedste bud på sandsynligheden) og targetværdien (som er den værdi, vi gerne vil kunne forudsige). Hvis $t=0$ vil vi også gerne have, at $o$ er tæt på $0$, og omvendt hvis $t=1$ vil vi gerne have, at $o$ er tæt på $1$. Det vil sige, at differensen 
 
@@ -144,7 +144,7 @@ $$
 
 hvor der altså her summeres over alle træningsdata. Vi har lige ganget med $\frac{1}{2}$ foran. Det kan virke lidt mærkeligt, men du ser fidusen senere. 
 
-Hvis vægtene $w_0, w_1$ og $w_2$ er valgt, så sigmoid-funktionen er god til at prædiktere, om tilbudet aktiveres eller ej, så vil ovenstående udtryk være tæt på $0$. Det vil sige, at hvis $E$ er tæt på $0$, så har vi valgte gode værdier af vægtene, mens hvis $E$ er langt væk fra $0$, så har vi valgt mindre gode værdier af vægtene (i forhold til det overordnede ønske om at være i stand til at prædiktere om tilbudet aktiveres eller ej). Denne funktion $E$, som jo afhænger af vægtene $w_0, w_1$ og $w_2$, kaldes for en **tabsfunktion** (eller på engelsk **error function**). 
+Hvis vægtene $w_0, w_1$ og $w_2$ er valgt, så sigmoid-funktionen er god til at prædiktere, om tilbuddet aktiveres eller ej, så vil ovenstående udtryk være tæt på $0$. Det vil sige, at hvis $E$ er tæt på $0$, så har vi valgte gode værdier af vægtene, mens hvis $E$ er langt væk fra $0$, så har vi valgt mindre gode værdier af vægtene (i forhold til det overordnede ønske om at være i stand til at prædiktere om tilbuddet aktiveres eller ej). Denne funktion $E$, som jo afhænger af vægtene $w_0, w_1$ og $w_2$, kaldes for en **tabsfunktion** (eller på engelsk **error function**). 
 
 Nu er vægtene jo ikke givet på forhånd, men det er lige præcis tabsfunktionen, man bruger til at bestemme \"gode\" værdier af vægtene. Det gøres ved at bestemme de værdier af vægtene, som minimerer tabsfunktionen. Det er altså et optimeringsproblem, vi står overfor. Hvordan det løses, kan du læse om i næste afsnit.
 
@@ -309,10 +309,10 @@ hvor $o_m = \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})$.
 
 I praksis vil man som sagt blive ved med at opdatere vægtene, indtil værdien af tabsfunktionen ikke ændrer sig særlig meget. 
 
-Når vi på den måde har bestemt værdien af vægtene, kan vi bruge outputværdien $o$ til at forudsige, om en kunde vil aktivere tilbudet eller ej. Det vil vi gøre på denne måde:
+Når vi på den måde har bestemt værdien af vægtene, kan vi bruge outputværdien $o$ til at forudsige, om en kunde vil aktivere tilbuddet eller ej. Det vil vi gøre på denne måde:
 
 $$
-\textrm{Kunden aktiverer tilbudet: }
+\textrm{Kunden aktiverer tilbuddet: }
 \begin{cases}
 \textrm{JA} & \textrm{hvis } o \geq 0.5\\
 \textrm{NEJ} & \textrm{hvis } o < 0.5\\
@@ -324,9 +324,9 @@ hvor
 $$
 o = \sigma(w_0 + w_1\cdot x_1 + \cdots + w_n \cdot x_n).
 $$
-Bemærk, at når vi tænker på $o$ som sandsynligheden for, at kunden vil aktivere tilbudet, så giver det god mening, at vi vil prædiktere, at kunden vil aktivere tilbudet, hvis $o \geq 0.5$ og ellers ikke.
+Bemærk, at når vi tænker på $o$ som sandsynligheden for, at kunden vil aktivere tilbuddet, så giver det god mening, at vi vil prædiktere, at kunden vil aktivere tilbuddet, hvis $o \geq 0.5$ og ellers ikke.
 
-Skillelinjen, som afgører, om vi prædikterer, at kunden aktiverer tilbudet eller ej, går ved
+Skillelinjen, som afgører, om vi prædikterer, at kunden aktiverer tilbuddet eller ej, går ved
 
 $$
 \sigma(w_0 + w_1\cdot x_1 + \cdots + w_n \cdot x_n) = 0.5.
@@ -381,7 +381,7 @@ Indtegnes denne linje sammen med datasættet fra Good Food får vi:
 ```{r}
 #| echo: false
 #| message: false
-#| fig-cap: Fiktivt datasæt som viser 100 Good Food kunders alder og forbrug. Hvert punkt, som repræsenterer en kunde, er farvet rødt, hvis kunden har aktiveret tilbudet og blåt ellers. Samtidig er den linje indtegnet, som fås ved at bruge et simpelt neuralt netværk på data.
+#| fig-cap: Fiktivt datasæt som viser 100 Good Food kunders alder og forbrug. Hvert punkt, som repræsenterer en kunde, er farvet rødt, hvis kunden har aktiveret tilbuddet og blåt ellers. Samtidig er den linje indtegnet, som fås ved at bruge et simpelt neuralt netværk på data.
 #| label: fig-alder_vs_forbrug2
 w0 <-  -0.2975679652
 w1 <- -0.0374751270
@@ -405,7 +405,7 @@ Det vil sige, at (se eventuelt @fig-sigmoid)
 $$
 o = \sigma (-0.298 - 0.0375\cdot x_1 + 0.000769\cdot x_2) > 0.5.
 $$
-Ifølge (@eq-pred) betyder det, at for alle punkter, som ligger over linjen, vil vi prædiktere, at den tilhørende kunde, vil aktivere tilbudet. Og det omvendte gælder så selvfølgelig for alle punkter, som ligger under linjen: her vil vi prædiktere, at de tilhørende kunder *ikke* aktiverer tilbudet.
+Ifølge (@eq-pred) betyder det, at for alle punkter, som ligger over linjen, vil vi prædiktere, at den tilhørende kunde, vil aktivere tilbuddet. Og det omvendte gælder så selvfølgelig for alle punkter, som ligger under linjen: her vil vi prædiktere, at de tilhørende kunder *ikke* aktiverer tilbuddet.
 
 Lad os se på et eksempel.
 
@@ -425,7 +425,7 @@ $$
 \end{aligned}
 $$
 
-Ifølge vores model er der altså en sandsynlighed på $62.7 \%$ for, at Hans vil aktivere tilbudet, mens den tilsvarende sandsynlighed for Gerda er på $35.8 \%$. Vores bedste bud vil derfor være at prædiktere, at Hans vil aktivere tilbudet, mens Gerda ikke vil. Vi vælger derfor at vise det pågældende tilbud til Hans, men ikke til Gerda.
+Ifølge vores model er der altså en sandsynlighed på $62.7 \%$ for, at Hans vil aktivere tilbuddet, mens den tilsvarende sandsynlighed for Gerda er på $35.8 \%$. Vores bedste bud vil derfor være at prædiktere, at Hans vil aktivere tilbuddet, mens Gerda ikke vil. Vi vælger derfor at vise det pågældende tilbud til Hans, men ikke til Gerda.
 
 ```{r}
 #| echo: false
@@ -455,7 +455,7 @@ fig + geom_abline(slope=-w1/w2,intercept=-w0/w2,size=1) +  geom_point(aes(x=50,y
 
 ```
 
-På @fig-alder_vs_forbrug_eks ses de to punkter $(50,3500)$ og $(65,2800)$, som repræsenterer Hans og Gerda indtegnet. Her ses det også, at Hans' punkt ligger over linjen (svarende til at vi mener, at han vil aktivere tilbudet), mens Gerdas punkt ligger under linjen (svarende til at vi ikke mener, at hun vil aktivere tilbudet).
+På @fig-alder_vs_forbrug_eks ses de to punkter $(50,3500)$ og $(65,2800)$, som repræsenterer Hans og Gerda indtegnet. Her ses det også, at Hans' punkt ligger over linjen (svarende til at vi mener, at han vil aktivere tilbuddet), mens Gerdas punkt ligger under linjen (svarende til at vi ikke mener, at hun vil aktivere tilbuddet).
 :::
 
 
@@ -475,7 +475,7 @@ I alle tilfælde har vi at gøre med træningsdata, som består af en række inp
 
 ### Perceptron learning algoritmen
 
-I perceptron learning algortimen kan targetværdien[^1] antage værdierne $-1$ og $1$:
+I perceptron learning algoritmen kan targetværdien[^1] antage værdierne $-1$ og $1$:
 
 $$
 t \in \{-1,1\}.
@@ -633,4 +633,4 @@ I tabellen herunder finder du et samlet overblik over perceptron learning algori
 
 [^4]: En linearkombination af $x_1$ og $x_2$ betyder bare $w_0 + w_1 \cdot x_1 + w_2 \cdot x_2$, hvor $w_0, w_1$ og $w_2$ er konstanter.
 
-[^5]: Læg mærke til at det er en sandsynlighed, som vi forsøger at beregne. Man kan sagtens forestille sig to kunder på præcis samme alder og med præcis samme forbrug, hvor den ene vil aktivere tilbudet, mens den anden ikke vil. Vi kan altså ikke forudsige nøjagtigt, hvad en given kunde vil gøre -- men vi kan måske være heldig at komme med et godt bud på sandsynligheden for, at en bestemt kunden vil aktivere tilbudet. 
+[^5]: Læg mærke til at det er en sandsynlighed, som vi forsøger at beregne. Man kan sagtens forestille sig to kunder på præcis samme alder og med præcis samme forbrug, hvor den ene vil aktivere tilbuddet, mens den anden ikke vil. Vi kan altså ikke forudsige nøjagtigt, hvad en given kunde vil gøre -- men vi kan måske være heldig at komme med et godt bud på sandsynligheden for, at en bestemt kunden vil aktivere tilbuddet. 
