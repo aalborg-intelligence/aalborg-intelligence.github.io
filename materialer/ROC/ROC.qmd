@@ -394,15 +394,11 @@ sen<-c(rep(1,12),rep(2/3,3),rep(1/3,2),rep(0,3))
 spe<-c((1:12)/17,12/17,13/17 ,14/17, (14:15)/17,(15:17)/17)
 # plot(1-spe,sen,type="l",xlab="1 - specificitet",ylab="sensitivitet")
 # abline(0,1)
-dat <- data.frame(tærskelværdi = 1:20, sensitivitet = round(sen, 3), specificitet = round(spe, 3))
-library(ggplot2)
-p <- dat |> 
-  ggplot(aes(x = 1-specificitet, y = sensitivitet, text = tærskelværdi)) +
-  geom_point() +
-  geom_path() +
-  geom_abline(slope = 1, intercept = 0) +
-  theme_bw()
-plotly::ggplotly(p)
+dat <- data.frame(tærskelværdi = paste("Tærskelværdi:", 1:20), sensitivitet = round(sen, 3), specificitet = round(spe, 3))
+fig <- dat |> 
+  plotly::plot_ly(x = ~1-specificitet, y=~sensitivitet, text = ~tærskelværdi, 
+                  type = "scatter", mode = "lines+markers", showlegend = FALSE)
+plotly::config(fig, displayModeBar = FALSE)
 ```
 
 Vi vil gerne have både sensitivitet og specificitet til at være så tæt på $1$ som muligt. Det betyder derfor, at vi gerne vil have $1-\textrm{specificitet}$ så tæt på $0$ som muligt. Vi søger derfor samlet set et punkt på ROC-kurven, der ligger tæt på punktet $(0,1)$. Ud fra ROC-kurven kunne punktet $(0.176,0.667)$ ligne et godt bud. Ifølge @tbl-sensitivitet svarer det til en tærskelværdi på $t=15$.
@@ -438,16 +434,28 @@ Optimalt set skulle ROC-kurven stige lodret op til punktet $(0,1)$ og derefter f
 #| echo: false
 #| fig-cap: AUC for perfekt klassifikation (orange), tilfældig klassifikation (grøn) og vores dataeksempel (sort).
 #| label: fig-auc
-sen<-c(rep(1,12),rep(2/3,3),rep(1/3,2),rep(0,3))
-spe<-c((1:12)/17,12/17,13/17 ,14/17, (14:15)/17,(15:17)/17)
-plot(1-spe,sen,type="l",xlab="1 - specificitet",ylab="sensitivitet")
-abline(0,1,col="green")
-lines(c(0,0,1),c(0,1,1),col="orange")
-legend("bottomright",          # Position
-       legend = c("Optimal, AUC=1", "Tilfældig, AUC=1/2","Data, AUC=0.804"), 
-       lty = c(1, 1, 1),           
-       col = c("orange", "green","black"),        
-       lwd = 2) 
+library(ggplot2)
+dat |> 
+  ggplot(aes(x = 1-specificitet, y = sensitivitet)) +
+  geom_path(aes(color = "Data")) +
+  geom_path(data = data.frame(x = c(0, 1), y = c(0, 1)), aes(x=x, y=y, color = "Tilfældig")) +
+  geom_path(data = data.frame(x = c(0, 0, 1), y = c(0, 1, 1)), aes(x=x, y=y, color = "Optimal"), linetype = 2) +
+  theme_bw() +
+  scale_color_manual(
+    name = '',
+    breaks = c('Data', 'Optimal', 'Tilfældig'),
+    values = c('Data' = 'pink', 'Optimal' = 'blue', 'Tilfældig' = 'orange')
+  )
+# sen<-c(rep(1,12),rep(2/3,3),rep(1/3,2),rep(0,3))
+# spe<-c((1:12)/17,12/17,13/17 ,14/17, (14:15)/17,(15:17)/17)
+# plot(1-spe,sen,type="l",xlab="1 - specificitet",ylab="sensitivitet")
+# abline(0,1,col="green")
+# lines(c(0,0,1),c(0,1,1),col="orange")
+# legend("bottomright",          # Position
+#        legend = c("Optimal, AUC=1", "Tilfældig, AUC=1/2","Data, AUC=0.804"), 
+#        lty = c(1, 1, 1),           
+#        col = c("orange", "green","black"),        
+#        lwd = 2) 
 ```
 
 Man kan vise, at AUC har en konkret fortolkning. Hvis man tager et vilkårligt element fra den blå klasse og et fra den røde klasse, så vil AUC-værdien være sandsynligheden for, at $x$-værdien for den røde klasse er højere end $x$-værdien for den blå klasse. Hvis man prøver at gætte, hvilken af de to klasser der er rød ud fra $x$-værdien, er AUC altså sandsynligheden for, at man gætter rigtigt.
