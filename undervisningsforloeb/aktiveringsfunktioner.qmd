@@ -79,20 +79,58 @@ I det nedenstående vil vi nu behandle en række af de mest anvendte aktiverings
 **Sigmoid**-funktionen har forskrift
 
 $$
-f(x)=\frac{1}{1+e^{-x}}.
+f(x)=\frac{1}{1+e^{-x}},
+$$ {#eq-sigmoid}
+
+som også kan skrives
+
 $$
+f(x)=\frac{e^x}{1+e^x},
+$$
+hvilket ses med at gange med $e^x$ i både tæller og nævner i (@eq-sigmoid).
 
 Grafen for Sigmoid-funktionen ses i @fig-sigmoid.
 
 ![Grafen for sigmoid-funktionen.](aktiveringsfunktioner/sigmoid.png){width=75% #fig-sigmoid}
 
-Det ser på @fig-sigmoid ud som om, at værdimængden for $f$ er $(0,1)$. Hvis du vil have et lidt bedre argument for det, kan du læse i boksen herunder.
+Det ser på @fig-sigmoid ud som om, at værdimængden for $f$ er det åbne interval[^2] $(0,1)$. Det skrives
+
+$$
+Vm(f)=(0,1).
+$$
+
+
+Hvis du vil have et lidt bedre argument for det, kan du læse i boksen herunder.
+
+[^2]: Bemærk, at det åbne interval $(0,1)$ også kan skrives $]0,1[$. 
 
 ::: {.callout-tip collapse="true" appearance="minimal"}
 
 ## Argument for værdimængden for $f$
 
-Vi vil her argumentere for, at værdimængden for $f$ er $(0,1)$.
+Vi vil her argumentere for, at værdimængden for $f$ er $(0,1)$. Vi vil starte med at se, at funktionsværdierne for $f$ ligger mellem $0$ og $1$.
+
+Da både tæller og nævner i (@eq-sigmoid) er positive, så må $f(x)>0$. Og da
+
+$$
+1<1+e^{-x}
+$$
+så må
+
+$$
+\frac{1}{1+e^{-x}}<1.
+$$
+Det vil sige, at
+$$
+0 < f(x) < 1
+$$
+og derfor må værdimængden for $f$ være en del af intervallet $(0,1)$. Det kan skrives sådan her
+
+$$
+Vm(f) \subseteq (0,1).
+$$
+Vi vil nu vise, at vi kan komme lige så tæt på $0$ og $1$, som det skal være. Det vil med andre ord sige, at værdimængden for $f$ \"fylder\" hele intervallet $(0,1)$ ud.
+
 
 På figuren herunder ses grafen for $e^{-x}$.
 
@@ -120,7 +158,7 @@ $$
 \frac{1}{1+e^{-x}} \rightarrow 0 \quad \textrm{når} \quad x \rightarrow -\infty.
 $$
 
-Det vil sige, at værdimængden for $f$ er $(0,1)$.
+Alt i alt har vi altså argumenteret for, at værdimængden for $f$ er $(0,1)$.
 
 :::
 
@@ -226,7 +264,13 @@ $$ {#eq-def_softsign}
 
 Ud fra denne omskrivning kan man vise, at $f$ rent faktisk er kontinuert i $0$. Det kan du læse mere om i boksen herunder, hvis du har lyst.
 
-På @fig-softsign ser det ud som om, at værdimængden for $f$ er $(-1,1)$ (også det argumenterer vi for i boksen). Det vil sige, at hvis vi skal bruge softsign-funktionen som aktiveringsfunktion, så skal targetværdierne være $\pm 1$.
+På @fig-softsign ser det ud som om, at værdimængden for $f$ er $(-1,1)$ (også det argumenterer vi for i boksen):
+
+$$
+Vm(f) = (-1,1).
+$$
+
+Det vil sige, at hvis vi skal bruge softsign-funktionen som aktiveringsfunktion, så skal targetværdierne være $\pm 1$.
 
 
 
@@ -235,6 +279,21 @@ På @fig-softsign ser det ud som om, at værdimængden for $f$ er $(-1,1)$ (ogs�
 ## Argument for kontinuitet i $0$ og værdimængde for $f$
 
 Lad os først argumentere for, at $f$ er kontinuert i $0$. For det første ser vi, at $f(0)=0/(1+0)=0$ og $f(x) \rightarrow 0$, når $x$ nærmer sig $0$ både fra højre og venstre. Det betyder, at $f$ *er* kontinuert i $0$.
+
+Vi starter med at indse, at funktionsværdierne for $f$ ligger i $(-1,1)$. Ser vi på definitionen i (@eq-def_softsign), kan vi se, at hvis $x \geq 0$, så vil $f(x) \geq 0$, mens hvis $x<0$ så vil $f(x)<0$ (tælleren i $\frac{x}{1-x}$ er negativ, mens nævneren er positiv). Når vi skal vise, at $f(x)<1$, så kan vi altså nøjes med at se på $x \geq 0$. Men da
+
+$$
+x < 1+x
+$$
+
+vil
+
+$$
+\frac{1}{1+x}<1.
+$$
+Altså er $f(x)<1$. START HER.
+
+
 
 Vi ser også, at for store positive værdier af $x$ vil
 $$
@@ -370,6 +429,10 @@ $$
 \tanh(x) \rightarrow -1 \quad \textrm{når} \quad x \rightarrow - \infty
 $$
 hvilket stemmer fint overens med @fig-tanh. 
+
+Man siger, at linjerne med ligning $y=-1$ og $y=1$ er vandrette asymptoter.
+
+
 
 :::
 
