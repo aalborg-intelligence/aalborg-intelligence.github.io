@@ -60,26 +60,7 @@ I datasættet har vi genereret en masse mennesker med ekstremt højt eller lavt 
 ```{r echo=FALSE}
 #| fig-cap: Her ses et plot af data med blodtryk på $x$-aksen og sygdomsstatus på $y$-aksen.
 #| label: fig-data
-set.seed(1)
-x<-round(runif(2000,80,300))
-u<-runif(2000,0,1)
-b=-4.07#-4.24470
-a=0.023#0.02368
-p = function(x,a,b){exp(a*x + b)/(1+exp(a*x+ b))}
-px <- p(x,a,b)
-y <- as.numeric(u<px)
-# writexl::write_xlsx(
- # data.frame(blodtryk = x, syg = y),
- # path = here::here("materialer", "logistisk", "data", "blodtryk.xlsx")
-# )
-fit <- glm(y~x, family = binomial())
-a_mle <- coef(fit)[2]
-b_mle <- coef(fit)[1]
-a_mle_pretty <- unname(signif(a_mle, 2))
-b_mle_pretty <- unname(signif(b_mle, 2))
-OR_mle <- unname(signif(exp(a_mle),4))
-par(mar=c(4,4,0.5,1))
-plot(x[1:200],y[1:200],pch=1,xlab="Blodtryk",ylab="y")
+#| file: R/figur1.R
 ```
 
 Det ses på  @fig-data, at der er flest personer med $y$-værdien 0, altså raske personer, blandt folk med lavt blodtryk, mens der er flest med $y$-værdien 1, svarende til syge, blandt folk med højt blodtryk.
@@ -92,24 +73,11 @@ Vi vil nu se på, hvordan man kan modellere denne funktion.
 
 For at få en idé om, hvordan $p(x)$ kunne se ud, kigger vi på datasættet fra før.
 Vi inddeler blodtrykket i intervaller af længde 25 og tæller op, hvor mange syge og raske der er inden for hvert interval. 
-```{r}
+```{r echo=FALSE}
 #| tbl-cap: Tabel over syge og raske inden for forskellige blodtryksintervaller.
 #| label: tbl-blodtryk
 #| classes: .hover
-interval <- cut(x, breaks = seq(75, 300, by=25), right = TRUE)
-tabel_data <- table(interval, y)
-tabel <- data.frame(Blodtryk = rownames(tabel_data), Rask = tabel_data[,1], Syg = tabel_data[,2])
-tabel$total <- rowSums(tabel_data)
-tabel$`Andel syge` <- round(tabel$Syg/tabel$total, 3)
-tabel |> subset(select = -total) |> 
-  knitr::kable(row.names = FALSE, align = "rrrc")
-```
-```{r}
-# Tal til teksten
-rask2 <- tabel$Rask[2]
-syg2 <- tabel$Syg[2]
-total2 <- tabel$total[2]
-andel2 <- tabel$`Andel syge`[2]
+#| file: R/tabel1.R
 ```
 
 Desuden har vi beregnet, hvor stor en andel af patienterne inden for hvert interval, der lider af hjerte-kar-sygdom.
@@ -157,10 +125,7 @@ På @fig-linear har vi indtegnet den bedste rette linje i @fig-p-plot.
 ```{r echo=FALSE}
 #| fig-cap: Grafen for $p(x)$ tilnærmet med en ret linje.
 #| label: fig-linear
-par(mar=c(4,4,0.5,1))
-plot(x_midt, tab/100, ylim=c(0,1), pch=16, xlab="Blodtryk", ylab="p", xlim=c(70,320), xaxt="n")
-abline(-0.341213 + 12.5*0.004409, 0.004409 )
-axis(1, at=x_breaks)
+#| file: R/figur3.R
 ```
 
 Der er et problem her: En sandsynlighed ligger altid mellem 0 og 1, men regressionslinjen  ovenfor  skærer $x$-aksen ved blodtryksværdier omkring 70.

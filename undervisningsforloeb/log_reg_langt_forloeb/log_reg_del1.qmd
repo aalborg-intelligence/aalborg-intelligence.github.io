@@ -1,0 +1,107 @@
+---
+title: "Del 1: Logistisk regression"
+format:
+    html: 
+      self-contained: true
+      toc: true
+      toc-title: Indhold
+      toc-location: left
+      link-external-newwindow: true
+from: markdown+emoji
+reference-location: margin
+categories:
+  - A-niveau
+crossref:
+  fig-prefix: figur   # (default is "Figure")
+  tbl-prefix: tabel    # (default is "Table")
+  exm-prefix: eksempel
+  thm-prefix: sætning
+  sec-prefix: afsnit
+  eq-prefix: ''
+  fig-title: Figur
+  exm-title: Eksempel
+  thm-title: Sætning
+  tbl-title: Tabel
+label:
+    fig: Figur
+fig-cap-location: margin
+tab-cap-location: margin
+tbl-cap-location: margin
+execute:
+  echo: false
+  warning: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+**Forventet tid ca. 90 min.**
+
+## Step 1
+Start med at se denne video (eller læs afsnittet [logistisk regression og hjerte-kar-sygdom](../../materialer/logistisk/log-reg.qmd#logistisk-regression-og-hjerte-kar-sygdom)):
+
+{{< video https://www.youtube.com/embed/GdnlokVCqBg?si=pcYr2KUSB_UBl9v0 >}}
+
+## Step 2
+Hent [datasættet](../../materialer/logistisk/data/blodtryk.xlsx) med de 2000 datapunkter.
+
+## Step 3
+Genskab denne [figur](../../materialer/logistisk/log-reg.qmd#fig-data)
+  
+```{r echo=FALSE}
+#| file: ../../materialer/logistisk/R/figur1.R
+```
+  
+fra afsnittet [logistisk regression og hjerte-kar-sygdom](../../materialer/logistisk/log-reg.qmd#logistisk-regression-og-hjerte-kar-sygdom) ud fra de første 100 punkter og overvej, hvorfor det er en dårlig ide at bruge alle 2000 punkter. Du kan enten gøre det i dit eget CAS værktøj eller i Excel. 
+  
+Hvis du ikke er vant til at lave grafer i Excel, er det nok lettest at anvende det program, som du normalt bruger.
+  
+## Step 4
+
+Inddel de 2000 datapunkter i intervaller som vist i denne [tabel](../../materialer/logistisk/log-reg.qmd#tbl-blodtryk):
+  
+```{r}
+#| tbl-cap: Tabel over syge og raske inden for forskellige blodtryksintervaller.
+#| label: tbl-blodtryk
+#| file: ../../materialer/logistisk/R/tabel1.R
+```
+
+Dette kan for eksempel gøres ved hjælp af en pivottabel i Excel som beskrevet nedenfor.
+
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+
+## Hjælp til Pivottabel i Excel
+
+* Vælg "Indsæt pivottabel" i Excel og vælg dataområde og placering. Bemærk, at du skal gøre dette under menuen "Indsæt", og hvis du finder "pivotdiagram" et sted, er det ikke det rigtige, det skal være pivottabel. Når du klikker på "Eksisterende regneark" skal du klikke det sted i regnearket, hvor du vil have pivottabellen placeret.
+
+![](../logistiskregression_filer/pivottabel1.png)
+
+* Indstil pivottabellen som vist på figuren nedenfor. Bemærk, at du skal trække Blodtryk og Syg ned fra listen for oven til \"Kolonner\", \"Rækker\" og \"Værdier\" i bunden. Under \"Værdier\" vil der i første omgang stå \"Sum af Syg\", så klik på pilen, vælg \"Værdifeltindstillinger\" og ændr det til \"Antal af syg\".
+
+![](../logistiskregression_filer/pivottabel2.png)
+
+* Højreklik på én af værdierne for blodtryk i pivottabellen, vælg \"Grupper\" og vælg indstillinger for intervallerne.
+
+![](../logistiskregression_filer/pivottabel3.png)
+
+Herefter skal det se således ud:
+
+![](../logistiskregression_filer/pivottabel4.png)
+
+:::
+
+## Step 5
+
+Lav lineær regression ud fra data i @tbl-blodtryk og genskab derved denne [figur](../../materialer/logistisk/log-reg.qmd#fig-linear):
+  
+```{r}
+#| fig-cap: Grafen for $p(x)$ tilnærmet med en ret linje.
+#| label: fig-linear
+#| file: ../../materialer/logistisk/R/figur3.R
+```
+  
+Husk at bruge midtpunktet af hvert interval. Brug det program, du normalt anvender til at lave lineære regression.
+
