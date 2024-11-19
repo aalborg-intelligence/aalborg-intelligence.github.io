@@ -1,0 +1,140 @@
+---
+title: "Featureskalering på data fra overvågningsforløb"
+description-meta: 'I forlængelse af forløbet om overvågning ses her på begrebet featureskalering.'
+image: "kNN_forlob_overvaagning_filer/images/to_indbyggere.png"
+
+format:
+    html: 
+      self-contained: true
+      toc: true
+      toc-title: Indhold
+      toc-location: left
+      link-external-newwindow: true
+from: markdown+emoji
+reference-location: margin
+categories:
+  - B-niveau
+  - Kort
+crossref:
+  fig-prefix: figur   # (default is "Figure")
+  tbl-prefix: tabel    # (default is "Table")
+  exm-prefix: eksempel
+  thm-prefix: sætning
+  sec-prefix: afsnit
+  eq-prefix: ''
+  fig-title: Figur
+  exm-title: Eksempel
+  thm-title: Sætning
+  tbl-title: Tabel
+label:
+    fig: Figur
+fig-cap-location: margin
+tab-cap-location: margin
+tbl-cap-location: margin
+execute:
+  echo: false
+  warning: false
+---
+
+
+
+::: {.callout-caution collapse="true" appearance="minimal"}
+### Forudsætninger og tidsforbrug
+Forløbet kræver, at man har gennemgået forløbet
+
++ [Overvågning i Monitorbian](../undervisningsforlkNN_forlob_overvaagning.qmd.qmd)
+
+
+**Tidsforbrug:** ca. 90 minutter.
+
+:::
+
+::: {.purpose}
+
+### Formål
+
+I dette forløb undersøges begrebet **featureskalering** med brug af data fra forløbet om overvågning i Monitorbian.
+
+Man kan læse mere om featureskalering i noten [Afstande om feature-skalering](../materialer/afstande/afstand.qmd){target="_blank"}, men det er ikke en forudsætning for at arbejde med dette forløb.
+
+:::
+
+## De konkrete features
+
+I datasættet er fodarealerne målt i $cm^2$ med værdier fra 138 til 334, mens højderne er målt i $cm$ med værdier fra 62 til 155. Så variationsbredden i fodarealer uden enhed er ca. 200, mens variationsbredden i højder uden enhed er ca. 100. Så når vi med $kNN$ bestemmer nærmeste naboer, vil højden ofte betyde mere end fodarealet, da højderne ligger tættere på hinanden. 
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 1: Illustration af de konkrete features
+
+* Lav et punktplot, hvor datapunkterne for **Fedtmule** er røde, datapunkterne for **Anders And** er blå, og der desuden er et gråt punkt i $(240 \ cm^2, 88 \  cm)$.
+* Tilføj en cirkel i det grå punkt med en radius, så $6$ af de øvrige punkter ligger i cirklen.
+
+:::
+
+## Enheden på data ændres
+
+Men hvad ville der ske, hvis vi anvendte en anden enhed f.eks. for højderne. Hvad hvis vi i stedet målte højderne i $mm$? Så bliver variationsbredden i højderne ca. $1000$, mens variationsbredden for fodarealerne stadig er ca. $200$. Så vi må nu forvente, at fodarealerne betyder mere end højderne, når vi bestemmer nærmeste naboer, da fodarealerne nu ligger tættere på hinanden end højderne.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 2: Illustration med højder i mm
+
+* Lav samme punktplot som før, men nu skal alle y-koordinaterne være 10 gange så store, da det skal regnes i mm. det gælder også det grå punkt.
+* Tilføj også her en cirkel i det grå punkt med en radius, så $6$ af de øvrige punkter ligger i cirklen.
+* Diskuter og vurder, om det fik den betydning, at fodarealerne nu betyder mere end før i forhold til kNN.
+
+:::
+
+Det er naturligvis ikke praktisk, hvis den valgte enhed på data har betydning for, hvilke punkter der er tættest på hinanden.
+
+
+## Metode til at give begge features samme vægt
+
+Som du måske har gættet, vil det bedste nok være, at fodareal og højde betød lige meget.
+
+Det gøres i to trin. Først flyttes data, så både værdierne for fodarealer og værdierne for højder ligger omkring $0$. Så værdier under gennemsnittet bliver negative og værdier over gennemsnittet bliver positive.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 3: Data centreres omkring $(0, 0)$.
+
+* Beregn middelværdien af fodarealerne fra de 20 datapunkter.
+* Træk middelværdien fra værdierne for fodareal for alle 20 datapunkter og det grå punkt.
+* Beregn tilsvarende middelværdien af højderne fra de 20 datapunkter.
+* Træk middelværdien fra værdierne for højde for alle 20 datapunkter og det grå punkt.
+
+:::
+
+Dernæst gøres variationsbredderne nogenlunde lige store. Man kunne dividere alle værdierne for fodarealer med varationsbredden for fodarealerne, og tilsvarende for højderne. Derved ville de to features begge få en variationsbredde på $1$, og dermed være ens. Man vælger dog at gøre noget lidt anderledes, bl.a fordi variationsbredden kun afhænger af to af punkterne, og ikke dem alle. I stedet for at dividere med variationsbredden, divideres med spredningen, hvorefter de fleste dataværdier kommer til at ligge mellem -2 og 2 for begge features.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 4: Variationsbredden gøres nogenlunde ens.
+
+* Beregn stikprøvespredning af fodarealerne fra de 20 datapunkter.
+* Divider de justerede fodarealer fra opgave 3 med spredningen, også værdien for det grå punkt.
+* Beregn tilsvarende stikprøvespredningen af højderne fra de 20 datapunkter.
+* Divider de justerede højder fra opgave 3 med spredningen, også værdien for det grå punkt.
+
+:::
+
+Vi skal have set, hvordan det ser ud.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 5: Illustration med justerede værdier for begge features
+
+* Lav samme punktplot som tidligere, men nu med de justerede værdier.
+* Tilføj også her en cirkel i det grå punkt med en radius, så $6$ af de øvrige punkter ligger i cirklen.
+* Se, om værdierne for begge features nogenlunde ligger mellem -2 og 2, som forventet.
+:::
+
+Denne metode er en kendt standard til at sørge for, at begge (eller alle, hvis der er flere) features vægtes lige meget, så man undgår at den vælge enhed afgør, om den ene eller anden anden feature bliver dominerende.
+
+F.eks. bruger programmet Orange, som du anvendte i forløbet [Overvågning i Monitorbian](../undervisningsforlkNN_forlob_overvaagning.qmd.qmd) denne form for featureskalering.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 6: Ekstra
+
+* Overvej, om centreringen i opgave 3 er nødvendig.
+* Overvej, hvordan punkter og cirkel vil placere sig uden justeringen i opgave 3.
+* Lav illustrationen uden justeringen omkring $(0,0)$, men stadig med divisionen med spredningen for hver feature.
+:::
+
+Så justeringen omkring $(0,0)$ er faktisk ikke nødvendig, men indgår alligevel ofte i featureskalering, så data som standard ligger mellem -2 og 2.
