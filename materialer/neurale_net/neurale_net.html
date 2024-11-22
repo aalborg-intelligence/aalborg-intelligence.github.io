@@ -203,26 +203,6 @@ window.Quarto = {
   <li><a href="#sec-opdatering_rs" id="toc-sec-opdatering_rs" class="nav-link" data-scroll-target="#sec-opdatering_rs">Opdatering af <span class="math inline">\(r\)</span>- og <span class="math inline">\(s\)</span>-vægtene</a></li>
   <li><a href="#video-kunstige-neurale-netværk-7" id="toc-video-kunstige-neurale-netværk-7" class="nav-link" data-scroll-target="#video-kunstige-neurale-netværk-7">VIDEO: Kunstige neurale netværk 7</a></li>
   </ul></li>
-  <li><a href="#sec-bogstaver_til_indekser" id="toc-sec-bogstaver_til_indekser" class="nav-link" data-scroll-target="#sec-bogstaver_til_indekser">Fra bogstaver til indekser</a>
-  <ul class="collapse">
-  <li><a href="#sec-feedforward_indekser" id="toc-sec-feedforward_indekser" class="nav-link" data-scroll-target="#sec-feedforward_indekser">Feedforward med indekser</a></li>
-  <li><a href="#sec-backpropagation_indekser" id="toc-sec-backpropagation_indekser" class="nav-link" data-scroll-target="#sec-backpropagation_indekser">Backpropagation med indekser</a>
-  <ul class="collapse">
-  <li><a href="#sec-opdatering_lag4" id="toc-sec-opdatering_lag4" class="nav-link" data-scroll-target="#sec-opdatering_lag4">Opdateringsregler for lag <span class="math inline">\(4\)</span></a></li>
-  <li><a href="#sec-opdatering_lag3" id="toc-sec-opdatering_lag3" class="nav-link" data-scroll-target="#sec-opdatering_lag3">Opdateringsregler for lag <span class="math inline">\(3\)</span></a></li>
-  <li><a href="#sec-opdatering_lag2" id="toc-sec-opdatering_lag2" class="nav-link" data-scroll-target="#sec-opdatering_lag2">Opdateringsregler for lag <span class="math inline">\(2\)</span></a></li>
-  </ul></li>
-  <li><a href="#var-det-så-egentlig-smart-med-alle-de-indekser" id="toc-var-det-så-egentlig-smart-med-alle-de-indekser" class="nav-link" data-scroll-target="#var-det-så-egentlig-smart-med-alle-de-indekser">Var det så egentlig smart med alle de indekser?</a></li>
-  </ul></li>
-  <li><a href="#sec-NN_generelt" id="toc-sec-NN_generelt" class="nav-link" data-scroll-target="#sec-NN_generelt">Kunstige neurale netværk helt generelt</a>
-  <ul class="collapse">
-  <li><a href="#backpropagation---generelt" id="toc-backpropagation---generelt" class="nav-link" data-scroll-target="#backpropagation---generelt">Backpropagation - generelt</a>
-  <ul class="collapse">
-  <li><a href="#opdateringsregler-i-outputlaget" id="toc-opdateringsregler-i-outputlaget" class="nav-link" data-scroll-target="#opdateringsregler-i-outputlaget">Opdateringsregler i outputlaget</a></li>
-  <li><a href="#opdateringsregler-i-et-vilkårligt-skjult-lag" id="toc-opdateringsregler-i-et-vilkårligt-skjult-lag" class="nav-link" data-scroll-target="#opdateringsregler-i-et-vilkårligt-skjult-lag">Opdateringsregler i et vilkårligt skjult lag</a></li>
-  </ul></li>
-  <li><a href="#stokastisk-gradientnedstigning" id="toc-stokastisk-gradientnedstigning" class="nav-link" data-scroll-target="#stokastisk-gradientnedstigning">Stokastisk gradientnedstigning</a></li>
-  </ul></li>
   <li><a href="#valg-af-tabsfunktion" id="toc-valg-af-tabsfunktion" class="nav-link" data-scroll-target="#valg-af-tabsfunktion">Valg af tabsfunktion</a></li>
   <li><a href="#billedgenkendelse-og-kunstige-neurale-netværk" id="toc-billedgenkendelse-og-kunstige-neurale-netværk" class="nav-link" data-scroll-target="#billedgenkendelse-og-kunstige-neurale-netværk">Billedgenkendelse og kunstige neurale netværk</a></li>
   <li><a href="#videre-læsning" id="toc-videre-læsning" class="nav-link" data-scroll-target="#videre-læsning">Videre læsning</a></li>
@@ -409,9 +389,12 @@ t=
 <p>Det kan vi nu bruge til at definere det, man kalder for en <em>error-</em> eller tabsfunktion <span class="math inline">\(E\)</span>. For et givet input <span class="math inline">\(\vec{x}\)</span> med target-værdi <span class="math inline">\(t\)</span> og hvor netværket giver outputværdien <span class="math inline">\(o\)</span> definerer vi tabsfunktionen <span class="math inline">\(E\)</span> på denne måde: <span id="eq-error_func"><span class="math display">\[
 E = \frac{1}{2}(t-o)^2
 \tag{12}\]</span></span> Bemærk, at hvis der er stor forskel på <span class="math inline">\(t\)</span> og <span class="math inline">\(o\)</span> (hvilket vi jo ikke er interesseret i), så vil fejlen også være stor. Og omvendt hvis der er lille forskel på <span class="math inline">\(t\)</span> og <span class="math inline">\(o\)</span>, så vil fejlen være lille. Desuden vil fortegnet på fejlen forsvinde, fordi vi opløfter i anden. At vi ganger med <span class="math inline">\(1/2\)</span> viser sig bekvemt senere, men det er i princippet underordnet.</p>
-<p>I virkeligheden vil man have rigtige mange træningsdata med tilhørende target- og outputværdier. Forestil dig at vi nummerer alle disse target- og outputværdier på følgende måde: <span class="math display">\[(t_1, o_1), (t_2, o_2), (t_3, o_3), \dots, (t_n, o_n)\]</span> Og da vil man definere tabsfunktionen ved at lægge alle de kvadrerede fejl sammen: <span class="math display">\[\begin{align*}
+<p>I virkeligheden vil man have rigtige mange træningsdata med tilhørende target- og outputværdier. Forestil dig at vi nummerer alle disse target- og outputværdier på følgende måde: <span class="math display">\[(t_1, o_1), (t_2, o_2), (t_3, o_3), \dots, (t_n, o_n)\]</span> Og da vil man definere tabsfunktionen ved at lægge alle de kvadrerede fejl sammen: <span class="math display">\[
+\begin{aligned}
 E &amp;= \frac{1}{2} ((t_1-o_1)^2+(t_2-o_2)^2+\cdots+(t_n-o_n)^2) \\ &amp;= \frac{1}{2} \sum_{i=1}^n (t_i-o_i)^2
-\end{align*}\]</span> Vi vil dog se på det tilfælde, hvor vi hele tiden ser på et træningseksempel ad gangen og på den baggrund opdaterer vægtene. Derfor vil vi begrænse os til at se på fejlfunktionen i (<a href="#eq-error_func" class="quarto-xref">12</a>).</p>
+\end{aligned}
+\]</span></p>
+<p><strong>Det korrekte er at bruge denne tabsfunktion, men for at holde tingene simple, vælger vi her kun at se på det tilfælde, hvor vi hele tiden ser på et træningseksempel ad gangen og på den baggrund opdaterer vægtene. Altså vil vi begrænse os til at se på tabsfunktionen i (<a href="#eq-error_func" class="quarto-xref">12</a>).</strong></p>
 <p>Ønsket er nu, at bestemme biasene og vægtene (lad os bare samlet set kalde dem for vægtene fremover): <span class="math display">\[
 r_0, r_1, r_2, r_3, r_4, s_0, s_1, s_2, s_3, s_4, v_0, v_1, v_2, u_0, u_1, u_2, w_0, w_1, w_2
 \]</span> sådan at tabsfunktionen <span class="math inline">\(E\)</span> bliver så lille som mulig. Det giver jo god mening! Find de vægte som gør, at netværket begår så lille en fejl, som overhovedet mulig. Ja da - det er det, vi gør! Vi betragter nu tabsfunktionen, som en funktion af alle vægtene: <span class="math display">\[\begin{align*}
@@ -703,727 +686,14 @@ s_4 &amp;\leftarrow s_4 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1
 <h2 class="anchored" data-anchor-id="video-kunstige-neurale-netværk-7">VIDEO: Kunstige neurale netværk 7</h2>
 <p>I denne video forklares hvordan <span class="math inline">\(r\)</span>-vægtene opdateres.</p>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/fUFH8hVvGMU" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
-</section>
-</section>
-<section id="sec-bogstaver_til_indekser" class="level1 page-columns page-full">
-<h1>Fra bogstaver til indekser</h1>
-<p>Det står på nuværende tidspunkt nok klart for de fleste, at den notation, som vi har anvendt i de foregående afsnit, er en lille smule tung. Der er bare rigtig mange bogstaver, og det kan være svært at huske om et givet bogstav betegner en outputværdi fra en neuron eller, om det er en vægt. Desuden skalerer notationen ufattelig dårligt! Forestil dig, at vi tilføjer <span class="math inline">\(2-3\)</span> ekstra lag til vores netværk - det bliver svært at blive ved med at finde nye bogstaver!</p>
-<p>Derfor griber man traditionelt set notationen i forbindelse med kunstige neurale netværk lidt anderledes an, så det skalerer bedre, og så det bliver nemmere at læse (i hvert tilfælde når man lige har vænnet sig til de ekstra indekser, som vi bliver nødt til at indføre).</p>
-<p>Lad os se på netværket i <a href="#fig-netvaerk3" class="quarto-xref">figur&nbsp;7</a>. Dette netværk har <span class="math inline">\(3\)</span> outputværdier i stedet for én, og der er ændret på antallet af neuroner i det ene af de skjulte lag i forhold til tidligere.</p>
-<div id="fig-netvaerk3" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-netvaerk3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/netvaerk3.jpg" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-netvaerk3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;7: Kunstigt neuralt netværk med flere outputneuroner.
-</figcaption>
-</figure>
-</div>
-<p>Hvert lag i netværket er nu nummeret fortløbende fra <span class="math inline">\(1\)</span> til <span class="math inline">\(4\)</span>. Desuden giver vi nu en samlet betegnelse for den værdi, som hver neuron "spytter ud". F.eks. vil den <span class="math inline">\(3.\)</span> neuron i det <span class="math inline">\(2.\)</span> lag "outputte" eller "fyre" værdien <span class="math display">\[
-a_3^{(2)}
-\]</span> Det vil altså sige, at det tal, som står hævet i parentesen, refererer til laget og det tal, som er sænket, refererer til nummeret på rækken i det givne lag.</p>
-<p>Bemærk også at inputværdierne i det første lag nu har to forskellige betegnelser for det samme: <span class="math display">\[
-x_i  =a_i^{(1)}
-\]</span> og tilsvarende har outputværdierne i det sidste og fjerde lag også to forskellige betegnelser: <span class="math display">\[
-y_i  =a_i^{(4)}
-\]</span> Lad os nu se på hvordan <strong>feedforward</strong> virker med vores nye notation. For det første er vi nødt til at være lidt smartere end tidligere i forhold til, hvad vi kalder vores vægte og bias. Der er tradition for, at man navngiver vægtene, som det ses på <a href="#fig-w_jik" class="quarto-xref">figur&nbsp;8</a>.</p>
-<div id="fig-w_jik" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-w_jik-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/w_jik.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-w_jik-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;8: Navngivning af vægte.
-</figcaption>
-</figure>
-</div>
-<p>Her er tanken, at vi gerne vil beregne outputværdien fra den <span class="math inline">\(j\)</span>’te neuron i det <span class="math inline">\(k\)</span>’te lag. Det gør vi ved at vægte alle outputværdierne fra det foregående lag: (<span class="math inline">\(k-1\)</span>). Den vægt, som vi ganger outputværdien fra den <span class="math inline">\(i\)</span>’te neuron i det <span class="math inline">\((k-1)'te\)</span> lag (<span class="math inline">\(a_i^{(k-1)}\)</span>) med, og som skal bruges for at beregne <span class="math inline">\(a_j^{(k)}\)</span>, vælger vi at kalde for <span class="math display">\[
-w_{ji}^{(k)}
-\]</span> Hvis man tænker på, at vi skal <em>til</em> række <span class="math inline">\(j\)</span> i <em>lag</em> <span class="math inline">\(k\)</span> <em>fra</em> række <span class="math inline">\(i\)</span>, så kan man måske huske på notationen sådan her: <span class="math display">\[
-w_{\textrm{til fra}}^{(\textrm{lag})}
-\]</span> Se også hvordan det passer med <a href="#fig-w_jik" class="quarto-xref">figur&nbsp;8</a>.</p>
-<section id="sec-feedforward_indekser" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="sec-feedforward_indekser">Feedforward med indekser</h2>
-<p>Vi vil nu se på, hvordan de forskellige <span class="math inline">\(a_j^{(k)}\)</span>-værdier beregnes. Det vil sige, at vi altså skal se på, hvordan de forskellige feedforward-ligninger ser ud med vores nye notation.</p>
-<div id="fig-udregn_a_1_2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-udregn_a_1_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/udregn_a_1-2.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-udregn_a_1_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;9: Udregning af <span class="math inline">\(a_1^{(2)}\)</span>.
-</figcaption>
-</figure>
-</div>
-<p>Lad os se på et konkret eksempel, så bliver det lidt nemmere at forholde sig til. Vi starter med at udregne outputværdien <span class="math inline">\(a_1^{(2)}\)</span> for den første neuron i det andet lag. Denne neuron får input fra alle neuroner i det foregående lag (som her er inputlaget). Bruger vi den notation for vægtene, som vi lige har indført, så starter vi med at beregne: <span class="math display">\[
-z_1^{(2)} = w_{11}^{(2)} \cdot x_1 + w_{12}^{(2)} \cdot x_2 + w_{13}^{(2)} \cdot x_3 + w_{14}^{(2)} \cdot x_4 + b_1^{(2)}
-\]</span> Der er to ting at bemærke her: 1) Vi vælger, at kalde udtrykket på højreside for <span class="math inline">\(z_1^{(2)}\)</span> og, 2) vi har kaldt biasen for <span class="math inline">\(b_1^{(2)}\)</span>.</p>
-<p>Bruger vi nu de mere generelle udtryk for inputværdierne <span class="math inline">\(a_1^{(1)}, a_2^{(1)}, \dots, a_4^{(1)}\)</span> kan vi skrive: <span class="math display">\[\begin{align}
-z_1^{(2)} &amp;= w_{11}^{(2)} \cdot a_1^{(1)} + w_{12}^{(2)} \cdot a_2^{(1)} + w_{13}^{(2)} \cdot a_3^{(1)} + w_{14}^{(2)} \cdot a_4^{(1)} + b_1^{(2)} \\
-&amp;= \sum_{i=1}^{4} w_{1i}^{(2)} a_i^{(1)} +  b_1^{(2)}
-\end{align}\]</span> Og endelig finder vi outputværdien <span class="math inline">\(a_1^{(2)}\)</span> for den første neuron i det andet lag ved som tidligere at anvende sigmoid-funktionen på ovenstående udtryk: <span class="math display">\[\begin{align}
-a_1^{(2)} &amp;= \sigma(z_1^{(2)}) \\
-&amp;= \sigma \left( \sum_{i=1}^{4} w_{1i}^{(2)} a_i^{(1)} +  b_1^{(2)} \right)
-\end{align}\]</span> Det her er faktisk notationsmæssigt selve idéen. Folder vi det ud til hele det andet lag får vi derfor:</p>
-<div class="callout callout-style-simple callout-caution no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Feedforwardligninger til lag 2
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Beregn først: <span class="math display">\[\begin{align}
-z_1^{(2)} &amp;= \sum_{i=1}^{4} w_{1i}^{(2)} a_i^{(1)} +  b_1^{(2)} \\
-&amp; \\
-z_2^{(2)} &amp;=\sum_{i=1}^{4} w_{2i}^{(2)} a_i^{(1)} +  b_2^{(2)} \\
-&amp; \\
-z_3^{(2)} &amp;= \sum_{i=1}^{4} w_{3i}^{(2)} a_i^{(1)} +  b_3^{(2)} \\
-\end{align}\]</span> Outputværdierne for neuroner i det andet lag udregnes dernæst på denne måde: <span class="math display">\[\begin{align}
-a_1^{(2)} &amp;= \sigma(z_1^{(2)}) \\
-&amp; \\
-a_2^{(2)} &amp;= \sigma(z_2^{(2)}) \\
-&amp;\\
-a_3^{(2)} &amp;= \sigma(z_3^{(2)}) \\
-\end{align}\]</span></p>
-</div>
-</div>
-</div>
-<p>Og vover vi pelsen, kan vi helt generelt skrive:</p>
-<div class="callout callout-style-simple callout-caution no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Feedforward-ligninger til lag 2
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Beregn først: <span class="math display">\[\begin{align}
-z_j^{(2)} = \sum_{i=1}^{4} w_{ji}^{(2)} a_i^{(1)} +  b_j^{(2)}
-\end{align}\]</span> Outputværdierne for neuroner i det andet lag udregnes dernæst på denne måde: <span class="math display">\[\begin{align}
-a_j^{(2)} &amp;= \sigma(z_j^{(2)})
-\end{align}\]</span> for <span class="math inline">\(j \in \{1, 2, 3 \}\)</span>.</p>
-</div>
-</div>
-</div>
-<p>Fordelen ved denne notation er, at det nu er utrolig nemt at opskrive feedforward-ligningerne for lag 3 og 4 - det er blot nogle indekser, som skal ændres lidt. I det tredje lag er der to neuroner, hvis outputværdier beregnes på denne måde:</p>
-<div class="callout callout-style-simple callout-caution no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Feedforward-ligninger til lag 3
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Beregn først: <span id="eq-lag3"><span class="math display">\[
-z_j^{(3)} = \sum_{i=1}^{3} w_{ji}^{(3)} a_i^{(2)} +  b_j^{(3)}
-\tag{20}\]</span></span> Outputværdierne for neuroner i det tredje lag udregnes dernæst på denne måde: <span class="math display">\[\begin{align}
-a_j^{(3)} &amp;= \sigma(z_j^{(3)})
-\end{align}\]</span> for <span class="math inline">\(j \in \{1, 2 \}\)</span>.</p>
-</div>
-</div>
-</div>
-<p>Og endelig beregnes outputtet fra hele netværket i det fjerde lag:</p>
-<div class="callout callout-style-simple callout-caution no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Feedforward-ligninger til lag 4
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Udregn først: <span id="eq-lag4"><span class="math display">\[
-z_j^{(4)} = \sum_{i=1}^{2} w_{ji}^{(4)} a_i^{(3)} +  b_j^{(4)}
-\tag{21}\]</span></span> Outputværdierne for neuroner i det tredje lag udregnes dernæst på denne måde: <span class="math display">\[\begin{align}
-y_j = a_j^{(4)} &amp;= \sigma(z_j^{(4)})
-\end{align}\]</span> for <span class="math inline">\(j \in \{1, 2, 3 \}\)</span>.</p>
-</div>
-</div>
-</div>
-<p>Det fremgår nu tydeligt, at feedforward-ligningerne er på fuldstændig samme form, og vi vil derfor helt generelt kunne skrive:</p>
-<div class="callout callout-style-simple callout-caution no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Feedforward-ligninger generelt
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-10" class="callout-10-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Beregn først: <span class="math display">\[\begin{align}
-z_j^{(k)} = \sum_{i} w_{ji}^{(k)} a_i^{(k-1)} +  b_j^{(k)}
-\end{align}\]</span> Outputværdierne for neuroner i det <span class="math inline">\(k\)</span>’te lag udregnes dernæst på denne måde: <span class="math display">\[\begin{align}
-a_j^{(k)} &amp;= \sigma(z_j^{(k)})
-\end{align}\]</span> for <span class="math inline">\(k \in \{2, 3, 4 \}\)</span>.</p>
-</div>
-</div>
-</div>
-<p>Når man bruger feedforward, starter man altså med at udregne outputværdierne for det første skjulte lag, dernæst for det andet skjulte lag og så videre, indtil man når til outputværdierne for selve netværket (deraf navnet: <em>feedforward</em> ). Bemærk her, at det ikke giver mening at udregne <span class="math inline">\(a_j^{(1)}\)</span>, fordi det svarer til inputværdierne til netværket.</p>
-</section>
-<section id="sec-backpropagation_indekser" class="level2">
-<h2 class="anchored" data-anchor-id="sec-backpropagation_indekser">Backpropagation med indekser</h2>
-<p>Lad os nu se på hvordan backpropagation fungerer. Vi skal altså have opskrevet vores opdateringsregler med den nye notation, og vi vil gribe det an, ligesom vi gjorde det i <a href="#sec-backpropagation_bogstaver" class="quarto-xref">afsnit&nbsp;4</a>. Nemlig ved at starte i det sidste lag (her lag <span class="math inline">\(4\)</span>) og finde opdateringsreglerne for de vægte og bias, som har direkte indflydelse på outputværdierne fra lag <span class="math inline">\(4\)</span>.</p>
-<section id="sec-opdatering_lag4" class="level3">
-<h3 class="anchored" data-anchor-id="sec-opdatering_lag4">Opdateringsregler for lag <span class="math inline">\(4\)</span></h3>
-<p>Vi er altså i første omgang på jagt efter <span class="math display">\[
-\frac{\partial E}{\partial w_{ji}^{(4)}} \quad \text{og} \quad \frac{\partial E}{\partial b_j^{(4)}},
-\]</span> for <span class="math inline">\(j \in \{1, 2, 3\}\)</span>, <span class="math inline">\(i \in \{1, 2\}\)</span>. Tabsfunktionen <span class="math inline">\(E\)</span>, som hører til netværket i <a href="#fig-netvaerk3" class="quarto-xref">figur&nbsp;7</a>, bliver her: <span id="eq-E_indekser"><span class="math display">\[
-E=\frac{1}{2} \sum_{j=1}^3 \left( t_j-y_j \right)^2 = \frac{1}{2} \sum_{j=1}^3 \left( t_j-a_j^{(4)} \right)^2
-\tag{22}\]</span></span> hvor igen <span class="math inline">\(t_j\)</span> er den ønskede target-værdi for den <span class="math inline">\(j\)</span>’te outputneuron.</p>
-<p>Lad os starte med at bestemme <span class="math inline">\(\frac{\partial E}{\partial w_{ji}^{(4)}}\)</span>. Vi må derfor først se på, hvordan <span class="math inline">\(w_{ji}^{(4)}\)</span> påvirker tabsfunktionen <span class="math inline">\(E\)</span>. Da <span class="math inline">\(w_{ji}^{(4)}\)</span> kun indgår i udtrykket for beregningen af <span class="math inline">\(z_j^{(4)}\)</span>, som igen bruges til beregningen af <span class="math inline">\(a_j^{(4)}\)</span>, som dernæst direkte påvirker tabsfunktionen, kan vi skrive: <span class="math display">\[
-w_{ji}^{(4)} \rightarrow z_j^{(4)} \rightarrow a_j^{(4)} \rightarrow E
-\]</span> Bruger vi først kædereglen én gang, får vi derfor <span id="eq-partialE_w_ji_4"><span class="math display">\[
-\frac{\partial E}{\partial w_{ji}^{(4)}} = \frac{\partial E}{\partial z_j^{(4)}} \cdot \frac{\partial z_j^{(4)}}{\partial w_{ji}^{(4)}}
-\tag{23}\]</span></span> og bruges kædereglen igen, kan første faktor udfoldes yderligere <span class="math display">\[
-\frac{\partial E}{\partial z_j^{(4)}} = \frac{\partial E}{\partial a_j^{(4)}} \cdot  \frac{\partial a_j^{(4)}}{\partial z_j^{(4)}}
-\]</span> Lad os starte med at udregne <span class="math inline">\(\frac{\partial E}{\partial z_j^{(4)}}\)</span> ved at udregne hver faktor på højresiden i ovenstående udtryk for sig. Fra (<a href="#eq-E_indekser" class="quarto-xref">22</a>) får vi, at <span class="math display">\[
-E=\frac{1}{2} \sum_{j=1}^3 \left( t_j-a_j^{(4)} \right)^2 = \frac{1}{2} \left( \left( t_1-a_1^{(4)} \right)^2 + \left( t_2-a_2^{(4)} \right)^2+ \left( t_3-a_3^{(4)}\right)^2 \right)
-\]</span> Hvis vi f.eks. skal differentiere ovenstående med hensyn til <span class="math inline">\(a_2^{(4)}\)</span>, kan vi se at alle de led, som ikke indeholder <span class="math inline">\(a_2^{(4)}\)</span>, vil være at betragte som konstanter, når vi differentierer - og når vi differentierer konstanter, får vi som bekendt <span class="math inline">\(0\)</span>. Derfor får vi, at <span class="math display">\[
-\frac{\partial E}{\partial a_2^{(4)}} = \frac{1}{2}\cdot 2 \cdot (t_2-a_2^{(4)})\cdot (-1) = -(t_2-a_2^{(4)})
-\]</span> På tilsvarende vis har vi derfor generelt, at <span id="eq-partialE_a_j_4"><span class="math display">\[
-\frac{\partial E}{\partial a_j^{(4)}} = -(t_j-a_j^{(4)})
-\tag{24}\]</span></span> Vi ved også, at <span class="math display">\[
-a_j^{(4)} = \sigma(z_j^{(4)})
-\]</span> Og bruger vi endnu en gang resultatet fra <a href="#thm-sigmoid_diff" class="quarto-xref">sætning&nbsp;1</a> får vi, at <span id="eq-partial_a_j^(z)_z_j^(4)"><span class="math display">\[
-\frac{\partial a_j^{(4)}}{\partial z_j^{(4)}}  = \sigma'(z_j^{(4)})= \sigma(z_j^{(4)}) \cdot (1-\sigma(z_j^{(4)}))= a_j^{(4)}\cdot (1-a_j^{(4)})
-\tag{25}\]</span></span> Indtil videre har vi altså, at <span class="math display">\[\begin{align}
-\frac{\partial E}{\partial z_j^{(4)}} &amp;= \frac{\partial E}{\partial a_j^{(4)}} \cdot  \frac{\partial a_j^{(4)}}{\partial z_j^{(4)}} \\
-&amp;=-(t_j-a_j^{(4)}) \cdot  a_j^{(4)}\cdot (1-a_j^{(4)})
-\end{align}\]</span> I forhold til det videre arbejde viser det sig hensigtsmæssigt, at lave en samlet betegnelse for <span class="math display">\[\begin{align}
-\frac{\partial E}{\partial z_j^{(4)}}  
-&amp;=-(t_j-a_j^{(4)}) \cdot  a_j^{(4)}\cdot (1-a_j^{(4)})
-\end{align}\]</span> Vi sætter derfor <span class="math display">\[
-\delta_j^{(4)} = \frac{\partial E}{\partial z_j^{(4)}}  = -(t_j-a_j^{(4)}) \cdot a_j^{(4)} \cdot (1-a_j^{(4)})
-\]</span> Udtrykket <span class="math inline">\(\delta_j^{(4)}\)</span> kalder man også for fejlleddet for det fjerde lag, men det kommer vi tilbage til senere.</p>
-<p>Vi har nu fundet den første faktor i (<a href="#eq-partialE_w_ji_4" class="quarto-xref">23</a>), og mangler derfor kun at bestemme <span class="math inline">\(\frac{\partial z_j^{(4)}}{\partial w_{ji}^{(4)}}\)</span>. Bruger vi (<a href="#eq-lag4" class="quarto-xref">21</a>) ser vi, at <span class="math display">\[
-z_j^{(4)} =  \sum_{i=1}^{2} w_{ji}^{(4)} a_i^{(3)} +  b_j^{(4)}  =
-w_{j1}^{(4)} a_1^{(3)}+ w_{j2}^{(4)} a_2^{(3)} +  b_j^{(4)}
-\]</span> Skal vi f.eks. differentiere dette udtryk med hensyn til <span class="math inline">\(w_{j1}^{(4)}\)</span>, får vi (fordi de fleste led i ovenstående, vil være at betragte som konstanter) <span class="math display">\[
-\frac{\partial z_j^{(4)}}{\partial w_{j1}^{(4)}} =  a_1^{(3)}
-\]</span> Og helt tilsvarende hvis vi differentierer med hensyn til <span class="math inline">\(w_{j2}^{(4)}\)</span>, får vi <span class="math display">\[
-\frac{\partial z_j^{(4)}}{\partial w_{j2}^{(4)}} =  a_2^{(3)}
-\]</span> Generelt har vi derfor, at <span id="eq-partial_z_j_4_w_ji_4"><span class="math display">\[
-\frac{\partial z_j^{(4)}}{\partial w_{ji}^{(4)}} = a_i^{(3)}
-\tag{26}\]</span></span></p>
-<p>Samler vi nu de tre udtryk, som vi netop har udledt og indsætter i (<a href="#eq-partialE_w_ji_4" class="quarto-xref">23</a>) får vi <span class="math display">\[
-\frac{\partial E}{\partial w_{ji}^{(4)}} =  -(t_j-a_j^{(4)}) \cdot a_j^{(4)} \cdot (1-a_j^{(4)}) \cdot a_i^{(3)}
-\]</span> og med den lidt kortere notation, som vi indførte ovenfor, kan vi nu skrive <span class="math display">\[
-\frac{\partial E}{\partial w_{ji}^{(4)}} =  \delta_j^{(4)} \cdot a_i^{(3)}
-\]</span> For at finde opdateringsreglerne for biasene, må vi først bestemme de partielle afledede af <span class="math inline">\(E\)</span> med hensyn til <span class="math inline">\(b_j^{(4)}\)</span>. På helt tilsvarende vis får vi, at <span class="math display">\[
-\frac{\partial E}{\partial b_j^{(4)}} = \frac{\partial E}{\partial z_j^{(4)}} \cdot \frac{\partial z_j^{(4)}}{\partial b_j^{(4)}}
-\]</span> Vi ved allerede, at <span class="math display">\[\begin{align}
-\frac{\partial E}{\partial z_j^{(4)}}  = \delta_j^{(4)}
-\end{align}\]</span> og ser man på ligningen i (<a href="#eq-lag4" class="quarto-xref">21</a>), ses det nemt, at <span class="math display">\[
-\frac{\partial z_j^{(4)}}{\partial b_j^{(4)}} = 1
-\]</span> og derfor har vi, at <span class="math display">\[
-\frac{\partial E}{\partial b_j^{(4)}}  =\delta_j^{(4)}
-\]</span> Opdateringsreglerne for de vægte og bias, som hører til outputlaget (lag <span class="math inline">\(4\)</span>) er derfor <span class="math display">\[
-w_{ji}^{(4)} \leftarrow w_{ji}^{(4)} - \eta \cdot \frac{\partial E}{\partial w_{ji}^{(4)}} = w_{ji}^{(4)} - \eta \cdot \delta_j^{(4)} \cdot a_i^{(3)}
-\]</span> og <span class="math display">\[
-b_j^{(4)} \leftarrow b_j^{(4)} - \eta \cdot \frac{\partial E}{\partial b_j^{(4)}}  = b_j^{(4)} - \eta \cdot \delta_j^{(4)}
-\]</span> Vi kan altså opsummere:</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Opdateringsregler til vægte og bias i outputlaget (lag 4)
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-11" class="callout-11-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Vægtene i outputlaget opdateres på denne måde: <span class="math display">\[
-w_{ji}^{(4)} \leftarrow w_{ji}^{(4)} - \eta \cdot \delta_j^{(4)} \cdot a_i^{(3)}
-\]</span> Biasene i outputlaget opdateres på denne måde: <span class="math display">\[
-b_j^{(4)} \leftarrow b_j^{(4)} - \eta \cdot \delta_j^{(4)}
-\]</span> hvor <span id="eq-error_term_j_4"><span class="math display">\[
-\delta_j^{(4)} = \frac{\partial E}{\partial z_j^{(4)}}= -(t_j-a_j^{(4)}) \cdot a_j^{(4)} \cdot (1-a_j^{(4)})
-\tag{27}\]</span></span></p>
-</div>
-</div>
-</div>
-<p>Udtrykket <span class="math inline">\(\delta_j^{(4)}\)</span> kalder man, som nævnt tidligere, også for fejlleddet i den <span class="math inline">\(j\)</span>’te række i det fjerde lag, og man kan se på ovenstående opdateringsregler, at dette fejlled netop indgår i opdateringen af både vægtene og biasene. Faktisk kan vi, præcis som vi gjorde det tidligere, tillægge dette fejlled en intuitiv god mening. Det kommer vi tilbage til igen senere!</p>
-<p>Bemærk, at hvis vi i vores netværk starter med at vælge mere eller mindre tilfældige vægte, så kan vi på baggrund af dem bruge feedforwardligningerne til at udregne, <span class="math inline">\(a_j^{(4)}\)</span>- og <span class="math inline">\(a_i^{(3)}\)</span>- værdierne. Samtidig kender vi target-værdierne <span class="math inline">\(t_j\)</span>, og vi kan derfor også udregne fejlleddene <span class="math inline">\(\delta_j^{(4)}\)</span>. Vi har altså alt, hvad vi skal bruge for at benytte ovenstående opdateringsregler.</p>
-</section>
-<section id="sec-opdatering_lag3" class="level3">
-<h3 class="anchored" data-anchor-id="sec-opdatering_lag3">Opdateringsregler for lag <span class="math inline">\(3\)</span></h3>
-<p>Vi bevæger os nu et trin længere bagud i netværket og udleder opdateringsreglerne for det næstsidste lag - lag <span class="math inline">\(3\)</span>. Altså skal vi have bestemt <span class="math display">\[
-\frac{\partial E}{\partial w_{ji}^{(3)}} \quad \text{og} \quad \frac{\partial E}{\partial b_j^{(3)}},
-\]</span> for <span class="math inline">\(j \in \{1, 2\}\)</span>, <span class="math inline">\(i \in \{1, 2, 3\}\)</span>. Vi må igen se på, hvordan <span class="math inline">\(w_{ji}^{(3)}\)</span> påvirker tabsfunktionen <span class="math inline">\(E\)</span>. Ser vi på figur <a href="#fig-netvaerk3" class="quarto-xref">figur&nbsp;7</a>, kan vi se, at <span class="math inline">\(w_{ji}^{(3)}\)</span> direkte påvirker <span class="math inline">\(z_j^{(3)}\)</span>, som igen direkte påvirker <span class="math inline">\(a_j^{(3)}\)</span>. Nu vil den <span class="math inline">\(j\)</span>’te neuron i det tredje lag fyre værdien <span class="math inline">\(a_j^{(3)}\)</span> til alle neuroner i det fjerde lag. Altså vil <span class="math inline">\(a_j^{(3)}\)</span> påvirke <span class="math inline">\(z_1^{(4)}, z_2^{(4)}\)</span> og <span class="math inline">\(z_3^{(4)}\)</span>, som bruges til beregning af <span class="math inline">\(a_1^{(4)}, a_2^{(4)}\)</span> og <span class="math inline">\(a_3^{(4)}\)</span>, som så igen vil påvirke tabsfunktionen <span class="math inline">\(E\)</span>. Det kan illustreres på denne måde <span class="math display">\[
-\begin{matrix}
-&amp; &amp; &amp; &amp; z_1^{(4)} \rightarrow a_1^{(4)} &amp; &amp; \\
-&amp; &amp; &amp; \nearrow  &amp; &amp;  \searrow &amp; \\
-w_{ji}^{(3)} &amp; \rightarrow &amp; z_j^{(3)} \rightarrow a_j^{(3)} &amp; \rightarrow &amp;
-z_2^{(4)} \rightarrow a_2^{(4)} &amp; \rightarrow &amp; E \\
-&amp; &amp; &amp; \searrow &amp; &amp;  \nearrow &amp;  \\
-&amp; &amp; &amp; &amp; z_3^{(4)} \rightarrow a_3^{(4)} &amp; &amp; \\
-\end{matrix}
-\]</span> I første omgang kan vi skrive <span id="eq-partialE_w_ji_3"><span class="math display">\[
-\frac{\partial E}{\partial w_{ji}^{(3)}} = \frac{\partial E}{\partial z_j^{(3)}} \cdot \frac{\partial z_j^{(3)}}{\partial w_{ji}^{(3)}}
-\tag{28}\]</span></span> og så gentagne gange bruge kædereglen til at udfolde dette udtryk.</p>
-<p>Lad os starte med det nemmeste, nemlig <span class="math inline">\(\frac{\partial z_j^{(3)}}{\partial w_{ji}^{(3)}}\)</span>. Ser vi på definitionen af <span class="math inline">\(z_j^{(3)}\)</span> i (<a href="#eq-lag3" class="quarto-xref">20</a>), kan vi argumentere helt tilsvarende, som da vi ovenfor udledte udtrykket i (<a href="#eq-partial_z_j_4_w_ji_4" class="quarto-xref">26</a>) og får <span class="math display">\[
-\frac{\partial z_j^{(3)}}{\partial w_{ji}^{(3)}} = a_i^{(2)}
-\]</span></p>
-<p>Lad os nu kaste os over den første faktor i (<a href="#eq-partialE_w_ji_3" class="quarto-xref">28</a>). Vi kan starte med at udnytte denne lidt overordnede måde, som <span class="math inline">\(z_j^{(3)}\)</span> påvirker <span class="math inline">\(E\)</span> på <span class="math display">\[
-z_j^{(3)} \rightarrow a_j^{(3)} \rightarrow E
-\]</span> Kædereglen giver os derfor i første omgang <span id="eq-partial_E_z_j_3"><span class="math display">\[
-\frac{\partial E}{\partial z_j^{(3)}} = \frac{\partial E}{\partial a_j^{(3)}} \cdot
-\frac{\partial a_j^{(3)}}{\partial z_j^{(3)}}
-\tag{29}\]</span></span> Igen er sidste faktor nem nok, idet <span class="math display">\[
-a_j^{(3)} = \sigma (z_j^{(3)})
-\]</span> og derfor er <span class="math display">\[
-\frac{\partial a_j^{(3)}}{\partial z_j^{(3)}} = \sigma' (z_j^{(3)})=\sigma(z_j^{(3)})\cdot (1-\sigma(z_j^{(3)}))= a_j^{(3)} \cdot (1-a_j^{(3)}),
-\]</span> hvor vi endnu en gang har benyttet <a href="#thm-sigmoid_diff" class="quarto-xref">sætning&nbsp;1</a>.</p>
-<p>Når vi skal bestemme <span class="math inline">\(\frac{\partial E}{\partial a_j^{(3)}}\)</span> kommer vi ikke udenom kædereglen for funktioner af flere variable. Det bliver tydeligt, når vi zoomer ind på hvordan <span class="math inline">\(a_j^{(3)}\)</span> påvirker <span class="math inline">\(E\)</span>: <span class="math display">\[
-\begin{matrix}
-  &amp; &amp; z_1^{(4)} \rightarrow a_1^{(4)} &amp; &amp; \\
-  &amp; \nearrow  &amp; &amp;  \searrow &amp; \\
-  a_j^{(3)} &amp; \rightarrow &amp;
-z_2^{(4)} \rightarrow a_2^{(4)} &amp; \rightarrow &amp; E \\
-&amp; \searrow &amp; &amp;  \nearrow &amp;  \\
-&amp; &amp; z_3^{(4)} \rightarrow a_3^{(4)} &amp; &amp; \\
-\end{matrix}
-\]</span> For at vi senere kan udnytte nogle af de ligninger, som vi udledte i lag <span class="math inline">\(4\)</span>, vil vi faktisk bare nøjes med at se på det, på denne måde: <span class="math display">\[
-\begin{matrix}
-  &amp; &amp; z_1^{(4)} &amp; &amp; \\
-  &amp; \nearrow  &amp; &amp;  \searrow &amp; \\
-  a_j^{(3)} &amp; \rightarrow &amp;
-z_2^{(4)} &amp; \rightarrow &amp; E \\
-&amp; \searrow &amp; &amp;  \nearrow &amp;  \\
-&amp; &amp; z_3^{(4)}  &amp; &amp; \\
-\end{matrix}
-\]</span> Nu er vi endelig klar til at bruge kædereglen for funktioner af flere variable: <span class="math display">\[\begin{align}
-\frac{\partial E}{\partial a_j^{(3)}} &amp;=  \frac{\partial E}{\partial z_1^{(4)}} \cdot \frac{\partial z_1^{(4)}}{\partial a_j^{(3)}}  + \frac{\partial E}{\partial z_2^{(4)}} \cdot \frac{\partial z_2^{(4)}}{\partial a_j^{(3)}} + \frac{\partial E}{\partial z_3^{(4)}} \cdot \frac{\partial z_3^{(4)}}{\partial a_j^{(3)}} \\
-&amp;= \sum_{k=1}^{3}\frac{\partial E}{\partial z_k^{(4)}} \cdot \frac{\partial z_k^{(4)}}{\partial a_j^{(3)}}  
-\end{align}\]</span> Se nu dukker der noget op, som vi har set før! Nemlig det fejlled, som vi definerede i (<a href="#eq-error_term_j_4" class="quarto-xref">27</a>), og som vi allerede har regnet ud, da vi opdaterede vægtene og biasene i lag <span class="math inline">\(4\)</span>. Tænk lige over det - det er faktisk ret fedt! Dvs. at vi kan skrive: <span id="eq-partial_E_a_j_3"><span class="math display">\[
-\begin{aligned}
-\frac{\partial E}{\partial a_j^{(3)}} &amp;= \sum_{k=1}^{3} \delta_k^{(4)} \cdot \frac{\partial z_k^{(4)}}{\partial a_j^{(3)}}  
-\end{aligned}
-\tag{30}\]</span></span> Så mangler vi kun lige at finde <span class="math inline">\(\frac{\partial z_k^{(4)}}{\partial a_j^{(3)}}\)</span>! Fra (<a href="#eq-lag4" class="quarto-xref">21</a>) har vi, at <span class="math display">\[
-z_k^{(4)} = \sum_i w_{ki}^{(4)} a_i^{(3)}+b_k^{(4)}
-\]</span> så <span class="math display">\[
-\frac{\partial z_k^{(4)}}{\partial a_j^{(3)}} = \frac{\partial}{\partial a_j^{(3)}} \left(\sum_i w_{ki}^{(4)} a_i^{(3)}+b_k^{(4)} \right)
-\]</span> Når vi skal differentierer summen i ovenstående udtryk, får vi kun et led med, når <span class="math inline">\(i=j\)</span>, fordi i alle andre tilfælde, vil vi med hensyn til <span class="math inline">\(a_j^{(3)}\)</span> skulle differentiere en konstant. Og da <span class="math display">\[
-\frac{\partial}{\partial a_j^{(3)}}\left ( w_{kj}^{(4)} a_j^{(3)} \right) = w_{kj}^{(4)}
-\]</span> har vi altså, at <span class="math display">\[
-\frac{\partial z_k^{(4)}}{\partial a_j^{(3)}} = w_{kj}^{(4)}
-\]</span> Indsætter vi dette i (<a href="#eq-partial_E_a_j_3" class="quarto-xref">30</a>), har vi nu <span class="math display">\[\begin{align}
-\frac{\partial E}{\partial a_j^{(3)}} = \sum_{k=1}^{3} \delta_k^{(4)} \cdot \frac{\partial z_k^{(4)}}{\partial a_j^{(3)}}  = \sum_{k=1}^{3} \delta_k^{(4)} \cdot w_{kj}^{(4)}
-\end{align}\]</span></p>
-<p>Nu skal vi i første omgang tilbage til (<a href="#eq-partial_E_z_j_3" class="quarto-xref">29</a>) og indsætte det vi netop er kommet frem til: <span class="math display">\[\begin{align}
-\frac{\partial E}{\partial z_j^{(3)}}=\underbrace{\left ( \sum_{k=1}^{3} \delta_k^{(4)} \cdot w_{kj}^{(4)}\right )}_{\frac{\partial E}{\partial a_j^{(3)}}}
-\cdot \underbrace{a_j^{(3)} \cdot (1-a_j^{(3)})}_{\frac{\partial a_j^{(3)}}{\partial z_j^{(3)}}}
-\end{align}\]</span> Som vi gjorde i <a href="#sec-opdatering_lag4" class="quarto-xref">afsnit&nbsp;5.2.1</a>, vil vi også give dette lidt lange udtryk en særlig betegnelse, nemlig <span class="math display">\[\begin{align}
-\delta_j^{(3)} = \frac{\partial E}{\partial z_j^{(3)}}=\left ( \sum_{k=1}^{3} \delta_k^{(4)} \cdot w_{kj}^{(4)}\right )
-\cdot a_j^{(3)} \cdot (1-a_j^{(3)})
-\end{align}\]</span> Det kan vist godt være lidt svært at bevare overblikket her, men nu er vi faktisk i mål! Vi indsætter i (<a href="#eq-partialE_w_ji_3" class="quarto-xref">28</a>) <span class="math display">\[\begin{align}
-\frac{\partial E}{\partial w_{ji}^{(3)}} &amp;= \frac{\partial E}{\partial z_j^{(3)}} \cdot \frac{\partial z_j^{(3)}}{\partial w_{ji}^{(3)}} \\
-&amp;= \delta_j^{(3)} \cdot a_i^{(2)}
-\end{align}\]</span></p>
-<p>Det er nu en smal sag at bestemme <span class="math inline">\(\frac{\partial E}{\partial b_j^{(3)}}\)</span>, da <span class="math display">\[\begin{align}
-\frac{\partial E}{\partial b_j^{(3)}} &amp;= \frac{\partial E}{\partial z_j^{(3)}} \cdot \frac{\partial z_j^{(3)}}{\partial b_j^{(3)}} \\ &amp;= \delta_j^{(3)}\cdot \frac{\partial z_j^{(3)}}{\partial b_j^{(3)}}
-\end{align}\]</span> Fra (<a href="#eq-lag3" class="quarto-xref">20</a>) har vi, at <span class="math display">\[
-z_j^{(3)} = \sum_{i=1}^3 w_{ji}^{(3)} a_i^{(2)} + b_j^{(3)}
-\]</span> og derfor er <span class="math display">\[
-\frac{\partial z_j^{(3)}}{\partial b_j^{(3)}} = 1
-\]</span> Altså får vi <span class="math display">\[\begin{align}
-\frac{\partial E}{\partial b_j^{(3)}} = \delta_j^{(3)}
-\end{align}\]</span> Glæden er stor, da vi nu har alle ingredienser til at opskrive opdateringsreglerne for det tredje lag!</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Opdateringsregler til vægte og bias i lag 3
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-12" class="callout-12-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Vægtene i outputlaget opdateres på denne måde: <span class="math display">\[
-w_{ji}^{(3)} \leftarrow w_{ji}^{(3)} - \eta \cdot \delta_j^{(3)} \cdot a_i^{(2)}
-\]</span> Biasene i outputlaget opdateres på denne måde: <span class="math display">\[
-b_j^{(3)} \leftarrow b_j^{(3)} - \eta \cdot \delta_j^{(3)}
-\]</span> hvor <span id="eq-error_term_j_3"><span class="math display">\[
-\delta_j^{(3)} = \frac{\partial E}{\partial z_j^{(3)}}=\left( \sum_{k=1}^{3}\delta_k^{(4)} \cdot w_{kj}^{(4)}   \right) \cdot a_j^{(3)} \cdot (1-a_j^{(3)})
-\tag{31}\]</span></span></p>
-</div>
-</div>
-</div>
-<p>Bemærk, at udgangspunktet for ovenstående er, at vi først har lavet et feedforward i netværket, så vi har alle <span class="math inline">\(a_i^{(2)}\)</span>- og <span class="math inline">\(a_j^{(3)}\)</span>-værdier. Derudover har vi allerede opdateret vægtene og biasene i lag <span class="math inline">\(4\)</span>. Derfor kender vi også fejleddene <span class="math inline">\(\delta_k^{(4)}\)</span> fra lag <span class="math inline">\(4\)</span>, som indgår i beregningen af <span class="math inline">\(\delta_j^{(3)}\)</span> i (<a href="#eq-error_term_j_3" class="quarto-xref">31</a>). Altså er det muligt at foretage de beregninger, som opdateringsreglerne i lag <span class="math inline">\(3\)</span> kræver.</p>
-</section>
-<section id="sec-opdatering_lag2" class="level3">
-<h3 class="anchored" data-anchor-id="sec-opdatering_lag2">Opdateringsregler for lag <span class="math inline">\(2\)</span></h3>
-<p>Vi er nu fremme ved det sidste lag, hvor vi skal have opdateret vægte og bias (husk på at <span class="math inline">\(a_i^{(1)}\)</span>-værdierne jo ikke skal beregnes, men er inputværdierne til netværket). Den gode nyhed her er, at der absolut intet nyt er under solen! Vi vil derfor heller ikke gå i drabelige deltaljer med alle udregninger her, men blot skitsere idéen.</p>
-<p>Vi er nu på jagt efter <span class="math display">\[
-\frac{\partial E}{\partial w_{ji}^{(2)}} \quad \text{og} \quad \frac{\partial E}{\partial b_j^{(2)}}
-\]</span> og kigger vi på vores netværk i <a href="#fig-netvaerk3" class="quarto-xref">figur&nbsp;7</a> kan vi se følgende afhængigheder: <span class="math display">\[
-\begin{matrix}
-&amp; &amp; &amp; &amp; z_1^{(3)}  &amp; &amp; \\
-&amp; &amp; &amp; \nearrow  &amp; &amp;  \searrow &amp; \\
-w_{ji}^{(2)} &amp; \rightarrow &amp; z_j^{(2)} \rightarrow a_j^{(2)} &amp;  &amp;  &amp;  &amp; E \\
-&amp; &amp; &amp; \searrow &amp; &amp;  \nearrow &amp;  \\
-&amp; &amp; &amp; &amp; z_2^{(3)} &amp; &amp; \\
-\end{matrix}
-\]</span> Vi kan nu igen skrive <span id="eq-partialE_w_ji_2"><span class="math display">\[
-\frac{\partial E}{\partial w_{ji}^{(2)}} = \frac{\partial E}{\partial z_j^{(2)}} \cdot \frac{\partial z_j^{(2)}}{\partial w_{ji}^{(2)}}
-\tag{32}\]</span></span> Helt analogt til tidligere ses det nemt, at <span class="math display">\[
-\frac{\partial z_j^{(2)}}{\partial w_{ji}^{(2)}} = a_i^{(1)}
-\]</span> og kædreglen giver igen, at <span id="eq-partial_E_z_j_2"><span class="math display">\[
-\frac{\partial E}{\partial z_j^{(2)}}= \frac{\partial E}{\partial a_j^{(2)}} \cdot
-\frac{\partial a_j^{(2)}}{\partial z_j^{(2)}}
-\tag{33}\]</span></span> Her fås også uden problemer, at den sidste faktor kan skrives som <span class="math display">\[
-\frac{\partial a_j^{(2)}}{\partial z_j^{(2)}} = a_j^{(2)} \cdot (1-a_j^{(2)})
-\]</span> og bruger man kædereglen for funktioner af flere variable, kommer man frem til, at <span class="math display">\[\begin{align}
-\frac{\partial E}{\partial a_j^{(2)}} &amp;= \sum_{k=1}^2 \frac{\partial E}{\partial z_k^{(3)}}
-\cdot \frac{\partial  z_k^{(3)}}{\partial a_j^{(2)}} \\
-&amp;= \sum_{k=1}^2  \delta_k^{(3)} w_{kj}^{(3)},
-\end{align}\]</span> hvor vi allerede har udregnet <span class="math inline">\(\delta_k^{(3)}\)</span>, da vi opdaterede vægtene og biasene i lag <span class="math inline">\(3\)</span>.</p>
-<p>Indsætter vi i (<a href="#eq-partial_E_z_j_2" class="quarto-xref">33</a>) og samtidig definerer fejlleddet <span class="math inline">\(\delta_j^{(2)}\)</span> for det andet lag, får vi <span class="math display">\[
-\delta_j^{(2)} = \frac{\partial E}{\partial z_j^{(2)}} = \left ( \sum_{k=1}^2  \delta_k^{(3)} w_{kj}^{(3)} \right ) \cdot a_j^{(2)} \cdot (1-a_j^{(2)})
-\]</span> Alt i alt ender vi med <span class="math display">\[\begin{align}
-\frac{\partial E}{\partial w_{ji}^{(2)}} &amp;= \delta_j^{(2)} \cdot a_i^{(1)} \\
-&amp;= \delta_j^{(2)} \cdot x_i
-\end{align}\]</span> fordi alle <span class="math inline">\(a_i^{(1)}\)</span>-værdierne svarer til selve inputværdierne <span class="math inline">\(x_i\)</span> til netværket.</p>
-<p>Det er nu ikke svært at se, at <span class="math display">\[
-\frac{\partial E}{\partial b_j^{(2)}} = \delta_j^{(2)}
-\]</span> og vi får derfor følgende opdateringsregler for lag 2:</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Opdateringsregler til vægte og bias i lag 2
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-13" class="callout-13-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Vægtene i outputlaget opdateres på denne måde: <span class="math display">\[\begin{align}
-w_{ji}^{(2)} \leftarrow w_{ji}^{(2)} - \eta \cdot \delta_j^{(2)} \cdot a_i^{(1)}
-\end{align}\]</span> Biasene i outputlaget opdateres på denne måde: <span class="math display">\[\begin{align}
-b_j^{(2)} \leftarrow b_j^{(2)} - \eta \cdot \delta_j^{(2)}
-\end{align}\]</span> hvor <span id="eq-error_term_j_2"><span class="math display">\[
-\delta_j^{(2)} = \frac{\partial E}{\partial z_j^{(2)}}= \left ( \sum_{k=1}^2  \delta_k^{(3)} w_{kj}^{(3)} \right ) \cdot a_j^{(2)} \cdot (1-a_j^{(2)})
-\tag{34}\]</span></span></p>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="var-det-så-egentlig-smart-med-alle-de-indekser" class="level2">
-<h2 class="anchored" data-anchor-id="var-det-så-egentlig-smart-med-alle-de-indekser">Var det så egentlig smart med alle de indekser?</h2>
-<p>Hvis man er nået hertil, kan man godt følge sig en lille smule forpustet. Der har godt nok været mange indekser at holde styr på! Både nogle der var sænkede, og nogle der var hævede og sat i parenteser! Alligevel kan man måske godt se fidusen nu.</p>
-<p>Hvis vi ser på de opdateringsregler, som vi lige har udledt, så kan man se, at selve opdateringsreglerne af vægte og bias følger <em>præcis</em> samme form. Faktisk kan man, hvis man sammenligner opdateringsreglerne for de tre lag se, at opdateringsreglerne er på denne form:</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Generelle opdateringsregler til vægte og bias
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-14" class="callout-14-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Vægtene opdateres generelt på denne måde: <span class="math display">\[\begin{align}
-w_{ji}^{(\text{lag})} \leftarrow w_{ji}^{(\text{lag})} - \eta \cdot \delta_j^{(\text{lag})} \cdot a_i^{(\text{lag-1})}
-\end{align}\]</span> Biasene i outputlaget opdateres på denne måde: <span class="math display">\[\begin{align}
-b_j^{(\text{lag})} \leftarrow b_j^{(\text{lag})} - \eta \cdot \delta_j^{(\text{lag})}
-\end{align}\]</span></p>
-</div>
-</div>
-</div>
-<p>Bemærk her, at da vi allerede har lavet en feedforward i netværket, så kender vi outputværdierne <span class="math inline">\(a_i^{(\text{lag})}\)</span> i alle lag. Det vil sige, at vi kan opdatere vægtene og biasene, når blot vi kan beregne fejlleddene.</p>
-<p>Den eneste reelle forskel på opdateringsreglerne er, at fejlleddene udregnes lidt forskelligt, alt efter om der er tale om outputlaget eller et skjult lag:</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Beregning af fejlleddene
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-15" class="callout-15-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Fejlleddene i outputlaget beregnes på denne måde: <span class="math display">\[\begin{align}
-\delta_j^{(\text{outputlag})} = -(t_j-y_j) \cdot y_j \cdot (1-y_j),
-\end{align}\]</span> idet outputværdierne fra netværket netop er <span class="math inline">\(y_1, y_2, \dots\)</span>.</p>
-<p>Fejlleddene i et skjult lag beregnes på denne måde: <span class="math display">\[\begin{align}
-\delta_j^{(\text{lag})} = \left ( \sum_{k}  \delta_k^{(\text{lag+1})} w_{kj}^{(\text{lag+1})} \right ) \cdot a_j^{(\text{lag})} \cdot (1-a_j^{(\text{lag})})
-\end{align}\]</span></p>
-</div>
-</div>
-</div>
-<p>Bemærk her, at fejlleddene fra outputlaget uden videre kan beregnes, da vi kender target-værdierne <span class="math inline">\(t_j\)</span> og outputværdierne <span class="math inline">\(y_j\)</span> fra netværket (fordi vi allerede har lavet en feedforward). Vi kan også beregne fejlleddene i alle skjulte lag, idet vi hele tiden arbejder bagud i netværket (<em>backpropagation</em>). Det vil sige, at vi hele tiden har adgang til fejlleddene i laget længere fremme (lag+1), hvor (lag+1) første gang vil svare til outputlaget. Desuden kender vi pga. feedforward alle outputværdier <span class="math inline">\(a_j^{(\text{(lag)})}\)</span> og alle vægte <span class="math inline">\(w_{kj}^{(\text{(lag+1)})}\)</span>. Derfor kan vi også beregne fejlleddene i alle de skjulte lag.</p>
-<p>Denne indsigt og den generelle overordnede struktur på opdateringsreglerne, var meget svær at indse med fremgangsmåde i <a href="#sec-backpropagation_bogstaver" class="quarto-xref">afsnit&nbsp;4</a>. Her druknede alt bare i et sandt bogstavshelvede!</p>
-<p>Der er et par andre interessante ting at sige om beregningen af fejlleddene. Lad os først se på outputlaget: <span class="math display">\[
-\delta_j^{(\text{outputlag})} = -(t_j-y_j) \cdot y_j \cdot (1-y_j)
-\]</span> Hvis der er stor forskel på target-værdien <span class="math inline">\(t_j\)</span> og outputværdien <span class="math inline">\(y_j\)</span>, så bliver forskellen <span class="math inline">\(t_j-y_j\)</span> numerisk stor. Altså vil en stor forskel på det, vi ønsker, og det vi får ud af netværket betyde, at fejlleddet bliver større og i sidste ende, at de vægte, som direkte påvirker outputtet, også vil blive opdateret meget. Endelig ser vi igen, at hvis outputneuronen er mættet (dvs. at <span class="math inline">\(y_j\)</span> enten er tæt på <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span>), så vil fejlleddet ikke blive opdateret i samme grad, som hvis outputneuronen ikke havde været mættet (fordi hvis <span class="math inline">\(y_j\)</span> enten er tæt på <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span>, så vil <span class="math inline">\(y_j \cdot (1-y_j)\)</span> være tæt på <span class="math inline">\(0\)</span>).</p>
-<p>Vi ser altså, at fejlleddet fra det sidste lag direkte afhænger af hvor stor forskellen er på target-værdi og outputværdi.</p>
-<p>Ser vi så på fejlleddene fra de skjulte lag: <span class="math display">\[
-\delta_j^{(\text{lag})} = \left ( \sum_{k}  \delta_k^{(\text{lag+1})} w_{kj}^{(\text{lag+1})} \right ) \cdot a_j^{(\text{lag})} \cdot (1-a_j^{(\text{lag})})
-\]</span> Så kan vi igen se, at hvis den tilhørende outputneuron, som fyrer værdien <span class="math inline">\(a_j^{(\text{lag})}\)</span>, er mættet, så vil fejlleddet være tættere på <span class="math inline">\(0\)</span>, end hvis neuronen ikke havde været mættet. Samtidig kan vi også se, at der i fejlleddet indgår en vægtet sum af alle fejlleddene fra laget længere fremme: <span class="math display">\[
-\sum_{k}  \delta_k^{(\text{lag+1})} w_{kj}^{(\text{lag+1})}
-\]</span> På den måde vil store fejl i laget længere fremme også få indflydelse på fejlleddet i det nuværende lag.</p>
-</section>
-</section>
-<section id="sec-NN_generelt" class="level1 page-columns page-full">
-<h1>Kunstige neurale netværk helt generelt</h1>
-<p>Med det benarbejde vi lige har været igennem, ligger det faktisk lige til højrebenet at generalisere overstående til et vilkårligt kunstigt neuralt netværk.</p>
-<p>Vi forestiller os nu, at vi har <span class="math inline">\(K\)</span> lag i netværket, som det er illustreret på <a href="#fig-generelt_netvaerk" class="quarto-xref">figur&nbsp;10</a>.</p>
-<div id="fig-generelt_netvaerk" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-generelt_netvaerk-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/generelt_netvaerk.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-generelt_netvaerk-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;10: Generelt kunstigt neuralt netværk med <span class="math inline">\(K\)</span> lag.
-</figcaption>
-</figure>
-</div>
-<p>Det vil sige ét inputlag, ét outputlag og <span class="math inline">\(K-2\)</span> skjulte lag. Antallet af neuroner i hvert lag kan variere og behøver ikke at være det samme. Så lad os navngive antallet af neuroner i de <span class="math inline">\(K\)</span> lag på denne måde: <span class="math display">\[
-n_1, n_2, \dots, n_k, \dots, n_K
-\]</span> Inputværdierne til netværket betegner vi: <span class="math display">\[
-a_1^{(1)}, a_2^{(1)}, \dots, a_{n_1}^{(1)}
-\]</span> Feedforward ligningerne er nu helt identiske med dem vi opstillede i <a href="#sec-feedforward_indekser" class="quarto-xref">afsnit&nbsp;5.1</a>:</p>
-<div class="callout callout-style-simple callout-caution no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Feedforwardligninger - helt generelt
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-16" class="callout-16-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Beregn først: <span id="eq-z_j_k_generelt"><span class="math display">\[
-z_j^{(k)} = \sum_{i} w_{ji}^{(k)} a_i^{(k-1)} +  b_j^{(k)}
-\tag{35}\]</span></span> Outputværdierne for neuroner i det <span class="math inline">\(k\)</span>’te lag udregnes dernæst på denne måde: <span id="eq-a_j_k_generelt"><span class="math display">\[
-a_j^{(k)} = \sigma(z_j^{(k)})
-\tag{36}\]</span></span> for <span class="math inline">\(k \in \{2, 3, \dots, K \}\)</span>.</p>
-</div>
-</div>
-</div>
-<p>Hvis vi også kalder outputværdierne fra netværket for <span class="math display">\[
-y_1, y_2, \dots, y_{n_K}
-\]</span> så beregnes disse værdier altså ved <span class="math display">\[\begin{align}
-y_j = a_j^{(K)} &amp;= \sigma(z_j^{(K)})
-\end{align}\]</span> for <span class="math inline">\(j \in \{1, 2, \dots, n_K \}\)</span>.</p>
-<section id="backpropagation---generelt" class="level2">
-<h2 class="anchored" data-anchor-id="backpropagation---generelt">Backpropagation - generelt</h2>
-<p>Lad os så se på backpropagation. Vi ved fra det foregående, at der reelt set kun er to ting, vi skal gøre:</p>
-<ol type="1">
-<li><p>Finde opdateringsreglerne for vægte og bias i outputlaget.</p></li>
-<li><p>Finde opdateringsreglerne for vægte og bias i et vilkårligt skjult lag.</p></li>
-</ol>
-<section id="opdateringsregler-i-outputlaget" class="level3">
-<h3 class="anchored" data-anchor-id="opdateringsregler-i-outputlaget">Opdateringsregler i outputlaget</h3>
-<p>Vores tabsfunktion er stadig <span class="math display">\[
-E= \frac{1}{2} \sum_{i=1}^{n_K} \left ( t_i - a_i^{(K)} \right )^2,
-\]</span> hvor <span class="math inline">\(t_i\)</span> igen er targetværdierne. Vi skal bestemme <span class="math display">\[
-\frac{\partial E}{\partial w_{ji}^{(K)}} \quad \text{og} \quad \frac{\partial E}{\partial b_j^{(K)}}
-\]</span> Vi gør præcis som i <a href="#sec-opdatering_lag4" class="quarto-xref">afsnit&nbsp;5.2.1</a>. Vi indser først, at vi har denne direkte afhængighed fra <span class="math inline">\(w_{ji}^{(K)}\)</span> til <span class="math inline">\(E\)</span>: <span class="math display">\[
-w_{ji}^{(K)} \rightarrow z_j^{(K)} \rightarrow a_j^{(K)} \rightarrow E
-\]</span> Derfor får vi <span id="eq-partialE_w_ji_K"><span class="math display">\[
-\frac{\partial E}{\partial w_{ji}^{(K)}} = \frac{\partial E}{\partial z_j^{(K)}} \cdot \frac{\partial z_j^{(K)}}{\partial w_{ji}^{(K)}}
-\tag{37}\]</span></span> På grund af feedforwardligningen i (<a href="#eq-z_j_k_generelt" class="quarto-xref">35</a>) får vi for det første, at <span id="eq-partial_z_j_K_w_ji_K"><span class="math display">\[
-\frac{\partial z_j^{(K)}}{\partial w_{ji}^{(K)}} = a_i^{(K-1)}
-\tag{38}\]</span></span> Nu bruger vi kædereglen til at bestemme <span id="eq-partial_E_z_j_K_generelt"><span class="math display">\[
-\frac{\partial E}{\partial z_j^{(K)}} = \frac{\partial E}{\partial a_j^{(K)}} \cdot  \frac{\partial a_j^{(K)}}{\partial z_j^{(K)}}
-\tag{39}\]</span></span> På grund af feedforwardligningen i (<a href="#eq-a_j_k_generelt" class="quarto-xref">36</a>) og <a href="#thm-sigmoid_diff" class="quarto-xref">sætning&nbsp;1</a> får vi sidste faktor til <span class="math display">\[
-\frac{\partial a_j^{(K)}}{\partial z_j^{(K)}}  =  a_j^{(K)}\cdot (1-a_j^{(K)})
-\]</span> Endelig får vi, ved at differentiere tabsfunktionen med hensyn til <span class="math inline">\(a_j^{(K)}\)</span> <span class="math display">\[
-\frac{\partial E}{\partial a_j^{(K)}} = -(t_j-a_j^{(K)})
-\]</span> Vi definerer nu igen fejlleddet for outputlaget <span class="math inline">\(\delta_j^{(K)}\)</span>, som tidligere <span class="math display">\[
-\delta_j^{(K)} = \frac{\partial E}{\partial z_j^{(K)}}
-\]</span> og indsætter vi det, vi netop har udledt, i (<a href="#eq-partial_E_z_j_K_generelt" class="quarto-xref">39</a>) får vi <span class="math display">\[
-\delta_j^{(K)} =  -(t_j-a_j^{(K)}) \cdot a_j^{(K)} \cdot (1-a_j^{(K)})
-\]</span> Indsætter vi nu det hele i (<a href="#eq-partialE_w_ji_K" class="quarto-xref">37</a>), har vi altså: <span class="math display">\[
-\frac{\partial E}{\partial w_{ji}^{(K)}} = \delta_j^{(K)}  \cdot a_i^{(K-1)}
-\]</span> Det er ikke svært at overbevise sig selv om, at <span class="math display">\[
-\frac{\partial E}{\partial b_j^{(K)}} = \delta_j^{(K)}
-\]</span> og derfor har vi:</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Generelle opdateringsregler til vægte og bias i outputlaget (lag <span class="math inline">\(K\)</span>)
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-17" class="callout-17-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Vægtene i outputlaget opdateres på denne måde: <span class="math display">\[\begin{align}
-w_{ji}^{(K)} \leftarrow w_{ji}^{(K)} - \eta \cdot \delta_j^{(K)} \cdot a_i^{(K-1)}
-\end{align}\]</span> Biasene i outputlaget opdateres på denne måde: <span class="math display">\[\begin{align}
-b_j^{(K)} \leftarrow b_j^{(K)} - \eta \cdot \delta_j^{(K)}
-\end{align}\]</span> hvor <span class="math display">\[\begin{align}
-\delta_j^{(K)} = \frac{\partial E}{\partial z_j^{(K)}}= -(t_j-a_j^{(K)}) \cdot a_j^{(K)} \cdot (1-a_j^{(K)})
-\end{align}\]</span></p>
-</div>
-</div>
-</div>
-</section>
-<section id="opdateringsregler-i-et-vilkårligt-skjult-lag" class="level3">
-<h3 class="anchored" data-anchor-id="opdateringsregler-i-et-vilkårligt-skjult-lag">Opdateringsregler i et vilkårligt skjult lag</h3>
-<p>Vi ser nu på et vilkårligt skjult lag <span class="math inline">\(k\)</span>, som hverken er inputlaget eller outputlaget. Det vil sige, at <span class="math inline">\(k \in \{2, 3, \dots, K-1 \}\)</span>. Vi antager, at vi har kørt backpropagation på alle lag, der ligger længere fremme i netværket, og specielt har vi altså beregnet fejlleddene i lag <span class="math inline">\(k+1:\)</span> <span class="math display">\[
-\delta_j^{(k+1)} = \frac{\partial E}{\partial z_j^{(k+1)}}
-\]</span> Vi indser først, at vi har denne afhængighed fra <span class="math inline">\(w_{ji}^{(k)}\)</span> til tabsfunktionen <span class="math inline">\(E\)</span>: <span id="eq-dep_E_w_ji_k"><span class="math display">\[
-\begin{matrix}
-&amp; &amp; &amp; &amp; z_1^{(k+1)}  &amp; &amp; \\
-&amp; &amp; &amp; \nearrow  &amp; \vdots &amp;  \searrow &amp; \\
-w_{ji}^{(k)} &amp; \rightarrow &amp; z_j^{(k)} \rightarrow a_j^{(k)} &amp; \rightarrow  &amp;  z_j^{(k+1)} &amp; \rightarrow  &amp; E \\
-&amp; &amp; &amp; \searrow &amp; \vdots &amp;  \nearrow &amp;  \\
-&amp; &amp; &amp; &amp; z_{n_{k+1}}^{(k+1)} &amp; &amp; \\
-\end{matrix}
-\tag{40}\]</span></span> Vi starter som tidligere med at bruge kædereglen én gang: <span id="eq-partialE_w_ji_k"><span class="math display">\[
-\frac{\partial E}{\partial w_{ji}^{(k)}} = \frac{\partial E}{\partial z_j^{(k)}} \cdot \frac{\partial z_j^{(k)}}{\partial w_{ji}^{(k)}}
-\tag{41}\]</span></span> Fra feedforwardligningen i (<a href="#eq-z_j_k_generelt" class="quarto-xref">35</a>) får vi for det første, at <span class="math display">\[
-\frac{\partial z_j^{(k)}}{\partial w_{ji}^{(k)}} = a_i^{(k-1)}
-\]</span> Endnu en anvendelse af kædereglen, og hvor vi også i samme hug definerer fejlleddet <span class="math inline">\(\delta_j^{(k)}\)</span> for det <span class="math inline">\(k\)</span>’te skjulte lag, giver: <span id="eq-partial_E_z_j_k"><span class="math display">\[
-\delta_j^{(k)} = \frac{\partial E}{\partial z_j^{(k)}}= \frac{\partial E}{\partial a_j^{(k)}} \cdot
-\frac{\partial a_j^{(k)}}{\partial z_j^{(k)}}
-\tag{42}\]</span></span> Den sidste partielle afledede kan vi udlede fra feedforwardligningen (<a href="#eq-a_j_k_generelt" class="quarto-xref">36</a>) og <a href="#thm-sigmoid_diff" class="quarto-xref">sætning&nbsp;1</a>: <span class="math display">\[
-\frac{\partial a_j^{(k)}}{\partial z_j^{(k)}} = a_j^{(k)} \cdot (1-a_j^{(k)})
-\]</span> For at beregne <span class="math inline">\(\frac{\partial E}{\partial a_j^{(k)}}\)</span> må vi have fat i kædereglen for funktioner af flere variable (se illustrationen i (<a href="#eq-dep_E_w_ji_k" class="quarto-xref">40</a>): <span class="math display">\[\begin{align}
-\frac{\partial E}{\partial a_j^{(k)}} = \sum_{i=1}^{n_{k+1}} \frac{\partial E}{\partial z_i^{(k+1)}}
-\cdot \frac{\partial  z_i^{(k+1)}}{\partial a_j^{(k)}}
-\end{align}\]</span> Vi udnytter nu, at vi allerede kender fejlleddene fra lag <span class="math inline">\(k+1\)</span> og kan derfor omskrive til</p>
-<p><span id="eq-partialE_aj_k"><span class="math display">\[
-\frac{\partial E}{\partial a_j^{(k)}} = \sum_{i=1}^{n_{k+1}} \delta_i^{(k+1)}
-\cdot \frac{\partial  z_i^{(k+1)}}{\partial a_j^{(k)}}
-\tag{43}\]</span></span></p>
-<p>Fra feedforwardligningen i (<a href="#eq-z_j_k_generelt" class="quarto-xref">35</a>) får vi, at <span class="math inline">\(z_i^{(k+1)}\)</span> kan skrives som <span class="math display">\[
-z_i^{(k+1)} = \sum_{j} w_{ij}^{(k+1)} a_j^{(k)} +  b_i^{(k+1)}
-\]</span> og derfor er <span class="math display">\[\begin{align}
-\frac{\partial  z_i^{(k+1)}}{\partial a_j^{(k)}} = w_{ij}^{(k+1)}
-\end{align}\]</span> Indsætter vi i (<a href="#eq-partialE_aj_k" class="quarto-xref">43</a>) fås <span class="math display">\[\begin{align}
-\frac{\partial E}{\partial a_j^{(k)}} = \sum_{i=1}^{n_{k+1}} \delta_i^{(k+1)}
-\cdot w_{ij}^{(k+1)}
-\end{align}\]</span> og ved indsættelse i (<a href="#eq-partial_E_z_j_k" class="quarto-xref">42</a>) får vi nu fejlleddet i det <span class="math inline">\(k\)</span>’te lag <span class="math display">\[
-\delta_j^{(k)} = \frac{\partial E}{\partial z_j^{(k)}}=  \left ( \sum_{i=1}^{n_{k+1}} \delta_i^{(k+1)} \cdot w_{ij}^{(k+1)} \right) \cdot a_j^{(k)} \cdot (1-a_j^{(k)})
-\]</span> Vi bruger nu udtrykket for <span class="math inline">\(\frac{\partial E}{\partial w_{ji}^{(k)}}\)</span> i (<a href="#eq-partialE_w_ji_k" class="quarto-xref">41</a>) og ender med <span class="math display">\[\begin{align}
-\frac{\partial E}{\partial w_{ji}^{(k)}} = \delta_j^{(k)} \cdot a_i^{(k-1)}
-\end{align}\]</span> og tilsvarende får vi også, at <span class="math display">\[
-\frac{\partial E}{\partial b_j^{(k)}} = \delta_j^{(k)}
-\]</span> Opdateringsreglerne for et vilkårligt skjult lag bliver så:</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Opdateringsregler til vægte og bias i et vilkårligt skjult lag <span class="math inline">\(k\)</span>
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-18" class="callout-18-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Vægtene i outputlaget opdateres på denne måde: <span class="math display">\[\begin{align}
-w_{ji}^{(k)} \leftarrow w_{ji}^{(k)} - \eta \cdot \delta_j^{(k)} \cdot a_i^{(k-1)}
-\end{align}\]</span> Biasene i outputlaget opdateres på denne måde: <span class="math display">\[\begin{align}
-b_j^{(k)} \leftarrow b_j^{(k)} - \eta \cdot \delta_j^{(k)}
-\end{align}\]</span> hvor <span class="math display">\[\begin{align}
-\delta_j^{(k)} = \frac{\partial E}{\partial z_j^{(k)}}=  \left ( \sum_{i=1}^{n_{k+1}} \delta_i^{(k+1)} \cdot w_{ij}^{(k+1)} \right) \cdot a_j^{(k)} \cdot (1-a_j^{(k)})
-\end{align}\]</span></p>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="stokastisk-gradientnedstigning" class="level2">
-<h2 class="anchored" data-anchor-id="stokastisk-gradientnedstigning">Stokastisk gradientnedstigning</h2>
-<p>Vi har faktisk snydt lidt… Okay – indrømmet – det er lidt træls at komme at sige nu! Men i alt hvad vi har lavet indtil nu, har vi kun kigget på ét træningseksempel. Vi har ladet inputværdierne for det ene træningseksempel "kører igennem" netværket (feedforward), beregnet tabsfunktionen og brugt resultatet herfra til at opdatere alle vægtene (backpropagation). Men vi har jo ikke kun ét træningseksempel. Vi har faktisk rigtig mange! Måske ligefrem tusindvis af træningsdata. Men hvad gør man så?</p>
-<p>Lad os lige genopfriske den tabsfunktion, som vi endte med i det helt generelle tilfælde: <span id="eq-E_singletraining"><span class="math display">\[
-E= \frac{1}{2} \sum_{i=1}^{n_K} \left ( t_i - a_i^{(K)} \right )^2.
-\tag{44}\]</span></span> Her er <span class="math inline">\(t_i\)</span> target-værdien for den <span class="math inline">\(i\)</span>’te outputneuron for lige præcis det træningseksempel vi står med. Husk på at et givet træningseksempel består af inputværdierne <span class="math display">\[
-x_1, x_2, \dots, x_{n_1}
-\]</span> <em>og</em> de ønskede target-værdier <span class="math display">\[
-t_1, t_2, \dots, t_{n_K}.
-\]</span> Når vi kører disse inputværdier igennem netværket, får de selvfølgelig i sidste ende direkte betydning for outputværdierne i det sidste lag (<span class="math inline">\(K\)</span>): <span class="math display">\[
-a_1^{(K)}, a_2^{(K)}, \cdots, a_{n_K}^{(K)}.
-\]</span> Det vil sige, at i vores tabsfunktion i (<a href="#eq-E_singletraining" class="quarto-xref">44</a>), så afhænger både <span class="math inline">\(t_i\)</span>’erne og <span class="math inline">\(a_i^{(K)}\)</span>’erne af træningseksemplet. Hvis vi sådan lidt generelt benævner vores træningseksempel med <span class="math inline">\(x\)</span>, så vil det kunne udtrykkes sådan her: <span class="math display">\[
-E_x= \frac{1}{2} \sum_{i=1}^{n_K} \left ( t_{x,i} - a_{x,i}^{(K)} \right )^2,
-\]</span> hvor så <span class="math inline">\(t_{x,i}\)</span> er target-værdien for den <span class="math inline">\(i\)</span>’te outputneuron fra træningsdata <span class="math inline">\(x\)</span> og <span class="math inline">\(a_{x,i}^{(K)}\)</span> er outputværdien for den <span class="math inline">\(i\)</span>’te outputneuron, som er beregnet på baggrund af inputværdierne fra træningsdata <span class="math inline">\(x\)</span>.</p>
-<p>Den samlede tabsfunktion, som er den, vi i virkeligheden ønsker at minimere, bliver så gennemsnittet af tabsfunktionerne hørende til de enkelte træningsdata: <span id="eq-E_generel"><span class="math display">\[
-E = \frac{1}{n} \sum_x E_x= \frac{1}{n} \sum_x \left ( \frac{1}{2} \sum_{i=1}^{n_K} \left ( t_{x,i} - a_{x,i}^{(K)} \right )^2 \right ).
-\tag{45}\]</span></span> Husk på at vi er ude efter <span class="math display">\[
-\frac{\partial E}{\partial w_{ji}^{(k)}} \quad \text{og} \quad \frac{\partial E}{\partial b_j^{(k)}}
-\]</span> for <span class="math inline">\(k \in \{2, 3, \dots, K\}\)</span> og hvor <span class="math inline">\(E\)</span> nu er summen i (<a href="#eq-E_generel" class="quarto-xref">45</a>). Heldigvis kan vi differentiere ledvis, og der gælder derfor <span class="math display">\[
-\frac{\partial E}{\partial w_{ji}^{(k)}} = \frac{1}{n} \sum_x \frac{\partial E_x}{\partial w_{ji}^{(k)}}
-\]</span> og tilsvarende <span class="math display">\[
-\frac{\partial E}{\partial b_j^{(k)}} = \frac{1}{n} \sum_x \frac{\partial E_x}{\partial b_j^{(k)}}
-\]</span> Det kommer så til at betyde, at opdateringsreglerne nu generelt bliver på formen <span id="eq-opdatering_w_ji_alledata"><span class="math display">\[
-w_{ji}^{(k)} \leftarrow w_{ji}^{(k)}-\eta \cdot \frac{\partial E}{\partial w_{ji}^{(k)}}  =
-w_{ji}^{(k)}-\eta \cdot \frac{1}{n} \sum_x \frac{\partial E_x}{\partial w_{ji}^{(k)}}
-\tag{46}\]</span></span> og tilsvarende for biasene <span id="eq-opdatering_b_j_alledata"><span class="math display">\[
-b_j^{(k)} \leftarrow b_j^{(k)} -\eta \cdot \frac{\partial E}{\partial b_j^{(k)}}  =
-b_j^{(k)}-\eta \cdot \frac{1}{n} \sum_x \frac{\partial E_x}{\partial b_j^{(k)}}
-\tag{47}\]</span></span> Alle leddene <span class="math inline">\(\frac{\partial E_x}{\partial w_{ji}^{(k)}}\)</span> og <span class="math inline">\(\frac{\partial E_x}{\partial b_j^{(k)}}\)</span>, som indgår i opdateringsreglerne, svarer netop til hvad vi har udledt i de foregående afsnit, fordi vi jo netop her kun så på ét træningseksempel ad gangen. Hvis vi overfører dette til opdateringsreglerne i outputlaget, så vil vi f.eks. få</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Generelle opdateringsregler til vægte og bias i outputlaget (lag <span class="math inline">\(K\)</span>) med brug af alle træningsdata
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-19" class="callout-19-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Vægtene i outputlaget opdateres på denne måde: <span class="math display">\[\begin{align}
-w_{ji}^{(K)} \leftarrow w_{ji}^{(K)} - \eta \cdot \frac{1}{n} \sum_x \left ( \delta_{x,j}^{(K)} \cdot a_{x,i}^{(K-1)} \right )
-\end{align}\]</span> Biasene i outputlaget opdateres på denne måde: <span class="math display">\[\begin{align}
-b_j^{(K)} \leftarrow b_j^{(K)} - \eta \cdot \frac{1}{n} \sum_x \left ( \delta_{x,j}^{(K)} \right )
-\end{align}\]</span> hvor <span class="math display">\[\begin{align}
-\delta_{x,j}^{(K)} = \frac{\partial E_x}{\partial z_j^{(K)}}= -(t_{x,j}-a_{x,j}^{(K)}) \cdot a_{x,j}^{(K)} \cdot (1-a_{x,j}^{(K)})
-\end{align}\]</span></p>
-</div>
-</div>
-</div>
-<p>Og helt tilsvarende vil det se ud for opdateringsreglerne i de skjulte lag.</p>
-<p>Lad os lige dvæle lidt ved, hvad det her, det egentlig betyder. Lad os sige at vi har <span class="math inline">\(1000\)</span> træningsdata. Så skal vi lade de <span class="math inline">\(1000\)</span> træningsdata kører igennem netværket, så vi kan beregne de <span class="math inline">\(1000\)</span> led, som indgår i de ovenstående summer. Herefter kan vi opdatere alle vægte og bias én gang. Det vil blot være ét lille skridt på vej ned i dalen mod det lokale minimum, som vi er på jagt efter. Dette lille skridt skal gentages rigtig mange gange, indtil værdien af tabsfunktionen ser ud til at begynde at konvergere – svarende til at vi har ramt det lokale minimum.</p>
-<p>Så selvom gradientnedstigning kan bruges til at finde et lokalt minimum for tabsfunktionen <span class="math inline">\(E\)</span>, så er det faktisk også en beregningsmæssig stor og tung opgave! Derfor er der forsket meget videre i at gøre det endnu bedre og endnu hurtigere. I algoritmer som disse er der ofte et trade-off: Man kan gøre noget hurtigere ved at bruge mere hukommelse – eller bruge mindre hukommelse ved at gøre det en smule langsommere. En af de teknikker, der er kommet ud af den forskning, er, at man kan bruge mindre hukommelse ved i hvert opdateringsskridt kun at bruge en tilfældigt udvalgt del af træningsdata – det kunne f.eks. være <span class="math inline">\(10\%\)</span> af alle træningsdata. Så vil man i hvert skridt stadig bruge opdateringsreglerne i (<a href="#eq-opdatering_w_ji_alledata" class="quarto-xref">46</a>) og (<a href="#eq-opdatering_b_j_alledata" class="quarto-xref">47</a>), men hvor der nu kun summeres over de <span class="math inline">\(10 \%\)</span> af træningsdatene. Hver gang man laver et nyt opdateringsskridt, vil man tage en ny tilfældigt udvalgt del af træningsdata. Denne teknik kalder man <em>stokastisk gradientnedstigning</em> (stochastic gradient descent). Og der er endnu flere af sådanne små ændringer, der enten gør algoritmen hurtigere eller, at den bruger mindre hukommelse. Det vil komme an på den enkelte anvendelse, hvad der er vigtigst her.</p>
+<p>Hvis du er helt vild - så kan du i <a href="neurale_net_helt_generelt.qmd">noten om neurale netværk helt generelt</a> læse mere om, hvordan man beskriver et neuralt netværk med et vilkårligt antal skjulte lag, og hvordan opdateringsreglerne bliver i det tilfælde. Det bliver lidt mere langhåret, men det er ikke umuligt!</p>
 </section>
 </section>
 <section id="valg-af-tabsfunktion" class="level1 page-columns page-full">
 <h1>Valg af tabsfunktion</h1>
 <p>I <a href="#sec-backpropagation_bogstaver" class="quarto-xref">afsnit&nbsp;4</a> definerede vi tabsfunktionen ved <span class="math display">\[
 E = \frac{1}{2}(t-o)^2
-\]</span> mens vi <a href="#sec-bogstaver_til_indekser" class="quarto-xref">afsnit&nbsp;5</a> og <a href="#sec-NN_generelt" class="quarto-xref">afsnit&nbsp;6</a> så, hvordan denne tabsfunktionen kan generaliseres, når outputlaget har mere end én neuron. I alle tilfælde er der tale om en <em>kvadratisk</em> tabsfunktion, fordi vi ser på den kvadrerede forskel på target-værdi <span class="math inline">\(t\)</span> og outputværdi <span class="math inline">\(o\)</span>. Men det er et <em>valg</em> at definere tabsfunktionen på denne måde, man kunne have defineret mange andre tabsfunktioner i stedet for. Egentlig ønsker vi blot en tabsfunktion <span class="math inline">\(E\)</span> med følgende egenskaber:</p>
+\]</span> mens vi <a href="neurale_net_helt_generelt.qmd">neurale netværk helt generelt</a> så, hvordan denne tabsfunktionen kan generaliseres, når outputlaget har mere end én neuron. I alle tilfælde er der tale om en <em>kvadratisk</em> tabsfunktion, fordi vi ser på den kvadrerede forskel på target-værdi <span class="math inline">\(t\)</span> og outputværdi <span class="math inline">\(o\)</span>. Men det er et <em>valg</em> at definere tabsfunktionen på denne måde, man kunne have defineret mange andre tabsfunktioner i stedet for. Egentlig ønsker vi blot en tabsfunktion <span class="math inline">\(E\)</span> med følgende egenskaber:</p>
 <ul>
 <li><p><span class="math inline">\(E&gt;0\)</span> - fordi det giver bedst mening at tale om et positivt tab.</p></li>
 <li><p>Hvis vi har et netværk, som klassificerer godt, så er <span class="math inline">\(E\)</span> tæt på <span class="math inline">\(0\)</span>, og omvendt hvis netværket er dårligt til at klassificere, så er <span class="math inline">\(E\)</span> langt væk fra <span class="math inline">\(0\)</span>.</p></li>
@@ -1435,13 +705,13 @@ w_1 \leftarrow w_1 + \eta  \cdot (t-o) \cdot o \cdot (1-o) \cdot z_1
 <p>Problemet opstår, hvis startvægtene fejlagtigt kommer til at give en outputværdi <span class="math inline">\(o\)</span>, som enten er tæt på <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span>. Hvis det sker, vil <span class="math inline">\(t-o\)</span> være "stor" (fordi outputværdien er fejlagtig), men samtidig vil faktoren <span class="math inline">\(o \cdot (1-o)\)</span> være tæt på <span class="math inline">\(0\)</span> (fordi <span class="math inline">\(o\)</span> enten er tæt på <span class="math inline">\(0\)</span> eller på <span class="math inline">\(1\)</span>). Derfor kan vi risikere, at <span class="math inline">\(w_1\)</span>-vægten ikke bliver opdateret særlig meget, fordi <span class="math inline">\(t-o\)</span> bliver ganget med et tal, som er tæt på <span class="math inline">\(0\)</span>. Sker dette kalder man det for <em>slow learning</em>.</p>
 <p>Nu kunne man måske godt tænke, at det da ikke har noget med tabsfunktionen at gøre, men det har lige præcis noget med tabsfunktionen <em>i kombination</em> med sigmoid-funktionen at gøre. For at se det må vi genkalde os, hvor ovenstående opdateringsregel kom fra. Faktisk svarede <span class="math inline">\(t-o\)</span> til <span class="math inline">\(-dE/do\)</span> og <span class="math inline">\(o \cdot (1-o)\)</span> var sigmoid-funktionen <span class="math inline">\(\sigma(w_0+w_1 \cdot z_1 + w_2 \cdot z_2)\)</span> differentieret. Det vil sige: <span id="eq-opdatering_w1_med_forklaring"><span class="math display">\[
 w_1 \leftarrow w_1 + \eta  \cdot \underbrace{(t-o)}_{-dE/do} \cdot \underbrace{o \cdot (1-o)}_{\sigma'(\cdots)} \cdot z_1
-\tag{48}\]</span></span> Hvis man derimod kunne vælge en tabsfunktion, som passer bedre sammen med sigmoid-funktionen, på den måde at forstå at faktoren <span class="math inline">\(o \cdot (1-o)\)</span> vil forkorte ud i ovenstående udtryk, så vil man slippe af med problemet omkring langsom læring.</p>
+\tag{20}\]</span></span> Hvis man derimod kunne vælge en tabsfunktion, som passer bedre sammen med sigmoid-funktionen, på den måde at forstå at faktoren <span class="math inline">\(o \cdot (1-o)\)</span> vil forkorte ud i ovenstående udtryk, så vil man slippe af med problemet omkring langsom læring.</p>
 <p>Nok ikke helt overraskende så kan man faktisk godt diske op med en sådan tabsfunktion! Den tabsfunktion, som passer godt sammen med sigmoid-funktionen, kaldes for <em>cross-entropy</em> tabsfunktionen og er defineret sådan her <span id="eq-cross_entropy"><span class="math display">\[
 E = - \left ( t \cdot \ln(o)+(1-t) \cdot \ln(1-o) \right )
-\tag{49}\]</span></span> Det ser jo ikke umiddelbart videre behageligt ud, og det er slet ikke oplagt, at det overhovedet er en tabsfunktion. Det vil sige, opfylder cross-entropy tabsfunktionen betingelserne listet ovenfor? Lad os starte med at undersøge om <span class="math inline">\(E&gt;0\)</span>. For det første er target-værdien <span class="math inline">\(t\)</span> altid enten <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span>. Derfor er der følgende to muligheder: <span class="math display">\[\begin{align}
+\tag{21}\]</span></span> Det ser jo ikke umiddelbart videre behageligt ud, og det er slet ikke oplagt, at det overhovedet er en tabsfunktion. Det vil sige, opfylder cross-entropy tabsfunktionen betingelserne listet ovenfor? Lad os starte med at undersøge om <span class="math inline">\(E&gt;0\)</span>. For det første er target-værdien <span class="math inline">\(t\)</span> altid enten <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span>. Derfor er der følgende to muligheder: <span class="math display">\[\begin{align}
 t=0: &amp; \quad  E=- \ln(1-o)\\
 t=1: &amp; \quad E=- \ln(o)
-\end{align}\]</span> Vi ved også, at outputværdien <span class="math inline">\(o\)</span> ligger mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>. Altså <span class="math inline">\(0&lt;o&lt;1\)</span>. Derfor vil også <span class="math inline">\(1-o\)</span> ligge mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>. På <a href="#fig-graf_ln" class="quarto-xref">figur&nbsp;11</a> ses grafen for den naturlige logaritmefunktion <span class="math inline">\(\ln(x)\)</span>. Her ser vi, at hvis <span class="math inline">\(0&lt;x&lt;1\)</span>, så vil <span class="math inline">\(\ln(x)\)</span> være negativ. Derfor kan vi fra ovenstående udtryk se, at <span class="math inline">\(E\)</span> vil være positiv (fordi både <span class="math inline">\(\ln (1-o)\)</span> og <span class="math inline">\(\ln(o)\)</span> vil være negative).</p>
+\end{align}\]</span> Vi ved også, at outputværdien <span class="math inline">\(o\)</span> ligger mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>. Altså <span class="math inline">\(0&lt;o&lt;1\)</span>. Derfor vil også <span class="math inline">\(1-o\)</span> ligge mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>. På <a href="#fig-graf_ln" class="quarto-xref">figur&nbsp;7</a> ses grafen for den naturlige logaritmefunktion <span class="math inline">\(\ln(x)\)</span>. Her ser vi, at hvis <span class="math inline">\(0&lt;x&lt;1\)</span>, så vil <span class="math inline">\(\ln(x)\)</span> være negativ. Derfor kan vi fra ovenstående udtryk se, at <span class="math inline">\(E\)</span> vil være positiv (fordi både <span class="math inline">\(\ln (1-o)\)</span> og <span class="math inline">\(\ln(o)\)</span> vil være negative).</p>
 <div class="cell page-columns page-full">
 <div class="cell-output-display page-columns page-full">
 <div id="fig-graf_ln" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
@@ -1450,7 +720,7 @@ t=1: &amp; \quad E=- \ln(o)
 <img src="neurale_net_files/figure-html/fig-graf_ln-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-graf_ln-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;11: Grafen for den naturlige logaritmefunktion <span class="math inline">\(\ln(x)\)</span>.
+Figur&nbsp;7: Grafen for den naturlige logaritmefunktion <span class="math inline">\(\ln(x)\)</span>.
 </figcaption>
 </figure>
 </div>
@@ -1458,10 +728,10 @@ Figur&nbsp;11: Grafen for den naturlige logaritmefunktion <span class="math inli
 </div>
 <p>Vi mangler nu at redegøre for, at <span class="math inline">\(E \thickapprox 0\)</span>, hvis netværket er god til at klassificere. Der er igen to muligheder alt efter om <span class="math inline">\(t=0\)</span> eller om <span class="math inline">\(t=1\)</span>. Hvis <span class="math inline">\(t=0\)</span> og netværket er godt, så vil <span class="math inline">\(o\)</span> også være tæt på <span class="math inline">\(0\)</span>, og <span class="math inline">\(1-o\)</span> vil være tæt på <span class="math inline">\(1\)</span>. I det tilfælde får vi <span class="math display">\[
 E = - \left ( \underbrace{t}_{=0} \cdot \ln(o)+\underbrace{(1-t)}_{= 1} \cdot \underbrace{\ln(1-o)}_{\thickapprox 0} \right ),
-\]</span> hvor vi bruger, at <span class="math inline">\(\ln(x) \thickapprox 0\)</span>, hvis <span class="math inline">\(x \thickapprox 1\)</span> (se <a href="#fig-graf_ln" class="quarto-xref">figur&nbsp;11</a>). Alt i alt får vi i dette tilfælde, at <span class="math inline">\(E\)</span> er tæt på <span class="math inline">\(0\)</span>. Hvis derimod <span class="math inline">\(t=1\)</span> og netværket er godt, så <span class="math inline">\(o\)</span> er tæt på <span class="math inline">\(1\)</span>, så får vi: <span class="math display">\[
+\]</span> hvor vi bruger, at <span class="math inline">\(\ln(x) \thickapprox 0\)</span>, hvis <span class="math inline">\(x \thickapprox 1\)</span> (se <a href="#fig-graf_ln" class="quarto-xref">figur&nbsp;7</a>). Alt i alt får vi i dette tilfælde, at <span class="math inline">\(E\)</span> er tæt på <span class="math inline">\(0\)</span>. Hvis derimod <span class="math inline">\(t=1\)</span> og netværket er godt, så <span class="math inline">\(o\)</span> er tæt på <span class="math inline">\(1\)</span>, så får vi: <span class="math display">\[
 E = - \left ( \underbrace{t}_{=1} \cdot \underbrace{\ln(o)}_{\thickapprox 0}+\underbrace{(1-t)}_{=0} \cdot \ln(1-o) \right )
 \]</span> Igen får vi også i dette tilfælde, at <span class="math inline">\(E\)</span> er tæt på <span class="math inline">\(0\)</span>. På tilsvarende vis kan man argumentere for, at hvis netværket er dårligt, så enten <span class="math inline">\(t=0\)</span> og <span class="math inline">\(o \thickapprox  1\)</span> eller <span class="math inline">\(t=1\)</span> og <span class="math inline">\(o \thickapprox 0\)</span>, så vil <span class="math inline">\(E\)</span> blive stor.</p>
-<p>Alt i alt er vi altså kommet frem til, at cross-entropy tabsfunktionen opfylder betingelserne ovenfor og dermed, at cross-entropy tabsfunktionen rent faktisk <em>er</em> en tabsfunktion! Så langt så godt! Nu mangler vi at vise, at cross-entropy tabsfunktionen løser det potentielle problem omkring langsom læring. Det gør vi ved at finde et nyt udtryk for opdatering af <span class="math inline">\(w_1\)</span>-vægten. Hvis vi ser på udtrykket i (<a href="#eq-opdatering_w1_med_forklaring" class="quarto-xref">48</a>), så skal vi bare have fundet et nyt udtryk for <span class="math inline">\(dE/do\)</span>, da vi holder fast i sigmoid aktiveringsfunktionen. Så lad os differentiere cross-entropy tabsfunktionen defineret i (<a href="#eq-cross_entropy" class="quarto-xref">49</a>) med hensyn til <span class="math inline">\(o\)</span>: <span class="math display">\[
+<p>Alt i alt er vi altså kommet frem til, at cross-entropy tabsfunktionen opfylder betingelserne ovenfor og dermed, at cross-entropy tabsfunktionen rent faktisk <em>er</em> en tabsfunktion! Så langt så godt! Nu mangler vi at vise, at cross-entropy tabsfunktionen løser det potentielle problem omkring langsom læring. Det gør vi ved at finde et nyt udtryk for opdatering af <span class="math inline">\(w_1\)</span>-vægten. Hvis vi ser på udtrykket i (<a href="#eq-opdatering_w1_med_forklaring" class="quarto-xref">20</a>), så skal vi bare have fundet et nyt udtryk for <span class="math inline">\(dE/do\)</span>, da vi holder fast i sigmoid aktiveringsfunktionen. Så lad os differentiere cross-entropy tabsfunktionen defineret i (<a href="#eq-cross_entropy" class="quarto-xref">21</a>) med hensyn til <span class="math inline">\(o\)</span>: <span class="math display">\[
 \frac{dE}{do}= - \left ( t \cdot \frac{1}{o}-(1-t) \cdot \frac{1}{1-o} \right ),
 \]</span> hvor vi har husket, at <span class="math inline">\(\ln(1-o)\)</span> er en sammensat funktion. Vi sætter nu på fælles brøkstreg <span class="math display">\[\begin{align}
 \frac{dE}{do} &amp;= -  \frac{t \cdot (1-o) - o \cdot (1-t)}{o \cdot (1-o)}  \\
@@ -1469,7 +739,7 @@ E = - \left ( \underbrace{t}_{=1} \cdot \underbrace{\ln(o)}_{\thickapprox 0}+\un
 &amp; = -\frac{t-o}{o \cdot (1-o)}
 \end{align}\]</span> Og derfor er <span class="math display">\[
 - \frac{dE}{do}=\frac{t-o}{o \cdot (1-o)}
-\]</span> som ved indsættelse i (<a href="#eq-opdatering_w1_med_forklaring" class="quarto-xref">48</a>) giver <span class="math display">\[
+\]</span> som ved indsættelse i (<a href="#eq-opdatering_w1_med_forklaring" class="quarto-xref">20</a>) giver <span class="math display">\[
 w_1 \leftarrow w_1 + \eta  \cdot \underbrace{\frac{t-o}{o \cdot (1-o)}}_{-dE/do} \cdot \underbrace{o \cdot (1-o)}_{\sigma'(\cdots)} \cdot z_1
 \]</span> Vi ser nu, at udtrykket <span class="math inline">\(o \cdot (1-o)\)</span>, som var den faktor, der kunne give anledning til langsom læring, forkorter ud, og vi får i stedet <span class="math display">\[
 w_1 \leftarrow w_1 + \eta  \cdot (t-o) \cdot  z_1
@@ -1606,36 +876,36 @@ w_1 \leftarrow w_1 + \eta  \cdot (t-o) \cdot  z_1
 </tbody>
 </table>
 <p>Det vil sige, at <span class="math inline">\(x_{5,8}\)</span> er pixelværdien i række <span class="math inline">\(5\)</span> og kolonne <span class="math inline">\(8\)</span> i billedet. Husk at når billedet er sort/hvidt, er denne værdi et heltal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(255\)</span>.</p>
-<p>Vi forestiller os nu, at vi lader et vindue på <span class="math inline">\(3 \times 3\)</span> pixels kører henover billedet, som vist på <a href="#fig-sliding_window" class="quarto-xref">figur&nbsp;12</a>.</p>
+<p>Vi forestiller os nu, at vi lader et vindue på <span class="math inline">\(3 \times 3\)</span> pixels kører henover billedet, som vist på <a href="#fig-sliding_window" class="quarto-xref">figur&nbsp;8</a>.</p>
 <div id="fig-sliding_window" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-sliding_window-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/sliding_window1.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-sliding_window-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;12: Illustration af vindue på <span class="math inline">\(3 \times 3\)</span> pixels, som glider henover billedet.
+Figur&nbsp;8: Illustration af vindue på <span class="math inline">\(3 \times 3\)</span> pixels, som glider henover billedet.
 </figcaption>
 </figure>
 </div>
-<p>Hvis man tæller efter, vil der i alt kunne glide <span class="math inline">\(8\)</span> vinduer vandret og <span class="math inline">\(8\)</span> vinduer lodret. Det giver i alt <span class="math inline">\(64\)</span> vinduer. Pixelværdierne i hvert af disse vinduer sendes nu frem til en skjult neuron i et nyt lag i netværket. Dette er illustreret på <a href="#fig-local_receptive_fields" class="quarto-xref">figur&nbsp;13</a>.</p>
+<p>Hvis man tæller efter, vil der i alt kunne glide <span class="math inline">\(8\)</span> vinduer vandret og <span class="math inline">\(8\)</span> vinduer lodret. Det giver i alt <span class="math inline">\(64\)</span> vinduer. Pixelværdierne i hvert af disse vinduer sendes nu frem til en skjult neuron i et nyt lag i netværket. Dette er illustreret på <a href="#fig-local_receptive_fields" class="quarto-xref">figur&nbsp;9</a>.</p>
 <div id="fig-local_receptive_fields" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-local_receptive_fields-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/local_receptive_fields.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-local_receptive_fields-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;13: Local receptive fields for de skjulte neuroner.
+Figur&nbsp;9: Local receptive fields for de skjulte neuroner.
 </figcaption>
 </figure>
 </div>
-<p>Bemærk, at neuronerne i det første skjulte lag er repræsenteret som et <span class="math inline">\(8 \times 8\)</span> pixels billede (i stedet for neuroner i en vertikal søjle som vi har gjort tidligere). Hvert af vinduerne til venstre i <a href="#fig-local_receptive_fields" class="quarto-xref">figur&nbsp;13</a> kalder man for et <em>local receptive field</em> for den tilhørende skjulte neuron til højre i figuren. For at beregne den værdi som den første skjulte neuron sender videre i netværket, gør vi som tidligere - men med den vigtige undtagelse, at vi kun vægter de <span class="math inline">\(9\)</span> værdi fra det tilhørende <em>local receptive field</em>. Hvis vi kalder den værdi, som den første skjulte neuron sender videre, for <span class="math inline">\(y_{1,1}\)</span>, så kommer det til se sådan her ud: <span class="math display">\[\begin{align}
+<p>Bemærk, at neuronerne i det første skjulte lag er repræsenteret som et <span class="math inline">\(8 \times 8\)</span> pixels billede (i stedet for neuroner i en vertikal søjle som vi har gjort tidligere). Hvert af vinduerne til venstre i <a href="#fig-local_receptive_fields" class="quarto-xref">figur&nbsp;9</a> kalder man for et <em>local receptive field</em> for den tilhørende skjulte neuron til højre i figuren. For at beregne den værdi som den første skjulte neuron sender videre i netværket, gør vi som tidligere - men med den vigtige undtagelse, at vi kun vægter de <span class="math inline">\(9\)</span> værdi fra det tilhørende <em>local receptive field</em>. Hvis vi kalder den værdi, som den første skjulte neuron sender videre, for <span class="math inline">\(y_{1,1}\)</span>, så kommer det til se sådan her ud: <span class="math display">\[\begin{align}
 y_{1,1}&amp;=\sigma(v_0 + v_1 \cdot x_{1,1} + v_2 \cdot x_{1,2} + v_3 \cdot x_{1,3} \\ &amp;\quad \quad \quad \quad + v_4 \cdot x_{2,1} + v_5 \cdot x_{2,2}+\cdots+ v_{9} \cdot x_{3,3}),
 \end{align}\]</span> her er <span class="math inline">\(v_0\)</span> en bias, <span class="math inline">\(v_1, v_2, \dots, v_9\)</span> er vægte og <span class="math inline">\(\sigma\)</span> er igen sigmoid-funktionen.</p>
 <p>Det vil altså sige, at hver neuron i det første skjulte lag <em>kun</em> afhænger af <span class="math inline">\(9\)</span> af de i alt <span class="math inline">\(100\)</span> input-neuroner. På den måde får vi konstrueret et netværk, hvor vi eksplicit indbygger i netværket, at pixels som ligger tæt på hinanden, skal have noget med hinanden at gøre. Og omvendt hvis to pixels ligger langt væk fra hinanden, skal de ikke have noget med hinanden at gøre (fordi de ikke kommer til at indgå i den samme vægtede sum).</p>
 <p>En anden ting, der er ny, er, at vi for alle <span class="math inline">\(64\)</span> vinduer bruger de <em>samme</em> <span class="math inline">\(10\)</span> vægte: <span class="math inline">\(v_0, v_1, \dots, v_9\)</span>. Det vil sige, at når vi f.eks. skal udregne den sidste værdi, så bliver det <span class="math display">\[\begin{align}
 y_{8,8}&amp; =\sigma(v_0 + v_1 \cdot x_{8,8} + v_2 \cdot x_{8,9} + v_3 \cdot x_{8,10}
 \\ &amp; \quad \quad \quad \quad + v_4 \cdot x_{9,8} + v_5 \cdot x_{9,9}+\cdots+ v_9 \cdot x_{10,10})
-\end{align}\]</span> Resultatet bliver <span class="math inline">\(8 \times 8\)</span> skjulte neuroner, som er vist til højre på billedet i <a href="#fig-local_receptive_fields" class="quarto-xref">figur&nbsp;13</a>. Dette lag i netværket kalder man for et <em>convolutional layer</em>. De i alt <span class="math inline">\(10\)</span> vægte kaldes for et <em>feature map</em>, og idéen er, at de bruges til at finde en bestemt egenskab (feature) i billedet. Lad os se på et eksempel. Nedenfor er illustreret et <span class="math inline">\(10 \times 10\)</span> pixels billede med en vertikal mørk linje i midten. Værdierne i hver celle er egentlig ikke en del af billedet, men blot den tilhørende gråskalaværdi.</p>
+\end{align}\]</span> Resultatet bliver <span class="math inline">\(8 \times 8\)</span> skjulte neuroner, som er vist til højre på billedet i <a href="#fig-local_receptive_fields" class="quarto-xref">figur&nbsp;9</a>. Dette lag i netværket kalder man for et <em>convolutional layer</em>. De i alt <span class="math inline">\(10\)</span> vægte kaldes for et <em>feature map</em>, og idéen er, at de bruges til at finde en bestemt egenskab (feature) i billedet. Lad os se på et eksempel. Nedenfor er illustreret et <span class="math inline">\(10 \times 10\)</span> pixels billede med en vertikal mørk linje i midten. Værdierne i hver celle er egentlig ikke en del af billedet, men blot den tilhørende gråskalaværdi.</p>
 <div class="cell">
 <div class="cell-output-display">
 <table class="huxtable" data-quarto-disable-processing="true" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  ">
@@ -1691,7 +961,7 @@ y_{8,8}&amp; =\sigma(v_0 + v_1 \cdot x_{8,8} + v_2 \cdot x_{8,9} + v_3 \cdot x_{
 
 </div>
 </div>
-<p>Et feature map, som kan bruges til at finde henholdsvis lodrette og vandrette linjer i et billede er vist i <a href="#fig-feature1_maps" class="quarto-xref">figur&nbsp;14</a> og <a href="#fig-feature2_maps" class="quarto-xref">figur&nbsp;15</a>.</p>
+<p>Et feature map, som kan bruges til at finde henholdsvis lodrette og vandrette linjer i et billede er vist i <a href="#fig-feature1_maps" class="quarto-xref">figur&nbsp;10</a> og <a href="#fig-feature2_maps" class="quarto-xref">figur&nbsp;11</a>.</p>
 <div class="cell page-columns page-full">
 <div id="fig-feature1_maps" class="cell-output-display quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
@@ -1707,7 +977,7 @@ y_{8,8}&amp; =\sigma(v_0 + v_1 \cdot x_{8,8} + v_2 \cdot x_{8,9} + v_3 \cdot x_{
 
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-feature1_maps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;14: Et feature map <span class="math inline">\(f_1\)</span>, som kan finde vandrette linjer i billeder.
+Figur&nbsp;10: Et feature map <span class="math inline">\(f_1\)</span>, som kan finde vandrette linjer i billeder.
 </figcaption>
 </figure>
 </div>
@@ -1727,7 +997,7 @@ Figur&nbsp;14: Et feature map <span class="math inline">\(f_1\)</span>, som kan 
 
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-feature2_maps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;15: Et feature map <span class="math inline">\(f_2\)</span>, som kan finde lodrette linjer i billeder.
+Figur&nbsp;11: Et feature map <span class="math inline">\(f_2\)</span>, som kan finde lodrette linjer i billeder.
 </figcaption>
 </figure>
 </div>
@@ -1781,14 +1051,14 @@ Figur&nbsp;15: Et feature map <span class="math inline">\(f_2\)</span>, som kan 
 </div>
 </div>
 <p>Læg mærke til hvordan man på dette kondenserede billede tydeligt kan se den lodrette stribe, som var i det oprindelige billede.</p>
-<p>Så dette er den overordnede idé, men der er flere ting at bemærke. For det første bruges et feature map til at finde egenskaber på et billede som vist ovenfor, men man vil typisk ikke kun lede efter én egenskab men flere. Det vil sige, at der ikke kun er ét convolutional lag, men måske <span class="math inline">\(5\)</span> eller <span class="math inline">\(20\)</span> lag. For hvert af disse lag fås et tilhørende pooling lag. Dette er illustreret på <a href="#fig-CNN" class="quarto-xref">figur&nbsp;16</a>.</p>
+<p>Så dette er den overordnede idé, men der er flere ting at bemærke. For det første bruges et feature map til at finde egenskaber på et billede som vist ovenfor, men man vil typisk ikke kun lede efter én egenskab men flere. Det vil sige, at der ikke kun er ét convolutional lag, men måske <span class="math inline">\(5\)</span> eller <span class="math inline">\(20\)</span> lag. For hvert af disse lag fås et tilhørende pooling lag. Dette er illustreret på <a href="#fig-CNN" class="quarto-xref">figur&nbsp;12</a>.</p>
 <div id="fig-CNN" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-CNN-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/CNN.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-CNN-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;16: Convolutional neural network.
+Figur&nbsp;12: Convolutional neural network.
 </figcaption>
 </figure>
 </div>
