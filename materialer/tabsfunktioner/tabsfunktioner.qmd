@@ -33,7 +33,6 @@ $$
 t=
 \begin{cases}
 1 & \textrm{hvis patienten har kræft} \\
-0 & \textrm{hvis patienten ikke har kræft} \\
 \end{cases}
 $$
 Man kunne også have valgt:
@@ -50,7 +49,7 @@ At bestemme, om targetværdien er $0$ eller $1$,  beror på faglig ekspertise in
 
 [^3]: Måske er disse tests først taget et stykke tid efter blodprøven, fordi det ikke er muligt at stille diagnose på tidspunktet for blodprøven. I så fald kan man måske være heldig at få udviklet en AI model, som kan prædiktere kræft *tidligere* end med gængse metoder. 
 
-I @fig-data ses et eksempel på et fiktivt datasæt, hvor en biomarkør er målt på en skala fra 0 til 50 ($x$-aksen) samtidig med, at det ved hjælp af targetværdien er angivet, om patienten har kræft eller ej ($y$-aksen). Det ser her ud som om, at en lav værdi af biomarkøren (cirka under 25) indikerer, at patienten ikke har kræft, men en bestemt skæringsværdi findes ikke. 
+I @fig-data ses et eksempel på et fiktivt [datasæt](data/data.xlsx), hvor en biomarkør er målt på en skala fra 0 til 50 ($x$-aksen) samtidig med, at det ved hjælp af targetværdien er angivet, om patienten har kræft eller ej ($y$-aksen). Det ser her ud som om, at en lav værdi af biomarkøren (cirka under 25) indikerer, at patienten ikke har kræft, men en bestemt skæringsværdi findes ikke. 
 
 
 ```{r echo=FALSE}
@@ -158,7 +157,10 @@ $$
 og med sigmoid-funktionen som aktiveringsfunktion bliver det
 
 $$
-o_m = \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) = \frac{1}{1+e^{-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})}}.
+\begin{aligned}
+o_m &= \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \\
+&= \frac{1}{1+e^{-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})}}.
+\end{aligned}
 $${#eq-o_m}
 
 For perceptroner og simple neurale netværk svarer $x_1, x_2, \dots, x_n$ direkte til inputværdierne, som AI modellen i sidste ende skal virke på. I et kunstig neuralt netværk er det mere kompliceret, men ovenstående er korrekt, hvis man tænker på $x_1, x_2, \dots, x_n$, som de værdier neuronerne i det sidste skjulte lag sender videre til outputlaget.
@@ -261,7 +263,7 @@ $$
 w_i \leftarrow w_i - \eta \cdot \left ( -\sum_{m=1}^M \left (t_m-o_m \right) \cdot o_m \cdot (1-o_m) \cdot x_{m,i}\right).
 $$
 
-Som kan omskrives til
+Som kan omskrives til:
 
 ::: {.callout-note collapse="false" appearance="minimal"} 
 
@@ -270,6 +272,83 @@ Som kan omskrives til
 $$
 w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^M \left (t_m-o_m \right) \cdot o_m \cdot (1-o_m) \cdot x_{m,i}.
 $${#eq-opdatering_kvadreredefejl}
+
+:::
+
+Lad os se på et eksempel.
+
+:::{#exm-squared_error}
+
+Vi vil i vores fiktive eksempel med biomarkør og prædiktion af kræft prøve at bruge *squared error* tabsfunktionen sammen med sigmoid som aktiveringsfunktion.
+
+De første fem datapunkter (ud af ialt 50) er:
+
+|Biomarkør| Target $t$ |
+|:------:|:------:|
+| $19.58$ | $0$ |
+| $18.83$ | $0$ |
+| $8.97$  | $0$ |
+| $36.41$ | $1$ |
+| $23.13$ | $0$ |
+
+
+Vi kan på den baggrund opskrive *squared error* tabsfunktionen:
+
+$$
+E(w_0,w_1) = \frac{1}{2} \left(
+(0-\sigma(w_0+w_1 \cdot 19.58))^2+
+(0-\sigma(w_0+w_1 \cdot 18.83))^2+
+(0-\sigma(w_0+w_1 \cdot 8.97))^2+
+(1-\sigma(w_0+w_1 \cdot 36.41))^2+
+(0-\sigma(w_0+w_1 \cdot 23.13))^2 + \cdots
+\right)^2
+$$
+
+
+Vi søger nu de værdier af $w_0$ og $w_1$, som minimerer tabsfunktionen. Bruges gradientnedstigning (du kan selv prøve ved at bruge [app'en her](../apps/perceptron_app.qmd)) fås:
+
+$$
+w_0 = -7.455 \quad \quad \textrm{og} \quad \quad w_1= 0.2539
+$$
+
+Grafen for 
+$$
+\sigma(-7.455+0.2539 \cdot x) = \frac{1}{1+e^{-(-7.455+0.2539 \cdot x)}}
+$$
+ses indtegnet sammen med datapunkterne i @fig-eksempel_squared_error:
+
+```{r echo=FALSE}
+#| fig-cap: Her ses et plot af data med biomarkør på $x$-aksen og sygdomsstatus på $y$-aksen sammen med grafen for den fundne sigmoid-funktion.
+#| label: fig-eksempel_squared_error
+set.seed(1)
+xp <- runif(50,0,1)
+mu <- ifelse(xp<0.9, 20, 40)
+x <- rnorm(50, mu, sd = 7.5)
+u<-runif(50,0,1)
+b=-9.2
+a=0.35
+p = function(x,a,b){exp(a*x + b)/(1+exp(a*x+ b))}
+px <- p(x,a,b)
+y <- as.numeric(u<px)
+# writexl::write_xlsx(
+# data.frame(biomarker = x, target = y),
+# path = here::here("materialer", "tabsfunktioner", "data",  "data.xlsx")
+# )
+fit <- glm(y~x, family = binomial())
+a_mle <- coef(fit)[2]
+b_mle <- coef(fit)[1]
+a_mle_pretty <- unname(signif(a_mle, 2))
+b_mle_pretty <- unname(signif(b_mle, 2))
+OR_mle <- unname(signif(exp(a_mle),4))
+par(mar=c(4,4,0.5,1))
+plot(x,y,pch=1,xlab="Biomarkør",ylab="Targetværdi")
+w0 = -7.455
+w1 = 0.2539
+xx <- seq(5,45,by=0.1)
+lines(xx,p(xx,w1,w0))
+```
+
+Vi kan nu bruge de fundne vægte til at prædiktere om en fremtidig patient har kræft eller ej. Lad os sige 
 
 :::
 
@@ -388,38 +467,6 @@ $$ {#eq-opdatering_crossentropy}
 
 :::
 
-```{r message=FALSE, warning=FALSE}
-#| fig-cap: Graf for tabsfunktionen.
-#| label: fig-cross
-library(plotly)
-par(mar=c(4,4,0,1))
-# mle_data <- data.frame(a = a_mle, b = b_mle, ll = as.numeric(logLik(fit)))
-tabs_data <- readRDS(file.path("data", "tabsfunktioner.rds"))
-# contour(llik$a, llik$b, llik$vals, xlab = "a", ylab = "b", levels = c(-1028, -1030, -1034, -1038, -1046, -1052, -1084), labels = "")
-ax_x <- list(title = "w0")
-ax_y <- list(title = "w1")
-ax_z <- list(title = "Cross-entropy")
-plot_ly(showscale = FALSE) |>
-  add_surface(x = tabs_data$w0, y = tabs_data$w1, z = ~tabs_data$cross_vals) |>
-  # add_markers(data = mle_data, x = ~w1, y = ~w0, z = ~ll,
-  #             marker = list(size = 5, color = "black"), name = NULL) |>
-  layout(scene = list(xaxis = ax_x, yaxis = ax_y, zaxis = ax_z), showlegend = FALSE)
-```
-
-
-```{r message=FALSE, warning=FALSE}
-#| fig-cap: Graf for tabsfunktionen.
-#| label: fig-squared
-par(mar=c(4,4,0,1))
-ax_z <- list(title = "Squared error")
-plot_ly(showscale = FALSE) |>
-  add_surface(x = tabs_data$w0, y = tabs_data$w1, z = ~tabs_data$squared_vals) |>
-  # add_markers(data = mle_data, x = ~w1, y = ~w0, z = ~ll,
-  #             marker = list(size = 5, color = "black"), name = NULL) |>
-  layout(scene = list(xaxis = ax_x, yaxis = ax_y, zaxis = ax_z), showlegend = FALSE)
-```
-
-
 Der er en interessant sammenhæng mellem denne opdateringsregel og [Perceptron Learning algoritmen](../perceptron/perceptron.qmd#sec-perceptron_learning_algortimen), som du kan læse mere om i boksen herunder.
 
 ::: {.callout-tip collapse="true" appearance="minimal"}
@@ -446,6 +493,53 @@ $$
 \end{aligned}
 $$
 
-Problemet opstår, fordi man i forbindelse med gradientnedstigning, starter i et tilfældigt punkt $(w_0, w_1, \dots, w_n)$. Hvis disse vægte resulterer i forkerte prædiktioner, så for eksempel $o_m \approx 0$, men $t_m = 1$, så vil faktoren $o_m \cdot (1-o_m)$ være tæt på $0$. Det betyder, at vægtene næsten ikke bliver opdateret, når vi bruger *squared error*, fordi opdateringsleddene alle er tæt på $0$. Noget tilsvarende gør sig gældende, hvis $o_m \approx 1$ og $t_m = 0$. Dette fænomen kalder man for **slow learning**. Noget tilsvarende opstår ikke med *cross-entropy*, da faktoren $o_m \cdot (1-o_m)$ ikke indgår i opdateringsleddet.
+Problemet opstår, fordi man i forbindelse med gradientnedstigning, starter i et tilfældigt punkt $(w_0, w_1, \dots, w_n)$. Hvis disse vægte resulterer i forkerte prædiktioner, så for eksempel $o_m \approx 0$, men $t_m = 1$, så vil faktoren $o_m \cdot (1-o_m)$ være tæt på $0$. Det betyder, at vægtene næsten ikke bliver opdateret, når vi bruger *squared error*, fordi opdateringsleddene alle er tæt på $0$. Noget tilsvarende gør sig gældende, hvis $o_m \approx 1$ og $t_m = 0$. Dette fænomen kalder man for **slow learning**. 
+
+I @fig-squared ses grafen for *squared error* tabsfunktionen fra eksemplet om biomarkører og prædiktion af kræft. Her er det ret tydeligt, at der findes værdier af vægtene $w_0$ og $w_1$, hvor grafen flader helt ud. Hvis man får startet sin gradientnedstigning her, så kan der gå lang tid inden, man ender i minimum.
+
+
+```{r message=FALSE, warning=FALSE}
+#| fig-cap: Graf for *squared error* tabsfunktionen fra eksemplet om biomarkører og prædiktion af kræft.
+#| label: fig-squared
+library(plotly)
+par(mar=c(4,4,0,1))
+tabs_data <- readRDS(file.path("data", "tabsfunktioner.rds"))
+# contour(llik$a, llik$b, llik$vals, xlab = "a", ylab = "b", levels = c(-1028, -1030, -1034, -1038, -1046, -1052, -1084), labels = "")
+ax_x <- list(title = "w0")
+ax_y <- list(title = "w1")
+ax_z <- list(title = "Squared error")
+plot_ly(showscale = FALSE) |>
+  add_surface(x = tabs_data$w0, y = tabs_data$w1, z = ~tabs_data$squared_vals) |>
+  # add_markers(data = mle_data, x = ~w1, y = ~w0, z = ~ll,
+  #             marker = list(size = 5, color = "black"), name = NULL) |>
+  layout(scene = list(xaxis = ax_x, yaxis = ax_y, zaxis = ax_z), showlegend = FALSE)
+```
+
+
+
+Noget tilsvarende opstår ikke med *cross-entropy*, da faktoren $o_m \cdot (1-o_m)$ ikke indgår i opdateringsleddet i for *cross-entropy*:
+$$
+w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} (t_m- o_m)\cdot x_{m,i}
+$$
+Det ses også på grafen for *cross-entropy* tabsfunktionen i @fig-cross. Her er der ingen steder, hvor grafen flader ud. Det vil sige, at man ikke på samme måde kan komme til at starte et uheldigt sted på grafen.  Derimod vil man ret hurtigt \"lande\" i minimum uanset, hvor man starter. 
+
+
+```{r message=FALSE, warning=FALSE}
+#| fig-cap: Graf for *cross-entropy* tabsfunktionen fra eksemplet om biomarkører og prædiktion af kræft.
+#| label: fig-cross
+par(mar=c(4,4,0,1))
+# mle_data <- data.frame(a = a_mle, b = b_mle, ll = as.numeric(logLik(fit)))
+ax_z <- list(title = "Cross-entropy")
+plot_ly(showscale = FALSE) |>
+  add_surface(x = tabs_data$w0, y = tabs_data$w1, z = ~tabs_data$cross_vals) |>
+  # add_markers(data = mle_data, x = ~w1, y = ~w0, z = ~ll,
+  #             marker = list(size = 5, color = "black"), name = NULL) |>
+  layout(scene = list(xaxis = ax_x, yaxis = ax_y, zaxis = ax_z), showlegend = FALSE)
+```
+
+
+
+
+
 
 

@@ -8,8 +8,8 @@ names(dat) <- c("x", "t")
 fit <- glm(t~x, family = binomial(), data = dat)
 w1_mle <- coef(fit)[2]
 w0_mle <- coef(fit)[1]
-w1_grid <- round(seq(0.5,1.5,by=.005)*w1_mle, 4)
-w0_grid <- round(rev(seq(0.5,1.5,by=.005))*w0_mle, 2)
+w1_grid <- round(seq(0.5,4.5,by=.005)*w1_mle, 4)
+w0_grid <- round(rev(seq(0.5,4.5,by=.005))*w0_mle, 2)
 crossentropy <- function(w0, w1, x, t){
   o <- 1/(1+exp(-(w0+w1*x)))
   - sum(t * log(o) + (1-t)*log(1-o))
