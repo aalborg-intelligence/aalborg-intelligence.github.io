@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="I forlængelse af forløbet om overvågning ses her på begrebet featureskalering.">
+<meta name="description" content="I forlængelse af forløbet om overvågning ses her på begrebet feature-skalering.">
 
-<title>Featureskalering på data fra overvågningsforløb – AI MAT - matematikken bag magien</title>
+<title>Feature-skalering på data fra overvågningsforløb – AI MAT - matematikken bag magien</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -179,7 +179,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Featureskalering på data fra overvågningsforløb</h1>
+<h1 class="title">Feature-skalering på data fra overvågningsforløb</h1>
   <div class="quarto-categories">
     <div class="quarto-category">B-niveau</div>
     <div class="quarto-category">Kort</div>
@@ -213,21 +213,21 @@ Forudsætninger og tidsforbrug
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Forløbet kræver, at man har gennemgået forløbet <a href="../undervisningsforloeb/kNN_forlob_overvaagning.html">Overvågning i Monitorbian</a></li>
-<li>Stikprøvespredning</li>
+<li>Forløbet kræver, at man har gennemgået forløbet <a href="../undervisningsforloeb/kNN_forlob_overvaagning.html">Overvågning i Monitorbian</a>.</li>
+<li>Stikprøvespredning.</li>
 </ul>
-<p><strong>Tidsforbrug:</strong> ca. 90 minutter.</p>
+<p><strong>Tidsforbrug:</strong> Ca. 90 minutter.</p>
 </div>
 </div>
 </div>
 <section id="formål" class="level3 purpose">
 <h3 class="anchored" data-anchor-id="formål">Formål</h3>
-<p>I dette forløb undersøges begrebet <strong>featureskalering</strong> med brug af data fra forløbet om overvågning i Monitorbian.</p>
-<p>Man kan læse mere om featureskalering i noten <a href="../materialer/afstande/afstand.html" target="_blank">Afstande om feature-skalering</a>, men det er ikke en forudsætning for at arbejde med dette forløb.</p>
+<p>I dette forløb undersøges begrebet <strong>feature-skalering</strong> med brug af data fra forløbet om overvågning i Monitorbian.</p>
+<p>Man kan læse mere i <a href="../materialer/afstande/feature_scaling.html" target="_blank">noten om feature-skalering</a>, men det er ikke en forudsætning for at arbejde med dette forløb.</p>
 </section>
 <section id="de-konkrete-features" class="level2">
 <h2 class="anchored" data-anchor-id="de-konkrete-features">De konkrete features</h2>
-<p>I datasættet er fodarealerne målt i <span class="math inline">\(cm^2\)</span> med værdier fra 138 til 334, mens højderne er målt i <span class="math inline">\(cm\)</span> med værdier fra 62 til 155. Så variationsbredden i fodarealer uden enhed er ca. 200, mens variationsbredden i højder uden enhed er ca. 100. Så når vi med <span class="math inline">\(kNN\)</span> bestemmer nærmeste naboer, vil højden ofte betyde mere end fodarealet, da højderne ligger tættere på hinanden.</p>
+<p>I datasættet er fodarealerne målt i <span class="math inline">\(cm^2\)</span> med værdier fra 138 til 334, mens højderne er målt i <span class="math inline">\(cm\)</span> med værdier fra 62 til 155. Så variationsbredden i fodarealer uden enhed er ca. 200, mens variationsbredden i højder uden enhed er ca. 100. Så når vi med <em>kNN</em> bestemmer nærmeste naboer, vil højden ofte betyde mere end fodarealet, da højderne ligger tættere på hinanden.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -240,9 +240,10 @@ Opgave 1: Illustration af de konkrete features
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
+<p>Datasæt: <a href="kNN_forlob_overvaagning_filer/data/Træningsdata.xlsx">Træningsdata</a>.</p>
 <ul>
 <li>Lav et punktplot, hvor datapunkterne for <strong>Fedtmule</strong> er røde, datapunkterne for <strong>Anders And</strong> er blå, og der desuden er et gråt punkt i <span class="math inline">\((240 \ cm^2, 88 \  cm)\)</span>.</li>
-<li>Vurder, hvilke <span class="math inline">\(6\)</span> punkter, der ligger tættet på det grå punkt, evt. ved at tilføje en cirkel med centrum i det grå punkt med en radius, så <span class="math inline">\(6\)</span> af de øvrige punkter ligger i cirklen.</li>
+<li>Vurder, hvilke <span class="math inline">\(6\)</span> punkter, der ligger tættest på det grå punkt, eventuelt ved at tilføje en cirkel med centrum i det grå punkt med en radius, så <span class="math inline">\(6\)</span> af de øvrige punkter ligger i cirklen.</li>
 </ul>
 </div>
 </div>
@@ -250,23 +251,23 @@ Opgave 1: Illustration af de konkrete features
 </section>
 <section id="enheden-på-data-ændres" class="level2">
 <h2 class="anchored" data-anchor-id="enheden-på-data-ændres">Enheden på data ændres</h2>
-<p>Men hvad ville der ske, hvis vi anvendte en anden enhed f.eks. for højderne. Hvad hvis vi i stedet målte højderne i <span class="math inline">\(mm\)</span>? Så bliver variationsbredden i højderne ca. <span class="math inline">\(1000\)</span>, mens variationsbredden for fodarealerne stadig er ca. <span class="math inline">\(200\)</span>. Så vi må nu forvente, at fodarealerne betyder mere end højderne, når vi bestemmer nærmeste naboer, da fodarealerne nu ligger tættere på hinanden end højderne.</p>
+<p>Men hvad ville der ske, hvis vi anvendte en anden enhed for eksempel for højderne. Hvad hvis vi i stedet målte højderne i <span class="math inline">\(mm\)</span>? Så bliver variationsbredden i højderne ca. <span class="math inline">\(1000\)</span>, mens variationsbredden for fodarealerne stadig er ca. <span class="math inline">\(200\)</span>. Så vi må nu forvente, at fodarealerne betyder mere end højderne, når vi bestemmer nærmeste naboer, da fodarealerne nu ligger tættere på hinanden end højderne. Det skal vi se på i de følgende opgaver.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 2: Illustration med højder i mm
+Opgave 2: Illustration med højder i <span class="math inline">\(mm\)</span>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Lav samme punktplot som før, men nu skal alle y-koordinaterne være 10 gange så store, da det skal regnes i mm. det gælder også det grå punkt.</li>
-<li>Vurder igen, hvilke <span class="math inline">\(6\)</span> punkter, der ligger tættet på det grå punkt, evt. vha. en cirkel.</li>
-<li>Diskuter og vurder, om det fik den betydning, at fodarealerne nu betyder mere end før i forhold til kNN.</li>
+<li>Lav samme punktplot som før, men nu skal alle <span class="math inline">\(y\)</span>-koordinaterne være 10 gange så store, da de skal regnes i <span class="math inline">\(mm\)</span> (det gælder også det grå punkt).</li>
+<li>Vurder igen, hvilke <span class="math inline">\(6\)</span> punkter, der ligger tættest på det grå punkt, eventuelt ved hjælp af en cirkel.</li>
+<li>Diskuter og vurder, om det fik den betydning, at fodarealerne nu betyder mere end før i forhold til <em>kNN</em>.</li>
 </ul>
 </div>
 </div>
@@ -276,14 +277,14 @@ Opgave 2: Illustration med højder i mm
 <section id="metode-til-at-give-begge-features-samme-vægt" class="level2">
 <h2 class="anchored" data-anchor-id="metode-til-at-give-begge-features-samme-vægt">Metode til at give begge features samme vægt</h2>
 <p>Som du måske har gættet, vil det bedste nok være, at fodareal og højde betød lige meget.</p>
-<p>Det gøres i to trin. Først flyttes data, så både værdierne for fodarealer og værdierne for højder ligger omkring <span class="math inline">\(0\)</span>. Så værdier under gennemsnittet bliver negative og værdier over gennemsnittet bliver positive.</p>
+<p>Det gøres i to trin. Først "flyttes" data, så både værdierne for fodarealer og værdierne for højder ligger omkring <span class="math inline">\(0\)</span>. På den måde vil værdier under gennemsnittet blive negative og værdier over gennemsnittet positive.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 3: Data centreres omkring <span class="math inline">\((0, 0)\)</span>.
+Opgave 3: Data centreres omkring <span class="math inline">\((0, 0)\)</span>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -298,14 +299,14 @@ Opgave 3: Data centreres omkring <span class="math inline">\((0, 0)\)</span>.
 </div>
 </div>
 </div>
-<p>Dernæst gøres variationsbredderne nogenlunde lige store. Man kunne dividere alle værdierne for fodarealer med varationsbredden for fodarealerne, og tilsvarende for højderne. Derved ville de to features begge få en variationsbredde på <span class="math inline">\(1\)</span>, og dermed være ens. Man vælger dog at gøre noget lidt anderledes, bl.a fordi variationsbredden kun afhænger af to af punkterne, og ikke dem alle. I stedet for at dividere med variationsbredden, divideres med spredningen, hvorefter de fleste dataværdier kommer til at ligge mellem -2 og 2 for begge features.</p>
+<p>Dernæst gøres variationsbredderne nogenlunde lige store. Man kunne dividere alle værdierne for fodarealer med variationsbredden for fodarealerne, og tilsvarende for højderne. Derved ville de to features begge få en variationsbredde på <span class="math inline">\(1\)</span>, og dermed være ens. Man vælger dog at gøre noget lidt anderledes, blandt andet fordi variationsbredden kun afhænger af to af punkterne og ikke dem alle. I stedet for at dividere med variationsbredden, divideres med spredningen, hvorefter de fleste dataværdier kommer til at ligge mellem <span class="math inline">\(-2\)</span> og <span class="math inline">\(2\)</span> for begge features.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 4: Variationsbredden gøres nogenlunde ens.
+Opgave 4: Variationsbredden gøres nogenlunde ens
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -335,14 +336,14 @@ Opgave 5: Illustration med justerede værdier for begge features
 <div class="callout-body-container callout-body">
 <ul>
 <li>Lav samme punktplot som tidligere, men nu med de justerede værdier.</li>
-<li>Vurder igen, hvilke <span class="math inline">\(6\)</span> punkter, der ligger tættet på det grå punkt, evt. vha. en cirkel.</li>
-<li>Se, om værdierne for begge features nogenlunde ligger mellem -2 og 2, som forventet.</li>
+<li>Vurder igen, hvilke <span class="math inline">\(6\)</span> punkter, der ligger tættest på det grå punkt, eventuelt ved hjælp af en cirkel.</li>
+<li>Se, om værdierne for begge features nogenlunde ligger mellem <span class="math inline">\(-2\)</span> og <span class="math inline">\(2\)</span>, som forventet.</li>
 </ul>
 </div>
 </div>
 </div>
-<p>Denne metode er en kendt standard til at sørge for, at begge (eller alle, hvis der er flere) features vægtes lige meget, så man undgår at den vælge enhed afgør, om den ene eller anden anden feature bliver dominerende.</p>
-<p>F.eks. bruger programmet Orange, som du anvendte i forløbet <a href="../undervisningsforloeb/kNN_forlob_overvaagning.html">Overvågning i Monitorbian</a> denne form for featureskalering.</p>
+<p>Denne metode er en kendt standard til at sørge for, at begge (eller alle, hvis der er flere) features vægtes lige meget, så man undgår at den valgte enhed afgør, om den ene eller anden anden feature bliver dominerende.</p>
+<p>For eksempel bruger programmet Orange, som du anvendte i forløbet <a href="../undervisningsforloeb/kNN_forlob_overvaagning.html">Overvågning i Monitorbian</a> denne form for feature-skalering.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -363,19 +364,19 @@ Opgave 6: Ekstra
 </div>
 </div>
 </div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Åben først efter opgave 6.
+Åben først efter opgave 6
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Så justeringen omkring <span class="math inline">\((0,0)\)</span> er faktisk ikke nødvendig, men indgår alligevel ofte i featureskalering, så data som standard ligger mellem -2 og 2.</p>
+<p>Så justeringen omkring <span class="math inline">\((0,0)\)</span> er faktisk ikke nødvendig, men indgår alligevel ofte i feature-skalering, så data som standard ligger mellem -2 og 2.</p>
 </div>
 </div>
 </div>
