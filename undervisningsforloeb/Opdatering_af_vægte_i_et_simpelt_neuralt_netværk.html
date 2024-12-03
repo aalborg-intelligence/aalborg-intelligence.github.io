@@ -168,6 +168,7 @@ window.Quarto = {
   <li><a href="#første-opdatering-af-vægtene" id="toc-første-opdatering-af-vægtene" class="nav-link" data-scroll-target="#første-opdatering-af-vægtene">Første opdatering af vægtene</a></li>
   <li><a href="#anden-opdatering-af-vægtene" id="toc-anden-opdatering-af-vægtene" class="nav-link" data-scroll-target="#anden-opdatering-af-vægtene">Anden opdatering af vægtene</a></li>
   <li><a href="#app-til-simple-neurale-netværk" id="toc-app-til-simple-neurale-netværk" class="nav-link" data-scroll-target="#app-til-simple-neurale-netværk">App til simple neurale netværk</a></li>
+  <li><a href="#cross-entropy-som-tabsfunktion." id="toc-cross-entropy-som-tabsfunktion." class="nav-link" data-scroll-target="#cross-entropy-som-tabsfunktion.">Cross-entropy som tabsfunktion.</a></li>
   </ul>
 </nav>
 </nav>
@@ -214,18 +215,18 @@ Forudsætninger og tidsforbrug
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Simple neurale netværk</li>
-<li>Sigmoid aktiveringsfunktion</li>
-<li>Gradientnedstigning</li>
+<li>Simple neurale netværk.</li>
+<li>Sigmoid aktiveringsfunktion.</li>
+<li>Gradientnedstigning.</li>
 </ul>
-<p>Forudsætningerne kan f.eks. dækkes vha. <a href="../materialer/perceptron/perceptron.html" target="_blank">note om simple neurale netværk</a>.</p>
+<p>Forudsætningerne kan f.eks. dækkes vha. <a href="../materialer/perceptron/perceptron.html" target="_blank">noten om simple neurale netværk</a>.</p>
 <p><strong>Tidsforbrug:</strong> Ca. 90 minutter.</p>
 </div>
 </div>
 </div>
 <section id="formål" class="level3 purpose">
 <h3 class="anchored" data-anchor-id="formål">Formål</h3>
-<p>At forstå gennem detaljerede beregninger, hvordan vægtene i et simpelt neuralt netværk opdateres med brug af sigmoid aktiveringsfunktionen og gradientnedstigning.</p>
+<p>Gennem detaljerede beregninger at forstå, hvordan vægtene i et simpelt neuralt netværk opdateres med brug af sigmoid aktiveringsfunktionen og gradientnedstigning.</p>
 <p>Dette kan ses som et skridt på vejen til at forstå, hvordan vægtene opdateres i et generelt neuralt netværk.</p>
 </section>
 <section id="et-meget-lille-datasæt" class="level2">
@@ -259,7 +260,7 @@ Forudsætninger og tidsforbrug
 </tr>
 </tbody>
 </table>
-<p>Vi vælger en learning-rate på <span class="math inline">\(\eta = 0.1\)</span>, sigmoid-funktionen <span class="math inline">\(\sigma(x)=\frac{1}{1+e^{-x}}\)</span> som aktiveringsfunktion og kvadrat-sum som tabsfunktion <span class="math inline">\(E(w_0, w_1, w_2) = \frac{1}{2} \sum_{m=1}^{3} \left (t_m-\sigma(w_0 + w_1 \cdot x_{m,1} + w_2 \cdot x_{m,2}) \right)^2\)</span> Endeligt vælger vi startvægtene <span class="math inline">\(w_0=0.1, w_1=0.1, w_2=0.1\)</span>.</p>
+<p>Vi vælger en learning-rate på <span class="math display">\[\eta = 0.1\]</span> <em>sigmoid-funktionen</em> som aktiveringsfunktion <span class="math display">\[\sigma(x)=\frac{1}{1+e^{-x}}\]</span> og <em>squared-error</em> som tabsfunktion <span class="math display">\[E(w_0, w_1, w_2) = \frac{1}{2} \sum_{m=1}^{3} \left (t_m-\sigma(w_0 + w_1 \cdot x_{m,1} + w_2 \cdot x_{m,2}) \right)^2\]</span> Endeligt vælger vi startvægtene <span class="math display">\[w_0=0.1, w_1=0.1, w_2=0.1\]</span>.</p>
 </section>
 <section id="første-opdatering-af-vægtene" class="level2">
 <h2 class="anchored" data-anchor-id="første-opdatering-af-vægtene">Første opdatering af vægtene</h2>
@@ -270,7 +271,7 @@ Forudsætninger og tidsforbrug
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 1: beregn værdien af tabsfunktionen
+Opgave 1: Beregn værdien af tabsfunktionen
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -278,7 +279,7 @@ Opgave 1: beregn værdien af tabsfunktionen
 <div class="callout-body-container callout-body">
 <ul>
 <li>Udregn først <span class="math inline">\(s_1 = w_0 + w_1 \cdot x_1 + w_2 \cdot x_2\)</span> for det første datapunkt.</li>
-<li>Udregn så <span class="math inline">\(o_1 = \sigma (s_1)\)</span></li>
+<li>Udregn så <span class="math inline">\(o_1 = \sigma (s_1)\)</span>.</li>
 <li>Udregn derefter <span class="math inline">\(e_1 = (t_1 - o_1)^2\)</span>, hvilket giver det første punkts bidrag til tabsfunktionen.</li>
 <li>Gentag for hver af de 2 øvrige datapunkter.</li>
 <li>Læg de 3 beregnede værdier sammen og divider med 2, så <span class="math inline">\(E=\frac{1}{2} \cdot (e_1+e_2+e_3)\)</span>.</li>
@@ -292,7 +293,7 @@ Opgave 1: beregn værdien af tabsfunktionen
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Løsning til opgave 1.
+Løsning til opgave 1
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -327,7 +328,7 @@ E &amp; = \frac {1}{2}(e_1+e_2+e_3) \approx 0.3368276195
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 2: Beregn de partielle afledede.
+Opgave 2: Beregn de partielle afledede
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -347,7 +348,7 @@ Opgave 2: Beregn de partielle afledede.
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Løsning til opgave 2.
+Løsning til opgave 2
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -406,7 +407,7 @@ E_{23} &amp; = (t_3-o_3) \cdot o_3 \cdot (1-o_3) \cdot x_{23} \\
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 3: Opdater vægtene.
+Opgave 3: Opdater vægtene
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -428,7 +429,7 @@ w_2 \leftarrow &amp; w_2 - \eta \cdot \frac{\partial E}{\partial w_2}
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Løsning til opgave 3.
+Løsning til opgave 3
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -437,8 +438,8 @@ Løsning til opgave 3.
 <p>Beregn de opdaterede vægte <span class="math display">\[
 \begin{aligned}
 w_0 \leftarrow &amp; 0.1 - 0.1 \cdot (-0.02454325869) \approx 0.1024543259   \\
-w_1 \leftarrow &amp; w_1 - 0.1 \cdot 0.05202358001 \approx 0.09479764200  \\
-w_2 \leftarrow &amp; w_2 - 0.1 \cdot (-0.0535258408) \approx 0.1053525841
+w_1 \leftarrow &amp; 0.1 - 0.1 \cdot 0.05202358001 \approx 0.09479764200  \\
+w_2 \leftarrow &amp; 0.1 - 0.1 \cdot (-0.0535258408) \approx 0.1053525841
 \end{aligned}
 \]</span></p>
 </div>
@@ -454,7 +455,7 @@ w_2 \leftarrow &amp; w_2 - 0.1 \cdot (-0.0535258408) \approx 0.1053525841
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 4: Opdater vægtene anden gang.
+Opgave 4: Opdater vægtene anden gang
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -467,14 +468,14 @@ Opgave 4: Opdater vægtene anden gang.
 </div>
 </div>
 </div>
-<p>Bemærk, at tabsfunktionen er blevet lidt mindre. Formålet er jo netop at minimere den gennem gradientnedstigning, så som regel bør værdien bliver mindre, hver gang vægtene opdateres.</p>
+<p>Bemærk, at værdien af tabsfunktionen er blevet lidt mindre. Formålet er jo netop at minimere den gennem gradientnedstigning, så som regel bør værdien bliver mindre, hver gang vægtene opdateres.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Løsning til opgave 4.
+Løsning til opgave 4
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -494,14 +495,14 @@ w_2 &amp; \approx 0.1086460194
 </section>
 <section id="app-til-simple-neurale-netværk" class="level2">
 <h2 class="anchored" data-anchor-id="app-til-simple-neurale-netværk">App til simple neurale netværk</h2>
-<p>Med <a href="../apps/perceptron_app.html" target="_blank">Perceptron app</a> kan du lave de samme beregninger bare automatisk.</p>
+<p>Med <a href="../apps/perceptron_app.html" target="_blank">perceptron app’en</a> kan du lave de samme beregninger bare automatisk.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 5: Afprøv perceptron app.
+Opgave 5: Afprøv perceptron app’en
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -509,32 +510,36 @@ Opgave 5: Afprøv perceptron app.
 <div class="callout-body-container callout-body">
 <ul>
 <li>Lav et Excelark med feature- og targetværdierne.</li>
-<li>Indlæs data fra Excelarket i perceptron appen.</li>
-<li>Vælg de korrekte værdier i felterne på appen. Herunder skal feature-skalering være slået fra.</li>
-<li>Se om appen giver samme resultater for tabsfunktionen og vægtene, som du selv fik efter 1 iteration og efter 2 iterationer.</li>
+<li>Indlæs data fra Excelarket i perceptron app’en.</li>
+<li>Vælg de korrekte værdier i felterne på app’en. Herunder skal feature-skalering være slået fra.</li>
+<li>Se om app’en giver samme resultater for tabsfunktionen og vægtene, som du selv fik efter 1 iteration og efter 2 iterationer.</li>
 </ul>
 </div>
 </div>
 </div>
+</section>
+<section id="cross-entropy-som-tabsfunktion." class="level2">
+<h2 class="anchored" data-anchor-id="cross-entropy-som-tabsfunktion.">Cross-entropy som tabsfunktion.</h2>
+<p>Du kan læse om <em>cross-entry</em> i <a href="../materialer/tabsfunktioner/tabsfunktioner.html#cross-entropy" target="_blank">noten om tabsfunktion</a>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-(Extra) Opgave 6: Cross-entropy tabsfunktion
+(Ekstra) Opgave 6: Cross-entropy tabsfunktion
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-11" class="callout-11-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Gentag opgave 1-5 men med cross-entropy som tabsfunktion i stedet for kvadrat-sum.</li>
+<li>Gentag opgave 1-5 men med <em>cross-entropy</em> som tabsfunktion i stedet for <em>square-error</em>.</li>
 </ul>
 </div>
 </div>
 </div>
-<p>NB: Ege skal have tilføjet en mulighed for at slå featureskalering fra i appen, før det fungerer efter hensigten.</p>
+<p>NB: Ege skal have tilføjet en mulighed for at slå feature-skalering fra i appen, før det fungerer efter hensigten.</p>
 
 
 </section>
