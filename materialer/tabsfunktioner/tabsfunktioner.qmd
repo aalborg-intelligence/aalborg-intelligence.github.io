@@ -2,6 +2,7 @@
 title: "Tabsfunktioner"
 image: "images/tabsfunktion.jpg"
 description-meta: "I langt de fleste tilfælde sker træning af AI modeller ved at minimere en tabsfunktion. Lidt løst sagt kan man sige, at en tabsfunktion måler, hvor god en AI model er til at forudsige det, vi gerne vil have den til at sige noget om. I denne note lærer du lidt om, hvordan tabsfunktioner kan se ud, og hvad træningsdata er for en størrelse."
+tbl-cap-location: top # Virker ikke lige nu - det er vist en bug
 ---
 
 
@@ -33,6 +34,7 @@ $$
 t=
 \begin{cases}
 1 & \textrm{hvis patienten har kræft} \\
+0 & \textrm{hvis patienten ikke har kræft} \\
 \end{cases}
 $$
 Man kunne også have valgt:
@@ -45,7 +47,7 @@ t=
 $$
 Eller noget helt tredje! Lad os for nu sige at vi vælger den første mulighed, hvor $t \in \{0,1\}$. 
 
-At bestemme, om targetværdien er $0$ eller $1$,  beror på faglig ekspertise indenfor det genstandsfelt, hvor AI modellen skal anvendes. I eksemplet med kræft vil det for eksempel være baseret på forskellige diagnostiske tests, som en læge kan bruge til at vurdere, om patienten har kræft[^3].
+At bestemme om patienten har kræft eller ej -- det vil sige, om targetværdien er $0$ eller $1$,  beror på faglig ekspertise indenfor det genstandsfelt, hvor AI modellen skal anvendes. I eksemplet med kræft vil det for eksempel være baseret på forskellige diagnostiske tests, som en læge kan bruge til at vurdere, om patienten har kræft[^3].
 
 [^3]: Måske er disse tests først taget et stykke tid efter blodprøven, fordi det ikke er muligt at stille diagnose på tidspunktet for blodprøven. I så fald kan man måske være heldig at få udviklet en AI model, som kan prædiktere kræft *tidligere* end med gængse metoder. 
 
@@ -83,12 +85,18 @@ Idéen er nu, at man \"fodrer\" sin AI algoritme med en hel masse inputværdier 
 
 Overordnet set skal en tabsfunktion $E$ have følgende egenskaber:
 
+::: {.callout-caution collapse="false" appearance="minimal"}
+### Egenskaber ved en tabsfunktion $E$
+
 * Tabsfunktionen skal være positiv: $E>0$ (vi vil ikke operere med negative fejl). 
+
 * Hvis AI modellen er god til at prædiktere, skal $E$ være tæt på $0$, mens hvis AI modellen er dårlig til at prædiktere, skal $E$ være langt væk fra $0$.
+
+:::
 
 Overordnet set vil vi altså gerne have en AI model med så lille et tab eller så lille en fejl som muligt. **Derfor skal tabsfunktionen minimeres.** 
 
-I AI modellen vil det typisk være sådan, at de forskellige inputværdier vægtes med en række vægte $w_0, w_1, \dots, w_n$:
+I AI modellen vil det typisk være sådan, at de forskellige inputværdier vægtes med en række vægte $w_0, w_1, \dots, w_n$ på denne måde:
 
 $$
 w_0 + w_1 \cdot x_1 + \cdots +w_n \cdot x_n.
@@ -107,7 +115,7 @@ f(w_0, w_1, \dots, w_n).
 $$
 Funktionen afhænger selvfølgelig også af hele træningsdatasættet, men eftersom det er vægtene, man skal justere, alt imens træningsdata er fastlagt, vil vi blot tænke på $f$ som en funktion af vægtene.
 
-Funktionen $f$ kaldes for øvrigt i mange AI modeller for en [**aktiveringsfunktion**](../undervisningsforloeb/aktiveringsfunktioner.qmd). Ofte vil værdimængden for $f$ være $(0,1)$. Det gælder for eksempel, hvis $f$ er [sigmoid-funktionen ](../../undervisningsforloeb/aktiveringsfunktioner.qmd#sigmoid) $\sigma$ med forskrift:
+Funktionen $f$ kaldes for øvrigt i mange AI modeller for en [**aktiveringsfunktion**](../undervisningsforloeb/aktiveringsfunktioner.qmd). Ofte vil værdimængden for $f$ være $(0,1)$. Det gælder for eksempel, hvis $f$ er [sigmoid-funktionen ](../undervisningsforloeb/aktiveringsfunktioner.qmd#sigmoid) $\sigma$ med forskrift:
 
 $$
 \sigma (x) = \frac{1}{1+e^{-x}}.
@@ -115,12 +123,12 @@ $$
 Med inputværdier $(x_1, \dots, x_n)$ og vægte $w_0, w_1, \dots, w_n$ bruges sigmoid-funktionen, som aktiveringsfunktion sådan her:
 
 $$
-f(w_0, w_1, \dots, w_n) = \frac{1}{1+e^{-(w_0 + w_1 \cdot x_1 + \cdots w_n \cdot x_n)}}.
+f(w_0, w_1, \dots, w_n) = \frac{1}{1+e^{-(w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)}}.
 $$
 
 Grafen for sigmoid-funktionen kan ses i @fig-sigmoid.
 
-![Grafen for sigmoid-funktionen.](../../undervisningsforloeb/aktiveringsfunktioner/sigmoid.png){width=75% #fig-sigmoid}
+![Grafen for sigmoid-funktionen.](images/sigmoid.png){width=75% #fig-sigmoid}
 
 Det betyder, at vi kan tolke værdien af $f$ som en sandsynlighed. Vi forestiller os, at vi får et nyt sæt af inputværdier -- for eksempel målingerne fra en ny blodprøve, og vi vil gerne finde ud af, om patienten har kræft eller ej. Disse værdier \"sendes\" nu ind i funktionen $f$ og ud kommer en ouputværdi, som vi vil kalde for $o$. Værdien af $o$ betragtes nu som sandsynligheden for, at den rigtige targetværdi er $1$. Det kunne for eksempel være sådan her:
 
@@ -132,7 +140,19 @@ $$
 \end{cases}
 $$
 
-Men hvis det skal give mening, så kræver det altså, at vi har fundet de værdier af vægtene, som gør, at denne prædiktion rent faktisk bliver god.
+I vores eksempel med kræft, vil det nok typisk være sådan, at det er meget vigtigt, at alle patienter, hvor der er den mindste mistanke om kræft sendes til videre udredning. Og derfor kunne man for eksempel også have valgt følgende prædiktion:
+
+$$
+\textrm{prædiktion}=
+\begin{cases}
+\textrm{patienten har kræft} & \textrm{hvis } o \geq 0.05 \\
+\textrm{patienten har ikke kræft} & \textrm{hvis } o < 0.05 \\
+\end{cases}
+$$
+
+Det afhænger altså af den konkrete anvendelse, hvordan man vil forholde sig til den beregnede outputværdi.
+
+Men uanset hvad, så vil det kun give mening, hvis vi har fundet de værdier af vægtene, som gør, at denne prædiktion rent faktisk bliver god. 
 
 Vi har hele tiden sagt, at det gør vi ved at minimere tabsfunktionen, men det kræver jo, at vi har en tabsfunktion. Inden vi dykker længere ned i forskellige typer af tabsfunktioner, skal vi lige have skrevet vores træningsdata lidt mere formelt op.
 
@@ -165,6 +185,9 @@ $${#eq-o_m}
 
 For perceptroner og simple neurale netværk svarer $x_1, x_2, \dots, x_n$ direkte til inputværdierne, som AI modellen i sidste ende skal virke på. I et kunstig neuralt netværk er det mere kompliceret, men ovenstående er korrekt, hvis man tænker på $x_1, x_2, \dots, x_n$, som de værdier neuronerne i det sidste skjulte lag sender videre til outputlaget.
 
+Hele idéen omkring træningsdata, outværdi og tabsfunktion er illustreret i @fig-kort_fortalt herunder.
+
+![Idéen med træningsdata, outputværdi og tabsfunktion kort fortalt.](images/kort_fortalt.png){width=100% #fig-kort_fortalt}
 
 
 ## Gradientnedstigning
@@ -188,12 +211,18 @@ $$
 vil pege i den retning, hvor funktionværdien for $E$ i et givent punkt vokser *mest*. Derfor vil den negative gradient $-\nabla E(w_0,w_1,\dots, w_n)$ pege i den retning, hvor funktionværdien for $E$ i et givent punkt aftager *mest*. 
 
 Denne viden udnyttes i gradientnedstigning: Stil dig i et tilfældig punkt $(w_0, w_1, \dots, w_n)$ og gå et lille stykke i den negative gradients retning. Så kommer du -- hvis ikke du tager et alt for stort skridt -- en lille smule tættere på minimum. Det betyder, at alle vægte bliver opdateret på denne måde:
-$$
-w_i \leftarrow w_i - \eta\cdot \frac{\partial E}{\partial w_i},
-$${#eq-opdatering}
-hvor $\eta$ her svarer til skridtlængden (den kaldes også i AI verdenen for en *learning rate*). Pilen til venstre betyder, at vægten $w_i$ skal opdateres ved at tage den nuværende værdi af $w_i$ og trække $\eta\cdot \frac{\partial E}{\partial w_i}$ fra.
 
-Og så er vi klar til at kaste os over forskellige tabsfunktioner!
+::: {.callout-note collapse="false" appearance="minimal"} 
+### Opdateringsregler baseret på gradientnedstigning
+$$
+w_i \leftarrow w_i - \eta\cdot \frac{\partial E}{\partial w_i}
+$${#eq-opdatering}
+
+:::
+
+I ovenstående opdateringsregel svarer $\eta$ til skridtlængden (den kaldes også i AI verdenen for en *learning rate*), mens pilen til venstre betyder, at vægten $w_i$ skal opdateres ved at tage den nuværende værdi af $w_i$ og trække $\eta\cdot \frac{\partial E}{\partial w_i}$ fra.
+
+Og så er vi endelig klar til at kaste os over forskellige tabsfunktioner!
 
 ## Squared error tabsfunktionen
 
@@ -220,7 +249,7 @@ o_m \right)^2,
 $$
 hvor man ser på den gennemsnitlige kvadrede fejl. Men eftersom vi kun er interesseret i at finde minimum for tabsfunktionen, så gør det ingen forskel, om vi ser på *squared error* eller *mean squared error*. Vi vil derfor her på siden nøjes med at se på *squared error*.
 
-For det første kan vi se, at $E \geq 0$, fordi der er tale om en kvadreret sum. For det andet kan vi se, at hvis AI modellen er god, så vil den beregnede sandsynlighed $o$, for at patienten har kræft være tæt på $1$, når $t=1$, og $o$ vil være tæt på $0$, når $t=0$. Det betyder, at de kvadrerede forskelle $(t-o)^2$ i det tilfælde vil være små, og dermed vil tabsfunktionen også være lille. Altså lever $E$ op til de krav, vi stiller til en tabsfunktion.
+Lad os starte med at se, at $E$ opfylder de to betingelser for en tabsfunktion. For det første kan vi se, at $E \geq 0$, fordi der er tale om en kvadreret sum. For det andet kan vi se, at hvis AI modellen er god, så vil den beregnede sandsynlighed $o$, for at patienten har kræft være tæt på $1$, når $t=1$, og $o$ vil være tæt på $0$, når $t=0$. Det betyder, at de kvadrerede forskelle $(t-o)^2$ i det tilfælde vil være små, og dermed vil tabsfunktionen også være lille. Altså lever $E$ op til de krav, vi stiller til en tabsfunktion.
 
 Differentierer vi tabsfunktionen i (@eq-tabsfunktion) med hensyn til den $i$'te vægt $w_i$ får vi:
 $$
@@ -230,7 +259,7 @@ $$
 &= \sum_{m=1}^M \left (t_m-o_m \right) (-1) \frac{\partial o_m}{\partial w_i} \\
 &= - \sum_{m=1}^M \left (t_m-o_m \right) \frac{\partial o_m}{\partial w_i} 
 \end{aligned}
-$$
+$${#eq-partialE_partialwi}
 
 Bruger vi sigmoid-funktionen til at beregne outputværdien $o_m$ så får vi
 $$
@@ -239,6 +268,15 @@ $$
 & = \sigma'(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \cdot x_{m,i}
 \end{aligned}
 $$
+
+Bemærk, at vi her ganger med $x_{m,i}$, fordi vi skal differentiere summen:
+
+$$
+w_0 + w_1 \cdot x_{m,1} + \cdots + w_i \cdot x_{m,i} + \cdots + w_n \cdot x_{m,n}
+$$
+
+med hensyn til $w_i$ og det eneste led, der afhænger af $w_i$ er $w_i \cdot x_{m,i}$.
+
 Sigmoid-funktionen har den særlige egenskab, at 
 
 $$
@@ -250,7 +288,7 @@ $$
 \frac{\partial o_m}{\partial w_i}  = o_m \cdot (1-o_m) \cdot x_{m,i}
 $$ {#eq-sigmoid_aktiveringsfkt}
 
-Derfor kan den partielle afledede af tabfunktionen med hensyn til $w_i$ skrives som
+Indsættes dette i (@eq-partialE_partialwi), kan den partielle afledede af tabfunktionen med hensyn til $w_i$ skrives som
 
 $$
 \begin{aligned}
@@ -281,7 +319,7 @@ Lad os se på et eksempel.
 
 Vi vil i vores fiktive eksempel med biomarkør og prædiktion af kræft prøve at bruge *squared error* tabsfunktionen sammen med sigmoid som aktiveringsfunktion.
 
-De første fem datapunkter (ud af ialt 50) er:
+En delmængde af træningsdatasættet er (ud af i alt 50):
 
 |Biomarkør| Target $t$ |
 |:------:|:------:|
@@ -289,27 +327,31 @@ De første fem datapunkter (ud af ialt 50) er:
 | $18.83$ | $0$ |
 | $8.97$  | $0$ |
 | $36.41$ | $1$ |
-| $23.13$ | $0$ |
+| $\vdots$ | $\vdots$ |
+| $10.60$ | $0$ |
 
 
 Vi kan på den baggrund opskrive *squared error* tabsfunktionen:
 
 $$
-E(w_0,w_1) = \frac{1}{2} \left(
-(0-\sigma(w_0+w_1 \cdot 19.58))^2+
-(0-\sigma(w_0+w_1 \cdot 18.83))^2+
-(0-\sigma(w_0+w_1 \cdot 8.97))^2+
-(1-\sigma(w_0+w_1 \cdot 36.41))^2+
-(0-\sigma(w_0+w_1 \cdot 23.13))^2 + \cdots
-\right)^2
+\begin{aligned}
+E(w_0,w_1) = \frac{1}{2} (
+& (0-\sigma(w_0+w_1 \cdot 19.58))^2 + \\
+& (0-\sigma(w_0+w_1 \cdot 18.83))^2 + \\
+& (0-\sigma(w_0+w_1 \cdot 8.97))^2 + \\
+& (1-\sigma(w_0+w_1 \cdot 36.41))^2 + \\
+& \qquad \qquad \qquad\vdots \\
+& (0-\sigma(w_0+w_1 \cdot 10.60))^2)
+\end{aligned}
 $$
 
-
-Vi søger nu de værdier af $w_0$ og $w_1$, som minimerer tabsfunktionen. Bruges gradientnedstigning (du kan selv prøve ved at bruge [app'en her](../apps/perceptron_app.qmd)) fås:
+Vi søger nu de værdier af $w_0$ og $w_1$, som minimerer tabsfunktionen. Bruges gradientnedstigning (du kan selv prøve ved at bruge [app'en](../apps/perceptron_app.qmd)) her fås[^1]:
 
 $$
 w_0 = -7.455 \quad \quad \textrm{og} \quad \quad w_1= 0.2539
 $$
+[^1:] For at være sikker på, at man finder et lokalt minimum for tabsfunktionen, er \"Maksimalt antal iterationer før algoritmen stopper\" her sat op til 10000. Husk også at vælge \"squared error\" som tabsfunktion og \"sigmoid\" som aktiveringsfunktion.
+
 
 Grafen for 
 $$
@@ -318,22 +360,8 @@ $$
 ses indtegnet sammen med datapunkterne i @fig-eksempel_squared_error:
 
 ```{r echo=FALSE}
-#| fig-cap: Her ses et plot af data med biomarkør på $x$-aksen og sygdomsstatus på $y$-aksen sammen med grafen for den fundne sigmoid-funktion.
+#| fig-cap: Her ses et plot af data med biomarkør på $x$-aksen og sygdomsstatus på $y$-aksen sammen med grafen for den fundne sigmoid-funktion baseret på at minimere *squared error* tabsfunktionen. De to mørkeblå punkter illustrerer to nye, fiktive patienter.
 #| label: fig-eksempel_squared_error
-set.seed(1)
-xp <- runif(50,0,1)
-mu <- ifelse(xp<0.9, 20, 40)
-x <- rnorm(50, mu, sd = 7.5)
-u<-runif(50,0,1)
-b=-9.2
-a=0.35
-p = function(x,a,b){exp(a*x + b)/(1+exp(a*x+ b))}
-px <- p(x,a,b)
-y <- as.numeric(u<px)
-# writexl::write_xlsx(
-# data.frame(biomarker = x, target = y),
-# path = here::here("materialer", "tabsfunktioner", "data",  "data.xlsx")
-# )
 fit <- glm(y~x, family = binomial())
 a_mle <- coef(fit)[2]
 b_mle <- coef(fit)[1]
@@ -346,9 +374,22 @@ w0 = -7.455
 w1 = 0.2539
 xx <- seq(5,45,by=0.1)
 lines(xx,p(xx,w1,w0))
+points(20,p(20,w1,w0),pch=19, col="#020873", cex=1.5)
+points(35,p(35,w1,w0),pch=19, col="#020873", cex=1.5) 
+text(20,p(20,w1,w0), "Patient 1", pos=4, col="#020873")
+text(35,p(35,w1,w0), "Patient 2", pos=4, col="#020873")
 ```
 
-Vi kan nu bruge de fundne vægte til at prædiktere om en fremtidig patient har kræft eller ej. Lad os sige XXX
+Vi kan nu bruge de fundne vægte til at prædiktere om en fremtidig patient har kræft eller ej. Lad os se på to forskellige værdier af biomarkøren og udregne outputværdi:
+
+$$
+\begin{aligned}
+\textrm{Patient 1} \quad \quad & x = 20: \quad \quad o = \sigma(-7.455+0.2539 \cdot 20)= 0.085 \\
+\textrm{Patient 2} \quad \quad & x = 35: \quad \quad o = \sigma(-7.455+0.2539 \cdot 35)= 0.807\\
+\end{aligned}
+$$
+
+Det vil sige, at hvis patient 1 har en målt biomarkør på 20, så vil vi prædiktere, at der er 8.5% risiko for, at patienten har kræft. Og tilsvarende hvis patient 2 har en målt biomarkør på 35, så vil vi prædiktere, at risikoen for kræft er steget til 80.7%. Disse to patienter ses også indtegnet på @fig-eksempel_squared_error.
 
 :::
 
@@ -357,10 +398,12 @@ Vi kan nu bruge de fundne vægte til at prædiktere om en fremtidig patient har 
 En anden tabsfunktion, som meget ofte anvendes, men som nok er lidt sværere umiddelbart at forstå, er **cross-entropy** tabsfunktionen. Den er defineret sådan her:
 
 $$
-E(w_0, w_1, \dots, w_n) = - \sum_{m=1}^{M} \left (t_m \cdot \ln(o_m) + (1-t_m) \cdot \ln(1-o_m)  \right)
+\begin{aligned}
+E(w_0, w_1, \dots, & w_n) = \\ &- \sum_{m=1}^{M} \left (t_m \cdot \ln(o_m) + (1-t_m) \cdot \ln(1-o_m)  \right)
+\end{aligned}
 $$ {#eq-crossentropy}
 
-her skal outputværdien $o_m$ ligger mellem $0$ og $1$ vi bruger derfor igen sigmoid-funktionen[^1]: 
+her skal outputværdien $o_m$ ligger mellem $0$ og $1$. Vi bruger derfor igen sigmoid-funktionen[^2]: 
 
 $$
 \begin{aligned}
@@ -369,7 +412,7 @@ o_m &= \sigma (w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \\
 \end{aligned}
 $$
 
-[^1]: Hvis du har læst om logistisk regression, så kan du i [afsnittet om likelihood funktionen](../logistisk/log-reg.qmd#yderligere-omskrivning-af-likelihoodfunktionen) se, at *cross-entropy* tabsfunktionen faktisk svarer til minus log-likelihood funktionen. Det vil sige, at finde minimum for *cross-entropy* svarer til at finde maksimum for log-likelihood funktionen, når man laver logistisk regression. 
+[^2]: Hvis du har læst om logistisk regression, så kan du i [afsnittet om likelihood funktionen](../logistisk/log-reg.qmd#yderligere-omskrivning-af-likelihoodfunktionen) se, at *cross-entropy* tabsfunktionen faktisk svarer til minus log-likelihood funktionen. Det vil sige, at finde minimum for *cross-entropy* svarer til at finde maksimum for log-likelihood funktionen, når man laver logistisk regression. 
 
 Det er ikke oplagt, at *cross-entropy* overhovedet er en tabsfunktion. Lad os starte med at argumentere for, at $E \geq 0$.
 
@@ -380,15 +423,15 @@ $$
 t_m=0: & \quad  t_m \cdot \ln(o_m) + (1-t_m) \cdot \ln(1-o_m) = \ln(1-o_m) \\
 t_m=1: & \quad t_m \cdot \ln(o_m) + (1-t_m) \cdot \ln(1-o_m) = \ln(o_m)
 \end{aligned}
-$${#eq-tomuligheder}
+$$ {#eq-to_muligheder}
 
-Nu ved vi, at $0<o_m<1$, og derfor er også $0<1-o_m<1$. På @fig-ln_graf se grafen for den naturlige logartimen. Her ses det tydeligt, at hvis $x$ ligger mellem $0$ og $1$, så er $\ln(x)$ negativ.
+Nu ved vi, at $0<o_m<1$, og derfor er også $0<1-o_m<1$. På @fig-ln_graf ses grafen for den naturlige logartime. Her ses det tydeligt, at hvis $x$ ligger mellem $0$ og $1$, så er $\ln(x)$ negativ.
 
 ![Grafen for den naturlige logaritmefunktion.](images/ln_graf.png){width=75% fig-align='center' #fig-ln_graf}
 
 Det vil sige, at alle led i summen i (@eq-crossentropy) er negative, og da der står et minustegn foran hele summen, bliver *cross-entropy* tabsfunktionen altså positiv.
 
-Vi mangler nu at se, at hvis AI modellen er god, så vil tabsfunktionen være tæt på 0. Her er der igen to muligheder. En god model vil have det sådan, at hvis targetværdien $t_m=1$, så vil den tilhørende outputværdi $o_m$ også være tæt på $1$ og omvendt, hvis $t_m=0$. Vi ser igen på hvert led i summen i (@eq-crossentropy), som vi gjorde det i (@eq-tomuligheder):
+Vi mangler nu at se, at hvis AI modellen er god, så vil tabsfunktionen være tæt på 0. Her er der igen to muligheder. En god model vil have det sådan, at hvis targetværdien $t_m=1$, så vil den tilhørende outputværdi $o_m$ også være tæt på $1$ og omvendt, hvis $t_m=0$. Vi ser igen på hvert led i summen i (@eq-crossentropy), som vi gjorde det ovenfor:
 
 $$
 t_m=0: \quad  t_m \cdot \ln(o_m) + (1-t_m) \cdot \ln(1-o_m) = \ln(1-o_m) \\
@@ -398,7 +441,7 @@ $$
 \ln(1-o_m) \approx \ln(1)=0
 $$
 
-Tilsvarende:
+Tilsvarende hvis:
 $$
 t_m=1: \quad t_m \cdot \ln(o_m) + (1-t_m) \cdot \ln(1-o_m) = \ln(o_m)
 $$
@@ -429,7 +472,7 @@ $$
 \end{aligned}
 $$ 
 
-De to brøker har $o_m \cdot (1-o_m)$ som fællesnævner:
+De to brøker har $o_m \cdot (1-o_m)$ som fællesnævner og vi kan derfor sætte på fælles brøkstreg:
 
 $$
 \begin{aligned}
@@ -451,6 +494,8 @@ $$
 &= - \sum_{m=1}^{M} (t_m- o_m)\cdot x_{m,i}
 \end{aligned}
 $$
+Bemærk her, at $o_m \cdot (1-o_m)$ forkorter ud.
+
 Opdateringsreglen i (@eq-opdatering) bliver derfor med *cross-entropy* tabsfunktionen:
 $$
 w_i \leftarrow w_i - \eta \cdot \left (  - \sum_{m=1}^{M} (t_m- o_m)\cdot x_{m,i} \right)
@@ -478,13 +523,137 @@ I perceptron learning algoritmen er både target- og outputværdien enten $-1$ e
 $$
 w_i \leftarrow w_i + \eta \cdot (t-o) \cdot x_i
 $$
-hvor $t-o$ enten kan være $-2, 0$ eller $2$. I opdateringsreglen i (@eq-opdatering_crossentropy) er $t-o$ enten $-1, 0$ eller $1$, men eftersom vi bare kan vælge en skridtlængde $\eta$, som er dobbelt så stor, så gør det ingen reel forskel. Det betyder, at den eneste forskel på perceptron learning algoritmen og *cross-entropy* tabsfunktionen sammen med sigmoid som aktiveringsfunktion er, at *alle* træningsdata bruges i opdateringsreglen i sidstnævnte. 
+hvor $t-o$ enten kan være $-2, 0$ eller $2$. I opdateringsreglen i (@eq-opdatering_crossentropy) er $t-o$ enten $-1, 0$ eller $1$, men eftersom vi bare kan vælge en skridtlængde $\eta$, som er dobbelt så stor, så gør det ingen reel forskel. 
+
+Det betyder, at den eneste forskel på perceptron learning algoritmen og *cross-entropy* tabsfunktionen sammen med sigmoid som aktiveringsfunktion er, at *alle* træningsdata bruges i opdateringsreglen i sidstnævnte. 
 
 :::
 
-### Slow learning
+Lad os igen se på et eksempel.
 
-Det kan måske virke lidt ligegyldigt, om man bruger den ene eller den anden tabsfunktion, men *cross-entropy* sammen med aktiveringsfunktionen sigmoid løser faktisk et problem, som *squared error* (også sammen med sigmoid) har. De to tabsfunktioner giver følgende to opdateringsregler:
+:::{#exm-cross_entropy}
+
+Vi vil i vores fiktive eksempel med biomarkør og prædiktion af kræft nu prøve at bruge *cross-entropy* tabsfunktionen sammen med sigmoid som aktiveringsfunktion. Vi skal igen datasættet fra @exm-squared_error og indsætte i *cross-entropy* tabsfunktionen i (@eq-crossentropy). Her bruger vi de to udtryk vi fandt i (@eq-to_muligheder) alt efter om $t_m=0$ eller $t_m=1$:
+
+
+$$
+\begin{aligned}
+E(w_0,w_1) = - (
+&\ln(1-\sigma(w_0+w_1 \cdot 19.58)) + \\
+& \ln(1-\sigma(w_0+w_1 \cdot 18.83)+ \\
+& \ln(1-\sigma(w_0+w_1 \cdot 8.97) + \\
+& \ln(\sigma(w_0+w_1 \cdot 36.41) + \\
+& \qquad \qquad \qquad\vdots \\
+& \ln(1-\sigma(w_0+w_1 \cdot 10.60))
+\end{aligned}
+$$
+
+Vi søger nu igen de værdier af $w_0$ og $w_1$, som minimerer tabsfunktionen. Bruges gradientnedstigning (du kan selv prøve ved at bruge [app'en](../apps/perceptron_app.qmd)) her fås[^3]:
+
+$$
+w_0 = -9.413  \quad \quad \textrm{og} \quad \quad w_1=0.3218 
+$$
+[^3:] For at være sikker på, at man finder et lokalt minimum for tabsfunktionen, er \"Maksimalt antal iterationer før algoritmen stopper\" igen sat op til 10000. Husk også at vælge \"cross-entropy\" som tabsfunktion og \"sigmoid\" som aktiveringsfunktion.
+
+
+Grafen for 
+$$
+\sigma(-9.413+0.3218 \cdot x) = \frac{1}{1+e^{-(-9.413+0.3218 \cdot x)}}
+$$
+ses indtegnet sammen med datapunkterne i @fig-eksempel_cross-entropy:
+
+```{r echo=FALSE}
+#| fig-cap: Her ses et plot af data med biomarkør på $x$-aksen og sygdomsstatus på $y$-aksen sammen med grafen for den fundne sigmoid-funktion baseret på at minimere *cross-entropy* tabsfunktionen. De to lyseblå punkter illustrerer to nye, fiktive patienter.
+#| label: fig-eksempel_cross-entropy
+fit <- glm(y~x, family = binomial())
+a_mle <- coef(fit)[2]
+b_mle <- coef(fit)[1]
+a_mle_pretty <- unname(signif(a_mle, 2))
+b_mle_pretty <- unname(signif(b_mle, 2))
+OR_mle <- unname(signif(exp(a_mle),4))
+par(mar=c(4,4,0.5,1))
+plot(x,y,pch=1,xlab="Biomarkør",ylab="Targetværdi")
+w0 = -9.413
+w1 = 0.3218
+xx <- seq(5,45,by=0.1)
+lines(xx,p(xx,w1,w0))
+points(20,p(20,w1,w0),pch=19, col="#8086F2", cex=1.5)
+points(35,p(35,w1,w0),pch=19, col="#8086F2", cex=1.5) 
+text(20,p(20,w1,w0), "Patient 1", pos=4, col="#8086F2")
+text(35,p(35,w1,w0), "Patient 2", pos=4, col="#8086F2")
+# + geom_label(
+#     label="Patient 1", 
+#     x=25,
+#     y=0.1,
+#     label.padding = unit(0.55, "lines"), # Rectangle size around label
+#     label.size = 0.35,
+#     color = "black",
+#     fill="lightgray"
+#   )
+```
+
+Vi kan nu igen bruge de fundne vægte til at prædiktere om en fremtidig patient har kræft eller ej. Lad os se på to forskellige værdier af biomarkøren og udregne outputværdi:
+
+$$
+\begin{aligned}
+\textrm{Patient 1} \quad \quad & x = 20: \quad \quad o = \sigma(-9.413+0.3218 \cdot 20)= 0.048 \\
+\textrm{Patient 2} \quad \quad & x = 35: \quad \quad o = \sigma(-9.413+0.3218 \cdot 35)= 0.864\\
+\end{aligned}
+$$
+
+Det vil sige, at hvis patient 1 har en målt biomarkør på 20, så vil vi nu prædiktere, at der er 4.8% risiko for, at patienten har kræft. Og tilsvarende hvis patient 2 har en målt biomarkør på 35, så er vores bud på risikoen for kræft nu helt oppe på 86.4%. Disse to patienter ses også indtegnet på @fig-eksempel_cross-entropy.
+
+:::
+
+Umiddelbart kan man jo tænke, at det er hip som hap, om vi vælger den ene eller den anden tabsfunktion. I det næste afsnit skal vi se, at *cross-entropy* tabsfunktionen faktisk passer bedre sammen med sigmoid-funktionen som aktiveringsfunktion end *squared error* tabsfunktionen gør. Men lad os for nu prøve at sammenligne de to sigmoid-funktioner, som vi fandt i @exm-squared_error og @exm-cross_entropy.
+
+```{r echo=FALSE}
+#| fig-cap: Her ses et plot af data med biomarkør på $x$-aksen og sygdomsstatus på $y$-aksen sammen med graferne for de to fundne sigmoid-funktioner baseret på at minimere henholdsvis *squared error* (mørkeblå) og *cross-entropy* (lyseblå) tabsfunktionen. De to punkter på hver graf illustrerer to nye, fiktive patienter.
+#| label: fig-eksempel_squared-error-versus-cross-entropy
+fit <- glm(y~x, family = binomial())
+a_mle <- coef(fit)[2]
+b_mle <- coef(fit)[1]
+a_mle_pretty <- unname(signif(a_mle, 2))
+b_mle_pretty <- unname(signif(b_mle, 2))
+OR_mle <- unname(signif(exp(a_mle),4))
+par(mar=c(4,4,0.5,1))
+plot(x,y,pch=1,xlab="Biomarkør",ylab="Targetværdi")
+# Squared error
+w0_s = -7.455
+w1_s = 0.2539
+xx <- seq(5,45,by=0.1)
+lines(xx,p(xx,w1_s,w0_s), col="#020873")
+points(20,p(20,w1_s,w0_s),pch=19, col="#020873", cex=1.5)
+points(35,p(35,w1_s,w0_s),pch=19, col="#020873", cex=1.5) 
+# Cross-entropy
+w0_c = -9.413
+w1_c = 0.3218
+lines(xx,p(xx,w1_c,w0_c),col="#8086F2")
+points(20,p(20,w1_c,w0_c),pch=19, col="#8086F2", cex=1.5)
+points(35,p(35,w1_c,w0_c),pch=19, col="#8086F2", cex=1.5) 
+legend(8,0.9,          # Position
+        legend = c("Squared error", "Cross-entropy"), 
+        lty = c(1, 1),           
+        col = c("#020873", "#8086F2"),        
+        lwd = 2) 
+```
+
+
+I @fig-eksempel_squared-error-versus-cross-entropy har vi tegnet de to grafer for de to forskellige sigmoid-funktioner ind i samme koordinatsystem. Her kan man se, at sigmoid-funktionen som er baseret på at minimere *cross-entropy* tabsfunktionen (lyseblå) vokser mere stejlt end sigmoid-funktionen som er baseret på at minimere *squared error* tabsfunktionen (mørkeblå). Det er en fordel i forbindelse med prædiktion, fordi prædiktionen baseret på den lyseblå graf er \"mere sikker\" i sin forudsigelse af om patienten har kræft eller ej. Det stemmer også med de sandsynligheder, som vi beregnede i @exm-squared_error og @exm-cross_entropy, som er opsummeret herunder.
+
+
+| | Patient 1 ($x=20$) | Patient 2 ($x=35$)  |
+|:------:|:------:|:------:|
+| *Squared error* | $0.085$ | $0.807$ |
+| *Cross-entropy* | $0.048$ | $0.864$ |
+: Prædikteret sandsynlighed for at patienten har kræft 
+
+
+## Slow learning
+
+Som vi lige har set, er det faktisk ikke helt ligegyldigt, om man bruger den ene eller den anden tabsfunktion. Vi skal i dette afsnit se, at *cross-entropy* sammen med aktiveringsfunktionen sigmoid løser et problem, som *squared error* (også sammen med sigmoid) har. 
+
+Vi starter med at huske, at de to tabsfunktioner giver følgende to opdateringsregler:
 
 $$
 \begin{aligned}
@@ -493,7 +662,7 @@ $$
 \end{aligned}
 $$
 
-Problemet opstår, fordi man i forbindelse med gradientnedstigning, starter i et tilfældigt punkt $(w_0, w_1, \dots, w_n)$. Hvis disse vægte resulterer i forkerte prædiktioner, så for eksempel $o_m \approx 0$, men $t_m = 1$, så vil faktoren $o_m \cdot (1-o_m)$ være tæt på $0$. Det betyder, at vægtene næsten ikke bliver opdateret, når vi bruger *squared error*, fordi opdateringsleddene alle er tæt på $0$. Noget tilsvarende gør sig gældende, hvis $o_m \approx 1$ og $t_m = 0$. Dette fænomen kalder man for **slow learning**. 
+Problemet opstår, fordi man i forbindelse med gradientnedstigning, starter i et tilfældigt punkt $(w_0, w_1, \dots, w_n)$. Hvis dette punkt svarer til vægte, som resulterer i forkerte prædiktioner, så for eksempel $o_m \approx 0$, men $t_m = 1$, så vil faktoren $o_m \cdot (1-o_m)$ være tæt på $0$. Det betyder, at vægtene næsten ikke bliver opdateret, når vi bruger *squared error*, fordi opdateringsleddene alle er tæt på $0$. Noget tilsvarende gør sig gældende, hvis $o_m \approx 1$ og $t_m = 0$. Dette fænomen kalder man for **slow learning**. 
 
 I @fig-squared ses grafen for *squared error* tabsfunktionen fra eksemplet om biomarkører og prædiktion af kræft. Her er det ret tydeligt, at der findes værdier af vægtene $w_0$ og $w_1$, hvor grafen flader helt ud. Hvis man får startet sin gradientnedstigning her, så kan der gå lang tid inden, man ender i minimum.
 
@@ -537,8 +706,9 @@ plot_ly(showscale = FALSE) |>
   layout(scene = list(xaxis = ax_x, yaxis = ax_y, zaxis = ax_z), showlegend = FALSE)
 ```
 
+**Ege og Lisbeth:** Grunden til at grafen for sigmoid-funktionen i @fig-eksempel_squared-error-versus-cross-entropy baseret på *cross-entropy* er stejlere - er det mon fordi, at vi med *squared error* slet ikke ramt minimum (pga. slow learning)? Og derfor er den ikke så god til at skelne?
 
-
+**Ege:** På de to grafer for tabsfunktionerne: Kan vi få indtegnet det rigtige minimum OG det minimum, som vi er endt i?
 
 
 
