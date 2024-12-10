@@ -26,9 +26,14 @@ $$
 x_1, x_2, \dots, x_n
 $$ 
 
-på baggrund af hvilke, man ønsker at prædiktere en såkaldt **targetværdi** $t$, som også er en del af træningsdata. 
+på baggrund af hvilke, man ønsker at forudsige en såkaldt **targetværdi** $t$, som også er en del af træningsdata. Det betyder, at et enkelt træningsdatasæt kan skrives sådan her:
 
-Lad os tage et eksempel fra den virkelige verden så bliver det lidt nemmere at forstå: Vi forestiller os, at vi på baggrund af en blodprøve gerne vil kunne prædiktere om en patient har kræft eller ej. Her kan inputværdierne $x_1, x_2, \dots, x_n$ være forskellige ting, man måler i blodet (spørg en biologilærer om hvad det kunne være). Targetværdien $t$ kan antage to værdier:
+$$
+(x_1, x_2, \dots, x_n, t)
+$$
+Altså inputværdierne sammen med den tilhørende targetværdi.
+
+Lad os tage et eksempel fra den virkelige verden, så bliver det lidt nemmere at forstå: Vi forestiller os, at vi på baggrund af en blodprøve gerne vil kunne prædiktere, om en patient har kræft eller ej. Her kan inputværdierne $x_1, x_2, \dots, x_n$ være forskellige biomarkører, man måler i blodet (spørg en biologilærer om, hvad det kunne være). Targetværdien $t$ kan antage to værdier:
 
 $$
 t=
@@ -45,11 +50,13 @@ t=
 -1 & \textrm{hvis patienten ikke har kræft} \\
 \end{cases}
 $$
-Eller noget helt tredje! Lad os for nu sige at vi vælger den første mulighed, hvor $t \in \{0,1\}$. 
+Eller noget helt tredje! Lad os for nu sige, at vi vælger den første mulighed, hvor $t \in \{0,1\}$. 
 
-At bestemme om patienten har kræft eller ej -- det vil sige, om targetværdien er $0$ eller $1$,  beror på faglig ekspertise indenfor det genstandsfelt, hvor AI modellen skal anvendes. I eksemplet med kræft vil det for eksempel være baseret på forskellige diagnostiske tests, som en læge kan bruge til at vurdere, om patienten har kræft[^3].
+At bestemme om patienten har kræft eller ej -- det vil sige, om targetværdien er $0$ eller $1$ --  beror på faglig ekspertise indenfor det genstandsfelt, hvor AI modellen skal anvendes. I eksemplet med kræft vil det for eksempel være baseret på forskellige diagnostiske tests, som en læge kan bruge til at vurdere, om patienten har kræft[^3].
 
 [^3]: Måske er disse tests først taget et stykke tid efter blodprøven, fordi det ikke er muligt at stille diagnose på tidspunktet for blodprøven. I så fald kan man måske være heldig at få udviklet en AI model, som kan prædiktere kræft *tidligere* end med gængse metoder. 
+
+Targetværdien $t$ er altså en slags facitliste for, hvad det rigtige svar er. AI-modellen skal så trænes til at forudsige (eller **prædiktere**), hvad det korrekte svar er. 
 
 I @fig-data ses et eksempel på et fiktivt [datasæt](data/data.xlsx), hvor en biomarkør er målt på en skala fra 0 til 50 ($x$-aksen) samtidig med, at det ved hjælp af targetværdien er angivet, om patienten har kræft eller ej ($y$-aksen). Det ser her ud som om, at en lav værdi af biomarkøren (cirka under 25) indikerer, at patienten ikke har kræft, men en bestemt skæringsværdi findes ikke. 
 
@@ -81,20 +88,20 @@ par(mar=c(4,4,0.5,1))
 plot(x,y,pch=1,xlab="Biomarkør",ylab="Targetværdi")
 ```
 
-Idéen er nu, at man \"fodrer\" sin AI algoritme med en hel masse inputværdier (her værdien af biomarkøreren) med tilhørende targetværdier og finder den AI model, som på en eller anden måde er god til at forudsige targetværdien baseret på inputværdierne. Det med om en model er god eller ej, måler man typisk ved at se på hvor stor en fejl, AI modellen begår, og man ønsker så at finde den model, som laver så få fejl som muligt. Funktioner, som kan måle sådanne fejl, kaldes på engelsk for *error functions*, mens de på dansk typisk kaldes for **tabsfunktioner**. 
+Idéen er nu, at man \"fodrer\" sin AI algoritme med en hel masse inputværdier (her værdien af biomarkøreren) med tilhørende targetværdier og finder den AI model, som på en eller anden måde er god til at forudsige targetværdien baseret på inputværdierne. Det med om en model er god eller ej, måler man typisk ved at se på, hvor stor en fejl AI modellen begår, og man ønsker så at finde den model, som samlet set laver så små fejl som muligt. Funktioner, som kan måle sådanne fejl, kaldes på engelsk for *error functions*, mens de på dansk typisk kaldes for **tabsfunktioner**. 
 
 Overordnet set skal en tabsfunktion $E$ have følgende egenskaber:
 
 ::: {.callout-caution collapse="false" appearance="minimal"}
 ### Egenskaber ved en tabsfunktion $E$
 
-* Tabsfunktionen skal være positiv: $E>0$ (vi vil ikke operere med negative fejl). 
+* Tabsfunktionen skal være positiv eller $0$: $E \geq 0$ (vi vil ikke operere med negative fejl). 
 
 * Hvis AI modellen er god til at prædiktere, skal $E$ være tæt på $0$, mens hvis AI modellen er dårlig til at prædiktere, skal $E$ være langt væk fra $0$.
 
 :::
 
-Overordnet set vil vi altså gerne have en AI model med så lille et tab eller så lille en fejl som muligt. **Derfor skal tabsfunktionen minimeres.** 
+Overordnet set vil vi altså gerne have en AI model med så lille et samlet tab eller så lille en samlet fejl som muligt. **Derfor skal tabsfunktionen minimeres.** 
 
 I AI modellen vil det typisk være sådan, at de forskellige inputværdier vægtes med en række vægte $w_0, w_1, \dots, w_n$ på denne måde:
 
@@ -103,12 +110,12 @@ w_0 + w_1 \cdot x_1 + \cdots +w_n \cdot x_n.
 $$
 Tænk på det på den måde, at hvis inputværdien $x_i$ er vigtig, så er vægten $w_i$ stor (som i langt væk fra $0$), mens hvis $x_i$ ikke er vigtig, så er $w_i$ tæt på $0$.
 
-Når AI modellen trænes, er det dybest set bare disse vægte, man \"skruer\" på, sådan at modellen bliver god til at prædiktere det, den er trænet på. For store kunstige neurale netværk -- for eksempel de store sprogmodeller -- taler vi om milliarder af vægte!
+Når AI modellen trænes, er det dybest set bare disse vægte, man \"skruer\" på, sådan at modellen bliver så god som mulig til at prædiktere det, den er trænet på. For store kunstige neurale netværk -- for eksempel de store sprogmodeller -- taler vi om milliarder af vægte!
 
 
 ## Prædiktion
 
-Man kan tænke på en AI model, som en funktion $f$, der afhænger af vægtene $w_0, w_1, \dots, w_n$:
+Man kan tænke på en AI model som en funktion $f$, der afhænger af vægtene $w_0, w_1, \dots, w_n$:
 
 $$
 f(w_0, w_1, \dots, w_n).
@@ -126,11 +133,19 @@ $$
 f(w_0, w_1, \dots, w_n) = \frac{1}{1+e^{-(w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)}}.
 $$
 
+Hvis der bare er tale om en enkelt inputværdi $x_1$, kan det simpliciferes til:
+
+$$
+f(w_0, w_1) = \frac{1}{1+e^{-(w_0 + w_1 \cdot x_1)}}.
+$$
+
+Så er det ikke helt så slemt at se på!
+
 Grafen for sigmoid-funktionen kan ses i @fig-sigmoid.
 
 ![Grafen for sigmoid-funktionen.](images/sigmoid.png){width=75% #fig-sigmoid}
 
-Det betyder, at vi kan tolke værdien af $f$ som en sandsynlighed. Vi forestiller os, at vi får et nyt sæt af inputværdier -- for eksempel målingerne fra en ny blodprøve, og vi vil gerne finde ud af, om patienten har kræft eller ej. Disse værdier \"sendes\" nu ind i funktionen $f$ og ud kommer en ouputværdi, som vi vil kalde for $o$. Værdien af $o$ betragtes nu som sandsynligheden for, at den rigtige targetværdi er $1$. Det kunne for eksempel være sådan her:
+Det betyder, at vi kan tolke værdien af $f$ som en sandsynlighed. Vi forestiller os, at vi får et nyt sæt af inputværdier -- for eksempel målingerne fra en ny blodprøve, og vi vil gerne finde ud af, om patienten har kræft eller ej. Disse værdier \"sendes\" nu ind i funktionen $f$ og ud kommer en outputværdi, som vi vil kalde for $o$. Værdien af $o$ betragtes nu som sandsynligheden for, at den rigtige targetværdi er $1$. Det kunne for eksempel være sådan her:
 
 $$
 \textrm{prædiktion}=
@@ -140,7 +155,7 @@ $$
 \end{cases}
 $$
 
-I vores eksempel med kræft, vil det nok typisk være sådan, at det er meget vigtigt, at alle patienter, hvor der er den mindste mistanke om kræft sendes til videre udredning. Og derfor kunne man for eksempel også have valgt følgende prædiktion:
+I vores eksempel med kræft, vil det nok typisk være sådan, at det er meget vigtigt, at alle patienter, hvor der er den mindste mistanke om kræft, sendes til videre udredning. Og derfor kunne man for eksempel også have valgt følgende prædiktion:
 
 $$
 \textrm{prædiktion}=
@@ -185,14 +200,14 @@ $${#eq-o_m}
 
 For perceptroner og simple neurale netværk svarer $x_1, x_2, \dots, x_n$ direkte til inputværdierne, som AI modellen i sidste ende skal virke på. I et kunstig neuralt netværk er det mere kompliceret, men ovenstående er korrekt, hvis man tænker på $x_1, x_2, \dots, x_n$, som de værdier neuronerne i det sidste skjulte lag sender videre til outputlaget.
 
-Hele idéen omkring træningsdata, outværdi og tabsfunktion er illustreret i @fig-kort_fortalt herunder.
+Hele idéen omkring træningsdata, outputværdi og tabsfunktion er illustreret i @fig-kort_fortalt herunder.
 
 ![Idéen med træningsdata, outputværdi og tabsfunktion kort fortalt.](images/kort_fortalt.png){width=100% #fig-kort_fortalt}
 
 
 ## Gradientnedstigning
 
-En AI modellen trænes som sagt ved at finde minimum for tabsfunktionen. Et sådant minimum bestemmes ofte ved hjælp af en numerisk metode, som kaldes for [gradientnedstigning](../gradientnedstigning/gradientnedstigning.qmd). Her kommer gradientnedstigning kort fortalt. Tabsfunktionen 
+En AI model trænes som sagt ved at finde minimum for tabsfunktionen. Et sådant minimum bestemmes ofte ved hjælp af en numerisk metode, som kaldes for [gradientnedstigning](../gradientnedstigning/gradientnedstigning.qmd). Her kommer gradientnedstigning kort fortalt. Tabsfunktionen 
 
 $$
 E(w_0,w_1,\dots, w_n)
@@ -249,7 +264,7 @@ o_m \right)^2,
 $$
 hvor man ser på den gennemsnitlige kvadrede fejl. Men eftersom vi kun er interesseret i at finde minimum for tabsfunktionen, så gør det ingen forskel, om vi ser på *squared error* eller *mean squared error*. Vi vil derfor her på siden nøjes med at se på *squared error*.
 
-Lad os starte med at se, at $E$ opfylder de to betingelser for en tabsfunktion. For det første kan vi se, at $E \geq 0$, fordi der er tale om en kvadreret sum. For det andet kan vi se, at hvis AI modellen er god, så vil den beregnede sandsynlighed $o$, for at patienten har kræft være tæt på $1$, når $t=1$, og $o$ vil være tæt på $0$, når $t=0$. Det betyder, at de kvadrerede forskelle $(t-o)^2$ i det tilfælde vil være små, og dermed vil tabsfunktionen også være lille. Altså lever $E$ op til de krav, vi stiller til en tabsfunktion.
+Lad os starte med at indse, at $E$ opfylder de to betingelser for en tabsfunktion. For det første kan vi se, at $E \geq 0$, fordi der er tale om en kvadreret sum. For det andet kan vi se, at hvis AI modellen er god, så vil den beregnede sandsynlighed $o$, for at patienten har kræft være tæt på $1$, når $t=1$, og $o$ vil være tæt på $0$, når $t=0$. Det betyder, at de kvadrerede forskelle $(t-o)^2$ i det tilfælde vil være små, og dermed vil tabsfunktionen også være lille. Altså lever $E$ op til de krav, vi stiller til en tabsfunktion.
 
 Differentierer vi tabsfunktionen i (@eq-tabsfunktion) med hensyn til den $i$'te vægt $w_i$ får vi:
 $$
@@ -277,7 +292,7 @@ $$
 
 med hensyn til $w_i$ og det eneste led, der afhænger af $w_i$ er $w_i \cdot x_{m,i}$.
 
-Sigmoid-funktionen har den særlige egenskab, at 
+[Sigmoid-funktionen](../undervisningsforloeb/aktiveringsfunktioner.qmd#sigmoid) har den særlige egenskab, at 
 
 $$
 \sigma'(x) = \sigma(x) \cdot (1-\sigma(x))
@@ -317,7 +332,7 @@ Lad os se på et eksempel.
 
 :::{#exm-squared_error}
 
-Vi vil i vores fiktive eksempel med biomarkør og prædiktion af kræft prøve at bruge *squared error* tabsfunktionen sammen med sigmoid som aktiveringsfunktion.
+Vi vil i vores fiktive eksempel med biomarkør og prædiktion af kræft bruge *squared error* tabsfunktionen sammen med sigmoid som aktiveringsfunktion.
 
 En delmængde af træningsdatasættet er (ud af i alt 50):
 
@@ -345,7 +360,7 @@ E(w_0,w_1) = \frac{1}{2} (
 \end{aligned}
 $$
 
-Vi søger nu de værdier af $w_0$ og $w_1$, som minimerer tabsfunktionen. Bruges gradientnedstigning (du kan selv prøve ved at bruge [app'en](../apps/perceptron_app.qmd)) her fås[^1]:
+Vi søger nu de værdier af $w_0$ og $w_1$, som minimerer tabsfunktionen. Bruges gradientnedstigning (du kan selv prøve ved at bruge [app'en](https://apps01.math.aau.dk/adaline/)) her fås[^1]:
 
 $$
 w_0 = -7.455 \quad \quad \textrm{og} \quad \quad w_1= 0.2539
@@ -412,11 +427,11 @@ o_m &= \sigma (w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \\
 \end{aligned}
 $$
 
-[^2]: Hvis du har læst om logistisk regression, så kan du i [afsnittet om likelihood funktionen](../logistisk/log-reg.qmd#yderligere-omskrivning-af-likelihoodfunktionen) se, at *cross-entropy* tabsfunktionen faktisk svarer til minus log-likelihood funktionen. Det vil sige, at finde minimum for *cross-entropy* svarer til at finde maksimum for log-likelihood funktionen, når man laver logistisk regression. 
+[^2]: Hvis du har læst om logistisk regression, så kan du i [afsnittet om likelihood funktionen](../logistisk/log-reg.qmd#yderligere-omskrivning-af-likelihoodfunktionen){target=”blank”} se, at *cross-entropy* tabsfunktionen faktisk svarer til minus log-likelihood funktionen. Det vil sige, at finde minimum for *cross-entropy* svarer til at finde maksimum for log-likelihood funktionen, når man laver logistisk regression. 
 
 Det er ikke oplagt, at *cross-entropy* overhovedet er en tabsfunktion. Lad os starte med at argumentere for, at $E \geq 0$.
 
-Hvis vi ser på hvert led i summen i (@eq-crossentropy), så er der to muligheder alt efter om $t_m=0$ eller $t_m=1$:
+Hvis vi ser på hvert led i summen i (@eq-crossentropy), så er der to muligheder alt efter, om $t_m=0$ eller $t_m=1$:
 
 $$
 \begin{aligned}
@@ -425,7 +440,7 @@ t_m=1: & \quad t_m \cdot \ln(o_m) + (1-t_m) \cdot \ln(1-o_m) = \ln(o_m)
 \end{aligned}
 $$ {#eq-to_muligheder}
 
-Nu ved vi, at $0<o_m<1$, og derfor er også $0<1-o_m<1$. På @fig-ln_graf ses grafen for den naturlige logartime. Her ses det tydeligt, at hvis $x$ ligger mellem $0$ og $1$, så er $\ln(x)$ negativ.
+Nu ved vi, at $0<o_m<1$, og derfor er også $0<1-o_m<1$. På @fig-ln_graf ses grafen for den naturlige logaritme. Her ses det tydeligt, at hvis $x$ ligger mellem $0$ og $1$, så er $\ln(x)$ negativ.
 
 ![Grafen for den naturlige logaritmefunktion.](images/ln_graf.png){width=75% fig-align='center' #fig-ln_graf}
 
@@ -451,7 +466,7 @@ $$
 $$
 Det betyder altså samlet set, at hvis modellen er god, så vil alle led i tabsfunktionen i (@eq-crossentropy) være tæt på $0$, og den samlede tabsfunktion vil dermed også være tæt på $0$. 
 
-Vi vil nu prøve at differentiere *cross-entropy* tabsfunktionen i (@eq-crossentropy) med hensyn til $w_i$. Husk på at selvom det ikke umiddelbart ser ud som om, at tabsfunktionen afhænger af nogle vægte, så gør den det alligevel via outputværdien $o_m$:
+Vi vil nu differentiere *cross-entropy* tabsfunktionen i (@eq-crossentropy) med hensyn til $w_i$. Husk på at selvom det ikke umiddelbart ser ud som om, at tabsfunktionen afhænger af nogle vægte, så gør den det alligevel via outputværdien $o_m$:
 
 $$
 o_m = f(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})
@@ -533,7 +548,7 @@ Lad os igen se på et eksempel.
 
 :::{#exm-cross_entropy}
 
-Vi vil i vores fiktive eksempel med biomarkør og prædiktion af kræft nu prøve at bruge *cross-entropy* tabsfunktionen sammen med sigmoid som aktiveringsfunktion. Vi skal igen datasættet fra @exm-squared_error og indsætte i *cross-entropy* tabsfunktionen i (@eq-crossentropy). Her bruger vi de to udtryk vi fandt i (@eq-to_muligheder) alt efter om $t_m=0$ eller $t_m=1$:
+Vi vil i vores fiktive eksempel med biomarkør og prædiktion af kræft nu bruge *cross-entropy* tabsfunktionen sammen med sigmoid som aktiveringsfunktion. Vi skal igen datasættet fra @exm-squared_error og indsætte i *cross-entropy* tabsfunktionen i (@eq-crossentropy). Her bruger vi de to udtryk vi fandt i (@eq-to_muligheder) alt efter om $t_m=0$ eller $t_m=1$:
 
 
 $$
@@ -605,7 +620,7 @@ Det vil sige, at hvis patient 1 har en målt biomarkør på 20, så vil vi nu pr
 
 :::
 
-Umiddelbart kan man jo tænke, at det er hip som hap, om vi vælger den ene eller den anden tabsfunktion. I det næste afsnit skal vi se, at *cross-entropy* tabsfunktionen faktisk passer bedre sammen med sigmoid-funktionen som aktiveringsfunktion end *squared error* tabsfunktionen gør. Men lad os for nu prøve at sammenligne de to sigmoid-funktioner, som vi fandt i @exm-squared_error og @exm-cross_entropy.
+Umiddelbart kan man jo tænke, at det er hip som hap, om vi vælger den ene eller den anden tabsfunktion. I det næste afsnit skal vi se, at *cross-entropy* tabsfunktionen faktisk passer bedre sammen med sigmoid-funktionen som aktiveringsfunktion end *squared error* tabsfunktionen gør. Men lad os for nu sammenligne de to sigmoid-funktioner, som vi fandt i @exm-squared_error og @exm-cross_entropy.
 
 ```{r echo=FALSE}
 #| fig-cap: Her ses et plot af data med biomarkør på $x$-aksen og sygdomsstatus på $y$-aksen sammen med graferne for de to fundne sigmoid-funktioner baseret på at minimere henholdsvis *squared error* (mørkeblå) og *cross-entropy* (lyseblå) tabsfunktionen. De to punkter på hver graf illustrerer to nye, fiktive patienter.
@@ -662,7 +677,7 @@ $$
 \end{aligned}
 $$
 
-Problemet opstår, fordi man i forbindelse med gradientnedstigning, starter i et tilfældigt punkt $(w_0, w_1, \dots, w_n)$. Hvis dette punkt svarer til vægte, som resulterer i forkerte prædiktioner, så for eksempel $o_m \approx 0$, men $t_m = 1$, så vil faktoren $o_m \cdot (1-o_m)$ være tæt på $0$. Det betyder, at vægtene næsten ikke bliver opdateret, når vi bruger *squared error*, fordi opdateringsleddene alle er tæt på $0$. Noget tilsvarende gør sig gældende, hvis $o_m \approx 1$ og $t_m = 0$. Dette fænomen kalder man for **slow learning**. 
+Problemet opstår, fordi man i forbindelse med gradientnedstigning starter i et tilfældigt punkt $(w_0, w_1, \dots, w_n)$. Hvis dette punkt svarer til vægte, som resulterer i forkerte prædiktioner, så for eksempel $o_m \approx 0$, men $t_m = 1$, så vil faktoren $o_m \cdot (1-o_m)$ være tæt på $0$. Det betyder, at vægtene næsten ikke bliver opdateret, når vi bruger *squared error*, fordi opdateringsleddene alle er tæt på $0$. Noget tilsvarende gør sig gældende, hvis $o_m \approx 1$ og $t_m = 0$. Dette fænomen kalder man for **slow learning**. 
 
 I @fig-squared ses grafen for *squared error* tabsfunktionen fra eksemplet om biomarkører og prædiktion af kræft. Her er det ret tydeligt, at der findes værdier af vægtene $w_0$ og $w_1$, hvor grafen flader helt ud. Hvis man får startet sin gradientnedstigning her, så kan der gå lang tid inden, man ender i minimum.
 
