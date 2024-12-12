@@ -1,0 +1,150 @@
+---
+title: "Simple neurale netværk 2 - den lange..."
+##image: "images/"
+description-meta: "Her ser vi på **feedforward** og **backpropagation** for et neuralt netværk, hvor hver af de skjulte lag kun består af én neuron."
+from: markdown+emoji
+---
+
+Indledning
+
+## Kan vi forudsige vejret?
+
+Forestil dig at du gerne vil kunne forudsige, om det bliver regnvejr i morgen. Det er selvfølgelig ikke nogen helt simpel opgave, men man kunne forestille sig, at der vil være en række variable, som kan hjælpe med at lave den forudsigelse. Det kunne for eksempel være:
+
+$$
+\begin{aligned}
+&x_1: \textrm{Er det regnvejr i dag? Hvis 'ja' er } x_1=1 \textrm{ og } 0 \textrm{ ellers.} \\
+&x_2: \textrm{Luftfugtigheden i dag.} \\
+&x_3: \textrm{Temperaturen i dag.} \\
+&x_4: \textrm{Lufttrykket i dag.} \\
+\end{aligned}
+$$
+Og der vil sikkert være en masse andre variable, som også kunne give mening. Disse variable $x_1, x_2, \dots, x_n$ kaldes for **inputvariable**.
+
+Vi vil nu se på, hvordan man ved hjælp af sådanne inputvariable kan prædiktere, om det bliver regnvejr i morgen.
+
+
+## Feedforward
+
+Vi ser nu på det mere generelle tilfælde, hvor vi har $n$ inputvariable
+
+$$
+x_1, x_2, \dots, x_n.
+$$
+Disse inputvariable sender vi nu ind i et forholdsvis simpelt neuralt netværk, som vist i @fig-long_simple_NN.
+
+![Grafisk illustration af et neuralt netværk med $n$ inputvariable og to skjulte lag, som hver består af én neuron.](images/long_simple_NN.png){width=75% #fig-long_simple_NN}
+
+Cirklerne i @fig-long_simple_NN kaldes for **neuroner**. Idéen er, at vi på baggrund af inputværdierne i sidste ende beregne en outputværdi $o$ (som er illustreret ved den blå cirkel længst til højre i @fig-long_simple_NN). Outputværdien skal i dette eksempel være et tal mellem $0$ og $1$, som skal kunne fortolkes som sandsynligheden for, at det bliver regnvejr i morgen baseret på inputværdierne $x_1, x_2, \dots, x_n$. Herefter kunne man forestille sig følgende vejrudsigt:
+
+$$
+\textrm{Det bliver regnvejr i morgen: }
+\begin{cases}
+\textrm{Ja} & \textrm{hvis } o \geq 0.5\\
+\textrm{Nej} & \textrm{hvis } o < 0.5\\
+\end{cases}
+$$
+Lad os derfor se på, hvordan $o$ kan beregnes. Det sker ved hjælp af en række vægte, som er repræsenteret ved pilene i @fig-long_simple_NN. Inputværdierne sendes frem til den første neuron (vist som en lysegrøn cirkel i @fig-long_simple_NN). Her beregnes den vægtede sum:
+
+$$
+r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n.
+$$
+
+Herefter benyttes en såkaldt **aktiveringsfunktion** på den vægtede sum. En ofte anvendt aktiveringsfunktion er sigmoid-funktionen $\sigma$:
+
+$$
+\sigma (x) = \frac{1}{1+e^{-x}}.
+$$
+
+Det vil sige, at vi beregner
+
+$$
+y = \sigma (r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n) = \frac{1}{1+e^{-(r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n)}}.
+$$ 
+
+Grafen for sigmoid-funktionen ses i @fig-sigmoid.
+
+![Grafen for sigmoid-funktionen.](images/sigmoid.png){width=75% #fig-sigmoid}
+
+
+Her anskueliggøres det, at sigmoid-funktionen tager et vilkårligt reelt tal som input og giver et tal i intervallet $(0,1)$ som output:
+
+$$
+\sigma : \mathbb{R} \rightarrow (0,1)
+$$
+
+Det betyder, at den første neuron sender værdien $y$ videre i netværket, hvor $0<y<1$. Ved den næste neuron i @fig-long_simple_NN (repræsenteret ved den mørkegrønne cirkel), beregnes først den vægtede sum og herefter anvendes igen aktiveringsfunktionen: 
+
+$$
+z = \sigma (v_0 + v_1 \cdot y).
+$$
+
+Denne værdi sendes nu frem til den sidste neuron i outputlaget og outputværdien $o$ beregnes
+
+$$
+o = \sigma(w_0 + w_1 \cdot z).
+$$
+
+Hele denne proces med at udregne outputværdien $o$ på baggrund af inputværdierne $x_1, x_2, \dots, x_n$ kaldes for **feedforward** og er opsummeret herunder:
+
+::: {.callout-note collapse="false" appearance="minimal"} 
+## Feedforward ligninger
+
+På baggrund af inputværdierne $x_1, x_2, \dots, x_n$ beregnes outputværdien $o$ på denne måde:
+
+$$
+y = \sigma (r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n) 
+$$ {#eq-y}
+
+$$
+z = \sigma (v_0 + v_1 \cdot y) 
+$$ {#eq-z}
+
+$$
+o = \sigma(w_0 + w_1 \cdot z)
+$$ {#eq-o}
+
+:::
+
+Bemærk, at outputværdien $o$ beregnes ved hjælp af sigmoid-funktionen, og derfor er et tal mellem $0$ og $1$, som tidligere ønsket.
+
+Med udgangspunkt i feedforward ligningerne, kan vi også skrive outputværdien $o$ direkte som en funktion af inputværdierne $x_1, x_2, \dots, x_n$. Vi starter med at indsætte udtrykket for $z$ i (@eq-z) i udtrykket for $o$ i (@eq-o):
+
+$$
+o = \sigma(w_0 + w_1 \cdot (\sigma (v_0 + v_1 \cdot y)))
+$$
+
+Herefter erstatter vi $y$ med udtrykket i (@eq-y):
+
+$$
+o = \sigma(w_0 + w_1 \cdot (\sigma (v_0 + v_1 \cdot (\sigma (r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n) ))))
+$$
+
+Her bliver det meget tydeligt, at 
+
+1) Outputværdien afhænger direkte af inputværdierne $x_1, x_2, \dots, x_n$
+
+og 
+
+2) Outputværdien $o$ kan udtrykkes ved hjælp af flere sammensatte funktioner.
+
+Bortset fra det er feedforward ligningerne ovenfor nok nemmere at overskue!
+
+Fint nok! Nu har vi altså en model, som kan bruges til at forudsige vejret. Men måske er du skeptisk. Det bør du i hvert tilfælde være! For hvem siger, at ouputværdien $o$ siger noget som helst om sandsynligheden for, at det bliver regnvejr i morgen? Det korte svar er: Det gør den heller ikke! I hvert tilfælde ikke sådan uden videre. Det kræver nemlig, at alle vægtene er \"indstillet\" sådan, at den beregnede outputværdi rent faktisk kan fortolkes, som en sandsynlighed for, at det bliver regnvejr i morgen. For at lave denne indstilling skal vi bruge to ting: 1) træningsdata og 2) en tabsfunktion. Det kommer her: 
+
+## Træningsdata og tabsfunktion
+
+START HER!
+
+Nu tænker vi os, at du registrerer disse fire størrelser på en række forskellige dage *samtidig* med, at du også den efterfølgende dag registrerer, om det regner eller ej. Denne sidste registrering kunne for eksempel ske på denne måde:
+
+$$
+t=
+\begin{cases}
+1 & \textrm{hvis det regner den efterfølgende dag} \\
+0 & \textrm{hvis det ikke regner den efterfølgende dag} \\
+\end{cases}
+$$
+Variablen $t$ kaldes for en **targetvariabel**. Det er netop denne værdi, vi gerne vil kunne forudsige. Man kan derfor tænke på variablen $t$, som en slags facitliste. Man siger også, vi gerne vil **prædiktere** $t$.
+
+
