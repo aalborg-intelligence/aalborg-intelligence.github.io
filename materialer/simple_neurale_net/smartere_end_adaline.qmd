@@ -53,27 +53,27 @@ Hvis vi skal forstå, hvad der sker, må vi se lidt nærmere på den tabsfunktio
 
 $$
 \begin{aligned}
-E(w_0, w_1, &\dots, w_n)\\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2
+E(w_0, w_1, &\dots, w_n)\\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2
 \end{aligned}
 $$ {#eq-tabsfuntion}
 
 hvor det $m$'te træningseksempel er
-$$(x_{m,1}, x_{m,2}, \dots, x_{m,n}, t_m)$$
+$$(x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)}, t^{(m)})$$
 
 Det vil sige, at det $m$'te træningseksempel giver et bidrag til tabsfunktionen på 
 
 $$
-\left ( t_m- (w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2
+\left ( t^{(m)}- (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2
 $$
 
-For et blåt punkt med $t_m=1$ vil det sige, at bidraget til tabsfunktionen er præcis $0,$ hvis
+For et blåt punkt med $t^{(m)}=1$ vil det sige, at bidraget til tabsfunktionen er præcis $0,$ hvis
 $$
-1- (w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})=0
+1- \left (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} \right) =0
 $$
-og for et rødt punkt med $t_m=-1$ er bidraget til tabsfunktionen præcis $0,$ hvis
+og for et rødt punkt med $t^{(m)}=-1$ er bidraget til tabsfunktionen præcis $0,$ hvis
 $$
--1- (w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})=0
+-1- \left (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} \right)=0
 $$
 Nu er $1- (w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)=0$ og $-1- (w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)=0$ jo bare ligninger for rette linjer[^3]. Disse linjer ses indtegnet på @fig-eks1_2 (som henholdsvis en blå og rød stiplet linje) sammen med de oprindelige seks punkter og den linje, som ADALINE fandt baseret på disse seks punkter. Samtidig er det for hvert punkt markeret, hvor meget dette punkt bidrager til tabsfunktionen. 
 
@@ -106,21 +106,21 @@ $$
 \textrm{dist}(P,l)=\frac{|a x_1 + b y_1 +c|}{\sqrt{a^2+b^2}}
 $$
 
-Denne afstandsformel kan generaliseres, så afstanden fra et punkt $P(x_{m,1}, x_{m,2}, \dots, x_{m,n})$ (i et $n$-dimensionalt rum!) til planen $\alpha$ med ligning $w_0+w_1 x_1 + w_2 x_2 + \cdots + w_n x_n=0$ er:
+Denne afstandsformel kan generaliseres, så afstanden fra et punkt $P(x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)})$ (i et $n$-dimensionalt rum!) til planen $\alpha$ med ligning $w_0+w_1 x_1 + w_2 x_2 + \cdots + w_n x_n=0$ er:
 
 $$
-\textrm{dist}(P,\alpha)=\frac{|w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}|}{\sqrt{w_1^2 + w_2^2 + \cdots + w_n^2}}
+\textrm{dist}(P,\alpha)=\frac{\left | w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} \right |}{\sqrt{w_1^2 + w_2^2 + \cdots + w_n^2}}
 $$
 
-Det vil sige, at udtrykket i tælleren $|w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}|$ bliver et mål for hvor langt væk punktet $P(x_{m,1}, x_{m,2}, \dots, x_{m,n})$ ligger fra planen. Det forklarer, hvordan et *ekstremt* punkt kan give et meget stort bidrag til tabsfunktionen:
+Det vil sige, at udtrykket i tælleren $|w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}|$ bliver et mål for hvor langt væk punktet $P(x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)})$ ligger fra planen. Det forklarer, hvordan et *ekstremt* punkt kan give et meget stort bidrag til tabsfunktionen:
 
 $$
-\left ( t- (w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2
+\left ( t^{(m)}- (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2
 $$ {#eq-bidrag_til_tabsfunktion}
 
-Hvis punktet ligger langt væk fra den plan, som måske umiddelbart ser fornuftig ud, så vil punktet give et stort bidrag til tabsfunktionen, fordi værdien af $w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}$ bliver stor, og dermed vil bidraget til tabsfunktionen i (@eq-bidrag_til_tabsfunktion) også blive stort!
+Hvis punktet ligger langt væk fra den plan, som måske umiddelbart ser fornuftig ud, så vil punktet give et stort bidrag til tabsfunktionen, fordi værdien af $w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}$ bliver stor, og dermed vil bidraget til tabsfunktionen i (@eq-bidrag_til_tabsfunktion) også blive stort!
 
-Alt det her leder os frem til, at valget af tabsfunktion måske i virkeligheden ikke er super smart. Problemet opstår grundlæggende, fordi targetværdien $t$ og udtrykket i den inderste parentes i (@eq-bidrag_til_tabsfunktion) er på to helt vidt forskellige skalaer. Targetværdien er enten $-1$ eller $1$, mens udtrykket $w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}$ kan antage en hvilken som helst reel værdi -- en værdi som kan blive vældig stor, hvis punktet $P(x_{m,1}, x_{m,2}, \dots, x_{m,n})$ ligger langt væk fra planen. Derfor bliver ADALINE nødt til at tvinge planen med ligningen 
+Alt det her leder os frem til, at valget af tabsfunktion måske i virkeligheden ikke er super smart. Problemet opstår grundlæggende, fordi targetværdien $t$ og udtrykket i den inderste parentes i (@eq-bidrag_til_tabsfunktion) er på to helt vidt forskellige skalaer. Targetværdien er enten $-1$ eller $1$, mens udtrykket $w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}$ kan antage en hvilken som helst reel værdi -- en værdi som kan blive vældig stor, hvis punktet $P(x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)})$ ligger langt væk fra planen. Derfor bliver ADALINE nødt til at tvinge planen med ligningen 
 
 $$
 w_0 + w_1 \cdot x_{1} + \cdots + w_n \cdot x_{n}=0
@@ -130,7 +130,7 @@ over mod et ekstremt punkt, sådan at dette punkts bidrag til tabsfunktionen ikk
 
 Problemet kan løses ved at bruge et [simpelt neuralt netværk](simple_neurale_net.qmd). 
 
-Helt grundlæggende handler problemet om, at targetværdi $t,$ og det udtryk, som vi beregner på baggrund af punktet $P(x_{m,1}, x_{m,2}, \dots, x_{m,n})$, skal være på samme skala. I det simple neurale netværk brugte vi sigmoid-funktionen $\sigma$, som aktiveringsfunktion. Forskriften for sigmoid-funktionen er:
+Helt grundlæggende handler problemet om, at targetværdi $t,$ og det udtryk, som vi beregner på baggrund af punktet $P(x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)})$, skal være på samme skala. I det simple neurale netværk brugte vi sigmoid-funktionen $\sigma$, som aktiveringsfunktion. Forskriften for sigmoid-funktionen er:
 
 $$
 \sigma(x)=\frac{1}{1+e^{-x}}
@@ -160,12 +160,12 @@ Så targetværdierne er nu $0$ eller $1$ i stedet for $-1$ og $1$. Vi husker nu,
 
 $$
 \begin{aligned}
-E(w_0, w_1, &\dots, w_n) \\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2
+E(w_0, w_1, &\dots, w_n) \\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2
 \end{aligned}
 $$ {#eq-ny_tabsfunktion}
 
-Bemærk, at problemet med de to skalaer nu er løst. Targetværdien er enten $0$ eller $1$ samtidig med, at $\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})$ også ligger mellem $0$ og $1$. Vi sammenligner altså ikke længere pærer med bananer! Den \"perceptron\", som minimerer tabsfunktionen i (@eq-ny_tabsfunktion), er netop det, vi kalder for et **simpelt neuralt netværk**.
+Bemærk, at problemet med de to skalaer nu er løst. Targetværdien er enten $0$ eller $1$ samtidig med, at $\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})$ også ligger mellem $0$ og $1$. Vi sammenligner altså ikke længere pærer med bananer! Den \"perceptron\", som minimerer tabsfunktionen i (@eq-ny_tabsfunktion), er netop det, vi kalder for et **simpelt neuralt netværk**.
 
 I noten om [simple neurale netværk](simple_neurale_net.qmd) beskrev vi, hvordan vi kan tænke på outputværdien 
 

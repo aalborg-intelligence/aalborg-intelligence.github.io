@@ -791,36 +791,36 @@ træningseksempler. Så vil vi opskrive de $M$ træningseksempler på denne
 måde:
 $$
 \begin{aligned}
-&\text{Træningseksempel 1:} \quad (x_{1,1}, x_{1,2}, \dots, x_{1,n}, t_1) \\
+&\text{Træningseksempel 1:} \quad (x_1^{(1)}, x_2^{(1)}, \dots, x_n^{(1)}, t^{(1)}) \\
 &  \quad \quad \quad \quad \vdots \\
-&\text{Træningseksempel m:} \quad (x_{m,1}, x_{m,2}, \dots, x_{m,n}, t_m) \\
+&\text{Træningseksempel m:} \quad (x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)}, t^{(m)}) \\
 &  \quad \quad \quad \quad \vdots \\
-&\text{Træningseksempel M:} \quad (x_{M,1}, x_{M,2}, \dots, x_{M,n}, t_M) \\
+&\text{Træningseksempel M:} \quad (x_1^{(M)}, x_2^{(M)}, \dots, x_n^{(M)}, t^{(M)}) \\
 \end{aligned}
 $$
 Det vil altså sige, at det $m$'te træningseksempel har inputværdier
-$(x_{m,1}, x_{m,2}, \dots, x_{m,n})$ og targetværdi $t_m$.
+$(x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)})$ og targetværdi $t^{(m)}$.
 
 Vi definerer nu tabsfunktionen $E$ på følgende måde: 
 $$
 \begin{aligned}
-E(w_0, w_1, \dots, w_n) = \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2
+E(w_0, w_1, \dots, w_n) = \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2
 \end{aligned}
 $${#eq-tabsfunktion}
 Men hvorfor giver det nu god mening? Jo, det gør det, fordi udtrykket i
 parentesen
 $$
 \begin{aligned}
-t_m-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})
+t^{(m)}-(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})
 \end{aligned}
 $$
 angiver fejlen, som vi så det i eksemplet ovenfor. Det er altså
-forskellen mellem den ønskede targetværdi $t_m$ for det $m$'te
+forskellen mellem den ønskede targetværdi $t^{(m)}$ for det $m$'te
 træningseksempel og den vægtede sum
 $$
 \begin{aligned}
-w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}, 
+w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}, 
 \end{aligned}
 $$
 som perceptronen beregner, *inden* vi finder den endelig outputværdi $o$
@@ -839,7 +839,7 @@ tabsfunktionen!
 
 ## VIDEO: Perceptron Learning versus ADALINE
 
-I denne video forklarer vi idéen bag ADALINE og indfører tabsfunktionen.
+I denne video forklarer vi idéen bag ADALINE og indfører tabsfunktionen (vær opmærksom på, at notationen i forbindelse med træningsdata er en lille smule anderledes i videoen).
 
 {{< video https://www.youtube.com/embed/QF3WRIe5v6U >}}
 
@@ -851,8 +851,8 @@ nemmest at se på en tabsfunktion, som kun afhænger af to vægte $w_0$ og
 $w_1$. I det tilfælde får vi 
 $$
 \begin{aligned}
-E(w_0, w_1) = \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1}) \right)^2.
+E(w_0, w_1) = \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)}) \right)^2.
 \end{aligned}
 $$
 Da tabsfunktionenkun afhænger af to variable, kan vi tegne grafen for den. Et eksempel
@@ -924,13 +924,13 @@ Nu mangler vi bare at få bestemt de partielle afledede. Ved at bruge
 sumreglen og kædereglen for differentiation får vi fra (@eq-tabsfunktion), at 
 $$
 \begin{aligned}
-\frac{\partial E}{\partial w_i} &= \frac{1}{2} \sum_{m=1}^{M} \frac{\partial}{\partial w_i}\left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2 \\
-&= \frac{1}{2} \sum_{m=1}^{M} 2 \cdot \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \\ & \quad  \quad \quad  \quad \quad  \quad \cdot \frac{\partial}{\partial w_i} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n} ) \right) \\
-&= \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \cdot \left (-x_{m,i} \right)
+\frac{\partial E}{\partial w_i} &= \frac{1}{2} \sum_{m=1}^{M} \frac{\partial}{\partial w_i}\left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2 \\
+&= \frac{1}{2} \sum_{m=1}^{M} 2 \cdot \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \\ & \quad  \quad \quad  \quad \quad  \quad \cdot \frac{\partial}{\partial w_i} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} ) \right) \\
+&= \sum_{m=1}^{M} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \cdot \left (-x_i^{(m)} \right)
 \end{aligned}
 $$
 for $i \in \{1, 2, \dots, n\}$.
@@ -938,32 +938,32 @@ for $i \in \{1, 2, \dots, n\}$.
 Læg mærke til at når vi differentierer den indre funktion
 $$
 \begin{aligned}
-t_m-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})
+t^{(m)}-(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})
 \end{aligned}
 $$
 med hensyn til $w_i$, så vil alle led være at betragte som konstanter bortset fra leddet
 $$
 \begin{aligned}
--w_i \cdot x_{m,i}
+-w_i \cdot x_i^{(m)}
 \end{aligned}
 $$
-og når vi differentierer dette led med hensyn til $w_i$ får vi netop $- x_{m,i}$. Læg også mærke til at hvis vi differentierer med hensyn til $w_0$, så får vi,
+og når vi differentierer dette led med hensyn til $w_i$ får vi netop $- x_i^{(m)}$. Læg også mærke til at hvis vi differentierer med hensyn til $w_0$, så får vi,
 $$
 \begin{aligned}
-\frac{\partial E}{\partial w_0} = \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \cdot \left (-1 \right).
+\frac{\partial E}{\partial w_0} = \sum_{m=1}^{M} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \cdot \left (-1 \right).
 \end{aligned}
 $$
 Altså bliver vores opdateringsregler
 $$
 \begin{aligned}
-w_0 \leftarrow & w_0 + \eta \cdot \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)  \\
-w_1 \leftarrow & w_1 + \eta \cdot  \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \cdot \left (x_{m,1} \right)\\
+w_0 \leftarrow & w_0 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)  \\
+w_1 \leftarrow & w_1 + \eta \cdot  \sum_{m=1}^{M} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \cdot \left (x_1^{(m)} \right)\\
 &\vdots  \\
-w_n \leftarrow & w_n + \eta \cdot  \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \cdot \left (x_{m,n} \right)\\
+w_n \leftarrow & w_n + \eta \cdot  \sum_{m=1}^{M} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \cdot \left (x_n^{(m)} \right)\\
 \end{aligned}
 $$
 Vi kan altså sammenfatte gradientnedstigningsalgoritmen (ADALINE) på denne måde:
@@ -978,10 +978,10 @@ Vi kan altså sammenfatte gradientnedstigningsalgoritmen (ADALINE) på denne må
 -   Udregn på baggrund af alle træningsdata fejlene: 
 $$
 \begin{aligned}
-    error_0 &= \sum_{m=1}^{M} \left (t_m-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \\
-    error_1 &= \sum_{m=1}^{M} \left (t_m-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \cdot x_{m,1} \right) \\
+    error_0 &= \sum_{m=1}^{M} \left (t^{(m)}-(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \\
+    error_1 &= \sum_{m=1}^{M} \left (t^{(m)}-(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \cdot x_1^{(m)} \right) \\
     &\vdots \\
-    error_n &= \sum_{m=1}^{M} \left (t_m-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \cdot x_{m,n} \right) 
+    error_n &= \sum_{m=1}^{M} \left (t^{(m)}-(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \cdot x_n^{(m)} \right) 
 \end{aligned}
 $$
 
@@ -1005,12 +1005,12 @@ Lad os prøve at bruge gradientnedstigning på vores eksempel omkring
 kandidattest. I dette simple eksempel bliver vores opdateringsregler nu
 $$
 \begin{aligned}
-w_0 \leftarrow & w_0 + \eta \cdot \sum_{m=1}^{6} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + w_2 \cdot x_{m,2}) \right)  \\
-w_1 \leftarrow & w_1 + \eta \cdot  \sum_{m=1}^{6} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + w_2 \cdot x_{m,2}) \right) \cdot \left (x_{m,1} \right)\\
-w_2 \leftarrow & w_2 + \eta \cdot  \sum_{m=1}^{6} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1}  + w_2 \cdot x_{m,2}) \right) \cdot \left (x_{m,2} \right)
+w_0 \leftarrow & w_0 + \eta \cdot \sum_{m=1}^{6} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + w_2 \cdot x_2^{(m)}) \right)  \\
+w_1 \leftarrow & w_1 + \eta \cdot  \sum_{m=1}^{6} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + w_2 \cdot x_2^{(m)}) \right) \cdot \left (x_1^{(m)} \right)\\
+w_2 \leftarrow & w_2 + \eta \cdot  \sum_{m=1}^{6} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)}  + w_2 \cdot x_2^{(m)}) \right) \cdot \left (x_2^{(m)} \right)
 \end{aligned}
 $$
 Hvis man bruger disse opdateringsregler på dataene fra @tbl-trainingdata_tabel, så ender man med følgende værdier af vægtene
@@ -1089,7 +1089,7 @@ opdateret. Det er både hurtigere og mere pladsbesparende.
 
 ## VIDEO: ADALINE
 
-I denne video forklarer vi, hvad gradientnedstigning går ud på, og hvordan gradientnedstigning bruges til at opdatere vægtene i ADALINE. 
+I denne video forklarer vi, hvad gradientnedstigning går ud på, og hvordan gradientnedstigning bruges til at opdatere vægtene i ADALINE (vær opmærksom på, at notationen i forbindelse med træningsdata er en lille smule anderledes i videoen). 
 
 {{< video https://www.youtube.com/embed/4YMzpNP4wnA >}}
 
@@ -1100,8 +1100,8 @@ I det foregående har vi set på, hvordan ADALINE algoritmen forsøger at minime
 
 $$
 \begin{aligned}
-E(w_0, w_1, \dots, w_n) = \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2.
+E(w_0, w_1, \dots, w_n) = \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2.
 \end{aligned}
 $$
 

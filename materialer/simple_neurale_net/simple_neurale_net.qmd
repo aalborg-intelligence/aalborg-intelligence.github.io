@@ -135,11 +135,11 @@ Samtidig forestiller vi os, at vi har $M$ træningsdata. Det vil sige, $M$ forsk
 
 $$
 \begin{aligned}
-&\text{Træningseksempel 1:} \quad (x_{1,1}, x_{1,2}, \dots, x_{1,n}, t_1) \\
+&\text{Træningseksempel 1:} \quad (x_1^{(1)}, x_2^{(1)}, \dots, x_n^{(1)}, t^{(1)}) \\
 &  \quad \quad \quad \quad \vdots \\
-&\text{Træningseksempel m:} \quad (x_{m,1}, x_{m,2}, \dots, x_{m,n}, t_m) \\
+&\text{Træningseksempel m:} \quad (x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)}, t^{(m)}) \\
 &  \quad \quad \quad \quad \vdots \\
-&\text{Træningseksempel M:} \quad (x_{M,1}, x_{M,2}, \dots, x_{M,n}, t_M) \\
+&\text{Træningseksempel M:} \quad (x_1^{(M)}, x_2^{(M)}, \dots, x_n^{(M)}, t^{(M)}) \\
 \end{aligned}
 $$
 
@@ -147,8 +147,8 @@ og tabsfunktionen bliver da
 
 $$
 \begin{aligned}
-E(w_0, w_1, &\dots, w_n) \\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2.
+E(w_0, w_1, &\dots, w_n) \\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2.
 \end{aligned}
 $$
 
@@ -171,16 +171,16 @@ For at foretage opdateringerne har vi altså brug for at bestemme den partielle 
 
 $$
 \begin{aligned}
-\frac{\partial E}{\partial w_i} &= \frac{1}{2} \sum_{m=1}^{M} \frac{\partial}{\partial w_i}\left (t_m-
-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2 \\
-&= \frac{1}{2} \sum_{m=1}^{M} 2 \cdot \left (t_m-
-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \\ 
-& \quad  \quad \quad  \quad  \cdot \frac{\partial}{\partial w_i} \left (t_m-
-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n} ) \right) \\
-&=  \sum_{m=1}^{M} \left (t_m-
-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \\ 
-& \quad  \quad \quad  \quad  \cdot \frac{\partial}{\partial w_i} \left (t_m-
-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n} ) \right) \\
+\frac{\partial E}{\partial w_i} &= \frac{1}{2} \sum_{m=1}^{M} \frac{\partial}{\partial w_i}\left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2 \\
+&= \frac{1}{2} \sum_{m=1}^{M} 2 \cdot \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \\ 
+& \quad  \quad \quad  \quad  \cdot \frac{\partial}{\partial w_i} \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} ) \right) \\
+&=  \sum_{m=1}^{M} \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \\ 
+& \quad  \quad \quad  \quad  \cdot \frac{\partial}{\partial w_i} \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} ) \right) \\
 \end{aligned}
 $$ {#eq-partiel}
 
@@ -191,23 +191,23 @@ Betragter vi nu kun den sidste faktor og bruger kædereglen igen, får vi
 
 $$
 \begin{aligned}
-\frac{\partial}{\partial w_i} (t_m &- \sigma(w_0 +  w_1 \cdot x_{m,1} + \cdots   + w_n \cdot x_{m,n} )) = \\ 
-&- \sigma'(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})\cdot  \\ & \qquad \qquad \qquad
-\qquad \frac{\partial}{\partial w_i} \left (w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n} \right)
+\frac{\partial}{\partial w_i} (t^{(m)} &- \sigma(w_0 +  w_1 \cdot x_1^{(m)} + \cdots   + w_n \cdot x_n^{(m)} )) = \\ 
+&- \sigma'(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})\cdot  \\ & \qquad \qquad \qquad
+\qquad \frac{\partial}{\partial w_i} \left (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} \right)
 \end{aligned}
 $$
 
 Nu er
 
 $$
-\frac{\partial}{\partial w_i} \left (w_0 + w_1 \cdot x_{m,1} + \cdots + w_i \cdot x_{m,i} + \cdots  + w_n \cdot x_{m,n} \right) = x_{m,i}
+\frac{\partial}{\partial w_i} \left (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_i \cdot x_i^{(m)} + \cdots  + w_n \cdot x_n^{(m)} \right) = x_i^{(m)}
 $$ {#eq-partial_wi}
 
 når $i \in \{1, 2, \dots, n\}$. Så
 $$
 \begin{aligned}
-\frac{\partial}{\partial w_i} (t_m -
-\sigma(w_0 &+ w_1 \cdot x_{m,1}  + \cdots  + w_n \cdot x_{m,n} )) = \\ &- \sigma'(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})\cdot x_{m,i}
+\frac{\partial}{\partial w_i} (t^{(m)} -
+\sigma(w_0 &+ w_1 \cdot x_1^{(m)}  + \cdots  + w_n \cdot x_n^{(m)} )) = \\ &- \sigma'(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})\cdot x_i^{(m)}
 \end{aligned}
 $$
 
@@ -221,43 +221,43 @@ Derfor bliver
 
 $$
 \begin{aligned}
-\frac{\partial}{\partial w_i} (t_m -
-\sigma(w_0 &+ w_1 \cdot x_{m,1} + \cdots  + w_n \cdot x_{m,n} )) = \\
-&- \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \cdot \\ & (1-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots  + w_n \cdot x_{m,n} )) \cdot x_{m,i}
+\frac{\partial}{\partial w_i} (t^{(m)} -
+\sigma(w_0 &+ w_1 \cdot x_1^{(m)} + \cdots  + w_n \cdot x_n^{(m)} )) = \\
+&- \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \cdot \\ & (1-\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots  + w_n \cdot x_n^{(m)} )) \cdot x_i^{(m)}
 \end{aligned}
 $$
 
-I eksemplet med Good Food app'en kaldte vi $\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2)$ for outputværdien $o$ (se (@eq-output)). På samme måde kan vi at gøre ovenstående lidt mere læsevenligt ved at kalde outputværdien hørende til det $m$'te træningseksempel for $o_m$:
+I eksemplet med Good Food app'en kaldte vi $\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2)$ for outputværdien $o$ (se (@eq-output)). På samme måde kan vi at gøre ovenstående lidt mere læsevenligt ved at kalde outputværdien hørende til det $m$'te træningseksempel for $o^{(m)}$:
 
 $$
-o_m = \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})
+o^{(m)} = \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})
 $$
 
 Vi får så
 
 $$
 \begin{aligned}
-\frac{\partial}{\partial w_i} (t_m -
-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots  &+ w_n \cdot x_{m,n} )) = \\ &- o_m\cdot (1-o_m) \cdot x_{m,i}
+\frac{\partial}{\partial w_i} (t^{(m)} -
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots  &+ w_n \cdot x_n^{(m)} )) = \\ &- o^{(m)}\cdot (1-o^{(m)}) \cdot x_i^{(m)}
 \end{aligned}
 $$
 
 Indsættes dette i (@eq-partiel) samtidig med at vi bruger, at 
 
-$$o_m = \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})$$ 
+$$o^{(m)} = \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})$$ 
 
 får vi
 
 $$
 \begin{aligned}
-\frac{\partial E}{\partial w_i} = - \sum_{m=1}^{M} \left (t_m-o_m \right) \cdot o_m\cdot (1-o_m) \cdot x_{m,i}
+\frac{\partial E}{\partial w_i} = - \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x_i^{(m)}
 \end{aligned}
 $$
 
 Dette gælder for $i \in \{1, 2, \dots, n \}$. Når $i=0$ kan det fra (@eq-partial_wi) ses, at den partielle med hensyn til $w_0$ bliver $1$. Derfor er det ikke svært at overbevise sig selv om, at
 
 $$
-\frac{\partial E}{\partial w_0} = - \sum_{m=1}^{M} \left (t_m-o_m \right) \cdot o_m\cdot (1-o_m) \cdot 1
+\frac{\partial E}{\partial w_0} = - \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot 1
 $$
 
 Vi ender således med:
@@ -266,14 +266,14 @@ Vi ender således med:
 ## Opdateringsregler for simple neurale netværk
 $$
 \begin{aligned}
-w_0 \leftarrow & w_0 + \eta \cdot \sum_{m=1}^{M} \left (t_m-o_m \right) \cdot o_m\cdot (1-o_m) \\
-w_1 \leftarrow & w_1 + \eta \cdot \sum_{m=1}^{M} \left (t_m-o_m \right) \cdot o_m\cdot (1-o_m) \cdot x_{m,1}\\
+w_0 \leftarrow & w_0 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \\
+w_1 \leftarrow & w_1 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x_1^{(m)}\\
 &\vdots  \\
-w_n \leftarrow & w_n + \eta \cdot \sum_{m=1}^{M} \left (t_m-o_m \right) \cdot o_m\cdot (1-o_m) \cdot x_{m,n}
+w_n \leftarrow & w_n + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x_n^{(m)}
 \end{aligned}
 $$
 
-hvor $o_m = \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})$.
+hvor $o^{(m)} = \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})$.
 
 :::
 
@@ -494,8 +494,8 @@ I ADALINE bestemmes vægtene ved at minimere tabsfunktionen:
 
 $$
 \begin{aligned}
-E(w_0, w_1, \dots, w_n) = \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2.
+E(w_0, w_1, \dots, w_n) = \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+\left (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} \right) \right)^2.
 \end{aligned}
 $$ {#eq-tab_ADALINE}
 
@@ -506,10 +506,10 @@ Gør man det, bliver opdateringsreglerne
 
 Vægtene opdateres således:
 $$
-w_i \leftarrow w_i + \eta \cdot  \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \cdot \left (x_{m,i} \right)
+w_i \leftarrow w_i + \eta \cdot  \sum_{m=1}^{M} \left (t^{(m)}-
+\left (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} \right ) \right) \cdot \left (x_i^{(m)} \right)
 $$
-for $i \in \{0, 1, 2, \dots, n\}$, hvis vi sætter $x_{m,0}=1$ for alle værdier af $m$.
+for $i \in \{0, 1, 2, \dots, n\}$, hvis vi sætter $x_0^{(m)}=1$ for alle værdier af $m$.
 :::
 
 ### Simple neurale netværk
@@ -530,14 +530,14 @@ Hvis vi sammenligner med reglen i (@eq-pred) vil vi sige, at hvis denne outputv�
 I det simple neurale netværk er tabsfunktionen 
 $$
 \begin{aligned}
-E(w_0, w_1, &\dots, w_n) \\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2
-\\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
-o_m \right)^2,
+E(w_0, w_1, &\dots, w_n) \\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2
+\\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+o^{(m)} \right)^2,
 \end{aligned}
 $$ {#eq-tabsfunktion_sigmoid}
 
-hvor $o_m = \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})$.
+hvor $o^{(m)} = \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})$.
 
 Opdateringsreglen er:
 
@@ -545,11 +545,11 @@ Opdateringsreglen er:
 ## Opdateringsregler -- Simpelt neuralt netværk
 Vægtene opdateres således:
 $$
-w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} \left (t_m-o_m \right) \cdot o_m\cdot (1-o_m) \cdot x_{m,i}
+w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot \left (1-o^{(m)} \right) \cdot x_i^{(m)}
 $$
-for $i \in \{0, 1, 2, \dots, n\}$, hvis vi sætter $x_{m,0}=1$ for alle værdier af $m$ og hvor 
+for $i \in \{0, 1, 2, \dots, n\}$, hvis vi sætter $x_0^{(m)}=1$ for alle værdier af $m$ og hvor 
 $$
-o_m = \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}).
+o^{(m)} = \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}).
 $$
 :::
 
