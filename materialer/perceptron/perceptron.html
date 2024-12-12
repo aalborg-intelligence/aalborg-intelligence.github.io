@@ -778,38 +778,38 @@ error = t-o=1-(-1)=2
 \]</span> Her bliver det meget tydeligt, at fejlen er lille i tilfælde 1 og stor i tilfælde 2. Hvis vi skal tage højde for det i vores opdateringsalgoritme, så må vi altså væk fra den meget simple måde, at definere fejlen på og i stedet se på fejlen som: <span class="math inline">\(error = t - (w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)\)</span>. Dette er præcis, hvad man gør i ADAPTIVE LINEAR neuroner (ADALINE).</p>
 <p>For at forstå læringsalgoritmen i ADALINE må vi først indføre en tabsfunktion, som skal give et samlet mål for, hvor god/dårlig perceptronen klassificerer alle træningsdata for givne værdier af vægtene. Men først er vi nødt til at indføre lidt ny notation, så vi kan skelne de forskellige træningsdata fra hinanden. Antag, at vi har <span class="math inline">\(M\)</span> træningseksempler. Så vil vi opskrive de <span class="math inline">\(M\)</span> træningseksempler på denne måde: <span class="math display">\[
 \begin{aligned}
-&amp;\text{Træningseksempel 1:} \quad (x_{1,1}, x_{1,2}, \dots, x_{1,n}, t_1) \\
+&amp;\text{Træningseksempel 1:} \quad (x_1^{(1)}, x_2^{(1)}, \dots, x_n^{(1)}, t^{(1)}) \\
 &amp;  \quad \quad \quad \quad \vdots \\
-&amp;\text{Træningseksempel m:} \quad (x_{m,1}, x_{m,2}, \dots, x_{m,n}, t_m) \\
+&amp;\text{Træningseksempel m:} \quad (x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)}, t^{(m)}) \\
 &amp;  \quad \quad \quad \quad \vdots \\
-&amp;\text{Træningseksempel M:} \quad (x_{M,1}, x_{M,2}, \dots, x_{M,n}, t_M) \\
+&amp;\text{Træningseksempel M:} \quad (x_1^{(M)}, x_2^{(M)}, \dots, x_n^{(M)}, t^{(M)}) \\
 \end{aligned}
-\]</span> Det vil altså sige, at det <span class="math inline">\(m\)</span>’te træningseksempel har inputværdier <span class="math inline">\((x_{m,1}, x_{m,2}, \dots, x_{m,n})\)</span> og targetværdi <span class="math inline">\(t_m\)</span>.</p>
+\]</span> Det vil altså sige, at det <span class="math inline">\(m\)</span>’te træningseksempel har inputværdier <span class="math inline">\((x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)})\)</span> og targetværdi <span class="math inline">\(t^{(m)}\)</span>.</p>
 <p>Vi definerer nu tabsfunktionen <span class="math inline">\(E\)</span> på følgende måde: <span id="eq-tabsfunktion"><span class="math display">\[
 \begin{aligned}
-E(w_0, w_1, \dots, w_n) = \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2
+E(w_0, w_1, \dots, w_n) = \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2
 \end{aligned}
 \tag{3}\]</span></span> Men hvorfor giver det nu god mening? Jo, det gør det, fordi udtrykket i parentesen <span class="math display">\[
 \begin{aligned}
-t_m-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})
+t^{(m)}-(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})
 \end{aligned}
-\]</span> angiver fejlen, som vi så det i eksemplet ovenfor. Det er altså forskellen mellem den ønskede targetværdi <span class="math inline">\(t_m\)</span> for det <span class="math inline">\(m\)</span>’te træningseksempel og den vægtede sum <span class="math display">\[
+\]</span> angiver fejlen, som vi så det i eksemplet ovenfor. Det er altså forskellen mellem den ønskede targetværdi <span class="math inline">\(t^{(m)}\)</span> for det <span class="math inline">\(m\)</span>’te træningseksempel og den vægtede sum <span class="math display">\[
 \begin{aligned}
-w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n},
+w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)},
 \end{aligned}
 \]</span> som perceptronen beregner, <em>inden</em> vi finder den endelig outputværdi <span class="math inline">\(o\)</span> ved at benytte (<a href="#eq-output_perceptron" class="quarto-xref">2</a>). Denne forskel kan være både positiv og negativ – og et stort positivt tal er lige så "slemt", som det tilsvarende negative tal. Derfor sætter man forskellen i anden for at slippe af med fortegnene. Endelig lægger vi alle de kvadrerede fejlled fra alle de <span class="math inline">\(M\)</span> træningsdata sammen (og ganger med en halv – det er ikke så afgørende – du ser lige om lidt hvorfor). Hvis vores perceptron med de nuværende værdier af vægtene er god til at klassificere alle træningseksemplerne, så vil vores tabsfunktion give en lille værdi og omvendt, hvis perceptronen er dårlig til at klassificere, vil tabsfunktionen give en stor værdi. Se det er faktisk hele humlen. Vi skal finde de værdier af vægtene <span class="math inline">\(w_0, w_1, \dots, w_n\)</span>, som minimerer tabsfunktionen!</p>
 <section id="video-perceptron-learning-versus-adaline" class="level2">
 <h2 class="anchored" data-anchor-id="video-perceptron-learning-versus-adaline">VIDEO: Perceptron Learning versus ADALINE</h2>
-<p>I denne video forklarer vi idéen bag ADALINE og indfører tabsfunktionen.</p>
+<p>I denne video forklarer vi idéen bag ADALINE og indfører tabsfunktionen (vær opmærksom på, at notationen i forbindelse med træningsdata er en lille smule anderledes i videoen).</p>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/QF3WRIe5v6U" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 </section>
 <section id="sec-ADALINE_gradientnedstigning" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="sec-ADALINE_gradientnedstigning">Gradientnedstigning</h2>
 <p>For at gøre det bruges en metode, som kaldes for <em>gradientnedstigning</em>. For at forklare hvad det går ud på, er det nemmest at se på en tabsfunktion, som kun afhænger af to vægte <span class="math inline">\(w_0\)</span> og <span class="math inline">\(w_1\)</span>. I det tilfælde får vi <span class="math display">\[
 \begin{aligned}
-E(w_0, w_1) = \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1}) \right)^2.
+E(w_0, w_1) = \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)}) \right)^2.
 \end{aligned}
 \]</span> Da tabsfunktionenkun afhænger af to variable, kan vi tegne grafen for den. Et eksempel herpå ses i <a href="#fig-tabsfunktion" class="quarto-xref">figur&nbsp;9</a>.</p>
 <div id="fig-tabsfunktion" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
@@ -844,37 +844,37 @@ w_n \leftarrow &amp; w_n - \eta \cdot \frac{\partial E }{\partial w_n} \\
 \]</span> Her er <span class="math inline">\(\eta\)</span> igen en <em>learning rate</em> f.eks. <span class="math inline">\(0.05\)</span>, som sørger for, at vi hele tiden bare tager et lille skridt i den negative gradients retning. Man vælger værdien af <span class="math inline">\(\eta\)</span> lille for ikke at lave alt for store justeringer af vægtene ad gangen. Det svarer grafisk til, at vi lige så stille går ned af den bakke, som tabsfunktionen giver (se <a href="#fig-tabsfunktion" class="quarto-xref">figur&nbsp;9</a>). Hvis vi tager for store skridt, risikerer vi helt, at komme til at “træde forbi” det minimum, som vi gerne vil lande i. Omvendt vil alt for små skridt føre til, at vi alt for langsomt nærmer os minimum. Så værdien af <span class="math inline">\(\eta\)</span> angiver altså, hvor meget vi er villige til at justere vægtene og dermed hvor hurtige eller hvor langsomme, vi bevæger os ned mod minimum. Af den grund giver det god mening, at <span class="math inline">\(\eta\)</span> kaldes for en <em>learning rate</em> - fordi den afgører, hvor hurtigt vi lærer af vores træningsdata.</p>
 <p>Nu mangler vi bare at få bestemt de partielle afledede. Ved at bruge sumreglen og kædereglen for differentiation får vi fra (<a href="#eq-tabsfunktion" class="quarto-xref">3</a>), at <span class="math display">\[
 \begin{aligned}
-\frac{\partial E}{\partial w_i} &amp;= \frac{1}{2} \sum_{m=1}^{M} \frac{\partial}{\partial w_i}\left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2 \\
-&amp;= \frac{1}{2} \sum_{m=1}^{M} 2 \cdot \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \\ &amp; \quad  \quad \quad  \quad \quad  \quad \cdot \frac{\partial}{\partial w_i} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n} ) \right) \\
-&amp;= \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \cdot \left (-x_{m,i} \right)
+\frac{\partial E}{\partial w_i} &amp;= \frac{1}{2} \sum_{m=1}^{M} \frac{\partial}{\partial w_i}\left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2 \\
+&amp;= \frac{1}{2} \sum_{m=1}^{M} 2 \cdot \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \\ &amp; \quad  \quad \quad  \quad \quad  \quad \cdot \frac{\partial}{\partial w_i} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} ) \right) \\
+&amp;= \sum_{m=1}^{M} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \cdot \left (-x_i^{(m)} \right)
 \end{aligned}
 \]</span> for <span class="math inline">\(i \in \{1, 2, \dots, n\}\)</span>.</p>
 <p>Læg mærke til at når vi differentierer den indre funktion <span class="math display">\[
 \begin{aligned}
-t_m-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})
+t^{(m)}-(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})
 \end{aligned}
 \]</span> med hensyn til <span class="math inline">\(w_i\)</span>, så vil alle led være at betragte som konstanter bortset fra leddet <span class="math display">\[
 \begin{aligned}
--w_i \cdot x_{m,i}
+-w_i \cdot x_i^{(m)}
 \end{aligned}
-\]</span> og når vi differentierer dette led med hensyn til <span class="math inline">\(w_i\)</span> får vi netop <span class="math inline">\(- x_{m,i}\)</span>. Læg også mærke til at hvis vi differentierer med hensyn til <span class="math inline">\(w_0\)</span>, så får vi, <span class="math display">\[
+\]</span> og når vi differentierer dette led med hensyn til <span class="math inline">\(w_i\)</span> får vi netop <span class="math inline">\(- x_i^{(m)}\)</span>. Læg også mærke til at hvis vi differentierer med hensyn til <span class="math inline">\(w_0\)</span>, så får vi, <span class="math display">\[
 \begin{aligned}
-\frac{\partial E}{\partial w_0} = \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \cdot \left (-1 \right).
+\frac{\partial E}{\partial w_0} = \sum_{m=1}^{M} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \cdot \left (-1 \right).
 \end{aligned}
 \]</span> Altså bliver vores opdateringsregler <span class="math display">\[
 \begin{aligned}
-w_0 \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)  \\
-w_1 \leftarrow &amp; w_1 + \eta \cdot  \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \cdot \left (x_{m,1} \right)\\
+w_0 \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)  \\
+w_1 \leftarrow &amp; w_1 + \eta \cdot  \sum_{m=1}^{M} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \cdot \left (x_1^{(m)} \right)\\
 &amp;\vdots  \\
-w_n \leftarrow &amp; w_n + \eta \cdot  \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \cdot \left (x_{m,n} \right)\\
+w_n \leftarrow &amp; w_n + \eta \cdot  \sum_{m=1}^{M} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \cdot \left (x_n^{(m)} \right)\\
 \end{aligned}
 \]</span> Vi kan altså sammenfatte gradientnedstigningsalgoritmen (ADALINE) på denne måde:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
@@ -894,10 +894,10 @@ ADALINE
 <li><p>Vælg en værdi af <span class="math inline">\(\eta\)</span> (f.eks. <span class="math inline">\(0.05\)</span>).</p></li>
 <li><p>Udregn på baggrund af alle træningsdata fejlene: <span class="math display">\[
 \begin{aligned}
-error_0 &amp;= \sum_{m=1}^{M} \left (t_m-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \\
-error_1 &amp;= \sum_{m=1}^{M} \left (t_m-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \cdot x_{m,1} \right) \\
+error_0 &amp;= \sum_{m=1}^{M} \left (t^{(m)}-(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \\
+error_1 &amp;= \sum_{m=1}^{M} \left (t^{(m)}-(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \cdot x_1^{(m)} \right) \\
 &amp;\vdots \\
-error_n &amp;= \sum_{m=1}^{M} \left (t_m-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \cdot x_{m,n} \right)
+error_n &amp;= \sum_{m=1}^{M} \left (t^{(m)}-(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \cdot x_n^{(m)} \right)
 \end{aligned}
 \]</span></p></li>
 <li><p>Opdatér alle vægtene: <span class="math display">\[
@@ -918,12 +918,12 @@ w_n  \leftarrow &amp; w_n + \eta \cdot error_n
 <h2 class="anchored" data-anchor-id="eksempel-på-gradientnedstigning">Eksempel på gradientnedstigning</h2>
 <p>Lad os prøve at bruge gradientnedstigning på vores eksempel omkring kandidattest. I dette simple eksempel bliver vores opdateringsregler nu <span class="math display">\[
 \begin{aligned}
-w_0 \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{6} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + w_2 \cdot x_{m,2}) \right)  \\
-w_1 \leftarrow &amp; w_1 + \eta \cdot  \sum_{m=1}^{6} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + w_2 \cdot x_{m,2}) \right) \cdot \left (x_{m,1} \right)\\
-w_2 \leftarrow &amp; w_2 + \eta \cdot  \sum_{m=1}^{6} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1}  + w_2 \cdot x_{m,2}) \right) \cdot \left (x_{m,2} \right)
+w_0 \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{6} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + w_2 \cdot x_2^{(m)}) \right)  \\
+w_1 \leftarrow &amp; w_1 + \eta \cdot  \sum_{m=1}^{6} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + w_2 \cdot x_2^{(m)}) \right) \cdot \left (x_1^{(m)} \right)\\
+w_2 \leftarrow &amp; w_2 + \eta \cdot  \sum_{m=1}^{6} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)}  + w_2 \cdot x_2^{(m)}) \right) \cdot \left (x_2^{(m)} \right)
 \end{aligned}
 \]</span> Hvis man bruger disse opdateringsregler på dataene fra <a href="#tbl-trainingdata_tabel" class="quarto-xref">tabel&nbsp;1</a>, så ender man med følgende værdier af vægtene <span class="math display">\[
 \begin{aligned}
@@ -964,7 +964,7 @@ Figur&nbsp;10: Ilustration af svaret på spørgsmål 1 (<span class="math inline
 </section>
 <section id="video-adaline" class="level2">
 <h2 class="anchored" data-anchor-id="video-adaline">VIDEO: ADALINE</h2>
-<p>I denne video forklarer vi, hvad gradientnedstigning går ud på, og hvordan gradientnedstigning bruges til at opdatere vægtene i ADALINE.</p>
+<p>I denne video forklarer vi, hvad gradientnedstigning går ud på, og hvordan gradientnedstigning bruges til at opdatere vægtene i ADALINE (vær opmærksom på, at notationen i forbindelse med træningsdata er en lille smule anderledes i videoen).</p>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/4YMzpNP4wnA" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 </section>
 </section>
@@ -973,8 +973,8 @@ Figur&nbsp;10: Ilustration af svaret på spørgsmål 1 (<span class="math inline
 <p>I det foregående har vi set på, hvordan ADALINE algoritmen forsøger at minimere tabsfunktionen</p>
 <p><span class="math display">\[
 \begin{aligned}
-E(w_0, w_1, \dots, w_n) = \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2.
+E(w_0, w_1, \dots, w_n) = \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2.
 \end{aligned}
 \]</span></p>
 <p>Det virker som en besnærende god idé! Men faktisk er denne tabsfunktion ikke altid super smart. Dét problem – og en løsning på det – kan du læse meget mere om i noten om <a href="../../materialer/simple_neurale_net/simple_neurale_net.html">simple neurale netværk</a>.</p>

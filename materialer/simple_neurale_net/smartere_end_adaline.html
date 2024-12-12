@@ -282,19 +282,19 @@ Figur&nbsp;3: Et nyt rødt punkt er indtegnet og den linje, som ADALINE finder.
 <p>Hvis vi skal forstå, hvad der sker, må vi se lidt nærmere på den tabsfunktion, som ADALINE forsøger at mininere. Fra <a href="../../materialer/perceptron/perceptron.html#sec-ADALINE">afsnittet om ADALINE</a> ved vi, at tabsfunktionen<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> er</p>
 <div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Bemærk her, at det ikke er afgørende, at der er ganget med <span class="math inline">\(1/2\)</span> – det viser sig bare smartere senere.</p></div></div><p><span id="eq-tabsfuntion"><span class="math display">\[
 \begin{aligned}
-E(w_0, w_1, &amp;\dots, w_n)\\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2
+E(w_0, w_1, &amp;\dots, w_n)\\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2
 \end{aligned}
 \tag{1}\]</span></span></p>
-<p>hvor det <span class="math inline">\(m\)</span>’te træningseksempel er <span class="math display">\[(x_{m,1}, x_{m,2}, \dots, x_{m,n}, t_m)\]</span></p>
+<p>hvor det <span class="math inline">\(m\)</span>’te træningseksempel er <span class="math display">\[(x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)}, t^{(m)})\]</span></p>
 <p>Det vil sige, at det <span class="math inline">\(m\)</span>’te træningseksempel giver et bidrag til tabsfunktionen på</p>
 <p><span class="math display">\[
-\left ( t_m- (w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2
+\left ( t^{(m)}- (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2
 \]</span></p>
-<p>For et blåt punkt med <span class="math inline">\(t_m=1\)</span> vil det sige, at bidraget til tabsfunktionen er præcis <span class="math inline">\(0,\)</span> hvis <span class="math display">\[
-1- (w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})=0
-\]</span> og for et rødt punkt med <span class="math inline">\(t_m=-1\)</span> er bidraget til tabsfunktionen præcis <span class="math inline">\(0,\)</span> hvis <span class="math display">\[
--1- (w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})=0
+<p>For et blåt punkt med <span class="math inline">\(t^{(m)}=1\)</span> vil det sige, at bidraget til tabsfunktionen er præcis <span class="math inline">\(0,\)</span> hvis <span class="math display">\[
+1- \left (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} \right) =0
+\]</span> og for et rødt punkt med <span class="math inline">\(t^{(m)}=-1\)</span> er bidraget til tabsfunktionen præcis <span class="math inline">\(0,\)</span> hvis <span class="math display">\[
+-1- \left (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} \right)=0
 \]</span> Nu er <span class="math inline">\(1- (w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)=0\)</span> og <span class="math inline">\(-1- (w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)=0\)</span> jo bare ligninger for rette linjer<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. Disse linjer ses indtegnet på <a href="#fig-eks1_2" class="quarto-xref">figur&nbsp;4</a> (som henholdsvis en blå og rød stiplet linje) sammen med de oprindelige seks punkter og den linje, som ADALINE fandt baseret på disse seks punkter. Samtidig er det for hvert punkt markeret, hvor meget dette punkt bidrager til tabsfunktionen.</p>
 <div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Det er i hvert tilfælde "bare linjer", når <span class="math inline">\(n=2\)</span>. Hvis <span class="math inline">\(n=3\)</span>, er der tale om ligningen for en plan, og hvis <span class="math inline">\(n&gt;3\)</span>, kalder man det for ligningen for en "hyperplan". Men sidstnævnte er visuelt svære at forestille sig, fordi koordinatsystemet, disse hyperplaner skal tegnes i, har en dimension større end <span class="math inline">\(3\)</span>. Og de er ikke så nemme at tegne!</p></div></div><div id="fig-eks1_2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
@@ -340,22 +340,22 @@ Figur&nbsp;6: I alt syv punkter sammen med den sorte linje, som ADALINE giver ba
 <p><span class="math display">\[
 \textrm{dist}(P,l)=\frac{|a x_1 + b y_1 +c|}{\sqrt{a^2+b^2}}
 \]</span></p>
-<p>Denne afstandsformel kan generaliseres, så afstanden fra et punkt <span class="math inline">\(P(x_{m,1}, x_{m,2}, \dots, x_{m,n})\)</span> (i et <span class="math inline">\(n\)</span>-dimensionalt rum!) til planen <span class="math inline">\(\alpha\)</span> med ligning <span class="math inline">\(w_0+w_1 x_1 + w_2 x_2 + \cdots + w_n x_n=0\)</span> er:</p>
+<p>Denne afstandsformel kan generaliseres, så afstanden fra et punkt <span class="math inline">\(P(x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)})\)</span> (i et <span class="math inline">\(n\)</span>-dimensionalt rum!) til planen <span class="math inline">\(\alpha\)</span> med ligning <span class="math inline">\(w_0+w_1 x_1 + w_2 x_2 + \cdots + w_n x_n=0\)</span> er:</p>
 <p><span class="math display">\[
-\textrm{dist}(P,\alpha)=\frac{|w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}|}{\sqrt{w_1^2 + w_2^2 + \cdots + w_n^2}}
+\textrm{dist}(P,\alpha)=\frac{\left | w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} \right |}{\sqrt{w_1^2 + w_2^2 + \cdots + w_n^2}}
 \]</span></p>
-<p>Det vil sige, at udtrykket i tælleren <span class="math inline">\(|w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}|\)</span> bliver et mål for hvor langt væk punktet <span class="math inline">\(P(x_{m,1}, x_{m,2}, \dots, x_{m,n})\)</span> ligger fra planen. Det forklarer, hvordan et <em>ekstremt</em> punkt kan give et meget stort bidrag til tabsfunktionen:</p>
+<p>Det vil sige, at udtrykket i tælleren <span class="math inline">\(|w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}|\)</span> bliver et mål for hvor langt væk punktet <span class="math inline">\(P(x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)})\)</span> ligger fra planen. Det forklarer, hvordan et <em>ekstremt</em> punkt kan give et meget stort bidrag til tabsfunktionen:</p>
 <p><span id="eq-bidrag_til_tabsfunktion"><span class="math display">\[
-\left ( t- (w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2
+\left ( t^{(m)}- (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2
 \tag{2}\]</span></span></p>
-<p>Hvis punktet ligger langt væk fra den plan, som måske umiddelbart ser fornuftig ud, så vil punktet give et stort bidrag til tabsfunktionen, fordi værdien af <span class="math inline">\(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}\)</span> bliver stor, og dermed vil bidraget til tabsfunktionen i (<a href="#eq-bidrag_til_tabsfunktion" class="quarto-xref">2</a>) også blive stort!</p>
-<p>Alt det her leder os frem til, at valget af tabsfunktion måske i virkeligheden ikke er super smart. Problemet opstår grundlæggende, fordi targetværdien <span class="math inline">\(t\)</span> og udtrykket i den inderste parentes i (<a href="#eq-bidrag_til_tabsfunktion" class="quarto-xref">2</a>) er på to helt vidt forskellige skalaer. Targetværdien er enten <span class="math inline">\(-1\)</span> eller <span class="math inline">\(1\)</span>, mens udtrykket <span class="math inline">\(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}\)</span> kan antage en hvilken som helst reel værdi – en værdi som kan blive vældig stor, hvis punktet <span class="math inline">\(P(x_{m,1}, x_{m,2}, \dots, x_{m,n})\)</span> ligger langt væk fra planen. Derfor bliver ADALINE nødt til at tvinge planen med ligningen</p>
+<p>Hvis punktet ligger langt væk fra den plan, som måske umiddelbart ser fornuftig ud, så vil punktet give et stort bidrag til tabsfunktionen, fordi værdien af <span class="math inline">\(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}\)</span> bliver stor, og dermed vil bidraget til tabsfunktionen i (<a href="#eq-bidrag_til_tabsfunktion" class="quarto-xref">2</a>) også blive stort!</p>
+<p>Alt det her leder os frem til, at valget af tabsfunktion måske i virkeligheden ikke er super smart. Problemet opstår grundlæggende, fordi targetværdien <span class="math inline">\(t\)</span> og udtrykket i den inderste parentes i (<a href="#eq-bidrag_til_tabsfunktion" class="quarto-xref">2</a>) er på to helt vidt forskellige skalaer. Targetværdien er enten <span class="math inline">\(-1\)</span> eller <span class="math inline">\(1\)</span>, mens udtrykket <span class="math inline">\(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}\)</span> kan antage en hvilken som helst reel værdi – en værdi som kan blive vældig stor, hvis punktet <span class="math inline">\(P(x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)})\)</span> ligger langt væk fra planen. Derfor bliver ADALINE nødt til at tvinge planen med ligningen</p>
 <p><span class="math display">\[
 w_0 + w_1 \cdot x_{1} + \cdots + w_n \cdot x_{n}=0
 \]</span></p>
 <p>over mod et ekstremt punkt, sådan at dette punkts bidrag til tabsfunktionen ikke bliver alt for stort.</p>
 <p>Problemet kan løses ved at bruge et <a href="../../materialer/simple_neurale_net/simple_neurale_net.html">simpelt neuralt netværk</a>.</p>
-<p>Helt grundlæggende handler problemet om, at targetværdi <span class="math inline">\(t,\)</span> og det udtryk, som vi beregner på baggrund af punktet <span class="math inline">\(P(x_{m,1}, x_{m,2}, \dots, x_{m,n})\)</span>, skal være på samme skala. I det simple neurale netværk brugte vi sigmoid-funktionen <span class="math inline">\(\sigma\)</span>, som aktiveringsfunktion. Forskriften for sigmoid-funktionen er:</p>
+<p>Helt grundlæggende handler problemet om, at targetværdi <span class="math inline">\(t,\)</span> og det udtryk, som vi beregner på baggrund af punktet <span class="math inline">\(P(x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)})\)</span>, skal være på samme skala. I det simple neurale netværk brugte vi sigmoid-funktionen <span class="math inline">\(\sigma\)</span>, som aktiveringsfunktion. Forskriften for sigmoid-funktionen er:</p>
 <p><span id="eq-sigmoid"><span class="math display">\[
 \sigma(x)=\frac{1}{1+e^{-x}}
 \tag{3}\]</span></span></p>
@@ -385,11 +385,11 @@ t=
 <p>Så targetværdierne er nu <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span> i stedet for <span class="math inline">\(-1\)</span> og <span class="math inline">\(1\)</span>. Vi husker nu, hvordan vi definerede tabsfunktionen for det simple neurale netværk:</p>
 <p><span id="eq-ny_tabsfunktion"><span class="math display">\[
 \begin{aligned}
-E(w_0, w_1, &amp;\dots, w_n) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2
+E(w_0, w_1, &amp;\dots, w_n) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2
 \end{aligned}
 \tag{4}\]</span></span></p>
-<p>Bemærk, at problemet med de to skalaer nu er løst. Targetværdien er enten <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span> samtidig med, at <span class="math inline">\(\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})\)</span> også ligger mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>. Vi sammenligner altså ikke længere pærer med bananer! Den "perceptron", som minimerer tabsfunktionen i (<a href="#eq-ny_tabsfunktion" class="quarto-xref">4</a>), er netop det, vi kalder for et <strong>simpelt neuralt netværk</strong>.</p>
+<p>Bemærk, at problemet med de to skalaer nu er løst. Targetværdien er enten <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span> samtidig med, at <span class="math inline">\(\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})\)</span> også ligger mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>. Vi sammenligner altså ikke længere pærer med bananer! Den "perceptron", som minimerer tabsfunktionen i (<a href="#eq-ny_tabsfunktion" class="quarto-xref">4</a>), er netop det, vi kalder for et <strong>simpelt neuralt netværk</strong>.</p>
 <p>I noten om <a href="../../materialer/simple_neurale_net/simple_neurale_net.html">simple neurale netværk</a> beskrev vi, hvordan vi kan tænke på outputværdien</p>
 <p><span class="math display">\[
 o = \sigma(w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)

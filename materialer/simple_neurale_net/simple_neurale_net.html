@@ -315,18 +315,18 @@ Figur&nbsp;4: Grafisk illustration af et generelt simpelt neuralt netværk med <
 <p>Samtidig forestiller vi os, at vi har <span class="math inline">\(M\)</span> træningsdata. Det vil sige, <span class="math inline">\(M\)</span> forskellige træningseksempler bestående af inputværdier med tilhørende targetværdi. Det kan opskrives sådan her:</p>
 <p><span class="math display">\[
 \begin{aligned}
-&amp;\text{Træningseksempel 1:} \quad (x_{1,1}, x_{1,2}, \dots, x_{1,n}, t_1) \\
+&amp;\text{Træningseksempel 1:} \quad (x_1^{(1)}, x_2^{(1)}, \dots, x_n^{(1)}, t^{(1)}) \\
 &amp;  \quad \quad \quad \quad \vdots \\
-&amp;\text{Træningseksempel m:} \quad (x_{m,1}, x_{m,2}, \dots, x_{m,n}, t_m) \\
+&amp;\text{Træningseksempel m:} \quad (x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)}, t^{(m)}) \\
 &amp;  \quad \quad \quad \quad \vdots \\
-&amp;\text{Træningseksempel M:} \quad (x_{M,1}, x_{M,2}, \dots, x_{M,n}, t_M) \\
+&amp;\text{Træningseksempel M:} \quad (x_1^{(M)}, x_2^{(M)}, \dots, x_n^{(M)}, t^{(M)}) \\
 \end{aligned}
 \]</span></p>
 <p>og tabsfunktionen bliver da</p>
 <p><span class="math display">\[
 \begin{aligned}
-E(w_0, w_1, &amp;\dots, w_n) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2.
+E(w_0, w_1, &amp;\dots, w_n) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2.
 \end{aligned}
 \]</span></p>
 <p>Det er en <a href="../../materialer/funktioner_af_flere_variable/funktioner_af_flere_variable.html">funktion af flere variable</a>. I princippet kan man bestemme minimum ved at sætte alle de partielle afledede lig med <span class="math inline">\(0\)</span> og dernæst overbevise sig selv om, at man har fundet et minimum. Det vil give et ligningssystem med <span class="math inline">\(n+1\)</span> ligninger, som alle er koblet med hinanden. Det viser sig, at være en beregningsmæssig tung opgave at løse dette ligningssystem analytisk. Derfor bruger man i stedet for den metode, som kaldes for <a href="../gradientnedstigning/graditentnedstigning.qmd">gradientnedstigning</a>. Gradientnedstigning går ud på først at vælge tilfældige værdier af vægtene <span class="math inline">\(w_0, w_1, \cdots, w_n\)</span>. Det viser sig så, at den negative gradient vil pege i den retning, hvor funktionsværdien falder mest. Derfor er idéen at bevæge sig et lille stykke i den negative gradients retning – fordi vi så kommer lidt tættere på minimum. Når vi har gjort det, beregner vi gradienten igen, og bevæger os igen et lille stykke i den negative gradients retning. Det forsætter vi med indtil værdien af tabsfunktionen ikke ændrer sig særlig meget, hvilket svarer til, at vi har fundet minimum.</p>
@@ -343,35 +343,35 @@ w_n \leftarrow &amp; w_n - \eta \cdot \frac{\partial E }{\partial w_n} \\
 <p>For at foretage opdateringerne har vi altså brug for at bestemme den partielle afledede for hver af vægtene. Den partielle afledede for den <span class="math inline">\(i\)</span>’te vægt kan findes ved at bruge sum- og kædereglen:</p>
 <p><span id="eq-partiel"><span class="math display">\[
 \begin{aligned}
-\frac{\partial E}{\partial w_i} &amp;= \frac{1}{2} \sum_{m=1}^{M} \frac{\partial}{\partial w_i}\left (t_m-
-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2 \\
-&amp;= \frac{1}{2} \sum_{m=1}^{M} 2 \cdot \left (t_m-
-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \\
-&amp; \quad  \quad \quad  \quad  \cdot \frac{\partial}{\partial w_i} \left (t_m-
-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n} ) \right) \\
-&amp;=  \sum_{m=1}^{M} \left (t_m-
-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \\
-&amp; \quad  \quad \quad  \quad  \cdot \frac{\partial}{\partial w_i} \left (t_m-
-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n} ) \right) \\
+\frac{\partial E}{\partial w_i} &amp;= \frac{1}{2} \sum_{m=1}^{M} \frac{\partial}{\partial w_i}\left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2 \\
+&amp;= \frac{1}{2} \sum_{m=1}^{M} 2 \cdot \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \\
+&amp; \quad  \quad \quad  \quad  \cdot \frac{\partial}{\partial w_i} \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} ) \right) \\
+&amp;=  \sum_{m=1}^{M} \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \\
+&amp; \quad  \quad \quad  \quad  \cdot \frac{\partial}{\partial w_i} \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} ) \right) \\
 \end{aligned}
 \tag{3}\]</span></span></p>
 <p>Bemærk, at <span class="math inline">\(\frac{1}{2}\)</span> forkortede ud – det var derfor, at vi gangede <span class="math inline">\(\frac{1}{2}\)</span> på tabsfunktionen til at starte med.</p>
 <p>Betragter vi nu kun den sidste faktor og bruger kædereglen igen, får vi</p>
 <p><span class="math display">\[
 \begin{aligned}
-\frac{\partial}{\partial w_i} (t_m &amp;- \sigma(w_0 +  w_1 \cdot x_{m,1} + \cdots   + w_n \cdot x_{m,n} )) = \\
-&amp;- \sigma'(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})\cdot  \\ &amp; \qquad \qquad \qquad
-\qquad \frac{\partial}{\partial w_i} \left (w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n} \right)
+\frac{\partial}{\partial w_i} (t^{(m)} &amp;- \sigma(w_0 +  w_1 \cdot x_1^{(m)} + \cdots   + w_n \cdot x_n^{(m)} )) = \\
+&amp;- \sigma'(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})\cdot  \\ &amp; \qquad \qquad \qquad
+\qquad \frac{\partial}{\partial w_i} \left (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} \right)
 \end{aligned}
 \]</span></p>
 <p>Nu er</p>
 <p><span id="eq-partial_wi"><span class="math display">\[
-\frac{\partial}{\partial w_i} \left (w_0 + w_1 \cdot x_{m,1} + \cdots + w_i \cdot x_{m,i} + \cdots  + w_n \cdot x_{m,n} \right) = x_{m,i}
+\frac{\partial}{\partial w_i} \left (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_i \cdot x_i^{(m)} + \cdots  + w_n \cdot x_n^{(m)} \right) = x_i^{(m)}
 \tag{4}\]</span></span></p>
 <p>når <span class="math inline">\(i \in \{1, 2, \dots, n\}\)</span>. Så <span class="math display">\[
 \begin{aligned}
-\frac{\partial}{\partial w_i} (t_m -
-\sigma(w_0 &amp;+ w_1 \cdot x_{m,1}  + \cdots  + w_n \cdot x_{m,n} )) = \\ &amp;- \sigma'(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})\cdot x_{m,i}
+\frac{\partial}{\partial w_i} (t^{(m)} -
+\sigma(w_0 &amp;+ w_1 \cdot x_1^{(m)}  + \cdots  + w_n \cdot x_n^{(m)} )) = \\ &amp;- \sigma'(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})\cdot x_i^{(m)}
 \end{aligned}
 \]</span></p>
 <p>Vi mangler nu bare at finde den afledede sigmoid-funktion. Man kan vise – <a href="../../undervisningsforloeb/aktiveringsfunktioner/aktiveringsfunktioner.qmd">se forløbet om aktiveringsfunktioner</a> – at</p>
@@ -381,33 +381,33 @@ w_n \leftarrow &amp; w_n - \eta \cdot \frac{\partial E }{\partial w_n} \\
 <p>Derfor bliver</p>
 <p><span class="math display">\[
 \begin{aligned}
-\frac{\partial}{\partial w_i} (t_m -
-\sigma(w_0 &amp;+ w_1 \cdot x_{m,1} + \cdots  + w_n \cdot x_{m,n} )) = \\
-&amp;- \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \cdot \\ &amp; (1-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots  + w_n \cdot x_{m,n} )) \cdot x_{m,i}
+\frac{\partial}{\partial w_i} (t^{(m)} -
+\sigma(w_0 &amp;+ w_1 \cdot x_1^{(m)} + \cdots  + w_n \cdot x_n^{(m)} )) = \\
+&amp;- \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \cdot \\ &amp; (1-\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots  + w_n \cdot x_n^{(m)} )) \cdot x_i^{(m)}
 \end{aligned}
 \]</span></p>
-<p>I eksemplet med Good Food app’en kaldte vi <span class="math inline">\(\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2)\)</span> for outputværdien <span class="math inline">\(o\)</span> (se (<a href="#eq-output" class="quarto-xref">2</a>)). På samme måde kan vi at gøre ovenstående lidt mere læsevenligt ved at kalde outputværdien hørende til det <span class="math inline">\(m\)</span>’te træningseksempel for <span class="math inline">\(o_m\)</span>:</p>
+<p>I eksemplet med Good Food app’en kaldte vi <span class="math inline">\(\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2)\)</span> for outputværdien <span class="math inline">\(o\)</span> (se (<a href="#eq-output" class="quarto-xref">2</a>)). På samme måde kan vi at gøre ovenstående lidt mere læsevenligt ved at kalde outputværdien hørende til det <span class="math inline">\(m\)</span>’te træningseksempel for <span class="math inline">\(o^{(m)}\)</span>:</p>
 <p><span class="math display">\[
-o_m = \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})
+o^{(m)} = \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})
 \]</span></p>
 <p>Vi får så</p>
 <p><span class="math display">\[
 \begin{aligned}
-\frac{\partial}{\partial w_i} (t_m -
-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots  &amp;+ w_n \cdot x_{m,n} )) = \\ &amp;- o_m\cdot (1-o_m) \cdot x_{m,i}
+\frac{\partial}{\partial w_i} (t^{(m)} -
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots  &amp;+ w_n \cdot x_n^{(m)} )) = \\ &amp;- o^{(m)}\cdot (1-o^{(m)}) \cdot x_i^{(m)}
 \end{aligned}
 \]</span></p>
 <p>Indsættes dette i (<a href="#eq-partiel" class="quarto-xref">3</a>) samtidig med at vi bruger, at</p>
-<p><span class="math display">\[o_m = \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})\]</span></p>
+<p><span class="math display">\[o^{(m)} = \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})\]</span></p>
 <p>får vi</p>
 <p><span class="math display">\[
 \begin{aligned}
-\frac{\partial E}{\partial w_i} = - \sum_{m=1}^{M} \left (t_m-o_m \right) \cdot o_m\cdot (1-o_m) \cdot x_{m,i}
+\frac{\partial E}{\partial w_i} = - \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x_i^{(m)}
 \end{aligned}
 \]</span></p>
 <p>Dette gælder for <span class="math inline">\(i \in \{1, 2, \dots, n \}\)</span>. Når <span class="math inline">\(i=0\)</span> kan det fra (<a href="#eq-partial_wi" class="quarto-xref">4</a>) ses, at den partielle med hensyn til <span class="math inline">\(w_0\)</span> bliver <span class="math inline">\(1\)</span>. Derfor er det ikke svært at overbevise sig selv om, at</p>
 <p><span class="math display">\[
-\frac{\partial E}{\partial w_0} = - \sum_{m=1}^{M} \left (t_m-o_m \right) \cdot o_m\cdot (1-o_m) \cdot 1
+\frac{\partial E}{\partial w_0} = - \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot 1
 \]</span></p>
 <p>Vi ender således med:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
@@ -424,13 +424,13 @@ Opdateringsregler for simple neurale netværk
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[
 \begin{aligned}
-w_0 \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{M} \left (t_m-o_m \right) \cdot o_m\cdot (1-o_m) \\
-w_1 \leftarrow &amp; w_1 + \eta \cdot \sum_{m=1}^{M} \left (t_m-o_m \right) \cdot o_m\cdot (1-o_m) \cdot x_{m,1}\\
+w_0 \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \\
+w_1 \leftarrow &amp; w_1 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x_1^{(m)}\\
 &amp;\vdots  \\
-w_n \leftarrow &amp; w_n + \eta \cdot \sum_{m=1}^{M} \left (t_m-o_m \right) \cdot o_m\cdot (1-o_m) \cdot x_{m,n}
+w_n \leftarrow &amp; w_n + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x_n^{(m)}
 \end{aligned}
 \]</span></p>
-<p>hvor <span class="math inline">\(o_m = \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})\)</span>.</p>
+<p>hvor <span class="math inline">\(o^{(m)} = \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})\)</span>.</p>
 </div>
 </div>
 </div>
@@ -591,8 +591,8 @@ t \in \{-1,1\}.
 <p>I ADALINE bestemmes vægtene ved at minimere tabsfunktionen:</p>
 <p><span id="eq-tab_ADALINE"><span class="math display">\[
 \begin{aligned}
-E(w_0, w_1, \dots, w_n) = \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2.
+E(w_0, w_1, \dots, w_n) = \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+\left (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} \right) \right)^2.
 \end{aligned}
 \tag{6}\]</span></span></p>
 <p>Gør man det, bliver opdateringsreglerne</p>
@@ -609,9 +609,9 @@ Opdateringsregler – ADALINE
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Vægtene opdateres således: <span class="math display">\[
-w_i \leftarrow w_i + \eta \cdot  \sum_{m=1}^{M} \left (t_m-
-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right) \cdot \left (x_{m,i} \right)
-\]</span> for <span class="math inline">\(i \in \{0, 1, 2, \dots, n\}\)</span>, hvis vi sætter <span class="math inline">\(x_{m,0}=1\)</span> for alle værdier af <span class="math inline">\(m\)</span>.</p>
+w_i \leftarrow w_i + \eta \cdot  \sum_{m=1}^{M} \left (t^{(m)}-
+\left (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} \right ) \right) \cdot \left (x_i^{(m)} \right)
+\]</span> for <span class="math inline">\(i \in \{0, 1, 2, \dots, n\}\)</span>, hvis vi sætter <span class="math inline">\(x_0^{(m)}=1\)</span> for alle værdier af <span class="math inline">\(m\)</span>.</p>
 </div>
 </div>
 </div>
@@ -628,13 +628,13 @@ o = \sigma(w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n).
 <p>Hvis vi sammenligner med reglen i (<a href="#eq-pred" class="quarto-xref">5</a>) vil vi sige, at hvis denne outputværdi <span class="math inline">\(o \geq 0.5\)</span>, så vil vi prædiktere<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>, at den ukendte targetværdi er <span class="math inline">\(1\)</span> og <span class="math inline">\(0\)</span> ellers. Her kan man altså tænke på <span class="math inline">\(o\)</span>, som sandsynligheden for, at den ukendte targetværdi er <span class="math inline">\(1\)</span>.</p>
 <div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Der er faktisk ingen, som siger, at vi skal skære ved <span class="math inline">\(0.5\)</span>. Hvis man er i gang med at screene for en meget alvorlig sygdom, som det er vigtigt at opdage hurtigt, kunne der være god grund til at vælge en lavere værdi end <span class="math inline">\(0.5\)</span>.</p></div></div><p>I det simple neurale netværk er tabsfunktionen <span id="eq-tabsfunktion_sigmoid"><span class="math display">\[
 \begin{aligned}
-E(w_0, w_1, &amp;\dots, w_n) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
-\sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \right)^2
-\\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
-o_m \right)^2,
+E(w_0, w_1, &amp;\dots, w_n) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2
+\\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+o^{(m)} \right)^2,
 \end{aligned}
 \tag{7}\]</span></span></p>
-<p>hvor <span class="math inline">\(o_m = \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})\)</span>.</p>
+<p>hvor <span class="math inline">\(o^{(m)} = \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})\)</span>.</p>
 <p>Opdateringsreglen er:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
@@ -649,9 +649,9 @@ Opdateringsregler – Simpelt neuralt netværk
 <div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Vægtene opdateres således: <span class="math display">\[
-w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} \left (t_m-o_m \right) \cdot o_m\cdot (1-o_m) \cdot x_{m,i}
-\]</span> for <span class="math inline">\(i \in \{0, 1, 2, \dots, n\}\)</span>, hvis vi sætter <span class="math inline">\(x_{m,0}=1\)</span> for alle værdier af <span class="math inline">\(m\)</span> og hvor <span class="math display">\[
-o_m = \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}).
+w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot \left (1-o^{(m)} \right) \cdot x_i^{(m)}
+\]</span> for <span class="math inline">\(i \in \{0, 1, 2, \dots, n\}\)</span>, hvis vi sætter <span class="math inline">\(x_0^{(m)}=1\)</span> for alle værdier af <span class="math inline">\(m\)</span> og hvor <span class="math display">\[
+o^{(m)} = \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}).
 \]</span></p>
 </div>
 </div>
