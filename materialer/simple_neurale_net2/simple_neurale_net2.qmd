@@ -18,7 +18,8 @@ $$
 &x_3: \textrm{Temperaturen i dag.} \\
 &x_4: \textrm{Lufttrykket i dag.} \\
 \end{aligned}
-$$
+$$ {#eq-inputvar}
+
 Og der vil sikkert være en masse andre variable, som også kunne give mening. Disse variable $x_1, x_2, \dots, x_n$ kaldes for **inputvariable**.
 
 Vi vil nu se på, hvordan man ved hjælp af sådanne inputvariable kan prædiktere, om det bliver regnvejr i morgen.
@@ -26,7 +27,7 @@ Vi vil nu se på, hvordan man ved hjælp af sådanne inputvariable kan prædikte
 
 ## Feedforward
 
-Vi ser nu på det mere generelle tilfælde, hvor vi har $n$ inputvariable
+Vi ser nu på det mere generelle tilfælde, hvor vi har $n$ inputvariable:
 
 $$
 x_1, x_2, \dots, x_n.
@@ -35,7 +36,7 @@ Disse inputvariable sender vi nu ind i et forholdsvis simpelt neuralt netværk, 
 
 ![Grafisk illustration af et neuralt netværk med $n$ inputvariable og to skjulte lag, som hver består af én neuron.](images/long_simple_NN.png){width=75% #fig-long_simple_NN}
 
-Cirklerne i @fig-long_simple_NN kaldes for **neuroner**. Idéen er, at vi på baggrund af inputværdierne i sidste ende beregne en outputværdi $o$ (som er illustreret ved den blå cirkel længst til højre i @fig-long_simple_NN). Outputværdien skal i dette eksempel være et tal mellem $0$ og $1$, som skal kunne fortolkes som sandsynligheden for, at det bliver regnvejr i morgen baseret på inputværdierne $x_1, x_2, \dots, x_n$. Herefter kunne man forestille sig følgende vejrudsigt:
+Cirklerne i @fig-long_simple_NN kaldes for **neuroner**. Idéen er, at vi på baggrund af inputværdierne (her vist som de lille cirkler til venestre) i sidste ende vil beregne en outputværdi $o$ (som er illustreret ved den blå cirkel længst til højre i @fig-long_simple_NN). Outputværdien skal i dette eksempel være et tal mellem $0$ og $1$, som skal kunne fortolkes som sandsynligheden for, at det bliver regnvejr i morgen baseret på inputværdierne $x_1, x_2, \dots, x_n$. Herefter kunne man forestille sig følgende vejrudsigt:
 
 $$
 \textrm{Det bliver regnvejr i morgen: }
@@ -59,7 +60,10 @@ $$
 Det vil sige, at vi beregner
 
 $$
-y = \sigma (r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n) = \frac{1}{1+e^{-(r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n)}}.
+\begin{aligned}
+y &= \sigma (r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n) \\ 
+&= \frac{1}{1+e^{-(r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n)}}.
+\end{aligned}
 $$ 
 
 Grafen for sigmoid-funktionen ses i @fig-sigmoid.
@@ -67,7 +71,7 @@ Grafen for sigmoid-funktionen ses i @fig-sigmoid.
 ![Grafen for sigmoid-funktionen.](images/sigmoid.png){width=75% #fig-sigmoid}
 
 
-Her anskueliggøres det, at sigmoid-funktionen tager et vilkårligt reelt tal som input og giver et tal i intervallet $(0,1)$ som output:
+Her anskueliggøres det, at sigmoid-funktionen tager et vilkårligt reelt tal som input og giver et tal i intervallet $(0,1)$ som output. Det kan skrives sådan her:
 
 $$
 \sigma : \mathbb{R} \rightarrow (0,1)
@@ -130,13 +134,11 @@ og
 
 Bortset fra det er feedforward ligningerne ovenfor nok nemmere at overskue!
 
-Fint nok! Nu har vi altså en model, som kan bruges til at forudsige vejret. Men måske er du skeptisk. Det bør du i hvert tilfælde være! For hvem siger, at ouputværdien $o$ siger noget som helst om sandsynligheden for, at det bliver regnvejr i morgen? Det korte svar er: Det gør den heller ikke! I hvert tilfælde ikke sådan uden videre. Det kræver nemlig, at alle vægtene er \"indstillet\" sådan, at den beregnede outputværdi rent faktisk kan fortolkes, som en sandsynlighed for, at det bliver regnvejr i morgen. For at lave denne indstilling skal vi bruge to ting: 1) træningsdata og 2) en tabsfunktion. Det kommer her: 
+Fint nok! Nu har vi altså en model, som kan bruges til at forudsige vejret. Men måske er du skeptisk. Det bør du i hvert tilfælde være! For hvem siger, at ouputværdien $o$ siger noget som helst om sandsynligheden for, at det bliver regnvejr i morgen? Det korte svar er: Det gør den heller ikke! I hvert tilfælde ikke sådan uden videre. Det kræver nemlig, at alle vægtene er \"indstillet\" sådan, at den beregnede outputværdi rent faktisk kan fortolkes, som en sandsynlighed for, at det bliver regnvejr i morgen. For at lave denne indstilling skal vi bruge to ting: 1) træningsdata og 2) en tabsfunktion. Det kommer her. 
 
 ## Træningsdata og tabsfunktion
 
-START HER!
-
-Nu tænker vi os, at du registrerer disse fire størrelser på en række forskellige dage *samtidig* med, at du også den efterfølgende dag registrerer, om det regner eller ej. Denne sidste registrering kunne for eksempel ske på denne måde:
+Nu tænker vi os, at du registrerer de fire størrelser i (@eq-inputvar) på en række forskellige dage *samtidig* med, at du også den efterfølgende dag registrerer, om det regner eller ej. Denne sidste registrering kunne for eksempel ske på denne måde:
 
 $$
 t=
@@ -146,5 +148,121 @@ t=
 \end{cases}
 $$
 Variablen $t$ kaldes for en **targetvariabel**. Det er netop denne værdi, vi gerne vil kunne forudsige. Man kan derfor tænke på variablen $t$, som en slags facitliste. Man siger også, vi gerne vil **prædiktere** $t$.
+
+Hvis vi for eksempel laver denne registrering på 10 forskellige dage får vi følgende:
+
+$$
+\begin{aligned}
+&\text{Dag 1:} \quad (x_1^{(1)}, x_2^{(1)}, x_3^{(1)}, x_4^{(1)}, t^{(1)}) \\
+&\text{Dag 2:} \quad (x_1^{(2)}, x_2^{(2)}, x_3^{(2)}, x_4^{(2)}, t^{(2)}) \\
+&  \quad  \vdots \\
+&\text{Dag 10:} \quad (x_1^{(10)}, x_2^{(10)}, x_3^{(10)}, x_4^{(10)}, t^{(10)}) \\
+\end{aligned}
+$$
+
+
+Det hævede tal i parentes angiver altså nummeret på dagen. For eksempel angiver $x_3^{(2)}$ temperaturen på dag 2, mens $t^{(2)}$ er 1, hvis det regner dagen efter dag 2 og 0 ellers.
+
+Ovenstående kaldes for et **træningsdata**. Helt generelt med $n$ inputvariable vil vi opskrive træningsdatasættet sådan her:
+
+$$
+\begin{aligned}
+&\text{Træningseksempel 1:} \quad (x_1^{(1)}, x_2^{(1)}, \dots, x_n^{(1)}, t^{(1)}) \\
+&  \quad \quad \quad \quad \vdots \\
+&\text{Træningseksempel m:} \quad (x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)}, t^{(m)}) \\
+&  \quad \quad \quad \quad \vdots \\
+&\text{Træningseksempel M:} \quad (x_1^{(M)}, x_2^{(M)}, \dots, x_n^{(M)}, t^{(M)}) \\
+\end{aligned}
+$$
+
+Vi kan nu tage hvert træningsdataeksempel og sende det ind i netværket i @fig-long_simple_NN. Det gør vi ved hjælp af feedforward ligningerne i (@eq-y), (@eq-z) og (@eq-o). Vi får derfor for hvert træningseksempel beregnet en outputværdi $o$. Ouputværdien for det $m$'te træningseksempel vil vi kalde for $o^{(m)}$.
+
+Hvis netværket er godt -- det vil sige, hvis vi har fundet nogle \"gode\" værdier af vægtene, så vil outputværdien $o$ kunne fortolkes som sandsynligheden for, om det bliver regnvejr i morgen.
+
+Det betyder, at et godt netværk har denne egenskab:
+
+* Hvis $t=1$, så er $o \approx 1$.
+* Hvis $t=0$, så er $o \approx 0$.
+
+I begge tilfælde betyder det, at
+$$
+t-o \approx 0
+$$
+
+Det er præcis denne differens, som vi vil bruge som et mål for, hvor godt netværket er. 
+
+Nu kan denne differens både være positiv og negativ. Derfor vil vi se på den kvadrerede differens:
+
+$$
+(t-o)^2.
+$$
+
+Hvis netværket er godt, vil denne kvadrede differens stadig være tæt på $0$. Samtidig vil der jo også være en differens for hvert træningsdataeksempel:
+
+$$
+(t^{(1)}-o^{(1)})^2, (t^{(2)}-o^{(2)})^2, \dots, (t^{(M)}-o^{(M)})^2. 
+$$
+
+Det er summen af alle disse differenser (ganget[^1] med $1/2$), som vi vil bruge som mål for, hvor godt netværket er:
+
+$$
+E = \frac{1}{2} \sum_{m=1}^M (t^{(m)}-o^{(m)})^2
+$$
+
+[^1]: At vi ganger med $1/2$ er ikke så vigtigt -- du ser senere, hvorfor det er smart. 
+
+Denne funktion er den. som vi kalder for en **tabsfunktion** (eller på engelsk *error function* -- deraf $E$'et). Som vi har argumenteret for ovenfor, så er vi netop på jagt efter de værdier af vægtene, som minimerer tabsfunktionen.
+
+
+## Backpropagation
+
+::: {.callout-note collapse="false" appearance="minimal"} 
+## Opdateringsregler $w$-vægtene
+$$
+\begin{aligned}
+w_0 \leftarrow & w_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot 1\\
+w_1 \leftarrow & w_1 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot z^{(m)}\\
+\end{aligned}
+$$
+hvor
+$$
+\delta^{(m)} = (t^{(m)}-o^{(m)} ) \cdot o^{(m)}  \cdot (1-o^{(m)}) 
+$$
+
+
+:::
+
+
+::: {.callout-note collapse="false" appearance="minimal"} 
+## Opdateringsregler $v$-vægtene
+$$
+\begin{aligned}
+v_0 \leftarrow & v_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot 1\\
+v_1 \leftarrow & v_1 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot y^{(m)}\\
+\end{aligned}
+$$
+hvor
+$$
+\delta^{(m)} = (t^{(m)}-o^{(m)} ) \cdot o^{(m)}  \cdot (1-o^{(m)}) 
+$$
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"} 
+## Opdateringsregler $r$-vægtene
+
+$$
+\begin{aligned}
+r_0 \leftarrow & r_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot 1\\
+r_0 \leftarrow & r_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x^{(m)}\\
+\end{aligned}
+$$
+
+hvor
+$$
+\delta^{(m)} = (t^{(m)}-o^{(m)} ) \cdot o^{(m)}  \cdot (1-o^{(m)}) 
+$$
+:::
+
+
 
 
