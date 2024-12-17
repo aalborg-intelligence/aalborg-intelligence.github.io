@@ -184,6 +184,7 @@ window.Quarto = {
   <li><a href="#kan-vi-forudsige-vejret" id="toc-kan-vi-forudsige-vejret" class="nav-link active" data-scroll-target="#kan-vi-forudsige-vejret">Kan vi forudsige vejret?</a></li>
   <li><a href="#feedforward" id="toc-feedforward" class="nav-link" data-scroll-target="#feedforward">Feedforward</a></li>
   <li><a href="#træningsdata-og-tabsfunktion" id="toc-træningsdata-og-tabsfunktion" class="nav-link" data-scroll-target="#træningsdata-og-tabsfunktion">Træningsdata og tabsfunktion</a></li>
+  <li><a href="#backpropagation" id="toc-backpropagation" class="nav-link" data-scroll-target="#backpropagation">Backpropagation</a></li>
   </ul>
 </nav>
 </nav>
@@ -217,19 +218,20 @@ window.Quarto = {
 <section id="kan-vi-forudsige-vejret" class="level2">
 <h2 class="anchored" data-anchor-id="kan-vi-forudsige-vejret">Kan vi forudsige vejret?</h2>
 <p>Forestil dig at du gerne vil kunne forudsige, om det bliver regnvejr i morgen. Det er selvfølgelig ikke nogen helt simpel opgave, men man kunne forestille sig, at der vil være en række variable, som kan hjælpe med at lave den forudsigelse. Det kunne for eksempel være:</p>
-<p><span class="math display">\[
+<p><span id="eq-inputvar"><span class="math display">\[
 \begin{aligned}
 &amp;x_1: \textrm{Er det regnvejr i dag? Hvis 'ja' er } x_1=1 \textrm{ og } 0 \textrm{ ellers.} \\
 &amp;x_2: \textrm{Luftfugtigheden i dag.} \\
 &amp;x_3: \textrm{Temperaturen i dag.} \\
 &amp;x_4: \textrm{Lufttrykket i dag.} \\
 \end{aligned}
-\]</span> Og der vil sikkert være en masse andre variable, som også kunne give mening. Disse variable <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> kaldes for <strong>inputvariable</strong>.</p>
+\tag{1}\]</span></span></p>
+<p>Og der vil sikkert være en masse andre variable, som også kunne give mening. Disse variable <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> kaldes for <strong>inputvariable</strong>.</p>
 <p>Vi vil nu se på, hvordan man ved hjælp af sådanne inputvariable kan prædiktere, om det bliver regnvejr i morgen.</p>
 </section>
 <section id="feedforward" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="feedforward">Feedforward</h2>
-<p>Vi ser nu på det mere generelle tilfælde, hvor vi har <span class="math inline">\(n\)</span> inputvariable</p>
+<p>Vi ser nu på det mere generelle tilfælde, hvor vi har <span class="math inline">\(n\)</span> inputvariable:</p>
 <p><span class="math display">\[
 x_1, x_2, \dots, x_n.
 \]</span> Disse inputvariable sender vi nu ind i et forholdsvis simpelt neuralt netværk, som vist i <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;1</a>.</p>
@@ -243,7 +245,7 @@ Figur&nbsp;1: Grafisk illustration af et neuralt netværk med <span class="math 
 </figcaption>
 </figure>
 </div>
-<p>Cirklerne i <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;1</a> kaldes for <strong>neuroner</strong>. Idéen er, at vi på baggrund af inputværdierne i sidste ende beregne en outputværdi <span class="math inline">\(o\)</span> (som er illustreret ved den blå cirkel længst til højre i <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;1</a>). Outputværdien skal i dette eksempel være et tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>, som skal kunne fortolkes som sandsynligheden for, at det bliver regnvejr i morgen baseret på inputværdierne <span class="math inline">\(x_1, x_2, \dots, x_n\)</span>. Herefter kunne man forestille sig følgende vejrudsigt:</p>
+<p>Cirklerne i <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;1</a> kaldes for <strong>neuroner</strong>. Idéen er, at vi på baggrund af inputværdierne (her vist som de lille cirkler til venestre) i sidste ende vil beregne en outputværdi <span class="math inline">\(o\)</span> (som er illustreret ved den blå cirkel længst til højre i <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;1</a>). Outputværdien skal i dette eksempel være et tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>, som skal kunne fortolkes som sandsynligheden for, at det bliver regnvejr i morgen baseret på inputværdierne <span class="math inline">\(x_1, x_2, \dots, x_n\)</span>. Herefter kunne man forestille sig følgende vejrudsigt:</p>
 <p><span class="math display">\[
 \textrm{Det bliver regnvejr i morgen: }
 \begin{cases}
@@ -260,7 +262,10 @@ r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n.
 \]</span></p>
 <p>Det vil sige, at vi beregner</p>
 <p><span class="math display">\[
-y = \sigma (r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n) = \frac{1}{1+e^{-(r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n)}}.
+\begin{aligned}
+y &amp;= \sigma (r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n) \\
+&amp;= \frac{1}{1+e^{-(r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n)}}.
+\end{aligned}
 \]</span></p>
 <p>Grafen for sigmoid-funktionen ses i <a href="#fig-sigmoid" class="quarto-xref">figur&nbsp;2</a>.</p>
 <div id="fig-sigmoid" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
@@ -273,7 +278,7 @@ Figur&nbsp;2: Grafen for sigmoid-funktionen.
 </figcaption>
 </figure>
 </div>
-<p>Her anskueliggøres det, at sigmoid-funktionen tager et vilkårligt reelt tal som input og giver et tal i intervallet <span class="math inline">\((0,1)\)</span> som output:</p>
+<p>Her anskueliggøres det, at sigmoid-funktionen tager et vilkårligt reelt tal som input og giver et tal i intervallet <span class="math inline">\((0,1)\)</span> som output. Det kan skrives sådan her:</p>
 <p><span class="math display">\[
 \sigma : \mathbb{R} \rightarrow (0,1)
 \]</span></p>
@@ -301,22 +306,22 @@ Feedforward ligninger
 <p>På baggrund af inputværdierne <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> beregnes outputværdien <span class="math inline">\(o\)</span> på denne måde:</p>
 <p><span id="eq-y"><span class="math display">\[
 y = \sigma (r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n)
-\tag{1}\]</span></span></p>
+\tag{2}\]</span></span></p>
 <p><span id="eq-z"><span class="math display">\[
 z = \sigma (v_0 + v_1 \cdot y)
-\tag{2}\]</span></span></p>
+\tag{3}\]</span></span></p>
 <p><span id="eq-o"><span class="math display">\[
 o = \sigma(w_0 + w_1 \cdot z)
-\tag{3}\]</span></span></p>
+\tag{4}\]</span></span></p>
 </div>
 </div>
 </div>
 <p>Bemærk, at outputværdien <span class="math inline">\(o\)</span> beregnes ved hjælp af sigmoid-funktionen, og derfor er et tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>, som tidligere ønsket.</p>
-<p>Med udgangspunkt i feedforward ligningerne, kan vi også skrive outputværdien <span class="math inline">\(o\)</span> direkte som en funktion af inputværdierne <span class="math inline">\(x_1, x_2, \dots, x_n\)</span>. Vi starter med at indsætte udtrykket for <span class="math inline">\(z\)</span> i (<a href="#eq-z" class="quarto-xref">2</a>) i udtrykket for <span class="math inline">\(o\)</span> i (<a href="#eq-o" class="quarto-xref">3</a>):</p>
+<p>Med udgangspunkt i feedforward ligningerne, kan vi også skrive outputværdien <span class="math inline">\(o\)</span> direkte som en funktion af inputværdierne <span class="math inline">\(x_1, x_2, \dots, x_n\)</span>. Vi starter med at indsætte udtrykket for <span class="math inline">\(z\)</span> i (<a href="#eq-z" class="quarto-xref">3</a>) i udtrykket for <span class="math inline">\(o\)</span> i (<a href="#eq-o" class="quarto-xref">4</a>):</p>
 <p><span class="math display">\[
 o = \sigma(w_0 + w_1 \cdot (\sigma (v_0 + v_1 \cdot y)))
 \]</span></p>
-<p>Herefter erstatter vi <span class="math inline">\(y\)</span> med udtrykket i (<a href="#eq-y" class="quarto-xref">1</a>):</p>
+<p>Herefter erstatter vi <span class="math inline">\(y\)</span> med udtrykket i (<a href="#eq-y" class="quarto-xref">2</a>):</p>
 <p><span class="math display">\[
 o = \sigma(w_0 + w_1 \cdot (\sigma (v_0 + v_1 \cdot (\sigma (r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n) ))))
 \]</span></p>
@@ -329,12 +334,11 @@ o = \sigma(w_0 + w_1 \cdot (\sigma (v_0 + v_1 \cdot (\sigma (r_0 + r_1 \cdot x_1
 <li>Outputværdien <span class="math inline">\(o\)</span> kan udtrykkes ved hjælp af flere sammensatte funktioner.</li>
 </ol>
 <p>Bortset fra det er feedforward ligningerne ovenfor nok nemmere at overskue!</p>
-<p>Fint nok! Nu har vi altså en model, som kan bruges til at forudsige vejret. Men måske er du skeptisk. Det bør du i hvert tilfælde være! For hvem siger, at ouputværdien <span class="math inline">\(o\)</span> siger noget som helst om sandsynligheden for, at det bliver regnvejr i morgen? Det korte svar er: Det gør den heller ikke! I hvert tilfælde ikke sådan uden videre. Det kræver nemlig, at alle vægtene er "indstillet" sådan, at den beregnede outputværdi rent faktisk kan fortolkes, som en sandsynlighed for, at det bliver regnvejr i morgen. For at lave denne indstilling skal vi bruge to ting: 1) træningsdata og 2) en tabsfunktion. Det kommer her:</p>
+<p>Fint nok! Nu har vi altså en model, som kan bruges til at forudsige vejret. Men måske er du skeptisk. Det bør du i hvert tilfælde være! For hvem siger, at ouputværdien <span class="math inline">\(o\)</span> siger noget som helst om sandsynligheden for, at det bliver regnvejr i morgen? Det korte svar er: Det gør den heller ikke! I hvert tilfælde ikke sådan uden videre. Det kræver nemlig, at alle vægtene er "indstillet" sådan, at den beregnede outputværdi rent faktisk kan fortolkes, som en sandsynlighed for, at det bliver regnvejr i morgen. For at lave denne indstilling skal vi bruge to ting: 1) træningsdata og 2) en tabsfunktion. Det kommer her.</p>
 </section>
-<section id="træningsdata-og-tabsfunktion" class="level2">
+<section id="træningsdata-og-tabsfunktion" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="træningsdata-og-tabsfunktion">Træningsdata og tabsfunktion</h2>
-<p>START HER!</p>
-<p>Nu tænker vi os, at du registrerer disse fire størrelser på en række forskellige dage <em>samtidig</em> med, at du også den efterfølgende dag registrerer, om det regner eller ej. Denne sidste registrering kunne for eksempel ske på denne måde:</p>
+<p>Nu tænker vi os, at du registrerer de fire størrelser i (<a href="#eq-inputvar" class="quarto-xref">1</a>) på en række forskellige dage <em>samtidig</em> med, at du også den efterfølgende dag registrerer, om det regner eller ej. Denne sidste registrering kunne for eksempel ske på denne måde:</p>
 <p><span class="math display">\[
 t=
 \begin{cases}
@@ -342,9 +346,127 @@ t=
 0 &amp; \textrm{hvis det ikke regner den efterfølgende dag} \\
 \end{cases}
 \]</span> Variablen <span class="math inline">\(t\)</span> kaldes for en <strong>targetvariabel</strong>. Det er netop denne værdi, vi gerne vil kunne forudsige. Man kan derfor tænke på variablen <span class="math inline">\(t\)</span>, som en slags facitliste. Man siger også, vi gerne vil <strong>prædiktere</strong> <span class="math inline">\(t\)</span>.</p>
+<p>Hvis vi for eksempel laver denne registrering på 10 forskellige dage får vi følgende:</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\text{Dag 1:} \quad (x_1^{(1)}, x_2^{(1)}, x_3^{(1)}, x_4^{(1)}, t^{(1)}) \\
+&amp;\text{Dag 2:} \quad (x_1^{(2)}, x_2^{(2)}, x_3^{(2)}, x_4^{(2)}, t^{(2)}) \\
+&amp;  \quad  \vdots \\
+&amp;\text{Dag 10:} \quad (x_1^{(10)}, x_2^{(10)}, x_3^{(10)}, x_4^{(10)}, t^{(10)}) \\
+\end{aligned}
+\]</span></p>
+<p>Det hævede tal i parentes angiver altså nummeret på dagen. For eksempel angiver <span class="math inline">\(x_3^{(2)}\)</span> temperaturen på dag 2, mens <span class="math inline">\(t^{(2)}\)</span> er 1, hvis det regner dagen efter dag 2 og 0 ellers.</p>
+<p>Ovenstående kaldes for et <strong>træningsdata</strong>. Helt generelt med <span class="math inline">\(n\)</span> inputvariable vil vi opskrive træningsdatasættet sådan her:</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\text{Træningseksempel 1:} \quad (x_1^{(1)}, x_2^{(1)}, \dots, x_n^{(1)}, t^{(1)}) \\
+&amp;  \quad \quad \quad \quad \vdots \\
+&amp;\text{Træningseksempel m:} \quad (x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)}, t^{(m)}) \\
+&amp;  \quad \quad \quad \quad \vdots \\
+&amp;\text{Træningseksempel M:} \quad (x_1^{(M)}, x_2^{(M)}, \dots, x_n^{(M)}, t^{(M)}) \\
+\end{aligned}
+\]</span></p>
+<p>Vi kan nu tage hvert træningsdataeksempel og sende det ind i netværket i <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;1</a>. Det gør vi ved hjælp af feedforward ligningerne i (<a href="#eq-y" class="quarto-xref">2</a>), (<a href="#eq-z" class="quarto-xref">3</a>) og (<a href="#eq-o" class="quarto-xref">4</a>). Vi får derfor for hvert træningseksempel beregnet en outputværdi <span class="math inline">\(o\)</span>. Ouputværdien for det <span class="math inline">\(m\)</span>’te træningseksempel vil vi kalde for <span class="math inline">\(o^{(m)}\)</span>.</p>
+<p>Hvis netværket er godt – det vil sige, hvis vi har fundet nogle "gode" værdier af vægtene, så vil outputværdien <span class="math inline">\(o\)</span> kunne fortolkes som sandsynligheden for, om det bliver regnvejr i morgen.</p>
+<p>Det betyder, at et godt netværk har denne egenskab:</p>
+<ul>
+<li>Hvis <span class="math inline">\(t=1\)</span>, så er <span class="math inline">\(o \approx 1\)</span>.</li>
+<li>Hvis <span class="math inline">\(t=0\)</span>, så er <span class="math inline">\(o \approx 0\)</span>.</li>
+</ul>
+<p>I begge tilfælde betyder det, at <span class="math display">\[
+t-o \approx 0
+\]</span></p>
+<p>Det er præcis denne differens, som vi vil bruge som et mål for, hvor godt netværket er.</p>
+<p>Nu kan denne differens både være positiv og negativ. Derfor vil vi se på den kvadrerede differens:</p>
+<p><span class="math display">\[
+(t-o)^2.
+\]</span></p>
+<p>Hvis netværket er godt, vil denne kvadrede differens stadig være tæt på <span class="math inline">\(0\)</span>. Samtidig vil der jo også være en differens for hvert træningsdataeksempel:</p>
+<p><span class="math display">\[
+(t^{(1)}-o^{(1)})^2, (t^{(2)}-o^{(2)})^2, \dots, (t^{(M)}-o^{(M)})^2.
+\]</span></p>
+<p>Det er summen af alle disse differenser (ganget<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> med <span class="math inline">\(1/2\)</span>), som vi vil bruge som mål for, hvor godt netværket er:</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;At vi ganger med <span class="math inline">\(1/2\)</span> er ikke så vigtigt – du ser senere, hvorfor det er smart.</p></div></div><p><span class="math display">\[
+E = \frac{1}{2} \sum_{m=1}^M (t^{(m)}-o^{(m)})^2
+\]</span></p>
+<p>Denne funktion er den. som vi kalder for en <strong>tabsfunktion</strong> (eller på engelsk <em>error function</em> – deraf <span class="math inline">\(E\)</span>’et). Som vi har argumenteret for ovenfor, så er vi netop på jagt efter de værdier af vægtene, som minimerer tabsfunktionen.</p>
+</section>
+<section id="backpropagation" class="level2">
+<h2 class="anchored" data-anchor-id="backpropagation">Backpropagation</h2>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opdateringsregler <span class="math inline">\(w\)</span>-vægtene
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+\begin{aligned}
+w_0 \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot 1\\
+w_1 \leftarrow &amp; w_1 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot z^{(m)}\\
+\end{aligned}
+\]</span> hvor <span class="math display">\[
+\delta^{(m)} = (t^{(m)}-o^{(m)} ) \cdot o^{(m)}  \cdot (1-o^{(m)})
+\]</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opdateringsregler <span class="math inline">\(v\)</span>-vægtene
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+\begin{aligned}
+v_0 \leftarrow &amp; v_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot 1\\
+v_1 \leftarrow &amp; v_1 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot y^{(m)}\\
+\end{aligned}
+\]</span> hvor <span class="math display">\[
+\delta^{(m)} = (t^{(m)}-o^{(m)} ) \cdot o^{(m)}  \cdot (1-o^{(m)})
+\]</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opdateringsregler <span class="math inline">\(r\)</span>-vægtene
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+\begin{aligned}
+r_0 \leftarrow &amp; r_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot 1\\
+r_0 \leftarrow &amp; r_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x^{(m)}\\
+\end{aligned}
+\]</span></p>
+<p>hvor <span class="math display">\[
+\delta^{(m)} = (t^{(m)}-o^{(m)} ) \cdot o^{(m)}  \cdot (1-o^{(m)})
+\]</span></p>
+</div>
+</div>
+</div>
 
 
 </section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
