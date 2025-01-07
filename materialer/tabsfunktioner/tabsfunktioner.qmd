@@ -656,7 +656,7 @@ legend(8,0.9,          # Position
 ```
 
 
-I @fig-eksempel_squared-error-versus-cross-entropy har vi tegnet de to grafer for de to forskellige sigmoid-funktioner ind i samme koordinatsystem. Her kan man se, at sigmoid-funktionen som er baseret på at minimere *cross-entropy* tabsfunktionen (lyseblå) vokser mere stejlt end sigmoid-funktionen som er baseret på at minimere *squared error* tabsfunktionen (mørkeblå). Det er en fordel i forbindelse med prædiktion, fordi prædiktionen baseret på den lyseblå graf er \"mere sikker\" i sin forudsigelse af om patienten har kræft eller ej. Det stemmer også med de sandsynligheder, som vi beregnede i @exm-squared_error og @exm-cross_entropy, som er opsummeret herunder.
+I @fig-eksempel_squared-error-versus-cross-entropy har vi tegnet de to grafer for de to forskellige sigmoid-funktioner ind i samme koordinatsystem. Her kan man se, at de to grafer, som er baseret på at minimere henholdsvis *cross-entropy* tabsfunktionen (lyseblå) og *squared error* tabsfunktionen (mørkeblå), ikke er sammenfaldende. Det fremgår også af de sandsynligheder, som vi beregnede i @exm-squared_error og @exm-cross_entropy, og som er opsummeret herunder. 
 
 
 | | Patient 1 ($x=20$) | Patient 2 ($x=35$)  |
@@ -666,9 +666,11 @@ I @fig-eksempel_squared-error-versus-cross-entropy har vi tegnet de to grafer fo
 : Prædikteret sandsynlighed for at patienten har kræft 
 
 
+Om den ene model til forudsigelse af kræft er bedre end den anden, kan man ikke udtalelse sig om alene på baggrund af graferne i @fig-eksempel_squared-error-versus-cross-entropy. Det vil i stedet kræve, at man for eksempel bruger nogle af de metoder til modeludvælgelse, som er beskrevet i [noten om krydsvalidering](../krydsvalidering/krydsvalidering.qmd).
+
 ## Slow learning
 
-Som vi lige har set, er det faktisk ikke helt ligegyldigt, om man bruger den ene eller den anden tabsfunktion. Vi skal i dette afsnit se, at *cross-entropy* sammen med aktiveringsfunktionen sigmoid løser et problem, som *squared error* (også sammen med sigmoid) har. 
+Som vi lige har set, er resultatet forskelligt, alt efter hvilken tabsfunktion man bruger. Vi skal i dette afsnit se, at *cross-entropy* sammen med aktiveringsfunktionen sigmoid løser et problem, som *squared error* (også sammen med sigmoid) har. Dermed kan der være algoritmiske fordele ved at bruge *cross-entropy* tabsfunktionen. 
 
 Vi starter med at huske, at de to tabsfunktioner giver følgende to opdateringsregler:
 
@@ -722,11 +724,6 @@ plot_ly(showscale = FALSE) |>
   #             marker = list(size = 5, color = "black"), name = NULL) |>
   layout(scene = list(xaxis = ax_x, yaxis = ax_y, zaxis = ax_z), showlegend = FALSE)
 ```
-
-<!-- **Ege og Lisbeth:** Grunden til at grafen for sigmoid-funktionen i @fig-eksempel_squared-error-versus-cross-entropy baseret på *cross-entropy* er stejlere - er det mon fordi, at vi med *squared error* slet ikke ramt minimum (pga. slow learning)? Og derfor er den ikke så god til at skelne? -->
-
-<!-- **Ege:** På de to grafer for tabsfunktionerne: Kan vi få indtegnet det rigtige minimum OG det minimum, som vi er endt i? -->
-
 
 
 
