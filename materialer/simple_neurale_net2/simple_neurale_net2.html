@@ -184,7 +184,13 @@ window.Quarto = {
   <li><a href="#kan-vi-forudsige-vejret" id="toc-kan-vi-forudsige-vejret" class="nav-link active" data-scroll-target="#kan-vi-forudsige-vejret">Kan vi forudsige vejret?</a></li>
   <li><a href="#feedforward" id="toc-feedforward" class="nav-link" data-scroll-target="#feedforward">Feedforward</a></li>
   <li><a href="#træningsdata-og-tabsfunktion" id="toc-træningsdata-og-tabsfunktion" class="nav-link" data-scroll-target="#træningsdata-og-tabsfunktion">Træningsdata og tabsfunktion</a></li>
-  <li><a href="#backpropagation" id="toc-backpropagation" class="nav-link" data-scroll-target="#backpropagation">Backpropagation</a></li>
+  <li><a href="#kædereglen" id="toc-kædereglen" class="nav-link" data-scroll-target="#kædereglen">Kædereglen</a></li>
+  <li><a href="#backpropagation" id="toc-backpropagation" class="nav-link" data-scroll-target="#backpropagation">Backpropagation</a>
+  <ul class="collapse">
+  <li><a href="#opdatering-af-w-vægtene" id="toc-opdatering-af-w-vægtene" class="nav-link" data-scroll-target="#opdatering-af-w-vægtene">Opdatering af <span class="math inline">\(w\)</span>-vægtene</a></li>
+  <li><a href="#opdatering-af-v-vægtene" id="toc-opdatering-af-v-vægtene" class="nav-link" data-scroll-target="#opdatering-af-v-vægtene">Opdatering af <span class="math inline">\(v\)</span>-vægtene</a></li>
+  <li><a href="#opdatering-af-r-vægtene" id="toc-opdatering-af-r-vægtene" class="nav-link" data-scroll-target="#opdatering-af-r-vægtene">Opdatering af <span class="math inline">\(r\)</span>-vægtene</a></li>
+  </ul></li>
   </ul>
 </nav>
 </nav>
@@ -231,7 +237,7 @@ window.Quarto = {
 </section>
 <section id="feedforward" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="feedforward">Feedforward</h2>
-<p>Vi ser nu på det mere generelle tilfælde, hvor vi har <span class="math inline">\(n\)</span> inputvariable:</p>
+<p>Vi starter med at se på det mere generelle tilfælde, hvor vi har <span class="math inline">\(n\)</span> inputvariable:</p>
 <p><span class="math display">\[
 x_1, x_2, \dots, x_n.
 \]</span> Disse inputvariable sender vi nu ind i et forholdsvis simpelt neuralt netværk, som vist i <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;1</a>.</p>
@@ -245,7 +251,7 @@ Figur&nbsp;1: Grafisk illustration af et neuralt netværk med <span class="math 
 </figcaption>
 </figure>
 </div>
-<p>Cirklerne i <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;1</a> kaldes for <strong>neuroner</strong>. Idéen er, at vi på baggrund af inputværdierne (her vist som de lille cirkler til venestre) i sidste ende vil beregne en outputværdi <span class="math inline">\(o\)</span> (som er illustreret ved den blå cirkel længst til højre i <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;1</a>). Outputværdien skal i dette eksempel være et tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>, som skal kunne fortolkes som sandsynligheden for, at det bliver regnvejr i morgen baseret på inputværdierne <span class="math inline">\(x_1, x_2, \dots, x_n\)</span>. Herefter kunne man forestille sig følgende vejrudsigt:</p>
+<p>Cirklerne i <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;1</a> kaldes for <strong>neuroner</strong>. Idéen er, at vi på baggrund af inputværdierne (her vist som de lilla cirkler til venestre) i sidste ende vil beregne en outputværdi <span class="math inline">\(o\)</span> (som er illustreret ved den blå cirkel længst til højre i <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;1</a>). Outputværdien skal i dette eksempel være et tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>, som skal kunne fortolkes som sandsynligheden for, at det bliver regnvejr i morgen baseret på inputværdierne <span class="math inline">\(x_1, x_2, \dots, x_n\)</span>. Herefter kunne man forestille sig følgende vejrudsigt:</p>
 <p><span class="math display">\[
 \textrm{Det bliver regnvejr i morgen: }
 \begin{cases}
@@ -257,9 +263,9 @@ Figur&nbsp;1: Grafisk illustration af et neuralt netværk med <span class="math 
 r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n.
 \]</span></p>
 <p>Herefter benyttes en såkaldt <strong>aktiveringsfunktion</strong> på den vægtede sum. En ofte anvendt aktiveringsfunktion er sigmoid-funktionen <span class="math inline">\(\sigma\)</span>:</p>
-<p><span class="math display">\[
+<p><span id="eq-sigmoid"><span class="math display">\[
 \sigma (x) = \frac{1}{1+e^{-x}}.
-\]</span></p>
+\tag{2}\]</span></span></p>
 <p>Det vil sige, at vi beregner</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -280,13 +286,21 @@ Figur&nbsp;2: Grafen for sigmoid-funktionen.
 </div>
 <p>Her anskueliggøres det, at sigmoid-funktionen tager et vilkårligt reelt tal som input og giver et tal i intervallet <span class="math inline">\((0,1)\)</span> som output. Det kan skrives sådan her:</p>
 <p><span class="math display">\[
-\sigma : \mathbb{R} \rightarrow (0,1)
+\sigma : \mathbb{R} \rightarrow (0,1).
 \]</span></p>
+<p>Sigmoid-funktionen har en helt speciel egenskab, når den differentieres<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, som vi får brug for senere:</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Se eventuelt mere i <a href="../../undervisningsforloeb/aktiveringsfunktioner.html#sigmoid">opgave 2 her</a>.</p></div></div><div class="highlight">
+<p><strong>Den afledede sigmoid-funktion</strong></p>
+<p><span id="eq-afledt_sigmoid"><span class="math display">\[
+\sigma'(x) = \sigma(x) \cdot (1-\sigma(x))
+\tag{3}\]</span></span></p>
+</div>
+<p><br></p>
 <p>Det betyder, at den første neuron sender værdien <span class="math inline">\(y\)</span> videre i netværket, hvor <span class="math inline">\(0&lt;y&lt;1\)</span>. Ved den næste neuron i <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;1</a> (repræsenteret ved den mørkegrønne cirkel), beregnes først den vægtede sum og herefter anvendes igen aktiveringsfunktionen:</p>
 <p><span class="math display">\[
 z = \sigma (v_0 + v_1 \cdot y).
 \]</span></p>
-<p>Denne værdi sendes nu frem til den sidste neuron i outputlaget og outputværdien <span class="math inline">\(o\)</span> beregnes</p>
+<p>Denne værdi sendes nu frem til den sidste neuron i outputlaget og outputværdien <span class="math inline">\(o\)</span> beregnes på tilsvarende måde</p>
 <p><span class="math display">\[
 o = \sigma(w_0 + w_1 \cdot z).
 \]</span></p>
@@ -306,35 +320,36 @@ Feedforward ligninger
 <p>På baggrund af inputværdierne <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> beregnes outputværdien <span class="math inline">\(o\)</span> på denne måde:</p>
 <p><span id="eq-y"><span class="math display">\[
 y = \sigma (r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n)
-\tag{2}\]</span></span></p>
+\tag{4}\]</span></span></p>
 <p><span id="eq-z"><span class="math display">\[
 z = \sigma (v_0 + v_1 \cdot y)
-\tag{3}\]</span></span></p>
+\tag{5}\]</span></span></p>
 <p><span id="eq-o"><span class="math display">\[
 o = \sigma(w_0 + w_1 \cdot z)
-\tag{4}\]</span></span></p>
+\tag{6}\]</span></span></p>
 </div>
 </div>
 </div>
 <p>Bemærk, at outputværdien <span class="math inline">\(o\)</span> beregnes ved hjælp af sigmoid-funktionen, og derfor er et tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>, som tidligere ønsket.</p>
-<p>Med udgangspunkt i feedforward ligningerne, kan vi også skrive outputværdien <span class="math inline">\(o\)</span> direkte som en funktion af inputværdierne <span class="math inline">\(x_1, x_2, \dots, x_n\)</span>. Vi starter med at indsætte udtrykket for <span class="math inline">\(z\)</span> i (<a href="#eq-z" class="quarto-xref">3</a>) i udtrykket for <span class="math inline">\(o\)</span> i (<a href="#eq-o" class="quarto-xref">4</a>):</p>
+<p>Med udgangspunkt i feedforward ligningerne, kan vi også skrive outputværdien <span class="math inline">\(o\)</span> direkte som en funktion af inputværdierne <span class="math inline">\(x_1, x_2, \dots, x_n\)</span>. Vi starter med at indsætte udtrykket for <span class="math inline">\(z\)</span> i (<a href="#eq-z" class="quarto-xref">5</a>) i udtrykket for <span class="math inline">\(o\)</span> i (<a href="#eq-o" class="quarto-xref">6</a>):</p>
 <p><span class="math display">\[
 o = \sigma(w_0 + w_1 \cdot (\sigma (v_0 + v_1 \cdot y)))
 \]</span></p>
-<p>Herefter erstatter vi <span class="math inline">\(y\)</span> med udtrykket i (<a href="#eq-y" class="quarto-xref">2</a>):</p>
+<p>Herefter erstatter vi <span class="math inline">\(y\)</span> med udtrykket i (<a href="#eq-y" class="quarto-xref">4</a>):</p>
 <p><span class="math display">\[
 o = \sigma(w_0 + w_1 \cdot (\sigma (v_0 + v_1 \cdot (\sigma (r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n) ))))
 \]</span></p>
 <p>Her bliver det meget tydeligt, at</p>
 <ol type="1">
-<li>Outputværdien afhænger direkte af inputværdierne <span class="math inline">\(x_1, x_2, \dots, x_n\)</span></li>
+<li><p>Outputværdien afhænger direkte af inputværdierne <span class="math inline">\(x_1, x_2, \dots, x_n\)</span></p></li>
+<li><p>Ouputværdien afhænger af alle vægtene <span class="math inline">\(w_0, w_1, v_0, v_1, r_0, r_1, \dots, r_n\)</span></p></li>
 </ol>
 <p>og</p>
-<ol start="2" type="1">
+<ol start="3" type="1">
 <li>Outputværdien <span class="math inline">\(o\)</span> kan udtrykkes ved hjælp af flere sammensatte funktioner.</li>
 </ol>
 <p>Bortset fra det er feedforward ligningerne ovenfor nok nemmere at overskue!</p>
-<p>Fint nok! Nu har vi altså en model, som kan bruges til at forudsige vejret. Men måske er du skeptisk. Det bør du i hvert tilfælde være! For hvem siger, at ouputværdien <span class="math inline">\(o\)</span> siger noget som helst om sandsynligheden for, at det bliver regnvejr i morgen? Det korte svar er: Det gør den heller ikke! I hvert tilfælde ikke sådan uden videre. Det kræver nemlig, at alle vægtene er "indstillet" sådan, at den beregnede outputværdi rent faktisk kan fortolkes, som en sandsynlighed for, at det bliver regnvejr i morgen. For at lave denne indstilling skal vi bruge to ting: 1) træningsdata og 2) en tabsfunktion. Det kommer her.</p>
+<p>Fint nok – nu har vi altså en model, som kan bruges til at forudsige vejret. Men måske er du skeptisk. Det bør du i hvert tilfælde være! For hvem siger, at ouputværdien <span class="math inline">\(o\)</span> siger noget som helst om sandsynligheden for, at det bliver regnvejr i morgen? Det korte svar er: Det gør den heller ikke nødvendigvis! I hvert tilfælde ikke sådan uden videre. Det kræver nemlig, at alle vægtene er "indstillet" sådan, at den beregnede outputværdi rent faktisk kan fortolkes, som en sandsynlighed for, at det bliver regnvejr i morgen. For at lave denne indstilling skal vi bruge to ting: 1) træningsdata og 2) en tabsfunktion. Det kommer her.</p>
 </section>
 <section id="træningsdata-og-tabsfunktion" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="træningsdata-og-tabsfunktion">Træningsdata og tabsfunktion</h2>
@@ -346,7 +361,7 @@ t=
 0 &amp; \textrm{hvis det ikke regner den efterfølgende dag} \\
 \end{cases}
 \]</span> Variablen <span class="math inline">\(t\)</span> kaldes for en <strong>targetvariabel</strong>. Det er netop denne værdi, vi gerne vil kunne forudsige. Man kan derfor tænke på variablen <span class="math inline">\(t\)</span>, som en slags facitliste. Man siger også, vi gerne vil <strong>prædiktere</strong> <span class="math inline">\(t\)</span>.</p>
-<p>Hvis vi for eksempel laver denne registrering på 10 forskellige dage får vi følgende:</p>
+<p>Hvis vi for eksempel laver denne registrering på 10 forskellige dage kan vi skrive det op på denne måde:</p>
 <p><span class="math display">\[
 \begin{aligned}
 &amp;\text{Dag 1:} \quad (x_1^{(1)}, x_2^{(1)}, x_3^{(1)}, x_4^{(1)}, t^{(1)}) \\
@@ -356,7 +371,7 @@ t=
 \end{aligned}
 \]</span></p>
 <p>Det hævede tal i parentes angiver altså nummeret på dagen. For eksempel angiver <span class="math inline">\(x_3^{(2)}\)</span> temperaturen på dag 2, mens <span class="math inline">\(t^{(2)}\)</span> er 1, hvis det regner dagen efter dag 2 og 0 ellers.</p>
-<p>Ovenstående kaldes for et <strong>træningsdata</strong>. Helt generelt med <span class="math inline">\(n\)</span> inputvariable vil vi opskrive træningsdatasættet sådan her:</p>
+<p>Ovenstående kaldes for et <strong>træningsdata</strong>. Helt generelt med <span class="math inline">\(n\)</span> inputvariable og <span class="math inline">\(M\)</span> observatoiner i træningsdata vil vi opskrive træningsdatasættet sådan her:</p>
 <p><span class="math display">\[
 \begin{aligned}
 &amp;\text{Træningseksempel 1:} \quad (x_1^{(1)}, x_2^{(1)}, \dots, x_n^{(1)}, t^{(1)}) \\
@@ -366,7 +381,7 @@ t=
 &amp;\text{Træningseksempel M:} \quad (x_1^{(M)}, x_2^{(M)}, \dots, x_n^{(M)}, t^{(M)}) \\
 \end{aligned}
 \]</span></p>
-<p>Vi kan nu tage hvert træningsdataeksempel og sende det ind i netværket i <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;1</a>. Det gør vi ved hjælp af feedforward ligningerne i (<a href="#eq-y" class="quarto-xref">2</a>), (<a href="#eq-z" class="quarto-xref">3</a>) og (<a href="#eq-o" class="quarto-xref">4</a>). Vi får derfor for hvert træningseksempel beregnet en outputværdi <span class="math inline">\(o\)</span>. Ouputværdien for det <span class="math inline">\(m\)</span>’te træningseksempel vil vi kalde for <span class="math inline">\(o^{(m)}\)</span>.</p>
+<p>Vi kan nu tage hvert træningsdataeksempel og sende det ind i netværket i <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;1</a>. Det gør vi ved hjælp af feedforward ligningerne i (<a href="#eq-y" class="quarto-xref">4</a>), (<a href="#eq-z" class="quarto-xref">5</a>) og (<a href="#eq-o" class="quarto-xref">6</a>). Vi får derfor for hvert træningseksempel beregnet en outputværdi <span class="math inline">\(o\)</span>. Ouputværdien for det <span class="math inline">\(m\)</span>’te træningseksempel vil vi kalde for <span class="math inline">\(o^{(m)}\)</span>.</p>
 <p>Hvis netværket er godt – det vil sige, hvis vi har fundet nogle "gode" værdier af vægtene, så vil outputværdien <span class="math inline">\(o\)</span> kunne fortolkes som sandsynligheden for, om det bliver regnvejr i morgen.</p>
 <p>Det betyder, at et godt netværk har denne egenskab:</p>
 <ul>
@@ -374,7 +389,7 @@ t=
 <li>Hvis <span class="math inline">\(t=0\)</span>, så er <span class="math inline">\(o \approx 0\)</span>.</li>
 </ul>
 <p>I begge tilfælde betyder det, at <span class="math display">\[
-t-o \approx 0
+t-o \approx 0.
 \]</span></p>
 <p>Det er præcis denne differens, som vi vil bruge som et mål for, hvor godt netværket er.</p>
 <p>Nu kan denne differens både være positiv og negativ. Derfor vil vi se på den kvadrerede differens:</p>
@@ -385,21 +400,157 @@ t-o \approx 0
 <p><span class="math display">\[
 (t^{(1)}-o^{(1)})^2, (t^{(2)}-o^{(2)})^2, \dots, (t^{(M)}-o^{(M)})^2.
 \]</span></p>
-<p>Det er summen af alle disse differenser (ganget<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> med <span class="math inline">\(1/2\)</span>), som vi vil bruge som mål for, hvor godt netværket er:</p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;At vi ganger med <span class="math inline">\(1/2\)</span> er ikke så vigtigt – du ser senere, hvorfor det er smart.</p></div></div><p><span class="math display">\[
+<p>Det er summen af alle disse differenser (ganget<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> med <span class="math inline">\(1/2\)</span>), som vi vil bruge som mål for, hvor godt netværket er:</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;At vi ganger med <span class="math inline">\(1/2\)</span> er ikke så vigtigt – du ser senere, hvorfor det er smart.</p></div></div><p><span class="math display">\[
 E = \frac{1}{2} \sum_{m=1}^M (t^{(m)}-o^{(m)})^2
 \]</span></p>
-<p>Denne funktion er den. som vi kalder for en <strong>tabsfunktion</strong> (eller på engelsk <em>error function</em> – deraf <span class="math inline">\(E\)</span>’et). Som vi har argumenteret for ovenfor, så er vi netop på jagt efter de værdier af vægtene, som minimerer tabsfunktionen.</p>
+<p>Denne funktion er den, som vi kalder for en <a href="../../materialer/tabsfunktioner/tabsfunktioner.html"><strong>tabsfunktion</strong></a> (eller på engelsk <em>error function</em> – deraf <span class="math inline">\(E\)</span>’et). Som vi har argumenteret for ovenfor, så er vi netop på jagt efter de værdier af vægtene, som minimerer tabsfunktionen.</p>
+<p>Tabsfunktionen ovenfor kan også omskrives en smule:</p>
+<p><span id="eq-E"><span class="math display">\[
+\begin{aligned}
+E &amp;= \frac{1}{2} \sum_{m=1}^M (t^{(m)}-o^{(m)})^2 \\
+&amp;= \sum_{m=1}^M \frac{1}{2} (t^{(m)}-o^{(m)})^2 \\
+&amp;= \sum_{m=1}^M E^{(m)},
+\end{aligned}
+\tag{7}\]</span></span></p>
+<p>hvor</p>
+<p><span id="eq-E_m"><span class="math display">\[
+E^{(m)} = \frac{1}{2} (t^{(m)}-o^{(m)})^2
+\tag{8}\]</span></span></p>
+<p>er det bidrag til tabsfunktionen, som stammer fra det <span class="math inline">\(m\)</span>’te træningseksempel.</p>
+<p>For at finde de værdier af vægtene som minimerer tabsfunktionen bruges en metode, som kaldes for <strong>backpropagation</strong>. Det forklarer vi lige om lidt, men først skal vi lige se, hvordan kædereglen kan opskrives på en smart måde, som vi får brug for i det følgende.</p>
+</section>
+<section id="kædereglen" class="level2">
+<h2 class="anchored" data-anchor-id="kædereglen">Kædereglen</h2>
+<p>Du kender godt de sammensatte funktioner. Det kunne for eksempel være en funktion <span class="math inline">\(h\)</span>:</p>
+<p><span class="math display">\[
+h(x)= f(g(x))
+\]</span></p>
+<p>Den er sammensat af en indre og en ydre funktion:</p>
+<ul>
+<li>Indre funktion: <span class="math inline">\(t=g(x)\)</span></li>
+<li>Ydre funktion: <span class="math inline">\(f(t)\)</span></li>
+</ul>
+<p>** Tegning af funktionsmaskine her :o) **</p>
+<p>Hvis vi skal differentiere funktionen <span class="math inline">\(h\)</span>, så skal vi bruge reglen for at differentiere sammensatte funktioner:</p>
+<p><span class="math display">\[
+h'(x)=f'(g(x)) \cdot g'(x)
+\]</span> Det er altså den ydre funktion differentieret taget på den indre gange den indre funktion differentieret.</p>
+<p>Hvis vi erstatter <span class="math inline">\(g(x)\)</span> med <span class="math inline">\(t\)</span> kan det skrives:</p>
+<p><span class="math display">\[
+h'(x)=f'(t) \cdot g'(x)
+\]</span></p>
+<p>Du har nok også lært, at man i stedet for at bruge mærker til at angive, at man har differentieret i stedet kan skrive sådan her (kært barn har som bekendt mange navne):</p>
+<p><span class="math display">\[
+\frac{dh}{dx} = \frac{df}{dt} \cdot \frac{dt}{dx}
+\]</span></p>
+<p>Denne måde at skrive reglen for at differentiere sammensatte funktiner på kaldes for <strong>kædereglen</strong>.</p>
 </section>
 <section id="backpropagation" class="level2">
 <h2 class="anchored" data-anchor-id="backpropagation">Backpropagation</h2>
+<p>Når man skal minimere <a href="../../materialer/funktioner_af_flere_variable/funktioner_af_flere_variable.html">en funktion af flere variable</a> kan man egentlig bare sætte alle de partielle afledede lig med 0. Det vil give lige så mange ligninger, som der er vægte (og alle ligninger vil være koblet til hinanden). I vores simple eksempel her vil det ikke være noget problem at de ligninger. Men i virkelighedens verden hvor de kunstige neurale netværk afhænger af millioner eller milliarder af vægte, er denne fremgangsmåde beregningsmæssigt alt for tung. Det vil dels tage alt for lang tid og det vil dels tage for meget plads på computeren.</p>
+<p>Man bruger derfor en anden metode, som kaldes for <strong>backpropagation</strong>. I backpropagation bruger man for det første gradientnedstigning, så den tager vi lige først.</p>
+<p>Vi forestiller os, at vi har en funktion <span class="math inline">\(f\)</span>, som afhænger af <span class="math inline">\(x_1, x_2, \dots, x_n\)</span>. Vi "stiller" os nu et tilfældigt sted på grafen for <span class="math inline">\(f\)</span> og udregner gradienten</p>
+<p><span class="math display">\[
+\nabla f(x_1, x_2, \dots, x_n) =
+\begin{pmatrix}
+\frac{\partial f}{\partial x_1} \\
+\frac{\partial f}{\partial x_2} \\
+\vdots \\
+\frac{\partial f}{\partial x_n}
+\end{pmatrix}.
+\]</span></p>
+<p>Så viser det sig, at gradienten peger i den retning, hvor funktionsværdien vokser mest. Derfor vil minus gradienten pege i den retning, hvor funktionsværdien aftager mest. Visuelt kan man forestille sig, at man står i et bakkelandskab, hvor man gerne vil ned i en dal. Så kan man tænke på den negative gradient, som den retning vi skal bevæge os I, hvis vi gerne vil gå allermest nedad bakke (og det er jo smart, hvis man gerne vil ende i dalen). Man udregner derfor gradienten og går et lille stykke i den negative gradients retning. Nu er det jo ikke sikkert, at man hele tiden skal gå i den samme retning, så derfor er man nødt til at udregne gradienten igen på det nye sted, man nu står og så korrigere sin retning i forhold det næste lille skridt man tager. Det er idéen, hvis man gerne vil bestemme minimum. Man stiller sig simpelthen et tilfældigt sted på grafen for <span class="math inline">\(f\)</span> og udregner gradienten. Så bevæger man sig et lille stykke i den negative gradients retning. I det nye punkt udregner man gradienten igen og går et lille stykke i den nye negative gradients retning. Sådan fortsætter man, indtil funktionsværdien ikke ændrer sig ret meget, og man er landet i et minimum (eventuelt kun lokalt).</p>
+<p>Nu hedder vores funktion ikke <span class="math inline">\(f\)</span>, men <span class="math inline">\(E\)</span> (det var tabsfunktionen). <span class="math inline">\(E\)</span> afhænger af vægtene <span class="math inline">\(r_0, r_1, \dots, r_n, v_0, v_1, w_0\)</span> og <span class="math inline">\(w_1\)</span>. Vi vælger derfor nogle tilfældige værdier af disse vægte og og udregner gradienten. Så opdaterer vi alle vægtene ved at gå et lille stykke <span class="math inline">\(\eta\)</span> i den negative gradients retning. For <span class="math inline">\(w_1\)</span> vil det for eksempel se sådan her ud:</p>
+<p><span class="math display">\[
+w_1 \leftarrow w_1 - \eta \cdot \frac{\partial E}{\partial w_1}
+\]</span></p>
+<p>I backpropagation opdateres vægtene ved at bruge ovenstående opdateringsregel, men det gøres på en snedig måde. Nemlig ved at opdatere vægtene tættest på ouputlaget først – det vil sige <span class="math inline">\(w_0\)</span> og <span class="math inline">\(w_1\)</span>. Dernæst går man en skidt længere tilbage i netværket i <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;1</a> og opdaterer <span class="math inline">\(v_0\)</span> og <span class="math inline">\(v_1\)</span> og endelig opdaterer man til sidst vægtene tættest på inputlaget <span class="math inline">\(r_0, r_1, \dots, r_n\)</span>. Vi skal nok forklare, hvorfor det er smart, men det er altså årsagen til at metoden hedder <strong>back</strong>propagation: fordi vægtene opdateres fra outputlaget og bagud.</p>
+<p>Inden opdateringen af vægtene går i gang sættes alle vægtene til en tilfældig værdi. Herefter tager vi alle <span class="math inline">\(M\)</span> træningsdata og sender ind i netværket. Det vil sige, at vi på baggrund af feedforward ligningerne i (<a href="#eq-y" class="quarto-xref">4</a>), (<a href="#eq-z" class="quarto-xref">5</a>) og (<a href="#eq-o" class="quarto-xref">6</a>) udregner følgende for det <span class="math inline">\(m\)</span>’te træningsdataeksempel:</p>
+<p><span id="eq-y_m"><span class="math display">\[
+y^{(m)} = \sigma (r_0 + r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)} + \cdots + r_n \cdot x_n^{(m)})
+\tag{9}\]</span></span></p>
+<p><span id="eq-z_m"><span class="math display">\[
+z^{(m)} = \sigma (v_0 + v_1 \cdot y^{(m)})
+\tag{10}\]</span></span></p>
+<p><span id="eq-o_m"><span class="math display">\[
+o^{(m)} = \sigma(w_0 + w_1 \cdot z^{(m)})
+\tag{11}\]</span></span></p>
+<p>og det gør vi altså for alle <span class="math inline">\(M\)</span> træningsdata <span class="math inline">\(m \in \{1, 2, \dots, M\}\)</span>.</p>
+<p>Vi er nu klar til at opdatere vægtene <span class="math inline">\(w\)</span>-vægtene, som ligger tættest på outputlaget.</p>
+<section id="opdatering-af-w-vægtene" class="level3">
+<h3 class="anchored" data-anchor-id="opdatering-af-w-vægtene">Opdatering af <span class="math inline">\(w\)</span>-vægtene</h3>
+<p>Ved at bruge gradientnedstigning bliver opdateringsligningerne for <span class="math inline">\(w\)</span>-vægtene følgende:</p>
+<p><span id="eq-generel_opdatering_w"><span class="math display">\[
+\begin{aligned}
+w_0 &amp;\leftarrow w_0 - \eta \cdot \frac{\partial E}{\partial w_0} \\
+w_1 &amp;\leftarrow w_1 - \eta \cdot \frac{\partial E}{\partial w_1}
+\end{aligned}
+\tag{12}\]</span></span></p>
+<p>Vi skal altså differentiere tabsfunktionen</p>
+<p><span class="math display">\[
+\begin{aligned}
+E = \sum_{m=1}^M \frac{1}{2} (t^{(m)}-o^{(m)})^2 = \sum_{m=1}^M E^{(m)},
+\end{aligned}
+\]</span> hvor</p>
+<p><span class="math display">\[
+E^{(m)} = \frac{1}{2} (t^{(m)}-o^{(m)})^2
+\]</span> med hensyn til <span class="math inline">\(w_0\)</span> og <span class="math inline">\(w_1\)</span>. Lad os starte med <span class="math inline">\(w_1\)</span>. For det første skal vi huske, at man kan differentiere ledvist (det er sumreglen). Det giver:</p>
+<p><span class="math display">\[
+\frac{\partial E}{\partial w_1} =  \sum_{m=1}^M \frac{\partial E^{(m)}}{\partial w_1}
+\]</span></p>
+<p>For det andet får vi brug for kædereglen, da <span class="math inline">\(E^{(m)}\)</span> jo er en sammensat funktion. På figur <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;1</a> kan man se, at tabsfunktionen afhænger af <span class="math inline">\(w_1\)</span> via outputværdien <span class="math inline">\(o^{(m)}\)</span>. Derfor giver kædereglen:</p>
+<p><span id="eq-dE_dw1"><span class="math display">\[
+\frac{\partial E}{\partial w_1} =  \sum_{m=1}^M \frac{\partial E^{(m)}}{\partial o^{(m)}} \cdot \frac{\partial o^{(m)}}{\partial w_1}
+\tag{13}\]</span></span></p>
+<p>Vi ser nu på hver faktor i denne sum for sig. For at bestemme <span class="math inline">\(\frac{\partial E^{(m)}}{\partial o^{(m)}}\)</span> skal vi bruge definitionen i (<a href="#eq-E_m" class="quarto-xref">8</a>). Her bruger vi også kædereglen. Det giver</p>
+<p><span id="eq-dE_do"><span class="math display">\[
+\begin{aligned}
+\frac{\partial E^{(m)}}{\partial o^{(m)}} &amp;= \frac{1}{2} \cdot 2 \cdot (t^{(m)}-o^{(m)}) \cdot  (-1) \\
+&amp;= - (t^{(m)}-o^{(m)})
+\end{aligned}
+\tag{14}\]</span></span></p>
+<p>Bemærk for øvrigt, at <span class="math inline">\(\frac{1}{2}\)</span> og <span class="math inline">\(2\)</span> forkorter ud. Det var derfor, at vi gangede tabsfunktionen i (<a href="#eq-E" class="quarto-xref">7</a>) med <span class="math inline">\(\frac{1}{2}\)</span>.</p>
+<p>For at finde <span class="math inline">\(\frac{\partial o^{(m)}}{\partial w_1}\)</span> skal vi bruge feedforward ligningen i (<a href="#eq-o_m" class="quarto-xref">11</a>):</p>
+<p><span class="math display">\[
+o^{(m)} = \sigma(w_0 + w_1 \cdot z^{(m)})
+\]</span></p>
+<p>Det er også en sammensat funktion, og bruger vi kædereglen på dette udtryk, får vi</p>
+<p><span class="math display">\[
+\frac{\partial o^{(m)}}{\partial w_1} = \sigma'(w_0 + w_1 \cdot z^{(m)}) \cdot z^{(m)}
+\]</span></p>
+<p>da den indre funktion <span class="math inline">\(w_0 + w_1 \cdot z^{(m)}\)</span> differentieret med hensyn til <span class="math inline">\(w_1\)</span> bare giver <span class="math inline">\(z^{(m)}\)</span>. Vi bruger nu den særlige egenskab ved den afledede sigmoid-funktion i (<a href="#eq-afledt_sigmoid" class="quarto-xref">3</a>) og får</p>
+<p><span class="math display">\[
+\frac{\partial o^{(m)}}{\partial w_1} = \sigma(w_0 + w_1 \cdot z^{(m)}) \cdot (1-\sigma(w_0 + w_1 \cdot z^{(m)})) \cdot z^{(m)}
+\]</span></p>
+<p>Og da <span class="math inline">\(o^{(m)}=\sigma(w_0 + w_1 \cdot z^{(m)})\)</span> kan dette skrives som</p>
+<p><span id="eq-do_dw1"><span class="math display">\[
+\frac{\partial o^{(m)}}{\partial w_1} = o^{(m)} \cdot (1-o^{(m)}) \cdot z^{(m)}
+\tag{15}\]</span></span></p>
+<p>Det indsætter udtrykket i (<a href="#eq-dE_do" class="quarto-xref">14</a>) og (<a href="#eq-do_dw1" class="quarto-xref">15</a>) i (<a href="#eq-dE_dw1" class="quarto-xref">13</a>), får vi</p>
+<p><span class="math display">\[
+\frac{\partial E}{\partial w_1}= - \sum_{m=1}^M (t^{(m)}-o^{(m)}) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot z^{(m)}
+\]</span></p>
+<p>Indsættes dette i (<a href="#eq-generel_opdatering_w" class="quarto-xref">12</a>) bliver opdateringsreglen for <span class="math inline">\(w_1\)</span>:</p>
+<p><span class="math display">\[
+w_1 \leftarrow w_1 + \eta \cdot \sum_{m=1}^M (t^{(m)}-o^{(m)}) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot z^{(m)}
+\]</span></p>
+<p>Hvis vi lader</p>
+<p><span id="eq-delta_m"><span class="math display">\[
+\delta^{(m)} = (t^{(m)}-o^{(m)} ) \cdot o^{(m)}  \cdot (1-o^{(m)})
+\tag{16}\]</span></span></p>
+<p>kan det skrives kort som</p>
+<p><span class="math display">\[
+w_1 \leftarrow w_1 + \eta \cdot \sum_{m=1}^M \delta^{(m)} \cdot z^{(m)}
+\]</span></p>
+<p>På helt tilsvarende vis kan opdateringsreglen for <span class="math inline">\(w_0\)</span> udledes, og vi ender med:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opdateringsregler <span class="math inline">\(w\)</span>-vægtene
+Opdateringsregler for <span class="math inline">\(w\)</span>-vægtene
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -416,13 +567,73 @@ w_1 \leftarrow &amp; w_1 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot z^{(m)}\
 </div>
 </div>
 </div>
+<p>Bemærk her, at fordi vi allerede ved hjælp af feedforward ligningerne har beregnet <span class="math inline">\(z^{(m)}\)</span> og <span class="math inline">\(o^{(m)}\)</span>, så alle størrelser, som indgår i ovenstående opdateringsregler, er allerede udregnet.</p>
+</section>
+<section id="opdatering-af-v-vægtene" class="level3">
+<h3 class="anchored" data-anchor-id="opdatering-af-v-vægtene">Opdatering af <span class="math inline">\(v\)</span>-vægtene</h3>
+<p>Vi træder nu et skridt tilbage i netværket i <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;1</a> og opdaterer <span class="math inline">\(v\)</span>-vægtene. Gradientnedstigning giver helt generelt følgende opdateringsregler:</p>
+<p><span id="eq-generel_opdatering_v"><span class="math display">\[
+\begin{aligned}
+v_0 &amp;\leftarrow v_0 - \eta \cdot \frac{\partial E}{\partial v_0} \\
+v_1 &amp;\leftarrow v_1 - \eta \cdot \frac{\partial E}{\partial v_1}
+\end{aligned}
+\tag{17}\]</span></span></p>
+<p>Vi udleder den sidste regel og skal derfor finde <span class="math inline">\(\frac{\partial E}{\partial v_1}\)</span>. Det kan ses på <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;1</a>, at <span class="math inline">\(v\)</span>-vægtene påvirker tabsfunktionen <span class="math inline">\(E\)</span> først via værdien <span class="math inline">\(z\)</span> og dernæst via outputværdien <span class="math inline">\(o\)</span>. Når vi skal differentiere tabsfunktionen i (<a href="#eq-E" class="quarto-xref">7</a>) med hensyn til <span class="math inline">\(v_1\)</span> kan du derfor igen bruge kædereglen sådan her:</p>
+<p><span id="eq-dE_dv1"><span class="math display">\[
+\begin{aligned}
+\frac{\partial E}{\partial v_1} &amp;=  \sum_{m=1}^M \frac{ \partial E^{(m)}}{\partial v_1} \\
+&amp;= \sum_{m=1}^M \frac{ \partial E^{(m)}}{\partial o^{(m)}} \cdot \frac{ \partial o^{(m)}}{\partial z^{(m)} } \cdot \frac{ \partial z^{(m)}}{\partial v_1}
+\end{aligned}
+\tag{18}\]</span></span></p>
+<p>Vi har allerede i (<a href="#eq-dE_do" class="quarto-xref">14</a>) fundet ud af, at</p>
+<p><span class="math display">\[
+\frac{ \partial E^{(m)}}{\partial o^{(m)}}  = -(t^{(m)}-o^{(m)})
+\]</span></p>
+<p>Bruger vi feedforward ligningen i (<a href="#eq-o_m" class="quarto-xref">11</a>):</p>
+<p><span class="math display">\[
+o^{(m)} = \sigma(w_0 + w_1 \cdot z^{(m)})
+\]</span> hvor vi nu differentierer med hensyn til <span class="math inline">\(z^{(m)}\)</span> får vi:</p>
+<p><span id="eq-do_dz"><span class="math display">\[
+\begin{aligned}
+\frac{ \partial o^{(m)}}{\partial z^{(m)} } &amp;= \sigma'(w_0 + w_1 \cdot z^{(m)}) \cdot w_1 \\
+&amp;= o^{(m)} \cdot (1-o^{(m)}) \cdot w_1
+\end{aligned}
+\tag{19}\]</span></span></p>
+<p>Her har vi igen brugt den særlige egenskab i (<a href="#eq-afledt_sigmoid" class="quarto-xref">3</a>).</p>
+<p>Nu mangler vi blot at bestemme <span class="math inline">\(\frac{ \partial z^{(m)}}{\partial v_1}\)</span>, og her får vi brug for feedward ligningen i (<a href="#eq-z_m" class="quarto-xref">10</a>)</p>
+<p><span class="math display">\[
+z^{(m)} = \sigma (v_0 + v_1 \cdot y^{(m)}).
+\]</span></p>
+<p>Derfor er</p>
+<p><span id="eq-dz_dv1"><span class="math display">\[
+\begin{aligned}
+\frac{ \partial z^{(m)}}{\partial v_1} &amp;= \sigma' (v_0 + v_1 \cdot y^{(m)}) \cdot y^{(m)} \\
+&amp;= z^{(m)} \cdot (1-z^{(m)}) \cdot y^{(m)}
+\end{aligned}
+\tag{20}\]</span></span></p>
+<p>Igen på grund af (<a href="#eq-afledt_sigmoid" class="quarto-xref">3</a>).</p>
+<p>Vi kan nu indsætte (<a href="#eq-dE_do" class="quarto-xref">14</a>), (<a href="#eq-do_dz" class="quarto-xref">19</a>) og (<a href="#eq-dz_dv1" class="quarto-xref">20</a>) i (<a href="#eq-dE_dv1" class="quarto-xref">18</a>) og få</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\partial E}{\partial v_1} &amp;=  \sum_{m=1}^M -(t^{(m)}-o^{(m)}) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)}) \cdot y^{(m)} \\
+&amp;= - \sum_{m=1}^M \delta^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)}) \cdot y^{(m)}
+\end{aligned}
+\]</span></p>
+<p>da <span class="math display">\[
+\delta^{(m)} = (t^{(m)}-o^{(m)} ) \cdot o^{(m)}  \cdot (1-o^{(m)}).
+\]</span></p>
+<p>På tilsvarende vis kan man vise, at</p>
+<p><span class="math display">\[
+\frac{\partial E}{\partial v_1} = - \sum_{m=1}^M \delta^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)}) \cdot 1
+\]</span></p>
+<p>Indsættes i (<a href="#eq-generel_opdatering_v" class="quarto-xref">17</a>) får vi altså disse opdateringsregler:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opdateringsregler <span class="math inline">\(v\)</span>-vægtene
+Opdateringsregler for <span class="math inline">\(v\)</span>-vægtene
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -439,13 +650,70 @@ v_1 \leftarrow &amp; v_1 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_1 \cdo
 </div>
 </div>
 </div>
+<p>Her kan vi igen se, at vi på grund af feedforward allerede har beregnet <span class="math inline">\(y^{(m)}\)</span>, <span class="math inline">\(z^{(m)}\)</span> og <span class="math inline">\(o^{(m)}\)</span>.</p>
+</section>
+<section id="opdatering-af-r-vægtene" class="level3">
+<h3 class="anchored" data-anchor-id="opdatering-af-r-vægtene">Opdatering af <span class="math inline">\(r\)</span>-vægtene</h3>
+<p>Vi er nu nået til det sidste lag i netværket, som er tættest på inputlaget. Her bliver de generelle opdateringsregler:</p>
+<p><span id="eq-generel_opdatering_r"><span class="math display">\[
+\begin{aligned}
+r_0 &amp;\leftarrow r_0 - \eta \cdot \frac{\partial E}{\partial r_0} \\
+r_1 &amp;\leftarrow r_1 - \eta \cdot \frac{\partial E}{\partial r_1} \\
+&amp; \quad \vdots \\
+r_n &amp;\leftarrow r_n - \eta \cdot \frac{\partial E}{\partial r_n}
+\end{aligned}
+\tag{21}\]</span></span></p>
+<p>På <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;1</a> ses det, at tabsfunktionen afhænger af disse <span class="math inline">\(r\)</span>-vægte via <span class="math inline">\(o^{(m)}\)</span>, <span class="math inline">\(z^{(m)}\)</span> og <span class="math inline">\(y^{(m)}\)</span>. Der kommer derfor lidt mere fut i kædereglen nu. Den partielle afledede med hensyn til <span class="math inline">\(r_i\)</span> bliver</p>
+<p><span id="eq-dE_dri"><span class="math display">\[
+\begin{aligned}
+\frac{\partial E}{\partial r_i} &amp;=  \sum_{m=1}^M \frac{ \partial E^{(m)}}{\partial r_i} \\
+&amp;= \sum_{m=1}^M \frac{ \partial E^{(m)}}{\partial o^{(m)}} \cdot \frac{ \partial o^{(m)}}{\partial z^{(m)} } \cdot \frac{ \partial z^{(m)}}{\partial y^{(m)}} \cdot \frac{ \partial y^{(m)}}{\partial  r_i}
+\end{aligned}
+\tag{22}\]</span></span></p>
+<p>Nu er vi heldige, for vi har allerede udregnet de to første faktorer i denne sum i (<a href="#eq-dE_do" class="quarto-xref">14</a>) og (<a href="#eq-do_dz" class="quarto-xref">19</a>):</p>
+<p><span class="math display">\[
+\frac{\partial E^{(m)}}{\partial o^{(m)}} = - (t^{(m)}-o^{(m)})
+\]</span></p>
+<p>og</p>
+<p><span class="math display">\[
+\frac{ \partial o^{(m)}}{\partial z^{(m)} } = o^{(m)} \cdot (1-o^{(m)}) \cdot w_1
+\]</span></p>
+<p>Nu mangler vi bare de to sidste faktorer i (<a href="#eq-dE_dri" class="quarto-xref">22</a>). Feedforward ligningen i (<a href="#eq-z_m" class="quarto-xref">10</a>) giver</p>
+<p><span id="eq-dz_dy"><span class="math display">\[
+\begin{aligned}
+\frac{\partial z^{(m)}}{\partial y^{(m)}} &amp;= \sigma ' (v_0 + v_1 \cdot y^{(m)}) \cdot v_1 \\
+&amp;= z^{(m)} \cdot (1-z^{(m)})\cdot v_1.
+\end{aligned}
+\tag{23}\]</span></span></p>
+<p>Her har vi endnu en gang brugt (<a href="#eq-afledt_sigmoid" class="quarto-xref">3</a>).</p>
+<p>Ved hjælp af feedforward ligningen i (<a href="#eq-y_m" class="quarto-xref">9</a>) kan vi bestemme</p>
+<p><span id="eq-dy_dri"><span class="math display">\[
+\begin{aligned}
+\frac{\partial y^{(m)}}{\partial r_i} &amp;= \sigma '(r_0 + r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)} + \cdots + r_n \cdot x_n^{(m)}) \cdot x_i^{(m)} \\
+&amp;= y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}.
+\end{aligned}
+\tag{24}\]</span></span></p>
+<p>Sidste lighedstegn følger af (<a href="#eq-afledt_sigmoid" class="quarto-xref">3</a>).</p>
+<p>Vi kan nu som tidligere indsætte (<a href="#eq-dE_do" class="quarto-xref">14</a>), (<a href="#eq-do_dz" class="quarto-xref">19</a>), (<a href="#eq-dz_dy" class="quarto-xref">23</a>) og (<a href="#eq-dy_dri" class="quarto-xref">24</a>) i (<a href="#eq-dE_dri" class="quarto-xref">22</a>):</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\partial E}{\partial r_i} =   \sum_{m=1}^M \underbrace{-(t^{(m)}-o^{(m)})}_{\frac{\partial E^{(m)} }{\partial o^{(m)}}} \cdot &amp;\underbrace{o^{(m)} \cdot (1-o^{(m)}) \cdot w_1}_{\frac{\partial o^{(m)}}{\partial z^{(m)}}} \cdot \\ &amp;\underbrace{z^{(m)} \cdot (1-z^{(m)})\cdot v_1}_{\frac{\partial z^{(m)}}{\partial y^{(m)}}} \cdot \underbrace{y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}}_{\frac{\partial y^{(m)}}{\partial r_i}}
+\end{aligned}
+\]</span></p>
+<p>Definitionen af <span class="math inline">\(\delta^{(m)}\)</span> i (<a href="#eq-delta_m" class="quarto-xref">16</a>) tillader os at forkorte ovenstående en smule:</p>
+<p><span class="math display">\[
+\frac{\partial E}{\partial r_i} =   - \sum_{m=1}^M \delta^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}
+\]</span> Opdateringsreglen for <span class="math inline">\(r_i\)</span> bliver derfor ifølge (<a href="#eq-generel_opdatering_r" class="quarto-xref">21</a>):</p>
+<p><span class="math display">\[
+r_i \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}
+\]</span> Og for samtlige <span class="math inline">\(r\)</span>-vægte ender vi med følgende:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opdateringsregler <span class="math inline">\(r\)</span>-vægtene
+Opdateringsregler for <span class="math inline">\(r\)</span>-vægtene
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -453,8 +721,10 @@ Opdateringsregler <span class="math inline">\(r\)</span>-vægtene
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[
 \begin{aligned}
-r_0 \leftarrow &amp; r_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot 1\\
-r_0 \leftarrow &amp; r_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x^{(m)}\\
+r_0 &amp;\leftarrow r_0 + \eta \cdot \sum_{m=1}^M \delta^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot 1 \\
+r_1 &amp;\leftarrow r_1 + \eta \cdot \sum_{m=1}^M \delta^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_1^{(m)} \\
+&amp; \quad \vdots \\
+r_n &amp;\leftarrow r_n + \eta \cdot \sum_{m=1}^M \delta^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_n^{(m)} \\
 \end{aligned}
 \]</span></p>
 <p>hvor <span class="math display">\[
@@ -463,8 +733,10 @@ r_0 \leftarrow &amp; r_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)}\cdot w_1 \cdot
 </div>
 </div>
 </div>
+<p>Igen har vi – fordi vi forud for opdateringen af vægtene har lavet en feedforward i netværket – udregnet <span class="math inline">\(y^{(m)}\)</span>, <span class="math inline">\(z^{(m)}\)</span> og <span class="math inline">\(o^{(m)}\)</span>, som skal bruges for at beregne ovenstående opdateringer.</p>
 
 
+</section>
 </section>
 
 
