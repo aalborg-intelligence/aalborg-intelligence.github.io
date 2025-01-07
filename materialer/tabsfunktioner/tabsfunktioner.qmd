@@ -693,13 +693,13 @@ library(plotly)
 par(mar=c(4,4,0,1))
 tabs_data <- readRDS(file.path("data", "tabsfunktioner.rds"))
 # contour(llik$a, llik$b, llik$vals, xlab = "a", ylab = "b", levels = c(-1028, -1030, -1034, -1038, -1046, -1052, -1084), labels = "")
-ax_x <- list(title = "w0")
-ax_y <- list(title = "w1")
+ax_x <- list(title = "w1")
+ax_y <- list(title = "w0")
 ax_z <- list(title = "Squared error")
 plot_ly(showscale = FALSE) |>
-  add_surface(x = tabs_data$w0, y = tabs_data$w1, z = ~tabs_data$squared_vals) |>
-  # add_markers(data = mle_data, x = ~w1, y = ~w0, z = ~ll,
-  #             marker = list(size = 5, color = "black"), name = NULL) |>
+  add_surface(x = tabs_data$w1, y = tabs_data$w0, z = tabs_data$squared_vals) |>
+  add_markers(x = tabs_data$squared_w1, y = tabs_data$squared_w0, z = tabs_data$squared_opt,
+              marker = list(size = 5, color = "red"), name = NULL) |>
   layout(scene = list(xaxis = ax_x, yaxis = ax_y, zaxis = ax_z), showlegend = FALSE)
 ```
 
@@ -719,9 +719,9 @@ par(mar=c(4,4,0,1))
 # mle_data <- data.frame(a = a_mle, b = b_mle, ll = as.numeric(logLik(fit)))
 ax_z <- list(title = "Cross-entropy")
 plot_ly(showscale = FALSE) |>
-  add_surface(x = tabs_data$w0, y = tabs_data$w1, z = ~tabs_data$cross_vals) |>
-  # add_markers(data = mle_data, x = ~w1, y = ~w0, z = ~ll,
-  #             marker = list(size = 5, color = "black"), name = NULL) |>
+  add_surface(x = tabs_data$w1, y = tabs_data$w0, z = tabs_data$cross_vals) |>
+  add_markers(x = tabs_data$cross_w1, y = tabs_data$cross_w0, z = tabs_data$cross_opt,
+              marker = list(size = 5, color = "red"), name = NULL) |>
   layout(scene = list(xaxis = ax_x, yaxis = ax_y, zaxis = ax_z), showlegend = FALSE)
 ```
 
