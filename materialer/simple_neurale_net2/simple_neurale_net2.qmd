@@ -27,7 +27,7 @@ Vi vil nu se på, hvordan man ved hjælp af sådanne inputvariable kan prædikte
 
 ## Feedforward
 
-Vi ser nu på det mere generelle tilfælde, hvor vi har $n$ inputvariable:
+Vi starter med at se på det mere generelle tilfælde, hvor vi har $n$ inputvariable:
 
 $$
 x_1, x_2, \dots, x_n.
@@ -36,7 +36,7 @@ Disse inputvariable sender vi nu ind i et forholdsvis simpelt neuralt netværk, 
 
 ![Grafisk illustration af et neuralt netværk med $n$ inputvariable og to skjulte lag, som hver består af én neuron.](images/long_simple_NN.png){width=75% #fig-long_simple_NN}
 
-Cirklerne i @fig-long_simple_NN kaldes for **neuroner**. Idéen er, at vi på baggrund af inputværdierne (her vist som de lille cirkler til venestre) i sidste ende vil beregne en outputværdi $o$ (som er illustreret ved den blå cirkel længst til højre i @fig-long_simple_NN). Outputværdien skal i dette eksempel være et tal mellem $0$ og $1$, som skal kunne fortolkes som sandsynligheden for, at det bliver regnvejr i morgen baseret på inputværdierne $x_1, x_2, \dots, x_n$. Herefter kunne man forestille sig følgende vejrudsigt:
+Cirklerne i @fig-long_simple_NN kaldes for **neuroner**. Idéen er, at vi på baggrund af inputværdierne (her vist som de lilla cirkler til venestre) i sidste ende vil beregne en outputværdi $o$ (som er illustreret ved den blå cirkel længst til højre i @fig-long_simple_NN). Outputværdien skal i dette eksempel være et tal mellem $0$ og $1$, som skal kunne fortolkes som sandsynligheden for, at det bliver regnvejr i morgen baseret på inputværdierne $x_1, x_2, \dots, x_n$. Herefter kunne man forestille sig følgende vejrudsigt:
 
 $$
 \textrm{Det bliver regnvejr i morgen: }
@@ -55,7 +55,7 @@ Herefter benyttes en såkaldt **aktiveringsfunktion** på den vægtede sum. En o
 
 $$
 \sigma (x) = \frac{1}{1+e^{-x}}.
-$$
+$$ {#eq-sigmoid}
 
 Det vil sige, at vi beregner
 
@@ -74,16 +74,32 @@ Grafen for sigmoid-funktionen ses i @fig-sigmoid.
 Her anskueliggøres det, at sigmoid-funktionen tager et vilkårligt reelt tal som input og giver et tal i intervallet $(0,1)$ som output. Det kan skrives sådan her:
 
 $$
-\sigma : \mathbb{R} \rightarrow (0,1)
+\sigma : \mathbb{R} \rightarrow (0,1).
 $$
 
+Sigmoid-funktionen har en helt speciel egenskab, når den differentieres[^2], som vi får brug for senere:
+
+::: {.highlight }
+
+**Den afledede sigmoid-funktion**
+
+$$
+\sigma'(x) = \sigma(x) \cdot (1-\sigma(x))
+$$ {#eq-afledt_sigmoid}
+
+:::
+
+[^2]: Se eventuelt mere i [opgave 2 her](../../undervisningsforloeb/aktiveringsfunktioner.qmd#sigmoid).
+
+<br>
+  
 Det betyder, at den første neuron sender værdien $y$ videre i netværket, hvor $0<y<1$. Ved den næste neuron i @fig-long_simple_NN (repræsenteret ved den mørkegrønne cirkel), beregnes først den vægtede sum og herefter anvendes igen aktiveringsfunktionen: 
 
 $$
 z = \sigma (v_0 + v_1 \cdot y).
 $$
 
-Denne værdi sendes nu frem til den sidste neuron i outputlaget og outputværdien $o$ beregnes
+Denne værdi sendes nu frem til den sidste neuron i outputlaget og outputværdien $o$ beregnes på tilsvarende måde
 
 $$
 o = \sigma(w_0 + w_1 \cdot z).
@@ -110,7 +126,7 @@ $$ {#eq-o}
 
 :::
 
-Bemærk, at outputværdien $o$ beregnes ved hjælp af sigmoid-funktionen, og derfor er et tal mellem $0$ og $1$, som tidligere ønsket.
+Bemærk, at outputværdien $o$ beregnes ved hjælp af sigmoid-funktionen, og derfor er et tal mellem $0$ og $1$, som tidligere ønsket. 
 
 Med udgangspunkt i feedforward ligningerne, kan vi også skrive outputværdien $o$ direkte som en funktion af inputværdierne $x_1, x_2, \dots, x_n$. Vi starter med at indsætte udtrykket for $z$ i (@eq-z) i udtrykket for $o$ i (@eq-o):
 
@@ -128,13 +144,15 @@ Her bliver det meget tydeligt, at
 
 1) Outputværdien afhænger direkte af inputværdierne $x_1, x_2, \dots, x_n$
 
+2) Ouputværdien afhænger af alle vægtene $w_0, w_1, v_0, v_1, r_0, r_1, \dots, r_n$
+
 og 
 
-2) Outputværdien $o$ kan udtrykkes ved hjælp af flere sammensatte funktioner.
+3) Outputværdien $o$ kan udtrykkes ved hjælp af flere sammensatte funktioner.
 
 Bortset fra det er feedforward ligningerne ovenfor nok nemmere at overskue!
 
-Fint nok! Nu har vi altså en model, som kan bruges til at forudsige vejret. Men måske er du skeptisk. Det bør du i hvert tilfælde være! For hvem siger, at ouputværdien $o$ siger noget som helst om sandsynligheden for, at det bliver regnvejr i morgen? Det korte svar er: Det gør den heller ikke! I hvert tilfælde ikke sådan uden videre. Det kræver nemlig, at alle vægtene er \"indstillet\" sådan, at den beregnede outputværdi rent faktisk kan fortolkes, som en sandsynlighed for, at det bliver regnvejr i morgen. For at lave denne indstilling skal vi bruge to ting: 1) træningsdata og 2) en tabsfunktion. Det kommer her. 
+Fint nok -- nu har vi altså en model, som kan bruges til at forudsige vejret. Men måske er du skeptisk. Det bør du i hvert tilfælde være! For hvem siger, at ouputværdien $o$ siger noget som helst om sandsynligheden for, at det bliver regnvejr i morgen? Det korte svar er: Det gør den heller ikke nødvendigvis! I hvert tilfælde ikke sådan uden videre. Det kræver nemlig, at alle vægtene er \"indstillet\" sådan, at den beregnede outputværdi rent faktisk kan fortolkes, som en sandsynlighed for, at det bliver regnvejr i morgen. For at lave denne indstilling skal vi bruge to ting: 1) træningsdata og 2) en tabsfunktion. Det kommer her. 
 
 ## Træningsdata og tabsfunktion
 
@@ -149,7 +167,7 @@ t=
 $$
 Variablen $t$ kaldes for en **targetvariabel**. Det er netop denne værdi, vi gerne vil kunne forudsige. Man kan derfor tænke på variablen $t$, som en slags facitliste. Man siger også, vi gerne vil **prædiktere** $t$.
 
-Hvis vi for eksempel laver denne registrering på 10 forskellige dage får vi følgende:
+Hvis vi for eksempel laver denne registrering på 10 forskellige dage kan vi skrive det op på denne måde:
 
 $$
 \begin{aligned}
@@ -163,7 +181,7 @@ $$
 
 Det hævede tal i parentes angiver altså nummeret på dagen. For eksempel angiver $x_3^{(2)}$ temperaturen på dag 2, mens $t^{(2)}$ er 1, hvis det regner dagen efter dag 2 og 0 ellers.
 
-Ovenstående kaldes for et **træningsdata**. Helt generelt med $n$ inputvariable vil vi opskrive træningsdatasættet sådan her:
+Ovenstående kaldes for et **træningsdata**. Helt generelt med $n$ inputvariable og $M$ observatoiner i træningsdata vil vi opskrive træningsdatasættet sådan her:
 
 $$
 \begin{aligned}
@@ -186,7 +204,7 @@ Det betyder, at et godt netværk har denne egenskab:
 
 I begge tilfælde betyder det, at
 $$
-t-o \approx 0
+t-o \approx 0.
 $$
 
 Det er præcis denne differens, som vi vil bruge som et mål for, hvor godt netværket er. 
@@ -207,17 +225,215 @@ Det er summen af alle disse differenser (ganget[^1] med $1/2$), som vi vil bruge
 
 $$
 E = \frac{1}{2} \sum_{m=1}^M (t^{(m)}-o^{(m)})^2
-$$
+$$ 
 
 [^1]: At vi ganger med $1/2$ er ikke så vigtigt -- du ser senere, hvorfor det er smart. 
 
-Denne funktion er den. som vi kalder for en **tabsfunktion** (eller på engelsk *error function* -- deraf $E$'et). Som vi har argumenteret for ovenfor, så er vi netop på jagt efter de værdier af vægtene, som minimerer tabsfunktionen.
+Denne funktion er den, som vi kalder for en [**tabsfunktion**](../tabsfunktioner/tabsfunktioner.qmd) (eller på engelsk *error function* -- deraf $E$'et). Som vi har argumenteret for ovenfor, så er vi netop på jagt efter de værdier af vægtene, som minimerer tabsfunktionen.
 
+Tabsfunktionen ovenfor kan også omskrives en smule:
+
+$$
+\begin{aligned}
+E &= \frac{1}{2} \sum_{m=1}^M (t^{(m)}-o^{(m)})^2 \\
+ &= \sum_{m=1}^M \frac{1}{2} (t^{(m)}-o^{(m)})^2 \\
+ &= \sum_{m=1}^M E^{(m)},
+\end{aligned}
+$$ {#eq-E}
+
+hvor 
+
+$$
+E^{(m)} = \frac{1}{2} (t^{(m)}-o^{(m)})^2
+$$ {#eq-E_m}
+
+er det bidrag til tabsfunktionen, som stammer fra det $m$'te træningseksempel.
+
+For at finde de værdier af vægtene som minimerer tabsfunktionen bruges en metode, som kaldes for **backpropagation**. Det forklarer vi lige om lidt, men først skal vi lige se, hvordan kædereglen kan opskrives på en smart måde, som vi får brug for i det følgende.
+
+## Kædereglen
+
+Du kender godt de sammensatte funktioner. Det kunne for eksempel være en funktion $h$:
+
+$$
+h(x)= f(g(x))
+$$
+
+Den er sammensat af en indre og en ydre funktion:
+
+* Indre funktion: $t=g(x)$
+* Ydre funktion: $f(t)$
+
+** Tegning af funktionsmaskine her :o) **
+
+Hvis vi skal differentiere funktionen $h$, så skal vi bruge reglen for at differentiere sammensatte funktioner:
+
+$$
+h'(x)=f'(g(x)) \cdot g'(x)
+$$
+Det er altså den ydre funktion differentieret taget på den indre gange den indre funktion differentieret.
+
+Hvis vi erstatter $g(x)$ med $t$ kan det skrives:
+
+$$
+h'(x)=f'(t) \cdot g'(x)
+$$
+
+Du har nok også lært, at man i stedet for at bruge mærker til at angive, at man har differentieret i stedet kan skrive sådan her (kært barn har som bekendt mange navne):
+
+$$
+\frac{dh}{dx} = \frac{df}{dt} \cdot \frac{dt}{dx}
+$$
+
+Denne måde at skrive reglen for at differentiere sammensatte funktiner på kaldes for **kædereglen**.
 
 ## Backpropagation
 
+Når man skal minimere [en funktion af flere variable](../funktioner_af_flere_variable/funktioner_af_flere_variable.qmd) kan man egentlig bare sætte alle de partielle afledede lig med 0. Det vil give lige så mange ligninger, som der er vægte  (og alle ligninger vil være koblet til hinanden). I vores simple eksempel her vil det ikke være noget problem at de ligninger. Men i virkelighedens verden hvor de kunstige neurale netværk afhænger af millioner eller milliarder af vægte, er denne fremgangsmåde beregningsmæssigt alt for tung. Det vil dels tage alt for lang tid og det vil dels tage for meget plads på computeren. 
+
+Man bruger derfor en anden metode, som kaldes for **backpropagation**. I backpropagation bruger man for det første gradientnedstigning, så den tager vi lige først.
+
+Vi forestiller os, at vi har en funktion $f$, som afhænger af $x_1, x_2, \dots, x_n$. Vi \"stiller\" os nu et tilfældigt sted på grafen for $f$ og udregner gradienten
+
+$$
+\nabla f(x_1, x_2, \dots, x_n) = 
+\begin{pmatrix}
+\frac{\partial f}{\partial x_1} \\ 
+\frac{\partial f}{\partial x_2} \\
+\vdots \\
+\frac{\partial f}{\partial x_n}
+ \end{pmatrix}.
+$$
+
+Så viser det sig, at gradienten peger i den retning, hvor funktionsværdien vokser mest. Derfor vil minus gradienten pege i den retning, hvor funktionsværdien aftager mest. Visuelt kan man forestille sig, at man står i et bakkelandskab, hvor man gerne vil ned i en dal. Så kan man tænke på den negative gradient, som den retning vi skal bevæge os I, hvis vi gerne vil gå allermest nedad bakke (og det er jo smart, hvis man gerne vil ende i dalen). Man udregner derfor gradienten og går et lille stykke i den negative gradients retning. Nu er det jo ikke sikkert, at man hele tiden skal gå i den samme retning, så derfor er man nødt til at udregne gradienten igen på det nye sted, man nu står og så korrigere sin retning i forhold det næste lille skridt man tager. Det er idéen, hvis man gerne vil bestemme minimum. Man stiller sig simpelthen et tilfældigt sted på grafen for $f$ og udregner gradienten. Så bevæger man sig et lille stykke i den negative gradients retning. I det nye punkt udregner man gradienten igen og går et lille stykke i den nye negative gradients retning. Sådan fortsætter man, indtil funktionsværdien ikke ændrer sig ret meget, og man er landet i et minimum (eventuelt kun lokalt). 
+
+Nu hedder vores funktion ikke $f$, men $E$ (det var tabsfunktionen). $E$ afhænger af vægtene $r_0, r_1, \dots, r_n, v_0, v_1, w_0$ og $w_1$. Vi vælger derfor nogle tilfældige værdier af disse vægte og og udregner gradienten. Så opdaterer vi alle vægtene ved at gå et lille stykke $\eta$ i den negative gradients retning. For $w_1$ vil det for eksempel se sådan her ud:
+
+$$
+w_1 \leftarrow w_1 - \eta \cdot \frac{\partial E}{\partial w_1}
+$$
+
+
+I backpropagation opdateres vægtene ved at bruge ovenstående opdateringsregel, men det gøres på en snedig måde. Nemlig ved at opdatere vægtene tættest på ouputlaget først -- det vil sige $w_0$ og $w_1$. Dernæst går man en skidt længere tilbage i netværket i @fig-long_simple_NN og opdaterer $v_0$ og $v_1$ og endelig opdaterer man til sidst vægtene tættest på inputlaget $r_0, r_1, \dots, r_n$. Vi skal nok forklare, hvorfor det er smart, men det er altså årsagen til at metoden hedder **back**propagation: fordi vægtene opdateres fra outputlaget og bagud.
+
+Inden opdateringen af vægtene går i gang sættes alle vægtene til en tilfældig værdi. Herefter tager vi alle $M$ træningsdata og sender ind i netværket. Det vil sige, at vi på baggrund af feedforward ligningerne i (@eq-y), (@eq-z) og (@eq-o) udregner følgende for det $m$'te træningsdataeksempel:
+
+$$
+y^{(m)} = \sigma (r_0 + r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)} + \cdots + r_n \cdot x_n^{(m)}) 
+$$ {#eq-y_m}
+
+$$
+z^{(m)} = \sigma (v_0 + v_1 \cdot y^{(m)}) 
+$$ {#eq-z_m}
+
+$$
+o^{(m)} = \sigma(w_0 + w_1 \cdot z^{(m)})
+$$ {#eq-o_m}
+
+og det gør vi altså for alle $M$ træningsdata $m \in \{1, 2, \dots, M\}$.
+
+Vi er nu klar til at opdatere vægtene $w$-vægtene, som ligger tættest på outputlaget.
+
+
+### Opdatering af $w$-vægtene
+
+Ved at bruge gradientnedstigning bliver opdateringsligningerne for $w$-vægtene følgende:
+
+$$
+\begin{aligned}
+w_0 &\leftarrow w_0 - \eta \cdot \frac{\partial E}{\partial w_0} \\
+w_1 &\leftarrow w_1 - \eta \cdot \frac{\partial E}{\partial w_1}
+\end{aligned}
+$$ {#eq-generel_opdatering_w}
+
+Vi skal altså differentiere tabsfunktionen
+
+$$
+\begin{aligned}
+E = \sum_{m=1}^M \frac{1}{2} (t^{(m)}-o^{(m)})^2 = \sum_{m=1}^M E^{(m)},
+\end{aligned}
+$$
+hvor 
+
+$$
+E^{(m)} = \frac{1}{2} (t^{(m)}-o^{(m)})^2
+$$
+med hensyn til $w_0$ og $w_1$. Lad os starte med $w_1$. For det første skal vi huske, at man kan differentiere ledvist (det er sumreglen). Det giver: 
+
+$$
+\frac{\partial E}{\partial w_1} =  \sum_{m=1}^M \frac{\partial E^{(m)}}{\partial w_1} 
+$$ 
+
+For det andet får vi brug for kædereglen, da $E^{(m)}$ jo er en sammensat funktion. På figur @fig-long_simple_NN kan man se, at tabsfunktionen afhænger af $w_1$ via outputværdien $o^{(m)}$. Derfor giver kædereglen:
+
+$$
+\frac{\partial E}{\partial w_1} =  \sum_{m=1}^M \frac{\partial E^{(m)}}{\partial o^{(m)}} \cdot \frac{\partial o^{(m)}}{\partial w_1} 
+$$ {#eq-dE_dw1}
+
+Vi ser nu på hver faktor i denne sum for sig. For at bestemme $\frac{\partial E^{(m)}}{\partial o^{(m)}}$ skal vi bruge definitionen i (@eq-E_m). Her bruger vi også kædereglen. Det giver
+
+$$
+\begin{aligned}
+\frac{\partial E^{(m)}}{\partial o^{(m)}} &= \frac{1}{2} \cdot 2 \cdot (t^{(m)}-o^{(m)}) \cdot  (-1) \\
+&= - (t^{(m)}-o^{(m)})
+\end{aligned}
+$$ {#eq-dE_do}
+
+Bemærk for øvrigt, at $\frac{1}{2}$ og $2$ forkorter ud. Det var derfor, at vi gangede tabsfunktionen i (@eq-E) med $\frac{1}{2}$.
+
+
+For at finde $\frac{\partial o^{(m)}}{\partial w_1}$ skal vi bruge feedforward ligningen i (@eq-o_m):
+
+$$
+o^{(m)} = \sigma(w_0 + w_1 \cdot z^{(m)})
+$$
+
+Det er også en sammensat funktion, og bruger vi kædereglen på dette udtryk, får vi
+
+$$
+\frac{\partial o^{(m)}}{\partial w_1} = \sigma'(w_0 + w_1 \cdot z^{(m)}) \cdot z^{(m)}
+$$
+
+da den indre funktion $w_0 + w_1 \cdot z^{(m)}$ differentieret med hensyn til $w_1$ bare giver $z^{(m)}$. Vi bruger nu den særlige egenskab ved den afledede sigmoid-funktion i (@eq-afledt_sigmoid) og får
+
+$$
+\frac{\partial o^{(m)}}{\partial w_1} = \sigma(w_0 + w_1 \cdot z^{(m)}) \cdot (1-\sigma(w_0 + w_1 \cdot z^{(m)})) \cdot z^{(m)}
+$$
+
+Og da $o^{(m)}=\sigma(w_0 + w_1 \cdot z^{(m)})$ kan dette skrives som
+
+$$
+\frac{\partial o^{(m)}}{\partial w_1} = o^{(m)} \cdot (1-o^{(m)}) \cdot z^{(m)}
+$$ {#eq-do_dw1}
+
+Det indsætter udtrykket i (@eq-dE_do) og (@eq-do_dw1) i (@eq-dE_dw1), får vi
+
+$$
+\frac{\partial E}{\partial w_1}= - \sum_{m=1}^M (t^{(m)}-o^{(m)}) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot z^{(m)}
+$$
+
+Indsættes dette i (@eq-generel_opdatering_w) bliver opdateringsreglen for $w_1$: 
+
+$$
+w_1 \leftarrow w_1 + \eta \cdot \sum_{m=1}^M (t^{(m)}-o^{(m)}) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot z^{(m)}
+$$
+
+Hvis vi lader 
+
+$$
+\delta^{(m)} = (t^{(m)}-o^{(m)} ) \cdot o^{(m)}  \cdot (1-o^{(m)}) 
+$$ {#eq-delta_m}
+
+kan det skrives kort som
+
+$$
+w_1 \leftarrow w_1 + \eta \cdot \sum_{m=1}^M \delta^{(m)} \cdot z^{(m)}
+$$
+
+På helt tilsvarende vis kan opdateringsreglen for $w_0$ udledes, og vi ender med:
+
 ::: {.callout-note collapse="false" appearance="minimal"} 
-## Opdateringsregler $w$-vægtene
+## Opdateringsregler for $w$-vægtene
 $$
 \begin{aligned}
 w_0 \leftarrow & w_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot 1\\
@@ -232,9 +448,98 @@ $$
 
 :::
 
+Bemærk her, at fordi vi allerede ved hjælp af feedforward ligningerne har beregnet $z^{(m)}$ og $o^{(m)}$, så alle størrelser, som indgår i ovenstående opdateringsregler, er allerede udregnet.
+
+
+
+### Opdatering af $v$-vægtene
+
+Vi træder nu et skridt tilbage i netværket i @fig-long_simple_NN og opdaterer $v$-vægtene. Gradientnedstigning giver helt generelt følgende opdateringsregler:
+
+$$
+\begin{aligned}
+v_0 &\leftarrow v_0 - \eta \cdot \frac{\partial E}{\partial v_0} \\
+v_1 &\leftarrow v_1 - \eta \cdot \frac{\partial E}{\partial v_1}
+\end{aligned}
+$$ {#eq-generel_opdatering_v}
+
+Vi udleder den sidste regel og skal derfor finde $\frac{\partial E}{\partial v_1}$. Det kan ses på @fig-long_simple_NN, at $v$-vægtene påvirker tabsfunktionen $E$ først via værdien $z$ og dernæst via outputværdien $o$. Når vi skal differentiere tabsfunktionen i (@eq-E) med hensyn til $v_1$ kan du derfor igen bruge kædereglen sådan her:
+
+$$
+\begin{aligned}
+\frac{\partial E}{\partial v_1} &=  \sum_{m=1}^M \frac{ \partial E^{(m)}}{\partial v_1} \\
+&= \sum_{m=1}^M \frac{ \partial E^{(m)}}{\partial o^{(m)}} \cdot \frac{ \partial o^{(m)}}{\partial z^{(m)} } \cdot \frac{ \partial z^{(m)}}{\partial v_1}
+\end{aligned}
+$$ {#eq-dE_dv1}
+
+Vi har allerede i (@eq-dE_do) fundet ud af, at
+
+$$
+\frac{ \partial E^{(m)}}{\partial o^{(m)}}  = -(t^{(m)}-o^{(m)})
+$$
+
+Bruger vi feedforward ligningen i (@eq-o_m):
+
+$$
+o^{(m)} = \sigma(w_0 + w_1 \cdot z^{(m)})
+$$
+hvor vi nu differentierer med hensyn til $z^{(m)}$ får vi:
+
+$$
+\begin{aligned}
+\frac{ \partial o^{(m)}}{\partial z^{(m)} } &= \sigma'(w_0 + w_1 \cdot z^{(m)}) \cdot w_1 \\
+&= o^{(m)} \cdot (1-o^{(m)}) \cdot w_1
+\end{aligned}
+$$ {#eq-do_dz}
+
+Her har vi igen brugt den særlige egenskab i (@eq-afledt_sigmoid).
+
+Nu mangler vi blot at bestemme $\frac{ \partial z^{(m)}}{\partial v_1}$, og her får vi brug for feedward ligningen i (@eq-z_m)
+
+
+$$
+z^{(m)} = \sigma (v_0 + v_1 \cdot y^{(m)}). 
+$$ 
+
+
+Derfor er
+
+$$
+\begin{aligned}
+\frac{ \partial z^{(m)}}{\partial v_1} &= \sigma' (v_0 + v_1 \cdot y^{(m)}) \cdot y^{(m)} \\
+&= z^{(m)} \cdot (1-z^{(m)}) \cdot y^{(m)}
+\end{aligned}
+$$ {#eq-dz_dv1}
+
+Igen på grund af (@eq-afledt_sigmoid). 
+
+Vi kan nu indsætte (@eq-dE_do), (@eq-do_dz) og (@eq-dz_dv1) i (@eq-dE_dv1) og få
+
+$$
+\begin{aligned}
+\frac{\partial E}{\partial v_1} &=  \sum_{m=1}^M -(t^{(m)}-o^{(m)}) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)}) \cdot y^{(m)} \\
+&= - \sum_{m=1}^M \delta^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)}) \cdot y^{(m)}
+\end{aligned}
+$$
+
+da
+$$
+\delta^{(m)} = (t^{(m)}-o^{(m)} ) \cdot o^{(m)}  \cdot (1-o^{(m)}). 
+$$
+
+
+
+På tilsvarende vis kan man vise, at
+
+$$
+\frac{\partial E}{\partial v_1} = - \sum_{m=1}^M \delta^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)}) \cdot 1
+$$
+
+Indsættes i (@eq-generel_opdatering_v) får vi altså disse opdateringsregler:
+
 
 ::: {.callout-note collapse="false" appearance="minimal"} 
-## Opdateringsregler $v$-vægtene
+## Opdateringsregler for $v$-vægtene
 $$
 \begin{aligned}
 v_0 \leftarrow & v_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot 1\\
@@ -247,13 +552,97 @@ $$
 $$
 :::
 
-::: {.callout-note collapse="false" appearance="minimal"} 
-## Opdateringsregler $r$-vægtene
+Her kan vi igen se, at vi på grund af feedforward allerede har beregnet $y^{(m)}$, $z^{(m)}$ og $o^{(m)}$.
+
+
+### Opdatering af $r$-vægtene
+
+Vi er nu nået til det sidste lag i netværket, som er tættest på inputlaget. Her bliver de generelle opdateringsregler:
 
 $$
 \begin{aligned}
-r_0 \leftarrow & r_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot 1\\
-r_0 \leftarrow & r_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x^{(m)}\\
+r_0 &\leftarrow r_0 - \eta \cdot \frac{\partial E}{\partial r_0} \\
+r_1 &\leftarrow r_1 - \eta \cdot \frac{\partial E}{\partial r_1} \\
+& \quad \vdots \\
+r_n &\leftarrow r_n - \eta \cdot \frac{\partial E}{\partial r_n}
+\end{aligned}
+$$ {#eq-generel_opdatering_r}
+
+
+På @fig-long_simple_NN ses det, at tabsfunktionen afhænger af disse $r$-vægte via $o^{(m)}$, $z^{(m)}$ og $y^{(m)}$. Der kommer derfor lidt mere fut i kædereglen nu. Den partielle afledede med hensyn til $r_i$ bliver
+
+$$
+\begin{aligned}
+\frac{\partial E}{\partial r_i} &=  \sum_{m=1}^M \frac{ \partial E^{(m)}}{\partial r_i} \\
+&= \sum_{m=1}^M \frac{ \partial E^{(m)}}{\partial o^{(m)}} \cdot \frac{ \partial o^{(m)}}{\partial z^{(m)} } \cdot \frac{ \partial z^{(m)}}{\partial y^{(m)}} \cdot \frac{ \partial y^{(m)}}{\partial  r_i}
+\end{aligned}
+$$ {#eq-dE_dri}
+
+Nu er vi heldige, for vi har allerede udregnet de to første faktorer i denne sum i (@eq-dE_do) og (@eq-do_dz):
+
+
+$$
+\frac{\partial E^{(m)}}{\partial o^{(m)}} = - (t^{(m)}-o^{(m)})
+$$
+
+og 
+
+$$
+\frac{ \partial o^{(m)}}{\partial z^{(m)} } = o^{(m)} \cdot (1-o^{(m)}) \cdot w_1
+$$
+
+Nu mangler vi bare de to sidste faktorer i (@eq-dE_dri). Feedforward ligningen i (@eq-z_m) giver
+
+$$
+\begin{aligned}
+\frac{\partial z^{(m)}}{\partial y^{(m)}} &= \sigma ' (v_0 + v_1 \cdot y^{(m)}) \cdot v_1 \\
+&= z^{(m)} \cdot (1-z^{(m)})\cdot v_1.
+\end{aligned}
+$$ {#eq-dz_dy}
+
+Her har vi endnu en gang brugt (@eq-afledt_sigmoid).
+
+Ved hjælp af feedforward ligningen i (@eq-y_m) kan vi bestemme
+
+
+$$
+\begin{aligned}
+\frac{\partial y^{(m)}}{\partial r_i} &= \sigma '(r_0 + r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)} + \cdots + r_n \cdot x_n^{(m)}) \cdot x_i^{(m)} \\
+&= y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}.
+\end{aligned}
+$$ {#eq-dy_dri}
+
+Sidste lighedstegn følger af (@eq-afledt_sigmoid).
+
+Vi kan nu som tidligere indsætte (@eq-dE_do), (@eq-do_dz), (@eq-dz_dy) og (@eq-dy_dri) i (@eq-dE_dri):
+
+$$
+\begin{aligned}
+\frac{\partial E}{\partial r_i} =   \sum_{m=1}^M \underbrace{-(t^{(m)}-o^{(m)})}_{\frac{\partial E^{(m)} }{\partial o^{(m)}}} \cdot &\underbrace{o^{(m)} \cdot (1-o^{(m)}) \cdot w_1}_{\frac{\partial o^{(m)}}{\partial z^{(m)}}} \cdot \\ &\underbrace{z^{(m)} \cdot (1-z^{(m)})\cdot v_1}_{\frac{\partial z^{(m)}}{\partial y^{(m)}}} \cdot \underbrace{y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}}_{\frac{\partial y^{(m)}}{\partial r_i}}
+\end{aligned}
+$$
+
+Definitionen af $\delta^{(m)}$ i (@eq-delta_m) tillader os at forkorte ovenstående en smule:
+
+$$
+\frac{\partial E}{\partial r_i} =   - \sum_{m=1}^M \delta^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}
+$$
+Opdateringsreglen for $r_i$ bliver derfor ifølge (@eq-generel_opdatering_r):
+
+$$
+r_i \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}
+$$
+Og for samtlige $r$-vægte ender vi med følgende:
+
+::: {.callout-note collapse="false" appearance="minimal"} 
+## Opdateringsregler for $r$-vægtene
+
+$$
+\begin{aligned}
+r_0 &\leftarrow r_0 + \eta \cdot \sum_{m=1}^M \delta^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot 1 \\
+r_1 &\leftarrow r_1 + \eta \cdot \sum_{m=1}^M \delta^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_1^{(m)} \\
+& \quad \vdots \\
+r_n &\leftarrow r_n + \eta \cdot \sum_{m=1}^M \delta^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_n^{(m)} \\
 \end{aligned}
 $$
 
@@ -263,6 +652,6 @@ $$
 $$
 :::
 
-
+Igen har vi -- fordi vi forud for opdateringen af vægtene har lavet en feedforward i netværket -- udregnet $y^{(m)}$, $z^{(m)}$ og $o^{(m)}$, som skal bruges for at beregne ovenstående opdateringer.
 
 
