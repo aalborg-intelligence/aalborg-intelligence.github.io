@@ -1,0 +1,71 @@
+---
+title: "Word2vec"
+image: "images/COLOURBOX35006551.jpg"
+description-meta: "Word2vec."
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(plotly)
+est <- readRDS(here::here("materialer", "sprogmodeller", "data", "word2vec_estimates.rds"))
+type_fun <- function(x) {
+  switch(x,
+         "ko" = "dyr",
+         "hest" = "dyr",
+         "marsvin" = "dyr",
+         "æsel" = "dyr",
+         "bil" = "ting",
+         "cykel" = "ting",
+         "hus" = "ting",
+         "skur" = "ting",
+         "blå" = "farve",
+         "grøn" = "farve",
+         "blåt" = "farve",
+         "grønt" = "farve",
+         "ser" = "verbum",
+         "får" = "verbum",
+         "har" = "verbum",
+         "og" = "og",
+         "en" = "artikel",
+         "et" = "artikel",
+         "." = ".",
+         "Ib" = "person",
+         "Kim" = "person",
+         "Ole" = "person",
+         "Bo" = "person",
+         "Anne" = "person",
+         "Eva" = "person",
+         "Ida" = "person",
+         "Mia" = "person")
+}
+
+pos_dat <- cbind(est$ord, as.data.frame(est$w), type = sapply(est$ord, type_fun))
+neg_dat <- cbind(est$ord, as.data.frame(est$k), type = sapply(est$ord, type_fun))
+
+```
+
+## Sætningerne der bruges til at estimere vektorerne
+
+<https://aimat.dk/materialer/sprogmodeller/data/bog.txt>
+
+## Vægte når ordet er input
+
+```{r}
+pos_dat[,-c(1,5)] |> round(2) |> knitr::kable()
+```
+
+```{r}
+plot_ly(x = ~V1, y = ~V2, z = ~V3, data = pos_dat, type = "scatter3d", 
+       mode = "markers", marker = list(size = 3), color = ~type)
+```
+
+## Vægte når ordet er kontekst
+
+```{r}
+pos_dat[,-c(1,5)] |> round(2) |> knitr::kable()
+```
+
+```{r}
+plot_ly(x = ~V1, y = ~V2, z = ~V3, data = neg_dat, type = "scatter3d",
+       mode = "markers", marker = list(size = 3), color = ~type)
+```
