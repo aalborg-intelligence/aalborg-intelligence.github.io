@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Denne note giver en grundig gennemgang af matematikken bag kunstige neurale netværk.">
+<meta name="description" content="I denne note giver vi en grundig gennemgang af matematikken bag kunstige neurale netværk, hvor der i første omgang tages udgangspunkt i et netværk med to skjulte lag hver med to neuroner.">
 
 <title>Kunstige neurale netværk – AI MAT - matematikken bag magien</title>
 <style>
@@ -300,14 +300,14 @@ f: \mathbb{R}^{64} \rightarrow [0,1]
 </section>
 <section id="sec-feedforward" class="level1 page-columns page-full">
 <h1>Hvordan virker et kunstigt neuralt netværk?</h1>
-<p>Kunstige neurale netværk som bruges i den virkelige verden består som regel af millionvis af de såkaldte neuroner. For at holde tingene simple vil vi her begrænse os til nogle få. Forståelsesmæssigt mister man ingenting, notationen bliver blot lidt simplere. På <a href="#fig-simple_NN_noweights" class="quarto-xref">figur&nbsp;3</a> ser du et sådant simpelt kunstigt neuralt netværk, hvor alle cirklerne repræsenterer disse neuroner. I første omgang ser det måske lidt uoverskueligt ud, men vi tager det et skridt ad gangen.</p>
-<div id="fig-simple_NN_noweights" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<p>Kunstige neurale netværk som bruges i den virkelige verden består som regel af millionvis af de såkaldte neuroner. For at holde tingene simple vil vi her begrænse os til nogle få. Forståelsesmæssigt mister man ingenting, notationen bliver blot lidt simplere. På <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a> ser du et sådant simpelt kunstigt neuralt netværk, hvor alle cirklerne repræsenterer disse neuroner. I første omgang ser det måske lidt uoverskueligt ud, men vi tager det et skridt ad gangen.</p>
+<div id="fig-simple_NN_weights" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-simple_NN_noweights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/simple_NN_noweights.png" class="img-fluid figure-img">
+<div aria-describedby="fig-simple_NN_weights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/simple_NN_weights.png" class="img-fluid figure-img">
 </div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-simple_NN_noweights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;3: Simpelt kunstigt neuralt netværk.
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-simple_NN_weights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;3: Simpelt kunstigt neuralt netværk med navngivning af vægte.
 </figcaption>
 </figure>
 </div>
@@ -322,19 +322,9 @@ r_1 \cdot x_1 + r_2 \cdot x_2 + r_3 \cdot x_3 + r_4 \cdot x_4 + r_0
 \tag{2}\]</span></span></p>
 <p>Værdierne <span class="math inline">\(r_1, r_2, r_3\)</span> og <span class="math inline">\(r_4\)</span> kalder man for vægte. Hvis f.eks. <span class="math inline">\(r_1\)</span> er stor og <span class="math inline">\(r_2, r_3\)</span> og <span class="math inline">\(r_4\)</span> er tæt på <span class="math inline">\(0\)</span>, så vil <span class="math inline">\(r_1 \cdot x_1\)</span> også blive stor (med mindre <span class="math inline">\(x_1\)</span> er meget tæt på <span class="math inline">\(0\)</span>) og <span class="math inline">\(r_2 \cdot x_2+r_3 \cdot x_3+r_4 \cdot x_4\)</span> vil være tæt på <span class="math inline">\(0\)</span>. På den måde vil inputværdien <span class="math inline">\(x_1\)</span> altså få stor indflydelse på udtrykket i (<a href="#eq-linkom" class="quarto-xref">2</a>) - man siger, at <span class="math inline">\(x_1\)</span> kommer til at vægte højt.</p>
 <p>Værdien <span class="math inline">\(r_0\)</span> kaldes for en "bias" og det er altså en konstant størrelse, som bliver lagt til uafhængig af inputværdierne. Du skal tænke på ovenstående udtryk, som du tænker på en lineær funktion <span class="math inline">\(y=a \cdot x + b\)</span>. Her er der bare lige lidt flere <span class="math inline">\(x\)</span>-værdier og <span class="math inline">\(a\)</span> og <span class="math inline">\(b\)</span> er skiftet ud med <span class="math inline">\(r\)</span>’er.</p>
-<div id="fig-simple_NN_weights" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-simple_NN_weights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/simple_NN_weights.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-simple_NN_weights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;4: Simpelt kunstigt neuralt netværk med navngivning af vægte.
-</figcaption>
-</figure>
-</div>
 <p>Værdien af udtrykket i (<a href="#eq-linkom" class="quarto-xref">2</a>) kan være et hvilket som helst reelt tal. Ofte vil man være interesseret i, at den værdi der "kommer ud af" neuronen er et tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>. Til det bruges ofte den såkaldte "sigmoid"-funktion, som er defineret sådan her: <span id="eq-sigmoid"><span class="math display">\[
 \sigma(x)=\frac{1}{1+e^{-x}}
-\tag{3}\]</span></span> Grafen for sigmoid-funktionen ses i <a href="#fig-sigmoid_graf" class="quarto-xref">figur&nbsp;5</a>. Her kan man se, hvordan ethvert reelt tal bliver afbildet over i et tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>.</p>
+\tag{3}\]</span></span> Grafen for sigmoid-funktionen ses i <a href="#fig-sigmoid_graf" class="quarto-xref">figur&nbsp;4</a>. Her kan man se, hvordan ethvert reelt tal bliver afbildet over i et tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>.</p>
 <div class="cell page-columns page-full">
 <div class="cell-output-display page-columns page-full">
 <div id="fig-sigmoid_graf" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
@@ -343,7 +333,7 @@ Figur&nbsp;4: Simpelt kunstigt neuralt netværk med navngivning af vægte.
 <img src="neurale_net_files/figure-html/fig-sigmoid_graf-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-sigmoid_graf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;5: Grafen for sigmoid-funktionen.
+Figur&nbsp;4: Grafen for sigmoid-funktionen.
 </figcaption>
 </figure>
 </div>
@@ -365,12 +355,12 @@ y_1=\sigma(r_1 \cdot x_1 + r_2 \cdot x_2+r_3 \cdot x_3+r_4 \cdot x_4+r_0)
 \tag{4}\]</span></span> Det vil sige, at <span id="eq-y_1_2"><span class="math display">\[
 y_1=\frac{1}{1+e^{-(r_1 \cdot x_1 + r_2 \cdot x_2+r_3 \cdot x_3+r_4 \cdot x_4+r_0)}}
 \tag{5}\]</span></span></p>
-<p>Nu beregnes <span class="math inline">\(y_2\)</span> helt tilsvarende, men med andre vægte. Før kaldte vi vægtene for <span class="math inline">\(r_1, r_2\)</span> osv. De nye vægte vælger vi nu at kalde for <span class="math inline">\(s_1, s_2, \dots\)</span>, som det også er vist på <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;4</a>. Vi definerer altså <span id="eq-y_2_1"><span class="math display">\[
+<p>Nu beregnes <span class="math inline">\(y_2\)</span> helt tilsvarende, men med andre vægte. Før kaldte vi vægtene for <span class="math inline">\(r_1, r_2\)</span> osv. De nye vægte vælger vi nu at kalde for <span class="math inline">\(s_1, s_2, \dots\)</span>, som det også er vist på <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a>. Vi definerer altså <span id="eq-y_2_1"><span class="math display">\[
 y_2=\sigma(s_1 \cdot x_1 + s_2 \cdot x_2+s_3 \cdot x_3+s_4 \cdot x_4+s_0)
 \tag{6}\]</span></span> Det vil sige, at <span id="eq-y_2_2"><span class="math display">\[
 y_2=\frac{1}{1+e^{-(s_1 \cdot x_1 + s_2 \cdot x_2+s_3 \cdot x_3+s_4 \cdot x_4+s_0)}}
 \tag{7}\]</span></span></p>
-<p>Nu sker der det, at (de lysegrønne) neuroner i det andet lag "fyrer" deres <span class="math inline">\(y\)</span>-værdier frem til alle neuronerne i det tredje lag. Disse værdier bliver nu brugt som inputs til beregning af de nye <span class="math inline">\(z\)</span>-værdier (se igen <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;4</a>. Vi kan nu, som vi har gjort ovenfor definere de nye <span class="math inline">\(z\)</span>-værdier i det tredje lag, idet vi nu kalder vægtene for <span class="math inline">\(v_1, v_2, u_1\)</span> og <span class="math inline">\(u_2\)</span>, som det er vist på <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;4</a>. Den eneste forskel fra tidligere er, at disse neuroner i vores eksempel kun modtager to og ikke fire inputværdier: <span id="eq-z_1"><span class="math display">\[
+<p>Nu sker der det, at (de lysegrønne) neuroner i det andet lag "fyrer" deres <span class="math inline">\(y\)</span>-værdier frem til alle neuronerne i det tredje lag. Disse værdier bliver nu brugt som inputs til beregning af de nye <span class="math inline">\(z\)</span>-værdier (se igen <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a>. Vi kan nu, som vi har gjort ovenfor definere de nye <span class="math inline">\(z\)</span>-værdier i det tredje lag, idet vi nu kalder vægtene for <span class="math inline">\(v_1, v_2, u_1\)</span> og <span class="math inline">\(u_2\)</span>, som det er vist på <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a>. Den eneste forskel fra tidligere er, at disse neuroner i vores eksempel kun modtager to og ikke fire inputværdier: <span id="eq-z_1"><span class="math display">\[
 z_1=\sigma(v_1 \cdot y_1 + v_2 \cdot y_2 + v_0)
 \tag{8}\]</span></span> og <span id="eq-z_2"><span class="math display">\[
 z_2=\sigma(u_1 \cdot y_1 + u_2 \cdot y_2 + u_0)
@@ -427,15 +417,15 @@ E(r_0, r_1, r_2, r_3, r_4, s_0, s_1, s_2, s_3, s_4, &amp;v_0, v_1, v_2, u_0, u_1
 <img src="images/minMaxFunc.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-EksE-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;6: Eksempel på grafen for en tabsfunktion, som kun afhænger af to variable.
+Figur&nbsp;5: Eksempel på grafen for en tabsfunktion, som kun afhænger af to variable.
 </figcaption>
 </figure>
 </div>
-<p>Derfor er man nødt til at gøre noget andet. Forestil dig at tabsfunktionen kun afhænger af to variable <span class="math inline">\(E(v,w)\)</span><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> og at grafen for den ser ud, som vist i <a href="#fig-EksE" class="quarto-xref">figur&nbsp;6</a>. Her kan du se, at tabsfunktionen har to lokale minima og ét globalt minimum. Vi vil allerhelst finde vægtene sådan, at vi ender i det globale minimum, men kan vi kun finde et lokalt minimum, så kan det også gå (selvom det selvfølgelig ikke er det optimale). Forestil dig at grafen er et landskab. At finde grafens minimum svarer til, at du gerne vil ned i den dybeste dal. Din placering i landskabet svarer til, at du står i et eller andet punkt i planen <span class="math inline">\((v_0,w_0)\)</span> og din højde i vertikal retning er <span class="math inline">\(E(v_0,w_0)\)</span>. Som du måske husker, så gælder der, at hvis du i dette punkt gerne vil bevæge dig i den retning, som er <em>allerstejlest</em>, så skal du gå i retningen givet ved gradienten: <span class="math display">\[
+<p>Derfor er man nødt til at gøre noget andet. Forestil dig at tabsfunktionen kun afhænger af to variable <span class="math inline">\(E(v,w)\)</span><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> og at grafen for den ser ud, som vist i <a href="#fig-EksE" class="quarto-xref">figur&nbsp;5</a>. Her kan du se, at tabsfunktionen har to lokale minima og ét globalt minimum. Vi vil allerhelst finde vægtene sådan, at vi ender i det globale minimum, men kan vi kun finde et lokalt minimum, så kan det også gå (selvom det selvfølgelig ikke er det optimale). Forestil dig at grafen er et landskab. At finde grafens minimum svarer til, at du gerne vil ned i den dybeste dal. Din placering i landskabet svarer til, at du står i et eller andet punkt i planen <span class="math inline">\((v_0,w_0)\)</span> og din højde i vertikal retning er <span class="math inline">\(E(v_0,w_0)\)</span>. Som du måske husker, så gælder der, at hvis du i dette punkt gerne vil bevæge dig i den retning, som er <em>allerstejlest</em>, så skal du gå i retningen givet ved gradienten: <span class="math display">\[
 \nabla E(v_0,w_0) = \begin{pmatrix} \frac{\partial E }{\partial v}(v_0,w_0) \\ \\ \frac{\partial E }{\partial w}(v_0,w_0) \end{pmatrix}
 \]</span> Det betyder også, at hvis du gerne vil gå <em>allermest ned ad bakke</em>, så skal du gå i den stik modsatte retning - altså minus gradienten: <span class="math display">\[
 - \nabla E(v_0,w_0) = \begin{pmatrix} - \frac{\partial E }{\partial v}(v_0,w_0) \\ \\ - \frac{\partial E }{\partial w}(v_0,w_0) \end{pmatrix}
-\]</span> Dét trick skal vi bruge! Vi starter altså med at vælge nogle mere eller mindre tilfældige vægte. Det svarer til, at du står et mere eller mindre tilfældigt sted i landskabet på <a href="#fig-EksE" class="quarto-xref">figur&nbsp;6</a>. Så vælger vi at gå et lille stykke i den retning, hvor det går allermest ned ad bakke, ved at følge retningen angivet ved den negative gradient. Når vi står der, beregner vi gradienten i det punkt<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, og går igen et lille stykke i den retning, som den negative gradient angiver. Sådan fortsætter vi, og hvis vi sørger for ikke at tage alt for store skridt ad gangen, så vil vi til sidst ende i et lokalt minimum (der er desværre ingen garanti for, at vi vil ende i et globalt minimum<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>).</p>
+\]</span> Dét trick skal vi bruge! Vi starter altså med at vælge nogle mere eller mindre tilfældige vægte. Det svarer til, at du står et mere eller mindre tilfældigt sted i landskabet på <a href="#fig-EksE" class="quarto-xref">figur&nbsp;5</a>. Så vælger vi at gå et lille stykke i den retning, hvor det går allermest ned ad bakke, ved at følge retningen angivet ved den negative gradient. Når vi står der, beregner vi gradienten i det punkt<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, og går igen et lille stykke i den retning, som den negative gradient angiver. Sådan fortsætter vi, og hvis vi sørger for ikke at tage alt for store skridt ad gangen, så vil vi til sidst ende i et lokalt minimum (der er desværre ingen garanti for, at vi vil ende i et globalt minimum<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>).</p>
 <div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Du kan med god ret spørge: "Hvorfor nu det?". I virkeligheden afhænger den jo af millionvis af variable. Svaret er, at hvis vi skal forestille os grafen for tabsfunktionen, så er vores forestillingsevne begrænset til 3 dimensioner. Derfor må vi lige for en stund antage, at tabsfunktionen kun afhænger af to variable!</p></div><div id="fn2"><p><sup>2</sup>&nbsp;Hov! Vi kan jo ikke finde funktionsudtryk for alle de partielle afledte, så hvad foregår der her? Jo, vi vil se, at vi ved backpropagation kan udregne de partielle afledte <em>i et punkt</em> uden at finde et funktionsudtryk.</p></div><div id="fn3"><p><sup>3</sup>&nbsp;Hvis netværket ikke ender med at opføre sig tilfredsstillende, kan man jo prøve at starte et nyt tilfældigt sted i landskabet og gentage proceduren. Hvis man er heldig, lander man i et andet lokalt eller globalt minimum, hvor minimumsværdien er mindre end den tidligere.</p></div></div><p>Idéen er altså, at vi vælger en værdi for hver af de <span class="math inline">\(19\)</span> vægte. Lad os bare som eksempel så på vægten <span class="math inline">\(s_1\)</span>. Så beregner vi den partielle afledede <span class="math display">\[
 \frac{\partial E}{\partial s_1}
 \]</span> og så ændrer vi værdien af <span class="math inline">\(s_1\)</span> en lille smule i retning af den negative partielle afledede. Vi viser, at vi ændrer værdien af <span class="math inline">\(s_1\)</span> til en ny værdi, ved at bruge en pil: <span id="eq-opdatering_s1"><span class="math display">\[
@@ -453,7 +443,7 @@ s_1 \leftarrow s_1 - \eta  \frac{\partial E}{\partial s_1}
 </section>
 <section id="sec-opdatering_w" class="level2">
 <h2 class="anchored" data-anchor-id="sec-opdatering_w">Opdatering af <span class="math inline">\(w\)</span>-vægtene</h2>
-<p>Når man bruger backpropagation, starter man med at finde de partielle afledede for de vægte, som direkte påvirker outputværdien <span class="math inline">\(o\)</span>. På <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;4</a> fremgår det, at det er vægtene <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span> (husk at vi kalder vores bias for <span class="math inline">\(w_0\)</span>). Lad os starte med at finde den partielle afledede for <span class="math inline">\(w_1\)</span>. Ved at bruge kædereglen får vi: <span class="math display">\[
+<p>Når man bruger backpropagation, starter man med at finde de partielle afledede for de vægte, som direkte påvirker outputværdien <span class="math inline">\(o\)</span>. På <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a> fremgår det, at det er vægtene <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span> (husk at vi kalder vores bias for <span class="math inline">\(w_0\)</span>). Lad os starte med at finde den partielle afledede for <span class="math inline">\(w_1\)</span>. Ved at bruge kædereglen får vi: <span class="math display">\[
 \frac{\partial E}{\partial w_1} = \frac{d E}{d o} \cdot \frac{\partial o}{\partial w_1}
 \]</span> Vi ved fra (<a href="#eq-error_func" class="quarto-xref">12</a>), at <span class="math inline">\(E=\frac{1}{2}(t-o)^2\)</span> og derfor er: <span id="eq-dEdo"><span class="math display">\[
 \frac{d E}{d o} = \frac{1}{2} \cdot 2 \cdot (t-o) \cdot (-1) = -(t-o)
@@ -472,7 +462,7 @@ w_1 \leftarrow w_1 - \eta  \cdot \frac{\partial E}{\partial w_1}
 w_1 \leftarrow w_1 - \eta  \cdot (-(t-o) \cdot o \cdot (1-o) \cdot z_1)
 \]</span> Det vil sige, at <span class="math display">\[
 w_1 \leftarrow w_1 + \eta  \cdot (t-o) \cdot o \cdot (1-o) \cdot z_1
-\]</span> Det er værd at dvæle lidt ved opdateringsleddet <span class="math inline">\(\eta  \cdot (t-o) \cdot o \cdot (1-o) \cdot z_1\)</span> på højresiden, fordi det faktisk giver intuitiv god mening. For det første er <span class="math inline">\(\eta\)</span>, det vi som sagt kalder for vores <em>learning rate</em> - et lille positivt tal, som sørger for, at vi ikke tager for store skridt på vores vej ned i dalen (til det lokale minimum). Faktoren <span class="math inline">\(t-o\)</span> er jo netop fejlen. Nemlig forskellen mellem det vi ønsker <span class="math inline">\(t\)</span> (target), og det som netværket giver <span class="math inline">\(o\)</span> (output). Jo større fejl/forskel, desto mere må vi justere vægten. Ser vi på faktoren <span class="math inline">\(o\cdot(1-o)\)</span>, så vil det være sådan, at hvis outputværdien <span class="math inline">\(o\)</span> er tæt på enten <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span> (man siger at neuronen er "mættet"), så vil <span class="math inline">\(o\cdot(1-o)\)</span> være tæt på <span class="math inline">\(0\)</span>. Det vil sige, at hvis outputværdien er tæt på <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span>, så ændrer vi heller ikke så meget på vægten. Endelig er der faktoren <span class="math inline">\(z_1\)</span>, som er inputtet fra det foregående lag (se <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;4</a>). Hvis værdien af denne er (numerisk) stor, så får det også stor betydning for opdateringsleddet (eller tænk på det omvendt: hvis <span class="math inline">\(z_1\)</span> er tæt på <span class="math inline">\(0\)</span>, så har <span class="math inline">\(z_1\)</span> alligevel ikke så stor indflydelse på outputværdien, og så giver det heller ikke mening at justere så meget på den tilhørende vægt <span class="math inline">\(w_1\)</span>).</p>
+\]</span> Det er værd at dvæle lidt ved opdateringsleddet <span class="math inline">\(\eta  \cdot (t-o) \cdot o \cdot (1-o) \cdot z_1\)</span> på højresiden, fordi det faktisk giver intuitiv god mening. For det første er <span class="math inline">\(\eta\)</span>, det vi som sagt kalder for vores <em>learning rate</em> - et lille positivt tal, som sørger for, at vi ikke tager for store skridt på vores vej ned i dalen (til det lokale minimum). Faktoren <span class="math inline">\(t-o\)</span> er jo netop fejlen. Nemlig forskellen mellem det vi ønsker <span class="math inline">\(t\)</span> (target), og det som netværket giver <span class="math inline">\(o\)</span> (output). Jo større fejl/forskel, desto mere må vi justere vægten. Ser vi på faktoren <span class="math inline">\(o\cdot(1-o)\)</span>, så vil det være sådan, at hvis outputværdien <span class="math inline">\(o\)</span> er tæt på enten <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span> (man siger at neuronen er "mættet"), så vil <span class="math inline">\(o\cdot(1-o)\)</span> være tæt på <span class="math inline">\(0\)</span>. Det vil sige, at hvis outputværdien er tæt på <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span>, så ændrer vi heller ikke så meget på vægten. Endelig er der faktoren <span class="math inline">\(z_1\)</span>, som er inputtet fra det foregående lag (se <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a>). Hvis værdien af denne er (numerisk) stor, så får det også stor betydning for opdateringsleddet (eller tænk på det omvendt: hvis <span class="math inline">\(z_1\)</span> er tæt på <span class="math inline">\(0\)</span>, så har <span class="math inline">\(z_1\)</span> alligevel ikke så stor indflydelse på outputværdien, og så giver det heller ikke mening at justere så meget på den tilhørende vægt <span class="math inline">\(w_1\)</span>).</p>
 <p>Det viser sig faktisk, at faktoren <span class="math inline">\((t-o) \cdot o \cdot (1-o)\)</span> kommer til at gå igen rigtige mange gange i det følgende. Det bliver i længden lidt tungt at slæbe rundt på. Derfor vælger vi at definere <span id="eq-delta"><span class="math display">\[
 \delta = (t-o) \cdot o \cdot (1-o)
 \tag{16}\]</span></span> og derfor kan opdateringsreglen for <span class="math inline">\(w_1\)</span> nu også skrives: <span id="eq-opdatering_w1"><span class="math display">\[
@@ -509,7 +499,7 @@ w_2 &amp;\leftarrow w_2 + \eta  \cdot \delta \cdot z_2 \\
 </section>
 <section id="sec-opdatering_uv" class="level2">
 <h2 class="anchored" data-anchor-id="sec-opdatering_uv">Opdatering af <span class="math inline">\(u\)</span>- og <span class="math inline">\(v\)</span>-vægtene</h2>
-<p>Vi går nu et trin længere tilbage i netværket - væk fra outputlaget. Her kan vi se neuronerne, som fyrer værdierne <span class="math inline">\(z_1\)</span> og <span class="math inline">\(z_2\)</span>, som bliver påvirket af <span class="math inline">\(u\)</span>- og <span class="math inline">\(v\)</span>-vægtene. Lad os her starte med at bestemme opdateringsreglerne for <span class="math inline">\(v\)</span>-vægtene. For at gøre det skal vi finde ud af hvordan <span class="math inline">\(v\)</span>-vægtene påvirker neuronerne længere fremme i netværket. Se igen på <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;4</a>. Her er det tydeligt, at <span class="math inline">\(v\)</span>-vægtene påvirker den mørkegrønne neuron, som fyrer værdien <span class="math inline">\(z_1\)</span>, som igen påvirker outputværdien. Derfor kan vi bruge kædereglen på følgende måde: <span class="math display">\[
+<p>Vi går nu et trin længere tilbage i netværket - væk fra outputlaget. Her kan vi se neuronerne, som fyrer værdierne <span class="math inline">\(z_1\)</span> og <span class="math inline">\(z_2\)</span>, som bliver påvirket af <span class="math inline">\(u\)</span>- og <span class="math inline">\(v\)</span>-vægtene. Lad os her starte med at bestemme opdateringsreglerne for <span class="math inline">\(v\)</span>-vægtene. For at gøre det skal vi finde ud af hvordan <span class="math inline">\(v\)</span>-vægtene påvirker neuronerne længere fremme i netværket. Se igen på <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a>. Her er det tydeligt, at <span class="math inline">\(v\)</span>-vægtene påvirker den mørkegrønne neuron, som fyrer værdien <span class="math inline">\(z_1\)</span>, som igen påvirker outputværdien. Derfor kan vi bruge kædereglen på følgende måde: <span class="math display">\[
 \frac{\partial E}{\partial v_1} = \frac{d E}{d o} \cdot \frac{\partial o}{\partial z_1} \cdot \frac{\partial z_1}{\partial v_1}
 \]</span> Vi ved allerede fra (<a href="#eq-dEdo" class="quarto-xref">14</a>), at <span class="math display">\[
 \frac{d E}{d o} = -(t-o)
@@ -557,7 +547,7 @@ v_2 &amp;\leftarrow v_2 + \eta  \cdot \delta \cdot w_1 \cdot z_1 \cdot (1-z_1) \
 </div>
 </div>
 </div>
-<p>Opdateringsreglerne for <span class="math inline">\(u\)</span>-vægtene findes på præcis samme måde. Her skal man blot se, at <span class="math inline">\(u\)</span>-vægtene har indflydelse på outputtet via <span class="math inline">\(z_2\)</span> (se <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;4</a>). Derfor skal man f.eks. finde den partielle afledede af <span class="math inline">\(E\)</span> med hensyn til <span class="math inline">\(u_1\)</span> ved at bruge kædereglen på denne måde <span class="math display">\[
+<p>Opdateringsreglerne for <span class="math inline">\(u\)</span>-vægtene findes på præcis samme måde. Her skal man blot se, at <span class="math inline">\(u\)</span>-vægtene har indflydelse på outputtet via <span class="math inline">\(z_2\)</span> (se <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a>). Derfor skal man f.eks. finde den partielle afledede af <span class="math inline">\(E\)</span> med hensyn til <span class="math inline">\(u_1\)</span> ved at bruge kædereglen på denne måde <span class="math display">\[
 \frac{\partial E}{\partial u_1} = \frac{d E}{d o} \cdot \frac{\partial o}{\partial z_2} \cdot \frac{\partial z_2}{\partial u_1}
 \]</span> Udregninger svarende til det netop gennemgåede giver os</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
@@ -590,7 +580,7 @@ u_2 &amp;\leftarrow u_2 + \eta  \cdot \delta \cdot w_2 \cdot z_2 \cdot (1-z_2) \
 </section>
 <section id="sec-opdatering_rs" class="level2">
 <h2 class="anchored" data-anchor-id="sec-opdatering_rs">Opdatering af <span class="math inline">\(r\)</span>- og <span class="math inline">\(s\)</span>-vægtene</h2>
-<p>Så er vi endelig fremme ved <span class="math inline">\(r\)</span>- og <span class="math inline">\(s\)</span> vægtene. Start lige med at tage en dyb indånding! Nu bliver det lidt mere kompliceret. Se på <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;4</a>. Lad os starte med at finde den partielle afledede af <span class="math inline">\(E\)</span> med hensyn til <span class="math inline">\(r_1\)</span>. Når man ser på netværket, kan man se, at <span class="math inline">\(r_1\)</span> i første omgang påvirker <span class="math inline">\(y_1\)</span>, <span class="math inline">\(y_1\)</span> påvirker både <span class="math inline">\(z_1\)</span> og <span class="math inline">\(z_2\)</span>, som så til sidst påvirker outputværdien <span class="math inline">\(o\)</span>. Det kan illustreres sådan her <span class="math display">\[
+<p>Så er vi endelig fremme ved <span class="math inline">\(r\)</span>- og <span class="math inline">\(s\)</span> vægtene. Start lige med at tage en dyb indånding! Nu bliver det lidt mere kompliceret. Se på <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a>. Lad os starte med at finde den partielle afledede af <span class="math inline">\(E\)</span> med hensyn til <span class="math inline">\(r_1\)</span>. Når man ser på netværket, kan man se, at <span class="math inline">\(r_1\)</span> i første omgang påvirker <span class="math inline">\(y_1\)</span>, <span class="math inline">\(y_1\)</span> påvirker både <span class="math inline">\(z_1\)</span> og <span class="math inline">\(z_2\)</span>, som så til sidst påvirker outputværdien <span class="math inline">\(o\)</span>. Det kan illustreres sådan her <span class="math display">\[
 \begin{matrix}
 &amp; &amp; &amp; &amp; z_1 &amp; &amp; &amp; \\
 &amp; &amp; &amp; \nearrow &amp; &amp; \searrow &amp; &amp; \\
@@ -657,7 +647,7 @@ r_4 &amp;\leftarrow r_4 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_
 </div>
 </div>
 </div>
-<p>Opdateringen af <span class="math inline">\(s\)</span>-vægtene foregår på samme måde. Hvis du ser på <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;4</a>, kan du se, at alle <span class="math inline">\(s\)</span>-vægtene påvirker <span class="math inline">\(y_2\)</span>, som så påvirker både <span class="math inline">\(z_1\)</span> og <span class="math inline">\(z_2\)</span>, som i sidste ende påvirker outputtet <span class="math inline">\(o\)</span>. Ser vi generelt på vægten <span class="math inline">\(s_i\)</span>, hvor <span class="math inline">\(i=0, 1, 2, 3\)</span> eller <span class="math inline">\(4\)</span>, har vi altså <span class="math display">\[
+<p>Opdateringen af <span class="math inline">\(s\)</span>-vægtene foregår på samme måde. Hvis du ser på <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a>, kan du se, at alle <span class="math inline">\(s\)</span>-vægtene påvirker <span class="math inline">\(y_2\)</span>, som så påvirker både <span class="math inline">\(z_1\)</span> og <span class="math inline">\(z_2\)</span>, som i sidste ende påvirker outputtet <span class="math inline">\(o\)</span>. Ser vi generelt på vægten <span class="math inline">\(s_i\)</span>, hvor <span class="math inline">\(i=0, 1, 2, 3\)</span> eller <span class="math inline">\(4\)</span>, har vi altså <span class="math display">\[
 \begin{matrix}
 &amp; &amp; &amp; &amp; z_1 &amp; &amp; &amp; \\
 &amp; &amp; &amp; \nearrow &amp; &amp; \searrow &amp; &amp; \\
@@ -699,7 +689,7 @@ s_4 &amp;\leftarrow s_4 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1
 </div>
 </div>
 </div>
-<p>Det var faktisk det! Altså det blev jo en værre omgang bogstavgymnastik, men faktum er, at vi er i mål med at udlede backpropagation algoritmen for vores simple netværk i <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;4</a>. Hurra for det!</p>
+<p>Det var faktisk det! Altså det blev jo en værre omgang bogstavgymnastik, men faktum er, at vi er i mål med at udlede backpropagation algoritmen for vores simple netværk i <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a>. Hurra for det!</p>
 </section>
 <section id="video-kunstige-neurale-netværk-7" class="level2">
 <h2 class="anchored" data-anchor-id="video-kunstige-neurale-netværk-7">VIDEO: Kunstige neurale netværk 7</h2>
@@ -733,7 +723,7 @@ E = - \left ( t \cdot \ln(o)+(1-t) \cdot \ln(1-o) \right )
 \tag{21}\]</span></span> Det ser jo ikke umiddelbart videre behageligt ud, og det er slet ikke oplagt, at det overhovedet er en tabsfunktion. Det vil sige, opfylder cross-entropy tabsfunktionen betingelserne listet ovenfor? Lad os starte med at undersøge om <span class="math inline">\(E&gt;0\)</span>. For det første er target-værdien <span class="math inline">\(t\)</span> altid enten <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span>. Derfor er der følgende to muligheder: <span class="math display">\[\begin{align}
 t=0: &amp; \quad  E=- \ln(1-o)\\
 t=1: &amp; \quad E=- \ln(o)
-\end{align}\]</span> Vi ved også, at outputværdien <span class="math inline">\(o\)</span> ligger mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>. Altså <span class="math inline">\(0&lt;o&lt;1\)</span>. Derfor vil også <span class="math inline">\(1-o\)</span> ligge mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>. På <a href="#fig-graf_ln" class="quarto-xref">figur&nbsp;7</a> ses grafen for den naturlige logaritmefunktion <span class="math inline">\(\ln(x)\)</span>. Her ser vi, at hvis <span class="math inline">\(0&lt;x&lt;1\)</span>, så vil <span class="math inline">\(\ln(x)\)</span> være negativ. Derfor kan vi fra ovenstående udtryk se, at <span class="math inline">\(E\)</span> vil være positiv (fordi både <span class="math inline">\(\ln (1-o)\)</span> og <span class="math inline">\(\ln(o)\)</span> vil være negative).</p>
+\end{align}\]</span> Vi ved også, at outputværdien <span class="math inline">\(o\)</span> ligger mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>. Altså <span class="math inline">\(0&lt;o&lt;1\)</span>. Derfor vil også <span class="math inline">\(1-o\)</span> ligge mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>. På <a href="#fig-graf_ln" class="quarto-xref">figur&nbsp;6</a> ses grafen for den naturlige logaritmefunktion <span class="math inline">\(\ln(x)\)</span>. Her ser vi, at hvis <span class="math inline">\(0&lt;x&lt;1\)</span>, så vil <span class="math inline">\(\ln(x)\)</span> være negativ. Derfor kan vi fra ovenstående udtryk se, at <span class="math inline">\(E\)</span> vil være positiv (fordi både <span class="math inline">\(\ln (1-o)\)</span> og <span class="math inline">\(\ln(o)\)</span> vil være negative).</p>
 <div class="cell page-columns page-full">
 <div class="cell-output-display page-columns page-full">
 <div id="fig-graf_ln" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
@@ -742,7 +732,7 @@ t=1: &amp; \quad E=- \ln(o)
 <img src="neurale_net_files/figure-html/fig-graf_ln-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-graf_ln-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;7: Grafen for den naturlige logaritmefunktion <span class="math inline">\(\ln(x)\)</span>.
+Figur&nbsp;6: Grafen for den naturlige logaritmefunktion <span class="math inline">\(\ln(x)\)</span>.
 </figcaption>
 </figure>
 </div>
@@ -750,7 +740,7 @@ Figur&nbsp;7: Grafen for den naturlige logaritmefunktion <span class="math inlin
 </div>
 <p>Vi mangler nu at redegøre for, at <span class="math inline">\(E \thickapprox 0\)</span>, hvis netværket er god til at klassificere. Der er igen to muligheder alt efter om <span class="math inline">\(t=0\)</span> eller om <span class="math inline">\(t=1\)</span>. Hvis <span class="math inline">\(t=0\)</span> og netværket er godt, så vil <span class="math inline">\(o\)</span> også være tæt på <span class="math inline">\(0\)</span>, og <span class="math inline">\(1-o\)</span> vil være tæt på <span class="math inline">\(1\)</span>. I det tilfælde får vi <span class="math display">\[
 E = - \left ( \underbrace{t}_{=0} \cdot \ln(o)+\underbrace{(1-t)}_{= 1} \cdot \underbrace{\ln(1-o)}_{\thickapprox 0} \right ),
-\]</span> hvor vi bruger, at <span class="math inline">\(\ln(x) \thickapprox 0\)</span>, hvis <span class="math inline">\(x \thickapprox 1\)</span> (se <a href="#fig-graf_ln" class="quarto-xref">figur&nbsp;7</a>). Alt i alt får vi i dette tilfælde, at <span class="math inline">\(E\)</span> er tæt på <span class="math inline">\(0\)</span>. Hvis derimod <span class="math inline">\(t=1\)</span> og netværket er godt, så <span class="math inline">\(o\)</span> er tæt på <span class="math inline">\(1\)</span>, så får vi: <span class="math display">\[
+\]</span> hvor vi bruger, at <span class="math inline">\(\ln(x) \thickapprox 0\)</span>, hvis <span class="math inline">\(x \thickapprox 1\)</span> (se <a href="#fig-graf_ln" class="quarto-xref">figur&nbsp;6</a>). Alt i alt får vi i dette tilfælde, at <span class="math inline">\(E\)</span> er tæt på <span class="math inline">\(0\)</span>. Hvis derimod <span class="math inline">\(t=1\)</span> og netværket er godt, så <span class="math inline">\(o\)</span> er tæt på <span class="math inline">\(1\)</span>, så får vi: <span class="math display">\[
 E = - \left ( \underbrace{t}_{=1} \cdot \underbrace{\ln(o)}_{\thickapprox 0}+\underbrace{(1-t)}_{=0} \cdot \ln(1-o) \right )
 \]</span> Igen får vi også i dette tilfælde, at <span class="math inline">\(E\)</span> er tæt på <span class="math inline">\(0\)</span>. På tilsvarende vis kan man argumentere for, at hvis netværket er dårligt, så enten <span class="math inline">\(t=0\)</span> og <span class="math inline">\(o \thickapprox  1\)</span> eller <span class="math inline">\(t=1\)</span> og <span class="math inline">\(o \thickapprox 0\)</span>, så vil <span class="math inline">\(E\)</span> blive stor.</p>
 <p>Alt i alt er vi altså kommet frem til, at cross-entropy tabsfunktionen opfylder betingelserne ovenfor og dermed, at cross-entropy tabsfunktionen rent faktisk <em>er</em> en tabsfunktion! Så langt så godt! Nu mangler vi at vise, at cross-entropy tabsfunktionen løser det potentielle problem omkring langsom læring. Det gør vi ved at finde et nyt udtryk for opdatering af <span class="math inline">\(w_1\)</span>-vægten. Hvis vi ser på udtrykket i (<a href="#eq-opdatering_w1_med_forklaring" class="quarto-xref">20</a>), så skal vi bare have fundet et nyt udtryk for <span class="math inline">\(dE/do\)</span>, da vi holder fast i sigmoid aktiveringsfunktionen. Så lad os differentiere cross-entropy tabsfunktionen defineret i (<a href="#eq-cross_entropy" class="quarto-xref">21</a>) med hensyn til <span class="math inline">\(o\)</span>: <span class="math display">\[
@@ -898,36 +888,36 @@ w_1 \leftarrow w_1 + \eta  \cdot (t-o) \cdot  z_1
 </tbody>
 </table>
 <p>Det vil sige, at <span class="math inline">\(x_{5,8}\)</span> er pixelværdien i række <span class="math inline">\(5\)</span> og kolonne <span class="math inline">\(8\)</span> i billedet. Husk at når billedet er sort/hvidt, er denne værdi et heltal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(255\)</span>.</p>
-<p>Vi forestiller os nu, at vi lader et vindue på <span class="math inline">\(3 \times 3\)</span> pixels kører henover billedet, som vist på <a href="#fig-sliding_window" class="quarto-xref">figur&nbsp;8</a>.</p>
+<p>Vi forestiller os nu, at vi lader et vindue på <span class="math inline">\(3 \times 3\)</span> pixels kører henover billedet, som vist på <a href="#fig-sliding_window" class="quarto-xref">figur&nbsp;7</a>.</p>
 <div id="fig-sliding_window" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-sliding_window-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/sliding_window1.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-sliding_window-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;8: Illustration af vindue på <span class="math inline">\(3 \times 3\)</span> pixels, som glider henover billedet.
+Figur&nbsp;7: Illustration af vindue på <span class="math inline">\(3 \times 3\)</span> pixels, som glider henover billedet.
 </figcaption>
 </figure>
 </div>
-<p>Hvis man tæller efter, vil der i alt kunne glide <span class="math inline">\(8\)</span> vinduer vandret og <span class="math inline">\(8\)</span> vinduer lodret. Det giver i alt <span class="math inline">\(64\)</span> vinduer. Pixelværdierne i hvert af disse vinduer sendes nu frem til en skjult neuron i et nyt lag i netværket. Dette er illustreret på <a href="#fig-local_receptive_fields" class="quarto-xref">figur&nbsp;9</a>.</p>
+<p>Hvis man tæller efter, vil der i alt kunne glide <span class="math inline">\(8\)</span> vinduer vandret og <span class="math inline">\(8\)</span> vinduer lodret. Det giver i alt <span class="math inline">\(64\)</span> vinduer. Pixelværdierne i hvert af disse vinduer sendes nu frem til en skjult neuron i et nyt lag i netværket. Dette er illustreret på <a href="#fig-local_receptive_fields" class="quarto-xref">figur&nbsp;8</a>.</p>
 <div id="fig-local_receptive_fields" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-local_receptive_fields-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/local_receptive_fields.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-local_receptive_fields-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;9: Local receptive fields for de skjulte neuroner.
+Figur&nbsp;8: Local receptive fields for de skjulte neuroner.
 </figcaption>
 </figure>
 </div>
-<p>Bemærk, at neuronerne i det første skjulte lag er repræsenteret som et <span class="math inline">\(8 \times 8\)</span> pixels billede (i stedet for neuroner i en vertikal søjle som vi har gjort tidligere). Hvert af vinduerne til venstre i <a href="#fig-local_receptive_fields" class="quarto-xref">figur&nbsp;9</a> kalder man for et <em>local receptive field</em> for den tilhørende skjulte neuron til højre i figuren. For at beregne den værdi som den første skjulte neuron sender videre i netværket, gør vi som tidligere - men med den vigtige undtagelse, at vi kun vægter de <span class="math inline">\(9\)</span> værdi fra det tilhørende <em>local receptive field</em>. Hvis vi kalder den værdi, som den første skjulte neuron sender videre, for <span class="math inline">\(y_{1,1}\)</span>, så kommer det til se sådan her ud: <span class="math display">\[\begin{align}
+<p>Bemærk, at neuronerne i det første skjulte lag er repræsenteret som et <span class="math inline">\(8 \times 8\)</span> pixels billede (i stedet for neuroner i en vertikal søjle som vi har gjort tidligere). Hvert af vinduerne til venstre i <a href="#fig-local_receptive_fields" class="quarto-xref">figur&nbsp;8</a> kalder man for et <em>local receptive field</em> for den tilhørende skjulte neuron til højre i figuren. For at beregne den værdi som den første skjulte neuron sender videre i netværket, gør vi som tidligere - men med den vigtige undtagelse, at vi kun vægter de <span class="math inline">\(9\)</span> værdi fra det tilhørende <em>local receptive field</em>. Hvis vi kalder den værdi, som den første skjulte neuron sender videre, for <span class="math inline">\(y_{1,1}\)</span>, så kommer det til se sådan her ud: <span class="math display">\[\begin{align}
 y_{1,1}&amp;=\sigma(v_0 + v_1 \cdot x_{1,1} + v_2 \cdot x_{1,2} + v_3 \cdot x_{1,3} \\ &amp;\quad \quad \quad \quad + v_4 \cdot x_{2,1} + v_5 \cdot x_{2,2}+\cdots+ v_{9} \cdot x_{3,3}),
 \end{align}\]</span> her er <span class="math inline">\(v_0\)</span> en bias, <span class="math inline">\(v_1, v_2, \dots, v_9\)</span> er vægte og <span class="math inline">\(\sigma\)</span> er igen sigmoid-funktionen.</p>
 <p>Det vil altså sige, at hver neuron i det første skjulte lag <em>kun</em> afhænger af <span class="math inline">\(9\)</span> af de i alt <span class="math inline">\(100\)</span> input-neuroner. På den måde får vi konstrueret et netværk, hvor vi eksplicit indbygger i netværket, at pixels som ligger tæt på hinanden, skal have noget med hinanden at gøre. Og omvendt hvis to pixels ligger langt væk fra hinanden, skal de ikke have noget med hinanden at gøre (fordi de ikke kommer til at indgå i den samme vægtede sum).</p>
 <p>En anden ting, der er ny, er, at vi for alle <span class="math inline">\(64\)</span> vinduer bruger de <em>samme</em> <span class="math inline">\(10\)</span> vægte: <span class="math inline">\(v_0, v_1, \dots, v_9\)</span>. Det vil sige, at når vi f.eks. skal udregne den sidste værdi, så bliver det <span class="math display">\[\begin{align}
 y_{8,8}&amp; =\sigma(v_0 + v_1 \cdot x_{8,8} + v_2 \cdot x_{8,9} + v_3 \cdot x_{8,10}
 \\ &amp; \quad \quad \quad \quad + v_4 \cdot x_{9,8} + v_5 \cdot x_{9,9}+\cdots+ v_9 \cdot x_{10,10})
-\end{align}\]</span> Resultatet bliver <span class="math inline">\(8 \times 8\)</span> skjulte neuroner, som er vist til højre på billedet i <a href="#fig-local_receptive_fields" class="quarto-xref">figur&nbsp;9</a>. Dette lag i netværket kalder man for et <em>convolutional layer</em>. De i alt <span class="math inline">\(10\)</span> vægte kaldes for et <em>feature map</em>, og idéen er, at de bruges til at finde en bestemt egenskab (feature) i billedet. Lad os se på et eksempel. Nedenfor er illustreret et <span class="math inline">\(10 \times 10\)</span> pixels billede med en vertikal mørk linje i midten. Værdierne i hver celle er egentlig ikke en del af billedet, men blot den tilhørende gråskalaværdi.</p>
+\end{align}\]</span> Resultatet bliver <span class="math inline">\(8 \times 8\)</span> skjulte neuroner, som er vist til højre på billedet i <a href="#fig-local_receptive_fields" class="quarto-xref">figur&nbsp;8</a>. Dette lag i netværket kalder man for et <em>convolutional layer</em>. De i alt <span class="math inline">\(10\)</span> vægte kaldes for et <em>feature map</em>, og idéen er, at de bruges til at finde en bestemt egenskab (feature) i billedet. Lad os se på et eksempel. Nedenfor er illustreret et <span class="math inline">\(10 \times 10\)</span> pixels billede med en vertikal mørk linje i midten. Værdierne i hver celle er egentlig ikke en del af billedet, men blot den tilhørende gråskalaværdi.</p>
 <div class="cell">
 <div class="cell-output-display">
 <table class="huxtable" data-quarto-disable-processing="true" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  ">
@@ -983,7 +973,7 @@ y_{8,8}&amp; =\sigma(v_0 + v_1 \cdot x_{8,8} + v_2 \cdot x_{8,9} + v_3 \cdot x_{
 
 </div>
 </div>
-<p>Et feature map, som kan bruges til at finde henholdsvis lodrette og vandrette linjer i et billede er vist i <a href="#fig-feature1_maps" class="quarto-xref">figur&nbsp;10</a> og <a href="#fig-feature2_maps" class="quarto-xref">figur&nbsp;11</a>.</p>
+<p>Et feature map, som kan bruges til at finde henholdsvis lodrette og vandrette linjer i et billede er vist i <a href="#fig-feature1_maps" class="quarto-xref">figur&nbsp;9</a> og <a href="#fig-feature2_maps" class="quarto-xref">figur&nbsp;10</a>.</p>
 <div class="cell page-columns page-full">
 <div id="fig-feature1_maps" class="cell-output-display quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
@@ -999,7 +989,7 @@ y_{8,8}&amp; =\sigma(v_0 + v_1 \cdot x_{8,8} + v_2 \cdot x_{8,9} + v_3 \cdot x_{
 
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-feature1_maps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;10: Et feature map <span class="math inline">\(f_1\)</span>, som kan finde vandrette linjer i billeder.
+Figur&nbsp;9: Et feature map <span class="math inline">\(f_1\)</span>, som kan finde vandrette linjer i billeder.
 </figcaption>
 </figure>
 </div>
@@ -1019,7 +1009,7 @@ Figur&nbsp;10: Et feature map <span class="math inline">\(f_1\)</span>, som kan 
 
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-feature2_maps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;11: Et feature map <span class="math inline">\(f_2\)</span>, som kan finde lodrette linjer i billeder.
+Figur&nbsp;10: Et feature map <span class="math inline">\(f_2\)</span>, som kan finde lodrette linjer i billeder.
 </figcaption>
 </figure>
 </div>
@@ -1073,14 +1063,14 @@ Figur&nbsp;11: Et feature map <span class="math inline">\(f_2\)</span>, som kan 
 </div>
 </div>
 <p>Læg mærke til hvordan man på dette kondenserede billede tydeligt kan se den lodrette stribe, som var i det oprindelige billede.</p>
-<p>Så dette er den overordnede idé, men der er flere ting at bemærke. For det første bruges et feature map til at finde egenskaber på et billede som vist ovenfor, men man vil typisk ikke kun lede efter én egenskab men flere. Det vil sige, at der ikke kun er ét convolutional lag, men måske <span class="math inline">\(5\)</span> eller <span class="math inline">\(20\)</span> lag. For hvert af disse lag fås et tilhørende pooling lag. Dette er illustreret på <a href="#fig-CNN" class="quarto-xref">figur&nbsp;12</a>.</p>
+<p>Så dette er den overordnede idé, men der er flere ting at bemærke. For det første bruges et feature map til at finde egenskaber på et billede som vist ovenfor, men man vil typisk ikke kun lede efter én egenskab men flere. Det vil sige, at der ikke kun er ét convolutional lag, men måske <span class="math inline">\(5\)</span> eller <span class="math inline">\(20\)</span> lag. For hvert af disse lag fås et tilhørende pooling lag. Dette er illustreret på <a href="#fig-CNN" class="quarto-xref">figur&nbsp;11</a>.</p>
 <div id="fig-CNN" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-CNN-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/CNN.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-CNN-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;12: Convolutional neural network.
+Figur&nbsp;11: Convolutional neural network.
 </figcaption>
 </figure>
 </div>

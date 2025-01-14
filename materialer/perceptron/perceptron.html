@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Forløberen til kunstige neurale netværk er perceptroner, som du kan læse mere om her i denne note.">
+<meta name="description" content="Historisk set er forløberen til kunstige neurale netværk de såkaldte perceptroner. I denne note behandles perceptroner, og vi ser på opdateringsalgoritmerne <em>perceptron learning algoritmen</em> og <em>ADALINE</em> (adaptive linear neuron).">
 
 <title>Perceptroner – AI MAT - matematikken bag magien</title>
 <style>
@@ -201,11 +201,8 @@ window.Quarto = {
     <h2 id="toc-title">Indhold</h2>
    
   <ul>
-  <li><a href="#rosenblatts-perceptron" id="toc-rosenblatts-perceptron" class="nav-link active" data-scroll-target="#rosenblatts-perceptron">Rosenblatts perceptron</a>
-  <ul class="collapse">
-  <li><a href="#sec-kandidattest" id="toc-sec-kandidattest" class="nav-link" data-scroll-target="#sec-kandidattest">Eksempel: Hvem skal jeg stemme på ved næste valg?</a></li>
+  <li><a href="#sec-kandidattest" id="toc-sec-kandidattest" class="nav-link active" data-scroll-target="#sec-kandidattest">Eksempel: Hvem skal jeg stemme på ved næste valg?</a></li>
   <li><a href="#video-hvad-er-en-perceptron" id="toc-video-hvad-er-en-perceptron" class="nav-link" data-scroll-target="#video-hvad-er-en-perceptron">VIDEO: Hvad er en perceptron?</a></li>
-  </ul></li>
   <li><a href="#sec-perceptron_learning_algortimen" id="toc-sec-perceptron_learning_algortimen" class="nav-link" data-scroll-target="#sec-perceptron_learning_algortimen">Perceptron Learning Algoritmen</a>
   <ul class="collapse">
   <li><a href="#video-perceptron-learning-algoritmen" id="toc-video-perceptron-learning-algoritmen" class="nav-link" data-scroll-target="#video-perceptron-learning-algoritmen">VIDEO: Perceptron Learning Algoritmen</a></li>
@@ -249,10 +246,7 @@ window.Quarto = {
 </header>
 
 
-<p>Forløberen til kunstige neurale netværk er perceptroner, som du kan læse mere om her i denne note.</p>
-<section id="rosenblatts-perceptron" class="level1 page-columns page-full">
-<h1>Rosenblatts perceptron</h1>
-<p>Perceptroner... Hvorfor nu det? Jo, for det er faktisk sådan nogle, du ikke vidste, at du ikke kunne leve uden! Nu skal du høre hvorfor.</p>
+<p>Historisk set er forløberen til kunstige neurale netværk de såkaldte perceptroner. Vi vil her forklare, hvad en perceptron er, og vi vil se på opdateringsalgoritmerne <em>perceptron learning algoritmen</em> og <em>ADALINE</em> (adaptive linear neuron). For at gøre det tager vi udgangspunkt i et eksempel om kandidattests.</p>
 <section id="sec-kandidattest" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="sec-kandidattest">Eksempel: Hvem skal jeg stemme på ved næste valg?</h2>
 <p>De senere år er det blevet populært, at diverse medier laver forskellige kandidattests. Sådan nogle tests kan laves på mange forskellige måder - man kunne blandt andet bruge perceptroner! Testene fungerer som regel på den måde, at man bliver stillet en række forskellige spørgsmål og så skal man svare på en skala fra <em>meget uenig</em> til <em>meget enig</em>. Disse kategorier af svar kunne f.eks. oversættes til matematik på denne måde:</p>
@@ -416,7 +410,8 @@ o = \begin{cases}
 -1.5+1.2 \cdot x_1+x_2=-1.5+1.2 \cdot 0+2=0.5
 \]</span> Og da denne værdi er større end <span class="math inline">\(0\)</span>, sætter vi <span class="math inline">\(o=1\)</span>. Det vil sige, at vi vil anbefale denne vælger at stemme blå blok.</p>
 </div>
-<p>Det er da smart! Og det her er faktisk lige præcis idéen bag perceptroner, som den amerikanske psykolog Frank Rosenblatt foreslog helt tilbage i <span class="math inline">\(1958\)</span>. Den klassiske perceptron er defineret ved, at perceptronen kan modtage input <span class="math display">\[
+<p>Det er da smart! Og det her er faktisk lige præcis idéen bag perceptroner. Vi vil her definere perceptronen ved, at den kan modtage input</p>
+<p><span class="math display">\[
 \begin{aligned}
 x_1, x_2, \dots, x_n,
 \end{aligned}
@@ -445,7 +440,6 @@ Figur&nbsp;4: Grafisk illustration af en perceptron.
 <p>I denne video forklarer vi ovenstående, men med udgangspunkt i et andet eksempel.</p>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/1WTZZCx-pRY" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 </section>
-</section>
 <section id="sec-perceptron_learning_algortimen" class="level1 page-columns page-full">
 <h1>Perceptron Learning Algoritmen</h1>
 <p>Det er jo alt sammen meget fint, hvis man kender vægtene. Bum – så kan man beregne den vægtede sum <span class="math display">\[
@@ -453,8 +447,8 @@ Figur&nbsp;4: Grafisk illustration af en perceptron.
 w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n.
 \end{aligned}
 \]</span> Får vi et ikke-negativt tal sættes <span class="math inline">\(o\)</span> til <span class="math inline">\(1\)</span> og <span class="math inline">\(-1\)</span> ellers. Præcis som vi gjorde det i <a href="#exm-Rosenblatts" class="quarto-xref">eksempel&nbsp;1</a>. Men det kræver jo, at man kender vægtene <span class="math inline">\(w_0, w_1, \dots, w_n\)</span>...! I vores eksempel med bare to inputværdier var det nemt nok at finde nogle passende værdier af vægtene. Vi tegnede bare punkterne <span class="math inline">\((x_1,x_2)\)</span> ind i et koordinatsystem og slog en streg, der adskilte de røde punkter fra de blå punkter. Men hvis der er mere end to inputværdier (hvis man f.eks. i kandidattesten skal svare på 20 spørgsmål), så er det jo ikke helt så nemt! Hvad gør vi så?</p>
-<p>Det havde Frank Rosenblatt faktisk også en idé til, som vi nu skal se nærmere på. Vi skal forestille os, at vi har en masse data, som vi så det i vores eksempel. Disse data kalder vi for træningsdata, og de vil dels bestå af konkrete inputværdier <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> og den tilhørende korrekte klassificering <span class="math inline">\(t\)</span>. Her bruger vi bogstavet <span class="math inline">\(t\)</span> som en forkortelse for <em>target-værdi</em> – altså den "målværdi", som svarer til den rigtige klassificering. I vores eksempel viser (<a href="#eq-trainingdata" class="quarto-xref">1</a>) et eksempel på sådan et træningsdatasæt.</p>
-<p>Lad os så se på hvad Rosenblatts "Perceptron Learning Algoritmen" går nu ud på. Den kommer her:</p>
+<p>Det vil vi se nærmere på nu. Vi skal forestille os, at vi har en masse data, som vi så det i vores eksempel. Disse data kalder vi for træningsdata, og de vil dels bestå af konkrete inputværdier <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> og den tilhørende korrekte klassificering <span class="math inline">\(t\)</span>. Her bruger vi bogstavet <span class="math inline">\(t\)</span> som en forkortelse for <em>target-værdi</em> – altså den "målværdi", som svarer til den rigtige klassificering. I vores eksempel viser (<a href="#eq-trainingdata" class="quarto-xref">1</a>) et eksempel på sådan et træningsdatasæt.</p>
+<p>Lad os så se på hvad "Perceptron Learning Algoritmen" går nu ud på. Den kommer her:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -757,7 +751,7 @@ Figur&nbsp;8: Træningsdata hvor stort set alle datapunkterne er klassificeret k
 </div>
 </div>
 </div>
-<p>Der er derfor brug for noget lidt andet end den klassiske perceptron, som Rosenblatt foreslog. Eller rettere sagt: perceptronen er god nok, det er faktisk bare læringsalgoritmen, som skal justeres lidt. Det viser sig nemlig, at problemet opstår fordi vi i læringsalgoritmen bruger det diskrete output <span class="math inline">\(o\)</span>: <span id="eq-output_perceptron"><span class="math display">\[
+<p>Der er derfor brug for noget lidt andet end den klassiske perceptron. Eller rettere sagt: perceptronen er god nok, det er faktisk bare læringsalgoritmen, som skal justeres lidt. Det viser sig nemlig, at problemet opstår fordi vi i læringsalgoritmen bruger det diskrete output <span class="math inline">\(o\)</span>: <span id="eq-output_perceptron"><span class="math display">\[
 \begin{aligned}
 o = \begin{cases}
 1 &amp; \text{hvis } w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n \geq 0 \\
