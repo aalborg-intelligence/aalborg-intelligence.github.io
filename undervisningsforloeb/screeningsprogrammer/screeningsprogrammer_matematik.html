@@ -253,9 +253,9 @@ Tabel&nbsp;1: Tabel med forholdet mellem syge og raske for de fem udvalgte genet
 </figure>
 </div>
 <p>Bemærk, at nogle i gennemsnit er højere for de syge og nogle er lavere (fra <span class="math inline">\(0.42\)</span> til <span class="math inline">\(1.34\)</span>).</p>
-<p>Vi vil generere talværdier for genmarkørerne ved at sample en normalfordeling, hvor vi har valgt en middelværdi som den gennemsnitlige værdi for den pågældende genmarkør og en spredning som et mål for den biologiske variation.</p>
+<p>Vi vil generere talværdier for genmarkørerne ved at sample fra en normalfordeling, hvor vi har valgt en middelværdi som den gennemsnitlige værdi for den pågældende genmarkør og en spredning som et mål for den biologiske variation.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -264,7 +264,7 @@ Aktivitet 1 - Generering af fiktive kliniske data
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>For raske vælger vi, at bruge middelværdien <span class="math inline">\(\mu=10\)</span> og spredningen <span class="math inline">\(\sigma=5\)</span> – altså normalfordelingen <span class="math inline">\(N(10,5)\)</span>.</p>
 <p>For syge ændrer vi middelværdien afhængig af det angivne forhold i <a href="#tbl-gen" class="quarto-xref">tabel&nbsp;1</a> for den pågældende genmarkør, men beholder en spredning på <span class="math inline">\(5\)</span>.</p>
@@ -298,19 +298,19 @@ Aktivitet 1 - Generering af fiktive kliniske data
 </tr>
 </tbody>
 </table>
-<p>Vi kan nu generere vores kunstige kliniske data ved at sample fra disse normalfordelinger. <em>Her skal Ege lave noget smart, så vi kan undgå Maple.</em></p>
+<p>Vi kan nu generere vores kunstige kliniske data ved at sample fra disse normalfordelinger.</p>
 <ul>
-<li><p>Generer kunstige kliniske data for raske og for syge ved at sample fra normalfordelingerne ovenfor.</p></li>
-<li><p>Prøv også generere data, hvor spredningen er sat ned fra <span class="math inline">\(5\)</span> til <span class="math inline">\(2\)</span>. Det bør give en større forskel på de kliniske data for syge og for raske. Overvej hvorfor.</p></li>
-<li><p>Prøv tilsvarende at generere data, hvor spredningen er sat op fra <span class="math inline">\(5\)</span> til <span class="math inline">\(10\)</span>. Det bør give en mindre forskel på de kliniske data for syge og for raske. Overvej hvorfor.</p></li>
+<li><a href="https://apps01.math.aau.dk/ai/gendata/" target="blank">Brug denne app</a> til at generere kunstige kliniske data for 800 raske patienter og for 200 syge ved at sample fra normalfordelingerne ovenfor. Datasættet skal samles i én Excel-fil, hvor I tilføjer en kolonne "Syg", som har værdien 0 for de raske patienter og 1 for de syge (den værdi kaldes for en <strong>target</strong>-værdi). Disse data kaldes for <strong>træningsdata</strong>.</li>
 </ul>
+</div>
+</div>
+</div>
 <p>Bemærk, at vi har valgt at bruge normalfordelingerne <span class="math inline">\(N(10,5)\)</span> som udgangspunkt. Det er blot for at illustrere metoden. Det har altså ikke afsæt i kendte biologiske parametre. At sætte middelværdien til <span class="math inline">\(10\)</span> svarer blot til at vælge en enhed, hvor talværdien bliver <span class="math inline">\(10\)</span>, så det er ret uproblematisk. At sætte spredningen til <span class="math inline">\(5\)</span> kan være mere problematisk, da det svarer til at angive information om den biologiske variation for den pågældende genmarkør.</p>
 <p>I en virkelig anvendelse med brug af rigtige kliniske data for raske og for syge ville man sikkert se, at normalfordelinger er en god model for de kliniske data, men at middelværdi og spredning er forskellig for hver af de fem genmarkører.</p>
-</div>
-</div>
-</div>
+<p>Inden næste aktivitet skal I se denne video, hvor vi fortæller lidt om, hvad AI og kunstige neurale netværk er.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/ivrBEopralQ" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -319,34 +319,81 @@ Aktivitet 2 - Træning af kunstigt neuralt netværk
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><em>Screencast her med brug enten af app eller af Orange.</em></p>
-<p>Vi vil nu illustrere, hvordan de kliniske data kan bruges til at træne et neuralt net, som efterfølgende kan bruges i vores screeningsprogram for den pågældende sygdom. Vi lader de første syv raske og syv syge personer udgøre vores træningsdata.</p>
-<p>…</p>
-<p>Før vi kan bruge det i et screeningsprogram, skal vi bruge de resterende seks personer fra vores fiktive kliniske data til at teste, om det virker efter hensigten.</p>
-<p>…</p>
-<p>Vi ser, at modellen stort set ser ud til at virke, men dog ikke fanger, at <em>personF</em> er syg. <em>PersonD</em> og <em>personE</em> ville imidlertid være blevet opdaget ved en screening.</p>
-<p>Kvaliteten af en AI anvendelse afhænger voldsomt af kvaliteten og mængden af træningsdata.</p>
+<ul>
+<li><p>Træn forskellige kunstige neurale netværk (vælg forskellige antal skjulte lag og forskellige antal neuroner i de skjulte lag).</p></li>
+<li><p>Brug femfolds krydsvalidering og klassifikationsnøjagtigheden (CA) til at vurdere de netværk, som I har trænet.</p></li>
+<li><p>Lav en <strong>confusion matrix</strong> for alle de netværk som I har trænet.</p></li>
+<li><p>Hvorfor er en klassifikationsnøjagtighed på <span class="math inline">\(0.8\)</span> ikke imponerende, og hvad svarer det til?</p></li>
+<li><p>Hvad er den højeste klassifikationsnøjagtighed, som I kan nå?</p></li>
+</ul>
 </div>
 </div>
 </div>
+<p>I den foregående aktivitet har I måske været heldige og fundet en model med en klassifikationsnøjagtighed på omkring <span class="math inline">\(0.91\)</span>? Men formentlig ikke ret meget højere. I den næste aktivitet vil vi undersøge, hvorfor det er tilfældet.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Aktivitet 3 - Lav jeres eget screeningsprogram
+Aktivitet 3 - Vurdering af træningsdata
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Brug nogle af jeres egne fiktive kliniske data fra aktivitet 2 som træningsdata og andre af jeres kliniske data som testdata.</p>
-<p>Definer og træn et kunstigt neuralt net med jeres træningsdata, som det blev vist i aktivitet 3.</p>
-<p>Afprøv derefter med jeres testdata om screeningen for sygdommen med AI virker.</p>
-<p><em>Evt. også noget med at prøve på de data, hvor der har været ændret på spredningen.</em></p>
+<ul>
+<li><p>For hver af de fem genmarkører skal I i <em>samme</em> figur tegne to boksplots: et boksplot som viser fordelingen af den pågældende genmarkør for de raske og et tilsvarende boksplot for de syge.</p></li>
+<li><p>Hvad kan du konkludere på baggrund af disse boksplots?</p></li>
+<li><p>Kan det forklare, hvorfor I ikke kan finde en model med en klassifikationsnøjagtighed, som er tæt på <span class="math inline">\(1\)</span>?</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Aktivitet 4 - Lav jeres eget screeningsprogram
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Brug det kunstige neurale netværk som I fandt frem til i den foregående aktivitet.</li>
+</ul>
+<p>Vi forestiller os nu, at sundhedsmyndighederne stiller dette <a href="">valideringsdatasæt</a> til rådighed.</p>
+<p><em>Screencast som viser hvordan man laver prædiktioner med brug enten af app eller af Orange.</em></p>
+<ul>
+<li><p>Brug jeres kunstige neurale netværk (trænet på jeres eget træningsdata) til at prædiktere om patienterne i valideringsdatasættet er syge eller raske.</p></li>
+<li><p>Lav en <strong>confusion matrix</strong> og bestem klassifikationsnøjagtigheden.</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Aktivitet 5 - Hvad skal der til for at få en bedre model?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>I aktivitet 1 genererede I fiktive kliniske data ved at sample fra normalfordelinger med forskellige middelværdier, men alle med en spredning på <span class="math inline">\(5\)</span>.</p>
+<ul>
+<li><p>Prøv nu at generere data, hvor spredningen er sat ned fra <span class="math inline">\(5\)</span> til <span class="math inline">\(2\)</span>. Det bør give en større forskel på de kliniske data for syge og for raske. Overvej hvorfor.</p></li>
+<li><p>Gentag aktivitet 2 og 4 for disse data. Kan I ramme en højere eller lavere klassifikationsnøjagtighed? Overvej hvorfor det forholder sig sådan.</p></li>
+</ul>
 </div>
 </div>
 </div>
