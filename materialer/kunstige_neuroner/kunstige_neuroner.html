@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="I denne note behandles kunstige neuroner, som er en udvidelse af den klassiske perceptron, men med den tilføjelse at vi her indfører en aktiveringsfunktion. De kunstige neuroner er de byggesten, som et kunstigt neuralt netværk består af, og kan dermed ses som en trædesten på vej mod at forstå generelle kunstige neurale netværk.">
+
+<title>Kunstige neuroner – AI MAT - matematikken bag magien</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-3b81a08490d9a41431263658c5feaca7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-Y219BCPS45"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+ 
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'analytics_storage': 'denied'
+  });
+gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="floating nav-fixed slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../undervisningsforlob.html"> 
+<span class="menu-text">Undervisningsforløb</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../materialer.html"> 
+<span class="menu-text">Materialer</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../sro.html"> 
+<span class="menu-text">SRO</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../srp.html"> 
+<span class="menu-text">SRP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../apps.html"> 
+<span class="menu-text">Apps</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../referencer.html"> 
+<span class="menu-text">Referencer</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Om os</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.youtube.com/@ai-mat"> 
+<span class="menu-text"><img src="../../logo/YouTube/youtube-color-darkblue-icon.svg" style="height:2em"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indhold</h2>
+   
+  <ul>
+  <li><a href="#medlemsapp-til-good-food" id="toc-medlemsapp-til-good-food" class="nav-link active" data-scroll-target="#medlemsapp-til-good-food">Medlemsapp til Good Food</a></li>
+  <li><a href="#hvordan-bestemmes-vægtene" id="toc-hvordan-bestemmes-vægtene" class="nav-link" data-scroll-target="#hvordan-bestemmes-vægtene">Hvordan bestemmes vægtene?</a></li>
+  <li><a href="#aktiviteringsfunktioner" id="toc-aktiviteringsfunktioner" class="nav-link" data-scroll-target="#aktiviteringsfunktioner">Aktiviteringsfunktioner</a></li>
+  <li><a href="#smartere-end-adaline" id="toc-smartere-end-adaline" class="nav-link" data-scroll-target="#smartere-end-adaline">Smartere end ADALINE?</a></li>
+  <li><a href="#overblik" id="toc-overblik" class="nav-link" data-scroll-target="#overblik">Overblik</a>
+  <ul class="collapse">
+  <li><a href="#perceptron-learning-algoritmen" id="toc-perceptron-learning-algoritmen" class="nav-link" data-scroll-target="#perceptron-learning-algoritmen">Perceptron learning algoritmen</a></li>
+  <li><a href="#adaline" id="toc-adaline" class="nav-link" data-scroll-target="#adaline">ADALINE</a></li>
+  <li><a href="#kunstige-neuroner" id="toc-kunstige-neuroner" class="nav-link" data-scroll-target="#kunstige-neuroner">Kunstige neuroner</a></li>
+  <li><a href="#generelle-neurale-netværk" id="toc-generelle-neurale-netværk" class="nav-link" data-scroll-target="#generelle-neurale-netværk">Generelle neurale netværk</a></li>
+  <li><a href="#samlet-skematisk-overblik" id="toc-samlet-skematisk-overblik" class="nav-link" data-scroll-target="#samlet-skematisk-overblik">Samlet skematisk overblik</a></li>
+  </ul></li>
+  <li><a href="#videre-læsning" id="toc-videre-læsning" class="nav-link" data-scroll-target="#videre-læsning">Videre læsning</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Kunstige neuroner</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Vi vil her beskrive <strong>kunstige neuroner</strong>, som er en udvidelse af den klassiske perceptron, men med den tilføjelse at vi her indfører en såkaldt aktiveringsfunktion. De kunstige neuroner er de byggesten, som et kunstigt neuralt netværk består af, og kan dermed ses som en trædesten på vej mod at forstå generelle kunstige neurale netværk.</p>
+<section id="medlemsapp-til-good-food" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="medlemsapp-til-good-food">Medlemsapp til Good Food</h2>
+<p>Lad os tage udgangspunkt i et fiktivt eksempel. Vi forestiller os, at dagligvarekæden Good Food er ved at udvikle en ny medlemsapp, som kunderne kan hente og bruge til at aktivere forskellige tilbud, når de handler i Good Food. Når kunderne opretter en profil i app’en, oplyser de deres navn, fødselsdato og køn. Samtidig registrer app’en løbende, hvilke køb kunden foretager, hvilken ugedag de handler med videre. For at undgå at app’en bliver for uoverskuelig for kunderne, skal app’en kun vise et begrænset udvalg af tilbud, som kunden kan aktivere. For eksempel skal en midaldrende mand, som i den seneste måned har købt for 10000 kr. i app’en, have vist nogle andre tilbud end en teenagepige, som kun sjældent handler i Good Food.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/dagligvarer.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
+</figure>
+</div>
+<p>Good Food sætter derfor en undersøgelse i gang. Om alle deres kunder, som har app’en, registrerer de:</p>
+<ul>
+<li><span class="math inline">\(x_1\)</span>: kundens alder målt i år</li>
+<li><span class="math inline">\(x_2\)</span>: kundens forbrug i Good Food den seneste måned målt i kr.</li>
+</ul>
+<p>Disse to værdier <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> kaldes for inputværdier. Samtidig har de i en periode for hver kunde registreret, om kunden har aktiveret et bestemt tilbud. Denne information gemmes på denne måde:</p>
+<p><span class="math display">\[
+t=
+\begin{cases}
+1 &amp; \textrm{hvis tilbuddet aktiveres} \\
+0 &amp; \textrm{hvis tilbuddet ikke aktiveres} \\
+\end{cases}
+\]</span></p>
+<p>Værdien <span class="math inline">\(t\)</span> kaldes for en <strong>targetværdi</strong>, fordi det er denne værdi, vi gerne i fremtiden vil kunne forudsige baseret på kundens alder og forbrug. Hvis Good Food kan forudsige, om en given kunde med stor sandsynlighed vil aktivere et bestemt tilbud, så vil det være en god idé at vise lige præcis dét tilbud fremfor et alternativ, som kunden måske er mindre tilbøjelig til at aktivere.</p>
+<p>Et datasæt, som for hver kunde består af inputværdierne <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span> og den tilhørende targetværdi <span class="math inline">\(t\)</span>, kaldes for et <strong>træningsdatasæt</strong>. I <a href="#fig-alder_vs_forbrug" class="quarto-xref">figur&nbsp;1</a> ses et fiktivt eksempel på sådan et træningsdatasæt. Her er et punkt farvet rødt, hvis targetværdien er <span class="math inline">\(1\)</span> (det vil sige, at tilbuddet er aktiveret) og blåt, hvis targetværdien er <span class="math inline">\(0\)</span> (og tilbuddet er ikke aktiveret).</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-alder_vs_forbrug" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-alder_vs_forbrug-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="kunstige_neuroner_files/figure-html/fig-alder_vs_forbrug-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-alder_vs_forbrug-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;1: Fiktivt datasæt som viser 100 Good Food kunders alder og forbrug. Hvert punkt, som repræsenterer en kunde, er farvet rødt, hvis kunden har aktiveret tilbuddet og blåt ellers.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>For at forudsige – eller med et fint ord: at <strong>prædiktere</strong> – om tilbuddet aktiveres eller ej, vil vi prøve, om vi kan beregne en værdi <span class="math inline">\(o\)</span> (<span class="math inline">\(o\)</span> kaldes også for <strong>outputværdien</strong>), som kunne være et bud på sandsynligheden for, at en kunde med en given alder og et givent forbrug vil aktivere tilbuddet<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. En måde at modellere en sandsynlighed på er at bruge en såkaldt <strong>sigmoid</strong>-funktion. Forskriften for sigmoid-funktionen er</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Læg mærke til at det er en sandsynlighed, som vi forsøger at beregne. Man kan sagtens forestille sig to kunder på præcis samme alder og med præcis samme forbrug, hvor den ene vil aktivere tilbuddet, mens den anden ikke vil. Vi kan altså ikke forudsige nøjagtigt, hvad en given kunde vil gøre – men vi kan måske være heldig at komme med et godt bud på sandsynligheden for, at en bestemt kunden vil aktivere tilbuddet.</p></div></div><p><span id="eq-sigmoid"><span class="math display">\[
+\sigma(x)=\frac{1}{1+e^{-x}}
+\tag{1}\]</span></span></p>
+<p>og grafen ses i <a href="#fig-sigmoid" class="quarto-xref">figur&nbsp;2</a>.</p>
+<div id="fig-sigmoid" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-sigmoid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/sigmoid.png" class="img-fluid figure-img" style="width:75.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-sigmoid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;2: Grafen for sigmoid-funktionen med forskrift <span class="math inline">\(\sigma(x)=\frac{1}{1+e^{-x}}\)</span>.
+</figcaption>
+</figure>
+</div>
+<p>Definitionsmængden for sigmoid-funktionen er alle reelle tal, mens værdimængden er intervallet <span class="math inline">\((0,1)\)</span>. Det kan skrives sådan her:</p>
+<p><span class="math display">\[
+\sigma: \mathbb{R} \rightarrow (0,1).
+\]</span></p>
+<p>Da værdimængden er <span class="math inline">\((0,1)\)</span>, kan sigmoid-funktionen netop bruges til at modellere sandsynligheden for om tilbuddet aktiveres. Spørgsmålet er nu, hvordan man gør det.</p>
+<p>For det første skal sigmoid-funktionen selvfølgelig på en eller anden måde afhænge af vores inputværdier <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span>. Det kan man gøre på mange måder, men en ofte anvendt metode er, at "sende" en linearkombination<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> af inputværdierne ind i sigmoid-funktionen, så outputværdien <span class="math inline">\(o\)</span> beregnes sådan her:</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;En linearkombination af <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> betyder bare <span class="math inline">\(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2\)</span>, hvor <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span> er konstanter.</p></div></div><p><span id="eq-output"><span class="math display">\[
+o = \sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2).
+\tag{2}\]</span></span></p>
+<p>Her kaldes <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span> for vægte.</p>
+<p>Grafisk kan det illustreres sådan her:</p>
+<div id="fig-simplet_netvaerk1" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-simplet_netvaerk1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/simplet_netvaerk1.png" class="img-fluid figure-img" style="width:75.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-simplet_netvaerk1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;3: Grafisk illustration af en kunstig neuron i eksemplet om Good Food app’en.
+</figcaption>
+</figure>
+</div>
+<p>Opgaven bliver nu, at finde værdier af disse vægte sådan, at outputværdien <span class="math inline">\(o\)</span> for givne værdier af <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> bliver god til at modellere sandsynligheden for, om tilbuddet aktiveres eller ej.</p>
+<p>Det er her, at træningsdata kommer i spil, fordi vi for en lang række af inputværdier <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> jo faktisk ved, om tilbuddet blev aktiveret eller ej (husk på at den oplysning er gemt i targetværdien <span class="math inline">\(t\)</span>).</p>
+<p>Forestil dig for en stund at vi på en eller anden måde har bestemt værdier af <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span>. Vi kan nu sammenligne værdien af <span class="math inline">\(o\)</span> (vores pt bedste bud på sandsynligheden) og targetværdien (som er den værdi, vi gerne vil kunne forudsige). Hvis <span class="math inline">\(t=0\)</span> vil vi også gerne have, at <span class="math inline">\(o\)</span> er tæt på <span class="math inline">\(0\)</span>, og omvendt hvis <span class="math inline">\(t=1\)</span> vil vi gerne have, at <span class="math inline">\(o\)</span> er tæt på <span class="math inline">\(1\)</span>. Det vil sige, at differensen</p>
+<p><span class="math display">\[
+t-o = t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2)
+\]</span> ønskes tæt på <span class="math inline">\(0\)</span>. Nu kan differensen både være positiv og negativ, og for at slippe for fortegn vælger vi i stedet at se på den kvadrerede differens: <span class="math display">\[
+\left ( t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2) \right )^2
+\]</span></p>
+<p>Der er ikke bare ét, men rigtig mange træningsdata og derfor vælger man, at summere (det vil sige, "at lægge sammen") alle disse kvadrerede differenser:</p>
+<p><span class="math display">\[
+E = \frac{1}{2} \sum \left ( t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2) \right )^2,
+\]</span></p>
+<p>hvor der altså her summeres over alle træningsdata. Vi har lige ganget med <span class="math inline">\(\frac{1}{2}\)</span> foran. Det kan virke lidt mærkeligt, men du ser fidusen senere.</p>
+<p>Hvis vægtene <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span> er valgt, så sigmoid-funktionen er god til at prædiktere, om tilbuddet aktiveres eller ej, så vil ovenstående udtryk være tæt på <span class="math inline">\(0\)</span>. Det vil sige, at hvis <span class="math inline">\(E\)</span> er tæt på <span class="math inline">\(0\)</span>, så har vi valgte gode værdier af vægtene, mens hvis <span class="math inline">\(E\)</span> er langt væk fra <span class="math inline">\(0\)</span>, så har vi valgt mindre gode værdier af vægtene (i forhold til det overordnede ønske om at være i stand til at prædiktere om tilbuddet aktiveres eller ej). Denne funktion <span class="math inline">\(E\)</span>, som jo afhænger af vægtene <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span>, kaldes for en <strong>tabsfunktion</strong> (eller på engelsk <strong>error function</strong>).</p>
+<p>Nu er vægtene jo ikke givet på forhånd, men det er lige præcis tabsfunktionen, man bruger til at bestemme "gode" værdier af vægtene. Det gøres ved at bestemme de værdier af vægtene, som minimerer tabsfunktionen. Det er altså et optimeringsproblem, vi står overfor. Hvordan det løses, kan du læse om i næste afsnit.</p>
+</section>
+<section id="hvordan-bestemmes-vægtene" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="hvordan-bestemmes-vægtene">Hvordan bestemmes vægtene?</h2>
+<p>Inden vi går i gang med at finde ud af, hvordan vægtene bestemmes, så værdien af tabsfunktionen bliver så lille som mulig, vil vi lige gør det lidt mere generelt. For det første har man i virkelighedens verden sjældent kun to inputværdier <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span>. Vi siger derfor helt generelt, at vi har <span class="math inline">\(n\)</span> inputværdier <span class="math inline">\(x_1, x_2, \cdots, x_n\)</span>. Det betyder, at outputværdien <span class="math inline">\(o\)</span> nu beregnes sådan her:</p>
+<p><span class="math display">\[
+o = \sigma (w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n).
+\]</span></p>
+<p>Den generelle kunstige neuron kan illustreres sådan her:</p>
+<div id="fig-simplet_netvaerk2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-simplet_netvaerk2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/simplet_netvaerk2.png" class="img-fluid figure-img" style="width:75.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-simplet_netvaerk2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;4: Grafisk illustration af en generel kunstig neuron med <span class="math inline">\(n\)</span> inputvariable.
+</figcaption>
+</figure>
+</div>
+<p>Samtidig forestiller vi os, at vi har <span class="math inline">\(M\)</span> træningsdata. Det vil sige, <span class="math inline">\(M\)</span> forskellige træningseksempler bestående af inputværdier med tilhørende targetværdi. Det kan opskrives sådan her:</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\text{Træningseksempel 1:} \quad (x_1^{(1)}, x_2^{(1)}, \dots, x_n^{(1)}, t^{(1)}) \\
+&amp;  \quad \quad \quad \quad \vdots \\
+&amp;\text{Træningseksempel m:} \quad (x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)}, t^{(m)}) \\
+&amp;  \quad \quad \quad \quad \vdots \\
+&amp;\text{Træningseksempel M:} \quad (x_1^{(M)}, x_2^{(M)}, \dots, x_n^{(M)}, t^{(M)}) \\
+\end{aligned}
+\]</span></p>
+<p>og tabsfunktionen bliver da</p>
+<p><span class="math display">\[
+\begin{aligned}
+E(w_0, w_1, &amp;\dots, w_n) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2.
+\end{aligned}
+\]</span></p>
+<p>Det er en <a href="../../materialer/funktioner_af_flere_variable/funktioner_af_flere_variable.html">funktion af flere variable</a>. I princippet kan man bestemme minimum ved at sætte alle de partielle afledede lig med <span class="math inline">\(0\)</span> og dernæst overbevise sig selv om, at man har fundet et minimum. Det vil give et ligningssystem med <span class="math inline">\(n+1\)</span> ligninger, som alle er koblet med hinanden. Det viser sig, at være en beregningsmæssig tung opgave at løse dette ligningssystem analytisk. Derfor bruger man i stedet for den metode, som kaldes for <a href="../gradientnedstigning/graditentnedstigning.qmd">gradientnedstigning</a>. Gradientnedstigning går ud på først at vælge tilfældige værdier af vægtene <span class="math inline">\(w_0, w_1, \cdots, w_n\)</span>. Det viser sig så, at den negative gradient vil pege i den retning, hvor funktionsværdien falder mest. Derfor er idéen at bevæge sig et lille stykke i den negative gradients retning – fordi vi så kommer lidt tættere på minimum. Når vi har gjort det, beregner vi gradienten igen, og bevæger os igen et lille stykke i den negative gradients retning. Det forsætter vi med indtil værdien af tabsfunktionen ikke ændrer sig særlig meget, hvilket svarer til, at vi har fundet minimum.</p>
+<p>Når vi for alle vægtene bevæger os et lille stykke i den negative gradients retning, kan opdateringen af vægtene skrives sådan her:</p>
+<p><span class="math display">\[
+\begin{aligned}
+w_0 \leftarrow &amp; w_0 - \eta \cdot \frac{\partial E }{\partial w_0} \\
+w_1 \leftarrow &amp; w_1 - \eta \cdot \frac{\partial E }{\partial w_1} \\
+&amp;\vdots  \\
+w_n \leftarrow &amp; w_n - \eta \cdot \frac{\partial E }{\partial w_n} \\
+\end{aligned}
+\]</span></p>
+<p>hvor <span class="math inline">\(\eta\)</span> (udtales "eta") kaldes for en <em>learning rate</em>. Det er <span class="math inline">\(\eta\)</span>, som bestemmer hvor stort et skridt i gradientens retning, vi tager. Den konkrete værdi af <span class="math inline">\(\eta\)</span> sættes til et lille tal større end <span class="math inline">\(0\)</span>. Det kunne for eksempel være <span class="math inline">\(0.01\)</span>, men her må man prøve sig lidt frem. Pilene til venstre illustrerer opdatering af vægtene.</p>
+<p>For at foretage opdateringerne har vi altså brug for at bestemme den partielle afledede for hver af vægtene. Den partielle afledede for den <span class="math inline">\(i\)</span>’te vægt kan findes ved at bruge sum- og kædereglen:</p>
+<p><span id="eq-partiel"><span class="math display">\[
+\begin{aligned}
+\frac{\partial E}{\partial w_i} &amp;= \frac{1}{2} \sum_{m=1}^{M} \frac{\partial}{\partial w_i}\left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2 \\
+&amp;= \frac{1}{2} \sum_{m=1}^{M} 2 \cdot \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \\
+&amp; \quad  \quad \quad  \quad  \cdot \frac{\partial}{\partial w_i} \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} ) \right) \\
+&amp;=  \sum_{m=1}^{M} \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \\
+&amp; \quad  \quad \quad  \quad  \cdot \frac{\partial}{\partial w_i} \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} ) \right) \\
+\end{aligned}
+\tag{3}\]</span></span></p>
+<p>Bemærk, at <span class="math inline">\(\frac{1}{2}\)</span> forkortede ud – det var derfor, at vi gangede <span class="math inline">\(\frac{1}{2}\)</span> på tabsfunktionen til at starte med.</p>
+<p>Betragter vi nu kun den sidste faktor og bruger kædereglen igen, får vi</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\partial}{\partial w_i} (t^{(m)} &amp;- \sigma(w_0 +  w_1 \cdot x_1^{(m)} + \cdots   + w_n \cdot x_n^{(m)} )) = \\
+&amp;- \sigma'(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})\cdot  \\ &amp; \qquad \qquad \qquad
+\qquad \frac{\partial}{\partial w_i} \left (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} \right)
+\end{aligned}
+\]</span></p>
+<p>Nu er</p>
+<p><span id="eq-partial_wi"><span class="math display">\[
+\frac{\partial}{\partial w_i} \left (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_i \cdot x_i^{(m)} + \cdots  + w_n \cdot x_n^{(m)} \right) = x_i^{(m)}
+\tag{4}\]</span></span></p>
+<p>når <span class="math inline">\(i \in \{1, 2, \dots, n\}\)</span>. Så <span class="math display">\[
+\begin{aligned}
+\frac{\partial}{\partial w_i} (t^{(m)} -
+\sigma(w_0 &amp;+ w_1 \cdot x_1^{(m)}  + \cdots  + w_n \cdot x_n^{(m)} )) = \\ &amp;- \sigma'(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})\cdot x_i^{(m)}
+\end{aligned}
+\]</span></p>
+<p>Vi mangler nu bare at finde den afledede sigmoid-funktion. Man kan vise – <a href="../../undervisningsforloeb/aktiveringsfunktioner/aktiveringsfunktioner.qmd">se forløbet om aktiveringsfunktioner</a> – at</p>
+<p><span class="math display">\[
+\sigma'(x)=\sigma(x)\cdot(1-\sigma(x))
+\]</span></p>
+<p>Derfor bliver</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\partial}{\partial w_i} (t^{(m)} -
+\sigma(w_0 &amp;+ w_1 \cdot x_1^{(m)} + \cdots  + w_n \cdot x_n^{(m)} )) = \\
+&amp;- \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \cdot \\ &amp; (1-\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots  + w_n \cdot x_n^{(m)} )) \cdot x_i^{(m)}
+\end{aligned}
+\]</span></p>
+<p>I eksemplet med Good Food app’en kaldte vi <span class="math inline">\(\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2)\)</span> for outputværdien <span class="math inline">\(o\)</span> (se (<a href="#eq-output" class="quarto-xref">2</a>)). På samme måde kan vi at gøre ovenstående lidt mere læsevenligt ved at kalde outputværdien hørende til det <span class="math inline">\(m\)</span>’te træningseksempel for <span class="math inline">\(o^{(m)}\)</span>:</p>
+<p><span class="math display">\[
+o^{(m)} = \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})
+\]</span></p>
+<p>Vi får så</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\partial}{\partial w_i} (t^{(m)} -
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots  &amp;+ w_n \cdot x_n^{(m)} )) = \\ &amp;- o^{(m)}\cdot (1-o^{(m)}) \cdot x_i^{(m)}
+\end{aligned}
+\]</span></p>
+<p>Indsættes dette i (<a href="#eq-partiel" class="quarto-xref">3</a>) samtidig med at vi bruger, at</p>
+<p><span class="math display">\[o^{(m)} = \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})\]</span></p>
+<p>får vi</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\partial E}{\partial w_i} = - \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x_i^{(m)}
+\end{aligned}
+\]</span></p>
+<p>Dette gælder for <span class="math inline">\(i \in \{1, 2, \dots, n \}\)</span>. Når <span class="math inline">\(i=0\)</span> kan det fra (<a href="#eq-partial_wi" class="quarto-xref">4</a>) ses, at den partielle med hensyn til <span class="math inline">\(w_0\)</span> bliver <span class="math inline">\(1\)</span>. Derfor er det ikke svært at overbevise sig selv om, at</p>
+<p><span class="math display">\[
+\frac{\partial E}{\partial w_0} = - \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot 1
+\]</span></p>
+<p>Vi ender således med:</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opdateringsregler for kunstige neuroner
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+\begin{aligned}
+w_0 \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \\
+w_1 \leftarrow &amp; w_1 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x_1^{(m)}\\
+&amp;\vdots  \\
+w_n \leftarrow &amp; w_n + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x_n^{(m)}
+\end{aligned}
+\]</span></p>
+<p>hvor <span class="math inline">\(o^{(m)} = \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})\)</span>.</p>
+</div>
+</div>
+</div>
+<p>I praksis vil man som sagt blive ved med at opdatere vægtene, indtil værdien af tabsfunktionen ikke ændrer sig særlig meget.</p>
+<p>Når vi på den måde har bestemt værdien af vægtene, kan vi bruge outputværdien <span class="math inline">\(o\)</span> til at forudsige, om en kunde vil aktivere tilbuddet eller ej. Det vil vi gøre på denne måde:</p>
+<p><span id="eq-pred"><span class="math display">\[
+\textrm{Kunden aktiverer tilbuddet: }
+\begin{cases}
+\textrm{Ja} &amp; \textrm{hvis } o \geq 0.5\\
+\textrm{Nej} &amp; \textrm{hvis } o &lt; 0.5\\
+\end{cases}
+\tag{5}\]</span></span></p>
+<p>hvor</p>
+<p><span class="math display">\[
+o = \sigma(w_0 + w_1\cdot x_1 + \cdots + w_n \cdot x_n).
+\]</span> Bemærk, at når vi tænker på <span class="math inline">\(o\)</span> som sandsynligheden for, at kunden vil aktivere tilbuddet, så giver det god mening, at vi vil prædiktere, at kunden vil aktivere tilbuddet, hvis <span class="math inline">\(o \geq 0.5\)</span> og ellers ikke.</p>
+<p>Skillelinjen, som afgører, om vi prædikterer, at kunden aktiverer tilbuddet eller ej, går ved</p>
+<p><span class="math display">\[
+\sigma(w_0 + w_1\cdot x_1 + \cdots + w_n \cdot x_n) = 0.5.
+\]</span></p>
+<p>Ser vi på definitionen af sigmoid-funktionen i (<a href="#eq-sigmoid" class="quarto-xref">1</a>) svarer det til, at</p>
+<p><span class="math display">\[
+\frac{1}{1+e^{-(w_0 + w_1\cdot x_1 + \cdots + w_n \cdot x_n)}} = 0.5.
+\]</span></p>
+<p>Nu giver brøken til venstre præcis <span class="math inline">\(0.5\)</span>, hvis</p>
+<p><span class="math display">\[
+e^{-(w_0 + w_1\cdot x_1 + \cdots + w_n \cdot x_n)} = 1.
+\]</span> Det vil sige, at</p>
+<p><span class="math display">\[
+w_0 + w_1\cdot x_1 + \cdots + w_n \cdot x_n = 0.
+\]</span></p>
+<p>I vores eksempel om Good Food app’en havde vi kun to inputværdier. Det betyder, at ovenstående kan reduceres til</p>
+<p><span class="math display">\[
+w_0 + w_1\cdot x_1 + w_2 \cdot x_2 = 0.
+\]</span> Det er lige præcis ligningen for en ret linje i et <span class="math inline">\((x_1,x_2)\)</span>-koordinatsystem. Hvis vi i vores eksempel prøver at finde vægtene ved hjælp af gradientnedstigning, som beskrevet ovenfor, så ender vi med</p>
+<p><span class="math display">\[
+w_0 = -0.298, \quad  w_1 = -0.0375 \quad \textrm{ og } \quad  w_2=0.000769
+\]</span> Det giver ligningen <span class="math display">\[
+-0.298 - 0.0375\cdot x_1 + 0.000769\cdot x_2=0
+\]</span> hvilket også kan omskrives til</p>
+<p><span class="math display">\[
+x_2 = 48.7 \cdot x_1 +387
+\]</span></p>
+<p>eller måske den lidt mere velkendte skrivemåde:</p>
+<p><span class="math display">\[
+y = 48.7 \cdot x+387
+\]</span></p>
+<p>Indtegnes denne linje sammen med datasættet fra Good Food får vi:</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-alder_vs_forbrug2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-alder_vs_forbrug2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="kunstige_neuroner_files/figure-html/fig-alder_vs_forbrug2-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-alder_vs_forbrug2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;5: Fiktivt datasæt som viser 100 Good Food kunders alder og forbrug. Hvert punkt, som repræsenterer en kunde, er farvet rødt, hvis kunden har aktiveret tilbuddet og blåt ellers. Samtidig er den linje indtegnet, som fås ved at bruge en kunstig neuron på data.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Bemærk her, at den indtegnede linje er rigtig god til at adskille de røde punkter fra de blå i træningsdatasættet. Det betyder ikke nødvendigvis, at denne linje har samme gode prædiktive egenskab for et datasæt bestående af nye kunder. Hvis man gerne vil vurdere, hvor god modellen er på ukendte data, kan man for eksempel træne sin model på en delmængde af data (kaldet <strong>træningsdata</strong>) og så teste modellen på den resterende del af data (kaldet <strong>testdata</strong>). Man kan også anvende en metode, som kaldes for <strong>krydsvalidering</strong>. Det kan du alt sammen læse mere om i noten om <a href="../../materialer/krydsvalidering/krydsvalidering.html">Overfitting, modeludvælgelse og krydsvalidering</a>.</p>
+<p>Det vil nu være sådan, at for alle punkter <span class="math inline">\((x_1,x_2)\)</span>, som ligger over linjen i <a href="#fig-alder_vs_forbrug2" class="quarto-xref">figur&nbsp;5</a>, vil</p>
+<p><span class="math display">\[
+-0.298 - 0.0375\cdot x_1 + 0.000769\cdot x_2 &gt; 0.
+\]</span> Det vil sige, at (se eventuelt <a href="#fig-sigmoid" class="quarto-xref">figur&nbsp;2</a>) <span class="math display">\[
+o = \sigma (-0.298 - 0.0375\cdot x_1 + 0.000769\cdot x_2) &gt; 0.5.
+\]</span> Ifølge (<a href="#eq-pred" class="quarto-xref">5</a>) betyder det, at for alle punkter, som ligger over linjen, vil vi prædiktere, at den tilhørende kunde, vil aktivere tilbuddet. Og det omvendte gælder så selvfølgelig for alle punkter, som ligger under linjen: her vil vi prædiktere, at de tilhørende kunder <em>ikke</em> aktiverer tilbuddet.</p>
+<p>Lad os se på et eksempel.</p>
+<div id="exm-good_food" class="theorem example page-columns page-full">
+<p><span class="theorem-title"><strong>Eksempel 1</strong></span> Kunderne Hans og Gerda har downloadet Good Foods app. Hans er 50 år og har et forbrug på 3500 kroner. Gerda er derimod 65 år og med et forbrug på 2800 kroner.</p>
+<p>Vi vil nu beregne outputværdien <span class="math inline">\(o\)</span> for hver af de to kunder. Det gør vi ved at indsætte i: <span class="math display">\[
+o = \sigma (-0.298 - 0.0375\cdot x_1 + 0.000769\cdot x_2).
+\]</span> Da får vi <span class="math display">\[
+\begin{aligned}
+&amp;\textrm{Hans:} \quad \quad &amp;o=\sigma (-0.298 - 0.0375\cdot 50 + 0.000769\cdot 3500) = 0.627 \\
+&amp;\textrm{Gerda:} \quad \quad &amp;o=\sigma (-0.298 - 0.0375\cdot 65 + 0.000769\cdot 2800) = 0.358
+\end{aligned}
+\]</span></p>
+<p>Ifølge vores model er der altså en sandsynlighed på <span class="math inline">\(62.7 \%\)</span> for, at Hans vil aktivere tilbuddet, mens den tilsvarende sandsynlighed for Gerda er på <span class="math inline">\(35.8 \%\)</span>. Vores bedste bud vil derfor være at prædiktere, at Hans vil aktivere tilbuddet, mens Gerda ikke vil. Vi vælger derfor at vise det pågældende tilbud til Hans, men ikke til Gerda.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-alder_vs_forbrug_eks" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-alder_vs_forbrug_eks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="kunstige_neuroner_files/figure-html/fig-alder_vs_forbrug_eks-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-alder_vs_forbrug_eks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;6: Datasættet fra <a href="#fig-alder_vs_forbrug2" class="quarto-xref">figur&nbsp;5</a>. Desuden er de to punkter, som repræsenterer kunderne Hans og Gerda indtegnet.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>På <a href="#fig-alder_vs_forbrug_eks" class="quarto-xref">figur&nbsp;6</a> ses de to punkter <span class="math inline">\((50,3500)\)</span> og <span class="math inline">\((65,2800)\)</span>, som repræsenterer Hans og Gerda indtegnet. Her ses det også, at Hans’ punkt ligger over linjen (svarende til at vi mener, at han vil aktivere tilbuddet), mens Gerdas punkt ligger under linjen (svarende til at vi ikke mener, at hun vil aktivere tilbuddet).</p>
+</div>
+</section>
+<section id="aktiviteringsfunktioner" class="level2">
+<h2 class="anchored" data-anchor-id="aktiviteringsfunktioner">Aktiviteringsfunktioner</h2>
+<p>Sigmoid-funktionen, som er anvendt her, kaldes for en <strong>aktiveringsfunktion</strong>. Her brugte vi den, fordi den har den egenskab, at værdimængden er <span class="math inline">\((0,1)\)</span>, og derfor kan outputværdien fra sigmoid-funktionen fortolkes som en sandsynlighed. Men man behøver ikke nødvendigvis at bruge sigmoid-funktionen som aktiveringsfunktion. Der findes en lang række andre aktiveringsfunktioner, som kan bruges i stedet for. Hvis du har lyst til at lære mere, kan du se på vores <a href="../../undervisningsforloeb/aktiveringsfunktioner/aktiveringsfunktioner.qmd">forløb om andre aktiveringsfunktioner</a>.</p>
+</section>
+<section id="smartere-end-adaline" class="level2">
+<h2 class="anchored" data-anchor-id="smartere-end-adaline">Smartere end ADALINE?</h2>
+<p>Hvis du har læst noten om <a href="../../materialer/perceptron/perceptron.html">perceptroner</a> er du blevet præsenteteret for den klassiske perceptron. Her forklarede vi to forskellige måder at opdatere vægtene på: <strong>perceptron learning algoritmen</strong> og <strong>ADALINE</strong>. Perceptron learning algoritmen dur kun, hvis data er lineært separable. Det problem klarede ADALINE. Men faktisk er den kunstige neuron, som vi har præsenteret her, smartere end ADALINE. Hvis du vil blive klogere på hvorfor, kan du <a href="../../materialer/kunstige_neuroner/smartere_end_adaline.html">læse mere her</a>.</p>
+</section>
+<section id="overblik" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="overblik">Overblik</h2>
+<p>Perceptron learning algoritmen, ADALINE og kunstige neuroner – det kan være svært at holde tungen lige i munden. Hvad er forskellene, og hvordan peger det videre hen mod de helt generelle <a href="../../materialer/neurale_net/neurale_net.html">kunstige neurale netværk</a>. Vi vil i dette afsnit prøve at skabe det overblik. Du kan læse med, hvis du vil nørde lidt videre – men du kan også springe afsnittet over!</p>
+<p>I alle tilfælde har vi at gøre med træningsdata, som består af en række inputværdier <span class="math inline">\(x_1, x_2, \cdots, x_n\)</span> med en tilhørende targetværdi <span class="math inline">\(t\)</span>. Ønsket i alle tilfælde er også, at kunne beregne en outputværdi <span class="math inline">\(o\)</span>, som skal bruges til at prædiktere targetværdien i fremtidige data.</p>
+<section id="perceptron-learning-algoritmen" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="perceptron-learning-algoritmen">Perceptron learning algoritmen</h3>
+<p>I perceptron learning algoritmen kan targetværdien<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> antage værdierne <span class="math inline">\(-1\)</span> og <span class="math inline">\(1\)</span>:</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;I virkeligheden er det ikke så afgørende her. Men i forhold til de opdateringsregler, som vi præsenterer her, skal targetværdierne bare være symmetriske omkring <span class="math inline">\(0\)</span>.</p></div></div><p><span class="math display">\[
+t \in \{-1,1\}.
+\]</span> Outputværdien <span class="math inline">\(o\)</span> defineres ved <span class="math display">\[
+\begin{aligned}
+    o = \begin{cases}
+    1 &amp; \text{hvis } w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n \geq 0 \\
+    -1 &amp; \text{hvis } w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n &lt; 0. \\
+    \end{cases}
+\end{aligned}
+\]</span></p>
+<p>Denne outputværdi kan selvsagt ikke fortolkes som en sandsynlighed, men blot som en angivelse af, om vi forventer, at et nyt punkt er rødt eller blåt (altså om den ukendte targetværdi er <span class="math inline">\(-1\)</span> eller <span class="math inline">\(1\)</span>).</p>
+<p>Der er ikke knyttet nogen tabsfunktion til perceptron learning algoritmen, men den <span class="math inline">\(i\)</span>’te vægt opdateres på denne måde:</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opdateringsregler – Perceptron Learning Algoritmen
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Vægtene opdateres således – ét træningseksempel ad gangen: <span class="math display">\[
+w_i \leftarrow w_i +  \eta \cdot  (t-o) \cdot x_i
+\]</span> for <span class="math inline">\(i \in \{0, 1, 2, \dots, n\}\)</span>, hvis vi sætter <span class="math inline">\(x_0=1\)</span>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="adaline" class="level3">
+<h3 class="anchored" data-anchor-id="adaline">ADALINE</h3>
+<p>I ADALINE er targetværdierne igen <span class="math inline">\(-1\)</span> eller <span class="math inline">\(1\)</span>: <span class="math display">\[
+t \in \{-1,1\}.
+\]</span> Outputværdien <span class="math inline">\(o\)</span> defineres igen ved <span class="math display">\[
+\begin{aligned}
+    o = \begin{cases}
+    1 &amp; \text{hvis } w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n \geq 0 \\
+    -1 &amp; \text{hvis } w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n &lt; 0. \\
+    \end{cases}
+\end{aligned}
+\]</span></p>
+<p>Igen kan outputværdien her ikke fortolkes som en sandsynlighed.</p>
+<p>I ADALINE bestemmes vægtene ved at minimere tabsfunktionen:</p>
+<p><span id="eq-tab_ADALINE"><span class="math display">\[
+\begin{aligned}
+E(w_0, w_1, \dots, w_n) = \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+\left (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} \right) \right)^2.
+\end{aligned}
+\tag{6}\]</span></span></p>
+<p>Gør man det, bliver opdateringsreglerne</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opdateringsregler – ADALINE
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Vægtene opdateres således: <span class="math display">\[
+w_i \leftarrow w_i + \eta \cdot  \sum_{m=1}^{M} \left (t^{(m)}-
+\left (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} \right ) \right) \cdot \left (x_i^{(m)} \right)
+\]</span> for <span class="math inline">\(i \in \{0, 1, 2, \dots, n\}\)</span>, hvis vi sætter <span class="math inline">\(x_0^{(m)}=1\)</span> for alle værdier af <span class="math inline">\(m\)</span>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="kunstige-neuroner" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="kunstige-neuroner">Kunstige neuroner</h3>
+<p>I kunstige neuroner er targetværdierne <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span>:</p>
+<p><span class="math display">\[
+t \in \{0,1\}.
+\]</span> Her beregner vi en outputværdi <span class="math inline">\(o\)</span> som</p>
+<p><span class="math display">\[
+o = \sigma(w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n).
+\]</span></p>
+<p>Hvis vi sammenligner med reglen i (<a href="#eq-pred" class="quarto-xref">5</a>) vil vi sige, at hvis denne outputværdi <span class="math inline">\(o \geq 0.5\)</span>, så vil vi prædiktere<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>, at den ukendte targetværdi er <span class="math inline">\(1\)</span> og <span class="math inline">\(0\)</span> ellers. Her kan man altså tænke på <span class="math inline">\(o\)</span>, som sandsynligheden for, at den ukendte targetværdi er <span class="math inline">\(1\)</span>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Der er faktisk ingen, som siger, at vi skal skære ved <span class="math inline">\(0.5\)</span>. Hvis man er i gang med at screene for en meget alvorlig sygdom, som det er vigtigt at opdage hurtigt, kunne der være god grund til at vælge en lavere værdi end <span class="math inline">\(0.5\)</span>.</p></div></div><p>I kunstige neuroner er tabsfunktionen <span id="eq-tabsfunktion_sigmoid"><span class="math display">\[
+\begin{aligned}
+E(w_0, w_1, &amp;\dots, w_n) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+\sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2
+\\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+o^{(m)} \right)^2,
+\end{aligned}
+\tag{7}\]</span></span></p>
+<p>hvor <span class="math inline">\(o^{(m)} = \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})\)</span>.</p>
+<p>Opdateringsreglen er:</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opdateringsregler – Kunstige neuroner
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Vægtene opdateres således: <span class="math display">\[
+w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot \left (1-o^{(m)} \right) \cdot x_i^{(m)}
+\]</span> for <span class="math inline">\(i \in \{0, 1, 2, \dots, n\}\)</span>, hvis vi sætter <span class="math inline">\(x_0^{(m)}=1\)</span> for alle værdier af <span class="math inline">\(m\)</span> og hvor <span class="math display">\[
+o^{(m)} = \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}).
+\]</span></p>
+</div>
+</div>
+</div>
+<p>Læg mærke til at i Perceptron Learning Algoritmen er opdateringen af vægtene baseret på ét træningseksempel, mens det i ADALINE og kunstige neuroner er baseret på hele træningsdatasættet.</p>
+<p>Ser vi på tabsfunktionen for ADALINE i (<a href="#eq-tab_ADALINE" class="quarto-xref">6</a>) og sammenligner den med tabsfunktionen for kunstig neuroner i (<a href="#eq-tabsfunktion_sigmoid" class="quarto-xref">7</a>), kan vi se, at i ADALINE bruges sigmoid-funktionen ikke som aktiveringsfunktion. I stedet bruges den funktion <span class="math inline">\(f\)</span>, som man kalder for <strong>identiteten</strong>. Den har forskrift <span class="math display">\[
+f(x)=x.
+\]</span></p>
+<p>Forskellen på ADALINE og kunstige neuroner er altså, at aktivieringsfunktionen i ADALINE er identiteten, mens den for kunstige neuroner er sigmoid-funktionen. Den helt store fordel ved det, kan du <a href="../../materialer/kunstige_neuroner/smartere_end_adaline.html">læse mere om her</a>.</p>
+</section>
+<section id="generelle-neurale-netværk" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="generelle-neurale-netværk">Generelle neurale netværk</h3>
+<p>Et generelt neuralt netværk består egentlig bare af en masse kunstige neuroner, som er sat sammen. Det kunne se sådan her ud:</p>
+<div id="fig-simple_NN_noweights" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-simple_NN_noweights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../neurale_net/images/simple_NN_noweights.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-simple_NN_noweights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;7: Et generelt kunstigt neuralt netværk (som dog stadig er forholdsvist simpelt!).
+</figcaption>
+</figure>
+</div>
+<p>Her repræsenterer de fire lilla cirkler fire inputværdier <span class="math inline">\(x_1, x_2, x_3\)</span> og <span class="math inline">\(x_4\)</span>. De fire grønne cirkler i midten svarer til en kunstig neuron, som det er beskrevet her. Den blå cirkel svarer til den outputværdi, som netværket ender med at beregne. Hver pil i figuren svarer til en vægt, som skal beregnes. Man siger, at det netværk, som er illustreret på <a href="#fig-simple_NN_noweights" class="quarto-xref">figur&nbsp;7</a> har <strong>to skjulte lag</strong> (svarende til de to søjler med grønne cirkler), fordi der er to lag af neuroner fra input til output. Til sammenligning har en kunstig neuron ingen skjulte lag, fordi man direkte fra inputværdierne beregner outputværdien. Når mængden af skjulte lag bliver tilpas stor, taler man om <strong>deep learning</strong>.</p>
+<p>Tabsfunktion og opdateringsregler bliver noget mere kompliceret for generelle neurale netværk, men du kan læse meget mere om det i vores note om <a href="../../materialer/neurale_net/neurale_net.html">kunstige neurale netværk</a>.</p>
+<p>Men alt i alt kan man altså tænke på de kunstige neuroner, som byggesten til det generelle neurale netværk.</p>
+</section>
+<section id="samlet-skematisk-overblik" class="level3">
+<h3 class="anchored" data-anchor-id="samlet-skematisk-overblik">Samlet skematisk overblik</h3>
+<p>I tabellen herunder finder du et samlet overblik over perceptron learning algoritmen, ADALINE, kunstige neuroner og generelle neurale netværk.</p>
+<table class="table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 17%">
+<col style="width: 15%">
+<col style="width: 17%">
+<col style="width: 17%">
+<col style="width: 17%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">AI metode</th>
+<th style="text-align: center;">Skal data være lineært separable</th>
+<th style="text-align: left;">Aktiveringsfunktion</th>
+<th style="text-align: center;">Graf</th>
+<th style="text-align: center;">Targetværdi</th>
+<th style="text-align: center;">Antal skjulte lag</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Perceptron learning algoritmen</td>
+<td style="text-align: center;">Ja</td>
+<td style="text-align: left;">Ingen</td>
+<td style="text-align: center;">–</td>
+<td style="text-align: center;"><span class="math inline">\(\{-1,1\}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ADALINE</td>
+<td style="text-align: center;">Nej</td>
+<td style="text-align: left;">Identiteten</td>
+<td style="text-align: center;"><img src="images/identiteten.png" class="img-fluid"></td>
+<td style="text-align: center;"><span class="math inline">\(\{-1,1\}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Kunstig neuron</td>
+<td style="text-align: center;">Nej</td>
+<td style="text-align: left;">Sigmoid eller andre</td>
+<td style="text-align: center;"><img src="images/sigmoid.png" class="img-fluid"></td>
+<td style="text-align: center;"><span class="math inline">\(\{0,1\}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Generelle neurale netværk</td>
+<td style="text-align: center;">Nej</td>
+<td style="text-align: left;">Sigmoid eller andre</td>
+<td style="text-align: center;"><img src="images/sigmoid.png" class="img-fluid"></td>
+<td style="text-align: center;"><span class="math inline">\(\{0,1\}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\geq 1\)</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="videre-læsning" class="level1">
+<h1>Videre læsning</h1>
+<ul>
+<li><a href="https://towardsdatascience.com/sigmoid-neuron-deep-neural-networks-a4cd35b629d7">Sigmoid Neuron — Building Block of Deep Neural Networks</a></li>
+<li><a href="https://eng.libretexts.org/Bookshelves/Computer_Science/Applied_Programming/Book%3A_Neural_Networks_and_Deep_Learning_(Nielsen)/01%3A_Using_neural_nets_to_recognize_handwritten_digits/1.03%3A_simple_neurale_nets">Sigmoid neurons</a></li>
+</ul>
+
+
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/aimat\.dk");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
