@@ -33,13 +33,10 @@ jobs:
           cache-version: 1
           
       - name: "Install shinylive outside renv"
-        uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          packages:
-            cran::shinylive
-      #     
-      # - name: Setup tmate session
-      #   uses: mxschmitt/action-tmate@v3
+        run: Rscript -e "install.packages('shinylive')"
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
 
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
