@@ -228,8 +228,13 @@ server &lt;- function(input, output) {
  
     x &lt;- seq(-10, 10, length.out = 201)
     y &lt;- ssigmoid(x, a, b, c, d)
-    yy &lt;- log(y/(1-y))
-    co &lt;- coef(lm(yy~x))
+    # yy &lt;- log(y/(1-y))
+    # co &lt;- coef(lm(yy~x))
+    loss &lt;- function(par){
+      mean((y - sigmoid(x, par[1], par[2]))^2)
+    }
+    o &lt;- optim(c(0, 1), loss)
+    co &lt;- o$par
 
     plot(x, y, type = "l", col = "blue", lwd = 2,
          xlim = c(-10, 10), ylim = c(0, 1),
