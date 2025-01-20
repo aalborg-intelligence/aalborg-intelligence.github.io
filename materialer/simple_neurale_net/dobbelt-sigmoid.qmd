@@ -57,8 +57,13 @@ server <- function(input, output) {
  
     x <- seq(-10, 10, length.out = 201)
     y <- ssigmoid(x, a, b, c, d)
-    yy <- log(y/(1-y))
-    co <- coef(lm(yy~x))
+    # yy <- log(y/(1-y))
+    # co <- coef(lm(yy~x))
+    loss <- function(par){
+      mean((y - sigmoid(x, par[1], par[2]))^2)
+    }
+    o <- optim(c(0, 1), loss)
+    co <- o$par
 
     plot(x, y, type = "l", col = "blue", lwd = 2,
          xlim = c(-10, 10), ylim = c(0, 1),
