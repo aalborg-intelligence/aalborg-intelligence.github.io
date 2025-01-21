@@ -17,7 +17,9 @@ Så lad os komme i gang! Udgangspunktet er et eksempel om at lave en simpel vejr
 
 ## Kan vi forudsige vejret?
 
-Forestil dig at du gerne vil kunne forudsige, om det bliver regnvejr i morgen. Det er selvfølgelig ikke nogen helt simpel opgave, men man kunne forestille sig, at der vil være en række variable, som kan hjælpe med at lave den forudsigelse. Det kunne for eksempel være:
+![](images/vejrudsigt.jpg){width=75% fig-align='center'}
+
+Forestil dig, at du gerne vil kunne forudsige, om det bliver regnvejr i morgen. Det er selvfølgelig ikke nogen helt simpel opgave, men man kunne forestille sig, at der vil være en række variable, som kan hjælpe med at lave den forudsigelse. Det kunne for eksempel være:
 
 $$
 \begin{aligned}
@@ -30,7 +32,7 @@ $$ {#eq-inputvar}
 
 Og der vil sikkert være en masse andre variable, som også kunne give mening. Disse variable $x_1, x_2, \dots, x_n$ kaldes for **inputvariable**.
 
-![](images/vejrudsigt.jpg){width=75% fig-align='center'}
+
 
 Vi vil nu se på, hvordan man ved hjælp af sådanne inputvariable kan prædiktere, om det bliver regnvejr i morgen.
 
@@ -75,7 +77,8 @@ Det vil sige, at vi beregner
 
 $$
 \begin{aligned}
-y &= \sigma (r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n) \\ 
+y &= h(x_1, x_2, \dots, x_n) \\
+&=\sigma (r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n) \\ 
 &= \frac{1}{1+e^{-(r_0 + r_1 \cdot x_1 + r_2 \cdot x_2 + \cdots + r_n \cdot x_n)}}.
 \end{aligned}
 $$ 
@@ -85,7 +88,7 @@ Grafen for sigmoid-funktionen ses i @fig-sigmoid.
 ![Grafen for sigmoid-funktionen.](images/sigmoid.png){width=75% #fig-sigmoid}
 
 
-Her anskueliggøres det, at sigmoid-funktionen tager et vilkårligt reelt tal som input og giver et tal i intervallet $(0,1)$ som output. Det kan skrives sådan her:
+Her anskueliggøres det, at sigmoid-funktionen tager et vilkårligt reelt tal som input og giver et tal i intervallet $]0,1[$ som output. Det kan skrives sådan her:
 
 $$
 \sigma : \mathbb{R} \rightarrow ]0,1[.
@@ -94,13 +97,13 @@ $$
 Det næste, der sker, er, at den første (lysegrønne) neuron i @fig-long_simple_NN sender værdien $y$ videre i netværket, hvor $0<y<1$. Ved den næste neuron i @fig-long_simple_NN (repræsenteret ved den mørkegrønne cirkel), beregnes først den vægtede sum og herefter anvendes igen aktiveringsfunktionen: 
 
 $$
-z = \sigma (v_0 + v_1 \cdot y).
+z = g(y) = \sigma (v_0 + v_1 \cdot y).
 $$
 
 Denne værdi sendes nu frem til den sidste neuron i outputlaget og outputværdien $o$ beregnes på tilsvarende måde
 
 $$
-o = \sigma(w_0 + w_1 \cdot z).
+o = f(z) = \sigma(w_0 + w_1 \cdot z).
 $$
 
 Hele denne proces med at udregne outputværdien $o$ på baggrund af inputværdierne $x_1, x_2, \dots, x_n$ kaldes for **feedforward** og er opsummeret herunder:
@@ -159,13 +162,13 @@ Her bliver det meget tydeligt, at
    o = \sigma(w_0 + w_1 \cdot (\sigma (v_0 + v_1 \cdot (\sigma (r_0 + r_1 \cdot {\color{#F288B9} x_1} + r_2 \cdot      {\color{#F288B9} x_2} + \cdots + r_n \cdot {\color{#F288B9} x_n}) ))))
    $$
 
-   Det er den måde vi forstår feedforward-ligninger på: Vi beregner outputværdien $o$ ud fra inputværdierne $x_1, x_2, \dots, x_n$. Vi kan altså tænke på outputværdien som **en funktion af inputværdierne $x_1, x_2, \dots, x_n$**.
+   Det er den måde, vi forstår feedforward-ligninger på: Vi beregner outputværdien $o$ ud fra inputværdierne $x_1, x_2, \dots, x_n$. Vi kan altså her tænke på outputværdien som **en funktion af inputværdierne $x_1, x_2, \dots, x_n$**.
    
-2) Outputværdien afhænger også af *alle* vægtene $w_0, w_1, v_0, v_1, r_0, r_1, \dots, r_n$
+2) Outputværdien afhænger *også* af alle vægtene $w_0, w_1, v_0, v_1, r_0, r_1, \dots, r_n$:
    $$
    o =\sigma({\color{#8086F2} w_0} + {\color{#8086F2} w_1} \cdot (\sigma ({\color{#8086F2} v_0} + {\color{#8086F2} v_1} \cdot (\sigma ({\color{#8086F2} r_0} + {\color{#8086F2} r_1} \cdot x_1 + {\color{#8086F2} r_2} \cdot x_2 + \cdots + {\color{#8086F2} r_n} \cdot x_n) ))))
    $$
-   Her tænker vi på $o$ som **en funktion af vægtene $w_0, w_1, v_0, v_1, r_0, r_1, \dots, r_n$**. Det er denne tankegang, vi skal bruge, når vi skal i gang med at træne netværket. Her er inputværdierne (træningsdata) nemlig givet, mens vi ønsker at justere på vægtene, så netværk bliver så godt som muligt til at forudsige vejret.
+   Her tænker vi på $o$ som **en funktion af vægtene $w_0, w_1, v_0, v_1, r_0, r_1, \dots, r_n$**. Det er denne tankegang, vi skal bruge, når vi skal i gang med at træne netværket. Her er inputværdierne nemlig givet, mens vi ønsker at justere på vægtene, så netværk bliver så godt som muligt til at forudsige vejret.
    
 og 
 
@@ -738,7 +741,17 @@ $$
 \end{aligned}
 $$ {#eq-dy_dri}
 
-Sidste lighedstegn følger af (@eq-afledt_sigmoid) og at $y^{(m) = \sigma(r_0 + r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)} + \cdots + r_n \cdot x_n^{(m)})$. Bemærk her, at hvis vi differentierer med hensyn til $r_0$, så bliver $\frac{\partial y^{(m)}}{\partial r_0}=y^{(m)} \cdot (1-y^{(m)}) \cdot 1$.
+Sidste lighedstegn følger af (@eq-afledt_sigmoid) og at 
+
+$$
+y^{(m)} = \sigma(r_0 + r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)} + \cdots + r_n \cdot x_n^{(m)}).
+$$ 
+
+Bemærk her, at hvis vi differentierer med hensyn til $r_0$, så bliver 
+
+$$
+\frac{\partial y^{(m)}}{\partial r_0}=y^{(m)} \cdot (1-y^{(m)}) \cdot 1.
+$$
 
 Vi kan nu som tidligere indsætte (@eq-dE_do), (@eq-do_dz), (@eq-dz_dy) og (@eq-dy_dri) i (@eq-dE_dri):
 
@@ -800,7 +813,7 @@ $$
 $$
 
 
-Træder vi et skridt bagud i netværk opdateres $v$-vægtene således:
+Træder vi et skridt bagud i netværket opdateres $v$-vægtene således:
 
 $$
 \begin{aligned}
@@ -812,7 +825,7 @@ $$
 Vi ser nu, at $\delta_w^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})$ går igen i begge opdateringsregler. Vi sætter derfor
 
 $$
-\delta_v^{(m)} = \delta_w^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})
+\delta_v^{(m)} = \delta_w^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)}).
 $$ {#eq-delta_v}
 
 Opdateringen af $v$-vægtene kan derfor skrives på denne måde:
@@ -847,16 +860,24 @@ $$
 r_i^{\textrm{ny}} \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_i^{(m)}
 $$
 
-Vi kan nu sammenfatte opdateringsreglener på denne måde:
+Det fine er, at det nu er blevet meget tydeligt, at alle opdateringsregler faktisk minder ret meget om hinanden. Vi kan derfor sammenfatte opdateringsreglener på denne måde:
 
 ::: {.callout-note collapse="false" appearance="minimal"} 
 ## Backpropagation
 
 Backpropagation foregår samlet set på denne måde:
 
-1) Sæt alle vægtene til en tilfældig værdi og vælg en værdi for *learning raten* $\eta$.
+1) Sæt alle vægtene til en tilfældig værdi og vælg en værdi for learning raten $\eta$.
 
-2) For alle træningsdataeksempler udregnes $y^{(m)}$, $z^{(m)}$ og $o^{(m)}$ ved hjælp af feedforward-ligningerne i (@eq-y_m), (@eq-z_m) og (@eq-o_m).
+2) For alle træningsdataeksempler udregnes $y^{(m)}$, $z^{(m)}$ og $o^{(m)}$ ved hjælp af feedforward-ligningerne:
+
+   $$ 
+   \begin{aligned}
+   y^{(m)} &= \sigma (r_0 + r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)} + \cdots + r_n \cdot x_n^{(m)})  \\
+   z^{(m)} &= \sigma (v_0 + v_1 \cdot y^{(m)})  \\
+   o^{(m)} &= \sigma(w_0 + w_1 \cdot z^{(m)})
+   \end{aligned}
+   $$
 
 3) Udregn følgende:
 
@@ -927,7 +948,7 @@ Så står vi her i dag og vil gerne forudsige vejret i morgen. Kig lige ud af vi
 
 * Er $o \geq 0.5$? Find paraplyen frem -- din højteknologiske og banebrydende vejrudsigt forudsiger, at det bliver regnvejr i morgen.
 
-* Er $o<0.5$? No worries -- i morgen bliver det ikke regnvejr.
+* Er $o<0.5$? No worries -- i morgen bliver det ikke regnvejr. Så lad bare paraplyen stå.
 
 Det var faktisk \"bare\" det. Sådan kan man altså bruge kunstig intelligens til at forudsige vejret (og så kan du nok godt forestille dig, at i virkelighedens verden, er det hele lidt mere kompliceret).
 
