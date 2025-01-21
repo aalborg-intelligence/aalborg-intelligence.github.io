@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="En øvelse i at opdatere vægtene i et simpelt neuralt netværk med to skjult lag.">
 
-<title>AI MAT - matematikken bag magien</title>
+<title>Opdatering af vægte i simpelt neuralt netværk med to skjulte lag – AI MAT - matematikken bag magien</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,25 +24,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-3b81a08490d9a41431263658c5feaca7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-3b81a08490d9a41431263658c5feaca7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -69,35 +68,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-main-listing-content .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-main-listing-content'] = new List('listing-main-listing-content', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-Y219BCPS45"></script>
 
 <script type="text/javascript">
@@ -152,8 +122,8 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo">
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -163,38 +133,38 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./undervisningsforlob.html"> 
+    <a class="nav-link" href="../undervisningsforlob.html"> 
 <span class="menu-text">Undervisningsforløb</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./materialer.html"> 
+    <a class="nav-link" href="../materialer.html"> 
 <span class="menu-text">Materialer</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./sro.html"> 
+    <a class="nav-link" href="../sro.html"> 
 <span class="menu-text">SRO</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./srp.html"> 
+    <a class="nav-link" href="../srp.html"> 
 <span class="menu-text">SRP</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./apps.html"> 
+    <a class="nav-link" href="../apps.html"> 
 <span class="menu-text">Apps</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./referencer.html"> 
+    <a class="nav-link" href="../referencer.html"> 
 <span class="menu-text">Referencer</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../about.html"> 
 <span class="menu-text">Om os</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="https://www.youtube.com/@ai-mat"> 
-<span class="menu-text"><img src="./logo/YouTube/youtube-color-darkblue-icon.svg" style="height:2em"></span></a>
+<span class="menu-text"><img src="../logo/YouTube/youtube-color-darkblue-icon.svg" style="height:2em"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -207,115 +177,260 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indhold</h2>
+   
+  <ul>
+  <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
+  <li><a href="#et-meget-lille-datasæt" id="toc-et-meget-lille-datasæt" class="nav-link" data-scroll-target="#et-meget-lille-datasæt">Et meget lille datasæt</a></li>
+  <li><a href="#opdateringsregler" id="toc-opdateringsregler" class="nav-link" data-scroll-target="#opdateringsregler">Opdateringsregler</a></li>
+  <li><a href="#beregninger" id="toc-beregninger" class="nav-link" data-scroll-target="#beregninger">Beregninger</a></li>
+  <li><a href="#løsninger-til-opgaver" id="toc-løsninger-til-opgaver" class="nav-link" data-scroll-target="#løsninger-til-opgaver">Løsninger til opgaver</a></li>
+  </ul>
+</nav>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Opdatering af vægte i simpelt neuralt netværk med to skjulte lag</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">A-niveau</div>
+    <div class="quarto-category">Kort</div>
+  </div>
+  </div>
 
 
 
+<div class="quarto-title-meta">
 
-<p>Hvad er AI-matematik? Det er al den spændende matematik, som ligger bag kunstig intelligens!</p>
-<p>På denne side kan du lære, hvordan gymnasiematematikken bruges i en masse former for kunstig intelligens. Til gengæld kan du <em>ikke</em> lære, hvordan du får en kunstig intelligens til at løse dine matematikopgaver!</p>
-<div id="listing-main-listing-content" class="quarto-listing quarto-listing-container-grid">
-<div class="list grid quarto-listing-cols-2">
-<div class="g-col-1" data-index="0" data-listing-file-modified-sort="1737469343876" data-listing-reading-time-sort="1" data-listing-word-count-sort="2">
-<a href="./undervisningsforlob.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./images/undervisningsforloeb.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<div class="card-text listing-description">
-Forskellige undervisningsforløb til matematik i gymnasiet, som inddrager AI. Der findes forløb til både A-, B- og C-niveau.
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="1" data-listing-file-modified-sort="1737469343697" data-listing-reading-time-sort="1" data-listing-word-count-sort="57">
-<a href="./materialer.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./images/materialer.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<div class="card-text listing-description">
-Noter om diverse AI relaterede emner.
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="2" data-listing-file-modified-sort="1737469343876" data-listing-reading-time-sort="1" data-listing-word-count-sort="199">
-<a href="./sro.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./images/sro.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<div class="card-text listing-description">
-Idéer til hvordan AI kan inddrages i SRO.
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="3" data-listing-file-modified-sort="1737469343876" data-listing-reading-time-sort="4" data-listing-word-count-sort="794">
-<a href="./srp.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./images/srp.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<div class="card-text listing-description">
-Idéer til hvordan AI kan inddrages i SRP.
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="4" data-listing-file-modified-sort="1737469343161" data-listing-reading-time-sort="1" data-listing-word-count-sort="2">
-<a href="./apps.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./images/apps.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<div class="card-text listing-description">
-Diverse apps til træning af kunstig intelligens.
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="5" data-listing-file-modified-sort="1737469343809" data-listing-reading-time-sort="1" data-listing-word-count-sort="147">
-<a href="./referencer.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./images/referencer.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<div class="card-text listing-description">
-Diverse referencer til andre AI materialer.
-</div>
-</div>
-</div>
-</a>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div>
-<p>Projektet “AI - Aalborg Intelligence” er finansieret af Novo Nordisk Fonden og løber frem til 2026.</p>
+    
+  
+    
+  </div>
+  
 
 
+</header>
 
+
+<div class="callout callout-style-simple callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Forudsætninger og tidsforbrug
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Simple neurale netværk.</li>
+<li>Sigmoid aktiveringsfunktion.</li>
+<li>Gradientnedstigning.</li>
+</ul>
+<p>Forudsætningerne kan med fordel være dækket vha. <a href="../materialer/simple_neurale_netværk/simple_neurale_netværk.qmd" target="_blank">noten om simple neurale netværk</a>, da notationen derfra vil blive anvendt i dette forløb.</p>
+<p><strong>Tidsforbrug:</strong> Ca. 90 minutter.</p>
+</div>
+</div>
+</div>
+<section id="formål" class="level3 purpose">
+<h3 class="anchored" data-anchor-id="formål">Formål</h3>
+<p>Gennem detaljerede beregninger at forstå, hvordan vægtene i et simpelt neuralt netværk til klassifikation med to skjulte lag opdateres med brug af sigmoid som aktiveringsfunktion, squarred error som tabsfunktion og gradientnedstigning.</p>
+<p>Dette kan ses som et skridt på vejen til at forstå, hvordan vægtene opdateres i et generelt neuralt netværk.</p>
+</section>
+<section id="et-meget-lille-datasæt" class="level2">
+<h2 class="anchored" data-anchor-id="et-meget-lille-datasæt">Et meget lille datasæt</h2>
+<p>I neurale netværk er der ofte rigtigt mange features, rigtigt mange vægte og rigtigt mange datapunkter.</p>
+<p>For bedre at forstå, hvordan vægtene opdateres i et neuralt netværk, vil vi her se på et meget lille eksempel, så det mere manuelt er muligt at lave opdateringen af vægtene.</p>
+<p>Vi vil lave et netværk med 2 neuroner i inputlaget <span class="math inline">\(x\)</span>, 1 neuron i det første skjulte lag <span class="math inline">\(y\)</span>, 1 neuron i det andet skjulte lag <span class="math inline">\(z\)</span> og 1 neuron i outputlaget <span class="math inline">\(o\)</span>. Konkret vil vi se på to features <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> og en targetværdi <span class="math inline">\(t\)</span> ud fra følgende 3 datapunkter.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(x_1\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(x_2\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(t\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">0</td>
+</tr>
+</tbody>
+</table>
+<p>Vi vælger en learning-rate på <span class="math display">\[\eta = 0.1\]</span> <em>sigmoid-funktionen</em> som aktiveringsfunktion mellem lagene <span class="math display">\[\sigma(x)=\frac{1}{1+e^{-x}}\]</span> og <em>squared-error</em> som tabsfunktion <span class="math display">\[E = \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right)^2\]</span></p>
+<p>Endeligt vælger vi alle startvægtene til at være <span class="math inline">\(0.5\)</span>, så <span class="math display">\[r_0=0.5 \ (bias),\ r_1=0.5,\ r_2=0.5\]</span> <span class="math display">\[v_0=0.5 (bias), v_1=0.5\]</span> <span class="math display">\[w_0=0.5 (bias),\  w_1=0.5\]</span></p>
+</section>
+<section id="opdateringsregler" class="level2">
+<h2 class="anchored" data-anchor-id="opdateringsregler">Opdateringsregler</h2>
+<p>Fra <a href="../materialer/simple_neurale_netværk/simple_neurale_netværk.qmd" target="_blank">noten om simple neurale netværk</a> har vi opdateringsreglerne, som vi nu skal til at anvende på det konkrete datasæt.</p>
+<p><strong>De afledede</strong> <span class="math display">\[
+   \begin{aligned}
+   \delta_w^{(m)} &amp;= (t^{(m)}-o^{(m)} ) \cdot o^{(m)}  \cdot (1-o^{(m)})  \\
+   \delta_v^{(m)} &amp;= \delta_w^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)}) \\
+   \delta_r^{(m)} &amp;= \delta_v^{(m)} \cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)})
+   \end{aligned}
+   \]</span></p>
+<p><strong><span class="math inline">\(w\)</span>-vægtene:</strong> <span class="math display">\[
+   \begin{aligned}
+   w_0^{\textrm{ny}} &amp;\leftarrow w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
+   w_1^{\textrm{ny}} &amp;\leftarrow w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot z^{(m)}\\
+   \end{aligned}
+   \]</span> <strong><span class="math inline">\(v\)</span>-vægtene:</strong> <span class="math display">\[
+   \begin{aligned}
+   v_0^{\textrm{ny}} &amp;\leftarrow v_0 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot 1\\
+   v_1^{\textrm{ny}} &amp;\leftarrow v_1 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot y^{(m)}\\
+   \end{aligned}
+   \]</span> <strong><span class="math inline">\(r\)</span>-vægtene:</strong> <span class="math display">\[
+   \begin{aligned}
+   r_0^{\textrm{ny}} &amp;\leftarrow r_0 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot 1 \\
+   r_1^{\textrm{ny}} &amp;\leftarrow r_1 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)} \\
+   &amp; \quad \vdots \\
+   r_n^{\textrm{ny}} &amp;\leftarrow r_n + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_n^{(m)}
+   \end{aligned}
+   \]</span></p>
+</section>
+<section id="beregninger" class="level2">
+<h2 class="anchored" data-anchor-id="beregninger">Beregninger</h2>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 1: Feed-forward fra <span class="math inline">\(x\)</span> til <span class="math inline">\(y\)</span> lag.
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Udregn <span class="math inline">\(r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)} + r_0\)</span> for hver af de 3 punkter.</li>
+<li>Udregn <span class="math inline">\(y^{(m)}=\sigma(r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)} + r_0)\)</span> for hver af de 3 punkter.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 2: Feed-forward fra <span class="math inline">\(y\)</span> til <span class="math inline">\(z\)</span> lag.
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Udregn på tilsvarende vis <span class="math inline">\(z^{(m)}\)</span> for hver af de 3 punkter.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 3: Feed-forward fra <span class="math inline">\(z\)</span> til <span class="math inline">\(o\)</span> lag.
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Udregn på tilsvarende vis <span class="math inline">\(o^{(m)}\)</span> for hver af de 3 punkter.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 4: Backpropagation på <span class="math inline">\(w\)</span> vægte.
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Udregn <span class="math inline">\(\delta_w^{(m)} = (t^{(m)}-o^{(m)}) \cdot o^{(m)} \cdot (1-o^{(m)})\)</span> for hver af de 3 punkter.</li>
+<li>Udregn <span class="math inline">\(\sum_{m=1}^{3} \delta_w^{(m)}\)</span> for de 3 punkter.</li>
+<li>Udregn <span class="math inline">\(w_0^{ny} = w_0 + \eta \cdot \sum_{m=1}^{3} \delta_w^{(m)}\)</span></li>
+<li>Udregn <span class="math inline">\(\sum_{m=1}^{3} \delta_w^{(m)} \cdot z^{(m)}\)</span> for de 3 punkter.</li>
+<li>Udregn <span class="math inline">\(w_1^{ny} = w_1 + \eta \cdot \sum_{m=1}^3 \delta_w^{(m)} \cdot z^{(m)}\)</span></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 5: Backpropagation på <span class="math inline">\(v\)</span> vægte.
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Lav tilsvarende udregninger og opdatering af <span class="math inline">\(v\)</span> vægtene.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 6: Backpropagation på <span class="math inline">\(r\)</span> vægte.
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Lav tilsvarende udregninger og opdatering af <span class="math inline">\(r\)</span> vægtene.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="løsninger-til-opgaver" class="level2">
+<h2 class="anchored" data-anchor-id="løsninger-til-opgaver">Løsninger til opgaver</h2>
+<p><a href="../undervisningsforloeb/Opdatering_af_vægte_i_NN2_facit.html" target="_blank">Facitliste</a>.</p>
+
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
