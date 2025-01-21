@@ -1,0 +1,85 @@
+---
+title: ""
+description-meta: ''
+image: ""
+categories:
+---
+## Facit til forløb om opdatering af vægte i et simpelt neuralt netværk med 2 skjulte lag
+
+```{r, include = FALSE}
+
+# Definer sigmoid-funktionen
+sigmoid <- function(x) {
+  1 / (1 + exp(-x))
+}
+
+# Input og output data
+X1 <- c(1,2,3)
+X2 <- c(2,3,5)
+t  <- c(0, 1, 0)
+
+# Vægte og bias
+k <- 0.5
+r1 <- k; r2 <- k; r0 <- k
+v1 <- k; v0 <- k
+w1 <- k; w0 <- k
+
+# Læringsrate
+eta <- 0.1
+
+
+  # Forløb fremad
+  Y <- sigmoid(r1 * X1 + r2 * X2 + r0)
+  Z <- sigmoid(v1 * Y + v0)
+  o <- sigmoid(w1 * Z + w0)
+  
+  # Baglæns forløb (backpropagation)
+  dw <- (t - o) * o * (1 - o)
+  dv <- dw * w1 * Z * (1 - Z)
+  dr <- dv * v1 * Y * (1 - Y)
+  
+  # Opdater vægtene og bias
+  w0 <- w0 + eta * sum(dw)
+  w1 <- w1 + eta * sum(dw * Z)
+
+  v0 <- v0 + eta * sum(dv)  
+  v1 <- v1 + eta * sum(dv * Y)
+
+  r0 <- r0 + eta * sum(dr)
+  r1 <- r1 + eta * sum(dr * X1)
+  r2 <- r2 + eta * sum(dr * X2)
+
+```  
+  
+### Facit opgave 1
+$y$-værdierne er `r Y`
+
+### Facit opgave 2
+$z$-værdierne er `r Z`
+
+### Facit opgave 3
+$o$-værdierne er `r o`
+
+### Facit opgave 4
+* $\delta_w$-værdierne er `r dw`
+* Summen giver `r sum(dw)`
+* $w_{0ny}=$ `r w0` 
+* Summen giver `r sum(dw*Z)`
+* $w_{1ny}=$ `r w1` 
+
+### Facit opgave 5
+* $\delta_v$-værdierne er `r dv`
+* Summen giver `r sum(dv)`
+* $v_{0ny}=$ `r v0` 
+* Summen giver `r sum(dv*Y)`
+* $v_{1ny}=$ `r v1` 
+
+### Facit opgave 6
+* $\delta_r$-værdierne er `r formatC(dr,format="f",digits=7)`
+* Summen giver `r formatC(sum(dr),format="f",digits=7)`
+* $r_{0ny}=$ `r r0` 
+* Summen giver `r formatC(sum(dr*X1),format="f",digits=7)`
+* $r_{1ny}=$ `r r1`
+* Summen giver `r sum(dr*X2)`
+* $r_{1ny}=$ `r r2`
+
