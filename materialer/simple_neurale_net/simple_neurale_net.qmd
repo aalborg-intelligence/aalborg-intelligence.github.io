@@ -1,6 +1,6 @@
 ---
 title: "Simple kunstige neurale netværk"
-##image: "images/"
+image: "images/long_simple_NN.png"
 description-meta: "Her ser vi på et simpelt kunstigt neuralt nerværk med to skjulte lag, men hvor hvert skjult lag kun består af én neuron. I dette simple tilfælde forklarer vi, hvad **feedforward** og **backpropagation** handler om, ligesom vi også kommer ind på træningsdata og tabsfunktion."
 from: markdown+emoji
 ---
@@ -9,7 +9,7 @@ Et generelt kunstigt neuralt netværk består af en masse neuroner, som er sat s
 
 ![Generelt kunstigt neuralt netværk med flere skjulte lag.](../neurale_net/images/generelt_netvaerk.png){width=75% #fig-long_NN}
 
-I denne note vil vi se på et mere simpelt tilfælde, som det er vist i @fig-long_simple_NN. Her er der kun to skjulte lag, og hver af disse lag består kun af én neuron. Sådanne netværk, hvor de skjulte lag netop kun består af én neuron, vil vi her kalde for **simple kunstige neurale netværk**. På den måde befinder disse netværk sig begrebsmæssigt \"in between\" [perceptroner](../perceptron/perceptron.qmd) og [kunstige neuroner](../kunstige_neuroner/kunstige_neuroner.qmd) på den ene side og [generelle kunstige neurale netværk](../neurale_net/neurale_net.qmd)[^4] på den anden. De simple kunstige neurale netværk har den fordel, at de giver en fin forståelse for, hvad neurale netværk er -- herunder hvad **feedforward** og **backpropagation** går ud på -- men samtidig uden, at det bliver alt for matematisk svært.
+I denne note vil vi se på et mere simpelt tilfælde, som det er vist i @fig-long_simple_NN. Her er der kun to skjulte lag, og hver af disse lag består kun af én neuron. Sådanne netværk, hvor de skjulte lag netop kun består af én neuron, vil vi her kalde for **simple kunstige neurale netværk**. På den måde befinder disse netværk sig begrebsmæssigt \"in between\" [perceptroner](../perceptron/perceptron.qmd) og [kunstige neuroner](../kunstige_neuroner/kunstige_neuroner.qmd) på den ene side og [generelle kunstige neurale netværk](../neurale_net/neurale_net.qmd)[^4] på den anden. De simple kunstige neurale netværk har den fordel, at de giver en fin forståelse af, hvad neurale netværk er -- herunder hvad **feedforward** og **backpropagation** går ud på -- men samtidig uden, at det bliver alt for matematisk svært.
 
 [^4]: Som vi ofte bare vil referere til som *neurale netværk*.
 
@@ -94,7 +94,7 @@ $$
 \sigma : \mathbb{R} \rightarrow ]0,1[.
 $$
 
-Det næste, der sker, er, at den første (lysegrønne) neuron i @fig-long_simple_NN sender værdien $y$ videre i netværket, hvor $0<y<1$. Ved den næste neuron i @fig-long_simple_NN (repræsenteret ved den mørkegrønne cirkel), beregnes først den vægtede sum og herefter anvendes igen aktiveringsfunktionen: 
+Det næste, der sker, er, at den første (lysegrønne) neuron i @fig-long_simple_NN sender værdien $y$ videre i netværket, hvor $0<y<1$. Ved den næste neuron i @fig-long_simple_NN (repræsenteret ved den mørkegrønne cirkel), beregnes først $v_0 + v_1 \cdot y$ og herefter anvendes igen aktiveringsfunktionen: 
 
 $$
 z = g(y) = \sigma (v_0 + v_1 \cdot y).
@@ -109,7 +109,7 @@ $$
 Hele denne proces med at udregne outputværdien $o$ på baggrund af inputværdierne $x_1, x_2, \dots, x_n$ kaldes for **feedforward** og er opsummeret herunder:
 
 ::: {.callout-note collapse="false" appearance="minimal"} 
-## Feedforward-ligninger
+## Feedforward-udtryk
 
 På baggrund af inputværdierne $x_1, x_2, \dots, x_n$ beregnes outputværdien $o$ på følgende måde.
 
@@ -137,7 +137,7 @@ $$ {#eq-o}
 
 Bemærk, at outputværdien $o$ beregnes ved hjælp af sigmoid-funktionen, og derfor er et tal mellem $0$ og $1$, som tidligere ønsket -- altså kan $o$ fortolkes som en sandsynlighed. 
 
-Med udgangspunkt i feedforward-ligningerne, kan vi også skrive outputværdien $o$ direkte som en funktion af inputværdierne $x_1, x_2, \dots, x_n$. Vi starter med at indsætte udtrykket for $z$ i (@eq-z) i udtrykket for $o$ i (@eq-o):
+Med udgangspunkt i feedforward-udtrykkene, kan vi også skrive outputværdien $o$ direkte som en funktion af inputværdierne $x_1, x_2, \dots, x_n$. Vi starter med at indsætte udtrykket for $z$ i (@eq-z) i udtrykket for $o$ i (@eq-o):
 
 $$
 \begin{aligned}
@@ -162,7 +162,7 @@ Her bliver det meget tydeligt, at
    o = \sigma(w_0 + w_1 \cdot (\sigma (v_0 + v_1 \cdot (\sigma (r_0 + r_1 \cdot {\color{#F288B9} x_1} + r_2 \cdot      {\color{#F288B9} x_2} + \cdots + r_n \cdot {\color{#F288B9} x_n}) ))))
    $$
 
-   Det er den måde, vi forstår feedforward-ligninger på: Vi beregner outputværdien $o$ ud fra inputværdierne $x_1, x_2, \dots, x_n$. Vi kan altså her tænke på outputværdien som **en funktion af inputværdierne $x_1, x_2, \dots, x_n$**.
+   Det er den måde, vi forstår feedforward-udtrykkene på: Vi beregner outputværdien $o$ ud fra inputværdierne $x_1, x_2, \dots, x_n$. Vi kan altså her tænke på outputværdien som **en funktion af inputværdierne $x_1, x_2, \dots, x_n$**.
    
 2) Outputværdien afhænger *også* af alle vægtene $w_0, w_1, v_0, v_1, r_0, r_1, \dots, r_n$:
    $$
@@ -172,18 +172,19 @@ Her bliver det meget tydeligt, at
    
 og 
 
-3) Outputværdien $o$ kan udtrykkes ved hjælp af flere sammensatte funktioner.
+3) Outputværdien $o$ kan udtrykkes ved hjælp af flere sammensatte funktioner (her markeret med gult).
 
    $$
-   o = {\color{#F2B33D} f}(z) = {\color{#F2B33D} f}( {\color{#F2B33D} g}(y)) = {\color{#F2B33D} f} ( {\color{#F2B33D} g} ({\color{#F2B33D} h} (x_1, x_2, \dots, x_n))) 
+   o ={\color{#F2B33D} \sigma}({w_0} + {w_1} \cdot ({\color{#F2B33D} \sigma} ({v_0} + {v_1} \cdot ({\color{#F2B33D} \sigma} ({r_0} + {r_1} \cdot x_1 + {r_2} \cdot x_2 + \cdots + {r_n} \cdot x_n) ))))
    $$
+   
 
-   Det er årsagen til, at vi senere får brug for kædereglen, når vi skal i gang med at differentiere.
+   Det er årsagen til, at vi senere får brug for kædereglen, når vi skal i gang med at differentiere ovenstående med hensyn til vægtene.
 
 
-Bortset fra det er feedforward-ligningerne ovenfor nok nemmere at overskue!
+Bortset fra det er feedforward-udtrykkene ovenfor nok nemmere at overskue!
 
-Fint nok -- nu har vi altså en model, som kan bruges til at forudsige vejret. Men måske er du skeptisk. Det bør du i hvert tilfælde være! For hvem siger, at outputværdien $o$ siger noget som helst om sandsynligheden for, at det bliver regnvejr i morgen? Det korte svar er: Det gør den heller ikke nødvendigvis! I hvert tilfælde ikke sådan uden videre. Det kræver nemlig, at alle vægtene er \"indstillet\" sådan, at den beregnede outputværdi rent faktisk kan fortolkes, som en sandsynlighed for, at det bliver regnvejr i morgen. For at lave denne \"indstilling\" skal vi bruge to ting: 1) træningsdata og 2) en tabsfunktion. Det kommer her. 
+Fint nok -- nu har vi altså en model, som kan bruges til at forudsige vejret. Men måske er du skeptisk. Det bør du i hvert tilfælde være! For hvem siger, at outputværdien $o$ siger noget som helst om sandsynligheden for, at det bliver regnvejr i morgen? Det korte svar er: Det gør den heller ikke nødvendigvis! I hvert tilfælde ikke sådan uden videre. Det kræver nemlig, at alle vægtene er \"indstillet\" sådan, at den beregnede outputværdi rent faktisk kan fortolkes som en sandsynlighed for, at det bliver regnvejr i morgen. For at lave denne \"indstilling\" skal vi bruge to ting: 1) træningsdata og 2) en tabsfunktion. Det kommer her. 
 
 ## Træningsdata og tabsfunktion
 
@@ -224,7 +225,7 @@ $$
 \end{aligned}
 $$
 
-Vi kan nu tage hvert træningsdataeksempel og sende det ind i netværket i @fig-long_simple_NN. Det gør vi ved hjælp af feedforward-ligningerne i (@eq-y), (@eq-z) og (@eq-o). Vi får derfor for hvert træningseksempel beregnet en outputværdi $o$. Outputværdien for det $m$'te træningseksempel vil vi kalde for $o^{(m)}$.
+Vi kan nu tage hvert træningsdataeksempel og sende det ind i netværket i @fig-long_simple_NN. Det gør vi ved hjælp af feedforward-udtrykkene i (@eq-y), (@eq-z) og (@eq-o). Vi får derfor for hvert træningseksempel beregnet en outputværdi $o$. Outputværdien for det $m$'te træningseksempel vil vi kalde for $o^{(m)}$.
 
 Hvis netværket er godt -- det vil sige, hvis vi har fundet nogle \"gode\" værdier af vægtene, så vil outputværdien $o$ kunne fortolkes som sandsynligheden for, om det bliver regnvejr i morgen.
 
@@ -325,7 +326,9 @@ $$
 \frac{dk}{dx} = \frac{df}{du} \cdot \frac{du}{dx}
 $$
 
-Denne måde at skrive reglen for at differentiere sammensatte funktioner på kaldes for **kædereglen**. Navnet kædereglen kommer af, at de diffenrentialkvotienter, som indgår på højre side bliver \"kædet\" sammen. Det er nemmest at illustrere med farver:
+Denne måde at skrive reglen for at differentiere sammensatte funktioner på kaldes for **kædereglen**[^6]. Navnet kædereglen kommer af, at de diffenrentialkvotienter, som indgår på højre side bliver \"kædet\" sammen. Det er nemmest at illustrere med farver:
+
+[^6]: Bemærk, at denne måde at skrive en differentialkvotient på ($\frac{dk}{dx}$) ikke er en egentlig brøk, selvom det ligner. Det svarer derimod til grænseværdien af en brøk (nemlig grænseværdien af en differenskvotient).
 
 $$
 \frac{dk}{dx} = \frac{df}{\color{#8086F2} du} \color{black}\cdot \frac{\color{#8086F2} du \color{black}}{dx}
@@ -355,7 +358,7 @@ Denne funktion er sammensat af tre funktioner:
 * Indre funktion: $z=g(y)$
 * Ydre funktion: $f(z)$
 
-For at differentiere $k$ må vi først bruge kædereglen én gange:
+For at differentiere $k$ må vi først bruge kædereglen én gang:
 
 $$
 k'(x)= f'(g(h(x))) \cdot \left ( g(h(x))\right)'
@@ -393,7 +396,7 @@ Denne måde at skrive kædereglen på får vi brug for i det følgende.
 
 ## Backpropagation
 
-Husk på at vi gerne vil bestemme de værdier af vægtene, så tabsfunktionen i (@eq-E) bliver minimeret. Når man skal minimere [en funktion af flere variable](../funktioner_af_flere_variable/funktioner_af_flere_variable.qmd) kan man egentlig bare sætte alle de partielle afledede lig med 0. Det vil give lige så mange ligninger, som der er vægte  (og alle ligninger vil være koblet til hinanden). I vores simple eksempel her vil det ikke være noget problem at løse de ligninger. Men i virkelighedens verden hvor de kunstige neurale netværk afhænger af millioner eller milliarder af vægte, er denne fremgangsmåde beregningsmæssigt alt for tung. Det vil dels tage alt for lang tid, og det vil dels tage for meget plads på computeren. 
+Husk på at vi gerne vil bestemme de værdier af vægtene, så tabsfunktionen i (@eq-E) bliver minimeret. Når man skal minimere [en funktion af flere variable](../funktioner_af_flere_variable/funktioner_af_flere_variable.qmd) kan man egentlig bare sætte alle de partielle afledede lig med 0. Det vil give lige så mange ligninger, som der er vægte  (og alle ligninger vil være koblet til hinanden). I vores simple eksempel her vil det ikke være noget problem at løse de ligninger. Men i virkelighedens verden, hvor de kunstige neurale netværk afhænger af millioner eller milliarder af vægte, er denne fremgangsmåde beregningsmæssigt alt for tung. Det vil dels tage alt for lang tid, og det vil dels tage for meget plads på computeren. 
 
 Man bruger derfor en anden metode, som kaldes for **backpropagation**. I backpropagation bruger man for det første gradientnedstigning, så den tager vi lige først.
 
@@ -423,7 +426,7 @@ Det lille stykke $\eta$, som vi går i den negative gradients retning, kaldes og
 
 I backpropagation opdateres vægtene ved at bruge ovenstående opdateringsregel, men det gøres på en snedig måde. Nemlig ved at opdatere vægtene tættest på outputlaget først -- det vil sige $w_0$ og $w_1$. Dernæst går man en skidt længere tilbage i netværket i @fig-long_simple_NN og opdaterer $v_0$ og $v_1$ og endelig opdaterer man til sidst vægtene tættest på inputlaget $r_0, r_1, \dots, r_n$. Vi skal nok forklare, hvorfor det er smart, men det er altså årsagen til, at metoden kaldes for **back**propagation: Fordi vægtene opdateres fra outputlaget og bagud.
 
-Inden opdateringen af vægtene går i gang sættes alle vægtene til en tilfældig værdi. Herefter tager vi alle $M$ træningsdata og sender ind i netværket. Det vil sige, at vi på baggrund af feedforward-ligningerne i (@eq-y), (@eq-z) og (@eq-o) udregner følgende for det $m$'te træningsdataeksempel:
+Inden opdateringen af vægtene går i gang sættes alle vægtene til en tilfældig værdi. Herefter tager vi alle $M$ træningsdata og sender ind i netværket. Det vil sige, at vi på baggrund af feedforward-udtrykkene i (@eq-y), (@eq-z) og (@eq-o) udregner følgende for det $m$'te træningsdataeksempel:
 
 $$
 y^{(m)} = \sigma (r_0 + r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)} + \cdots + r_n \cdot x_n^{(m)}) 
@@ -437,7 +440,7 @@ $$
 o^{(m)} = \sigma(w_0 + w_1 \cdot z^{(m)})
 $$ {#eq-o_m}
 
-og det gør vi altså for alle $M$ træningsdata $m \in \{1, 2, \dots, M\}$.
+og det gør vi altså for alle $M$ træningsdata $m \in \{1, 2, \dots, M\}$. Alle disse værdier af $y^{(m)}$, $z^{(m)}$ og $o^{(m)}$ får vi nemlig brug for, når vi skal i gang med at opdatere vægtene.
 
 Vi er nu klar til at opdatere vægtene $w$-vægtene, som ligger tættest på outputlaget.
 
@@ -577,7 +580,7 @@ $$
 
 :::
 
-Bemærk her, at fordi vi allerede ved hjælp af feedforward-ligningerne har beregnet $z^{(m)}$ og $o^{(m)}$, så alle størrelser, som indgår i ovenstående opdateringsregler, er allerede udregnet.
+Bemærk her, at fordi vi allerede ved hjælp af feedforward-udtrykkene har beregnet $z^{(m)}$ og $o^{(m)}$, så alle størrelser, som indgår i ovenstående opdateringsregler, er allerede udregnet.
 
 
 
@@ -869,7 +872,7 @@ Backpropagation foregår samlet set på denne måde:
 
 1) Sæt alle vægtene til en tilfældig værdi og vælg en værdi for learning raten $\eta$.
 
-2) For alle træningsdataeksempler udregnes $y^{(m)}$, $z^{(m)}$ og $o^{(m)}$ ved hjælp af feedforward-ligningerne:
+2) For alle træningsdataeksempler udregnes $y^{(m)}$, $z^{(m)}$ og $o^{(m)}$ ved hjælp af feedforward-udtrykkene:
 
    $$ 
    \begin{aligned}
@@ -920,7 +923,8 @@ Backpropagation foregår samlet set på denne måde:
 
 
 
-Alle vægtene er nu opdateret, og vi kan gentage punkt 2 til 4, hvor feedforward i 2 hver gang er baseret på de netop opdaterede vægte fra det foregående gennemløb. Opdateringen af vægtene fortsætter indtil værdien af tabsfunktionen næsten ikke ændrer sig.
+Alle vægtene er nu opdateret, og vi kan gentage punkt 2 til 4, hvor feedforward i 2 hver gang er baseret på de netop opdaterede vægte fra det foregående gennemløb. Opdateringen af vægtene fortsætter indtil værdien af tabsfunktionen næsten ikke ændrer sig. Håbet er nu, at vi har fundet et minimum (eventuelt kun lokalt) for tabsfunktionen.
+
 
 :::
 
@@ -941,7 +945,7 @@ $$
 
 Vi forestiller os, at vi har samlet et stort træningsdatasæt, som beskrevet i afsnittet [Træningsdata og tabsfunktion](simple_neurale_net.qmd#træningsdata-og-tabsfunktion). Herefter bruger vi træningsdata og backpropagation, som gennemgået ovenfor, til at bestemme værdier af vægtene $w_0, w_1, v_0, v_1, r_0, r_1, \dots, r_n$, så tabsfunktionen minimeres.
 
-Så står vi her i dag og vil gerne forudsige vejret i morgen. Kig lige ud af vinduet. Regner det eller ej? Mål luftfugtigheden, temperaturen og lufttrykket. Du har nu fire konkret værdier af $x_1$, $x_2$, $x_3$ og $x_4$. Nu bruger du feedforward-ligningerne i (@eq-y), (@eq-z) og (@eq-o) til at beregne outputværdien $o$.
+Så står vi her i dag og vil gerne forudsige vejret i morgen. Kig lige ud af vinduet. Regner det eller ej? Mål luftfugtigheden, temperaturen og lufttrykket. Du har nu fire konkret værdier af $x_1$, $x_2$, $x_3$ og $x_4$. Nu bruger du feedforward-udtrykkene i (@eq-y), (@eq-z) og (@eq-o) til at beregne outputværdien $o$.
 
 
 ![](images/paraply.jpg){style='float:right;'  width=20%}
