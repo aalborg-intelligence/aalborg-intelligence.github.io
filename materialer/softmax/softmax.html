@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Noter om diverse AI relaterede emner.">
+<meta name="description" content="I denne note behandles et simpelt neuralt netværk uden skjulte lag, men hvor det til genæld er muligt at klassificere mere end to klasser. At kunne prædiktere en mulig klasse blandt flere bruges blandt andet i de store sprogmodeller.">
 
-<title>materialer – AI MAT - matematikken bag magien</title>
+<title>Softmax – AI MAT - matematikken bag magien</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -24,25 +24,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-486e2e43151247316116d2adfd1edd9a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-486e2e43151247316116d2adfd1edd9a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,35 +68,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-main-listing-content .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-title','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-main-listing-content'] = new List('listing-main-listing-content', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-Y219BCPS45"></script>
 
 <script type="text/javascript">
@@ -114,35 +83,6 @@ gtag('js', new Date());
 gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -153,8 +93,8 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo">
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -164,38 +104,38 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./undervisningsforlob.html"> 
+    <a class="nav-link" href="../../undervisningsforlob.html"> 
 <span class="menu-text">Undervisningsforløb</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./materialer.html" aria-current="page"> 
+    <a class="nav-link" href="../../materialer.html"> 
 <span class="menu-text">Materialer</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./sro.html"> 
+    <a class="nav-link" href="../../sro.html"> 
 <span class="menu-text">SRO</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./srp.html"> 
+    <a class="nav-link" href="../../srp.html"> 
 <span class="menu-text">SRP</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./apps.html"> 
+    <a class="nav-link" href="../../apps.html"> 
 <span class="menu-text">Apps</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./referencer.html"> 
+    <a class="nav-link" href="../../referencer.html"> 
 <span class="menu-text">Referencer</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">Om os</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="https://www.youtube.com/@ai-mat"> 
-<span class="menu-text"><img src="./logo/YouTube/youtube-color-darkblue-icon.svg" style="height:2em"></span></a>
+<span class="menu-text"><img src="../../logo/YouTube/youtube-color-darkblue-icon.svg" style="height:2em"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -208,255 +148,46 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indhold</h2>
+   
+  <ul>
+  <li><a href="#hvad-skal-du-have-at-spise" id="toc-hvad-skal-du-have-at-spise" class="nav-link active" data-scroll-target="#hvad-skal-du-have-at-spise">Hvad skal du have at spise?</a></li>
+  </ul>
+</nav>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Softmax</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
 
-<p>Til en del af materialerne findes en række videoer, hvor teorien forklares. Der er linket til de relevante videoer under de respektive materialer, men en samlet liste findes også <a href="./videoer.html">her</a>.</p>
-<div id="listing-main-listing-content" class="quarto-listing quarto-listing-container-grid">
-<div class="list grid quarto-listing-cols-2">
-<div class="g-col-1" data-index="0" data-listing-file-modified-sort="1738013535619" data-listing-reading-time-sort="33" data-listing-word-count-sort="6599">
-<a href="./materialer/perceptron/perceptron.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./materialer/perceptron/images/perceptron.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Perceptroner
-</h5>
-<div class="card-text listing-description">
-Historisk set er forløberen til kunstige neurale netværk de såkaldte perceptroner. Vi vil her forklare, hvad en perceptron er, og vi vil se på opdateringsalgoritmerne <em>percept…</em><em></em>
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="1" data-listing-file-modified-sort="1738013535611" data-listing-reading-time-sort="23" data-listing-word-count-sort="4498">
-<a href="./materialer/kunstige_neuroner/kunstige_neuroner.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./materialer/kunstige_neuroner/images/simplet_netvaerk2.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Kunstige neuroner
-</h5>
-<div class="card-text listing-description">
-Vi vil her beskrive <strong>kunstige neuroner</strong>, som er en udvidelse af den klassiske perceptron, men med den tilføjelse at vi her indfører en såkaldt aktiveringsfunktion. De kunstige…
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="2" data-listing-file-modified-sort="1738013535626" data-listing-reading-time-sort="28" data-listing-word-count-sort="5569">
-<a href="./materialer/simple_neurale_net/simple_neurale_net.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./materialer/simple_neurale_net/images/long_simple_NN.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Simple kunstige neurale netværk
-</h5>
-<div class="card-text listing-description">
-Et generelt kunstigt neuralt netværk består af en masse neuroner, som er sat sammen i en række lag. Det kunne for eksempel se ud som i figur&nbsp;1, hvor de grønne neuroner i…
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="3" data-listing-file-modified-sort="1738013535617" data-listing-reading-time-sort="47" data-listing-word-count-sort="9317">
-<a href="./materialer/neurale_net/neurale_net.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./materialer/neurale_net/images/simple_NN_weights.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Kunstige neurale netværk
-</h5>
-<div class="card-text listing-description">
-Denne note giver en grundig gennemgang af matematikken bag kunstige neurale netværk.
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="4" data-listing-file-modified-sort="1738013535614" data-listing-reading-time-sort="29" data-listing-word-count-sort="5621">
-<a href="./materialer/logistisk/log-reg.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./materialer/logistisk/data/figur_til_www_files/figure-html/log_reg_www-1.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Logistisk regression
-</h5>
-<div class="card-text listing-description">
-I denne note skal vi se på logistisk regression. Måske har du allerede hørt begrebet "logistisk" i gymnasieundervisningen i forbindelse med logistisk vækst. Det er et helt…
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="5" data-listing-file-modified-sort="1738013535693" data-listing-reading-time-sort="24" data-listing-word-count-sort="4682">
-<a href="./materialer/tabsfunktioner/tabsfunktioner.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./materialer/tabsfunktioner/images/tabsfunktion.jpg" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Tabsfunktioner
-</h5>
-<div class="card-text listing-description">
-I langt de fleste tilfælde sker træning af AI modeller ved at minimere en tabsfunktion. Lidt løst sagt kan man sige, at en tabsfunktion måler, hvor god en AI model er til at…
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="6" data-listing-file-modified-sort="1738013535604" data-listing-reading-time-sort="18" data-listing-word-count-sort="3484">
-<a href="./materialer/krydsvalidering/krydsvalidering.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./materialer/krydsvalidering/images/overfitting.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Overfitting, modeludvælgelse og krydsvalidering
-</h5>
-<div class="card-text listing-description">
-Hvordan vælger man den bedste model til beskrivelse af data? Skal man bare vælge den mest komplicerede? Eller kan der mon gå noget galt? Det handler overfitting og…
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="7" data-listing-file-modified-sort="1738013535586" data-listing-reading-time-sort="25" data-listing-word-count-sort="4858">
-<a href="./materialer/ROC/ROC.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./materialer/ROC/images/confusion_matrix.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Sensitivitet, specificitet, ROC-kurver og AUC
-</h5>
-<div class="card-text listing-description">
-Langt de fleste algoritmer, som vi behandler her på siden, handler om, hvordan AI kan bruges til klassifikation. Det kan være alt fra at prædiktere, om man vil stemme på rød…
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="8" data-listing-file-modified-sort="1738013535591" data-listing-reading-time-sort="17" data-listing-word-count-sort="3207">
-<a href="./materialer/funktioner_af_flere_variable/funktioner_af_flere_variable.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./materialer/funktioner_af_flere_variable/images/maskine2.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Funktioner af flere variable
-</h5>
-<div class="card-text listing-description">
-En funktion kan godt afhænge af flere forskellige variable, og i det tilfælde taler man om en <strong>funktion af flere variable</strong>. Denne type af funktioner viser sig at spille en…
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="9" data-listing-file-modified-sort="1738013535601" data-listing-reading-time-sort="6" data-listing-word-count-sort="1167">
-<a href="./materialer/gradientnedstigning/gradientnedstigning.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./materialer/gradientnedstigning/images/minMaxFunc.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Gradientnedstigning
-</h5>
-<div class="card-text listing-description">
-I denne note vil vi forklare hvad gradientnedstigning går ud på, og hvordan gradientnedstigning kan bruges i forbindelse med at bestemme minimum eller maksimum for en…
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="10" data-listing-file-modified-sort="1738013535614" data-listing-reading-time-sort="24" data-listing-word-count-sort="4762">
-<a href="./materialer/naivbayes/NaivBayes.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./materialer/naivbayes/images/bayes_thm.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Naiv Bayes klassifier
-</h5>
-<div class="card-text listing-description">
-Denne note handler om klassifikation ved hjælp af den metode, som kaldes for <strong>naiv Bayes</strong>.
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="11" data-listing-file-modified-sort="1738013535603" data-listing-reading-time-sort="19" data-listing-word-count-sort="3646">
-<a href="./materialer/kmeans/kmeans.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./materialer/kmeans/images/kmeansbil.jpg" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Clustering med K-means
-</h5>
-<div class="card-text listing-description">
-Når <span class="math inline">\(K\)</span>-means metoden bruges, er målet at inddele nogle observationer i grupper, så observationerne i hver gruppe minder meget om hinanden.
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="12" data-listing-file-modified-sort="1738013535590" data-listing-reading-time-sort="1" data-listing-word-count-sort="90">
-<a href="./materialer/afstande/index_afstande.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./materialer/afstande/images/fig_min_max_skalering.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Afstande og feature-skalering
-</h5>
-<div class="card-text listing-description">
-Det er ikke altid helt klart, hvordan man skal bestemme afstanden mellem to datapunkter, hvis koordinaterne i hvert datapunkter beskriver vidt forskellige ting. Det er…<em></em>
-</div>
-</div>
-</div>
-</a>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div>
-<!-- - [*k*-nærmeste naboer (dokument)](http://apps.math.aau.dk/AI/k_NN/) -->
-<!-- - [*k*-nærmeste naboer (app)](http://apps.math.aau.dk/AI/kNN/) -->
-<!-- - [Lineær regression (dokument)](http://apps.math.aau.dk/AI/linreg/) -->
-<!-- - [Modelkompleksitet (dokument)](http://apps.math.aau.dk/AI/modelkompleksitet/) -->
-<!-- - [Søgræs og *kNN* (dokument)](http://apps.math.aau.dk/AI/sogras/) -->
+    
+  
+    
+  </div>
+  
 
 
+</header>
 
+
+<p>Et kunstigt neuralt netværk fungerer på den måde, at man på baggrund af en række forskellige informationer gerne vil kunne forudsige en eller anden ting. Det kunne være, at man på baggrund af en række forskellige blodprøveværdier gerne vil kunne forudsige om en patient har en bestemt sygdom. Det kunne også være, at man på baggrund af svarene på en række forskellige spørsgmål vil kunne forudsige om en person vil stemme på rød eller blå blok. De nævnte eksempler kalder man for <em>binær klassifikation</em> – fordi der i hvert tilfælde er to muligheder: "syg"/"ikke syg" og "rød blok"/"blå blok". Men det er ikke svært at forestiller sig scenarier, hvor der kan være mere end to klasser. For eksempel er eksemplet med rød og blå nok tvivlsomt. Her ville det måske være bedre at prøve at forudsige et bestemt parti. Denne note handler om, hvordan man udvider en simpel <a href="../../materialer/kunstige_neuroner/kunstige_neuroner.html">kunstig neuron</a>, så den ikke kun kan bruges til binær klassifikation, men derimod</p>
+<section id="hvad-skal-du-have-at-spise" class="level2">
+<h2 class="anchored" data-anchor-id="hvad-skal-du-have-at-spise">Hvad skal du have at spise?</h2>
+
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
