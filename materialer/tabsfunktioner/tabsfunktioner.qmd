@@ -175,26 +175,26 @@ Vi antager, at vi har $M$ forskellige træningseksempler bestående af inputvær
 
 $$
 \begin{aligned}
-&\text{Træningseksempel 1:} \quad (x_{1,1}, x_{1,2}, \dots, x_{1,n}, t_1) \\
+&\text{Træningseksempel 1:} \quad (x_1^{(1)}, x_2^{(1)}, \dots, x_n^{(1)}, t^{(1)}) \\
 &  \quad \quad \quad \quad \vdots \\
-&\text{Træningseksempel m:} \quad (x_{m,1}, x_{m,2}, \dots, x_{m,n}, t_m) \\
+&\text{Træningseksempel m:} \quad (x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)}, t^{(m)}) \\
 &  \quad \quad \quad \quad \vdots \\
-&\text{Træningseksempel M:} \quad (x_{M,1}, x_{M,2}, \dots, x_{M,n}, t_M) \\
+&\text{Træningseksempel M:} \quad (x_1^{(M)}, x_2^{(M)}, \dots, x_n^{(M)}, t^{(M)}) \\
 \end{aligned}
 $$
 
-For det $m$'te træningseksempel beregnes outputværdien $o_m$ ofte som
+For det $m$'te træningseksempel beregnes outputværdien $o^{(m)}$ ofte som
 
 $$
-o_m = f(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})
+o^{(m)} = f(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})
 $$
 
 og med sigmoid-funktionen som aktiveringsfunktion bliver det
 
 $$
 \begin{aligned}
-o_m &= \sigma(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \\
-&= \frac{1}{1+e^{-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})}}.
+o^{(m)} &= \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \\
+&= \frac{1}{1+e^{-(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})}}.
 \end{aligned}
 $${#eq-o_m}
 
@@ -250,16 +250,16 @@ $$ {#eq-tabsfunktion}
 hvor der summeres over alle træningsdata. Det vil sige, at hvis vi skal skrive det lidt mere korrekt op, bliver det 
 $$
 \begin{aligned}
-E(w_0, w_1, &\dots, w_n) = \frac{1}{2} \sum_{m=1}^{M} \left (t_m-
-o_m \right)^2,
+E(w_0, w_1, &\dots, w_n) = \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+o^{(m)} \right)^2,
 \end{aligned}
 $$ {#eq-squared_error}
 
-hvor $o_m$ er den beregnede outputværdi hørende til det $m$'te træningseksempel. Faktisk vil man måske i virkeligheden oftere støde på **mean squared error** tabsfunktionen:
+hvor $o^{(m)}$ er den beregnede outputværdi hørende til det $m$'te træningseksempel. Faktisk vil man måske i virkeligheden oftere støde på **mean squared error** tabsfunktionen:
 $$
 \begin{aligned}
-E(w_0, w_1, &\dots, w_n) = \frac{1}{M} \sum_{m=1}^{M} \left (t_m-
-o_m \right)^2,
+E(w_0, w_1, &\dots, w_n) = \frac{1}{M} \sum_{m=1}^{M} \left (t^{(m)}-
+o^{(m)} \right)^2,
 \end{aligned}
 $$
 hvor man ser på den gennemsnitlige kvadrede fejl. Men eftersom vi kun er interesseret i at finde minimum for tabsfunktionen, så gør det ingen forskel, om vi ser på *squared error* eller *mean squared error*. Vi vil derfor her på siden nøjes med at se på *squared error*.
@@ -269,51 +269,51 @@ Lad os starte med at indse, at $E$ opfylder de to betingelser for en tabsfunktio
 Differentierer vi tabsfunktionen i (@eq-tabsfunktion) med hensyn til den $i$'te vægt $w_i$ får vi:
 $$
 \begin{aligned}
-\frac{\partial E}{\partial w_i} &= \frac{\partial}{\partial w_i}\left ( \frac{1}{2} \sum_{m=1}^M \left (t_m-o_m \right)^2 \right ) \\
-&=\frac{1}{2} \sum_{m=1}^M 2 \cdot \left (t_m-o_m \right) \frac{\partial}{\partial w_i} (t_m-o_m) \\
-&= \sum_{m=1}^M \left (t_m-o_m \right) (-1) \frac{\partial o_m}{\partial w_i} \\
-&= - \sum_{m=1}^M \left (t_m-o_m \right) \frac{\partial o_m}{\partial w_i} 
+\frac{\partial E}{\partial w_i} &= \frac{\partial}{\partial w_i}\left ( \frac{1}{2} \sum_{m=1}^M \left (t^{(m)}-o^{(m)} \right)^2 \right ) \\
+&=\frac{1}{2} \sum_{m=1}^M 2 \cdot \left (t^{(m)}-o^{(m)} \right) \frac{\partial}{\partial w_i} (t^{(m)}-o^{(m)}) \\
+&= \sum_{m=1}^M \left (t^{(m)}-o^{(m)} \right) (-1) \frac{\partial o^{(m)}}{\partial w_i} \\
+&= - \sum_{m=1}^M \left (t^{(m)}-o^{(m)} \right) \frac{\partial o^{(m)}}{\partial w_i} 
 \end{aligned}
 $${#eq-partialE_partialwi}
 
-Bruger vi sigmoid-funktionen til at beregne outputværdien $o_m$ så får vi
+Bruger vi sigmoid-funktionen til at beregne outputværdien $o^{(m)}$ så får vi
 $$
 \begin{aligned}
-\frac{\partial o_m}{\partial w_i} &= \frac{\partial }{\partial w_i} \left ( \sigma (w_0 + w_1 \cdot x_{m,1} + \cdots + w_i \cdot x_{m,i} + \cdots + w_n \cdot x_{m,n}) \right ) \\
-& = \sigma'(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \cdot x_{m,i}
+\frac{\partial o^{(m)}}{\partial w_i} &= \frac{\partial }{\partial w_i} \left ( \sigma (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_i \cdot x_i^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right ) \\
+& = \sigma'(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \cdot x_i^{(m)}
 \end{aligned}
 $$
 
-Bemærk, at vi her ganger med $x_{m,i}$, fordi vi skal differentiere summen:
+Bemærk, at vi her ganger med $x_i^{(m)}$, fordi vi skal differentiere summen:
 
 $$
-w_0 + w_1 \cdot x_{m,1} + \cdots + w_i \cdot x_{m,i} + \cdots + w_n \cdot x_{m,n}
+w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_i \cdot x_i^{(m)} + \cdots + w_n \cdot x_n^{(m)}
 $$
 
-med hensyn til $w_i$ og det eneste led, der afhænger af $w_i$ er $w_i \cdot x_{m,i}$.
+med hensyn til $w_i$ og det eneste led, der afhænger af $w_i$ er $w_i \cdot x_i^{(m)}$.
 
 [Sigmoid-funktionen](../../undervisningsforloeb/aktiveringsfunktioner.qmd#sigmoid) har den særlige egenskab, at 
 
 $$
 \sigma'(x) = \sigma(x) \cdot (1-\sigma(x))
 $$
-Og da aktiveringsfunktionen netop beregner outputværdien $o_m$, så vil 
+Og da aktiveringsfunktionen netop beregner outputværdien $o^{(m)}$, så vil 
 
 $$
-\frac{\partial o_m}{\partial w_i}  = o_m \cdot (1-o_m) \cdot x_{m,i}
+\frac{\partial o^{(m)}}{\partial w_i}  = o^{(m)} \cdot (1-o^{(m)}) \cdot x_i^{(m)}
 $$ {#eq-sigmoid_aktiveringsfkt}
 
 Indsættes dette i (@eq-partialE_partialwi), kan den partielle afledede af tabfunktionen med hensyn til $w_i$ skrives som
 
 $$
 \begin{aligned}
-\frac{\partial E}{\partial w_i} &= -\sum_{m=1}^M \left (t_m-o_m \right) \cdot o_m \cdot (1-o_m) \cdot x_{m,i}.
+\frac{\partial E}{\partial w_i} &= -\sum_{m=1}^M \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot x_i^{(m)}.
 \end{aligned}
 $$
 Bruger vi den generelle opdateringsregel i (@eq-opdatering), får vi
 
 $$
-w_i \leftarrow w_i - \eta \cdot \left ( -\sum_{m=1}^M \left (t_m-o_m \right) \cdot o_m \cdot (1-o_m) \cdot x_{m,i}\right).
+w_i \leftarrow w_i - \eta \cdot \left ( -\sum_{m=1}^M \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot x_i^{(m)}\right).
 $$
 
 Som kan omskrives til:
@@ -323,7 +323,7 @@ Som kan omskrives til:
 ## Opdateringsregler: Squared error tabsfunktion (med sigmoid som aktiveringsfunktion)
 
 $$
-w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^M \left (t_m-o_m \right) \cdot o_m \cdot (1-o_m) \cdot x_{m,i}.
+w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^M \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot x_i^{(m)}.
 $${#eq-opdatering_kvadreredefejl}
 
 :::
@@ -415,16 +415,16 @@ En anden tabsfunktion, som meget ofte anvendes, men som nok er lidt sværere umi
 
 $$
 \begin{aligned}
-E(w_0, w_1, \dots, & w_n) = \\ &- \sum_{m=1}^{M} \left (t_m \cdot \ln(o_m) + (1-t_m) \cdot \ln(1-o_m)  \right)
+E(w_0, w_1, \dots, & w_n) = \\ &- \sum_{m=1}^{M} \left (t^{(m)} \cdot \ln(o^{(m)}) + (1-t^{(m)}) \cdot \ln(1-o^{(m)})  \right)
 \end{aligned}
 $$ {#eq-crossentropy}
 
-her skal outputværdien $o_m$ ligger mellem $0$ og $1$. Vi bruger derfor igen sigmoid-funktionen[^2]: 
+her skal outputværdien $o^{(m)}$ ligger mellem $0$ og $1$. Vi bruger derfor igen sigmoid-funktionen[^2]: 
 
 $$
 \begin{aligned}
-o_m &= \sigma (w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n}) \\
-&=\frac{1}{1+e^{-(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})}}
+o^{(m)} &= \sigma (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \\
+&=\frac{1}{1+e^{-(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})}}
 \end{aligned}
 $$
 
@@ -432,89 +432,89 @@ $$
 
 Det er ikke oplagt, at *cross-entropy* overhovedet er en tabsfunktion. Lad os starte med at argumentere for, at $E \geq 0$.
 
-Hvis vi ser på hvert led i summen i (@eq-crossentropy), så er der to muligheder alt efter, om $t_m=0$ eller $t_m=1$:
+Hvis vi ser på hvert led i summen i (@eq-crossentropy), så er der to muligheder alt efter, om $t^{(m)}=0$ eller $t^{(m)}=1$:
 
 $$
 \begin{aligned}
-t_m=0: & \quad  t_m \cdot \ln(o_m) + (1-t_m) \cdot \ln(1-o_m) = \ln(1-o_m) \\
-t_m=1: & \quad t_m \cdot \ln(o_m) + (1-t_m) \cdot \ln(1-o_m) = \ln(o_m)
+t^{(m)}=0: & \quad  t^{(m)} \cdot \ln(o^{(m)}) + (1-t^{(m)}) \cdot \ln(1-o^{(m)}) = \ln(1-o^{(m)}) \\
+t^{(m)}=1: & \quad t^{(m)} \cdot \ln(o^{(m)}) + (1-t^{(m)}) \cdot \ln(1-o^{(m)}) = \ln(o^{(m)})
 \end{aligned}
 $$ {#eq-to_muligheder}
 
-Nu ved vi, at $0<o_m<1$, og derfor er også $0<1-o_m<1$. På @fig-ln_graf ses grafen for den naturlige logaritme. Her ses det tydeligt, at hvis $x$ ligger mellem $0$ og $1$, så er $\ln(x)$ negativ.
+Nu ved vi, at $0<o^{(m)}<1$, og derfor er også $0<1-o^{(m)}<1$. På @fig-ln_graf ses grafen for den naturlige logaritme. Her ses det tydeligt, at hvis $x$ ligger mellem $0$ og $1$, så er $\ln(x)$ negativ.
 
 ![Grafen for den naturlige logaritmefunktion.](images/ln_graf.png){width=75% fig-align='center' #fig-ln_graf}
 
 Det vil sige, at alle led i summen i (@eq-crossentropy) er negative, og da der står et minustegn foran hele summen, bliver *cross-entropy* tabsfunktionen altså positiv.
 
-Vi mangler nu at se, at hvis AI modellen er god, så vil tabsfunktionen være tæt på 0. Her er der igen to muligheder. En god model vil have det sådan, at hvis targetværdien $t_m=1$, så vil den tilhørende outputværdi $o_m$ også være tæt på $1$ og omvendt, hvis $t_m=0$. Vi ser igen på hvert led i summen i (@eq-crossentropy), som vi gjorde det ovenfor:
+Vi mangler nu at se, at hvis AI modellen er god, så vil tabsfunktionen være tæt på 0. Her er der igen to muligheder. En god model vil have det sådan, at hvis targetværdien $t^{(m)}=1$, så vil den tilhørende outputværdi $o^{(m)}$ også være tæt på $1$ og omvendt, hvis $t^{(m)}=0$. Vi ser igen på hvert led i summen i (@eq-crossentropy), som vi gjorde det ovenfor:
 
 $$
-t_m=0: \quad  t_m \cdot \ln(o_m) + (1-t_m) \cdot \ln(1-o_m) = \ln(1-o_m) \\
+t^{(m)}=0: \quad  t^{(m)} \cdot \ln(o^{(m)}) + (1-t^{(m)}) \cdot \ln(1-o^{(m)}) = \ln(1-o^{(m)}) \\
 $$
-og hvis også $o_m$ er tæt på $0$, så vil 
+og hvis også $o^{(m)}$ er tæt på $0$, så vil 
 $$
-\ln(1-o_m) \approx \ln(1)=0
+\ln(1-o^{(m)}) \approx \ln(1)=0
 $$
 
 Tilsvarende hvis:
 $$
-t_m=1: \quad t_m \cdot \ln(o_m) + (1-t_m) \cdot \ln(1-o_m) = \ln(o_m)
+t^{(m)}=1: \quad t^{(m)} \cdot \ln(o^{(m)}) + (1-t^{(m)}) \cdot \ln(1-o^{(m)}) = \ln(o^{(m)})
 $$
-og hvis $o_m$ er tæt på $1$, så får vi også i det tilfælde, at 
+og hvis $o^{(m)}$ er tæt på $1$, så får vi også i det tilfælde, at 
 $$
-\ln(o_m) \approx \ln(1)=0.
+\ln(o^{(m)}) \approx \ln(1)=0.
 $$
 Det betyder altså samlet set, at hvis modellen er god, så vil alle led i tabsfunktionen i (@eq-crossentropy) være tæt på $0$, og den samlede tabsfunktion vil dermed også være tæt på $0$. 
 
-Vi vil nu differentiere *cross-entropy* tabsfunktionen i (@eq-crossentropy) med hensyn til $w_i$. Husk på at selvom det ikke umiddelbart ser ud som om, at tabsfunktionen afhænger af nogle vægte, så gør den det alligevel via outputværdien $o_m$:
+Vi vil nu differentiere *cross-entropy* tabsfunktionen i (@eq-crossentropy) med hensyn til $w_i$. Husk på at selvom det ikke umiddelbart ser ud som om, at tabsfunktionen afhænger af nogle vægte, så gør den det alligevel via outputværdien $o^{(m)}$:
 
 $$
-o_m = f(w_0 + w_1 \cdot x_{m,1} + \cdots + w_n \cdot x_{m,n})
+o^{(m)} = f(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})
 $$
 Differentierer vi tabsfunktionen ledvist får vi:
 
 $$
 \begin{aligned}
-\frac{\partial E}{\partial w_i} &= - \sum_{m=1}^{M} \left ( \frac{\partial }{\partial w_i} \left (t_m \cdot \ln(o_m) \right) + \frac{\partial }{\partial w_i}\left ((1-t_m) \cdot \ln(1-o_m) \right ) \right) \\
-&= - \sum_{m=1}^{M} \left ( t_m \cdot \frac{1}{o_m} \cdot \frac{\partial o_m}{\partial w_i} + (1-t_m) \cdot \frac{-1}{1-o_m} \cdot \frac{\partial o_m}{\partial w_i} \right) \\
+\frac{\partial E}{\partial w_i} &= - \sum_{m=1}^{M} \left ( \frac{\partial }{\partial w_i} \left (t^{(m)} \cdot \ln(o^{(m)}) \right) + \frac{\partial }{\partial w_i}\left ((1-t^{(m)}) \cdot \ln(1-o^{(m)}) \right ) \right) \\
+&= - \sum_{m=1}^{M} \left ( t^{(m)} \cdot \frac{1}{o^{(m)}} \cdot \frac{\partial o^{(m)}}{\partial w_i} + (1-t^{(m)}) \cdot \frac{-1}{1-o^{(m)}} \cdot \frac{\partial o^{(m)}}{\partial w_i} \right) \\
 \end{aligned}
 $$ 
-Vi ser nu, at $\frac{\partial o_m}{\partial w_i}$ indgår som en fællesfaktor i hvert led i summen, og vi kan derfor sætte denne størrelse uden for parentesen:
+Vi ser nu, at $\frac{\partial o^{(m)}}{\partial w_i}$ indgår som en fællesfaktor i hvert led i summen, og vi kan derfor sætte denne størrelse uden for parentesen:
 
 $$
 \begin{aligned}
-\frac{\partial E}{\partial w_i} &= - \sum_{m=1}^{M} \left ( \frac{t_m}{o_m}  - \frac{(1-t_m)}{1-o_m}  \right)\cdot \frac{\partial o_m}{\partial w_i} \\
+\frac{\partial E}{\partial w_i} &= - \sum_{m=1}^{M} \left ( \frac{t^{(m)}}{o^{(m)}}  - \frac{(1-t^{(m)})}{1-o^{(m)}}  \right)\cdot \frac{\partial o^{(m)}}{\partial w_i} \\
 \end{aligned}
 $$ 
 
-De to brøker har $o_m \cdot (1-o_m)$ som fællesnævner og vi kan derfor sætte på fælles brøkstreg:
+De to brøker har $o^{(m)} \cdot (1-o^{(m)})$ som fællesnævner og vi kan derfor sætte på fælles brøkstreg:
 
 $$
 \begin{aligned}
-\frac{\partial E}{\partial w_i} &= - \sum_{m=1}^{M} \frac{t_m \cdot (1-o_m) - o_m \cdot (1-t_m)}{o_m \cdot (1-o_m)} \cdot \frac{\partial o_m}{\partial w_i} \\
-&= - \sum_{m=1}^{M}  \frac{t_m-t_m \cdot o_m - o_m +o_m \cdot t_m)}{o_m \cdot (1-o_m)} \cdot \frac{\partial o_m}{\partial w_i} \\
-&= - \sum_{m=1}^{M} \frac{t_m- o_m}{o_m \cdot (1-o_m)}\cdot \frac{\partial o_m}{\partial w_i} \\
+\frac{\partial E}{\partial w_i} &= - \sum_{m=1}^{M} \frac{t^{(m)} \cdot (1-o^{(m)}) - o^{(m)} \cdot (1-t^{(m)})}{o^{(m)} \cdot (1-o^{(m)})} \cdot \frac{\partial o^{(m)}}{\partial w_i} \\
+&= - \sum_{m=1}^{M}  \frac{t^{(m)}-t^{(m)} \cdot o^{(m)} - o^{(m)} +o^{(m)} \cdot t^{(m)})}{o^{(m)} \cdot (1-o^{(m)})} \cdot \frac{\partial o^{(m)}}{\partial w_i} \\
+&= - \sum_{m=1}^{M} \frac{t^{(m)}- o^{(m)}}{o^{(m)} \cdot (1-o^{(m)})}\cdot \frac{\partial o^{(m)}}{\partial w_i} \\
 \end{aligned}
 $$
 
 Da vi bruger sigmoid som aktiveringsfunktion, ved vi fra (@eq-sigmoid_aktiveringsfkt), at
 
 $$
-\frac{\partial o_m}{\partial w_i} = o_m \cdot (1-o_m) \cdot x_{m,i}
+\frac{\partial o^{(m)}}{\partial w_i} = o^{(m)} \cdot (1-o^{(m)}) \cdot x_i^{(m)}
 $$
 og derfor får vi
 $$
 \begin{aligned}
-\frac{\partial E}{\partial w_i} &= - \sum_{m=1}^{M} \frac{t_m- o_m}{o_m \cdot (1-o_m)}\cdot o_m \cdot (1-o_m) \cdot x_{m,i} \\
-&= - \sum_{m=1}^{M} (t_m- o_m)\cdot x_{m,i}
+\frac{\partial E}{\partial w_i} &= - \sum_{m=1}^{M} \frac{t^{(m)}- o^{(m)}}{o^{(m)} \cdot (1-o^{(m)})}\cdot o^{(m)} \cdot (1-o^{(m)}) \cdot x_i^{(m)} \\
+&= - \sum_{m=1}^{M} (t^{(m)}- o^{(m)})\cdot x_i^{(m)}
 \end{aligned}
 $$
-Bemærk her, at $o_m \cdot (1-o_m)$ forkorter ud.
+Bemærk her, at $o^{(m)} \cdot (1-o^{(m)})$ forkorter ud.
 
 Opdateringsreglen i (@eq-opdatering) bliver derfor med *cross-entropy* tabsfunktionen:
 $$
-w_i \leftarrow w_i - \eta \cdot \left (  - \sum_{m=1}^{M} (t_m- o_m)\cdot x_{m,i} \right)
+w_i \leftarrow w_i - \eta \cdot \left (  - \sum_{m=1}^{M} (t^{(m)}- o^{(m)})\cdot x_i^{(m)} \right)
 $$
 som kan omskrives til
 
@@ -523,7 +523,7 @@ som kan omskrives til
 ## Opdateringsregler: Cross-entropy tabsfunktion (med sigmoid som aktiveringsfunktion)
 
 $$
-w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} (t_m- o_m)\cdot x_{m,i}.
+w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} (t^{(m)}- o^{(m)})\cdot x_i^{(m)}.
 $$ {#eq-opdatering_crossentropy}
 
 :::
@@ -549,7 +549,7 @@ Lad os igen se på et eksempel.
 
 :::{#exm-cross_entropy}
 
-Vi vil i vores fiktive eksempel med biomarkør og prædiktion af kræft nu bruge *cross-entropy* tabsfunktionen sammen med sigmoid som aktiveringsfunktion. Vi skal igen datasættet fra @exm-squared_error og indsætte i *cross-entropy* tabsfunktionen i (@eq-crossentropy). Her bruger vi de to udtryk vi fandt i (@eq-to_muligheder) alt efter om $t_m=0$ eller $t_m=1$:
+Vi vil i vores fiktive eksempel med biomarkør og prædiktion af kræft nu bruge *cross-entropy* tabsfunktionen sammen med sigmoid som aktiveringsfunktion. Vi skal igen datasættet fra @exm-squared_error og indsætte i *cross-entropy* tabsfunktionen i (@eq-crossentropy). Her bruger vi de to udtryk vi fandt i (@eq-to_muligheder) alt efter om $t^{(m)}=0$ eller $t^{(m)}=1$:
 
 
 $$
@@ -676,12 +676,12 @@ Vi starter med at huske, at de to tabsfunktioner giver følgende to opdateringsr
 
 $$
 \begin{aligned}
-&\textrm{Squared error:} \quad \quad  w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^M \left (t_m-o_m \right) \cdot o_m \cdot (1-o_m) \cdot x_{m,i} \\
-&\textrm{Cross-entropy:} \quad \quad w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} (t_m- o_m)\cdot x_{m,i}.
+&\textrm{Squared error:} \quad \quad  w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^M \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot x_i^{(m)} \\
+&\textrm{Cross-entropy:} \quad \quad w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} (t^{(m)}- o^{(m)})\cdot x_i^{(m)}.
 \end{aligned}
 $$
 
-Problemet opstår, fordi man i forbindelse med gradientnedstigning starter i et tilfældigt punkt $(w_0, w_1, \dots, w_n)$. Hvis dette punkt svarer til vægte, som resulterer i forkerte prædiktioner, så for eksempel $o_m \approx 0$, men $t_m = 1$, så vil faktoren $o_m \cdot (1-o_m)$ være tæt på $0$. Det betyder, at vægtene næsten ikke bliver opdateret, når vi bruger *squared error*, fordi opdateringsleddene alle er tæt på $0$. Noget tilsvarende gør sig gældende, hvis $o_m \approx 1$ og $t_m = 0$. Dette fænomen kalder man for **slow learning**. 
+Problemet opstår, fordi man i forbindelse med gradientnedstigning starter i et tilfældigt punkt $(w_0, w_1, \dots, w_n)$. Hvis dette punkt svarer til vægte, som resulterer i forkerte prædiktioner, så for eksempel $o^{(m)} \approx 0$, men $t^{(m)} = 1$, så vil faktoren $o^{(m)} \cdot (1-o^{(m)})$ være tæt på $0$. Det betyder, at vægtene næsten ikke bliver opdateret, når vi bruger *squared error*, fordi opdateringsleddene alle er tæt på $0$. Noget tilsvarende gør sig gældende, hvis $o^{(m)} \approx 1$ og $t^{(m)} = 0$. Dette fænomen kalder man for **slow learning**. 
 
 I @fig-squared ses grafen for *squared error* tabsfunktionen fra eksemplet om biomarkører og prædiktion af kræft. Her er det ret tydeligt, at der findes værdier af vægtene $w_0$ og $w_1$, hvor grafen flader helt ud. Hvis man får startet sin gradientnedstigning her, så kan der gå lang tid inden, man ender i minimum.
 
@@ -705,9 +705,9 @@ plot_ly(showscale = FALSE) |>
 
 
 
-Noget tilsvarende opstår ikke med *cross-entropy*, da faktoren $o_m \cdot (1-o_m)$ ikke indgår i opdateringsleddet i for *cross-entropy*:
+Noget tilsvarende opstår ikke med *cross-entropy*, da faktoren $o^{(m)} \cdot (1-o^{(m)})$ ikke indgår i opdateringsleddet i for *cross-entropy*:
 $$
-w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} (t_m- o_m)\cdot x_{m,i}
+w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} (t^{(m)}- o^{(m)})\cdot x_i^{(m)}
 $$
 Det ses også på grafen for *cross-entropy* tabsfunktionen i @fig-cross. Her er der ingen steder, hvor grafen flader ud. Det vil sige, at man ikke på samme måde kan komme til at starte et uheldigt sted på grafen.  Derimod vil man ret hurtigt \"lande\" i minimum uanset, hvor man starter. 
 
