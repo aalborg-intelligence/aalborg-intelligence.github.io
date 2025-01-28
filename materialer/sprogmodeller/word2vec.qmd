@@ -7,7 +7,8 @@ description-meta: "Word2vec."
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(plotly)
-est <- readRDS(here::here("materialer", "sprogmodeller", "data", "word2vec_estimates.rds"))
+library(dplyr)
+est <- readRDS(here::here("materialer", "sprogmodeller", "data", "word2vec_estimates_reg.rds"))
 type_fun <- function(x) {
   switch(x,
          "ko" = "dyr",
@@ -39,8 +40,8 @@ type_fun <- function(x) {
          "Mia" = "person")
 }
 
-pos_dat <- cbind(est$ord, as.data.frame(est$w), type = sapply(est$ord, type_fun))
-neg_dat <- cbind(est$ord, as.data.frame(est$k), type = sapply(est$ord, type_fun))
+pos_dat <- cbind(ord = est$ord, as.data.frame(est$w), type = sapply(est$ord, type_fun))
+neg_dat <- cbind(ord = est$ord, as.data.frame(est$k), type = sapply(est$ord, type_fun))
 
 ```
 
@@ -55,8 +56,15 @@ pos_dat[,-c(1,5)] |> round(2) |> knitr::kable()
 ```
 
 ```{r}
-plot_ly(x = ~V1, y = ~V2, z = ~V3, data = pos_dat, type = "scatter3d", 
-       mode = "markers", marker = list(size = 3), color = ~type)
+# Add cones as arrow heads to plot
+pos_dat_dir <- rowwise(pos_dat) |> mutate(u = V1/sqrt(V1^2 + V2^2 + V3^2),
+                                          v = V2/sqrt(V1^2 + V2^2 + V3^2),
+                                          w = V3/sqrt(V1^2 + V2^2 + V3^2))
+# Add zero and NA between each row of pos_dat_dir
+pos_dat_dir |> group_by(ord) |> reframe(ord = rep(ord, 3), V1 = c(V1, 0, NA), V2 = c(V2, 0, NA), V3 = c(V3, 0, NA), type = rep(type, 3), u = c(u, NA, NA), v = c(v, NA, NA), w = c(w, NA, NA)) |>
+  plot_ly() |> 
+  add_trace(x = ~V1, y = ~V2, z = ~V3, type = "scatter3d", mode = "lines", line = list(width = 2), color = ~type, text = ~ord) |> 
+  add_trace(x = ~V1, y = ~V2, z = ~V3, u = ~u, v = ~v, w = ~w, type = "cone", anchor = "tail", showscale = FALSE, colorscale = list(list(0, "black"), list(1, "black")), sizeref = 1, sizemode = "absolute")
 ```
 
 ## Vægte når ordet er kontekst
@@ -66,6 +74,13 @@ neg_dat[,-c(1,5)] |> round(2) |> knitr::kable()
 ```
 
 ```{r}
-plot_ly(x = ~V1, y = ~V2, z = ~V3, data = neg_dat, type = "scatter3d",
-       mode = "markers", marker = list(size = 3), color = ~type)
+# Add cones as arrow heads to plot
+neg_dat_dir <- rowwise(neg_dat) |> mutate(u = V1/sqrt(V1^2 + V2^2 + V3^2),
+                                          v = V2/sqrt(V1^2 + V2^2 + V3^2),
+                                          w = V3/sqrt(V1^2 + V2^2 + V3^2))
+# Add zero and NA between each row of neg_dat_dir
+neg_dat_dir |> group_by(ord) |> reframe(ord = rep(ord, 3), V1 = c(V1, 0, NA), V2 = c(V2, 0, NA), V3 = c(V3, 0, NA), type = rep(type, 3), u = c(u, NA, NA), v = c(v, NA, NA), w = c(w, NA, NA)) |>
+  plot_ly() |> 
+  add_trace(x = ~V1, y = ~V2, z = ~V3, type = "scatter3d", mode = "lines", line = list(width = 2), color = ~type, text = ~ord) |> 
+  add_trace(x = ~V1, y = ~V2, z = ~V3, u = ~u, v = ~v, w = ~w, type = "cone", anchor = "tail", showscale = FALSE, colorscale = list(list(0, "black"), list(1, "black")), sizeref = 1, sizemode = "absolute")
 ```
