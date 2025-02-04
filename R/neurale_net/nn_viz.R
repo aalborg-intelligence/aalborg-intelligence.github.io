@@ -10,8 +10,7 @@ visualize_neural_network_interactive <- function(params, cache) {
     label = c("X_bias", paste0("X_", 1:n), "Y_bias", paste0("Y_", 1:n1), "Z_bias", paste0("Z_", 1:n2), paste0("O_", 1:num_classes)),
     group = c(rep("Input", n+1), rep("Hidden1", n1+1), rep("Hidden2", n2+1), rep("Output", num_classes)),
     level = c(rep(1, n+1), rep(2, n1+1), rep(3, n2+1), rep(4, num_classes)),
-    shape = c("box", rep("circle", n), "box", rep("circle", n1), "box", rep("circle", n2), rep("ellipse", num_classes)),
-    title = c("Bias", paste0("Input ", 1:n), "Bias", paste0("Hidden1 ", 1:n1), "Bias", paste0("Hidden2 ", 1:n2), paste0("Output ", 1:num_classes))
+    shape = c("box", rep("circle", n), "box", rep("circle", n1), "box", rep("circle", n2), rep("circle", num_classes))
   )
   # nodes$title <- nodes$label
   # nodes$title[(n+1):(n+n1)] <- paste0(nodes$title[(n+1):(n+n1)], "=", round(cache$A1, 2))
