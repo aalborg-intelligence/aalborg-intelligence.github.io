@@ -83,10 +83,39 @@ gtag('js', new Date());
 gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
-<body class="floating nav-fixed">
+<body class="floating nav-fixed slimcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -152,7 +181,11 @@ gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
     <h2 id="toc-title">Indhold</h2>
    
   <ul>
-  <li><a href="#hvad-skal-du-have-at-spise" id="toc-hvad-skal-du-have-at-spise" class="nav-link active" data-scroll-target="#hvad-skal-du-have-at-spise">Hvad skal du have at spise?</a></li>
+  <li><a href="#hvor-hårdt-skal-du-arbejde-i-matematiktimerne" id="toc-hvor-hårdt-skal-du-arbejde-i-matematiktimerne" class="nav-link active" data-scroll-target="#hvor-hårdt-skal-du-arbejde-i-matematiktimerne">Hvor hårdt skal du arbejde i matematiktimerne?</a></li>
+  <li><a href="#træningsdata" id="toc-træningsdata" class="nav-link" data-scroll-target="#træningsdata">Træningsdata</a></li>
+  <li><a href="#feedforward" id="toc-feedforward" class="nav-link" data-scroll-target="#feedforward">Feedforward</a></li>
+  <li><a href="#cross-entropy-tabsfunktionen" id="toc-cross-entropy-tabsfunktionen" class="nav-link" data-scroll-target="#cross-entropy-tabsfunktionen">Cross-entropy tabsfunktionen</a></li>
+  <li><a href="#opdatering-af-vægtene" id="toc-opdatering-af-vægtene" class="nav-link" data-scroll-target="#opdatering-af-vægtene">Opdatering af vægtene</a></li>
   </ul>
 </nav>
 </nav>
@@ -161,7 +194,7 @@ gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -182,9 +215,552 @@ gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
 </header>
 
 
-<p>Et kunstigt neuralt netværk fungerer på den måde, at man på baggrund af en række forskellige informationer gerne vil kunne forudsige en eller anden ting. Det kunne være, at man på baggrund af en række forskellige blodprøveværdier gerne vil kunne forudsige om en patient har en bestemt sygdom. Det kunne også være, at man på baggrund af svarene på en række forskellige spørsgmål vil kunne forudsige om en person vil stemme på rød eller blå blok. De nævnte eksempler kalder man for <em>binær klassifikation</em> – fordi der i hvert tilfælde er to muligheder: "syg"/"ikke syg" og "rød blok"/"blå blok". Men det er ikke svært at forestiller sig scenarier, hvor der kan være mere end to klasser. For eksempel er eksemplet med rød og blå nok tvivlsomt. Her ville det måske være bedre at prøve at forudsige et bestemt parti. Denne note handler om, hvordan man udvider en simpel <a href="../../materialer/kunstige_neuroner/kunstige_neuroner.html">kunstig neuron</a>, så den ikke kun kan bruges til binær klassifikation, men derimod</p>
-<section id="hvad-skal-du-have-at-spise" class="level2">
-<h2 class="anchored" data-anchor-id="hvad-skal-du-have-at-spise">Hvad skal du have at spise?</h2>
+<p>Et kunstigt neuralt netværk fungerer på den måde, at man på baggrund af en række forskellige informationer gerne vil kunne forudsige en eller anden ting. Det kunne være, at man på baggrund af en række forskellige blodprøveværdier gerne vil kunne forudsige om en patient har en bestemt sygdom. Det kunne også være, at man på baggrund af svarene på en række forskellige spørsgmål vil kunne forudsige om en person vil stemme på rød eller blå blok. De nævnte eksempler kalder man for <em>binær klassifikation</em> – fordi der i hvert tilfælde er to muligheder: "syg"/"ikke syg" og "rød blok"/"blå blok". Men det er ikke svært at forestiller sig scenarier, hvor der kan være mere end to klasser. For eksempel er eksemplet med rød og blå nok tvivlsomt. Her ville det måske være bedre at prøve at forudsige et bestemt parti. Denne note handler om, hvordan man udvider en simpel <a href="../../materialer/kunstige_neuroner/kunstige_neuroner.html">kunstig neuron</a>, så den ikke kun kan bruges til binær klassifikation, men derimod til at forudsige hvilke blandt flere klasser et givent tilfælde befinder sig i. Lad os tage et eksempel:</p>
+<section id="hvor-hårdt-skal-du-arbejde-i-matematiktimerne" class="level2">
+<h2 class="anchored" data-anchor-id="hvor-hårdt-skal-du-arbejde-i-matematiktimerne">Hvor hårdt skal du arbejde i matematiktimerne?</h2>
+<p>Du kender det sikkert godt. Der er gruppearbejde i matematiktimen, og du gider egentlig ikke. Det er nemmere bare at snige sin mobiltelefon i lommen og drible i kantinen. På den anden side er du også ambitiøs og vil gerne have en god karakter til eksamen. What to do?</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/matematiktime.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
+</figure>
+</div>
+<p>Lad os sige at du svarer på følgende tre spørgsmål på en skala fra 1 til 10:</p>
+<p><span class="math inline">\(x_1\)</span>: Hvor godt har jeg sovet i nat? (1="Elendigt", 10="Fantastisk").</p>
+<p><span class="math inline">\(x_2\)</span>: Hvor spændende er det emne, vi er i gang med lige nu? (1="Mega kedeligt", 10="Det er awesome").</p>
+<p><span class="math inline">\(x_3\)</span>: Hvor godt vil jeg gerne klare mig til eksamen? (1="Jeg er ligeglad", 10="Det skal gå så godt som muligt").</p>
+<p>Baseret på disse tre spørgsmål er der nu følgende fire valg, du kan træffe:</p>
+<ol type="1">
+<li>Jeg bliver i klassen, hvor læreren kan hjælpe mig, og regner alt det, jeg kan.</li>
+<li>Jeg sætter mig ud og regner opgaverne, så godt jeg kan.</li>
+<li>Jeg går i kantinen og sniger min telefon med – jeg prøver at regne nogle få opgaver.</li>
+<li>Jeg går hjem (og håber på ikke at få fravær)!</li>
+</ol>
+<p>Det valg du træffer, skal vi have oversat til matematik (beklager, men nu er det jo en matematik tekst, du er i gang med at læse!). Det gør vi ved at definere fire forskellige værdier <span class="math inline">\(t_1, t_2, t_3, t_4\)</span>, som også kaldes for <strong>targetværdier</strong>.</p>
+<p>Hvis du vælger 1. sætter vi: <span class="math display">\[
+t_1 = 1, \quad t_2=0, \quad t_3=0, \quad t_4=0.
+\]</span></p>
+<p>Hvis du vælger 2. sætter vi: <span class="math display">\[
+t_1 = 0, \quad t_2=1, \quad t_3=0, \quad t_4=0.
+\]</span></p>
+<p>Hvis du vælger 3. sætter vi: <span class="math display">\[
+t_1 = 0, \quad t_2=0, \quad t_3=1, \quad t_4=0.
+\]</span></p>
+<p>Hvis du vælger 4. sætter vi: <span class="math display">\[
+t_1 = 0, \quad t_2=0, \quad t_3=0, \quad t_4=1.
+\]</span></p>
+<p>Det kunne man godt repræsentere lidt smart ved hjælp af en vektor i fire dimensioner:</p>
+<p><span class="math display">\[
+\vec{t}=
+\begin{pmatrix}
+t_1 \\
+t_2 \\
+t_3 \\
+t_4 \\
+\end{pmatrix}
+\]</span></p>
+<p>Læg mærke til at der altid gælder følgende</p>
+<p><span id="eq-one_not"><span class="math display">\[
+t_1 + t_2 + t_3 + t_4 = 1.
+\tag{1}\]</span></span></p>
+<p>På grund af denne egenskab kalder man <span class="math inline">\(\vec{t}\)</span> for en <strong>one hot vektor</strong>. Det får vi brug for senere.</p>
+</section>
+<section id="træningsdata" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="træningsdata">Træningsdata</h2>
+<p>Vi forestiller os nu, at vi har stillet 12 elever de tre spørgsmål ovenfor. Derefter har vi observeret hvilket af de fire valg, de træffer. Det kunne se sådan her ud:</p>
+<div id="tbl-trainingdata" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
+<div aria-describedby="tbl-trainingdata-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Elev nr.</th>
+<th style="text-align: center;"><span class="math inline">\(x_1\)</span> (søvn)</th>
+<th style="text-align: center;"><span class="math inline">\(x_2\)</span> (emne)</th>
+<th style="text-align: center;"><span class="math inline">\(x_3\)</span> (eksamen)</th>
+<th style="text-align: center;">Valg</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: center;"><span class="math inline">\({\color{#020873} 1}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(8\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(7\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(8\)</span></td>
+<td style="text-align: center;"><span class="math inline">\({\color{#020873} 1}\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(9\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(6\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: center;"><span class="math inline">\({\color{#020873} 1}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: center;"><span class="math inline">\({\color{#020873} 1}\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(5\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(5\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(8\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(7\)</span></td>
+<td style="text-align: center;"><span class="math inline">\({\color{#8086F2} 2}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(6\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(7\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: center;"><span class="math inline">\({\color{#8086F2} 2}\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(7\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(7\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(7\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: center;"><span class="math inline">\({\color{#8086F2} 2}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(8\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(8\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: center;"><span class="math inline">\({\color{#F2B33D} 3}\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(9\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(6\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(5\)</span></td>
+<td style="text-align: center;"><span class="math inline">\({\color{#F2B33D} 3}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\({\color{#F2B33D} 3}\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(11\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
+<td style="text-align: center;"><span class="math inline">\({\color{#F288B9} 4}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(12\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(5\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\({\color{#F288B9} 4}\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-tbl margin-caption" id="tbl-trainingdata-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabel&nbsp;1: Træningsdata fra 12 elever.
+</figcaption>
+</figure>
+</div>
+<p>For eksempel har elev nummer 1 sovet fantastisk, eleven synes at emnet er vildt spændende og eleven vil gerne klare sig rigtig godt til eksamen – denne elev vælger derfor at blive i klassen. Targetværdien for denne elev er:</p>
+<p><span class="math display">\[
+\vec{t}=
+\begin{pmatrix}
+1 \\
+0 \\
+0 \\
+0 \\
+\end{pmatrix}
+\]</span></p>
+<p>Eleven nummer 10 har derimod sovet semi godt, til gengæld synes eleven ikke at emnet er særlig spændende og er også ligeglad med at klare sig godt til eksamen. Denne elev laver derfor en "sniger" og går hjem. Targetværdien for denne elev er:</p>
+<p><span class="math display">\[
+\vec{t}=
+\begin{pmatrix}
+0 \\
+0 \\
+0 \\
+1 \\
+\end{pmatrix}
+\]</span></p>
+<p>Disse data kaldes for <strong>træningsdata</strong>.</p>
+<p>I <a href="#fig-trainingdata" class="quarto-xref">figur&nbsp;1</a> er træningsdata indtegnet i et tre-dimensionelt koordinatsystem. Punkterne har koordinatsæt <span class="math inline">\((x_1, x_2, x_3)\)</span> og punktets farve angiver valget (mørkeblå svarer til 1, lyseblå svarer til 2, gul svarer til 3 og lyserød svarer til 4).</p>
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<script src="https://cdn.geogebra.org/apps/deployggb.js"></script>
+
+<!-- 
+Alle geogebra filer placeres i mappen _geogebra
+Erstat XXX med nr på app og erstat YYY med navn på ggb-fil -->
+<script>
+var parameters_trainingdata = {
+"id": "ggbApplet_trainingdata",
+"width":500,
+"height":500,
+"prerelease":false,
+"borderColor":null,
+"showMenuBar":false,
+"showAlgebraInput":false,
+"showToolBar":false,
+"showToolBarHelp":false,
+"showResetIcon":true,
+"enableLabelDrags":false,
+"enableShiftDragZoom":true,
+"enableRightClick":false,
+"errorDialogsActive":false,
+"useBrowserForJS":false,
+"capturingThreshold":null,
+"language":"da",
+// use this instead of ggbBase64 to load a .ggb file
+ "filename":"_geogebra/trainingdata.ggb",
+};
+var applet_trainingdata = new GGBApplet(parameters_trainingdata, true);
+</script>
+
+
+
+<script>
+var parameters_softmax = {
+"id": "ggbApplet_softmax",
+"width":500,
+"height":500,
+"prerelease":false,
+"borderColor":null,
+"showMenuBar":false,
+"showAlgebraInput":false,
+"showToolBar":false,
+"showToolBarHelp":false,
+"showResetIcon":true,
+"enableLabelDrags":false,
+"enableShiftDragZoom":true,
+"enableRightClick":false,
+"errorDialogsActive":false,
+"useBrowserForJS":false,
+"capturingThreshold":null,
+"language":"da",
+// use this instead of ggbBase64 to load a .ggb file
+ "filename":"_geogebra/softmax.ggb",
+};
+var applet_softmax = new GGBApplet(parameters_softmax, true);
+</script>
+
+
+<script>
+window.onload = function() {
+  applet_softmax.inject('ggbApplet_softmax');
+  applet_trainingdata.inject('ggbApplet_trainingdata');
+  }
+</script>
+<div id="fig-trainingdata" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-trainingdata-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="ggbApplet_trainingdata">
+
+</div>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-trainingdata-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;1: Punktplot af træningsdata fra <a href="#tbl-trainingdata" class="quarto-xref">tabel&nbsp;1</a>. Punkternes farve angiver valget (mørkeblå svarer til 1, lyseblå svarer til 2, gul svarer til 3 og lyserød svarer til 4).
+</figcaption>
+</figure>
+</div>
+<p>Det, vi gerne vil nu, er at lave et meget simpelt kunstigt neuralt netværk, som vi fremover kan bruge til at forudsige, hvilket valg du skal træffe baseret på svaret på de tre spørgsmål. Så idéen er altså, at du i et fremtidsscenarie svarer på de tre spørgsmål, og så fortæller din nye AI assistent dig, hvilket valg du skal træffe. Det er da smart – eller måske lidt dumt, men nu er det jo også bare et eksempel!</p>
+<p>Lad os forklare hvordan man kan gøre det – blot i et lidt mere generelt tilfælde.</p>
+</section>
+<section id="feedforward" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="feedforward">Feedforward</h2>
+<p>Vi forestiller os, at vi generelt har <span class="math inline">\(n\)</span> inputvariable</p>
+<p><span class="math display">\[
+x_1, x_2, \dots, x_n.
+\]</span></p>
+<p>I eksemplet ovenfor var <span class="math inline">\(n=3\)</span>, fordi vi svarede på tre spørgsmål.</p>
+<p>Disse <span class="math inline">\(n\)</span> inputvariable er vist i <a href="#fig-netvaerk_generelt" class="quarto-xref">figur&nbsp;2</a> som lilla cirkler. De grønne cirkler repræsenterer <span class="math inline">\(m\)</span> output neuroner (i vores eksempel er <span class="math inline">\(m=4\)</span> fordi der skal træffes et valg blandt 4 muligheder). Vi ønsker at træne netværket, så <span class="math inline">\(o_1\)</span> bliver sandsynligheden for at et givent træningseksempel tilhører klasse <span class="math inline">\(1\)</span>, <span class="math inline">\(o_2\)</span> skal være sandsynligheden for at træningseksemplet tilhører klasse <span class="math inline">\(2\)</span> og så videre. Hvis man vil skrive det lidt kompakt op, kan man samle alle outputværdierne i en vektor:</p>
+<p><span class="math display">\[
+\vec{o} =
+\begin{pmatrix}
+o_1 \\
+o_2 \\
+\vdots \\
+o_m
+\end{pmatrix}
+\]</span></p>
+<p>I vores eksempel vil det svare til, at <span class="math inline">\(o_1\)</span> skal være sandsynligheden for, at du bliver i klassen og regner opgaver (mulighed 1), <span class="math inline">\(o_2\)</span> skal være sandsynligheden for, at du sætter dig ud og regner opgaver og så videre.</p>
+<p>Det vil sige, at det skal være sådan, at</p>
+<p><span class="math display">\[
+o_1 + o_2 + \cdots + o_m = 1
+\]</span></p>
+<p>fordi sandsynlighederne for de <span class="math inline">\(m\)</span> forskellige muligheder til sammen skal give 1.</p>
+<div id="fig-netvaerk_generelt" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-netvaerk_generelt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/netvaerk_generelt.png" class="img-fluid figure-img" style="width:75.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-netvaerk_generelt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;2: Neuralt netværk med <span class="math inline">\(n\)</span> input neuroner og <span class="math inline">\(m\)</span> output neuroner.
+</figcaption>
+</figure>
+</div>
+<p>Vi vil starte med at se på, hvordan vi på baggrund af inputvariablene <span class="math inline">\(x_1, x_2, \cdots, x_n\)</span> kan beregne de <span class="math inline">\(m\)</span> outputværdier, så ovenstående er opfyldt. På <a href="#fig-netvaerk_generelt" class="quarto-xref">figur&nbsp;2</a> illustrerer de forskelligt farvede pile, at alle <span class="math inline">\(n\)</span> inputvariable sendes frem i netværket til alle <span class="math inline">\(m\)</span> outputværdier. Så for eksempel sendes <span class="math inline">\(x_1, x_2, \cdots, x_n\)</span> frem til <span class="math inline">\(o_1\)</span> (vist ved de lyseblå pile) ligesom de også sendes frem til <span class="math inline">\(o_2\)</span> (vist ved de mellemblå pile) og så videre.</p>
+<p>For at forklare den beregning der så foregår, har vi i <a href="#fig-netvaerk_generelt_wi" class="quarto-xref">figur&nbsp;3</a> kun vist de pile, som går fra inputvariablene frem til den <span class="math inline">\(i\)</span>’te outputværdi.</p>
+<p>Før <span class="math inline">\(o_i\)</span> bestemmes, beregner vi først en værdi <span class="math inline">\(z_i\)</span> på denne måde:</p>
+<p><span class="math display">\[
+z_i = w_{i,0} + w_{i,1} \cdot x_1 + w_{i,2} \cdot x_2 + \cdots + w_{i,n} \cdot x_n.
+\]</span></p>
+<p>Tallene <span class="math inline">\(w_{i,0}, w_{i,1}, w_{i,2}, \cdots, w_{i,n}\)</span> kaldes for <strong>vægte</strong>.</p>
+<p>Værdien <span class="math inline">\(z_i\)</span> er vist i <a href="#fig-netvaerk_generelt_wi" class="quarto-xref">figur&nbsp;3</a> inde i den grønne cirkel. På tilsvarende vis beregnes <span class="math inline">\(z_1, z_2, \cdots, z_m\)</span>. Bemærk her, at vægtene er forskellige. For eksempel er</p>
+<p><span class="math display">\[
+z_2 = w_{2,0} + w_{2,1} \cdot x_1 + w_{2,2} \cdot x_2 + \cdots + w_{2,n} \cdot x_n
+\]</span></p>
+<p>så vægtene er her <span class="math inline">\(w_{2,0}, w_{2,1}, w_{2,2}, \cdots, w_{2,n}\)</span>. I alt er der <span class="math inline">\((n+1)\cdot m\)</span> forskellige vægte (det vil sige i vores eksempel vil der være <span class="math inline">\((3+1)\cdot4=16\)</span> vægte).</p>
+<div id="fig-netvaerk_generelt_wi" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-netvaerk_generelt_wi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/netvaerk_generelt_wi.png" class="img-fluid figure-img" style="width:75.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-netvaerk_generelt_wi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;3: Neuralt netværk hvor vægtene fra de <span class="math inline">\(n\)</span> input neuroner over til den <span class="math inline">\(i\)</span>’te output neuron er vist.
+</figcaption>
+</figure>
+</div>
+<p>Alle <span class="math inline">\(z\)</span>-værdierne kan antage et hvilket som helst reelt tal og kan af den grund ikke fortolkes som en sandsynlighed. Vi bruger derfor en såkaldt <strong>aktiveringsfunktion</strong> <span class="math inline">\(\alpha\)</span> på alle <span class="math inline">\(z\)</span>-værdierne, så vi kan få beregnet en outputværdi, som kan fortolkes som en sandsynlighed:</p>
+<p><span class="math display">\[
+o_i = \alpha(z_i).
+\]</span></p>
+<p>Som aktiveringsfunktion <span class="math inline">\(\alpha\)</span> vil vi bruge en funktion, som kaldes for <strong>softmax</strong>, fordi den præcis har de egenskaber, som vi efterspørger – det ser vi lige om lidt. På baggrund af alle <span class="math inline">\(z\)</span>-værdierne beregnes <span class="math inline">\(o_i\)</span> på denne måde:</p>
+<p><span class="math display">\[
+o_i = \alpha(z_i) = \frac{e^{z_i}}{\sum_{j=1}^m e^{z_j}}.
+\]</span></p>
+<p>For det første kan vi se, at både tæller og nævner er positive. Derfor må <span class="math inline">\(o_i&gt;0\)</span>. For det andet er <span class="math inline">\(e^{z_i} &lt; \sum_{j=1}^m e^{z_j}\)</span> og derfor er</p>
+<p><span class="math display">\[
+o_i =  \frac{e^{z_i}}{\sum_{j=1}^m e^{z_j}} &lt; \frac{\sum_{j=1}^m e^{z_j}}{\sum_{j=1}^m e^{z_j}} = 1.
+\]</span></p>
+<p>Altså er</p>
+<p><span class="math display">\[
+0&lt;o_i&lt;1
+\]</span></p>
+<p>hvilket betyder, at <span class="math inline">\(o_i\)</span> kan opfattes som en sandsynlighed. Endelig er</p>
+<p><span class="math display">\[
+\begin{aligned}
+o_1 + o_2 + \cdots + o_m &amp;= \frac{e^{z_1}}{\sum_{j=1}^m e^{z_j}} + \frac{e^{z_2}}{\sum_{j=1}^m e^{z_j}} + \cdots + \frac{e^{z_m}}{\sum_{j=1}^m e^{z_j}} \\
+&amp;= \frac{e^{z_1} + e^{z_2} + \cdots + e^{z_m}}{\sum_{j=1}^m e^{z_j}} \\
+&amp;= \frac{\sum_{j=1}^m e^{z_j}}{\sum_{j=1}^m e^{z_j}} = 1.
+\end{aligned}
+\]</span></p>
+<p>I det helt specielle tilfælde, hvor der kun er to output neuroner, vil softmax-funktionen for <span class="math inline">\(o_1\)</span> blot være en funktion af to variable:</p>
+<p><span class="math display">\[
+o_1 = \frac{e^{z_1}}{e^{z_1} + e^{z_2}}
+\]</span></p>
+<p>Grafen for denne funktion er vist i <a href="#fig-softmax" class="quarto-xref">figur&nbsp;4</a>. Her ses det tydeligt, at værdien af <span class="math inline">\(o_1\)</span> ligger i intervallet <span class="math inline">\(]0,1[\)</span>.</p>
+<div id="fig-softmax" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-softmax-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="ggbApplet_softmax">
+
+</div>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-softmax-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;4: Grafen for softmax funktionen <span class="math inline">\(o_1 = \frac{e^{z_1}}{e^{z_1} + e^{z_2}}\)</span>.
+</figcaption>
+</figure>
+</div>
+<p>Det betyder, at hvis <span class="math inline">\(o\)</span>-værdierne beregnes på denne måde, er der altså tale om en sandsynlighedsfordeling. Beregningen af alle <span class="math inline">\(z\)</span>- og <span class="math inline">\(o\)</span>-værdier kan udføres, hvis bare man kender alle vægtene. I et neuralt netværk kaldes disse udregninger for <strong>feedforward</strong> og er opsummeret herunder.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Feedforward-udtryk
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>På baggrund af inputværdierne <span class="math inline">\(x_1, x_2, \cdots, x_n\)</span> beregnes først <span class="math inline">\(z\)</span>-værdier:</p>
+<p><span id="eq-z_i"><span class="math display">\[
+\begin{aligned}
+z_1 &amp;= w_{1,0} + w_{1,1} \cdot x_1 + w_{1,2} \cdot x_2 + \cdots + w_{1,n} \cdot x_n \\
+&amp; \,\,\, \vdots \\
+z_i &amp;= w_{i,0} + w_{i,1} \cdot x_1 + w_{i,2} \cdot x_2 + \cdots + w_{i,n} \cdot x_n \\
+&amp; \,\,\, \vdots \\
+z_m &amp;= w_{m,0} + w_{m,1} \cdot x_1 + w_{m,2} \cdot x_2 + \cdots + w_{m,n} \cdot x_n \\
+\end{aligned}
+\tag{2}\]</span></span></p>
+<p>Herefter beregnes outputværdierne:</p>
+<p><span id="eq-o_i"><span class="math display">\[
+\begin{aligned}
+o_1 &amp;= \frac{e^{z_1}}{\sum_{j=1}^m e^{z_j}} \\
+&amp; \,\,\, \vdots \\
+o_i &amp;= \frac{e^{z_i}}{\sum_{j=1}^m e^{z_j}} \\
+&amp; \,\,\, \vdots \\
+o_m &amp;= \frac{e^{z_m}}{\sum_{j=1}^m e^{z_j}} \\
+\end{aligned}
+\tag{3}\]</span></span></p>
+</div>
+</div>
+</div>
+<p>Vi har indtil videre skrevet, at outputværdierne kan fortolkes som sandsynligheder. Men bare fordi at en række tal (<span class="math inline">\(o_1, o_2, \dots, o_m\)</span>) alle ligger mellem 0 og 1 og alle summerer til 1, så er det jo ikke sikkert, at de på en fornuftig måde angiver sandsynligheden for de fire forskellige muligheder, som de enkelte elever har. For eksempel kunne de fleste lærere nok ønske sig, at</p>
+<p><span class="math display">\[
+o_1 = 0.5, \quad 0_2 = 0.5, \quad o_3=0, \quad o_4=0
+\]</span> fuldstændig uafhængig af svarene på de tre spørgsmål.</p>
+<p>Det svarer til, at cirka halvdelen af elever bliver i klassen og regner opgaver, mens den anden halvdel sætter sig ud og regner. Til gengæld er der <em>ingen</em> som går i kantinen og feder den, ligsom der heller ikke er nogle, som bare går hjem.</p>
+<p>For at vores nye AI assistent skal give et nogenlunde retvisende billede af virkeligheden skal vi have fundet nogle outputværdier, som for det første afhænger af inputværdierne (man kan jo se på <a href="#fig-trainingdata" class="quarto-xref">figur&nbsp;1</a> at inputværdierne har indflydelse) og som for det andet rent faktisk giver en realistisk sandsynlighed for hver af de fire muligheder. Det gør vi ved at blive ved med at "skrue" på alle vægtene indtil, at de beregnede outputværdier i (<a href="#eq-o_i" class="quarto-xref">3</a>) giver et godt bud på sandsynlighederne for de 4 muligheder.</p>
+<p>Hvordan det rent faktisk lader sig gøre kommer her:</p>
+</section>
+<section id="cross-entropy-tabsfunktionen" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="cross-entropy-tabsfunktionen">Cross-entropy tabsfunktionen</h2>
+<p>Forestil dig at vi bare har valgt nogle tilfældige værdier af vægtene. På den baggrund kan vi for et givent sæt af inputværdier beregne outputværdierne ved hjælp af (<a href="#eq-o_i" class="quarto-xref">3</a>). For eksempel kan vi se på elev nummer 7 fra <a href="#tbl-trainingdata" class="quarto-xref">tabel&nbsp;1</a> med targetværdi</p>
+<p><span id="eq-target"><span class="math display">\[
+\vec t =
+\begin{pmatrix}
+0 \\
+1 \\
+0 \\
+0 \\
+\end{pmatrix}
+\tag{4}\]</span></span></p>
+<p>fordi denne elev har valgt mulighed 2 (gå uden for klassen for at regne opgaver). En bestemt "indstilling" af vægtene kunne for eksempel give denne outputvektor:</p>
+<p><span id="eq-o_bad"><span class="math display">\[
+\vec o =
+\begin{pmatrix}
+0.85 \\
+0.10 \\
+0.03 \\
+0.02 \\
+\end{pmatrix}
+\tag{5}\]</span></span></p>
+<p>Det svarer til at vægtene ikke har fået nogle "gode" værdier, fordi denne outputvektor svarer til, at der kun er <span class="math inline">\(10 \%\)</span> chance for at eleven vælger mulighed 2. Hvis vægtene i stedet havde haft værdier, som ville resultere i denne outputvektor</p>
+<p><span id="eq-o_good"><span class="math display">\[
+\vec o =
+\begin{pmatrix}
+0.10 \\
+0.85 \\
+0.03 \\
+0.02 \\
+\end{pmatrix}
+\tag{6}\]</span></span></p>
+<p>så vil vi straks være mere tilfredse med vores AI assistent, fordi sandsynligheden for mulighed 2 nu er steget til <span class="math inline">\(85 \%\)</span>. Faktisk vil vi allerhelst kunne vælge vægtene så outputvektoren for elev nummer 5 kommer så tæt som muligt på targetvektoren i (<a href="#eq-target" class="quarto-xref">4</a>) – og noget tilsvarende skal gerne gøre sig gældende for de øvrige 11 elever i træningsdata.</p>
+<p>Vi har derfor brug for en metode til at vælge vægtene, så outputvektoren i (<a href="#eq-o_good" class="quarto-xref">6</a>) bliver "belønnet" fremfor outputvektoren i (<a href="#eq-o_bad" class="quarto-xref">5</a>). For at gøre det definerer man en såkaldt <strong>tabsfunktion</strong>. Vi vil her vælge en tabsfunktion, som kaldes for <strong>cross-entropy</strong>.</p>
+<p>For at holde tingene simple starter vi med at se på ét træningseksempel ad gangen (til sidst generaliserer vi). <em>Cross-entropy</em> tabsfunktionen er nu defineret ved:</p>
+<p><span class="math display">\[
+E = - \sum_{i=1}^m t_i \cdot \ln(o_i)
+\]</span></p>
+<p>Det ser måske lige lidt farligt ud, men vi skal nok forklare det. Vi kan prøve at skrive summen ud:</p>
+<p><span class="math display">\[
+E = - \left (t_1 \cdot \ln(o_1)  + t_2 \cdot \ln(o_2) + \cdots + t_i \cdot \ln(o_i) + \cdots + t_m \cdot \ln(o_m) \right)
+\]</span></p>
+<p>Vi husker nu på, at <span class="math inline">\(\vec t\)</span> er en <em>one hot vektor</em>. Det vil sige, at det kun er ét af <span class="math inline">\(t_i\)</span>’erne i ovenstående der er 1 – resten er 0. Lad os sige at det er <span class="math inline">\(t_i\)</span>, der er 1. Så er</p>
+<p><span class="math display">\[
+E = - t_i \cdot \ln(o_i) = - \ln(o_i).
+\]</span></p>
+<p>I <a href="#fig-natural_ln" class="quarto-xref">figur&nbsp;5</a> har vi tegnet grafen for den naturlige logaritme-funktion og for minus den naturlige logartime-funktion:</p>
+<div id="fig-natural_ln" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-natural_ln-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/natural_ln.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-natural_ln-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;5: Grafen for <span class="math inline">\(\ln(x)\)</span> og <span class="math inline">\(-\ln(x)\)</span>.
+</figcaption>
+</figure>
+</div>
+<p>Da <span class="math inline">\(0&lt;o_i&lt;1\)</span> kan vi for det første se, at <span class="math inline">\(-\ln(o_i) &gt;0\)</span>. Det vil sige, at tabsfunktionen er positiv.</p>
+<p>Husk nu på at <span class="math inline">\(t_i=1\)</span>. Hvis vægtene i vores neurale netværk er "indstillet" godt, så skal <span class="math inline">\(o_i\)</span> være tæt på 1. I <a href="#fig-natural_ln" class="quarto-xref">figur&nbsp;5</a> kan vi se, at det svarer til, at <span class="math inline">\(-\ln(o_i)\)</span> er tæt på <span class="math inline">\(0\)</span>. Det betyder, at værdien af tabsfunktionen er lille. Omvendt hvis vægtene er "indstillet" dårligt, så <span class="math inline">\(o_i\)</span> er tæt på <span class="math inline">\(0\)</span> (selvom <span class="math inline">\(t_i=1\)</span>), så vil <span class="math inline">\(-\ln(o_i)\)</span> være et stort positivt tal. Altså er værdien af tabsfunktionen stor.</p>
+<p>Det betyder, at tabsfunktionen på den måde måler kvaliteten af netværket:</p>
+<ul>
+<li><p>For et godt netværk (med gode indstillinger af vægtene) vil tabsfunktionen have en lille, men positiv værdi.</p></li>
+<li><p>For et dårligt netværk (med dårlige indstillinger af vægtene) vil tabsfunktionen have en stor positiv værdi.</p></li>
+</ul>
+<p>Lad også illustrere det med det tidligere eksempel. Hvis</p>
+<p><span class="math display">\[
+\vec t =
+\begin{pmatrix}
+0 \\
+1 \\
+0 \\
+0 \\
+\end{pmatrix}
+\quad \textrm{og} \quad
+\vec o =
+\begin{pmatrix}
+0.85 \\
+0.10 \\
+0.03 \\
+0.02 \\
+\end{pmatrix}
+\]</span></p>
+<p>så har vi et dårligt netværk og værdien af tabsfunktionen bliver</p>
+<p><span class="math display">\[
+\begin{aligned}
+E &amp;= - \left( 0 \cdot \ln(0.85) + 1 \cdot \ln(0.10) + 0 \cdot \ln(0.03) + 0 \cdot \ln(0.02)\right) \\ &amp;= - \ln(0.10) \approx 2.30.
+\end{aligned}
+\]</span></p>
+<p>Har vi derimod et bedre netværk, som i stedet giver følgende outputvektor:</p>
+<p><span class="math display">\[
+\vec t =
+\begin{pmatrix}
+0 \\
+1 \\
+0 \\
+0 \\
+\end{pmatrix}
+\quad \textrm{og} \quad
+\vec o =
+\begin{pmatrix}
+0.10 \\
+0.85 \\
+0.03 \\
+0.02 \\
+\end{pmatrix}
+\]</span></p>
+<p>så vil værdien af tabsfunktionen være</p>
+<p><span class="math display">\[
+\begin{aligned}
+E &amp;= - \left( 0 \cdot \ln(0.10) + 1 \cdot \ln(0.85) + 0 \cdot \ln(0.03) + 0 \cdot \ln(0.02)\right) \\
+&amp;= - \ln(0.85) \approx 0.16.
+\end{aligned}
+\]</span></p>
+<p>Altså kan vi her se, at det netværk, som er bedre, også har en lavere værdi af tabsfunktionen. Hele idéen er derfor, at vi for et givent træningsdatasæt vil bestemme de værdier af vægtene, som minimerer tabsfunktionen. Hvordan det gøres forklares i det næste afsnit.</p>
+</section>
+<section id="opdatering-af-vægtene" class="level2">
+<h2 class="anchored" data-anchor-id="opdatering-af-vægtene">Opdatering af vægtene</h2>
+<p>Vi skal bestemme de værdier af vægtene, som minimerer tabsfunktionen</p>
+<p><span class="math display">\[
+E = - \sum_{i=1}^m t_i \cdot \ln(o_i)
+\]</span></p>
+<p>Husk på at outputværdierne <span class="math inline">\(o_i\)</span> afhænger af <span class="math inline">\(z\)</span>-værdierne via (<a href="#eq-o_i" class="quarto-xref">3</a>), mens <span class="math inline">\(z\)</span>-værdierne afhænger af vægtene via (<a href="#eq-z_i" class="quarto-xref">2</a>). Altså afhænger tabsfunktionen også indirekte af alle vægtene.</p>
+<p>Når man skal minimere <a href="../../materialer/funktioner_af_flere_variable/funktioner_af_flere_variable.html">en funktion, som afhænger af flere variable</a> (her vægtene) kan det gøres ved hjælp af en metode, som kaldes for <a href="../../materialer/gradientnedstigning/gradientnedstigning.html">gradientnedstigning</a>. Vi vil her kort forklare, hvad det går ud på.</p>
+<p>Hvis en funktion <span class="math inline">\(f\)</span> afhænger af <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> så kaldes den vektor, som består af alle de partielle afledede for gradienten:</p>
+<p><span class="math display">\[
+\nabla f(x_1, x_2, \dots, x_n) =
+\begin{pmatrix}
+\frac{\partial f}{\partial x_1} \\
+\frac{\partial f}{\partial x_2} \\
+\vdots \\
+\frac{\partial f}{\partial x_n}
+\end{pmatrix}.
+\]</span></p>
+<p>Det viser sig, at denne gradient peger i den retning, hvor funktionsværdien <em>vokser mest</em>. Omvendt vil minus gradienten <span class="math inline">\(-\nabla f(x_1, x_2, \dots, x_n)\)</span> pege i den retning, hvor funktionsværdien <em>falder mest</em>. Hvis vi derfor står et vilkårligt sted på grafen for <span class="math inline">\(f\)</span> og går et lille skridt i den negative gradientens retning, så vil vi være på vej ned mod et minimum (eventuelt kun lokalt). Når vi har gået det lille skridt, udregner vi gradienten igen og bevæger os igen et lille skridt i den negative gradients retning. Sådan fortsætter man indstil funktionsværdien ikke ændrer sig ret meget – det svarer forhåbentlig til, at vi har fundet et (lokalt) minimum.</p>
+<p>Derfor når vægten <span class="math inline">\(w_{i,k}\)</span> skal opdateres, så gør vi følgende:</p>
+<p><span class="math display">\[
+w_{i,k}^{\textrm{ny}} = w_{i,k} - \eta \cdot \frac{\partial E}{\partial w_{i,k}}.
+\]</span></p>
+<p>Tallet <span class="math inline">\(\eta\)</span> kaldes for en <strong>learning rate</strong> og er typisk et lille tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>. Det svarer til den skridtlængde vi bruger, når vi går i den negative gradients retning.</p>
+<p>Det vil sige for at opdatere <span class="math inline">\(w_{i,k}\)</span>-vægten, skal vi have udregnet den partielle afledede</p>
+<p><span class="math display">\[
+\frac{\partial E}{\partial w_{i,k}}.
+\]</span></p>
+<p>Hvis vi ser på <a href="#fig-netvaerk_generelt_wi" class="quarto-xref">figur&nbsp;3</a> kan vi se, at <span class="math inline">\(w_{i,k}\)</span> kun har indflydelse på <span class="math inline">\(z_i\)</span> og dermed <span class="math inline">\(o_i\)</span></p>
 
 
 </section>
