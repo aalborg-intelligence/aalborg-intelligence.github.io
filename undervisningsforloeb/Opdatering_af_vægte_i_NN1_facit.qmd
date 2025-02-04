@@ -1,0 +1,151 @@
+---
+title: ""
+description-meta: ''
+image: ""
+categories:
+---
+## Facit til forløb om opdatering af vægte i et simpelt neuralt netværk med 2 skjulte lag
+
+```{r, include = FALSE}
+
+# Definer sigmoid-funktionen
+sigmoid <- function(x) {
+  1 / (1 + exp(-x))
+}
+
+cross_entropy_loss <- function(o, t) {
+  -sum(t * log(o) + (1 - t) * log(1 - o))
+}
+
+# Input og output data
+X1 <- c(1,2,3)
+X2 <- c(2,3,5)
+t  <- c(0, 1, 0)
+
+# Vægte og bias
+k <- 0.5
+r1 <- k; r2 <- k; r0 <- k
+w1 <- k; w0 <- k
+
+# Læringsrate
+eta <- 0.1
+
+
+# Forløb fremad
+  s <- r1 * X1 + r2 * X2 + r0
+  y <- sigmoid(r1 * X1 + r2 * X2 + r0)
+  o <- sigmoid(w1 * y + w0)
+  
+  tab0 <- cross_entropy_loss(o, t) 
+  
+# Baglæns forløb (backpropagation)
+  dw <- (t - o)
+  dr <- dw * w1 * y * (1 - y)
+  
+  # Opdater vægtene og bias
+  w0 <- w0 + eta * sum(dw)
+  w1 <- w1 + eta * sum(dw * y)
+
+  r0 <- r0 + eta * sum(dr)
+  r1 <- r1 + eta * sum(dr * X1)
+  r2 <- r2 + eta * sum(dr * X2)
+
+  
+# Forløb fremad
+  s <- r1 * X1 + r2 * X2 + r0
+  y <- sigmoid(r1 * X1 + r2 * X2 + r0)
+  o <- sigmoid(w1 * y + w0)
+  
+  tab1 <- cross_entropy_loss(o, t) 
+```  
+  
+### Facit opgave 1
+Summen giver `r s` for de 3 punkter.
+
+$y$-værdierne er `r y`
+
+### Facit opgave 2
+$o$-værdierne er `r o`
+
+### Facit opgave 3
+**De afledede**
+   $$
+   \begin{aligned}
+   \delta_w^{(m)} &= (t^{(m)}-o^{(m)} )  \\
+   \end{aligned}
+   $$
+
+  **$w$-vægtene:**
+   $$
+   \begin{aligned}
+   w_0^{\textrm{ny}} &= w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
+   w_1^{\textrm{ny}} &= w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot y^{(m)}\\
+   \end{aligned}
+   $$
+
+### Facit opgave 4
+* $\delta_w$-værdierne er `r dw`
+* Summen giver `r sum(dw)`
+* $w_{0}^{ny}=$ `r w0` 
+* Summen giver `r sum(dw*y)`
+* $w_{1}^{ny}=$ `r w1` 
+
+### Facit opgave 5
+$$
+   \begin{aligned}
+   \delta_r^{(m)} &= \delta_v^{(m)} \cdot w_1 \cdot y^{(m)} \cdot (1-y^{(m)})
+   \end{aligned}
+   $$
+$$
+   \begin{aligned}
+   r_0^{\textrm{ny}} & =  r_0 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot 1 \\
+   r_1^{\textrm{ny}} & =  r_1 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)} \\
+   r_2^{\textrm{ny}} & =  r_2 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_n^{(m)}
+   \end{aligned}
+   $$
+
+### Facit opgave 6
+* $\delta_r$-værdierne er `r formatC(dr,format="f",digits=7)`
+* Summen giver `r formatC(sum(dr),format="f",digits=7)`
+* $r_{0}^{ny}=$ `r r0` 
+* Summen giver `r formatC(sum(dr*X1),format="f",digits=7)`
+* $r_{1}^{ny}=$ `r r1`
+* Summen giver `r sum(dr*X2)`
+* $r_{2}^{ny}=$ `r r2`
+
+### Facit opgave 7
+* Tab før opdatering `r tab0`
+* Tab efter første opdatering `r tab1`
+
+
+```{r, include = FALSE}
+
+
+# Baglæns forløb (backpropagation)
+  dw <- (t - o)
+  dr <- dw * w1 * y * (1 - y)
+  
+  # Opdater vægtene og bias
+  w0 <- w0 + eta * sum(dw)
+  w1 <- w1 + eta * sum(dw * y)
+
+  r0 <- r0 + eta * sum(dr)
+  r1 <- r1 + eta * sum(dr * X1)
+  r2 <- r2 + eta * sum(dr * X2)
+
+  
+# Forløb fremad
+  s <- r1 * X1 + r2 * X2 + r0
+  y <- sigmoid(r1 * X1 + r2 * X2 + r0)
+  o <- sigmoid(w1 * y + w0)
+  
+  tab2 <- cross_entropy_loss(o, t) 
+```  
+
+### Facit opgave 8
+* $w_0$ `r w0`
+* $w_1$ `r w1`
+* $r_0$ `r r0`
+* $r_1$ `r r1`
+* $r_2$ `r r2`
+* Tab efter anden opdatering `r tab2`
