@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="En øvelse i at opdatere vægtene i et simpelt neuralt netværk med to skjult lag.">
 
-<title>Opdatering af vægte i simpelt neuralt netværk med to skjulte lag – AI MAT - matematikken bag magien</title>
+<title>opdatering_af_vægte_i_nn1_facit – AI MAT - matematikken bag magien</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -181,12 +180,17 @@ window.Quarto = {
     <h2 id="toc-title">Indhold</h2>
    
   <ul>
-  <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
-  <li><a href="#et-meget-lille-datasæt" id="toc-et-meget-lille-datasæt" class="nav-link" data-scroll-target="#et-meget-lille-datasæt">Et meget lille datasæt</a></li>
-  <li><a href="#opdateringsregler" id="toc-opdateringsregler" class="nav-link" data-scroll-target="#opdateringsregler">Opdateringsregler</a></li>
-  <li><a href="#beregninger" id="toc-beregninger" class="nav-link" data-scroll-target="#beregninger">Beregninger</a></li>
-  <li><a href="#app-til-simple-neurale-netværk" id="toc-app-til-simple-neurale-netværk" class="nav-link" data-scroll-target="#app-til-simple-neurale-netværk">App til simple neurale netværk</a></li>
-  <li><a href="#løsninger-til-opgaver" id="toc-løsninger-til-opgaver" class="nav-link" data-scroll-target="#løsninger-til-opgaver">Løsninger til opgaver</a></li>
+  <li><a href="#facit-til-forløb-om-opdatering-af-vægte-i-et-simpelt-neuralt-netværk-med-2-skjulte-lag" id="toc-facit-til-forløb-om-opdatering-af-vægte-i-et-simpelt-neuralt-netværk-med-2-skjulte-lag" class="nav-link active" data-scroll-target="#facit-til-forløb-om-opdatering-af-vægte-i-et-simpelt-neuralt-netværk-med-2-skjulte-lag">Facit til forløb om opdatering af vægte i et simpelt neuralt netværk med 2 skjulte lag</a>
+  <ul class="collapse">
+  <li><a href="#facit-opgave-1" id="toc-facit-opgave-1" class="nav-link" data-scroll-target="#facit-opgave-1">Facit opgave 1</a></li>
+  <li><a href="#facit-opgave-2" id="toc-facit-opgave-2" class="nav-link" data-scroll-target="#facit-opgave-2">Facit opgave 2</a></li>
+  <li><a href="#facit-opgave-3" id="toc-facit-opgave-3" class="nav-link" data-scroll-target="#facit-opgave-3">Facit opgave 3</a></li>
+  <li><a href="#facit-opgave-4" id="toc-facit-opgave-4" class="nav-link" data-scroll-target="#facit-opgave-4">Facit opgave 4</a></li>
+  <li><a href="#facit-opgave-5" id="toc-facit-opgave-5" class="nav-link" data-scroll-target="#facit-opgave-5">Facit opgave 5</a></li>
+  <li><a href="#facit-opgave-6" id="toc-facit-opgave-6" class="nav-link" data-scroll-target="#facit-opgave-6">Facit opgave 6</a></li>
+  <li><a href="#facit-opgave-7" id="toc-facit-opgave-7" class="nav-link" data-scroll-target="#facit-opgave-7">Facit opgave 7</a></li>
+  <li><a href="#facit-opgave-8" id="toc-facit-opgave-8" class="nav-link" data-scroll-target="#facit-opgave-8">Facit opgave 8</a></li>
+  </ul></li>
   </ul>
 </nav>
 </nav>
@@ -195,246 +199,92 @@ window.Quarto = {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Opdatering af vægte i simpelt neuralt netværk med to skjulte lag</h1>
-  <div class="quarto-categories">
-    <div class="quarto-category">A-niveau</div>
-    <div class="quarto-category">Kort</div>
-  </div>
-  </div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
 
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<div class="callout callout-style-simple callout-caution no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Forudsætninger og tidsforbrug
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<ul>
-<li>Simple neurale netværk.</li>
-<li>Sigmoid aktiveringsfunktion.</li>
-<li>Gradientnedstigning.</li>
-</ul>
-<p>Forudsætningerne kan med fordel være dækket vha. <a href="../materialer/simple_neurale_netværk/simple_neurale_netværk.qmd" target="_blank">noten om simple neurale netværk</a>, da notationen derfra vil blive anvendt i dette forløb.</p>
-<p><strong>Tidsforbrug:</strong> Ca. 90 minutter.</p>
-</div>
-</div>
-</div>
-<section id="formål" class="level3 purpose">
-<h3 class="anchored" data-anchor-id="formål">Formål</h3>
-<p>Gennem detaljerede beregninger at forstå, hvordan vægtene i et simpelt neuralt netværk til klassifikation med to skjulte lag opdateres med brug af sigmoid som aktiveringsfunktion, squarred error som tabsfunktion og gradientnedstigning med squared-error som tabsfunktion.</p>
-<p>Dette kan ses som et skridt på vejen til at forstå, hvordan vægtene opdateres i et generelt neuralt netværk.</p>
+<section id="facit-til-forløb-om-opdatering-af-vægte-i-et-simpelt-neuralt-netværk-med-2-skjulte-lag" class="level2">
+<h2 class="anchored" data-anchor-id="facit-til-forløb-om-opdatering-af-vægte-i-et-simpelt-neuralt-netværk-med-2-skjulte-lag">Facit til forløb om opdatering af vægte i et simpelt neuralt netværk med 2 skjulte lag</h2>
+<section id="facit-opgave-1" class="level3">
+<h3 class="anchored" data-anchor-id="facit-opgave-1">Facit opgave 1</h3>
+<p>Summen giver 1.9773575, 2.9659487, 4.4468601 for de 3 punkter.</p>
+<p><span class="math inline">\(y\)</span>-værdierne er 0.8783992, 0.9510119, 0.9884204</p>
 </section>
-<section id="et-meget-lille-datasæt" class="level2">
-<h2 class="anchored" data-anchor-id="et-meget-lille-datasæt">Et meget lille datasæt</h2>
-<p>I neurale netværk er der ofte rigtigt mange features, rigtigt mange vægte og rigtigt mange datapunkter.</p>
-<p>For bedre at forstå, hvordan vægtene opdateres i et neuralt netværk, vil vi her se på et meget lille eksempel, så det mere manuelt er muligt at lave opdateringen af vægtene.</p>
-<p>Vi vil lave et netværk med 2 neuroner i inputlaget <span class="math inline">\(x\)</span>, 1 neuron i det første skjulte lag <span class="math inline">\(y\)</span>, 1 neuron i det andet skjulte lag <span class="math inline">\(z\)</span> og 1 neuron i outputlaget <span class="math inline">\(o\)</span>. Konkret vil vi se på to features <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> og en targetværdi <span class="math inline">\(t\)</span> ud fra følgende 3 datapunkter.</p>
-<table class="table">
-<thead>
-<tr class="header">
-<th style="text-align: center;"><span class="math inline">\(x_1\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(x_2\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(t\)</span></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">1</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">0</td>
-</tr>
-</tbody>
-</table>
-<p>Vi vælger en learning-rate på <span class="math display">\[\eta = 0.1\]</span> <em>sigmoid-funktionen</em> som aktiveringsfunktion mellem lagene <span class="math display">\[\sigma(x)=\frac{1}{1+e^{-x}}\]</span> og <em>squared-error</em> som tabsfunktion <span class="math display">\[E = \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right)^2\]</span></p>
-<p>Endeligt vælger vi alle startvægtene til at være <span class="math inline">\(0.5\)</span>, så <span class="math display">\[r_0=0.5 \ (bias),\ r_1=0.5,\ r_2=0.5\]</span> <span class="math display">\[v_0=0.5 (bias), v_1=0.5\]</span> <span class="math display">\[w_0=0.5 (bias),\  w_1=0.5\]</span></p>
+<section id="facit-opgave-2" class="level3">
+<h3 class="anchored" data-anchor-id="facit-opgave-2">Facit opgave 2</h3>
+<p><span class="math inline">\(o\)</span>-værdierne er 0.6738134, 0.6800149, 0.6831854</p>
 </section>
-<section id="opdateringsregler" class="level2">
-<h2 class="anchored" data-anchor-id="opdateringsregler">Opdateringsregler</h2>
-<p>Fra <a href="../materialer/simple_neurale_netværk/simple_neurale_netværk.qmd" target="_blank">noten om simple neurale netværk</a> har vi opdateringsreglerne, som vi nu skal til at anvende på det konkrete datasæt.</p>
+<section id="facit-opgave-3" class="level3">
+<h3 class="anchored" data-anchor-id="facit-opgave-3">Facit opgave 3</h3>
 <p><strong>De afledede</strong> <span class="math display">\[
    \begin{aligned}
-   \delta_w^{(m)} &amp;= (t^{(m)}-o^{(m)} ) \cdot o^{(m)}  \cdot (1-o^{(m)})  \\
-   \delta_v^{(m)} &amp;= \delta_w^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)}) \\
-   \delta_r^{(m)} &amp;= \delta_v^{(m)} \cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)})
+   \delta_w^{(m)} &amp;= (t^{(m)}-o^{(m)} )  \\
    \end{aligned}
    \]</span></p>
 <p><strong><span class="math inline">\(w\)</span>-vægtene:</strong> <span class="math display">\[
    \begin{aligned}
    w_0^{\textrm{ny}} &amp;= w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
-   w_1^{\textrm{ny}} &amp;= w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot z^{(m)}\\
-   \end{aligned}
-   \]</span> <strong><span class="math inline">\(v\)</span>-vægtene:</strong> <span class="math display">\[
-   \begin{aligned}
-   v_0^{\textrm{ny}} &amp;= v_0 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot 1\\
-   v_1^{\textrm{ny}} &amp;= v_1 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot y^{(m)}\\
-   \end{aligned}
-   \]</span> <strong><span class="math inline">\(r\)</span>-vægtene:</strong> <span class="math display">\[
-   \begin{aligned}
-   r_0^{\textrm{ny}} &amp; =  r_0 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot 1 \\
-   r_1^{\textrm{ny}} &amp; =  r_1 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)} \\
-     &amp; \ \ \vdots &amp; \\
-   r_n^{\textrm{ny}} &amp; =  r_n + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_n^{(m)}
+   w_1^{\textrm{ny}} &amp;= w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot y^{(m)}\\
    \end{aligned}
    \]</span></p>
 </section>
-<section id="beregninger" class="level2">
-<h2 class="anchored" data-anchor-id="beregninger">Beregninger</h2>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Opgave 1: Feed-forward fra <span class="math inline">\(x\)</span> til <span class="math inline">\(y\)</span> lag.
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
+<section id="facit-opgave-4" class="level3">
+<h3 class="anchored" data-anchor-id="facit-opgave-4">Facit opgave 4</h3>
 <ul>
-<li>Udregn <span class="math inline">\(r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)} + r_0\)</span> for hver af de 3 punkter.</li>
-<li>Udregn <span class="math inline">\(y^{(m)}=\sigma(r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)} + r_0)\)</span> for hver af de 3 punkter.</li>
+<li><span class="math inline">\(\delta_w\)</span>-værdierne er -0.7191802, 0.2736291, -0.7299771</li>
+<li>Summen giver -1.1755281</li>
+<li><span class="math inline">\(w_{0}^{ny}=\)</span> 0.3824472</li>
+<li>Summen giver -1.093027</li>
+<li><span class="math inline">\(w_{1}^{ny}=\)</span> 0.3905243</li>
 </ul>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Opgave 2: Feed-forward fra <span class="math inline">\(y\)</span> til <span class="math inline">\(z\)</span> lag.
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<ul>
-<li>Udregn på tilsvarende vis <span class="math inline">\(z^{(m)}\)</span> for hver af de 3 punkter.</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Opgave 3: Feed-forward fra <span class="math inline">\(z\)</span> til <span class="math inline">\(o\)</span> lag.
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<ul>
-<li>Udregn på tilsvarende vis <span class="math inline">\(o^{(m)}\)</span> for hver af de 3 punkter.</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Opgave 4: Backpropagation på <span class="math inline">\(w\)</span> vægte.
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<ul>
-<li>Udregn <span class="math inline">\(\delta_w^{(m)} = (t^{(m)}-o^{(m)}) \cdot o^{(m)} \cdot (1-o^{(m)})\)</span> for hver af de 3 punkter.</li>
-<li>Udregn <span class="math inline">\(\sum_{m=1}^{3} \delta_w^{(m)}\)</span> for de 3 punkter.</li>
-<li>Udregn <span class="math inline">\(w_0^{ny} = w_0 + \eta \cdot \sum_{m=1}^{3} \delta_w^{(m)}\)</span></li>
-<li>Udregn <span class="math inline">\(\sum_{m=1}^{3} \delta_w^{(m)} \cdot z^{(m)}\)</span> for de 3 punkter.</li>
-<li>Udregn <span class="math inline">\(w_1^{ny} = w_1 + \eta \cdot \sum_{m=1}^3 \delta_w^{(m)} \cdot z^{(m)}\)</span></li>
-</ul>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Opgave 5: Backpropagation på <span class="math inline">\(v\)</span> vægte.
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<ul>
-<li>Lav tilsvarende udregninger og opdatering af <span class="math inline">\(v\)</span> vægtene.</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Opgave 6: Backpropagation på <span class="math inline">\(r\)</span> vægte.
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<ul>
-<li>Lav tilsvarende udregninger og opdatering af <span class="math inline">\(r\)</span> vægtene.</li>
-</ul>
-</div>
-</div>
-</div>
 </section>
-<section id="app-til-simple-neurale-netværk" class="level2">
-<h2 class="anchored" data-anchor-id="app-til-simple-neurale-netværk">App til simple neurale netværk</h2>
-<p>** mangler ** Her mangler noget med at bruge appen (der ikke er klar endnu) til at optimere vægtene, og efterfølgende lave prediktion.</p>
+<section id="facit-opgave-5" class="level3">
+<h3 class="anchored" data-anchor-id="facit-opgave-5">Facit opgave 5</h3>
+<p><span class="math display">\[
+   \begin{aligned}
+   \delta_r^{(m)} &amp;= \delta_v^{(m)} \cdot w_1 \cdot y^{(m)} \cdot (1-y^{(m)})
+   \end{aligned}
+   \]</span> <span class="math display">\[
+   \begin{aligned}
+   r_0^{\textrm{ny}} &amp; =  r_0 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot 1 \\
+   r_1^{\textrm{ny}} &amp; =  r_1 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)} \\
+   r_2^{\textrm{ny}} &amp; =  r_2 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_n^{(m)}
+   \end{aligned}
+   \]</span></p>
 </section>
-<section id="løsninger-til-opgaver" class="level2">
-<h2 class="anchored" data-anchor-id="løsninger-til-opgaver">Løsninger til opgaver</h2>
-<p><a href="../undervisningsforloeb/Opdatering_af_vægte_i_NN2_facit.html" target="_blank">Facitliste</a>.</p>
+<section id="facit-opgave-6" class="level3">
+<h3 class="anchored" data-anchor-id="facit-opgave-6">Facit opgave 6</h3>
+<ul>
+<li><span class="math inline">\(\delta_r\)</span>-værdierne er -0.0377547, 0.0061808, -0.0039660</li>
+<li>Summen giver -0.0355399</li>
+<li><span class="math inline">\(r_{0}^{ny}=\)</span> 0.496446</li>
+<li>Summen giver -0.0372911</li>
+<li><span class="math inline">\(r_{1}^{ny}=\)</span> 0.4962709</li>
+<li>Summen giver -0.0767971</li>
+<li><span class="math inline">\(r_{2}^{ny}=\)</span> 0.4923203</li>
+</ul>
+</section>
+<section id="facit-opgave-7" class="level3">
+<h3 class="anchored" data-anchor-id="facit-opgave-7">Facit opgave 7</h3>
+<ul>
+<li>Tab før opdatering 2.8989851</li>
+<li>Tab efter første opdatering 2.6553645</li>
+</ul>
+</section>
+<section id="facit-opgave-8" class="level3">
+<h3 class="anchored" data-anchor-id="facit-opgave-8">Facit opgave 8</h3>
+<ul>
+<li><span class="math inline">\(w_0\)</span> 0.2787458</li>
+<li><span class="math inline">\(w_1\)</span> 0.2942401</li>
+<li><span class="math inline">\(r_0\)</span> 0.4939121</li>
+<li><span class="math inline">\(r_1\)</span> 0.4937084</li>
+<li><span class="math inline">\(r_2\)</span> 0.4869186</li>
+<li>Tab efter anden opdatering 2.4674373</li>
+</ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
