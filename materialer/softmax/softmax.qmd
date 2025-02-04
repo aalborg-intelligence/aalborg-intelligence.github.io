@@ -5,8 +5,467 @@ description-meta: "I denne note behandles et simpelt neuralt netværk uden skjul
 from: markdown+emoji
 ---
 
-Et kunstigt neuralt netværk fungerer på den måde, at man på baggrund af en række forskellige informationer gerne vil kunne forudsige en eller anden ting. Det kunne være, at man på baggrund af en række forskellige blodprøveværdier gerne vil kunne forudsige om en patient har en bestemt sygdom. Det kunne også være, at man på baggrund af svarene på en række forskellige spørsgmål vil kunne forudsige om en person vil stemme på rød eller blå blok. De nævnte eksempler kalder man for *binær klassifikation* -- fordi der i hvert tilfælde er to muligheder: \"syg\"/\"ikke syg\" og \"rød blok\"/\"blå blok\". Men det er ikke svært at forestiller sig scenarier, hvor der kan være mere end to klasser. For eksempel er eksemplet med rød og blå nok tvivlsomt. Her ville det måske være bedre at prøve at forudsige et bestemt parti. Denne note handler om, hvordan man udvider en simpel [kunstig neuron](../kunstige_neuroner/kunstige_neuroner.qmd), så den ikke kun kan bruges til binær klassifikation, men derimod 
+Et kunstigt neuralt netværk fungerer på den måde, at man på baggrund af en række forskellige informationer gerne vil kunne forudsige en eller anden ting. Det kunne være, at man på baggrund af en række forskellige blodprøveværdier gerne vil kunne forudsige om en patient har en bestemt sygdom. Det kunne også være, at man på baggrund af svarene på en række forskellige spørsgmål vil kunne forudsige om en person vil stemme på rød eller blå blok. De nævnte eksempler kalder man for *binær klassifikation* -- fordi der i hvert tilfælde er to muligheder: \"syg\"/\"ikke syg\" og \"rød blok\"/\"blå blok\". Men det er ikke svært at forestiller sig scenarier, hvor der kan være mere end to klasser. For eksempel er eksemplet med rød og blå nok tvivlsomt. Her ville det måske være bedre at prøve at forudsige et bestemt parti. Denne note handler om, hvordan man udvider en simpel [kunstig neuron](../kunstige_neuroner/kunstige_neuroner.qmd), så den ikke kun kan bruges til binær klassifikation, men derimod til at forudsige hvilke blandt flere klasser et givent tilfælde befinder sig i. Lad os tage et eksempel:
 
 
-## Hvad skal du have at spise?
+## Hvor hårdt skal du arbejde i matematiktimerne?
 
+Du kender det sikkert godt. Der er gruppearbejde i matematiktimen, og du gider egentlig ikke. Det er nemmere bare at snige sin mobiltelefon i lommen og drible i kantinen. På den anden side er du også ambitiøs og vil gerne have en god karakter til eksamen. What to do? 
+
+![](images/matematiktime.jpg){width=75% fig-align='center'}
+
+Lad os sige at du svarer på følgende tre spørgsmål på en skala fra 1 til 10:
+
+$x_1$: Hvor godt har jeg sovet i nat? (1=\"Elendigt\", 10=\"Fantastisk\").
+
+$x_2$: Hvor spændende er det emne, vi er i gang med lige nu? (1=\"Mega kedeligt\", 10=\"Det er awesome\").
+
+$x_3$: Hvor godt vil jeg gerne klare mig til eksamen? (1=\"Jeg er ligeglad\", 10=\"Det skal gå så godt som muligt\").
+
+
+Baseret på disse tre spørgsmål er der nu følgende fire valg, du kan træffe:
+
+1. Jeg bliver i klassen, hvor læreren kan hjælpe mig, og regner alt det, jeg kan.
+2. Jeg sætter mig ud og regner opgaverne, så godt jeg kan.
+3. Jeg går i kantinen og sniger min telefon med -- jeg prøver at regne nogle få opgaver.
+4. Jeg går hjem (og håber på ikke at få fravær)!
+
+Det valg du træffer, skal vi have oversat til matematik (beklager, men nu er det jo en matematik tekst, du er i gang med at læse!). Det gør vi ved at definere fire forskellige værdier $t_1, t_2, t_3, t_4$, som også kaldes for **targetværdier**.
+
+Hvis du vælger 1. sætter vi:
+$$
+t_1 = 1, \quad t_2=0, \quad t_3=0, \quad t_4=0.
+$$
+
+Hvis du vælger 2. sætter vi:
+$$
+t_1 = 0, \quad t_2=1, \quad t_3=0, \quad t_4=0.
+$$
+
+Hvis du vælger 3. sætter vi:
+$$
+t_1 = 0, \quad t_2=0, \quad t_3=1, \quad t_4=0.
+$$
+
+Hvis du vælger 4. sætter vi:
+$$
+t_1 = 0, \quad t_2=0, \quad t_3=0, \quad t_4=1.
+$$
+
+Det kunne man godt repræsentere lidt smart ved hjælp af en vektor i fire dimensioner:
+
+$$
+\vec{t}=
+\begin{pmatrix}
+t_1 \\
+t_2 \\
+t_3 \\
+t_4 \\
+\end{pmatrix}
+$$
+
+Læg mærke til at der altid gælder følgende
+
+$$
+t_1 + t_2 + t_3 + t_4 = 1.
+$$ {#eq-one_not}
+
+På grund af denne egenskab kalder man $\vec{t}$ for en **one hot vektor**. Det får vi brug for senere.
+
+## Træningsdata
+
+Vi forestiller os nu, at vi har stillet 12 elever de tre spørgsmål ovenfor. Derefter har vi observeret hvilket af de fire valg, de træffer. Det kunne se sådan her ud:
+
+::: {#tbl-trainingdata}
+|Elev nr.| $x_1$ (søvn) | $x_2$ (emne) | $x_3$ (eksamen) | Valg |
+|:---:|:---:|:---:|:---:|:---:|
+|$1$ |$10$ | $10$ | $10$  | ${\color{#020873} 1}$  |
+|$2$ |$8$ | $7$ | $8$  |${\color{#020873} 1}$  | 
+|$3$ |$9$ | $6$ | $10$  |${\color{#020873} 1}$  |
+|$4$ |$4$ | $10$ | $10$  |${\color{#020873} 1}$  |
+|$5$ |$5$ | $8$ | $7$ | ${\color{#8086F2} 2}$ |
+|$6$ |$10$ | $7$ | $4$ | ${\color{#8086F2} 2}$ |
+|$7$ |$7$ | $7$ | $10$ | ${\color{#8086F2} 2}$ |
+|$8$ |$8$ | $3$ | $4$ | ${\color{#F2B33D} 3}$ |
+|$9$ |$6$ | $2$ | $5$ | ${\color{#F2B33D} 3}$ |
+|$10$ |$10$ | $2$ | $2$ | ${\color{#F2B33D} 3}$ |
+|$11$ |$1$ | $1$ | $3$ | ${\color{#F288B9} 4}$ |
+|$12$ |$5$ | $2$ | $2$ | ${\color{#F288B9} 4}$ |
+Træningsdata fra 12 elever.
+:::
+ 
+
+For eksempel har elev nummer 1 sovet fantastisk, eleven synes at emnet er vildt spændende og eleven vil gerne klare sig rigtig godt til eksamen -- denne elev vælger derfor at blive i klassen. Targetværdien for denne elev er:
+
+$$
+\vec{t}=
+\begin{pmatrix}
+1 \\
+0 \\
+0 \\
+0 \\
+\end{pmatrix}
+$$
+
+Eleven nummer 10 har derimod sovet semi godt, til gengæld synes eleven ikke at emnet er særlig spændende og er også ligeglad med at klare sig godt til eksamen. Denne elev laver derfor en \"sniger\" og går hjem. Targetværdien for denne elev er:
+
+$$
+\vec{t}=
+\begin{pmatrix}
+0 \\
+0 \\
+0 \\
+1 \\
+\end{pmatrix}
+$$
+
+Disse data kaldes for **træningsdata**.
+
+I @fig-trainingdata er træningsdata indtegnet i et tre-dimensionelt koordinatsystem. Punkterne har koordinatsæt $(x_1, x_2, x_3)$ og punktets farve angiver valget (mørkeblå svarer til 1, lyseblå svarer til 2, gul svarer til 3 og lyserød svarer til 4).
+
+{{< include _geogebra/_geogebra.qmd >}}
+
+::: {#fig-trainingdata}
+::: {#ggbApplet_trainingdata}
+:::
+Punktplot af træningsdata fra @tbl-trainingdata. Punkternes farve angiver valget (mørkeblå svarer til 1, lyseblå svarer til 2, gul svarer til 3 og lyserød svarer til 4).
+:::
+
+Det, vi gerne vil nu, er at lave et meget simpelt kunstigt neuralt netværk, som vi fremover kan bruge til at forudsige, hvilket valg du skal træffe baseret på svaret på de tre spørgsmål. Så idéen er altså, at du i et fremtidsscenarie svarer på de tre spørgsmål, og så fortæller din nye AI assistent dig, hvilket valg du skal træffe. Det er da smart -- eller måske lidt dumt, men nu er det jo også bare et eksempel!
+
+Lad os forklare hvordan man kan gøre det -- blot i et lidt mere generelt tilfælde.
+
+
+
+## Feedforward
+
+Vi forestiller os, at vi generelt har $n$ inputvariable
+
+$$
+x_1, x_2, \dots, x_n.
+$$
+
+I eksemplet ovenfor var $n=3$, fordi vi svarede på tre spørgsmål.
+
+Disse $n$ inputvariable er vist i @fig-netvaerk_generelt som lilla cirkler. De grønne cirkler repræsenterer $m$ output neuroner (i vores eksempel er $m=4$ fordi der skal træffes et valg blandt 4 muligheder). Vi ønsker at træne netværket, så $o_1$ bliver sandsynligheden for at et givent træningseksempel tilhører klasse $1$, $o_2$ skal være sandsynligheden for at træningseksemplet tilhører klasse $2$ og så videre. Hvis man vil skrive det lidt kompakt op, kan man samle alle outputværdierne i en vektor:
+
+$$
+\vec{o} = 
+\begin{pmatrix}
+o_1 \\
+o_2 \\
+\vdots \\
+o_m
+\end{pmatrix}
+$$
+
+
+
+I vores eksempel vil det svare til, at $o_1$ skal være sandsynligheden for, at du bliver i klassen og regner opgaver (mulighed 1), $o_2$ skal være sandsynligheden for, at du sætter dig ud og regner opgaver og så videre.
+
+Det vil sige, at det skal være sådan, at
+
+$$
+o_1 + o_2 + \cdots + o_m = 1
+$$
+
+fordi sandsynlighederne for de $m$ forskellige muligheder til sammen skal give 1.
+
+
+![Neuralt netværk med $n$ input neuroner og $m$ output neuroner.](images/netvaerk_generelt.png){width=75% #fig-netvaerk_generelt}
+
+Vi vil starte med at se på, hvordan vi på baggrund af inputvariablene $x_1, x_2, \cdots, x_n$ kan beregne de $m$ outputværdier, så ovenstående er opfyldt. På @fig-netvaerk_generelt illustrerer de forskelligt farvede pile, at alle $n$ inputvariable sendes frem i netværket til alle $m$ outputværdier. Så for eksempel sendes $x_1, x_2, \cdots, x_n$ frem til $o_1$ (vist ved de lyseblå pile) ligesom de også sendes frem til $o_2$ (vist ved de mellemblå pile) og så videre. 
+
+For at forklare den beregning der så foregår, har vi i @fig-netvaerk_generelt_wi kun vist de pile, som går fra inputvariablene frem til den $i$'te outputværdi.
+
+Før $o_i$ bestemmes, beregner vi først en værdi $z_i$ på denne måde:
+
+$$
+z_i = w_{i,0} + w_{i,1} \cdot x_1 + w_{i,2} \cdot x_2 + \cdots + w_{i,n} \cdot x_n.
+$$
+
+Tallene $w_{i,0}, w_{i,1}, w_{i,2}, \cdots, w_{i,n}$ kaldes for **vægte**. 
+
+Værdien $z_i$ er vist i @fig-netvaerk_generelt_wi inde i den grønne cirkel. På tilsvarende vis beregnes $z_1, z_2, \cdots, z_m$. Bemærk her, at vægtene er forskellige. For eksempel er
+
+$$
+z_2 = w_{2,0} + w_{2,1} \cdot x_1 + w_{2,2} \cdot x_2 + \cdots + w_{2,n} \cdot x_n
+$$
+
+så vægtene er her $w_{2,0}, w_{2,1}, w_{2,2}, \cdots, w_{2,n}$. I alt er der $(n+1)\cdot m$ forskellige vægte (det vil sige i vores eksempel vil der være $(3+1)\cdot4=16$ vægte).
+
+
+![Neuralt netværk hvor vægtene fra de $n$ input neuroner over til den $i$'te output neuron er vist.](images/netvaerk_generelt_wi.png){width=75% #fig-netvaerk_generelt_wi}
+
+
+Alle $z$-værdierne kan antage et hvilket som helst reelt tal og kan af den grund ikke fortolkes som en sandsynlighed. Vi bruger derfor en såkaldt **aktiveringsfunktion** $\alpha$ på alle $z$-værdierne, så vi kan få beregnet en outputværdi, som kan fortolkes som en sandsynlighed:
+
+$$
+o_i = \alpha(z_i).
+$$
+
+Som aktiveringsfunktion $\alpha$ vil vi bruge en funktion, som kaldes for **softmax**, fordi den præcis har de egenskaber, som vi efterspørger -- det ser vi lige om lidt. På baggrund af alle $z$-værdierne beregnes $o_i$ på denne måde:
+
+$$
+o_i = \alpha(z_i) = \frac{e^{z_i}}{\sum_{j=1}^m e^{z_j}}.
+$$
+
+For det første kan vi se, at både tæller og nævner er positive. Derfor må $o_i>0$. For det andet er $e^{z_i} < \sum_{j=1}^m e^{z_j}$ og derfor er
+
+$$
+o_i =  \frac{e^{z_i}}{\sum_{j=1}^m e^{z_j}} < \frac{\sum_{j=1}^m e^{z_j}}{\sum_{j=1}^m e^{z_j}} = 1.
+$$
+
+Altså er
+
+$$
+0<o_i<1
+$$
+
+hvilket betyder, at $o_i$ kan opfattes som en sandsynlighed. Endelig er
+
+$$
+\begin{aligned}
+o_1 + o_2 + \cdots + o_m &= \frac{e^{z_1}}{\sum_{j=1}^m e^{z_j}} + \frac{e^{z_2}}{\sum_{j=1}^m e^{z_j}} + \cdots + \frac{e^{z_m}}{\sum_{j=1}^m e^{z_j}} \\
+&= \frac{e^{z_1} + e^{z_2} + \cdots + e^{z_m}}{\sum_{j=1}^m e^{z_j}} \\ 
+&= \frac{\sum_{j=1}^m e^{z_j}}{\sum_{j=1}^m e^{z_j}} = 1.
+\end{aligned}
+$$
+
+I det helt specielle tilfælde, hvor der kun er to output neuroner, vil softmax-funktionen for $o_1$ blot være en funktion af to variable:
+
+$$
+o_1 = \frac{e^{z_1}}{e^{z_1} + e^{z_2}}
+$$
+
+Grafen for denne funktion er vist i @fig-softmax. Her ses det tydeligt, at værdien af $o_1$ ligger i intervallet $]0,1[$.
+
+
+::: {#fig-softmax}
+::: {#ggbApplet_softmax}
+:::
+Grafen for softmax funktionen $o_1 = \frac{e^{z_1}}{e^{z_1} + e^{z_2}}$.
+:::
+
+
+Det betyder, at hvis $o$-værdierne beregnes på denne måde, er der altså tale om en sandsynlighedsfordeling. Beregningen af alle $z$- og $o$-værdier kan udføres, hvis bare man kender alle vægtene. I et neuralt netværk kaldes disse udregninger for **feedforward** og er opsummeret herunder.
+
+
+::: {.callout-note collapse="false" appearance="minimal"} 
+## Feedforward-udtryk
+
+På baggrund af inputværdierne $x_1, x_2, \cdots, x_n$ beregnes først $z$-værdier:
+
+$$
+\begin{aligned}
+z_1 &= w_{1,0} + w_{1,1} \cdot x_1 + w_{1,2} \cdot x_2 + \cdots + w_{1,n} \cdot x_n \\
+& \,\,\, \vdots \\
+z_i &= w_{i,0} + w_{i,1} \cdot x_1 + w_{i,2} \cdot x_2 + \cdots + w_{i,n} \cdot x_n \\
+& \,\,\, \vdots \\
+z_m &= w_{m,0} + w_{m,1} \cdot x_1 + w_{m,2} \cdot x_2 + \cdots + w_{m,n} \cdot x_n \\
+\end{aligned}
+$$ {#eq-z_i}
+
+Herefter beregnes outputværdierne:
+
+$$
+\begin{aligned}
+o_1 &= \frac{e^{z_1}}{\sum_{j=1}^m e^{z_j}} \\
+& \,\,\, \vdots \\
+o_i &= \frac{e^{z_i}}{\sum_{j=1}^m e^{z_j}} \\
+& \,\,\, \vdots \\
+o_m &= \frac{e^{z_m}}{\sum_{j=1}^m e^{z_j}} \\
+\end{aligned}
+$$ {#eq-o_i}
+:::
+
+Vi har indtil videre skrevet, at outputværdierne kan fortolkes som sandsynligheder. Men bare fordi at en række tal ($o_1, o_2, \dots, o_m$) alle ligger mellem 0 og 1 og alle summerer til 1, så er det jo ikke sikkert, at de på en fornuftig måde angiver sandsynligheden for de fire forskellige muligheder, som de enkelte elever har. For eksempel kunne de fleste lærere nok ønske sig, at
+
+$$
+o_1 = 0.5, \quad 0_2 = 0.5, \quad o_3=0, \quad o_4=0
+$$
+fuldstændig uafhængig af svarene på de tre spørgsmål.
+
+
+Det svarer til, at cirka halvdelen af elever bliver i klassen og regner opgaver, mens den anden halvdel sætter sig ud og regner. Til gengæld er der *ingen* som går i kantinen og feder den, ligsom der heller ikke er nogle, som bare går hjem. 
+
+For at vores nye AI assistent skal give et nogenlunde retvisende billede af virkeligheden skal vi have fundet nogle outputværdier, som for det første afhænger af inputværdierne (man kan jo se på @fig-trainingdata at inputværdierne har indflydelse) og som for det andet rent faktisk giver en realistisk sandsynlighed for hver af de fire muligheder. Det gør vi ved at blive ved med at \"skrue\" på alle vægtene indtil, at de beregnede outputværdier i (@eq-o_i) giver et godt bud på sandsynlighederne for de 4 muligheder.
+
+Hvordan det rent faktisk lader sig gøre kommer her:
+
+
+## Cross-entropy tabsfunktionen
+
+Forestil dig at vi bare har valgt nogle tilfældige værdier af vægtene. På den baggrund kan vi for et givent sæt af inputværdier beregne outputværdierne ved hjælp af (@eq-o_i). For eksempel kan vi se på elev nummer 7 fra @tbl-trainingdata med targetværdi
+
+$$
+\vec t = 
+\begin{pmatrix}
+0 \\
+1 \\
+0 \\
+0 \\
+\end{pmatrix}
+$$ {#eq-target}
+
+fordi denne elev har valgt mulighed 2 (gå uden for klassen for at regne opgaver). En bestemt \"indstilling\" af vægtene kunne for eksempel give denne outputvektor:
+
+$$
+\vec o = 
+\begin{pmatrix}
+0.85 \\
+0.10 \\
+0.03 \\
+0.02 \\
+\end{pmatrix}
+$$ {#eq-o_bad}
+
+Det svarer til at vægtene ikke har fået nogle \"gode\" værdier, fordi denne outputvektor svarer til, at der kun er $10 \%$ chance for at eleven vælger mulighed 2. Hvis vægtene i stedet havde haft værdier, som ville resultere i denne outputvektor
+
+$$
+\vec o = 
+\begin{pmatrix}
+0.10 \\
+0.85 \\
+0.03 \\
+0.02 \\
+\end{pmatrix}
+$$ {#eq-o_good}
+
+så vil vi straks være mere tilfredse med vores AI assistent, fordi sandsynligheden for mulighed 2 nu er steget til $85 \%$. Faktisk vil vi allerhelst kunne vælge vægtene så outputvektoren for elev nummer 5 kommer så tæt som muligt på targetvektoren i (@eq-target) -- og noget tilsvarende skal gerne gøre sig gældende for de øvrige 11 elever i træningsdata.
+
+Vi har derfor brug for en metode til at vælge vægtene, så outputvektoren i (@eq-o_good) bliver \"belønnet\" fremfor outputvektoren i (@eq-o_bad). For at gøre det definerer man en såkaldt **tabsfunktion**. Vi vil her vælge en tabsfunktion, som kaldes for **cross-entropy**.
+
+For at holde tingene simple starter vi med at se på ét træningseksempel ad gangen (til sidst generaliserer vi). *Cross-entropy* tabsfunktionen er nu defineret ved:
+
+$$
+E = - \sum_{i=1}^m t_i \cdot \ln(o_i) 
+$$
+
+Det ser måske lige lidt farligt ud, men vi skal nok forklare det. Vi kan prøve at skrive summen ud:
+
+$$
+E = - \left (t_1 \cdot \ln(o_1)  + t_2 \cdot \ln(o_2) + \cdots + t_i \cdot \ln(o_i) + \cdots + t_m \cdot \ln(o_m) \right)
+$$
+
+Vi husker nu på, at $\vec t$ er en *one hot vektor*. Det vil sige, at det kun er ét af $t_i$'erne i ovenstående der er 1 -- resten er 0. Lad os sige at det er $t_i$, der er 1. Så er
+
+$$
+E = - t_i \cdot \ln(o_i) = - \ln(o_i).
+$$
+
+I @fig-natural_ln har vi tegnet grafen for den naturlige logaritme-funktion og for minus den naturlige logartime-funktion:
+
+![Grafen for $\ln(x)$ og $-\ln(x)$.](images/natural_ln.png){width=75% fig-align='center' #fig-natural_ln}
+
+Da $0<o_i<1$ kan vi for det første se, at $-\ln(o_i) >0$. Det vil sige, at tabsfunktionen er positiv.
+
+Husk nu på at $t_i=1$. Hvis vægtene i vores neurale netværk er \"indstillet\" godt, så skal $o_i$ være tæt på 1. I @fig-natural_ln kan vi se, at det svarer til, at $-\ln(o_i)$ er tæt på $0$. Det betyder, at værdien af tabsfunktionen er lille. 
+Omvendt hvis vægtene er \"indstillet\" dårligt, så $o_i$ er tæt på $0$ (selvom $t_i=1$), så vil $-\ln(o_i)$ være et stort positivt tal. Altså er værdien af tabsfunktionen stor.
+
+Det betyder, at tabsfunktionen på den måde måler kvaliteten af netværket:
+
+* For et godt netværk (med gode indstillinger af vægtene) vil tabsfunktionen have en lille, men positiv værdi.
+
+* For et dårligt netværk (med dårlige indstillinger af vægtene) vil tabsfunktionen have en stor positiv værdi.
+
+Lad også illustrere det med det tidligere eksempel. Hvis
+
+$$
+\vec t = 
+\begin{pmatrix}
+0 \\
+1 \\
+0 \\
+0 \\
+\end{pmatrix}
+\quad \textrm{og} \quad
+\vec o = 
+\begin{pmatrix}
+0.85 \\
+0.10 \\
+0.03 \\
+0.02 \\
+\end{pmatrix}
+$$
+
+så har vi et dårligt netværk og værdien af tabsfunktionen bliver
+
+$$
+\begin{aligned}
+E &= - \left( 0 \cdot \ln(0.85) + 1 \cdot \ln(0.10) + 0 \cdot \ln(0.03) + 0 \cdot \ln(0.02)\right) \\ &= - \ln(0.10) \approx 2.30.
+\end{aligned}
+$$
+
+Har vi derimod et bedre netværk, som i stedet giver følgende outputvektor:
+
+$$
+\vec t = 
+\begin{pmatrix}
+0 \\
+1 \\
+0 \\
+0 \\
+\end{pmatrix}
+\quad \textrm{og} \quad
+\vec o = 
+\begin{pmatrix}
+0.10 \\
+0.85 \\
+0.03 \\
+0.02 \\
+\end{pmatrix}
+$$
+
+så vil værdien af tabsfunktionen være
+
+$$
+\begin{aligned}
+E &= - \left( 0 \cdot \ln(0.10) + 1 \cdot \ln(0.85) + 0 \cdot \ln(0.03) + 0 \cdot \ln(0.02)\right) \\ 
+&= - \ln(0.85) \approx 0.16.
+\end{aligned}
+$$
+
+Altså kan vi her se, at det netværk, som er bedre, også har en lavere værdi af tabsfunktionen. Hele idéen er derfor, at vi for et givent træningsdatasæt vil bestemme de værdier af vægtene, som minimerer tabsfunktionen. Hvordan det gøres forklares i det næste afsnit.
+
+## Opdatering af vægtene
+
+Vi skal bestemme de værdier af vægtene, som minimerer tabsfunktionen
+
+$$
+E = - \sum_{i=1}^m t_i \cdot \ln(o_i) 
+$$
+
+Husk på at outputværdierne $o_i$ afhænger af $z$-værdierne via (@eq-o_i), mens $z$-værdierne afhænger af vægtene via (@eq-z_i). Altså afhænger tabsfunktionen også indirekte af alle vægtene. 
+
+Når man skal minimere [en funktion, som afhænger af flere variable](../funktioner_af_flere_variable/funktioner_af_flere_variable.qmd) (her vægtene) kan det gøres ved hjælp af en metode, som kaldes for [gradientnedstigning](../gradientnedstigning/gradientnedstigning.qmd). Vi vil her kort forklare, hvad det går ud på.
+
+Hvis en funktion $f$ afhænger af $x_1, x_2, \dots, x_n$ så kaldes den vektor, som består af alle de partielle afledede for gradienten:
+
+$$
+\nabla f(x_1, x_2, \dots, x_n) = 
+\begin{pmatrix}
+\frac{\partial f}{\partial x_1} \\ 
+\frac{\partial f}{\partial x_2} \\
+\vdots \\
+\frac{\partial f}{\partial x_n}
+ \end{pmatrix}.
+$$
+
+Det viser sig, at denne gradient peger i den retning, hvor funktionsværdien *vokser mest*. Omvendt vil minus gradienten $-\nabla f(x_1, x_2, \dots, x_n)$ pege i den retning, hvor funktionsværdien *falder mest*. Hvis vi derfor står et vilkårligt sted på grafen for $f$ og går et lille skridt i den negative gradientens retning, så vil vi være på vej ned mod et minimum (eventuelt kun lokalt). Når vi har gået det lille skridt, udregner vi gradienten igen og bevæger os igen et lille skridt i den negative gradients retning. Sådan fortsætter man indstil funktionsværdien ikke ændrer sig ret meget -- det svarer forhåbentlig til, at vi har fundet et (lokalt) minimum.
+
+Derfor når vægten $w_{i,k}$ skal opdateres, så gør vi følgende:
+
+$$
+w_{i,k}^{\textrm{ny}} = w_{i,k} - \eta \cdot \frac{\partial E}{\partial w_{i,k}}.
+$$
+
+Tallet $\eta$ kaldes for en **learning rate** og er typisk et lille tal mellem $0$ og $1$. Det svarer til den skridtlængde vi bruger, når vi går i den negative gradients retning. 
+
+Det vil sige for at opdatere $w_{i,k}$-vægten, skal vi have udregnet den partielle afledede
+
+$$
+\frac{\partial E}{\partial w_{i,k}}.
+$$
+
+Hvis vi ser på @fig-netvaerk_generelt_wi kan vi se, at $w_{i,k}$ kun har indflydelse på $z_i$ og dermed $o_i$
