@@ -115,12 +115,12 @@ visualize_neural_network_interactive <- function(params, cache) {
 }
 
 # Example usage
-set.seed(123)
-n <- 3  # Number of input neurons
-n1 <- 4  # Number of neurons in the first hidden layer
-n2 <- 3  # Number of neurons in the second hidden layer
-X <- matrix(runif(n * 5), nrow = n)  # Example input data
-params <- initialize_parameters(n, n1, n2, num_classes = 3)
-cache <- forward_propagation(X, params)
-
-visualize_neural_network_interactive(params, cache)
+# set.seed(123)
+# n <- 3  # Number of input neurons
+# n1 <- 4  # Number of neurons in the first hidden layer
+# n2 <- 3  # Number of neurons in the second hidden layer
+# X <- matrix(runif(n * 5), nrow = n)  # Example input data
+# params <- initialize_parameters(n, n1, n2, num_classes = 3)
+# cache <- forward_propagation(X, params)
+# 
+# visualize_neural_network_interactive(params, cache)

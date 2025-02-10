@@ -190,11 +190,13 @@ nn_fun <- function(formula, data, weights = NA, n_hidden = c(1,1), activation = 
   y_name <- as.character(formula)[2]
   y <- data[[y_name]]
   
+  lvls <- NULL
   if(is.character(y) | is.factor(y)){
     # Ensure y is a factor
     if(!is.factor(y)){
       y <- factor(y)
     }
+    lvls <- levels(y)
     if(length(levels(y))==1){stop("Response variable must have at least two levels")}
     if(length(levels(y))==2){
       y <- ifelse(y==levels(y)[1], 1, 0)
@@ -209,7 +211,10 @@ nn_fun <- function(formula, data, weights = NA, n_hidden = c(1,1), activation = 
   } else{
     params <- initialize_parameters(nrow(X), n_hidden[1], n_hidden[2], num_classes = nrow(y))
   }
-  train_neural_network(X, y, n1 = n_hidden[1], n2 = n_hidden[2], iterations = max_it, learning_rate = eta, params = params, loss_function = lossfun)
+  rslt <- train_neural_network(X, y, n1 = n_hidden[1], n2 = n_hidden[2], iterations = max_it, learning_rate = eta, params = params, loss_function = lossfun)
+  rslt$formula <- formula
+  rslt$levels <- lvls
+  return(rslt)
 }
 # 
 # Example usage
@@ -226,7 +231,7 @@ nn_fun <- function(formula, data, weights = NA, n_hidden = c(1,1), activation = 
 # 
 # trained_params <- train_neural_network(X, Y, n1, n2, iterations, learning_rate)
 
-ir <- iris
-ir[,1:4] <- scale(ir[,1:4])
-# ir <- ir[c(1:3, 51:53, 101:103),]
-fit_ir <- nn_fun(Species ~ ., ir, n_hidden = c(0,0), eta = 0.05, max_it = 20000, lossfun = "cross-entropy")
+# ir <- iris
+# ir[,1:4] <- scale(ir[,1:4])
+# # ir <- ir[c(1:3, 51:53, 101:103),]
+# fit_ir <- nn_fun(Species ~ ., ir, n_hidden = c(0,0), eta = 0.05, max_it = 20000, lossfun = "cross-entropy")
