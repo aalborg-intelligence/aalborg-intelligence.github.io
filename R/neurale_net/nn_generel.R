@@ -61,9 +61,9 @@ compute_loss <- function(Y, output, loss_function = c("cross-entropy", "squared"
   num_classes <- nrow(Y)
   if(loss_function == "squared"){
     if(is.null(num_classes) || num_classes==1){
-      return(1/2*((Y - t(output))^2))
+      return(1/2*sum((Y - t(output))^2))
     } else{
-      return(1/2*rowSums((Y - output)^2))
+      return(1/2*sum((Y - output)^2))
     }
   } else if(loss_function == "cross-entropy"){
     if(is.null(num_classes) || num_classes==1){
@@ -182,12 +182,11 @@ nn_fun <- function(formula, data, weights = NA, n_hidden = c(1,1), activation = 
   y <- t(y)
   X <- t(x[,colnames(x)!="bias"])
   if(length(weights)==1){
-    params <- initialize_parameters(nrow(X), n_hidden[1], n_hidden[2], const = weights, num_classes = nrow(y))
+    params <- initialize_parameters(nrow(X), n_hidden[1], n_hidden[2], num_classes = nrow(y), const = weights)
   } else{
     params <- initialize_parameters(nrow(X), n_hidden[1], n_hidden[2], num_classes = nrow(y))
   }
-  # browser()
-  train_neural_network(X, y, n1 = n_hidden[1], n2 = n_hidden[2], iterations = max_it, learning_rate = eta, params = params)
+  train_neural_network(X, y, n1 = n_hidden[1], n2 = n_hidden[2], iterations = max_it, learning_rate = eta, params = params, loss_function = lossfun)
 }
 # 
 # Example usage
@@ -204,4 +203,7 @@ nn_fun <- function(formula, data, weights = NA, n_hidden = c(1,1), activation = 
 # 
 # trained_params <- train_neural_network(X, Y, n1, n2, iterations, learning_rate)
 
-# nn_fun(Species ~ ., iris, n_hidden = c(2,2), eta = 0.01, max_it = 1000, lossfun = "cross-entropy")
+ir <- iris
+ir[,1:4] <- scale(ir[,1:4])
+# ir <- ir[c(1:3, 51:53, 101:103),]
+fit_ir <- nn_fun(Species ~ ., ir, n_hidden = c(9,5), eta = 0.1, max_it = 10000, lossfun = "cross-entropy")
