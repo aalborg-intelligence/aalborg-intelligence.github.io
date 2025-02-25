@@ -238,21 +238,21 @@ Forudsætninger og tidsforbrug
 <li>Sigmoid aktiveringsfunktion.</li>
 <li>Gradientnedstigning.</li>
 </ul>
-<p>Forudsætningerne kan f.eks. dækkes vha. <a href="../materialer/kunstige_neuroner/kunstige_neuroner.html" target="_blank">noten om kunstige neuroner</a>.</p>
+<p>Forudsætningerne kan for eksempel dækkes ved hjælp af <a href="../materialer/kunstige_neuroner/kunstige_neuroner.html" target="_blank">noten om kunstige neuroner</a>.</p>
 <p><strong>Tidsforbrug:</strong> Ca. 90 minutter.</p>
 </div>
 </div>
 </div>
 <section id="formål" class="level3 purpose">
 <h3 class="anchored" data-anchor-id="formål">Formål</h3>
-<p>Gennem detaljerede beregninger at forstå, hvordan vægtene i et simpelt neuralt netværk opdateres med brug af sigmoid aktiveringsfunktionen og gradientnedstigning.</p>
+<p>Formålet med dette forløb er gennem detaljerede beregninger at forstå, hvordan vægtene i et simpelt neuralt netværk opdateres med brug af sigmoid aktiveringsfunktionen og gradientnedstigning.</p>
 <p>Dette kan ses som et skridt på vejen til at forstå, hvordan vægtene opdateres i et generelt neuralt netværk.</p>
 </section>
 <section id="et-meget-lille-datasæt" class="level2">
 <h2 class="anchored" data-anchor-id="et-meget-lille-datasæt">Et meget lille datasæt</h2>
-<p>I neurale netværk er der ofte rigtige mange features, rigtigt mange vægte og rigtige mange datapunkter.</p>
-<p>For bedre at forstå, hvor vægtene opdateres i et simpelt neuralt netværk, vil vi her se på et meget lille eksempel, så det mere manuelt er muligt at lave opdateringen af vægtene.</p>
-<p>Konkret vil vi se på to features <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> og en targetværdi <span class="math inline">\(t\)</span> ud fra følgende 3 datapunkter.</p>
+<p>I neurale netværk er der ofte rigtige mange inputvariable (features), rigtigt mange vægte og rigtig mange træningsdata.</p>
+<p>For bedre at forstå, hvordan vægtene opdateres i et simpelt neuralt netværk, vil vi her se på et meget lille eksempel, så det manuelt er muligt at lave opdateringen af vægtene.</p>
+<p>Konkret vil vi se på to features <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> og en targetværdi <span class="math inline">\(t\)</span> ud fra følgende tre træningseksempler:</p>
 <table class="table">
 <thead>
 <tr class="header">
@@ -279,7 +279,13 @@ Forudsætninger og tidsforbrug
 </tr>
 </tbody>
 </table>
-<p>Vi vælger en learning-rate på <span class="math display">\[\eta = 0.1\]</span> <em>sigmoid-funktionen</em> som aktiveringsfunktion <span class="math display">\[\sigma(x)=\frac{1}{1+e^{-x}}\]</span> og <em>squared-error</em> som tabsfunktion <span class="math display">\[E(w_0, w_1, w_2) = \frac{1}{2} \sum_{m=1}^{3} \left (t^{(m)}-\sigma(w_0 + w_1 \cdot x_1^{(m)} + w_2 \cdot x_2^{(m)}) \right)^2\]</span> Endeligt vælger vi startvægtene <span class="math display">\[w_0=0.1, w_1=0.1, w_2=0.1\]</span>.</p>
+<p>Vi vælger en learning rate på</p>
+<p><span class="math display">\[
+\eta = 0.1,
+\]</span></p>
+<p><em>sigmoid-funktionen</em> som aktiveringsfunktion <span class="math display">\[\sigma(x)=\frac{1}{1+e^{-x}}\]</span> og <em>squared error</em> som tabsfunktion <span class="math display">\[E(w_0, w_1, w_2) = \frac{1}{2} \sum_{m=1}^{3} \left (t^{(m)}-\sigma(w_0 + w_1 \cdot x_1^{(m)} + w_2 \cdot x_2^{(m)}) \right)^2\]</span> Endeligt vælger vi startvægtene</p>
+<p><span class="math display">\[w_0=0.1, \qquad w_1=0.1, \qquad w_2=0.1
+\]</span></p>
 </section>
 <section id="første-opdatering-af-vægtene" class="level2">
 <h2 class="anchored" data-anchor-id="første-opdatering-af-vægtene">Første opdatering af vægtene</h2>
@@ -297,11 +303,17 @@ Opgave 1: Beregn værdien af tabsfunktionen
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Udregn først <span class="math inline">\(s^{(1)} = w_0 + w_1 \cdot x_1^{(1)} + w_2 \cdot x_2^{(1)}\)</span> for det første datapunkt.</li>
-<li>Udregn så <span class="math inline">\(o^{(1)} = \sigma (s^{(1)})\)</span>.</li>
-<li>Udregn derefter <span class="math inline">\(e^{(1)} = (t^{(1)} - o^{(1)})^2\)</span>, hvilket giver det første punkts bidrag til tabsfunktionen.</li>
-<li>Gentag for hver af de 2 øvrige datapunkter.</li>
-<li>Læg de 3 beregnede værdier sammen og divider med 2, så <span class="math inline">\(E=\frac{1}{2} \cdot (e^{(1)}+e^{(2)}+e^{(3)})\)</span>.</li>
+<li><p>Udregn først</p>
+<p><span class="math display">\[s^{(1)} = w_0 + w_1 \cdot x_1^{(1)} + w_2 \cdot x_2^{(1)}\]</span></p>
+<p>for det første træningseksempel.</p></li>
+<li><p>Udregn så</p>
+<p><span class="math display">\[o^{(1)} = \sigma (s^{(1)})\]</span></p></li>
+<li><p>Udregn derefter</p>
+<p><span class="math display">\[e^{(1)} = (t^{(1)} - o^{(1)})^2,\]</span></p>
+<p>hvilket giver det første træningseksempels bidrag til tabsfunktionen.</p></li>
+<li><p>Gentag for hver af de to øvrige træningseksempler.</p></li>
+<li><p>Læg de 3 beregnede værdier sammen og divider med 2, så</p>
+<p><span class="math display">\[E=\frac{1}{2} \cdot (e^{(1)}+e^{(2)}+e^{(3)}).\]</span></p></li>
 </ul>
 </div>
 </div>
@@ -340,9 +352,11 @@ Opgave 3: Opdater vægtene
 <div class="callout-body-container callout-body">
 <p>Beregn de opdaterede vægte <span class="math display">\[
 \begin{aligned}
-w_0 \leftarrow &amp; w_0 - \eta \cdot \frac{\partial E}{\partial w_0}   \\
-w_1 \leftarrow &amp; w_1 - \eta \cdot \frac{\partial E}{\partial w_1}  \\
-w_2 \leftarrow &amp; w_2 - \eta \cdot \frac{\partial E}{\partial w_2}
+w_0^{(\textrm{ny})} \leftarrow &amp; w_0 - \eta \cdot \frac{\partial E}{\partial w_0}   \\
+\\
+w_1^{(\textrm{ny})} \leftarrow &amp; w_1 - \eta \cdot \frac{\partial E}{\partial w_1}  \\
+\\
+w_2^{(\textrm{ny})} \leftarrow &amp; w_2 - \eta \cdot \frac{\partial E}{\partial w_2}
 \end{aligned}
 \]</span></p>
 </div>
@@ -351,7 +365,7 @@ w_2 \leftarrow &amp; w_2 - \eta \cdot \frac{\partial E}{\partial w_2}
 </section>
 <section id="anden-opdatering-af-vægtene" class="level2">
 <h2 class="anchored" data-anchor-id="anden-opdatering-af-vægtene">Anden opdatering af vægtene</h2>
-<p>Overvej, om du kan strømline dine beregninger, evt. i Excel eller i dit CAS værktøj, så det bliver hurtigere at opdatere vægtene en gang mere på samme måde.</p>
+<p>Overvej, om du kan strømline dine beregninger, for eksempel i Excel eller i dit CAS værktøj, så det bliver hurtigere at opdatere vægtene en gang mere på samme måde.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -414,7 +428,7 @@ Opgave 5: Afprøv perceptron app’en
 <div id="callout-7" class="callout-7-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Gentag opgave 1-5 men med <em>cross-entropy</em> som tabsfunktion i stedet for <em>squared-error</em>.</li>
+<li>Gentag opgave 1-5 men med <em>cross-entropy</em> som tabsfunktion i stedet for <em>squared error</em>.</li>
 </ul>
 </div>
 </div>
