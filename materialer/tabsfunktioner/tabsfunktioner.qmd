@@ -230,7 +230,7 @@ Denne viden udnyttes i gradientnedstigning: Stil dig i et tilfældig punkt $(w_0
 ::: {.callout-note collapse="false" appearance="minimal"} 
 ### Opdateringsregler baseret på gradientnedstigning
 $$
-w_i \leftarrow w_i - \eta\cdot \frac{\partial E}{\partial w_i}
+w_i^{(\textrm{ny})} \leftarrow w_i - \eta\cdot \frac{\partial E}{\partial w_i}
 $${#eq-opdatering}
 
 :::
@@ -313,7 +313,7 @@ $$
 Bruger vi den generelle opdateringsregel i (@eq-opdatering), får vi
 
 $$
-w_i \leftarrow w_i - \eta \cdot \left ( -\sum_{m=1}^M \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot x_i^{(m)}\right).
+w_i^{(\textrm{ny})} \leftarrow w_i - \eta \cdot \left ( -\sum_{m=1}^M \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot x_i^{(m)}\right).
 $$
 
 Som kan omskrives til:
@@ -323,7 +323,7 @@ Som kan omskrives til:
 ## Opdateringsregler: Squared error tabsfunktion (med sigmoid som aktiveringsfunktion)
 
 $$
-w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^M \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot x_i^{(m)}.
+w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot \sum_{m=1}^M \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot x_i^{(m)}.
 $${#eq-opdatering_kvadreredefejl}
 
 :::
@@ -514,7 +514,7 @@ Bemærk her, at $o^{(m)} \cdot (1-o^{(m)})$ forkorter ud.
 
 Opdateringsreglen i (@eq-opdatering) bliver derfor med *cross-entropy* tabsfunktionen:
 $$
-w_i \leftarrow w_i - \eta \cdot \left (  - \sum_{m=1}^{M} (t^{(m)}- o^{(m)})\cdot x_i^{(m)} \right)
+w_i^{(\textrm{ny})} \leftarrow w_i - \eta \cdot \left (  - \sum_{m=1}^{M} (t^{(m)}- o^{(m)})\cdot x_i^{(m)} \right)
 $$
 som kan omskrives til
 
@@ -523,7 +523,7 @@ som kan omskrives til
 ## Opdateringsregler: Cross-entropy tabsfunktion (med sigmoid som aktiveringsfunktion)
 
 $$
-w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} (t^{(m)}- o^{(m)})\cdot x_i^{(m)}.
+w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} (t^{(m)}- o^{(m)})\cdot x_i^{(m)}.
 $$ {#eq-opdatering_crossentropy}
 
 :::
@@ -537,7 +537,7 @@ Der er en interessant sammenhæng mellem denne opdateringsregel og [Perceptron L
 I perceptron learning algoritmen er både target- og outputværdien enten $-1$ eller $1$ og her opdateres vægtene ét træningseksempel ad gangen på denne måde:
 
 $$
-w_i \leftarrow w_i + \eta \cdot (t-o) \cdot x_i
+w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot (t-o) \cdot x_i
 $$
 hvor $t-o$ enten kan være $-2, 0$ eller $2$. I opdateringsreglen i (@eq-opdatering_crossentropy) er $t-o$ enten $-1, 0$ eller $1$, men eftersom vi bare kan vælge en skridtlængde $\eta$, som er dobbelt så stor, så gør det ingen reel forskel. 
 
@@ -676,8 +676,8 @@ Vi starter med at huske, at de to tabsfunktioner giver følgende to opdateringsr
 
 $$
 \begin{aligned}
-&\textrm{Squared error:} \quad \quad  w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^M \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot x_i^{(m)} \\
-&\textrm{Cross-entropy:} \quad \quad w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} (t^{(m)}- o^{(m)})\cdot x_i^{(m)}.
+&\textrm{Squared error:} \quad \quad  w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot \sum_{m=1}^M \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot x_i^{(m)} \\
+&\textrm{Cross-entropy:} \quad \quad w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} (t^{(m)}- o^{(m)})\cdot x_i^{(m)}.
 \end{aligned}
 $$
 
@@ -707,7 +707,7 @@ plot_ly(showscale = FALSE) |>
 
 Noget tilsvarende opstår ikke med *cross-entropy*, da faktoren $o^{(m)} \cdot (1-o^{(m)})$ ikke indgår i opdateringsleddet i for *cross-entropy*:
 $$
-w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} (t^{(m)}- o^{(m)})\cdot x_i^{(m)}
+w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} (t^{(m)}- o^{(m)})\cdot x_i^{(m)}
 $$
 Det ses også på grafen for *cross-entropy* tabsfunktionen i @fig-cross. Her er der ingen steder, hvor grafen flader ud. Det vil sige, at man ikke på samme måde kan komme til at starte et uheldigt sted på grafen.  Derimod vil man ret hurtigt \"lande\" i minimum uanset, hvor man starter. 
 

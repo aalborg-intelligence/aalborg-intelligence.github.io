@@ -332,11 +332,11 @@ $$
 -   Opdatér alle vægtene:
 $$
 \begin{aligned}
-    w_0 \leftarrow w_0 + & \eta \cdot error \\
-    w_1 \leftarrow w_1 + & \eta \cdot  error \cdot x_1 \\
-    w_2 \leftarrow w_2 + & \eta \cdot  error \cdot x_2 \\
+    w_0^{(\textrm{ny})} \leftarrow w_0 + & \eta \cdot error \\
+    w_1^{(\textrm{ny})} \leftarrow w_1 + & \eta \cdot  error \cdot x_1 \\
+    w_2^{(\textrm{ny})} \leftarrow w_2 + & \eta \cdot  error \cdot x_2 \\
     & \vdots  \\
-    w_n \leftarrow w_n + & \eta \cdot  error \cdot x_n \\
+    w_n^{(\textrm{ny})} \leftarrow w_n + & \eta \cdot  error \cdot x_n \\
 \end{aligned}
 $$
 Her er $\eta$ (udtales "eta") et tal mellem $0$ og $1$, som kaldes for en *learning rate* (på dansk: en læringsrate). Værdien af $\eta$ afgør hvor hurtigt, vi skal opdatere vægtene. Hvis $\eta$ er tæt på $0$ opdateres vægtene langsomt, hvorimod en værdi af $\eta$ tæt på $1$ vil betyde, at vægtene opdateres hurtigt.
@@ -393,13 +393,13 @@ $$
 og derfor ender vi også med ikke at opdatere nogle af vægtene, fordi vi generelt har (hvor $x_0=1$):
 $$
 \begin{aligned}
-w_i \leftarrow w_i + \eta \cdot error \cdot x_i,
+w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot error \cdot x_i,
 \end{aligned}
 $$
 men når $error=0$ ender vi bare med 
 $$
 \begin{aligned}
-w_i \leftarrow w_i.
+w_i^{(\textrm{ny})} \leftarrow w_i.
 \end{aligned}
 $$
 Altså ingen opdatering af vægtene. Det giver jo rigtig god mening, eftersom det første træningseksempel blev klassificeret korrekt.
@@ -421,9 +421,9 @@ $$
 Vores vægte skal derfor opdateres til
 $$
 \begin{aligned}
-w_0 &\leftarrow 0.5 +0.5 \cdot (-2) = -0.5 \\
-w_1 &\leftarrow 0.5 +0.5 \cdot (-2) \cdot (-1) = 1.5 \\
-w_2 &\leftarrow 0.5 +0.5 \cdot (-2) \cdot 1= -0.5 \\
+w_0^{(\textrm{ny})} &\leftarrow 0.5 +0.5 \cdot (-2) = -0.5 \\
+w_1^{(\textrm{ny})} &\leftarrow 0.5 +0.5 \cdot (-2) \cdot (-1) = 1.5 \\
+w_2^{(\textrm{ny})} &\leftarrow 0.5 +0.5 \cdot (-2) \cdot 1= -0.5 \\
 \end{aligned}
 $$
 
@@ -530,7 +530,7 @@ og vi kommer slet ikke til at opdatere
 vægtene, fordi vi bare ender med
 $$
 \begin{aligned}
-w_i \leftarrow w_i.
+w_i^{(\textrm{ny})} \leftarrow w_i.
 \end{aligned}
 $$
 Hvis vi derimod står i den situation, at vores træningsdata ikke klassificeres korrekt, så vil $t \neq o$. Der er her to muligheder:
@@ -559,7 +559,7 @@ på, hvad der sker efter opdateringen af vægtene. Da $error=2$ i mulighed
 $1$ har vi opdateringsreglen (hvor $x_0=1$): 
 $$
 \begin{aligned}
-w_i \leftarrow w_i + \eta \cdot error \cdot x_i = w_i + \eta \cdot 2 \cdot x_i.
+w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot error \cdot x_i = w_i + \eta \cdot 2 \cdot x_i.
 \end{aligned}
 $$
 Det vil sige, at næste gang vi skal beregne vores outputværdi, så skal
@@ -608,7 +608,7 @@ hvor vi egentlig gerne ville have haft, at denne værdi havde været negativ. I
 mulighed $2$ er fejlen $error=-2$ og opdateringsreglen bliver derfor
 $$
 \begin{aligned}
-w_i \leftarrow w_i + \eta \cdot error \cdot x_i = w_i -\eta \cdot 2 \cdot x_i.
+w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot error \cdot x_i = w_i -\eta \cdot 2 \cdot x_i.
 \end{aligned}
 $$
 Med et helt tilsvarende argument som ovenfor, kan man nu vise, at
@@ -896,10 +896,10 @@ sig mere -- det svarer til, at vi har ramt dalen. Derfor bliver vores
 opdateringsregler med denne metode 
 $$
 \begin{aligned}
-w_0 \leftarrow & w_0 - \eta \cdot \frac{\partial E }{\partial w_0} \\
-w_1 \leftarrow & w_1 - \eta \cdot \frac{\partial E }{\partial w_1} \\
+w_0^{(\textrm{ny})} \leftarrow & w_0 - \eta \cdot \frac{\partial E }{\partial w_0} \\
+w_1^{(\textrm{ny})} \leftarrow & w_1 - \eta \cdot \frac{\partial E }{\partial w_1} \\
 &\vdots  \\
-w_n \leftarrow & w_n - \eta \cdot \frac{\partial E }{\partial w_n} \\
+w_n^{(\textrm{ny})} \leftarrow & w_n - \eta \cdot \frac{\partial E }{\partial w_n} \\
 \end{aligned}
 $$
 Her er $\eta$ igen en *learning rate* f.eks. $0.05$, som
@@ -952,12 +952,12 @@ $$
 Altså bliver vores opdateringsregler
 $$
 \begin{aligned}
-w_0 \leftarrow & w_0 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-
+w_0^{(\textrm{ny})} \leftarrow & w_0 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-
 (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)  \\
-w_1 \leftarrow & w_1 + \eta \cdot  \sum_{m=1}^{M} \left (t^{(m)}-
+w_1^{(\textrm{ny})} \leftarrow & w_1 + \eta \cdot  \sum_{m=1}^{M} \left (t^{(m)}-
 (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \cdot \left (x_1^{(m)} \right)\\
 &\vdots  \\
-w_n \leftarrow & w_n + \eta \cdot  \sum_{m=1}^{M} \left (t^{(m)}-
+w_n^{(\textrm{ny})} \leftarrow & w_n + \eta \cdot  \sum_{m=1}^{M} \left (t^{(m)}-
 (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \cdot \left (x_n^{(m)} \right)\\
 \end{aligned}
 $$
@@ -983,10 +983,10 @@ $$
 -   Opdatér alle vægtene:
 $$
 \begin{aligned}
-    w_0  \leftarrow & w_0 + \eta \cdot error_0 \\
-    w_1  \leftarrow & w_1 + \eta \cdot error_1 \\
+    w_0^{(\textrm{ny})}  \leftarrow & w_0 + \eta \cdot error_0 \\
+    w_1^{(\textrm{ny})}  \leftarrow & w_1 + \eta \cdot error_1 \\
     & \vdots \\
-    w_n  \leftarrow & w_n + \eta \cdot error_n 
+    w_n^{(\textrm{ny})}  \leftarrow & w_n + \eta \cdot error_n 
 \end{aligned}
 $$
 
@@ -1000,11 +1000,11 @@ Lad os prøve at bruge gradientnedstigning på vores eksempel omkring
 kandidattest. I dette simple eksempel bliver vores opdateringsregler nu
 $$
 \begin{aligned}
-w_0 \leftarrow & w_0 + \eta \cdot \sum_{m=1}^{6} \left (t^{(m)}-
+w_0^{(\textrm{ny})} \leftarrow & w_0 + \eta \cdot \sum_{m=1}^{6} \left (t^{(m)}-
 (w_0 + w_1 \cdot x_1^{(m)} + w_2 \cdot x_2^{(m)}) \right)  \\
-w_1 \leftarrow & w_1 + \eta \cdot  \sum_{m=1}^{6} \left (t^{(m)}-
+w_1^{(\textrm{ny})} \leftarrow & w_1 + \eta \cdot  \sum_{m=1}^{6} \left (t^{(m)}-
 (w_0 + w_1 \cdot x_1^{(m)} + w_2 \cdot x_2^{(m)}) \right) \cdot \left (x_1^{(m)} \right)\\
-w_2 \leftarrow & w_2 + \eta \cdot  \sum_{m=1}^{6} \left (t^{(m)}-
+w_2^{(\textrm{ny})} \leftarrow & w_2 + \eta \cdot  \sum_{m=1}^{6} \left (t^{(m)}-
 (w_0 + w_1 \cdot x_1^{(m)}  + w_2 \cdot x_2^{(m)}) \right) \cdot \left (x_2^{(m)} \right)
 \end{aligned}
 $$
