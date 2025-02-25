@@ -1,6 +1,6 @@
 ---
-title: "Opdatering af vægte i simpelt neuralt netværk med to skjulte lag"
-description-meta: 'En øvelse i at opdatere vægtene i et simpelt neuralt netværk med to skjult lag.'
+title: "Opdatering af vægte i et simpelt neuralt netværk med to skjulte lag"
+description-meta: 'En øvelse i at opdatere vægtene i et simpelt neuralt netværk med to skjulte lag.'
 image: "../materialer/simple_neurale_net/images/long_simple_NN.png"
 categories:
   - A-niveau
@@ -14,7 +14,7 @@ categories:
 + Sigmoid aktiveringsfunktion.
 + Gradientnedstigning.
 
-Forudsætningerne kan med fordel være dækket vha. [noten om simple neurale netværk](../materialer/simple_neurale_net/simple_neurale_net.qmd){target="_blank"}, da notationen derfra vil blive anvendt i dette forløb.
+Forudsætningerne kan med fordel dækkes ved hjælp af [noten om simple neurale netværk](../materialer/simple_neurale_net/simple_neurale_net.qmd){target="_blank"}, da notationen derfra vil blive anvendt i dette forløb.
 
 **Tidsforbrug:** Ca. 90 minutter.
 
@@ -24,7 +24,7 @@ Forudsætningerne kan med fordel være dækket vha. [noten om simple neurale net
 
 ### Formål
 
-Gennem detaljerede beregninger at forstå, hvordan vægtene i et simpelt neuralt netværk til klassifikation med to skjulte lag opdateres med brug af sigmoid som aktiveringsfunktion, squarred error som tabsfunktion og gradientnedstigning med squared-error som tabsfunktion.
+Formålet med dette forløb er gennem detaljerede beregninger at forstå, hvordan vægtene i et simpelt neuralt netværk til klassifikation med to skjulte lag opdateres med brug af sigmoid som aktiveringsfunktion og gradientnedstigning med *squared error* som tabsfunktion.
 
 Dette kan ses som et skridt på vejen til at forstå, hvordan vægtene opdateres i et generelt neuralt netværk.
 
@@ -32,29 +32,62 @@ Dette kan ses som et skridt på vejen til at forstå, hvordan vægtene opdateres
 
 ## Et meget lille datasæt
 
-I neurale netværk er der ofte rigtigt mange features, rigtigt mange vægte og rigtigt mange datapunkter. 
+I neurale netværk er der ofte rigtige mange inputvariable (features), rigtigt mange vægte og rigtig mange træningsdata. 
 
-For bedre at forstå, hvordan vægtene opdateres i et neuralt netværk, vil vi her se på et meget lille eksempel, så det mere manuelt er muligt at lave opdateringen af vægtene.
+For bedre at forstå, hvordan vægtene opdateres i et neuralt netværk, vil vi her se på et meget lille eksempel, så det manuelt er muligt at lave opdateringen af vægtene.
 
-Vi vil lave et netværk med 2 neuroner i inputlaget $x$, 1 neuron i det første skjulte lag $y$, 1 neuron i det andet skjulte lag $z$ og 1 neuron i outputlaget $o$. Konkret vil vi se på to features $x_1$ og $x_2$ og en targetværdi $t$ ud fra følgende 3 datapunkter.
+Vi vil lave et netværk med 2 inputvariable ($x_1$ og $x_2$), 1 neuron i det første skjulte lag ($y$), 1 neuron i det andet skjulte lag ($z$) og 1 neuron i outputlaget ($o$). Netværket er illustreret i @fig-long_simple_NN.
+
+![Grafisk illustration af et neuralt netværk med 2 inputvariable og to skjulte lag, som hver består af én neuron.](../materialer/simple_neurale_net/images/long_simple_NN_input2.png){width=75% #fig-long_simple_NN}
+
+
+
+Konkret vil vi se på to features $x_1$ og $x_2$ og en targetværdi $t$ ud fra følgende træningsdatasæt:
 
 |$x_1$ | $x_2$ | $t$ |
 |:---:|:---:|:---:|
 | 1 | 2 | 0 |
 | 2 | 3 | 1 |
 | 3 | 5 | 0 |
+: {.bordered}
 
-Vi vælger en learning-rate på $$\eta = 0.1$$ 
-*sigmoid-funktionen* som aktiveringsfunktion mellem lagene $$\sigma(x)=\frac{1}{1+e^{-x}}$$
-og *squared-error* som tabsfunktion $$E = \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right)^2$$ 
+Vi vælger en learning rate på 
 
-Endeligt vælger vi alle startvægtene til at være $0.5$, så $$r_0=0.5 \ (bias),\ r_1=0.5,\ r_2=0.5$$ $$v_0=0.5 (bias), v_1=0.5$$ $$w_0=0.5 (bias),\  w_1=0.5$$
+$$\eta = 0.1,$$
+
+*sigmoid-funktionen* som aktiveringsfunktion mellem lagene 
+
+$$\sigma(x)=\frac{1}{1+e^{-x}}$$
+og *squared error* som tabsfunktion 
+
+$$E = \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right)^2$$ 
+
+Endeligt vælger vi alle startvægtene til at være $0.5$, så 
+$$
+r_0=0.5 \textrm{ (bias)},\qquad r_1=0.5,\qquad r_2=0.5
+$$ 
+
+$$
+v_0=0.5 \textrm{ (bias)}, \qquad v_1=0.5$$ 
+
+$$
+w_0=0.5 \textrm{ (bias)}, \qquad  w_1=0.5
+$$
 
 ## Opdateringsregler
 
-Fra [noten om simple neurale netværk](../materialer/simple_neurale_net/simple_neurale_net.qmd){target="_blank"} har vi opdateringsreglerne, som vi nu skal til at anvende på det konkrete datasæt.
+Fra [noten om simple neurale netværk](../materialer/simple_neurale_net/simple_neurale_net.qmd#opsummering-af-backpropagation){target="_blank"} har vi opdateringsreglerne, som vi nu skal til at anvende på det konkrete træningsdatasæt.
    
-   **De afledede**
+   **Først udregnes feedforward-udtrykkene:**
+   $$ 
+   \begin{aligned}
+   y^{(m)} &= \sigma (r_0 + r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)} + \cdots + r_n \cdot x_n^{(m)})  \\
+   z^{(m)} &= \sigma (v_0 + v_1 \cdot y^{(m)})  \\
+   o^{(m)} &= \sigma(w_0 + w_1 \cdot z^{(m)})
+   \end{aligned}
+   $$
+   **Herefter beregnes:**
+   
    $$
    \begin{aligned}
    \delta_w^{(m)} &= (t^{(m)}-o^{(m)} ) \cdot o^{(m)}  \cdot (1-o^{(m)})  \\
@@ -62,78 +95,96 @@ Fra [noten om simple neurale netværk](../materialer/simple_neurale_net/simple_n
    \delta_r^{(m)} &= \delta_v^{(m)} \cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)})
    \end{aligned}
    $$
-
+  **Vægtene kan nu opdateres:**
+  
   **$w$-vægtene:**
    $$
    \begin{aligned}
-   w_0^{\textrm{ny}} &= w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
-   w_1^{\textrm{ny}} &= w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot z^{(m)}\\
+   w_0^{\textrm{ny}} & \leftarrow w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
+   w_1^{\textrm{ny}} & \leftarrow w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot z^{(m)}\\
    \end{aligned}
    $$
+   
    **$v$-vægtene:**
    $$
    \begin{aligned}
-   v_0^{\textrm{ny}} &= v_0 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot 1\\
-   v_1^{\textrm{ny}} &= v_1 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot y^{(m)}\\
+   v_0^{\textrm{ny}} & \leftarrow v_0 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot 1\\
+   v_1^{\textrm{ny}} & \leftarrow v_1 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot y^{(m)}\\
    \end{aligned}
    $$
+   
    **$r$-vægtene:**
    $$
    \begin{aligned}
-   r_0^{\textrm{ny}} & =  r_0 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot 1 \\
-   r_1^{\textrm{ny}} & =  r_1 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)} \\
+   r_0^{\textrm{ny}} & \leftarrow  r_0 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot 1 \\
+   r_1^{\textrm{ny}} & \leftarrow  r_1 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)} \\
      & \ \ \vdots & \\
-   r_n^{\textrm{ny}} & =  r_n + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_n^{(m)}
+   r_n^{\textrm{ny}} & \leftarrow  r_n + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_n^{(m)}
    \end{aligned}
    $$
 
 ## Beregninger
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 1: Feed-forward fra $x$ til $y$ lag.
-* Udregn $r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)} + r_0$ for hver af de 3 punkter.
-* Udregn $y^{(m)}=\sigma(r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)} + r_0)$ for hver af de 3 punkter.
+### Opgave 1: Feedforward fra $x$ til $y$ lag
+* Udregn 
+   $$r_0 + r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)}$$ 
+   for hver af de 3 træningseksempler.
+   
+* Udregn 
+   $$y^{(m)}=\sigma(r_0 +r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)})$$ 
+   for hver af de 3 træningseksempler.
 
 :::
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 2: Feed-forward fra $y$ til $z$ lag.
-* Udregn på tilsvarende vis $z^{(m)}$ for hver af de 3 punkter.
+### Opgave 2: Feedforward fra $y$ til $z$ lag
+* Udregn på tilsvarende vis $z^{(m)}$ for hver af de 3 træningseksempler.
 
 :::
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 3: Feed-forward fra $z$ til $o$ lag.
-* Udregn på tilsvarende vis $o^{(m)}$ for hver af de 3 punkter.
+### Opgave 3: Feedforward fra $z$ til $o$ lag
+* Udregn på tilsvarende vis $o^{(m)}$ for hver af de 3 træningseksempler.
 
 :::
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 4: Backpropagation på $w$ vægte.
-* Udregn $\delta_w^{(m)} = (t^{(m)}-o^{(m)}) \cdot o^{(m)} \cdot (1-o^{(m)})$ for hver af de 3 punkter.
-* Udregn $\sum_{m=1}^{3} \delta_w^{(m)}$ for de 3 punkter.
-* Udregn $w_0^{ny} = w_0 + \eta \cdot \sum_{m=1}^{3} \delta_w^{(m)}$
-* Udregn $\sum_{m=1}^{3} \delta_w^{(m)} \cdot z^{(m)}$ for de 3 punkter.
-* Udregn $w_1^{ny} = w_1 + \eta \cdot \sum_{m=1}^3 \delta_w^{(m)} \cdot z^{(m)}$
+### Opgave 4: Opdatering af $w$-vægtene
+* Udregn 
+   $$\delta_w^{(m)} = (t^{(m)}-o^{(m)}) \cdot o^{(m)} \cdot (1-o^{(m)})$$ 
+   for hver af de 3 træningseksempler.
+
+* Udregn 
+   $$\sum_{m=1}^{3} \delta_w^{(m)}$$ 
+   
+* Opdatér $w_0$-vægten 
+   $$w_0^{ny} \leftarrow w_0 + \eta \cdot \sum_{m=1}^{3} \delta_w^{(m)}$$
+
+* Udregn 
+   $$\sum_{m=1}^{3} \delta_w^{(m)} \cdot z^{(m)}$$ 
+   
+* Opdatér $w_1$-vægten
+  $$w_1^{ny} \leftarrow w_1 + \eta \cdot \sum_{m=1}^3 \delta_w^{(m)} \cdot z^{(m)}$$
 
 :::
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 5: Backpropagation på $v$ vægte.
-* Lav tilsvarende udregninger og opdatering af $v$ vægtene.
+### Opgave 5: Opdatering af $v$-vægtene
+* Lav tilsvarende udregninger og opdatering af $v$-vægtene.
 
 :::
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 6: Backpropagation på $r$ vægte.
-* Lav tilsvarende udregninger og opdatering af $r$ vægtene.
+### Opgave 6: Opdatering af $r$-vægtene
+* Lav tilsvarende udregninger og opdatering af $r$-vægtene.
 
 :::
 
-## App til simple neurale netværk
+<!--## App til simple neurale netværk
 ** mangler **
 Her mangler noget med at bruge appen (der ikke er klar endnu) til at optimere vægtene, og efterfølgende lave prediktion.
-
+-->
 
 
 ## Løsninger til opgaver

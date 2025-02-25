@@ -14,7 +14,7 @@ categories:
 + Sigmoid aktiveringsfunktion.
 + Gradientnedstigning.
 
-Forudsætningerne kan f.eks. dækkes vha. [noten om kunstige neuroner](../materialer/kunstige_neuroner/kunstige_neuroner.qmd){target="_blank"}.
+Forudsætningerne kan for eksempel dækkes ved hjælp af [noten om kunstige neuroner](../materialer/kunstige_neuroner/kunstige_neuroner.qmd){target="_blank"}.
 
 **Tidsforbrug:** Ca. 90 minutter.
 
@@ -24,7 +24,7 @@ Forudsætningerne kan f.eks. dækkes vha. [noten om kunstige neuroner](../materi
 
 ### Formål
 
-Gennem detaljerede beregninger at forstå, hvordan vægtene i et simpelt neuralt netværk opdateres med brug af sigmoid aktiveringsfunktionen og gradientnedstigning.
+Formålet med dette forløb er gennem detaljerede beregninger at forstå, hvordan vægtene i et simpelt neuralt netværk opdateres med brug af sigmoid aktiveringsfunktionen og gradientnedstigning.
 
 Dette kan ses som et skridt på vejen til at forstå, hvordan vægtene opdateres i et generelt neuralt netværk.
 
@@ -32,11 +32,11 @@ Dette kan ses som et skridt på vejen til at forstå, hvordan vægtene opdateres
 
 ## Et meget lille datasæt
 
-I neurale netværk er der ofte rigtige mange features, rigtigt mange vægte og rigtige mange datapunkter. 
+I neurale netværk er der ofte rigtige mange inputvariable (features), rigtigt mange vægte og rigtig mange træningsdata. 
 
-For bedre at forstå, hvor vægtene opdateres i et simpelt neuralt netværk, vil vi her se på et meget lille eksempel, så det mere manuelt er muligt at lave opdateringen af vægtene.
+For bedre at forstå, hvordan vægtene opdateres i et simpelt neuralt netværk, vil vi her se på et meget lille eksempel, så det manuelt er muligt at lave opdateringen af vægtene.
 
-Konkret vil vi se på to features $x_1$ og $x_2$ og en targetværdi $t$ ud fra følgende 3 datapunkter.
+Konkret vil vi se på to features $x_1$ og $x_2$ og en targetværdi $t$ ud fra følgende tre træningseksempler:
 
 |$x_1$ | $x_2$ | $t$ |
 |:---:|:---:|:---:|
@@ -44,10 +44,18 @@ Konkret vil vi se på to features $x_1$ og $x_2$ og en targetværdi $t$ ud fra f
 | 0 | 4 | nej = 0 |
 | 1 | 7 | ja = 1 |
 
-Vi vælger en learning-rate på $$\eta = 0.1$$ 
+Vi vælger en learning rate på 
+
+$$
+\eta = 0.1,
+$$ 
+
 *sigmoid-funktionen* som aktiveringsfunktion $$\sigma(x)=\frac{1}{1+e^{-x}}$$ 
-og *squared-error* som tabsfunktion $$E(w_0, w_1, w_2) = \frac{1}{2} \sum_{m=1}^{3} \left (t^{(m)}-\sigma(w_0 + w_1 \cdot x_1^{(m)} + w_2 \cdot x_2^{(m)}) \right)^2$$ 
-Endeligt vælger vi startvægtene $$w_0=0.1, w_1=0.1, w_2=0.1$$.
+og *squared error* som tabsfunktion $$E(w_0, w_1, w_2) = \frac{1}{2} \sum_{m=1}^{3} \left (t^{(m)}-\sigma(w_0 + w_1 \cdot x_1^{(m)} + w_2 \cdot x_2^{(m)}) \right)^2$$ 
+Endeligt vælger vi startvægtene 
+
+$$w_0=0.1, \qquad w_1=0.1, \qquad w_2=0.1
+$$
 
 ## Første opdatering af vægtene
 
@@ -55,11 +63,27 @@ Du skal nu gå gennem de enkelte beregninger, som skal til for at opdatere vægt
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 1: Beregn værdien af tabsfunktionen
-* Udregn først $s^{(1)} = w_0 + w_1 \cdot x_1^{(1)} + w_2 \cdot x_2^{(1)}$ for det første datapunkt.
-* Udregn så $o^{(1)} = \sigma (s^{(1)})$.
-* Udregn derefter $e^{(1)} = (t^{(1)} - o^{(1)})^2$, hvilket giver det første punkts bidrag til tabsfunktionen.
-* Gentag for hver af de 2 øvrige datapunkter.
-* Læg de 3 beregnede værdier sammen og divider med 2, så $E=\frac{1}{2} \cdot (e^{(1)}+e^{(2)}+e^{(3)})$.
+* Udregn først 
+
+   $$s^{(1)} = w_0 + w_1 \cdot x_1^{(1)} + w_2 \cdot x_2^{(1)}$$ 
+
+   for det første træningseksempel.
+
+* Udregn så 
+
+   $$o^{(1)} = \sigma (s^{(1)})$$
+
+* Udregn derefter 
+
+   $$e^{(1)} = (t^{(1)} - o^{(1)})^2,$$ 
+
+   hvilket giver det første træningseksempels bidrag til tabsfunktionen.
+
+* Gentag for hver af de to øvrige træningseksempler.
+
+* Læg de 3 beregnede værdier sammen og divider med 2, så 
+
+  $$E=\frac{1}{2} \cdot (e^{(1)}+e^{(2)}+e^{(3)}).$$
 
 :::
 
@@ -80,9 +104,11 @@ Du skal nu gå gennem de enkelte beregninger, som skal til for at opdatere vægt
 Beregn de opdaterede vægte
 $$
 \begin{aligned}
-w_0 \leftarrow & w_0 - \eta \cdot \frac{\partial E}{\partial w_0}   \\
-w_1 \leftarrow & w_1 - \eta \cdot \frac{\partial E}{\partial w_1}  \\
-w_2 \leftarrow & w_2 - \eta \cdot \frac{\partial E}{\partial w_2} 
+w_0^{(\textrm{ny})} \leftarrow & w_0 - \eta \cdot \frac{\partial E}{\partial w_0}   \\
+\\
+w_1^{(\textrm{ny})} \leftarrow & w_1 - \eta \cdot \frac{\partial E}{\partial w_1}  \\
+\\
+w_2^{(\textrm{ny})} \leftarrow & w_2 - \eta \cdot \frac{\partial E}{\partial w_2} 
 \end{aligned}
 $$
 
@@ -90,7 +116,7 @@ $$
 
 
 ## Anden opdatering af vægtene
-Overvej, om du kan strømline dine beregninger, evt. i Excel eller i dit CAS værktøj, så det bliver hurtigere at opdatere vægtene en gang mere på samme måde.
+Overvej, om du kan strømline dine beregninger, for eksempel i Excel eller i dit CAS værktøj, så det bliver hurtigere at opdatere vægtene en gang mere på samme måde.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 4: Opdater vægtene anden gang
@@ -121,7 +147,7 @@ Du kan læse om *cross-entropy* i [noten om tabsfunktioner](../materialer/tabsfu
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### (Ekstra) Opgave 6: Cross-entropy tabsfunktion 
-* Gentag opgave 1-5 men med *cross-entropy* som tabsfunktion i stedet for *squared-error*.
+* Gentag opgave 1-5 men med *cross-entropy* som tabsfunktion i stedet for *squared error*.
 
 :::
 
