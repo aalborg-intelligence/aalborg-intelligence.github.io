@@ -5,7 +5,7 @@ description-meta: "I denne note behandles et simpelt neuralt netværk uden skjul
 from: markdown+emoji
 ---
 
-Et kunstigt neuralt netværk fungerer på den måde, at man på baggrund af en række forskellige informationer gerne vil kunne forudsige en eller anden ting. Det kan være, at man på baggrund af en række forskellige blodprøveværdier vil forudsige, om en patient har en bestemt sygdom. Det kunne også være, at man baseret på svarene fra en række forskellige spørgsgmål vil udtale sig om, om en person vil stemme på rød eller blå blok. De nævnte eksempler kalder man for *binær klassifikation* -- fordi der i hvert tilfælde er to muligheder: *syg*/*ikke syg* og *rød blok*/*blå blok*. Men det er ikke svært at forestiller sig scenarier, hvor der kan være mere end to klasser. For eksempel er eksemplet med rød og blå nok tvivlsomt. Her ville det måske være bedre at prøve at forudsige et bestemt parti. Denne note handler om, hvordan man udvider en simpel [kunstig neuron](../kunstige_neuroner/kunstige_neuroner.qmd), så den ikke kun kan bruges til binær klassifikation, men derimod til at forudsige hvilke blandt flere klasser et givent tilfælde befinder sig i. Lad os starte med et eksempel.
+Et kunstigt neuralt netværk fungerer på den måde, at man på baggrund af en række forskellige informationer gerne vil kunne forudsige en eller anden ting. Det kan være, at man på baggrund af en række forskellige blodprøveværdier vil forudsige, om en patient har en bestemt sygdom. Det kunne også være, at man baseret på svarene fra en række forskellige spørgsgmål vil udtale sig om, om en person vil stemme på rød eller blå blok. De nævnte eksempler kalder man for *binær klassifikation* -- fordi der i hvert tilfælde er to muligheder: *syg*/*ikke syg* og *rød blok*/*blå blok*. Men det er ikke svært at forestille sig scenarier, hvor der kan være mere end to klasser. For eksempel er eksemplet med rød og blå nok tvivlsomt. Her ville det måske være bedre at prøve at forudsige et bestemt parti. Denne note handler om, hvordan man udvider en simpel [kunstig neuron](../kunstige_neuroner/kunstige_neuroner.qmd), så den ikke kun kan bruges til binær klassifikation, men derimod til at forudsige hvilke blandt flere klasser et givent tilfælde befinder sig i. Lad os starte med et eksempel.
 
 
 ## Hvor hårdt skal du arbejde i matematiktimerne?
@@ -16,11 +16,11 @@ Du kender det sikkert godt. Der er gruppearbejde i matematiktimen, og du gider e
 
 Lad os sige at du svarer på følgende tre spørgsmål på en skala fra 1 til 10:
 
-$x_1$: Hvor godt har jeg sovet i nat? (1=\"Elendigt\", 10=\"Fantastisk\").
+* $x_1$: Hvor godt har jeg sovet i nat? (1=\"Elendigt\", 10=\"Fantastisk\").
 
-$x_2$: Hvor spændende er det emne, vi er i gang med lige nu? (1=\"Mega kedeligt\", 10=\"Det er awesome\").
+* $x_2$: Hvor spændende er det emne, vi er i gang med lige nu? (1=\"Mega kedeligt\", 10=\"Det er awesome\").
 
-$x_3$: Hvor godt vil jeg gerne klare mig til eksamen? (1=\"Jeg er ligeglad\", 10=\"Det skal gå så godt som muligt\").
+* $x_3$: Hvor godt vil jeg gerne klare mig til eksamen? (1=\"Jeg er ligeglad\", 10=\"Det skal gå så godt som muligt\").
 
 
 Baseret på disse tre spørgsmål er der nu følgende fire valg, du kan træffe:
@@ -64,7 +64,7 @@ t_4 \\
 \end{pmatrix}
 $$
 
-Vektoren $\vec t$ kaldes for **targetværdien**.
+Vektoren $\vec t$ kaldes for **targetværdien** eller **targetvektoren**.
 
 Læg mærke til, at der altid gælder følgende
 
@@ -97,7 +97,7 @@ Træningsdata fra 12 elever.
 :::
  
 
-For eksempel har elev nummer 1 sovet fantastisk, eleven synes at emnet er vildt spændende og eleven vil gerne klare sig rigtig godt til eksamen -- denne elev vælger derfor at blive i klassen. Targetværdien for denne elev er:
+For eksempel har elev nummer 1 sovet fantastisk, eleven synes at emnet er vildt spændende, og eleven vil gerne klare sig rigtig godt til eksamen -- denne elev vælger derfor at blive i klassen. Targetværdien for denne elev er:
 
 $$
 \vec{t}=
@@ -109,7 +109,7 @@ $$
 \end{pmatrix}
 $$
 
-Eleven nummer 12 har derimod sovet semi godt, til gengæld synes eleven ikke at emnet er særlig spændende og er også ligeglad med at klare sig godt til eksamen. Denne elev laver derfor en \"sniger\" og går hjem. Targetværdien for eleven er derfor:
+Eleven nummer 12 har derimod sovet semi godt, til gengæld synes eleven ikke at emnet er særlig spændende, og er også ligeglad med at klare sig godt til eksamen. Denne elev laver derfor en \"sniger\" og går hjem. Targetværdien for eleven er derfor:
 
 $$
 \vec{t}=
@@ -149,7 +149,7 @@ $$
 
 I eksemplet ovenfor var $n=3$, fordi vi svarede på tre spørgsmål.
 
-Disse $n$ inputvariable er vist i @fig-netvaerk_generelt som lilla cirkler. De grønne cirkler repræsenterer $m$ output neuroner (i vores eksempel er $m=4$ fordi der skal træffes et valg blandt 4 muligheder). 
+Disse $n$ inputvariable er vist i @fig-netvaerk_generelt som lilla cirkler. De grønne cirkler repræsenterer $J$ output neuroner (i vores eksempel er $J=4$, fordi der skal træffes et valg blandt 4 muligheder). 
 
 ![Neuralt netværk med $n$ input neuroner og $m$ output neuroner.](images/netvaerk_generelt.png){width=50% #fig-netvaerk_generelt}
 
@@ -161,7 +161,7 @@ $$
 o_1 \\
 o_2 \\
 \vdots \\
-o_m
+o_J
 \end{pmatrix}
 $$
 
@@ -172,79 +172,79 @@ I vores eksempel vil det svare til, at $o_1$ skal være sandsynligheden for, at 
 Det vil sige, at det skal være sådan, at
 
 $$
-o_1 + o_2 + \cdots + o_m = 1
+o_1 + o_2 + \cdots + o_J = 1
 $$
 
-fordi sandsynlighederne for de $m$ forskellige muligheder til sammen skal give 1.
+fordi sandsynlighederne for de $J$ forskellige muligheder til sammen skal give 1.
 
 
 
 
-Vi vil starte med at se på, hvordan vi på baggrund af inputvariablene $x_1, x_2, \cdots, x_n$ kan beregne de $m$ outputværdier, så ovenstående er opfyldt. På @fig-netvaerk_generelt illustrerer de forskelligt farvede pile, at alle $n$ inputvariable sendes frem i netværket til alle $m$ outputværdier. Så for eksempel sendes $x_1, x_2, \cdots, x_n$ frem til $o_1$ (vist ved de lyseblå pile), ligesom de også sendes frem til $o_2$ (vist ved de mellemblå pile) og så videre. 
+Vi vil starte med at se på, hvordan vi på baggrund af inputvariablene $x_1, x_2, \cdots, x_n$ kan beregne de $J$ outputværdier, så ovenstående er opfyldt. På @fig-netvaerk_generelt illustrerer de forskelligt farvede pile, at alle $n$ inputvariable sendes frem i netværket til alle $J$ outputværdier. Så for eksempel sendes $x_1, x_2, \cdots, x_n$ frem til $o_1$ (vist ved de lyseblå pile), ligesom de også sendes frem til $o_2$ (vist ved de mellemblå pile) og så videre. 
 
-For at forklare den beregning der så foregår, har vi i @fig-netvaerk_generelt_wi kun vist de pile, som går fra inputvariablene frem til den $i$'te outputværdi.
+For at forklare den beregning der så foregår, har vi i @fig-netvaerk_generelt_wj kun vist de pile, som går fra inputvariablene frem til den $j$'te outputværdi.
 
-![Neuralt netværk hvor vægtene fra de $n$ input neuroner over til den $i$'te output neuron er vist.](images/netvaerk_generelt_wi.png){width=50% #fig-netvaerk_generelt_wi}
+![Neuralt netværk hvor vægtene fra de $n$ input neuroner over til den $j$'te output neuron er vist.](images/netvaerk_generelt_wj.png){width=50% #fig-netvaerk_generelt_wj}
 
-Før $o_i$ bestemmes, beregner vi først en værdi $z_i$ på denne måde:
+Før $o_j$ bestemmes, beregner vi først en værdi $z_j$ på denne måde:
 
 $$
-z_i = w_{i,0} + w_{i,1} \cdot x_1 + w_{i,2} \cdot x_2 + \cdots + w_{i,n} \cdot x_n.
+z_j = w_{j,0} + w_{j,1} \cdot x_1 + w_{j,2} \cdot x_2 + \cdots + w_{j,n} \cdot x_n.
 $$
 
-Tallene $w_{i,0}, w_{i,1}, w_{i,2}, \cdots, w_{i,n}$ kaldes for **vægte**. 
+Tallene $w_{j,0}, w_{j,1}, w_{j,2}, \cdots, w_{j,n}$ kaldes for **vægte**. 
 
-Værdien $z_i$ er vist i @fig-netvaerk_generelt_wi inde i den grønne cirkel. På tilsvarende vis beregnes $z_1, z_2, \cdots, z_m$. Bemærk her, at vægtene er forskellige. For eksempel er
+Værdien $z_j$ er vist i @fig-netvaerk_generelt_wj inde i den grønne cirkel. På tilsvarende vis beregnes $z_1, z_2, \cdots, z_J$. Bemærk her, at vægtene er forskellige. For eksempel er
 
 $$
 z_2 = w_{2,0} + w_{2,1} \cdot x_1 + w_{2,2} \cdot x_2 + \cdots + w_{2,n} \cdot x_n
 $$
 
-så vægtene er her $w_{2,0}, w_{2,1}, w_{2,2}, \cdots, w_{2,n}$. I alt er der $(n+1)\cdot m$ forskellige vægte (det vil sige i vores eksempel vil der være $(3+1)\cdot4=16$ vægte).
+så vægtene er her $w_{2,0}, w_{2,1}, w_{2,2}, \cdots, w_{2,n}$. 
 
+I alt er der $(n+1)\cdot J$ forskellige vægte (det vil sige i vores eksempel vil der være $(3+1)\cdot4=16$ vægte).
 
-
-
-
-Alle $z$-værdierne kan antage et hvilket som helst reelt tal og kan af den grund ikke fortolkes som en sandsynlighed. Vi bruger derfor en såkaldt **aktiveringsfunktion** $\alpha$ på alle $z$-værdierne, så vi kan få beregnet en outputværdi, som kan fortolkes som en sandsynlighed:
+Alle $z$-værdierne kan antage et hvilket som helst reelt tal og kan alene af den grund ikke fortolkes som en sandsynlighed. Vi bruger derfor en såkaldt **aktiveringsfunktion** $\alpha$ på alle $z$-værdierne, så vi kan få beregnet en outputværdi, som kan fortolkes som en sandsynlighed:
 
 $$
-o_i = \alpha(z_i),
+o_j = \alpha(z_j),
 $$
 
 hvor
 
 $$
-0 \leq \alpha(z_i) \leq 1.
+0 \leq \alpha(z_j) \leq 1.
 $$
 
-Som aktiveringsfunktion $\alpha$ vil vi bruge en funktion, som kaldes for **softmax**, fordi den præcis har de egenskaber, som vi efterspørger -- det ser vi lige om lidt. På baggrund af alle $z$-værdierne beregnes $o_i$ ved hjælp af **softmax** på denne måde:
+Som aktiveringsfunktion $\alpha$ vil vi bruge en funktion, som kaldes for **softmax**, fordi den præcis har de egenskaber, som vi efterspørger -- det ser vi lige om lidt. På baggrund af alle $z$-værdierne beregnes $o_j$ ved hjælp af **softmax** på denne måde:
 
 $$
-o_i = \alpha(z_i) = \frac{e^{z_i}}{\sum_{j=1}^m e^{z_j}}.
+o_j = \alpha(z_j) = \frac{e^{z_j}}{\sum_{i=1}^J e^{z_i}}.
 $$
 
-For det første kan vi se, at både tæller og nævner er positive. Derfor må $o_i>0$. For det andet er $e^{z_i} < \sum_{j=1}^m e^{z_j}$ og derfor er
+For det første kan vi se, at både tæller og nævner er positive. Derfor må $o_j>0$. For det andet er $e^{z_j} < \sum_{i=1}^J e^{z_i}$ og derfor er
 
 $$
-o_i =  \frac{e^{z_i}}{\sum_{j=1}^m e^{z_j}} < \frac{\sum_{j=1}^m e^{z_j}}{\sum_{j=1}^m e^{z_j}} = 1.
+o_j =  \frac{e^{z_j}}{\sum_{i=1}^J e^{z_i}} < \frac{\sum_{i=1}^J e^{z_i}}{\sum_{i=1}^J e^{z_i}} = 1.
 $$
 
 Altså er
 
 $$
-0<o_i<1
+0<o_j<1
 $$
 
-hvilket betyder, at $o_i$ kan opfattes som en sandsynlighed. Endelig er
+hvilket betyder, at $o_j$ kan opfattes som en sandsynlighed. Endelig er
 
 $$
 \begin{aligned}
-o_1 + o_2 + \cdots + o_m &= \frac{e^{z_1}}{\sum_{j=1}^m e^{z_j}} + \frac{e^{z_2}}{\sum_{j=1}^m e^{z_j}} + \cdots + \frac{e^{z_m}}{\sum_{j=1}^m e^{z_j}} \\
-&= \frac{e^{z_1} + e^{z_2} + \cdots + e^{z_m}}{\sum_{j=1}^m e^{z_j}} \\ 
-&= \frac{\sum_{j=1}^m e^{z_j}}{\sum_{j=1}^m e^{z_j}} = 1.
+o_1 + o_2 + \cdots + o_J &= \frac{e^{z_1}}{\sum_{i=1}^J e^{z_i}} + \frac{e^{z_2}}{\sum_{i=1}^J e^{z_i}} + \cdots + \frac{e^{z_J}}{\sum_{i=1}^J e^{z_i}} \\
+&= \frac{e^{z_1} + e^{z_2} + \cdots + e^{z_J}}{\sum_{i=1}^J e^{z_i}} \\ 
+&= \frac{\sum_{i=1}^J e^{z_i}}{\sum_{i=1}^J e^{z_i}} = 1,
 \end{aligned}
 $$
+
+hvilket også var et krav til de beregnede outputværdier.
 
 I det helt specielle tilfælde, hvor der kun er to output neuroner, vil softmax-funktionen for $o_1$ blot være en funktion af to variable:
 
@@ -274,26 +274,26 @@ $$
 \begin{aligned}
 z_1 &= w_{1,0} + w_{1,1} \cdot x_1 + w_{1,2} \cdot x_2 + \cdots + w_{1,n} \cdot x_n \\
 & \,\,\, \vdots \\
-z_i &= w_{i,0} + w_{i,1} \cdot x_1 + w_{i,2} \cdot x_2 + \cdots + w_{i,n} \cdot x_n \\
+z_j &= w_{j,0} + w_{j,1} \cdot x_1 + w_{j,2} \cdot x_2 + \cdots + w_{j,n} \cdot x_n \\
 & \,\,\, \vdots \\
-z_m &= w_{m,0} + w_{m,1} \cdot x_1 + w_{m,2} \cdot x_2 + \cdots + w_{m,n} \cdot x_n \\
+z_J &= w_{J,0} + w_{J,1} \cdot x_1 + w_{J,2} \cdot x_2 + \cdots + w_{J,n} \cdot x_n \\
 \end{aligned}
-$$ {#eq-z_i}
+$$ {#eq-z_j}
 
 Herefter beregnes outputværdierne:
 
 $$
 \begin{aligned}
-o_1 &= \frac{e^{z_1}}{\sum_{j=1}^m e^{z_j}} \\
+o_1 &= \frac{e^{z_1}}{\sum_{i=1}^J e^{z_i}} \\
 & \,\,\, \vdots \\
-o_i &= \frac{e^{z_i}}{\sum_{j=1}^m e^{z_j}} \\
+o_j &= \frac{e^{z_j}}{\sum_{i=1}^J e^{z_i}} \\
 & \,\,\, \vdots \\
-o_m &= \frac{e^{z_m}}{\sum_{j=1}^m e^{z_j}} \\
+o_J &= \frac{e^{z_J}}{\sum_{i=1}^J e^{z_i}} \\
 \end{aligned}
-$$ {#eq-o_i}
+$$ {#eq-o_j}
 :::
 
-Vi har indtil videre skrevet, at outputværdierne kan fortolkes som sandsynligheder. Men bare fordi at en række tal ($o_1, o_2, \dots, o_m$) alle ligger mellem 0 og 1 og alle summerer til 1, så er det jo ikke sikkert, at de på en fornuftig måde angiver sandsynligheden for de fire forskellige muligheder, som de enkelte elever har. For eksempel kunne de fleste lærere nok ønske sig, at
+Vi har indtil videre skrevet, at outputværdierne kan fortolkes som sandsynligheder. Men bare fordi at en række tal ($o_1, o_2, \dots, o_J$) alle ligger mellem 0 og 1 og alle summerer til 1, så er det jo ikke sikkert, at de på en fornuftig måde angiver sandsynligheden for de fire forskellige muligheder, som de enkelte elever har. For eksempel kunne de fleste lærere nok ønske sig, at
 
 $$
 o_1 = 0.5, \quad 0_2 = 0.5, \quad o_3=0, \quad o_4=0
@@ -303,14 +303,14 @@ fuldstændig uafhængig af svarene på de tre spørgsmål.
 
 Det svarer til, at cirka halvdelen af elever bliver i klassen og regner opgaver, mens den anden halvdel sætter sig ud og regner. Til gengæld er der *ingen*, som går i kantinen og feder den, ligsom der heller ikke er nogle, som bare går hjem. 
 
-For at vores nye AI assistent skal give et nogenlunde retvisende billede af virkeligheden (det vil sige elevernes valg og ikke lærerens ønsker!) skal vi have fundet nogle outputværdier, som for det første afhænger af inputværdierne (man kan jo se på @fig-trainingdata at inputværdierne har indflydelse) og som for det andet rent faktisk giver en realistisk sandsynlighed for hver af de fire muligheder. Det gør vi ved at blive ved med at \"skrue\" på alle vægtene indtil, at de beregnede outputværdier i (@eq-o_i) giver et godt bud på sandsynlighederne for de 4 muligheder.
+For at vores nye AI assistent skal give et nogenlunde retvisende billede af virkeligheden (det vil sige elevernes valg og ikke lærerens ønsker!) skal vi have fundet nogle outputværdier, som for det første afhænger af inputværdierne (man kan jo se på @fig-trainingdata at inputværdierne har indflydelse), og som for det andet rent faktisk giver en realistisk sandsynlighed for hver af de fire muligheder. Det gør vi ved at blive ved med at \"skrue\" på alle vægtene indtil, at de beregnede outputværdier i (@eq-o_j) giver et godt bud på sandsynlighederne for de 4 muligheder.
 
-Hvordan det rent faktisk lader sig gøre kommer her.
+Hvordan, det rent faktisk lader sig gøre, kommer her.
 
 
 ## Cross-entropy tabsfunktionen
 
-Forestil dig at vi bare har valgt nogle tilfældige værdier af vægtene. På den baggrund kan vi for et givent sæt af inputværdier beregne outputværdierne ved hjælp af (@eq-o_i). Vi vil som eksempel se på elev nummer 7 fra @tbl-trainingdata. Denne elev har  valgt mulighed 2 (gå uden for klassen for at regne opgaver) og har derfor targetværdi
+Forestil dig at vi bare har valgt nogle tilfældige værdier af vægtene. På den baggrund kan vi for et givent sæt af inputværdier beregne outputværdierne ved hjælp af feedforward-udtrykkene i (@eq-o_j). Vi vil som eksempel se på elev nummer 7 fra @tbl-trainingdata. Denne elev har  valgt mulighed 2 (gå uden for klassen for at regne opgaver) og har derfor targetværdi
 
 $$
 \vec t = 
@@ -353,29 +353,29 @@ Vi har derfor brug for en metode til at vælge vægtene, så outputvektoren i (@
 For at holde tingene simple starter vi med at se på ét træningseksempel ad gangen (til sidst generaliserer vi). *Cross-entropy* tabsfunktionen er defineret sådan her:
 
 $$
-E = - \sum_{i=1}^m t_i \cdot \ln(o_i) 
+E = - \sum_{j=1}^J t_j \cdot \ln(o_j) 
 $$
 
 Det ser måske lige lidt mærkeligt ud, men vi skal nok forklare det. Vi kan prøve at skrive summen ud:
 
 $$
-E = - \left (t_1 \cdot \ln(o_1)  + t_2 \cdot \ln(o_2) + \cdots + t_i \cdot \ln(o_i) + \cdots + t_m \cdot \ln(o_m) \right)
+E = - \left (t_1 \cdot \ln(o_1)  + t_2 \cdot \ln(o_2) + \cdots + t_j \cdot \ln(o_j) + \cdots + t_J \cdot \ln(o_J) \right)
 $$
 
-Vi husker nu på, at $\vec t$ er en *one hot vektor*. Det vil sige, at det kun er ét af $t_i$'erne i ovenstående der er 1 -- resten er 0. Lad os sige at det er $t_i$, der er 1. Så er
+Vi husker nu på, at $\vec t$ er en *one hot vektor*. Det vil sige, at det kun er ét af $t_j$'erne i ovenstående, der er 1 -- resten er 0. Lad os sige at det er $t_j$, der er 1. Så er
 
 $$
-E = - t_i \cdot \ln(o_i) = - \ln(o_i).
+E = - t_j \cdot \ln(o_j) = - \ln(o_j).
 $$
 
-I @fig-natural_ln har vi tegnet grafen for den naturlige logaritme-funktion og for minus den naturlige logartime-funktion:
+I @fig-natural_ln har vi tegnet grafen for den naturlige logaritme-funktion samt grafen for minus den naturlige logartime-funktion:
 
 ![Grafen for $\ln(x)$ og $-\ln(x)$.](images/natural_ln.png){width=50% fig-align='center' #fig-natural_ln}
 
-Da $0<o_i<1$ kan vi for det første se, at $-\ln(o_i) >0$. Det vil sige, at tabsfunktionen er positiv.
+Da $0<o_j<1$ kan vi for det første se, at $-\ln(o_j) >0$. Det vil sige, at tabsfunktionen er positiv.
 
-Husk nu på at $t_i=1$. Hvis vægtene i vores neurale netværk er \"indstillet\" godt, så skal $o_i$ være tæt på 1. I @fig-natural_ln kan vi se, at det svarer til, at $-\ln(o_i)$ er tæt på $0$. Det betyder, at værdien af tabsfunktionen er lille. 
-Omvendt hvis vægtene er \"indstillet\" dårligt, så $o_i$ er tæt på $0$ (selvom $t_i=1$), så vil $-\ln(o_i)$ være et stort positivt tal. Altså er værdien af tabsfunktionen stor.
+Husk nu på at $t_j=1$. Hvis vægtene i vores neurale netværk er \"indstillet\" godt, så skal $o_j$ være tæt på 1. I @fig-natural_ln kan vi se, at det svarer til, at $-\ln(o_j)$ er tæt på $0$. Det betyder, at værdien af tabsfunktionen er lille. 
+Omvendt hvis vægtene er \"indstillet\" dårligt, så $o_j$ er tæt på $0$ (selvom $t_j=1$), så vil $-\ln(o_j)$ være et stort positivt tal. Altså er værdien af tabsfunktionen stor.
 
 Det betyder, at tabsfunktionen på den måde måler \"kvaliteten\" af netværket:
 
@@ -447,10 +447,10 @@ Altså kan vi her se, at det netværk, som er bedre, også har en lavere værdi 
 Vi skal bestemme de værdier af vægtene, som minimerer tabsfunktionen
 
 $$
-E = - \sum_{j=1}^m t_j \cdot \ln(o_j) 
+E = - \sum_{i=1}^J t_i \cdot \ln(o_i) 
 $$ {#eq-cross_entropy}
 
-Husk på at outputværdierne $o_j$ afhænger af $z$-værdierne via (@eq-o_i), mens $z$-værdierne afhænger af vægtene via (@eq-z_i). Altså afhænger tabsfunktionen også indirekte af alle vægtene. 
+Husk på at outputværdierne $o_i$ afhænger af $z$-værdierne via (@eq-o_j), mens $z$-værdierne afhænger af vægtene via (@eq-z_j). Altså afhænger tabsfunktionen også indirekte af alle vægtene. 
 
 Når man skal minimere [en funktion, som afhænger af flere variable](../funktioner_af_flere_variable/funktioner_af_flere_variable.qmd) (her vægtene) kan det gøres ved hjælp af en metode, som kaldes for [gradientnedstigning](../gradientnedstigning/gradientnedstigning.qmd). Vi vil her kort forklare, hvad det går ud på.
 
@@ -470,206 +470,232 @@ Det viser sig, at denne gradient peger i den retning, hvor funktionsværdien *vo
 
 [^1]: Du kan tænke på gradienten som et kompas, der hele tiden viser dig, hvilken vej du skal gå for at bevæge dig ned mod et minimum.
 
-Derfor når vægten $w_{i,k}$ skal opdateres, så gør vi følgende:
+Derfor når vægten $w_{j,k}$ skal opdateres, så gør vi følgende:
 
 $$
-w_{i,k}^{\textrm{ny}} = w_{i,k} - \eta \cdot \frac{\partial E}{\partial w_{i,k}}.
-$$ {#eq-w_ik-opdatering_grad}
+w_{j,k}^{\textrm{ny}} \leftarrow w_{j,k} - \eta \cdot \frac{\partial E}{\partial w_{j,k}}.
+$$ {#eq-w_jk-opdatering_grad}
 
 Tallet $\eta$ kaldes for en **learning rate** og er typisk et lille tal mellem $0$ og $1$. Det svarer til den skridtlængde vi bruger, når vi går i den negative gradients retning. 
 
-Det vil sige for at opdatere $w_{i,k}$-vægten, skal vi have udregnet den partielle afledede
+Det vil sige for at opdatere $w_{j,k}$-vægten, skal vi have udregnet den partielle afledede
 
 $$
-\frac{\partial E}{\partial w_{i,k}}.
+\frac{\partial E}{\partial w_{j,k}}.
 $$
 
-Hvis vi ser på @fig-netvaerk_generelt_wik kan vi se, at $w_{i,k}$ kun har indflydelse på $z_i$ og dermed $o_i$.
+Hvis vi ser på @fig-netvaerk_generelt_wjk kan vi se, at $w_{j,k}$ kun har indflydelse på $z_j$ og dermed $o_j$.
 
-![Neuralt netværk hvor vægtene fra de $n$ input neuroner over til den $i$'te output neuron er vist.](images/netvaerk_generelt_wik.png){width=50% #fig-netvaerk_generelt_wik}
+![Neuralt netværk hvor vægtene fra de $n$ input neuroner over til den $i$'te output neuron er vist.](images/netvaerk_generelt_wjk.png){width=50% #fig-netvaerk_generelt_wjk}
 
-Derfor kan vi ved hjælp af kædereglen finde den partielle afledede af $E$ med hensyn til $w_{i,k}$ på denne måde[^2]
+Derfor kan vi ved hjælp af kædereglen finde den partielle afledede af $E$ med hensyn til $w_{j,k}$ på denne måde[^2]
 
 $$
-\frac{\partial E}{\partial w_{i,k}} = \frac{\partial E}{\partial z_i} \cdot \frac{\partial z_i}{\partial w_{i,k}}
-$$ {#eq-partialE_w_ik}
+\frac{\partial E}{\partial w_{j,k}} = \frac{\partial E}{\partial z_j} \cdot \frac{\partial z_j}{\partial w_{j,k}}
+$$ {#eq-partialE_w_jk}
 
-[^2]: Da tabsfunktionen afhænger af alle $z$-værdierne, skal man egentlig bruge kædereglen af flere variable, så det bliver $\frac{\partial E}{\partial w_{i,k}} = \sum_{j=1}^m \frac{\partial E}{\partial z_j} \cdot \frac{\partial z_j}{\partial w_{i,k}}$, men $\frac{\partial z_j}{\partial w_{i,k}}=0$ når $j \neq i$ og derfor kan vi nøjes med udtrykket i (@eq-partialE_w_ik).
+[^2]: Da tabsfunktionen afhænger af alle $z$-værdierne, skal man egentlig bruge kædereglen af flere variable, så det bliver $\frac{\partial E}{\partial w_{j,k}} = \sum_{i=1}^J \frac{\partial E}{\partial z_i} \cdot \frac{\partial z_i}{\partial w_{j,k}}$, men $\frac{\partial z_i}{\partial w_{j,k}}=0$ når $i \neq j$ og derfor kan vi nøjes med udtrykket i (@eq-partialE_w_jk).
 
-Vi starter med at regne på den anden faktor $\frac{\partial z_i}{\partial w_{i,k}}$ (fordi den er nemmeste!). Ifølge (@eq-z_i) er
+Vi starter med at regne på den sidste faktor $\frac{\partial z_j}{\partial w_{j,k}}$ (fordi den er nemmeste!). Ifølge (@eq-z_j) er
 
 $$
 \begin{aligned}
-\frac{\partial z_i}{\partial w_{i,k}} &= \frac{\partial }{\partial w_{i,k}} \left ( w_{i,0} + w_{i,1} \cdot x_1 + w_{i,2} \cdot x_2 + \cdots +  w_{i,k} \cdot x_k + \cdots +  w_{i,n} \cdot x_n \right) \\ 
+\frac{\partial z_j}{\partial w_{j,k}} &= \frac{\partial }{\partial w_{j,k}} \left ( w_{j,0} + w_{j,1} \cdot x_1 + w_{j,2} \cdot x_2 + \cdots +  w_{j,k} \cdot x_k + \cdots +  w_{j,n} \cdot x_n \right) \\ 
 &= x_k
 \end{aligned}
-$$ {#eq-partial_z_i_w_ik}
+$$ {#eq-partial_z_j_w_jk}
 
 
-For at bestemme den første faktor $\frac{\partial E}{\partial z_i}$ bruger vi definitionen af tabsfunktionen i (@eq-cross_entropy):
+For at bestemme den første faktor $\frac{\partial E}{\partial z_j}$ bruger vi definitionen af tabsfunktionen i (@eq-cross_entropy):
 
 $$
-\frac{\partial E}{\partial z_i} = - \sum_{j=1}^m t_j \cdot \frac{1}{o_j} \cdot \frac{\partial o_j}{\partial z_i}
-$$ {#eq-partialE_z_i}
+\frac{\partial E}{\partial z_j} = - \sum_{i=1}^J t_i \cdot \frac{1}{o_i} \cdot \frac{\partial o_i}{\partial z_j}
+$$ {#eq-partialE_z_j}
 
 Nu er
 
 $$
-o_j = \frac{e^{z_j}}{\sum_{l=1}^m e^{z_l}}.
+o_i = \frac{e^{z_i}}{\sum_{l=1}^J e^{z_l}}.
 $$
 
-Da $o_j$ er udtrykt ved en brøk, får vi brug for kvotientreglen, når vi skal differentiere $o_j$:
+Da $o_i$ er udtrykt ved en brøk, får vi brug for kvotientreglen, når vi skal differentiere $o_i$:
 
 $$
 \left ( \frac{f}{g} \right )'(x)= \frac{f'(x)  \cdot g(x) - f(x) \cdot g'(x)}{(g(x))^2}
 $$
 
-Når $o_j$ skal differentieres med hensyn til $z_i$, er der to muligheder alt efter om $i=j$ eller $i \neq j$. 
+Når $o_i$ skal differentieres med hensyn til $z_j$, er der to muligheder alt efter om $i=j$ eller $i \neq j$. 
 
 Hvis $i \neq j$, får vi
 
 $$
 \begin{aligned}
-\frac{\partial o_j}{\partial z_i} &= \frac{0 \cdot (\sum_{l=1}^m e^{z_l}) - e^{z_j} \cdot e^{z_i}}{\left ( \sum_{l=1}^m e^{z_l} \right )^2} \\
-&= - \frac{e^{z_j}}{\sum_{l=1}^m e^{z_l}} \cdot \frac{e^{z_i}}{\sum_{l=1}^m e^{z_l}} = - o_j \cdot o_i, \quad \quad i \neq j
+\frac{\partial o_i}{\partial z_j} &= \frac{0 \cdot (\sum_{l=1}^J e^{z_l}) - e^{z_i} \cdot e^{z_j}}{\left ( \sum_{l=1}^J e^{z_l} \right )^2} \\
+&= - \frac{e^{z_i}}{\sum_{l=1}^J e^{z_l}} \cdot \frac{e^{z_j}}{\sum_{l=1}^J e^{z_l}} = - o_i \cdot o_j, \quad \quad i \neq j
 \end{aligned}
 $$
 
-hvor sidste lighedstegn følger af definitionen i (@eq-o_i). 
+hvor sidste lighedstegn følger af definitionen i (@eq-o_j). 
 
 Hvis $i=j$, får vi
 
 $$
 \begin{aligned}
-\frac{\partial o_j}{\partial z_i} &= \frac{\partial o_i}{\partial z_i} = \frac{e^{z_i} \cdot (\sum_{l=1}^m e^{z_l}) - e^{z_i} \cdot e^{z_i}}{\left ( \sum_{l=1}^m e^{z_l} \right )^2} \\
-&= \frac{e^{z_i} \cdot (\sum_{l=1}^m e^{z_l})}{\left ( \sum_{l=1}^m e^{z_l} \right )^2} - \frac{(e^{z_i})^2}{\left ( \sum_{l=1}^m e^{z_l} \right )^2} \\
-&= \frac{e^{z_i}}{\sum_{l=1}^m e^{z_l}} - \left ( \frac{e^{z_i}}{\sum_{l=1}^m e^{z_l}} \right)^2 \\
-& = o_i-o_i^2 = o_i(1-o_i), \quad \quad i = j
+\frac{\partial o_i}{\partial z_j} &= \frac{\partial o_j}{\partial z_j} = \frac{e^{z_j} \cdot (\sum_{l=1}^J e^{z_l}) - e^{z_j} \cdot e^{z_j}}{\left ( \sum_{l=1}^J e^{z_l} \right )^2} \\
+&= \frac{e^{z_j} \cdot (\sum_{l=1}^J e^{z_l})}{\left ( \sum_{l=1}^J e^{z_l} \right )^2} - \frac{(e^{z_j})^2}{\left ( \sum_{l=1}^J e^{z_l} \right )^2} \\
+&= \frac{e^{z_j}}{\sum_{l=1}^J e^{z_l}} - \left ( \frac{e^{z_j}}{\sum_{l=1}^J e^{z_l}} \right)^2 \\
+& = o_j-o_j^2 = o_j(1-o_j), \quad \quad i = j
 \end{aligned}
 $$
 
-Vi kan nu indsætte i (@eq-partialE_z_i):
+Vi kan nu indsætte i (@eq-partialE_z_j):
 
 $$
 \begin{aligned}
-\frac{\partial E}{\partial z_i} &= - \left ( \sum_{\substack{j=1 \\ j \neq i }}^m t_j \cdot \frac{1}{o_j} \cdot (-o_j \cdot o_i) \right ) - t_i \cdot \frac{1}{o_i} \cdot o_i \cdot (1-o_i) \\
-&=  - \left ( \sum_{\substack{j=1 \\ j \neq i }}^m t_j \cdot (-o_i) \right ) - t_i \cdot (1-o_i) \\
-&=  \left ( \sum_{\substack{j=1 \\ j \neq i }}^m t_j \cdot o_i \right ) - t_i + t_i \cdot o_i 
+\frac{\partial E}{\partial z_j} &= - \left ( \sum_{\substack{i=1 \\ i \neq j }}^J t_i \cdot \frac{1}{o_i} \cdot (-o_i \cdot o_j) \right ) - t_j \cdot \frac{1}{o_j} \cdot o_j \cdot (1-o_j) \\
+&=  - \left ( \sum_{\substack{i=1 \\ i \neq j }}^J t_i \cdot (-o_j) \right ) - t_j \cdot (1-o_j) \\
+&=  \left ( \sum_{\substack{i=1 \\ i \neq j }}^J t_i \cdot o_j \right ) - t_j + t_j \cdot o_j 
 \end{aligned}
 $$
 
-Vi kan nu se, at det led $t_i \cdot o_i$, som ikke er med i den første sum (hvor $j \neq i$), fremkommer som sidste led i ovenstående udtryk. Derfor kan vi lave denne omskrivning:
+Vi kan nu se, at det led $t_j \cdot o_j$, som ikke er med i den første sum (hvor $i \neq j$), fremkommer som sidste led i ovenstående udtryk. Derfor kan vi inkludere dette led i den første sum og få:
 
 $$
 \begin{aligned}
-\frac{\partial E}{\partial z_i} &= \left (\sum_{j=1}^m t_j \cdot o_i  \right ) - t_i \\ 
-& =  \left (o_i \cdot  \sum_{j=1}^m t_j  \right ) - t_i,
+\frac{\partial E}{\partial z_j} &= \left (\sum_{i=1}^J t_i \cdot o_j  \right ) - t_j \\ 
+& =  \left (o_j \cdot  \sum_{i=1}^J t_i  \right ) - t_j,
 \end{aligned}
 $$
 
-hvor sidste lighedstegn følger af, at $o_i$ ikke afhænger af det indeks, vi summerer over, og derfor kan $o_i$ sættes ud foran summen.
+hvor sidste lighedstegn følger af, at $o_j$ ikke afhænger af det indeks, vi summerer over, og derfor kan $o_j$ sættes ud foran summen (det svarer til at sætte en fællesfaktor ud foran en parentes).
 
-Vi udnytter nu, at $\vec t$ er en *one hot vektor* og derfor er $\sum_{j=1}^m t_j = 1$. Derfor ender vi med det meget simple udtryk
-
-$$
-\frac{\partial E}{\partial z_i} = o_i - t_i = -(t_i-o_i)
-$$
-
-Vi indsætter i (@eq-partialE_w_ik) og får
+Vi udnytter nu, at $\vec t$ er en *one hot vektor* -- det vil sige, at $\sum_{i=1}^J t_i = 1$. Derfor ender vi med det meget simple udtryk
 
 $$
-\frac{\partial E}{\partial w_{i,k}} = \underbrace{-(t_i - o_i)}_{\frac{\partial E}{\partial z_i}} \cdot \underbrace{x_k}_{\frac{\partial z_i}{\partial w_{i,k}}}
-$$ {#eq-partialE_partial_wik_final}
+\frac{\partial E}{\partial z_j} = o_j - t_j = -(t_j-o_j)
+$$
 
-Bruger vi opdateringsreglen for $w_{i,k}$-vægten i (@eq-w_ik-opdatering_grad), ender vi med følgende:
+Vi indsætter i (@eq-partialE_w_jk) og får
+
+$$
+\frac{\partial E}{\partial w_{j,k}} = \underbrace{-(t_j - o_j)}_{\frac{\partial E}{\partial z_j}} \cdot \underbrace{x_k}_{\frac{\partial z_j}{\partial w_{j,k}}}
+$$ {#eq-partialE_partial_wjk_final}
+
+Bruger vi opdateringsreglen for $w_{j,k}$-vægten i (@eq-w_jk-opdatering_grad), ender vi med følgende:
 
 ::: {.callout-note collapse="false" appearance="minimal"} 
 ## Opdateringsregel for $w_{i,k}$-vægten (baseret på ét træningseksempel)
 
-Vægten fra det $k$'te input $x_k$ til den $i$'te outputneuron opdateres således:
+Vægten fra det $k$'te input $x_k$ til den $j$'te outputneuron opdateres således:
 
 $$
-w_{i,k}^{(\textrm{ny})} = w_{i,k} + \eta \cdot (t_i - o_i) \cdot x_k
+w_{j,k}^{(\textrm{ny})} \leftarrow w_{j,k} + \eta \cdot (t_j - o_j) \cdot x_k
 $$
 
-![](images/netvaerk_generelt_wik_zoom.png){width=50% fig-align='center'}
+![](images/netvaerk_generelt_wjk_zoom.png){width=50% fig-align='center'}
 :::
 
 ### Opdatering ved hjælp af hele træningsdatasættet
 
-I det ovenstående har vi udledt opdateringsreglen for $w_{i,k}$-vægten baseret ét enkelt træningseksempel ad gangen ved at finde minimum for tabsfunktionen:
+I det ovenstående har vi udledt opdateringsreglen for $w_{j,k}$-vægten baseret ét enkelt træningseksempel ad gangen ved at finde minimum for tabsfunktionen:
 
 $$
-E = - \sum_{j=1}^m t_j \cdot \ln(o_j) 
+E = - \sum_{i=1}^J t_i \cdot \ln(o_i) 
 $$
 
-I virkeligheden definerer man tabsfunktionen baseret på hele træningsdatasættet. Hvis vi kalder targetværdien og outputværdien hørende til træningsdata $x$ for $\vec t^{(x)}$ og $\vec o^{(x)}$:
+I virkeligheden definerer man tabsfunktionen baseret på hele træningsdatasættet. Vi starter med at nummerere træningsdata fra $1$ til $M$ og kalder targetværdien og outputværdien hørende til det $m$'te træningseksempel for $\vec t^{(m)}$ og $\vec o^{(m)}$:
 
 $$
-\vec t^{(x)} = 
+\vec t^{(m)} = 
 \begin{pmatrix}
-t_1^{(x)} \\
-t_2^{(x)} \\
+t_1^{(m)} \\
+t_2^{(m)} \\
 \vdots \\
-t_m^{(x)} \\
+t_J^{(m)} \\
 \end{pmatrix} \quad \quad \textrm{og} \quad \quad 
-\vec o^{(x)} = 
+\vec o^{(m)} = 
 \begin{pmatrix}
-o_1^{(x)} \\
-o_2^{(x)} \\
+o_1^{(m)} \\
+o_2^{(m)} \\
 \vdots \\
-o_m^{(x)} \\
+o_J^{(m)} \\
 \end{pmatrix}
 $$
 
 Så definerer man tabsfunktionen på denne måde:
 
 $$
-E = \sum_x \left (- \sum_{j=1}^m t_j^{(x)} \cdot \ln(o_j^{(x)}) \right )
+E = \sum_{m=1}^M \left (- \sum_{i=1}^J t_i^{(m)} \cdot \ln(o_i^{(m)}) \right )
 $$
 Og sætter vi
 
 $$
-E_x = - \sum_{j=1}^m t_j^{(x)} \cdot \ln(o_j^{(x)})
+E^{(m)} = - \sum_{i=1}^J t_i^{(m)} \cdot \ln(o_i^{(m)})
 $$
 så bliver tabsfunktionen bare en sum over de individuelle bidrag til tabsfunktionen fra hvert træningseksempel:
 
 $$
-E = \sum_x E_x
+E = \sum_{m=1}^M E^{(m)}
 $$
 Vi kan heldigvis differentiere ledvist og får derfor
 
 $$
-\frac{\partial E}{\partial w_{i,k}} = \sum_x \frac{\partial E_x}{\partial w_{i,k}}
+\frac{\partial E}{\partial w_{j,k}} = \sum_{m=1}^M \frac{\partial E^{(m)}}{\partial w_{j,k}}
 $$
-I det foregående afsnit var det netop $\frac{\partial E_x}{\partial w_{i,k}}$ vi udledte i (@eq-partialE_partial_wik_final):
+I det foregående afsnit var det netop $\frac{\partial E^{(m)}}{\partial w_{j,k}}$ vi udledte i (@eq-partialE_partial_wjk_final) -- dog uden at specificere nummeret på træningseksemplet:
 
 $$
-\frac{\partial E_x}{\partial w_{i,k}} = -(t_i^{(x)} - o_i^{(x)}) \cdot x_k^{(x)}
+\frac{\partial E^{(m)}}{\partial w_{j,k}} = -(t_j^{(m)} - o_j^{(m)}) \cdot x_k^{(m)}
 $$
 
 Derfor bliver
 $$
-\frac{\partial E}{\partial w_{i,k}} = \sum_x \frac{\partial E_x}{\partial w_{i,k}} = - \sum_x (t_i^{(x)} - o_i^{(x)}) \cdot x_k^{(x)} 
+\frac{\partial E}{\partial w_{j,k}} = \sum_{m=1}^M \frac{\partial E^{(m)}}{\partial w_{j,k}} = - \sum_{m=1}^M (t_j^{(m)} - o_j^{(m)}) \cdot x_k^{(m)} 
 $$
-Opdateringsreglen for $w_{i,k}$-vægten bliver i det tilfælde
+Opdateringsreglen for $w_{j,k}$-vægten bliver i det tilfælde:
 
 ::: {.callout-note collapse="false" appearance="minimal"} 
 ## Opdateringsregel for $w_{i,k}$-vægten (baseret på hele træningsdatasættet)
 
-Vægten fra det $k$'te input $x_k$ til den $i$'te outputneuron opdateres således:
+Vægten fra det $k$'te input $x_k$ til den $j$'te outputneuron opdateres således:
 
 $$
-w_{i,k}^{(\textrm{ny})} = w_{i,k} + \eta \cdot \sum_x (t_i^{(x)} - o_i^{(x)}) \cdot x_k^{(x)}
+w_{j,k}^{(\textrm{ny})} \leftarrow w_{j,k} + \eta \cdot \sum_{m=1}^M (t_j^{(m)} - o_j^{(m)}) \cdot x_k^{(m)}
 $$
 
-![](images/netvaerk_generelt_wik_zoom.png){width=50% fig-align='center'}
+![](images/netvaerk_generelt_wjk_zoom.png){width=50% fig-align='center'}
 :::
+
+Samlet set trænes netværket på denne måde:
+
+1) Sæt alle vægtene til en tilfældig værdi og vælg en værdi for learning raten $\eta$.
+
+2) For alle træningseksempler udregnes $z_j^{(m)}$ og $o_j^{(m)}$ ved hjælp af feedforward-udtrykkene:
+
+   $$
+   z_j^{(m)} = w_{j,0} + w_{j,1} \cdot x_1^{(m)} + w_{j,2} \cdot x_2^{(m)} + \cdots + w_{j,n} \cdot x_n^{(m)} 
+   $$
+
+   og
+
+   $$
+   o_j^{(m)} = \frac{e^{z_j^{(m)}}}{\sum_{i=1}^J e^{z_i^{(m)}}} 
+   $$ 
+
+   for $j=1, 2, \dots, J$.
+
+3) Opdatér alle vægtene:
+
+   $$
+   w_{j,k}^{(\textrm{ny})} \leftarrow w_{j,k} + \eta \cdot \sum_{m=1}^M (t_j^{(m)} -    o_j^{(m)}) \cdot x_k^{(m)}
+   $$
+
+Alle vægtene er nu opdateret, og vi kan gentage punkt 2 og 3, hvor feedforward i 2 hver gang er baseret på de netop opdaterede vægte fra det foregående gennemløb. Opdateringen af vægtene fortsætter indtil værdien af tabsfunktionen næsten ikke ændrer sig. Håbet er nu, at vi har fundet et minimum (eventuelt kun lokalt) for tabsfunktionen.
 
 
 ## Tilbage til eksemplet
 
-Vi har nu fået udledt opdateringsreglerne for alle vægtene, og vi vil derfor prøve at træne et netværk ved hjælp af træningsdata i @tbl-trainingdata. Hvis vi til start sætter alle vægtene til $0.5$, vælger en learning rate på $0.001$ og laver i alt $100000$ iterationer (det vil sige, at vægtene alt i alt opdateres $100000$ gange), så nærmer vi os et minimum for tabsfunktionen. Alle outputværdierne kan nu beregnes ved hjælp af (@eq-o_i). Gør vi det for alle data i træningsdatasættet, får vi følgende[^4]:
+Vi har nu fået udledt opdateringsreglerne for alle vægtene, og vi vil derfor prøve at træne et netværk ved hjælp af træningsdata i @tbl-trainingdata. Hvis vi til start sætter alle vægtene til $0.5$, vælger en learning rate på $0.001$ og laver i alt $100000$ iterationer (det vil sige, at vægtene alt i alt opdateres $100000$ gange), så nærmer vi os et minimum for tabsfunktionen. Alle outputværdierne kan nu beregnes ved hjælp af (@eq-o_j). Gør vi det for alle data i træningsdatasættet, får vi følgende[^4]:
 
 ::: {#tbl-prediction}
 |Elev nr.| $x_1$ (søvn) | $x_2$ (emne) | $x_3$ (eksamen) | Valg | $o_1$ | $o_2$ | $o_3$ | $o_4$ |
@@ -691,7 +717,7 @@ Træningsdata fra 12 elever inklusion de bergende outputværdier.
 
 [^4]: Bemærk, at hvis $o_1+o_2+o_3+ o_4$ ikke giver $1$, så skyldes det afrunding.
 
-Et netværk vil altid være forholdsvis god til at prædiktere korrekt på de data, som netværket er trænet på. Det kan du læse mere om i noten om [\"Overfitting, modeludvælgelse og krydsvalidering\"](../krydsvalidering/krydsvalidering.qmd). Med det i baghovedet kan vi alligevel se fra @tbl-prediction se, at den prædikterede sandsynlighed for det valg, som hver elev træffer, er høj. For eksempel vælger elev nr. 1 også valg 1 (at blive i klassen), og den prædikterede sandsynlighed for dette valg er $o_1 = 0.98$. 
+Et netværk vil altid være forholdsvis god til at prædiktere korrekt på de data, som netværket er trænet på. Det kan du læse mere om i noten om [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd). Med det i baghovedet kan vi alligevel se fra @tbl-prediction se, at den prædikterede sandsynlighed for det valg, som hver elev træffer, er høj. For eksempel vælger elev nr. 1 også valg 1 (at blive i klassen), og den prædikterede sandsynlighed for dette valg er $o_1 = 0.98$. 
 
 For elev nr. 2 kan vi se, at vores AI assistent er i tvivl om ($o_1=o_2=0.50$), om den skal anbefale valg 1 eller 2 (eleven har valgt 1). For elev nr. 7 vil vores AI assisten anbefale valg 1 ($o_1 = 0.70$), men eleven træffer i virkeligheden valg 2. De resterende anbefalinger er korrekte.
 
@@ -725,7 +751,7 @@ Alle tre elever hiver straks deres ny AI assistent op af lommen, indtaster svare
 |Mads |$3$ | $8$ | $2$  |  $0.00$ |  $1.00$ |  $0.00$ |  $0.00$ | ${\color{#8086F2} 2}$ |
 
  
-Anton bliver anbefalet, at gå i kantinen (valg 3), mens Signe og Mads bliver anbefalet at gå ud for at regne opgaver (valg 2). Det kan godt se ud som om, at $x_2$ (interessen for emnet) er forholdsvis afgørende for den endelig anbefaling. Hvis du tager et kig på @fig-trainingdata, vil du også opdage, at hvis $x_2<5$, så er alle punkter lyserøde eller gule (svarende til valg 3 og 4), mens alle punkter, hvor $x_2 \geq 5$ er lyse- eller mørkeblå (valg 1 og 2). Det kunne jo få en til at tænke, om det i virkeligheden ville være nok at svare på spørgsmål 2, uden at det går udover klassifikationsnøjagtigheden. Det vil man kunne undersøge ved at lave en model med kun $x_2$ som inputvariabel og en anden model med alle tre inputvariable og så for eksempel vurdere de to modellers klassifikationsnøjagtighed ved hjælp af [krydsvalidering](../krydsvalidering/krydsvalidering.qmd).
+Anton bliver anbefalet, at gå i kantinen (valg 3), mens Signe og Mads bliver anbefalet at gå ud for at regne opgaver (valg 2). Det kan godt se ud som om, at $x_2$ (interessen for emnet) er forholdsvis afgørende for den endelig anbefaling. Hvis du tager et kig på @fig-trainingdata, vil du også opdage, at hvis $x_2<5$, så er alle punkter lyserøde eller gule (svarende til valg 3 og 4), mens alle punkter, hvor $x_2 \geq 5$ er lyse- eller mørkeblå (valg 1 og 2). Det kunne jo få en til at tænke, om det i virkeligheden ville være nok at svare på spørgsmål 2, uden at det går udover klassifikationsnøjagtigheden. Det vil man kunne undersøge ved at lave en model med kun $x_2$ som inputvariabel og en anden model med alle tre inputvariable og så for eksempel vurdere de to modellers klassifikationsnøjagtighed ved hjælp af [krydsvalidering](../krydsvalidering/krydsvalidering.qmd), men det ligger uden for formålet med denne note.
 
 I @fig-trainingdata_tre_nye_elever er de tre nye elever indtegnet sammen med træningsdata. Når man ser, hvordan de tre nye elever ligger i forhold til de andre punkter i træningsdata, så giver det faktisk god mening, at Anton bliver \"farvet\" gul, mens Signe og Mads bliver \"farvet\" lyseblå.
 
