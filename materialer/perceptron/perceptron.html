@@ -479,11 +479,11 @@ error = t-o
 \]</span></p></li>
 <li><p>Opdatér alle vægtene: <span class="math display">\[
 \begin{aligned}
-w_0 \leftarrow w_0 + &amp; \eta \cdot error \\
-w_1 \leftarrow w_1 + &amp; \eta \cdot  error \cdot x_1 \\
-w_2 \leftarrow w_2 + &amp; \eta \cdot  error \cdot x_2 \\
+w_0^{(\textrm{ny})} \leftarrow w_0 + &amp; \eta \cdot error \\
+w_1^{(\textrm{ny})} \leftarrow w_1 + &amp; \eta \cdot  error \cdot x_1 \\
+w_2^{(\textrm{ny})} \leftarrow w_2 + &amp; \eta \cdot  error \cdot x_2 \\
 &amp; \vdots  \\
-w_n \leftarrow w_n + &amp; \eta \cdot  error \cdot x_n \\
+w_n^{(\textrm{ny})} \leftarrow w_n + &amp; \eta \cdot  error \cdot x_n \\
 \end{aligned}
 \]</span> Her er <span class="math inline">\(\eta\)</span> (udtales “eta”) et tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>, som kaldes for en <em>learning rate</em> (på dansk: en læringsrate). Værdien af <span class="math inline">\(\eta\)</span> afgør hvor hurtigt, vi skal opdatere vægtene. Hvis <span class="math inline">\(\eta\)</span> er tæt på <span class="math inline">\(0\)</span> opdateres vægtene langsomt, hvorimod en værdi af <span class="math inline">\(\eta\)</span> tæt på <span class="math inline">\(1\)</span> vil betyde, at vægtene opdateres hurtigt.</p></li>
 <li><p>Start forfra med det næste træningseksempel indtil værdien af vægtene ikke ændrer sig.</p></li>
@@ -576,11 +576,11 @@ error = t-o=1-1=0
 \end{aligned}
 \]</span> og derfor ender vi også med ikke at opdatere nogle af vægtene, fordi vi generelt har (hvor <span class="math inline">\(x_0=1\)</span>): <span class="math display">\[
 \begin{aligned}
-w_i \leftarrow w_i + \eta \cdot error \cdot x_i,
+w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot error \cdot x_i,
 \end{aligned}
 \]</span> men når <span class="math inline">\(error=0\)</span> ender vi bare med <span class="math display">\[
 \begin{aligned}
-w_i \leftarrow w_i.
+w_i^{(\textrm{ny})} \leftarrow w_i.
 \end{aligned}
 \]</span> Altså ingen opdatering af vægtene. Det giver jo rigtig god mening, eftersom det første træningseksempel blev klassificeret korrekt.</p>
 <p>Vi går nu videre til det næste træningseksempel og udregner: <span class="math display">\[
@@ -593,9 +593,9 @@ error = t-o=-1-1=-2.
 \end{aligned}
 \]</span> Vores vægte skal derfor opdateres til <span class="math display">\[
 \begin{aligned}
-w_0 &amp;\leftarrow 0.5 +0.5 \cdot (-2) = -0.5 \\
-w_1 &amp;\leftarrow 0.5 +0.5 \cdot (-2) \cdot (-1) = 1.5 \\
-w_2 &amp;\leftarrow 0.5 +0.5 \cdot (-2) \cdot 1= -0.5 \\
+w_0^{(\textrm{ny})} &amp;\leftarrow 0.5 +0.5 \cdot (-2) = -0.5 \\
+w_1^{(\textrm{ny})} &amp;\leftarrow 0.5 +0.5 \cdot (-2) \cdot (-1) = 1.5 \\
+w_2^{(\textrm{ny})} &amp;\leftarrow 0.5 +0.5 \cdot (-2) \cdot 1= -0.5 \\
 \end{aligned}
 \]</span></p>
 <p>Så går vi videre til træningseksempel <span class="math inline">\(3\)</span> og udregner igen (men nu med de nye vægte!): <span class="math display">\[
@@ -658,7 +658,7 @@ error = t-o=0
 \end{aligned}
 \]</span> og vi kommer slet ikke til at opdatere vægtene, fordi vi bare ender med <span class="math display">\[
 \begin{aligned}
-w_i \leftarrow w_i.
+w_i^{(\textrm{ny})} \leftarrow w_i.
 \end{aligned}
 \]</span> Hvis vi derimod står i den situation, at vores træningsdata ikke klassificeres korrekt, så vil <span class="math inline">\(t \neq o\)</span>. Der er her to muligheder: <span class="math display">\[
 \begin{aligned}
@@ -675,7 +675,7 @@ y_{old} = w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n.
 \end{aligned}
 \]</span> Vi ville egentlig gerne have, at denne værdi <span class="math inline">\(y_{old}\)</span> havde været positiv, fordi så ville vi have fået en rigtig klassificering. Vi ser nu på, hvad der sker efter opdateringen af vægtene. Da <span class="math inline">\(error=2\)</span> i mulighed <span class="math inline">\(1\)</span> har vi opdateringsreglen (hvor <span class="math inline">\(x_0=1\)</span>): <span class="math display">\[
 \begin{aligned}
-w_i \leftarrow w_i + \eta \cdot error \cdot x_i = w_i + \eta \cdot 2 \cdot x_i.
+w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot error \cdot x_i = w_i + \eta \cdot 2 \cdot x_i.
 \end{aligned}
 \]</span> Det vil sige, at næste gang vi skal beregne vores outputværdi, så skal vi bruge de nye vægte og udregne (vi kalder nu den nye værdi for <span class="math inline">\(y_{new}\)</span>): <span class="math display">\[
 \begin{aligned}
@@ -702,7 +702,7 @@ w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n \geq 0,
 \end{aligned}
 \]</span> hvor vi egentlig gerne ville have haft, at denne værdi havde været negativ. I mulighed <span class="math inline">\(2\)</span> er fejlen <span class="math inline">\(error=-2\)</span> og opdateringsreglen bliver derfor <span class="math display">\[
 \begin{aligned}
-w_i \leftarrow w_i + \eta \cdot error \cdot x_i = w_i -\eta \cdot 2 \cdot x_i.
+w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot error \cdot x_i = w_i -\eta \cdot 2 \cdot x_i.
 \end{aligned}
 \]</span> Med et helt tilsvarende argument som ovenfor, kan man nu vise, at <span class="math display">\[
 \begin{aligned}
@@ -848,10 +848,10 @@ Figur&nbsp;9: Grafen for en tabsfunktion som afhænger af vægtene <span class="
 \end{aligned}
 \]</span> Fremgangsmåden bliver derfor den, at vi starter i nogle tilfældige <span class="math inline">\((w_0, w_1)\)</span>-værdier og så bevæger vi os et lille skridt i den negative gradients retning. Så ender vi i et nyt punkt, hvor vi igen beregner gradienten og går igen et lille skridt i den negative gradients retning. Sådan fortsætter vi indtil værdien af tabsfunktionen ikke rigtig ændrer sig mere – det svarer til, at vi har ramt dalen. Derfor bliver vores opdateringsregler med denne metode <span class="math display">\[
 \begin{aligned}
-w_0 \leftarrow &amp; w_0 - \eta \cdot \frac{\partial E }{\partial w_0} \\
-w_1 \leftarrow &amp; w_1 - \eta \cdot \frac{\partial E }{\partial w_1} \\
+w_0^{(\textrm{ny})} \leftarrow &amp; w_0 - \eta \cdot \frac{\partial E }{\partial w_0} \\
+w_1^{(\textrm{ny})} \leftarrow &amp; w_1 - \eta \cdot \frac{\partial E }{\partial w_1} \\
 &amp;\vdots  \\
-w_n \leftarrow &amp; w_n - \eta \cdot \frac{\partial E }{\partial w_n} \\
+w_n^{(\textrm{ny})} \leftarrow &amp; w_n - \eta \cdot \frac{\partial E }{\partial w_n} \\
 \end{aligned}
 \]</span> Her er <span class="math inline">\(\eta\)</span> igen en <em>learning rate</em> f.eks. <span class="math inline">\(0.05\)</span>, som sørger for, at vi hele tiden bare tager et lille skridt i den negative gradients retning. Man vælger værdien af <span class="math inline">\(\eta\)</span> lille for ikke at lave alt for store justeringer af vægtene ad gangen. Det svarer grafisk til, at vi lige så stille går ned af den bakke, som tabsfunktionen giver (se <a href="#fig-tabsfunktion" class="quarto-xref">figur&nbsp;9</a>). Hvis vi tager for store skridt, risikerer vi helt, at komme til at “træde forbi” det minimum, som vi gerne vil lande i. Omvendt vil alt for små skridt føre til, at vi alt for langsomt nærmer os minimum. Så værdien af <span class="math inline">\(\eta\)</span> angiver altså, hvor meget vi er villige til at justere vægtene og dermed hvor hurtige eller hvor langsomme, vi bevæger os ned mod minimum. Af den grund giver det god mening, at <span class="math inline">\(\eta\)</span> kaldes for en <em>learning rate</em> - fordi den afgører, hvor hurtigt vi lærer af vores træningsdata.</p>
 <p>Nu mangler vi bare at få bestemt de partielle afledede. Ved at bruge sumreglen og kædereglen for differentiation får vi fra (<a href="#eq-tabsfunktion" class="quarto-xref">3</a>), at <span class="math display">\[
@@ -880,12 +880,12 @@ t^{(m)}-(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})
 \end{aligned}
 \]</span> Altså bliver vores opdateringsregler <span class="math display">\[
 \begin{aligned}
-w_0 \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-
+w_0^{(\textrm{ny})} \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-
 (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)  \\
-w_1 \leftarrow &amp; w_1 + \eta \cdot  \sum_{m=1}^{M} \left (t^{(m)}-
+w_1^{(\textrm{ny})} \leftarrow &amp; w_1 + \eta \cdot  \sum_{m=1}^{M} \left (t^{(m)}-
 (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \cdot \left (x_1^{(m)} \right)\\
 &amp;\vdots  \\
-w_n \leftarrow &amp; w_n + \eta \cdot  \sum_{m=1}^{M} \left (t^{(m)}-
+w_n^{(\textrm{ny})} \leftarrow &amp; w_n + \eta \cdot  \sum_{m=1}^{M} \left (t^{(m)}-
 (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \cdot \left (x_n^{(m)} \right)\\
 \end{aligned}
 \]</span> Vi kan altså sammenfatte gradientnedstigningsalgoritmen (ADALINE) på denne måde:</p>
@@ -914,10 +914,10 @@ error_n &amp;= \sum_{m=1}^{M} \left (t^{(m)}-(w_0 + w_1 \cdot x_1^{(m)} + \cdots
 \]</span></p></li>
 <li><p>Opdatér alle vægtene: <span class="math display">\[
 \begin{aligned}
-w_0  \leftarrow &amp; w_0 + \eta \cdot error_0 \\
-w_1  \leftarrow &amp; w_1 + \eta \cdot error_1 \\
+w_0^{(\textrm{ny})}  \leftarrow &amp; w_0 + \eta \cdot error_0 \\
+w_1^{(\textrm{ny})}  \leftarrow &amp; w_1 + \eta \cdot error_1 \\
 &amp; \vdots \\
-w_n  \leftarrow &amp; w_n + \eta \cdot error_n
+w_n^{(\textrm{ny})}  \leftarrow &amp; w_n + \eta \cdot error_n
 \end{aligned}
 \]</span></p></li>
 <li><p>Start forfra indtil værdien af tabsfunktionen ikke ændrer sig (særlig meget).</p></li>
@@ -930,11 +930,11 @@ w_n  \leftarrow &amp; w_n + \eta \cdot error_n
 <h2 class="anchored" data-anchor-id="eksempel-på-gradientnedstigning">Eksempel på gradientnedstigning</h2>
 <p>Lad os prøve at bruge gradientnedstigning på vores eksempel omkring kandidattest. I dette simple eksempel bliver vores opdateringsregler nu <span class="math display">\[
 \begin{aligned}
-w_0 \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{6} \left (t^{(m)}-
+w_0^{(\textrm{ny})} \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{6} \left (t^{(m)}-
 (w_0 + w_1 \cdot x_1^{(m)} + w_2 \cdot x_2^{(m)}) \right)  \\
-w_1 \leftarrow &amp; w_1 + \eta \cdot  \sum_{m=1}^{6} \left (t^{(m)}-
+w_1^{(\textrm{ny})} \leftarrow &amp; w_1 + \eta \cdot  \sum_{m=1}^{6} \left (t^{(m)}-
 (w_0 + w_1 \cdot x_1^{(m)} + w_2 \cdot x_2^{(m)}) \right) \cdot \left (x_1^{(m)} \right)\\
-w_2 \leftarrow &amp; w_2 + \eta \cdot  \sum_{m=1}^{6} \left (t^{(m)}-
+w_2^{(\textrm{ny})} \leftarrow &amp; w_2 + \eta \cdot  \sum_{m=1}^{6} \left (t^{(m)}-
 (w_0 + w_1 \cdot x_1^{(m)}  + w_2 \cdot x_2^{(m)}) \right) \cdot \left (x_2^{(m)} \right)
 \end{aligned}
 \]</span> Hvis man bruger disse opdateringsregler på dataene fra <a href="#tbl-trainingdata_tabel" class="quarto-xref">tabel&nbsp;1</a>, så ender man med følgende værdier af vægtene <span class="math display">\[

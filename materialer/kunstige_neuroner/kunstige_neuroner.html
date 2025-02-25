@@ -351,10 +351,10 @@ E(w_0, w_1, &amp;\dots, w_n) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}
 <p>Når vi for alle vægtene bevæger os et lille stykke i den negative gradients retning, kan opdateringen af vægtene skrives sådan her:</p>
 <p><span class="math display">\[
 \begin{aligned}
-w_0 \leftarrow &amp; w_0 - \eta \cdot \frac{\partial E }{\partial w_0} \\
-w_1 \leftarrow &amp; w_1 - \eta \cdot \frac{\partial E }{\partial w_1} \\
+w_0^{(\textrm{ny})} \leftarrow &amp; w_0 - \eta \cdot \frac{\partial E }{\partial w_0} \\
+w_1^{(\textrm{ny})} \leftarrow &amp; w_1 - \eta \cdot \frac{\partial E }{\partial w_1} \\
 &amp;\vdots  \\
-w_n \leftarrow &amp; w_n - \eta \cdot \frac{\partial E }{\partial w_n} \\
+w_n^{(\textrm{ny})} \leftarrow &amp; w_n - \eta \cdot \frac{\partial E }{\partial w_n} \\
 \end{aligned}
 \]</span></p>
 <p>hvor <span class="math inline">\(\eta\)</span> (udtales "eta") kaldes for en <em>learning rate</em>. Det er <span class="math inline">\(\eta\)</span>, som bestemmer hvor stort et skridt i gradientens retning, vi tager. Den konkrete værdi af <span class="math inline">\(\eta\)</span> sættes til et lille tal større end <span class="math inline">\(0\)</span>. Det kunne for eksempel være <span class="math inline">\(0.01\)</span>, men her må man prøve sig lidt frem. Pilene til venstre illustrerer opdatering af vægtene.</p>
@@ -442,10 +442,10 @@ Opdateringsregler for kunstige neuroner
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[
 \begin{aligned}
-w_0 \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \\
-w_1 \leftarrow &amp; w_1 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x_1^{(m)}\\
+w_0^{(\textrm{ny})} \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \\
+w_1^{(\textrm{ny})} \leftarrow &amp; w_1 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x_1^{(m)}\\
 &amp;\vdots  \\
-w_n \leftarrow &amp; w_n + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x_n^{(m)}
+w_n^{(\textrm{ny})} \leftarrow &amp; w_n + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x_n^{(m)}
 \end{aligned}
 \]</span></p>
 <p>hvor <span class="math inline">\(o^{(m)} = \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})\)</span>.</p>
@@ -587,7 +587,7 @@ Opdateringsregler – Perceptron Learning Algoritmen
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Vægtene opdateres således – ét træningseksempel ad gangen: <span class="math display">\[
-w_i \leftarrow w_i +  \eta \cdot  (t-o) \cdot x_i
+w_i^{(\textrm{ny})} \leftarrow w_i +  \eta \cdot  (t-o) \cdot x_i
 \]</span> for <span class="math inline">\(i \in \{0, 1, 2, \dots, n\}\)</span>, hvis vi sætter <span class="math inline">\(x_0=1\)</span>.</p>
 </div>
 </div>
@@ -627,7 +627,7 @@ Opdateringsregler – ADALINE
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Vægtene opdateres således: <span class="math display">\[
-w_i \leftarrow w_i + \eta \cdot  \sum_{m=1}^{M} \left (t^{(m)}-
+w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot  \sum_{m=1}^{M} \left (t^{(m)}-
 \left (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} \right ) \right) \cdot \left (x_i^{(m)} \right)
 \]</span> for <span class="math inline">\(i \in \{0, 1, 2, \dots, n\}\)</span>, hvis vi sætter <span class="math inline">\(x_0^{(m)}=1\)</span> for alle værdier af <span class="math inline">\(m\)</span>.</p>
 </div>
@@ -667,7 +667,7 @@ Opdateringsregler – Kunstige neuroner
 <div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Vægtene opdateres således: <span class="math display">\[
-w_i \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot \left (1-o^{(m)} \right) \cdot x_i^{(m)}
+w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot \left (1-o^{(m)} \right) \cdot x_i^{(m)}
 \]</span> for <span class="math inline">\(i \in \{0, 1, 2, \dots, n\}\)</span>, hvis vi sætter <span class="math inline">\(x_0^{(m)}=1\)</span> for alle værdier af <span class="math inline">\(m\)</span> og hvor <span class="math display">\[
 o^{(m)} = \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}).
 \]</span></p>
