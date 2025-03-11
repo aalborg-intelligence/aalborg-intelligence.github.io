@@ -3,6 +3,21 @@ title: "Kunstige neuroner"
 image: "images/simplet_netvaerk2.png"
 description-meta: "I denne note behandles kunstige neuroner, som er en udvidelse af den klassiske perceptron, men med den tilføjelse at vi her indfører en aktiveringsfunktion. De kunstige neuroner er de byggesten, som et kunstigt neuralt netværk består af, og kan dermed ses som en trædesten på vej mod at forstå generelle kunstige neurale netværk."
 from: markdown+emoji
+listing:
+  id: main-listing-content
+  field-display-names:
+    description-meta: " "
+    title: "Forløb"
+  filter-ui: false 
+  sort-ui: false 
+  sort: false
+  type: table
+  contents: 
+    - path: ../../undervisningsforloeb/aktiveringsfunktioner.qmd 
+    - path: ../../undervisningsforloeb/screeningsprogrammer.qmd 
+    - path: ../../undervisningsforloeb/opklar_et_mord.qmd 
+    - path: ../../undervisningsforloeb/Opdatering_af_vægte_i_en_kunstig_neuron.qmd
+  fields: [title, description-meta] 
 ---
 
 Vi vil her beskrive **kunstige neuroner**, som er en udvidelse af den klassiske perceptron, men med den tilføjelse at vi her indfører en såkaldt aktiveringsfunktion. De kunstige neuroner er de byggesten, som et kunstigt neuralt netværk består af, og kan dermed ses som en trædesten på vej mod at forstå generelle kunstige neurale netværk.
@@ -152,7 +167,7 @@ E(w_0, w_1, &\dots, w_n) \\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
 \end{aligned}
 $$
 
-Det er en [funktion af flere variable](../funktioner_af_flere_variable/funktioner_af_flere_variable.qmd). I princippet kan man bestemme minimum ved at sætte alle de partielle afledede lig med $0$ og dernæst overbevise sig selv om, at man har fundet et minimum. Det vil give et ligningssystem med $n+1$ ligninger, som alle er koblet med hinanden. Det viser sig, at være en beregningsmæssig tung opgave at løse dette ligningssystem analytisk. Derfor bruger man i stedet for den metode, som kaldes for [gradientnedstigning](../gradientnedstigning/graditentnedstigning.qmd). Gradientnedstigning går ud på først at vælge tilfældige værdier af vægtene $w_0, w_1, \cdots, w_n$. Det viser sig så, at den negative gradient vil pege i den retning, hvor funktionsværdien falder mest. Derfor er idéen at bevæge sig et lille stykke i den negative gradients retning -- fordi vi så kommer lidt tættere på minimum. Når vi har gjort det, beregner vi gradienten igen, og bevæger os igen et lille stykke i den negative gradients retning. Det forsætter vi med indtil værdien af tabsfunktionen ikke ændrer sig særlig meget, hvilket svarer til, at vi har fundet minimum.  
+Det er en [funktion af flere variable](../funktioner_af_flere_variable/funktioner_af_flere_variable.qmd). I princippet kan man bestemme minimum ved at sætte alle de partielle afledede lig med $0$ og dernæst overbevise sig selv om, at man har fundet et minimum. Det vil give et ligningssystem med $n+1$ ligninger, som alle er koblet med hinanden. Det viser sig, at være en beregningsmæssig tung opgave at løse dette ligningssystem analytisk. Derfor bruger man i stedet for den metode, som kaldes for [gradientnedstigning](../gradientnedstigning/gradientnedstigning.qmd). Gradientnedstigning går ud på først at vælge tilfældige værdier af vægtene $w_0, w_1, \cdots, w_n$. Det viser sig så, at den negative gradient vil pege i den retning, hvor funktionsværdien falder mest. Derfor er idéen at bevæge sig et lille stykke i den negative gradients retning -- fordi vi så kommer lidt tættere på minimum. Når vi har gjort det, beregner vi gradienten igen, og bevæger os igen et lille stykke i den negative gradients retning. Det forsætter vi med indtil værdien af tabsfunktionen ikke ændrer sig særlig meget, hvilket svarer til, at vi har fundet minimum.  
 
 Når vi for alle vægtene bevæger os et lille stykke i den negative gradients retning, kan opdateringen af vægtene skrives sådan her:
 
@@ -211,7 +226,7 @@ $$
 \end{aligned}
 $$
 
-Vi mangler nu bare at finde den afledede sigmoid-funktion. Man kan vise -- [se forløbet om aktiveringsfunktioner](../../undervisningsforloeb/aktiveringsfunktioner/aktiveringsfunktioner.qmd) -- at
+Vi mangler nu bare at finde den afledede sigmoid-funktion. Man kan vise -- [se forløbet om aktiveringsfunktioner](../../undervisningsforloeb/aktiveringsfunktioner.qmd) -- at
 
 $$
 \sigma'(x)=\sigma(x)\cdot(1-\sigma(x))
@@ -431,7 +446,7 @@ På @fig-alder_vs_forbrug_eks ses de to punkter $(50,3500)$ og $(65,2800)$, som 
 
 ## Aktiviteringsfunktioner
 
-Sigmoid-funktionen, som er anvendt her, kaldes for en **aktiveringsfunktion**. Her brugte vi den, fordi den har den egenskab, at værdimængden er $(0,1)$, og derfor kan outputværdien fra sigmoid-funktionen fortolkes som en sandsynlighed. Men man behøver ikke nødvendigvis at bruge sigmoid-funktionen som aktiveringsfunktion. Der findes en lang række andre aktiveringsfunktioner, som kan bruges i stedet for. Hvis du har lyst til at lære mere, kan du se på vores [forløb om andre aktiveringsfunktioner](../../undervisningsforloeb/aktiveringsfunktioner/aktiveringsfunktioner.qmd).
+Sigmoid-funktionen, som er anvendt her, kaldes for en **aktiveringsfunktion**. Her brugte vi den, fordi den har den egenskab, at værdimængden er $(0,1)$, og derfor kan outputværdien fra sigmoid-funktionen fortolkes som en sandsynlighed. Men man behøver ikke nødvendigvis at bruge sigmoid-funktionen som aktiveringsfunktion. Der findes en lang række andre aktiveringsfunktioner, som kan bruges i stedet for. Hvis du har lyst til at lære mere, kan du se på vores [forløb om andre aktiveringsfunktioner](../../undervisningsforloeb/aktiveringsfunktioner.qmd).
 
 ## Smartere end ADALINE?
 
@@ -587,6 +602,12 @@ I tabellen herunder finder du et samlet overblik over perceptron learning algori
 | ADALINE | Nej | Identiteten | ![](images/identiteten.png) | $\{-1,1\}$ | $0$ |
 | Kunstig neuron | Nej | Sigmoid eller andre | ![](images/sigmoid.png) | $\{0,1\}$ | $0$ |
 | Generelle neurale netværk | Nej | Sigmoid eller andre | ![](images/sigmoid.png) | $\{0,1\}$ | $\geq 1$ |
+
+
+## Relaterede forløb
+
+::: {#main-listing-content}
+:::
 
 
 # Videre læsning
