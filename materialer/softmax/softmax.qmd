@@ -135,7 +135,7 @@ Punktplot af træningsdata fra @tbl-trainingdata. Punkternes farve angiver valge
 
 Det, vi gerne vil nu, er at lave et meget simpelt kunstigt neuralt netværk, som vi fremover kan bruge til at forudsige, hvilket valg du skal træffe baseret på svaret på de tre spørgsmål. Så idéen er altså, at du i et fremtidsscenarie svarer på de tre spørgsmål, og så fortæller din nye AI assistent dig, hvilket valg du skal træffe. Det er da smart -- eller måske lidt dumt, men nu er det jo også bare et eksempel!
 
-Lad os forklare hvordan man kan gøre det -- blot i et lidt mere generelt tilfælde.
+Lad os forklare, hvordan man kan gøre det -- blot i et lidt mere generelt tilfælde.
 
 
 
@@ -452,7 +452,7 @@ $$ {#eq-cross_entropy}
 
 Husk på at outputværdierne $o_i$ afhænger af $z$-værdierne via (@eq-o_j), mens $z$-værdierne afhænger af vægtene via (@eq-z_j). Altså afhænger tabsfunktionen også indirekte af alle vægtene. 
 
-Når man skal minimere [en funktion, som afhænger af flere variable](../funktioner_af_flere_variable/funktioner_af_flere_variable.qmd) (her vægtene) kan det gøres ved hjælp af en metode, som kaldes for [gradientnedstigning](../gradientnedstigning/gradientnedstigning.qmd). Vi vil her kort forklare, hvad det går ud på.
+Når man skal minimere [en funktion, som afhænger af flere variable](../funktioner_af_flere_variable/funktioner_af_flere_variable.qmd) (her vægtene), kan man finde alle de partielle afledede og sætte dem lig med $0$ (ligesom du sikkert er vant til, at løse $f'(x)=0$, hvis du skal bestemme minimum for funktionen $f$). Det vil give lige så mange ligninger, som der er vægte, og desuden vil ligningerne være koblet med hinanden. Det betyder, at denne fremgangsmåde er  beregningsmæssig tung og/eller vil kræve alt for meget plads på en computer. Derfor vælger man i stedet at bruge en approksimativ metode, som kaldes for [gradientnedstigning](../gradientnedstigning/gradientnedstigning.qmd). Vi vil her kort forklare, hvad det går ud på.
 
 Hvis en funktion $f$ afhænger af $x_1, x_2, \dots, x_n$ så kaldes den vektor, som består af alle de partielle afledede for gradienten:
 
@@ -466,11 +466,11 @@ $$
  \end{pmatrix}.
 $$
 
-Det viser sig, at denne gradient peger i den retning, hvor funktionsværdien *vokser mest*. Omvendt vil minus gradienten $-\nabla f(x_1, x_2, \dots, x_n)$ pege i den retning, hvor funktionsværdien *falder mest*. Hvis vi derfor står et vilkårligt sted på grafen for $f$ og går et lille skridt i den negative gradientens retning, så vil vi være på vej ned mod et minimum (eventuelt kun lokalt). Når vi har gået det lille skridt, udregner vi gradienten igen og bevæger os igen et lille skridt i den negative gradients retning[^1]. Sådan fortsætter man indstil funktionsværdien ikke ændrer sig ret meget -- det svarer forhåbentlig til, at vi har fundet et (lokalt) minimum.
+Det viser sig, at denne gradient peger i den retning, hvor funktionsværdien *vokser mest*. Omvendt vil minus gradienten $-\nabla f(x_1, x_2, \dots, x_n)$ pege i den retning, hvor funktionsværdien *aftager mest*. Hvis vi derfor står et vilkårligt sted på grafen for $f$ og går et lille skridt i den negative gradientens retning, så vil vi være på vej ned mod et minimum (eventuelt kun lokalt). Når vi har gået det lille skridt, udregner vi gradienten igen og bevæger os igen et lille skridt i den negative gradients retning[^1]. Sådan fortsætter man indstil funktionsværdien ikke ændrer sig ret meget -- det svarer forhåbentlig til, at vi har fundet et (lokalt) minimum.
 
 [^1]: Du kan tænke på gradienten som et kompas, der hele tiden viser dig, hvilken vej du skal gå for at bevæge dig ned mod et minimum.
 
-Derfor når vægten $w_{j,k}$ skal opdateres, så gør vi følgende:
+Nu hedder vores funktion ikke $f$, men $E$, og $E$ afhænger af alle vægtene $w_{j,k}$. Derfor, når vægten $w_{j,k}$ skal opdateres, så gør vi følgende:
 
 $$
 w_{j,k}^{\textrm{ny}} \leftarrow w_{j,k} - \eta \cdot \frac{\partial E}{\partial w_{j,k}}.
@@ -484,17 +484,30 @@ $$
 \frac{\partial E}{\partial w_{j,k}}.
 $$
 
-Hvis vi ser på @fig-netvaerk_generelt_wjk kan vi se, at $w_{j,k}$ kun har indflydelse på $z_j$ og dermed $o_j$.
+Hvis vi ser på @fig-netvaerk_generelt_wjk kan vi se, at $w_{j,k}$ kun har indflydelse på $z_j$. Til gengæld har alle $z$-værdier indflydelse på alle $o$-værdierne på grund af udtrykket i (@eq-o_j).
 
 ![Neuralt netværk hvor vægtene fra de $n$ input neuroner over til den $i$'te output neuron er vist.](images/netvaerk_generelt_wjk.png){width=50% #fig-netvaerk_generelt_wjk}
 
-Derfor kan vi ved hjælp af kædereglen finde den partielle afledede af $E$ med hensyn til $w_{j,k}$ på denne måde[^2]
+Derfor kan vi ved hjælp af kædereglen for flere variable finde den partielle afledede af $E$ med hensyn til $w_{j,k}$ på denne måde
+
+$$
+\frac{\partial E}{\partial w_{j,k}} = \sum_{i=1}^J \frac{\partial E}{\partial z_i} \cdot \frac{\partial z_i}{\partial w_{j,k}}
+$$
+
+Men da $w_{j,k}$ kun har indflydelse på $z_j$ (jævnfør @fig-netvaerk_generelt_wjk og (@eq-z_j)), så vil
+
+$$
+\frac{\partial z_i}{\partial w_{j,k}}=0 \qquad \text{når} \qquad i \neq j
+$$ 
+
+og derfor kan vi nøjes med følgende forsimplede udtryk
+
 
 $$
 \frac{\partial E}{\partial w_{j,k}} = \frac{\partial E}{\partial z_j} \cdot \frac{\partial z_j}{\partial w_{j,k}}
 $$ {#eq-partialE_w_jk}
 
-[^2]: Da tabsfunktionen afhænger af alle $z$-værdierne, skal man egentlig bruge kædereglen af flere variable, så det bliver $\frac{\partial E}{\partial w_{j,k}} = \sum_{i=1}^J \frac{\partial E}{\partial z_i} \cdot \frac{\partial z_i}{\partial w_{j,k}}$, men $\frac{\partial z_i}{\partial w_{j,k}}=0$ når $i \neq j$ og derfor kan vi nøjes med udtrykket i (@eq-partialE_w_jk).
+
 
 Vi starter med at regne på den sidste faktor $\frac{\partial z_j}{\partial w_{j,k}}$ (fordi den er nemmeste!). Ifølge (@eq-z_j) er
 
@@ -509,8 +522,10 @@ $$ {#eq-partial_z_j_w_jk}
 For at bestemme den første faktor $\frac{\partial E}{\partial z_j}$ bruger vi definitionen af tabsfunktionen i (@eq-cross_entropy):
 
 $$
-\frac{\partial E}{\partial z_j} = - \sum_{i=1}^J t_i \cdot \frac{1}{o_i} \cdot \frac{\partial o_i}{\partial z_j}
+\frac{\partial E}{\partial z_j} = - \sum_{i=1}^J t_i \cdot \frac{1}{o_i} \cdot \frac{\partial o_i}{\partial z_j},
 $$ {#eq-partialE_z_j}
+
+hvor vi har brugt, at $\ln(o_i)$ differentieret er $\frac{1}{o_i}$.
 
 Nu er
 
@@ -717,7 +732,7 @@ Træningsdata fra 12 elever inklusion de bergende outputværdier.
 
 [^4]: Bemærk, at hvis $o_1+o_2+o_3+ o_4$ ikke giver $1$, så skyldes det afrunding.
 
-Et netværk vil altid være forholdsvis god til at prædiktere korrekt på de data, som netværket er trænet på. Det kan du læse mere om i noten om [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd). Med det i baghovedet kan vi alligevel se fra @tbl-prediction se, at den prædikterede sandsynlighed for det valg, som hver elev træffer, er høj. For eksempel vælger elev nr. 1 også valg 1 (at blive i klassen), og den prædikterede sandsynlighed for dette valg er $o_1 = 0.98$. 
+Et netværk vil altid være forholdsvis godt til at prædiktere korrekt på de data, som netværket er trænet på. Det kan du læse mere om i noten om [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd). Med det i baghovedet kan vi alligevel se fra @tbl-prediction se, at den prædikterede sandsynlighed for det valg, som hver elev træffer, er høj. For eksempel vælger elev nr. 1 også valg 1 (at blive i klassen), og den prædikterede sandsynlighed for dette valg er $o_1 = 0.98$. 
 
 For elev nr. 2 kan vi se, at vores AI assistent er i tvivl om ($o_1=o_2=0.50$), om den skal anbefale valg 1 eller 2 (eleven har valgt 1). For elev nr. 7 vil vores AI assisten anbefale valg 1 ($o_1 = 0.70$), men eleven træffer i virkeligheden valg 2. De resterende anbefalinger er korrekte.
 
@@ -731,7 +746,7 @@ Punktplot af træningsdata fra @tbl-prediction. Punkternes farve angiver valget 
 :::
 
 
-Nu er idéen jo ikke at komme med et godt råd til de elever, som allerede har truffet et valg (svarende til at prædiktere på trænignsdata), men derimod at vejlede kommende elever.
+Nu er idéen jo ikke at komme med et godt råd til de elever, som allerede har truffet et valg (svarende til at prædiktere på træningsdata), men derimod at vejlede kommende elever.
 
 Byd derfor velkommen til tre nye elever:
 
