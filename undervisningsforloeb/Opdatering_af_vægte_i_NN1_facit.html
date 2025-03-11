@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Facit til forløb om opdatering af vægte i et simpelt neuralt netværk med to skjulte lag – AI MAT - matematikken bag magien</title>
+<title>Facit til forløb om opdatering af vægte i et simpelt neuralt netværk med ét skjulte lag – AI MAT - matematikken bag magien</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -187,7 +187,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Facit til forløb om opdatering af vægte i et simpelt neuralt netværk med to skjulte lag</h1>
+<h1 class="title">Facit til forløb om opdatering af vægte i et simpelt neuralt netværk med ét skjulte lag</h1>
 </div>
 
 
@@ -216,8 +216,10 @@ Facit til opgave 1
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Summen giver 1.9773575, 2.9659487, 4.4468601 for de 3 punkter.</p>
-<p><span class="math inline">\(y\)</span>-værdierne er 0.8783992, 0.9510119, 0.9884204</p>
+<p>Summen giver</p>
+<p>1.9773575, 2.9659487, 4.4468601</p>
+<p><span class="math inline">\(y\)</span>-værdierne er</p>
+<p>0.8783992, 0.9510119, 0.9884204</p>
 </div>
 </div>
 </div>
@@ -233,7 +235,8 @@ Facit til opgave 2
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><span class="math inline">\(o\)</span>-værdierne er 0.6738134, 0.6800149, 0.6831854</p>
+<p><span class="math inline">\(o\)</span>-værdierne er</p>
+<p>0.6738134, 0.6800149, 0.6831854</p>
 </div>
 </div>
 </div>
@@ -249,15 +252,15 @@ Facit til opgave 3
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><strong>De afledede</strong> <span class="math display">\[
+<p><span class="math inline">\(\delta_w^{(m)}\)</span>-værdierne er: <span class="math display">\[
    \begin{aligned}
    \delta_w^{(m)} &amp;= (t^{(m)}-o^{(m)} )  \\
    \end{aligned}
    \]</span></p>
-<p><strong><span class="math inline">\(w\)</span>-vægtene:</strong> <span class="math display">\[
+<p>Opdateringsregler for <span class="math inline">\(w\)</span>-vægtene: <span class="math display">\[
    \begin{aligned}
-   w_0^{\textrm{ny}} &amp;= w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
-   w_1^{\textrm{ny}} &amp;= w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot y^{(m)}\\
+   w_0^{\textrm{ny}} &amp; \leftarrow w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
+   w_1^{\textrm{ny}} &amp; \leftarrow w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot y^{(m)}\\
    \end{aligned}
    \]</span></p>
 </div>
@@ -276,11 +279,16 @@ Facit til opgave 4
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
-<li><span class="math inline">\(\delta_w\)</span>-værdierne er -0.7191802, 0.2736291, -0.7299771</li>
-<li>Summen giver -1.1755281</li>
-<li><span class="math inline">\(w_{0}^{ny}=\)</span> 0.3824472</li>
-<li>Summen giver -1.093027</li>
-<li><span class="math inline">\(w_{1}^{ny}=\)</span> 0.3905243</li>
+<li><p><span class="math inline">\(\delta_w\)</span>-værdierne er</p>
+<p>-0.7191802, 0.2736291, -0.7299771</p></li>
+<li><p>Summen</p>
+<p><span class="math inline">\(\sum_{m=1}^3 \delta_w^{(m)} =\)</span> -1.1755281</p></li>
+<li><p><span class="math inline">\(w_0\)</span>-vægten opdateres til</p>
+<p><span class="math inline">\(w_{0}^{ny}=\)</span> 0.3824472</p></li>
+<li><p>Summen</p>
+<p><span class="math inline">\(\sum_{m=1}^{3} \delta_w^{(m)} \cdot y^{(m)}=\)</span> -1.093027</p></li>
+<li><p><span class="math inline">\(w_1\)</span>-vægten opdateres til</p>
+<p><span class="math inline">\(w_{1}^{ny}=\)</span> 0.3905243</p></li>
 </ul>
 </div>
 </div>
@@ -297,15 +305,16 @@ Facit til opgave 5
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<p><span class="math inline">\(\delta_r^{(m)}\)</span>-værdierne er: <span class="math display">\[
+   \begin{aligned}
+   \delta_r^{(m)} &amp;= \delta_w^{(m)} \cdot w_1 \cdot y^{(m)} \cdot (1-y^{(m)})
+   \end{aligned}
+   \]</span> Opdateringsreglerne for <span class="math inline">\(r\)</span>-vægtene:</p>
 <p><span class="math display">\[
    \begin{aligned}
-   \delta_r^{(m)} &amp;= \delta_v^{(m)} \cdot w_1 \cdot y^{(m)} \cdot (1-y^{(m)})
-   \end{aligned}
-   \]</span> <span class="math display">\[
-   \begin{aligned}
-   r_0^{\textrm{ny}} &amp; =  r_0 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot 1 \\
-   r_1^{\textrm{ny}} &amp; =  r_1 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)} \\
-   r_2^{\textrm{ny}} &amp; =  r_2 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_n^{(m)}
+   r_0^{\textrm{ny}} &amp; \leftarrow  r_0 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot 1 \\
+   r_1^{\textrm{ny}} &amp; \leftarrow  r_1 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)} \\
+   r_2^{\textrm{ny}} &amp; \leftarrow  r_2 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_2^{(m)}
    \end{aligned}
    \]</span></p>
 </div>
@@ -324,13 +333,20 @@ Facit til opgave 6
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
-<li><span class="math inline">\(\delta_r\)</span>-værdierne er -0.0377547, 0.0061808, -0.0039660</li>
-<li>Summen giver -0.0355399</li>
-<li><span class="math inline">\(r_{0}^{ny}=\)</span> 0.496446</li>
-<li>Summen giver -0.0372911</li>
-<li><span class="math inline">\(r_{1}^{ny}=\)</span> 0.4962709</li>
-<li>Summen giver -0.0767971</li>
-<li><span class="math inline">\(r_{2}^{ny}=\)</span> 0.4923203</li>
+<li><p><span class="math inline">\(\delta_r\)</span>-værdierne er</p>
+<p>-0.0377547, 0.0061808, -0.0039660</p></li>
+<li><p>Summen</p>
+<p><span class="math inline">\(\sum_{m=1}^M \delta_r^{(m)}=\)</span> -0.0355399</p></li>
+<li><p><span class="math inline">\(r_0\)</span>-vægten opdateres til</p>
+<p><span class="math inline">\(r_{0}^{ny}=\)</span> 0.496446</p></li>
+<li><p>Summen</p>
+<p><span class="math inline">\(\sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)}=\)</span> -0.0372911</p></li>
+<li><p><span class="math inline">\(r_1\)</span>-vægten opdateres til</p>
+<p><span class="math inline">\(r_{1}^{ny}=\)</span> 0.4962709</p></li>
+<li><p>Summen</p>
+<p><span class="math inline">\(\sum_{m=1}^M \delta_r^{(m)} \cdot x_2^{(m)}=\)</span> -0.0767971</p></li>
+<li><p><span class="math inline">\(r_2\)</span>-vægten opdateres til</p>
+<p><span class="math inline">\(r_{2}^{ny}=\)</span> 0.4923203</p></li>
 </ul>
 </div>
 </div>
@@ -348,8 +364,8 @@ Facit til opgave 7
 <div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Tab før opdatering 2.8989851</li>
-<li>Tab efter første opdatering 2.6553645</li>
+<li>Værdien af tabsfunktionen før opdatering 2.8989851</li>
+<li>Værdien af tabsfunktionen efter første opdatering 2.6553645</li>
 </ul>
 </div>
 </div>
@@ -367,12 +383,12 @@ Facit til opgave 8
 <div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
-<li><span class="math inline">\(w_0\)</span> 0.2787458</li>
-<li><span class="math inline">\(w_1\)</span> 0.2942401</li>
-<li><span class="math inline">\(r_0\)</span> 0.4939121</li>
-<li><span class="math inline">\(r_1\)</span> 0.4937084</li>
-<li><span class="math inline">\(r_2\)</span> 0.4869186</li>
-<li>Tab efter anden opdatering 2.4674373</li>
+<li><span class="math inline">\(w_0 =\)</span> 0.2787458</li>
+<li><span class="math inline">\(w_1 =\)</span> 0.2942401</li>
+<li><span class="math inline">\(r_0 =\)</span> 0.4939121</li>
+<li><span class="math inline">\(r_1 =\)</span> 0.4937084</li>
+<li><span class="math inline">\(r_2 =\)</span> 0.4869186</li>
+<li>Værdien af tabsfunktionen efter anden opdatering 2.4674373</li>
 </ul>
 </div>
 </div>
