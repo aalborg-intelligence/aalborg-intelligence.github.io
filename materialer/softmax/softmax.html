@@ -538,7 +538,7 @@ Figur&nbsp;1: Punktplot af træningsdata fra <a href="#tbl-trainingdata" class="
 </figure>
 </div>
 <p>Det, vi gerne vil nu, er at lave et meget simpelt kunstigt neuralt netværk, som vi fremover kan bruge til at forudsige, hvilket valg du skal træffe baseret på svaret på de tre spørgsmål. Så idéen er altså, at du i et fremtidsscenarie svarer på de tre spørgsmål, og så fortæller din nye AI assistent dig, hvilket valg du skal træffe. Det er da smart – eller måske lidt dumt, men nu er det jo også bare et eksempel!</p>
-<p>Lad os forklare hvordan man kan gøre det – blot i et lidt mere generelt tilfælde.</p>
+<p>Lad os forklare, hvordan man kan gøre det – blot i et lidt mere generelt tilfælde.</p>
 </section>
 <section id="feedforward" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="feedforward">Feedforward</h2>
@@ -809,7 +809,7 @@ E &amp;= - \left( 0 \cdot \ln(0.10) + 1 \cdot \ln(0.85) + 0 \cdot \ln(0.03) + 0 
 E = - \sum_{i=1}^J t_i \cdot \ln(o_i)
 \tag{7}\]</span></span></p>
 <p>Husk på at outputværdierne <span class="math inline">\(o_i\)</span> afhænger af <span class="math inline">\(z\)</span>-værdierne via (<a href="#eq-o_j" class="quarto-xref">3</a>), mens <span class="math inline">\(z\)</span>-værdierne afhænger af vægtene via (<a href="#eq-z_j" class="quarto-xref">2</a>). Altså afhænger tabsfunktionen også indirekte af alle vægtene.</p>
-<p>Når man skal minimere <a href="../../materialer/funktioner_af_flere_variable/funktioner_af_flere_variable.html">en funktion, som afhænger af flere variable</a> (her vægtene) kan det gøres ved hjælp af en metode, som kaldes for <a href="../../materialer/gradientnedstigning/gradientnedstigning.html">gradientnedstigning</a>. Vi vil her kort forklare, hvad det går ud på.</p>
+<p>Når man skal minimere <a href="../../materialer/funktioner_af_flere_variable/funktioner_af_flere_variable.html">en funktion, som afhænger af flere variable</a> (her vægtene), kan man finde alle de partielle afledede og sætte dem lig med <span class="math inline">\(0\)</span> (ligesom du sikkert er vant til, at løse <span class="math inline">\(f'(x)=0\)</span>, hvis du skal bestemme minimum for funktionen <span class="math inline">\(f\)</span>). Det vil give lige så mange ligninger, som der er vægte, og desuden vil ligningerne være koblet med hinanden. Det betyder, at denne fremgangsmåde er beregningsmæssig tung og/eller vil kræve alt for meget plads på en computer. Derfor vælger man i stedet at bruge en approksimativ metode, som kaldes for <a href="../../materialer/gradientnedstigning/gradientnedstigning.html">gradientnedstigning</a>. Vi vil her kort forklare, hvad det går ud på.</p>
 <p>Hvis en funktion <span class="math inline">\(f\)</span> afhænger af <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> så kaldes den vektor, som består af alle de partielle afledede for gradienten:</p>
 <p><span class="math display">\[
 \nabla f(x_1, x_2, \dots, x_n) =
@@ -820,8 +820,8 @@ E = - \sum_{i=1}^J t_i \cdot \ln(o_i)
 \frac{\partial f}{\partial x_n}
 \end{pmatrix}.
 \]</span></p>
-<p>Det viser sig, at denne gradient peger i den retning, hvor funktionsværdien <em>vokser mest</em>. Omvendt vil minus gradienten <span class="math inline">\(-\nabla f(x_1, x_2, \dots, x_n)\)</span> pege i den retning, hvor funktionsværdien <em>falder mest</em>. Hvis vi derfor står et vilkårligt sted på grafen for <span class="math inline">\(f\)</span> og går et lille skridt i den negative gradientens retning, så vil vi være på vej ned mod et minimum (eventuelt kun lokalt). Når vi har gået det lille skridt, udregner vi gradienten igen og bevæger os igen et lille skridt i den negative gradients retning<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Sådan fortsætter man indstil funktionsværdien ikke ændrer sig ret meget – det svarer forhåbentlig til, at vi har fundet et (lokalt) minimum.</p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Du kan tænke på gradienten som et kompas, der hele tiden viser dig, hvilken vej du skal gå for at bevæge dig ned mod et minimum.</p></div></div><p>Derfor når vægten <span class="math inline">\(w_{j,k}\)</span> skal opdateres, så gør vi følgende:</p>
+<p>Det viser sig, at denne gradient peger i den retning, hvor funktionsværdien <em>vokser mest</em>. Omvendt vil minus gradienten <span class="math inline">\(-\nabla f(x_1, x_2, \dots, x_n)\)</span> pege i den retning, hvor funktionsværdien <em>aftager mest</em>. Hvis vi derfor står et vilkårligt sted på grafen for <span class="math inline">\(f\)</span> og går et lille skridt i den negative gradientens retning, så vil vi være på vej ned mod et minimum (eventuelt kun lokalt). Når vi har gået det lille skridt, udregner vi gradienten igen og bevæger os igen et lille skridt i den negative gradients retning<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Sådan fortsætter man indstil funktionsværdien ikke ændrer sig ret meget – det svarer forhåbentlig til, at vi har fundet et (lokalt) minimum.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Du kan tænke på gradienten som et kompas, der hele tiden viser dig, hvilken vej du skal gå for at bevæge dig ned mod et minimum.</p></div></div><p>Nu hedder vores funktion ikke <span class="math inline">\(f\)</span>, men <span class="math inline">\(E\)</span>, og <span class="math inline">\(E\)</span> afhænger af alle vægtene <span class="math inline">\(w_{j,k}\)</span>. Derfor, når vægten <span class="math inline">\(w_{j,k}\)</span> skal opdateres, så gør vi følgende:</p>
 <p><span id="eq-w_jk-opdatering_grad"><span class="math display">\[
 w_{j,k}^{\textrm{ny}} \leftarrow w_{j,k} - \eta \cdot \frac{\partial E}{\partial w_{j,k}}.
 \tag{8}\]</span></span></p>
@@ -830,7 +830,7 @@ w_{j,k}^{\textrm{ny}} \leftarrow w_{j,k} - \eta \cdot \frac{\partial E}{\partial
 <p><span class="math display">\[
 \frac{\partial E}{\partial w_{j,k}}.
 \]</span></p>
-<p>Hvis vi ser på <a href="#fig-netvaerk_generelt_wjk" class="quarto-xref">figur&nbsp;6</a> kan vi se, at <span class="math inline">\(w_{j,k}\)</span> kun har indflydelse på <span class="math inline">\(z_j\)</span> og dermed <span class="math inline">\(o_j\)</span>.</p>
+<p>Hvis vi ser på <a href="#fig-netvaerk_generelt_wjk" class="quarto-xref">figur&nbsp;6</a> kan vi se, at <span class="math inline">\(w_{j,k}\)</span> kun har indflydelse på <span class="math inline">\(z_j\)</span>. Til gengæld har alle <span class="math inline">\(z\)</span>-værdier indflydelse på alle <span class="math inline">\(o\)</span>-værdierne på grund af udtrykket i (<a href="#eq-o_j" class="quarto-xref">3</a>).</p>
 <div id="fig-netvaerk_generelt_wjk" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-netvaerk_generelt_wjk-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -841,8 +841,16 @@ Figur&nbsp;6: Neuralt netværk hvor vægtene fra de <span class="math inline">\(
 </figcaption>
 </figure>
 </div>
-<p>Derfor kan vi ved hjælp af kædereglen finde den partielle afledede af <span class="math inline">\(E\)</span> med hensyn til <span class="math inline">\(w_{j,k}\)</span> på denne måde<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
-<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Da tabsfunktionen afhænger af alle <span class="math inline">\(z\)</span>-værdierne, skal man egentlig bruge kædereglen af flere variable, så det bliver <span class="math inline">\(\frac{\partial E}{\partial w_{j,k}} = \sum_{i=1}^J \frac{\partial E}{\partial z_i} \cdot \frac{\partial z_i}{\partial w_{j,k}}\)</span>, men <span class="math inline">\(\frac{\partial z_i}{\partial w_{j,k}}=0\)</span> når <span class="math inline">\(i \neq j\)</span> og derfor kan vi nøjes med udtrykket i (<a href="#eq-partialE_w_jk" class="quarto-xref">9</a>).</p></div></div><p><span id="eq-partialE_w_jk"><span class="math display">\[
+<p>Derfor kan vi ved hjælp af kædereglen for flere variable finde den partielle afledede af <span class="math inline">\(E\)</span> med hensyn til <span class="math inline">\(w_{j,k}\)</span> på denne måde</p>
+<p><span class="math display">\[
+\frac{\partial E}{\partial w_{j,k}} = \sum_{i=1}^J \frac{\partial E}{\partial z_i} \cdot \frac{\partial z_i}{\partial w_{j,k}}
+\]</span></p>
+<p>Men da <span class="math inline">\(w_{j,k}\)</span> kun har indflydelse på <span class="math inline">\(z_j\)</span> (jævnfør <a href="#fig-netvaerk_generelt_wjk" class="quarto-xref">figur&nbsp;6</a> og (<a href="#eq-z_j" class="quarto-xref">2</a>)), så vil</p>
+<p><span class="math display">\[
+\frac{\partial z_i}{\partial w_{j,k}}=0 \qquad \text{når} \qquad i \neq j
+\]</span></p>
+<p>og derfor kan vi nøjes med følgende forsimplede udtryk</p>
+<p><span id="eq-partialE_w_jk"><span class="math display">\[
 \frac{\partial E}{\partial w_{j,k}} = \frac{\partial E}{\partial z_j} \cdot \frac{\partial z_j}{\partial w_{j,k}}
 \tag{9}\]</span></span></p>
 <p>Vi starter med at regne på den sidste faktor <span class="math inline">\(\frac{\partial z_j}{\partial w_{j,k}}\)</span> (fordi den er nemmeste!). Ifølge (<a href="#eq-z_j" class="quarto-xref">2</a>) er</p>
@@ -854,8 +862,9 @@ Figur&nbsp;6: Neuralt netværk hvor vægtene fra de <span class="math inline">\(
 \tag{10}\]</span></span></p>
 <p>For at bestemme den første faktor <span class="math inline">\(\frac{\partial E}{\partial z_j}\)</span> bruger vi definitionen af tabsfunktionen i (<a href="#eq-cross_entropy" class="quarto-xref">7</a>):</p>
 <p><span id="eq-partialE_z_j"><span class="math display">\[
-\frac{\partial E}{\partial z_j} = - \sum_{i=1}^J t_i \cdot \frac{1}{o_i} \cdot \frac{\partial o_i}{\partial z_j}
+\frac{\partial E}{\partial z_j} = - \sum_{i=1}^J t_i \cdot \frac{1}{o_i} \cdot \frac{\partial o_i}{\partial z_j},
 \tag{11}\]</span></span></p>
+<p>hvor vi har brugt, at <span class="math inline">\(\ln(o_i)\)</span> differentieret er <span class="math inline">\(\frac{1}{o_i}\)</span>.</p>
 <p>Nu er</p>
 <p><span class="math display">\[
 o_i = \frac{e^{z_i}}{\sum_{l=1}^J e^{z_l}}.
@@ -1019,8 +1028,8 @@ w_{j,k}^{(\textrm{ny})} \leftarrow w_{j,k} + \eta \cdot \sum_{m=1}^M (t_j^{(m)} 
 </section>
 <section id="tilbage-til-eksemplet" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="tilbage-til-eksemplet">Tilbage til eksemplet</h2>
-<p>Vi har nu fået udledt opdateringsreglerne for alle vægtene, og vi vil derfor prøve at træne et netværk ved hjælp af træningsdata i <a href="#tbl-trainingdata" class="quarto-xref">tabel&nbsp;1</a>. Hvis vi til start sætter alle vægtene til <span class="math inline">\(0.5\)</span>, vælger en learning rate på <span class="math inline">\(0.001\)</span> og laver i alt <span class="math inline">\(100000\)</span> iterationer (det vil sige, at vægtene alt i alt opdateres <span class="math inline">\(100000\)</span> gange), så nærmer vi os et minimum for tabsfunktionen. Alle outputværdierne kan nu beregnes ved hjælp af (<a href="#eq-o_j" class="quarto-xref">3</a>). Gør vi det for alle data i træningsdatasættet, får vi følgende<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>:</p>
-<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Bemærk, at hvis <span class="math inline">\(o_1+o_2+o_3+ o_4\)</span> ikke giver <span class="math inline">\(1\)</span>, så skyldes det afrunding.</p></div></div><div id="tbl-prediction" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<p>Vi har nu fået udledt opdateringsreglerne for alle vægtene, og vi vil derfor prøve at træne et netværk ved hjælp af træningsdata i <a href="#tbl-trainingdata" class="quarto-xref">tabel&nbsp;1</a>. Hvis vi til start sætter alle vægtene til <span class="math inline">\(0.5\)</span>, vælger en learning rate på <span class="math inline">\(0.001\)</span> og laver i alt <span class="math inline">\(100000\)</span> iterationer (det vil sige, at vægtene alt i alt opdateres <span class="math inline">\(100000\)</span> gange), så nærmer vi os et minimum for tabsfunktionen. Alle outputværdierne kan nu beregnes ved hjælp af (<a href="#eq-o_j" class="quarto-xref">3</a>). Gør vi det for alle data i træningsdatasættet, får vi følgende<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Bemærk, at hvis <span class="math inline">\(o_1+o_2+o_3+ o_4\)</span> ikke giver <span class="math inline">\(1\)</span>, så skyldes det afrunding.</p></div></div><div id="tbl-prediction" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-tbl figure page-columns page-full">
 <div aria-describedby="tbl-prediction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
@@ -1189,7 +1198,7 @@ Tabel&nbsp;2: Træningsdata fra 12 elever inklusion de bergende outputværdier.
 </figcaption>
 </figure>
 </div>
-<p>Et netværk vil altid være forholdsvis god til at prædiktere korrekt på de data, som netværket er trænet på. Det kan du læse mere om i noten om <a href="../../materialer/krydsvalidering/krydsvalidering.html">Overfitting, modeludvælgelse og krydsvalidering</a>. Med det i baghovedet kan vi alligevel se fra <a href="#tbl-prediction" class="quarto-xref">tabel&nbsp;2</a> se, at den prædikterede sandsynlighed for det valg, som hver elev træffer, er høj. For eksempel vælger elev nr. 1 også valg 1 (at blive i klassen), og den prædikterede sandsynlighed for dette valg er <span class="math inline">\(o_1 = 0.98\)</span>.</p>
+<p>Et netværk vil altid være forholdsvis godt til at prædiktere korrekt på de data, som netværket er trænet på. Det kan du læse mere om i noten om <a href="../../materialer/krydsvalidering/krydsvalidering.html">Overfitting, modeludvælgelse og krydsvalidering</a>. Med det i baghovedet kan vi alligevel se fra <a href="#tbl-prediction" class="quarto-xref">tabel&nbsp;2</a> se, at den prædikterede sandsynlighed for det valg, som hver elev træffer, er høj. For eksempel vælger elev nr. 1 også valg 1 (at blive i klassen), og den prædikterede sandsynlighed for dette valg er <span class="math inline">\(o_1 = 0.98\)</span>.</p>
 <p>For elev nr. 2 kan vi se, at vores AI assistent er i tvivl om (<span class="math inline">\(o_1=o_2=0.50\)</span>), om den skal anbefale valg 1 eller 2 (eleven har valgt 1). For elev nr. 7 vil vores AI assisten anbefale valg 1 (<span class="math inline">\(o_1 = 0.70\)</span>), men eleven træffer i virkeligheden valg 2. De resterende anbefalinger er korrekte.</p>
 <p>På <a href="#fig-trainingdata_prediction_wrong" class="quarto-xref">figur&nbsp;7</a> er elev 2 og 7 fremhævet ved, at de tilhørende punkter er tegnet større. Hvis man drejer lidt rundt på figuren, kan man se, at de to punkter ligger forholdsvis tæt på hinanden og i nærheden af andre mørkeblå punkter, så det er ikke helt så underligt, at netværket netop har svært ved at prædiktere, som det gør.</p>
 <div id="fig-trainingdata_prediction_wrong" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
@@ -1204,7 +1213,7 @@ Figur&nbsp;7: Punktplot af træningsdata fra <a href="#tbl-prediction" class="qu
 </figcaption>
 </figure>
 </div>
-<p>Nu er idéen jo ikke at komme med et godt råd til de elever, som allerede har truffet et valg (svarende til at prædiktere på trænignsdata), men derimod at vejlede kommende elever.</p>
+<p>Nu er idéen jo ikke at komme med et godt råd til de elever, som allerede har truffet et valg (svarende til at prædiktere på træningsdata), men derimod at vejlede kommende elever.</p>
 <p>Byd derfor velkommen til tre nye elever:</p>
 <ul>
 <li><p>Den første elev, som træder ind ad døren er Anton. Anton har sovet fuldstændig fantastisk (<span class="math inline">\(x_1=10\)</span>), han synes, at det emne, vi er i gang med, er pænt kedeligt (<span class="math inline">\(x_2=2\)</span>). Til gengæld har Anton høje ambitioner om at klare sig godt til eksamen (<span class="math inline">\(x_3=9\)</span>).</p></li>
