@@ -1,5 +1,5 @@
 ---
-title: "Facit til forløb om opdatering af vægte i et simpelt neuralt netværk med to skjulte lag"
+title: "Facit til forløb om opdatering af vægte i et simpelt neuralt netværk med ét skjulte lag"
 description-meta: ''
 image: ""
 categories:
@@ -60,75 +60,121 @@ eta <- 0.1
 
 ::: {.callout-note collapse="true" appearance="minimal"}  
 ### Facit til opgave 1
-Summen giver `r s` for de 3 punkter.
+Summen giver 
 
-$y$-værdierne er `r y`
+`r s` 
+
+
+$y$-værdierne er
+
+`r y`
 
 :::
 
 ::: {.callout-note collapse="true" appearance="minimal"}  
 ### Facit til opgave 2
-$o$-værdierne er `r o`
+$o$-værdierne er 
+
+`r o`
 :::
 
 ::: {.callout-note collapse="true" appearance="minimal"}  
 ### Facit til opgave 3
-**De afledede**
+$\delta_w^{(m)}$-værdierne er:
    $$
    \begin{aligned}
    \delta_w^{(m)} &= (t^{(m)}-o^{(m)} )  \\
    \end{aligned}
    $$
 
-  **$w$-vægtene:**
+  Opdateringsregler for $w$-vægtene:
    $$
    \begin{aligned}
-   w_0^{\textrm{ny}} &= w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
-   w_1^{\textrm{ny}} &= w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot y^{(m)}\\
+   w_0^{\textrm{ny}} & \leftarrow w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
+   w_1^{\textrm{ny}} & \leftarrow w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot y^{(m)}\\
    \end{aligned}
    $$
 :::
 
 ::: {.callout-note collapse="true" appearance="minimal"}  
 ### Facit til opgave 4
-* $\delta_w$-værdierne er `r dw`
-* Summen giver `r sum(dw)`
-* $w_{0}^{ny}=$ `r w0` 
-* Summen giver `r sum(dw*y)`
-* $w_{1}^{ny}=$ `r w1` 
+* $\delta_w$-værdierne er 
+
+   `r dw`
+
+* Summen 
+
+    $\sum_{m=1}^3 \delta_w^{(m)} =$ `r sum(dw)`
+    
+
+* $w_0$-vægten opdateres til
+
+   $w_{0}^{ny}=$ `r w0` 
+
+* Summen 
+
+    $\sum_{m=1}^{3} \delta_w^{(m)} \cdot y^{(m)}=$ `r sum(dw*y)`
+
+* $w_1$-vægten opdateres til
+
+   $w_{1}^{ny}=$ `r w1` 
 :::
 
 ::: {.callout-note collapse="true" appearance="minimal"}  
 ### Facit til opgave 5
+
+$\delta_r^{(m)}$-værdierne er:
 $$
    \begin{aligned}
-   \delta_r^{(m)} &= \delta_v^{(m)} \cdot w_1 \cdot y^{(m)} \cdot (1-y^{(m)})
+   \delta_r^{(m)} &= \delta_w^{(m)} \cdot w_1 \cdot y^{(m)} \cdot (1-y^{(m)})
    \end{aligned}
    $$
+Opdateringsreglerne for $r$-vægtene:
+
 $$
    \begin{aligned}
-   r_0^{\textrm{ny}} & =  r_0 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot 1 \\
-   r_1^{\textrm{ny}} & =  r_1 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)} \\
-   r_2^{\textrm{ny}} & =  r_2 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_n^{(m)}
+   r_0^{\textrm{ny}} & \leftarrow  r_0 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot 1 \\
+   r_1^{\textrm{ny}} & \leftarrow  r_1 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)} \\
+   r_2^{\textrm{ny}} & \leftarrow  r_2 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_2^{(m)}
    \end{aligned}
    $$
 :::
 
 ::: {.callout-note collapse="true" appearance="minimal"}  
 ### Facit til opgave 6
-* $\delta_r$-værdierne er `r formatC(dr,format="f",digits=7)`
-* Summen giver `r formatC(sum(dr),format="f",digits=7)`
-* $r_{0}^{ny}=$ `r r0` 
-* Summen giver `r formatC(sum(dr*X1),format="f",digits=7)`
-* $r_{1}^{ny}=$ `r r1`
-* Summen giver `r sum(dr*X2)`
-* $r_{2}^{ny}=$ `r r2`
+* $\delta_r$-værdierne er 
+
+   `r formatC(dr,format="f",digits=7)`
+   
+* Summen 
+
+   $\sum_{m=1}^M \delta_r^{(m)}=$ `r formatC(sum(dr),format="f",digits=7)`
+   
+* $r_0$-vægten opdateres til
+
+   $r_{0}^{ny}=$ `r r0` 
+
+* Summen 
+
+   $\sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)}=$ `r formatC(sum(dr*X1),format="f",digits=7)`
+
+* $r_1$-vægten opdateres til
+
+   $r_{1}^{ny}=$ `r r1`
+
+* Summen 
+
+   $\sum_{m=1}^M \delta_r^{(m)} \cdot x_2^{(m)}=$ `r sum(dr*X2)`
+   
+* $r_2$-vægten opdateres til
+
+   $r_{2}^{ny}=$ `r r2`
 :::
 
 ::: {.callout-note collapse="true" appearance="minimal"}  
 ### Facit til opgave 7
-* Tab før opdatering `r tab0`
-* Tab efter første opdatering `r tab1`
+* Værdien af tabsfunktionen før opdatering `r tab0`
+* Værdien af tabsfunktionen efter første opdatering `r tab1`
 :::
 
 ```{r, include = FALSE}
@@ -157,11 +203,11 @@ $$
 
 ::: {.callout-note collapse="true" appearance="minimal"}  
 ### Facit til opgave 8
-* $w_0$ `r w0`
-* $w_1$ `r w1`
-* $r_0$ `r r0`
-* $r_1$ `r r1`
-* $r_2$ `r r2`
-* Tab efter anden opdatering `r tab2`
+* $w_0 =$ `r w0`
+* $w_1 =$ `r w1`
+* $r_0 =$ `r r0`
+* $r_1 =$ `r r1`
+* $r_2 =$ `r r2`
+* Værdien af tabsfunktionen efter anden opdatering `r tab2`
 
 :::
