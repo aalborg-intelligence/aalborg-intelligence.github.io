@@ -32,6 +32,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
 <link href="../../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../../site_libs/quarto-listing/list.min.js"></script>
+<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -68,6 +70,35 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-main-listing-content .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-title','listing-description-meta',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
+      
+      searchColumns: ["listing-title","listing-author"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-main-listing-content'] = new List('listing-main-listing-content', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-Y219BCPS45"></script>
 
 <script type="text/javascript">
@@ -193,6 +224,7 @@ window.Quarto = {
   <li><a href="#generelle-neurale-netværk" id="toc-generelle-neurale-netværk" class="nav-link" data-scroll-target="#generelle-neurale-netværk">Generelle neurale netværk</a></li>
   <li><a href="#samlet-skematisk-overblik" id="toc-samlet-skematisk-overblik" class="nav-link" data-scroll-target="#samlet-skematisk-overblik">Samlet skematisk overblik</a></li>
   </ul></li>
+  <li><a href="#relaterede-forløb" id="toc-relaterede-forløb" class="nav-link" data-scroll-target="#relaterede-forløb">Relaterede forløb</a></li>
   <li><a href="#videre-læsning" id="toc-videre-læsning" class="nav-link" data-scroll-target="#videre-læsning">Videre læsning</a></li>
   </ul>
 </nav>
@@ -347,7 +379,7 @@ E(w_0, w_1, &amp;\dots, w_n) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}
 \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2.
 \end{aligned}
 \]</span></p>
-<p>Det er en <a href="../../materialer/funktioner_af_flere_variable/funktioner_af_flere_variable.html">funktion af flere variable</a>. I princippet kan man bestemme minimum ved at sætte alle de partielle afledede lig med <span class="math inline">\(0\)</span> og dernæst overbevise sig selv om, at man har fundet et minimum. Det vil give et ligningssystem med <span class="math inline">\(n+1\)</span> ligninger, som alle er koblet med hinanden. Det viser sig, at være en beregningsmæssig tung opgave at løse dette ligningssystem analytisk. Derfor bruger man i stedet for den metode, som kaldes for <a href="../gradientnedstigning/graditentnedstigning.qmd">gradientnedstigning</a>. Gradientnedstigning går ud på først at vælge tilfældige værdier af vægtene <span class="math inline">\(w_0, w_1, \cdots, w_n\)</span>. Det viser sig så, at den negative gradient vil pege i den retning, hvor funktionsværdien falder mest. Derfor er idéen at bevæge sig et lille stykke i den negative gradients retning – fordi vi så kommer lidt tættere på minimum. Når vi har gjort det, beregner vi gradienten igen, og bevæger os igen et lille stykke i den negative gradients retning. Det forsætter vi med indtil værdien af tabsfunktionen ikke ændrer sig særlig meget, hvilket svarer til, at vi har fundet minimum.</p>
+<p>Det er en <a href="../../materialer/funktioner_af_flere_variable/funktioner_af_flere_variable.html">funktion af flere variable</a>. I princippet kan man bestemme minimum ved at sætte alle de partielle afledede lig med <span class="math inline">\(0\)</span> og dernæst overbevise sig selv om, at man har fundet et minimum. Det vil give et ligningssystem med <span class="math inline">\(n+1\)</span> ligninger, som alle er koblet med hinanden. Det viser sig, at være en beregningsmæssig tung opgave at løse dette ligningssystem analytisk. Derfor bruger man i stedet for den metode, som kaldes for <a href="../../materialer/gradientnedstigning/gradientnedstigning.html">gradientnedstigning</a>. Gradientnedstigning går ud på først at vælge tilfældige værdier af vægtene <span class="math inline">\(w_0, w_1, \cdots, w_n\)</span>. Det viser sig så, at den negative gradient vil pege i den retning, hvor funktionsværdien falder mest. Derfor er idéen at bevæge sig et lille stykke i den negative gradients retning – fordi vi så kommer lidt tættere på minimum. Når vi har gjort det, beregner vi gradienten igen, og bevæger os igen et lille stykke i den negative gradients retning. Det forsætter vi med indtil værdien af tabsfunktionen ikke ændrer sig særlig meget, hvilket svarer til, at vi har fundet minimum.</p>
 <p>Når vi for alle vægtene bevæger os et lille stykke i den negative gradients retning, kan opdateringen af vægtene skrives sådan her:</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -392,7 +424,7 @@ w_n^{(\textrm{ny})} \leftarrow &amp; w_n - \eta \cdot \frac{\partial E }{\partia
 \sigma(w_0 &amp;+ w_1 \cdot x_1^{(m)}  + \cdots  + w_n \cdot x_n^{(m)} )) = \\ &amp;- \sigma'(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)})\cdot x_i^{(m)}
 \end{aligned}
 \]</span></p>
-<p>Vi mangler nu bare at finde den afledede sigmoid-funktion. Man kan vise – <a href="../../undervisningsforloeb/aktiveringsfunktioner/aktiveringsfunktioner.qmd">se forløbet om aktiveringsfunktioner</a> – at</p>
+<p>Vi mangler nu bare at finde den afledede sigmoid-funktion. Man kan vise – <a href="../../undervisningsforloeb/aktiveringsfunktioner.html">se forløbet om aktiveringsfunktioner</a> – at</p>
 <p><span class="math display">\[
 \sigma'(x)=\sigma(x)\cdot(1-\sigma(x))
 \]</span></p>
@@ -549,7 +581,7 @@ Figur&nbsp;6: Datasættet fra <a href="#fig-alder_vs_forbrug2" class="quarto-xre
 </section>
 <section id="aktiviteringsfunktioner" class="level2">
 <h2 class="anchored" data-anchor-id="aktiviteringsfunktioner">Aktiviteringsfunktioner</h2>
-<p>Sigmoid-funktionen, som er anvendt her, kaldes for en <strong>aktiveringsfunktion</strong>. Her brugte vi den, fordi den har den egenskab, at værdimængden er <span class="math inline">\((0,1)\)</span>, og derfor kan outputværdien fra sigmoid-funktionen fortolkes som en sandsynlighed. Men man behøver ikke nødvendigvis at bruge sigmoid-funktionen som aktiveringsfunktion. Der findes en lang række andre aktiveringsfunktioner, som kan bruges i stedet for. Hvis du har lyst til at lære mere, kan du se på vores <a href="../../undervisningsforloeb/aktiveringsfunktioner/aktiveringsfunktioner.qmd">forløb om andre aktiveringsfunktioner</a>.</p>
+<p>Sigmoid-funktionen, som er anvendt her, kaldes for en <strong>aktiveringsfunktion</strong>. Her brugte vi den, fordi den har den egenskab, at værdimængden er <span class="math inline">\((0,1)\)</span>, og derfor kan outputværdien fra sigmoid-funktionen fortolkes som en sandsynlighed. Men man behøver ikke nødvendigvis at bruge sigmoid-funktionen som aktiveringsfunktion. Der findes en lang række andre aktiveringsfunktioner, som kan bruges i stedet for. Hvis du har lyst til at lære mere, kan du se på vores <a href="../../undervisningsforloeb/aktiveringsfunktioner.html">forløb om andre aktiveringsfunktioner</a>.</p>
 </section>
 <section id="smartere-end-adaline" class="level2">
 <h2 class="anchored" data-anchor-id="smartere-end-adaline">Smartere end ADALINE?</h2>
@@ -756,12 +788,66 @@ Figur&nbsp;7: Et generelt kunstigt neuralt netværk (som dog stadig er forholdsv
 </table>
 </section>
 </section>
+<section id="relaterede-forløb" class="level2">
+<h2 class="anchored" data-anchor-id="relaterede-forløb">Relaterede forløb</h2>
+<div id="listing-main-listing-content" class="quarto-listing quarto-listing-container-table">
+<table class="quarto-listing-table table">
+<thead>
+<tr>
+<th>
+Forløb
+</th>
+<th>
+</th>
+</tr>
+</thead>
+<tbody class="list">
+<tr data-index="0" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1741701574468" data-listing-reading-time-sort="13" data-listing-word-count-sort="2598" data-listing-title-sort="Aktiveringsfunktioner" data-listing-filename-sort="aktiveringsfunktioner.qmd">
+<td>
+<a href="../../undervisningsforloeb/aktiveringsfunktioner.html" class="title listing-title">Aktiveringsfunktioner</a>
+</td>
+<td>
+<span class="listing-description-meta">I opbygningen af kunstige neurale netværk er aktiveringsfunktioner helt centrale. Og aktiveringsfunktioner skal differentieres – det handler dette forløb om.</span>
+</td>
+</tr>
+<tr data-index="1" data-categories="QS1uaXZlYXUlMkNCaW90ZWtub2xvZ2klMkNLb3J0" data-listing-file-modified-sort="1741701575239" data-listing-reading-time-sort="1" data-listing-word-count-sort="148" data-listing-title-sort="Screeningsprogrammer" data-listing-filename-sort="screeningsprogrammer.qmd">
+<td>
+<a href="../../undervisningsforloeb/screeningsprogrammer.html" class="title listing-title">Screeningsprogrammer</a>
+</td>
+<td>
+<span class="listing-description-meta">Kan man lave screeningsprogrammer for sygdomme baseret på genetiske markører med brug af AI? Det undersøger vi i dette forløb, som med fordel kan foregå i et samarbejde med bioteknologi.</span>
+</td>
+</tr>
+<tr data-index="2" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1741701574840" data-listing-reading-time-sort="3" data-listing-word-count-sort="576" data-listing-title-sort="Opklar et mord!" data-listing-filename-sort="opklar_et_mord.qmd">
+<td>
+<a href="../../undervisningsforloeb/opklar_et_mord.html" class="title listing-title">Opklar et mord!</a>
+</td>
+<td>
+<span class="listing-description-meta">Der er blevet begået et mord på skolen i nat. Det er jeres opgave at opklare det!</span>
+</td>
+</tr>
+<tr data-index="3" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1741701574459" data-listing-reading-time-sort="4" data-listing-word-count-sort="607" data-listing-title-sort="Opdatering af vægte i en kunstig neuron" data-listing-filename-sort="Opdatering_af_vægte_i_en_kunstig_neuron.qmd">
+<td>
+<a href="../../undervisningsforloeb/Opdatering_af_vægte_i_en_kunstig_neuron.html" class="title listing-title">Opdatering af vægte i en kunstig neuron</a>
+</td>
+<td>
+<span class="listing-description-meta">En øvelse i at opdatere vægtene i en kunstig neuron.</span>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+</div>
+</section>
 <section id="videre-læsning" class="level1">
 <h1>Videre læsning</h1>
 <ul>
 <li><a href="https://towardsdatascience.com/sigmoid-neuron-deep-neural-networks-a4cd35b629d7">Sigmoid Neuron — Building Block of Deep Neural Networks</a></li>
 <li><a href="https://eng.libretexts.org/Bookshelves/Computer_Science/Applied_Programming/Book%3A_Neural_Networks_and_Deep_Learning_(Nielsen)/01%3A_Using_neural_nets_to_recognize_handwritten_digits/1.03%3A_simple_neurale_nets">Sigmoid neurons</a></li>
 </ul>
+
 
 
 </section>
