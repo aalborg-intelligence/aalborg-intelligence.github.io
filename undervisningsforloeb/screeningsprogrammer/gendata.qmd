@@ -1,0 +1,98 @@
+---
+description-meta: "Gendata."
+toc: false
+page-layout: full
+filters:
+  - shinylive
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+:::{.column-page}
+## Data generator
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600 
+library(shiny)
+library(bslib)
+library(writexl)
+
+ui <- page_fluid(
+  layout_columns(
+  card(card_header("Gen 1"),
+         numericInput("m1", "Middelværdi:", 10),
+         numericInput("s1", "Spredning:", 5, min = 0),
+    ),
+    card(card_header("Gen 2"),
+         numericInput("m2", "Middelværdi:", 10),
+         numericInput("s2", "Spredning:", 5, min = 0),
+    ),
+    card(card_header("Gen 3"),
+         numericInput("m3", "Middelværdi:", 10),
+         numericInput("s3", "Spredning:", 5, min = 0),
+    ),
+    card(card_header("Gen 4"),
+         numericInput("m4", "Middelværdi:", 10),
+         numericInput("s4", "Spredning:", 5, min = 0),
+    ),
+    card(card_header("Gen 5"),
+         numericInput("m5", "Middelværdi:", 10),
+         numericInput("s5", "Spredning:", 5, min = 0),
+    ),
+    card(card_header("Indstillinger"),
+         numericInput("nsim", "Antal observationer:", 100, min = 1, max = 10000),
+         actionButton("run", "Kør")),
+    card(card_header("Data"),
+         tableOutput("dataTable")),
+    card(card_header("Download"),
+         downloadButton("excel", "Download (Excel)"),
+         downloadButton("csv", "Download (csv)")),
+  col_widths = c(rep(2,6),10,2)
+  )
+)
+
+server <- function(input, output) {
+  dat <- reactiveVal()
+
+  observeEvent(input$run, {
+    sim <- data.frame(
+        `Gen 1` = rnorm(input$nsim, mean = input$m1, sd = input$s1),
+        `Gen 2` = rnorm(input$nsim, mean = input$m2, sd = input$s2),
+        `Gen 3` = rnorm(input$nsim, mean = input$m3, sd = input$s3),
+        `Gen 4` = rnorm(input$nsim, mean = input$m4, sd = input$s4),
+        `Gen 5` = rnorm(input$nsim, mean = input$m5, sd = input$s5)
+        ) |> round(2)
+
+    dat(sim)
+
+    output$dataTable <- renderTable({
+      sim
+    })
+  })
+
+  output$excel <- downloadHandler(
+    filename = function() {
+      paste("gen-data_", Sys.Date(), ".xlsx", sep = "")
+    },
+    content = function(file) {
+      write_xlsx(dat(), file)
+    }
+  )
+
+  output$csv <- downloadHandler(
+    filename = function() {
+      paste("gen-data_", Sys.Date(), ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(dat(), file, row.names = FALSE)
+    }
+  )
+}
+
+# Run the application
+shinyApp(ui = ui, server = server)
+```
+:::
