@@ -1,0 +1,200 @@
+**Softsign**-funktionen har forskrift
+
+$$
+f(x)=\frac{x}{1+|x|}.
+$$
+Husk på at $|x|$ betyder den numeriske værdi af $x$. Det vil sige
+
+$$
+|x| = 
+\begin{cases}
+x & \textrm{hvis } x \geq 0 \\ 
+-x & \textrm{hvis } x < 0 \\ 
+\end{cases}
+$$ {#eq-numerisk_x}
+Det betyder for eksempel at $|7|=7$ og $|-7|=7$. Grafen for $|x|$ ses i @fig-numerisk_x.
+
+![Grafen for $|x|$.](/undervisningsforloeb/aktiveringsfunktioner/numerisk_x.png){width=75% #fig-numerisk_x}
+
+Grafen for softsign-funktionen $f$ ses i @fig-softsign.
+
+![Grafen for softsign-funktionen.](/undervisningsforloeb/aktiveringsfunktioner/softsign.png){width=75% #fig-softsign}
+
+Da den numeriske værdi af $x$ indgår i forskriften, kunne man få den tanke, at $f$ måske hverken er kontinuert eller differentiabel i $0$. For eksempel kan man i @fig-numerisk_x se, at $|x|$ ikke er differentiabel i $0$. 
+
+Men bruger vi definitionen på $|x|$, får vi
+
+$$
+f(x) = 
+\begin{cases}
+\frac{x}{1+x} & \textrm{hvis } x \geq 0 \\
+\\
+\frac{x}{1-x} & \textrm{hvis } x < 0 \\
+\end{cases}
+$$ {#eq-def_softsign}
+
+Ud fra denne omskrivning kan man vise, at $f$ rent faktisk er kontinuert i $0$. Det kan du læse mere om i boksen herunder, hvis du har lyst.
+
+På @fig-softsign ser det ud som om, at værdimængden for $f$ er $(-1,1)$ (også det argumenterer vi for i boksen):
+
+$$
+Vm(f) = (-1,1).
+$$
+
+Det vil sige, at hvis vi skal bruge softsign-funktionen som aktiveringsfunktion, så skal targetværdierne være $\pm 1$.
+
+
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+
+## Argument for kontinuitet i $0$ og værdimængde for $f$
+
+Lad os først argumentere for, at $f$ er kontinuert i $0$. For det første ser vi, at $f(0)=0/(1+0)=0$ og $f(x) \rightarrow 0$, når $x$ nærmer sig $0$ både fra højre og venstre. Det betyder, at $f$ *er* kontinuert i $0$.
+
+Vi vil herefter indse, at funktionsværdierne for $f$ ligger i $(-1,1)$. Ser vi på definitionen i (@eq-def_softsign), kan vi se, at vi skal inddele i to tilfælde, nemlig $x \geq 0$ og $x<0$:
+
+-   **Tilfælde 1**
+
+    Hvis $x \geq 0$, så er
+    $$
+    f(x)= \frac{x}{1+x}.
+    $$
+    Her er både tæller og nævner positiv, og derfor vil $-1<0<f(x)$. Da
+    $$
+    x < 1+x
+    $$
+    og $1+x$ er positiv vil
+    $$
+    f(x)=\frac{x}{1+x}<\frac{1+x}{1+x}=1.
+    $$
+    Altså er $-1<f(x)<1$ i det tilfælde, hvor $x \geq 0$. 
+
+-   **Tilfælde 2**
+
+    Hvis $x<0$, så er
+    $$
+    f(x) = \frac{x}{1-x}.
+    $$
+    Her er tælleren negativ, mens nævneren er positiv. Det vil sige, at $f(x)<0<1$. Nu er
+    $$
+    x-1<x<0.
+    $$
+    Da $x-1<0$, vil $-(x-1)>0$, og vi kan derfor dividere ovenstående igennem med $-(x-1)$ uden at ændre på ulighedstegnet:
+    $$
+    \frac{x-1}{-(x-1)}<\frac{x}{-(x-1)}.
+    $$
+    Da venstre side giver $-1$ og $-(x-1)=1-x$ får vi
+    $$
+    -1 < \frac{x}{1-x}=f(x).
+    $$
+    Alt i alt har vi altså også i dette tilfælde vist, at
+    $$
+    -1 < f(x) < 1.
+    $$
+
+Det vil sige, at $Vm(f) \subseteq (-1,1)$. 
+
+Vi vil nu vise, at værdimængden for $f$ \"fylder\" hele intervallet $(-1,1)$ ud. Vi ser, at for store positive værdier af $x$ vil
+$$
+f(x)= \frac{x}{1+x} \approx \frac{x}{x}=1
+$$
+og for store negative værdier af $x$ vil 
+$$
+f(x)= \frac{x}{1-x} \approx \frac{x}{-x}=-1
+$$
+Det betyder, at 
+$$
+f(x) \rightarrow 1 \quad \textrm{når} \quad x \rightarrow \infty
+$$
+og 
+
+$$
+f(x) \rightarrow -1 \quad \textrm{når} \quad x \rightarrow - \infty
+$$
+hvilket stemmer fint overens med @fig-softsign. 
+
+Vi har hermed vist, at $Vm(f) = (-1,1).$
+
+:::
+
+I nedenstående opgaver skal vi vise, at
+
+$$
+f'(x)=\frac{1}{\left ( 1+ |x| \right )^2}
+$$ {#eq-softsign_diff1}
+
+og at den afledte kan findes ved hjælp af funktionsværdien selv på denne måde
+
+$$
+f'(x)=(1-|f(x)|)^2.
+$$ {#eq-softsign_diff2}
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 3: Differentiation af softsign-funktionen
+
+Vis, at
+$$
+f'(x)=\frac{1}{\left ( 1+ |x| \right )^2}
+$$
+ved at bruge en brøkregneregel til at omskrive funktionsudtrykket i (@eq-def_softsign):
+
+$$
+f(x) = 
+\begin{cases}
+x \cdot \frac{1}{1+x} & \textrm{hvis } x \geq 0 \\
+\\
+x \cdot \frac{1}{1-x} & \textrm{hvis } x < 0 \\
+\end{cases}
+$$ {#eq-def_softsign2}
+
+
+Tegn til sidst grafen for $f'$. Synes du, at det ser ud som om, at $f'$ er differentiabel?
+:::
+
+
+::: {.callout-caution collapse="true" appearance="minimal"}
+### Hints til opgave 3
+
+* Antag først, at $x > 0$ og vis ved hjælp af produktreglen for differentiation, at
+$$
+f'(x)=\frac{1}{(1+x)^2} = \frac{1}{(1+|x|)^2}.
+$$ {#eq-diff1_sigmoid}
+*OBS! Du får på et tidspunkt brug for at sætte på fælles brøkstreg -- fællesnævneren er her $(1+x)^2$.*
+
+* Antag nu, at $x<0$ og vis igen ved hjælp af produktreglen for differentiation at
+$$
+f'(x)=\frac{1}{(1-x)^2} = \frac{1}{(1+|x|)^2}.
+$$ {#eq-diff2_sigmoid}
+
+* Antag slutteligt, at $x=0$ og indsæt $x=0$ i både (@eq-diff1_sigmoid) og (@eq-diff2_sigmoid) og se, at du får det samme. Da $f'(0)$ giver det samme for de to grene af funktionen, siger man, at funktionen også er differentiabel i $x=0$.
+
+:::
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 4: Omskrivning af $f'(x)$ for softsign-funktionen
+
+Vis nu, at den afledede af softsign-funktionen kan udtrykkes ved hjælp af softsign-funktionen selv:
+$$
+f'(x)=(1-|f(x)|)^2.
+$$
+
+:::
+
+::: {.callout-caution collapse="true" appearance="minimal"}
+### Hints til opgave 4
+
+* Start med at overvise dig selv om, at
+$$
+|f(x)|=f(|x|)
+$$
+ved at bruge definitionen i (@eq-numerisk_x).
+
+* Vis at 
+$$
+(1-f(|x|))^2 = \frac{1}{(1+|x|)^2}=f'(x)
+$$
+*Hint! Skriv $1$ som $\frac{1+|x|}{1+|x|}$.*
+
+:::

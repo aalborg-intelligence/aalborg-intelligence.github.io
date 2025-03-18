@@ -1,0 +1,242 @@
+---
+title: "Del 2: Kunstige neuroner"
+
+listing:
+  id: main-listing-content
+  sort: false
+  fields: 
+    - image
+    - title
+    - description
+  contents: 
+    - path: ../../materialer/kunstige_neuroner/kunstige_neuroner.qmd
+  type: grid 
+  grid-columns: 1
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+**Forventet tid ca. xx x 90 min.**
+
+## Aktivitet 1 - Kunstige neuroner {.aimat}
+
+Læs de tre første afsnit (\"Medlemsapp til Good Food\", \"Hvordan bestemmes vægtene?\" og \"Aktiveringsfunktioner\") i noten om kunstige neuroner (du behøver ikke at forstå *alt* i noten):
+
+::: {#main-listing-content}
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 1: Arbejdsspørgsmål til noten
+
+Forklar med dine egne ord hvad følgende betyder:
+
+- Targetværdi
+- Træningsdatasæt
+- Tabsfunktion
+
+:::
+
+I noten forklarer vi, at man bruger gradientnedstigning til at bestemme minimum for tabsfunktionen. Denne metode vil vi se nærmere på i den næste aktivitet.
+
+## Aktivitet 2 - Gradientnedstigning {.aimat}
+
+
+
+Vi vil illustrere gradientnedstigning i et simpelt eksempel: 
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 2: Minimum for en funktion af to variable
+
+Lad os se på en funktion $f$, som afhænger af to variable $x$ og $y$ (i noten om kunstige neuroner svarer de to variable til et eksempel med to vægte):
+
+$$
+f(x,y)= 0.2x^2-1.2x+0.3y^2-2.4y+8.6
+$$
+
+- Tegn grafen for funktionen (for eksempel i GeoGebra -- her skriver man forskriften ind i inputfeltet og vælger derefter \"Vis\" $\rightarrow$ \"3D Grafik\").
+
+Tænk på grafen som en skibakke. Nede i bunden af bakken er der \"After Ski\", så der vil du selvfølgelig gerne ned! Det svarer matematisk til funktionens minimum. 
+
+- Hvis du kigger på grafen alene - hvad er så dit bedste bud på minimumsstedet $(x,y)$ (altså i hvilket $(x,y)$-koordinat ser det ud til, at \"After Ski\" ligger)?
+
+:::
+
+Vi vil nu bruge gradientnedstigning til at bestemme minimum.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 3: Opdateringsregler
+
+- Bestem de såkaldte *partielle afledede* $\frac{\partial f}{\partial x}$ og $\frac{\partial f}{\partial y}$. Når du for eksempel skal finde $\frac{\partial f}{\partial x}$, så skal du differentiere $f(x,y)$, hvor du tænker på $x$ som den variable og $y$ som en konstant. Tilsvarende med $\frac{\partial f}{\partial y}$.
+
+- Brug de partielle afledede til at opskrives opdateringsreglerne:
+
+   $$
+   \begin{aligned}
+   x^{(ny)} &\leftarrow x - \eta \cdot \frac{\partial f}{\partial x} \\
+   y^{(ny)} &\leftarrow y - \eta \cdot \frac{\partial f}{\partial y} 
+   \end{aligned}
+   $$
+
+- Nu stiller vi os et tilfældigt sted på skibakken -- lad og sige i punktet $(6,8,f(6,8))$. Udregn funktionsværdien $f(6,8)$ og indtegn punktet $(6,8,f(6,8))$ i dit koordinatsystem (i GeoGebra skriver du bare $(6,8,f(6,8))$).
+
+- Du skal nu bruge ovenstående opdateringsregler til at finde ned mod \"After Ski\". Vi beslutter os for at vælge en skridtlængde på $\eta = 0.1$. Den første opdatering bliver så:
+
+   $$
+   \begin{aligned}
+   x^{(ny)} &\leftarrow 6 - 0.1 \cdot \frac{\partial f}{\partial x}(6,8) \\
+   y^{(ny)} &\leftarrow 8 - 0.1 \cdot \frac{\partial f}{\partial y}(6,8)
+   \end{aligned}
+   $$
+   
+   *Hint! Her er 
+   $$\frac{\partial f}{\partial x}(6,8)=0.4 \cdot 6-1.2= 1.2$$ 
+   og 
+   $$\frac{\partial f}{\partial y}(6,8)=0.6 \cdot 8-2.4=2.4$$*
+   
+- Udregn funktionsværdien $f(x^{(ny)}, y^{(ny)})$. Er funktionsværdien blevet mindre sammenlignet med $f(6,8)$?
+
+- Indtegn punktet $(x^{(ny)},y^{(ny)},f(x^{(ny)},y^{(ny)}))$ i dit koordinatsystem. Kan du se, at du er på vej ned mod skibakken?
+
+:::
+
+Det bliver lidt tungt at skulle lave disse udregninger i hånden. Vi vil derfor gøre det i Excel eller i GeoGebras regneark. I den næste opgave forklarer vi, hvordan man gør i GeoGebra:
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 4: Gradientnedstigning i GeoGebra
+
+- Udfyld et regneark på denne måde:
+
+   ![](images/regneark_ggb.png){width=50% fig-align="center"}
+
+   + I celle `A1` skriver du 6 (svarende til $x=6$ der hvor vi starter). 
+   + I celle `B1` skriver du 8.
+   + I celle `C1` skriver du `f(A1,B1)`.
+   + I celle `D1` skriver du `(A1,B1,C1)` (læg mærke til at punktet bliver tegnet ind i koordinatsystemet).
+
+- Vi skal nu have skrevet opdateringsreglerne ind. Du har nok tidligere fået, at $\frac{\partial f}{\partial x}=0.4x-1.2$ og $\frac{\partial f}{\partial y}=0.6y-2.4$. Du skal nu udvide regnearket på denne måde:
+
+   ![](images/regneark2_ggb.png){width=50% fig-align="center"}
+   + I celle `A2` skriver du `= A1 - 0.1*(0.4*A1-1.2)`.
+   + I celle `B2` skriver du `= B1 - 0.1*(0.6*B1-2.4)`.
+   + I celle `C2` skriver du `f(A2,B2)`.
+   + I celle `D2` skriver du `(A2,B2,C2)`.
+   
+- Du kan nu markere række to, tage ved den lille kasse i nederste højre hjørne for at beregne ny punkter. Gør det!
+
+- Hvor mange opdateringer skal du lave, for at funktionsværdien ikke ser ud til at ændre sig mere? 
+
+- Svarer det minimum, du finder ved hjælp af gradientnedstigning til det minimum, som du tidligere har aflæst på grafen?
+
+Tillykke! Du er nu kommet til \"After Ski\"!!
+:::
+
+## Aktivitet 3 - Tabsfunktioner {.aimat}
+
+Vi vil her se lidt nærmere på tabsfunktionen, men baseret på et meget lille træningsdatasæt.
+
+Vi ser igen på medlemsapp'en til Good Food, som vi også beskrev i noten. Nu vil vi bare nøjes med at se på kundens alder, som inputvariabel:
+
+* $x$: kundens alder målt i år
+
+Targetværdien er igen:
+
+$$
+t=
+\begin{cases}
+1 & \textrm{hvis tilbuddet aktiveres} \\
+0 & \textrm{hvis tilbuddet ikke aktiveres} \\
+\end{cases}
+$$
+
+Træningsdatasættet består af følgende tre træningseksempler:
+
+::: {#tbl-goodfood}
+|Nr. på træningseksempel $m$ | Kundens alder $x^{(m)}$ | Targetværdi $t^{(m)}$ |
+|:---:|:---:|:---:|
+| $1$ | $25$ | $0$ |
+| $2$ | $40$ | $0$ |
+| $3$ | $60$ | $1$ |
+Et meget lille træningsdatasæt til Good Food app'en.
+:::
+
+Tabsfunktionen bliver så:
+
+$$
+\begin{aligned}
+E &= \frac{1}{2} \sum_{m=1}^3 (t^{(m)}-\sigma(w_0 + w_1 \cdot x^{(m)}))^2 \\
+ & = \frac{1}{2}  ((t^{(1)}-\sigma(w_0 + w_1 \cdot x^{(1)}))^2 +\\
+ &\quad  \qquad (t^{(2)}-\sigma(w_0 + w_1 \cdot x^{(2)}))^2 + \\
+  &\quad \qquad (t^{(3)}-\sigma(w_0 + w_1 \cdot x^{(3)}))^2) \\
+\end{aligned}
+$$ {#eq-loss}
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 5: Tabsfunktion
+
+- Opskriv forskriften for tabsfunktionen $E$ ved at indsætte træningseksemplerne fra @tbl-goodfood i tabsfunktionen defineret i (@eq-loss).
+
+:::
+
+I flere CAS programmer kan det give problemer at tegne grafen for $E$, selvom du nu har forskriften for funktionen. Derfor kommer grafen her:
+
+
+```{r message=FALSE, warning=FALSE}
+#| fig-cap: Grafen for tabsfunktionen baseret på det lille træningsdatasæt i @tbl-goodfood.
+#| label: fig-E
+library(plotly)
+hovertemplate <- paste0(
+                'w0: %{y:.2f}<br>',
+                'w1: %{x:.2f}<br>',
+                'E: %{z:.2f}<br>',
+                '<extra></extra>')
+par(mar=c(4,4,0,1))
+tabs_data <- readRDS(file.path("data", "tabsfunktioner.rds"))
+# contour(llik$a, llik$b, llik$vals, xlab = "a", ylab = "b", levels = c(-1028, -1030, -1034, -1038, -1046, -1052, -1084), labels = "")
+ax_x <- list(title = "w1")
+ax_y <- list(title = "w0")
+ax_z <- list(title = "Squared error")
+plot_ly(showscale = FALSE) |>
+  add_surface(x = tabs_data$w1, y = tabs_data$w0, z = tabs_data$squared_vals, hovertemplate=hovertemplate) |>
+  add_markers(x = tabs_data$squared_w1, y = tabs_data$squared_w0, z = tabs_data$squared_opt,
+              marker = list(size = 5, color = "red"), name = NULL, hovertemplate=hovertemplate) |>
+  layout(scene = list(xaxis = ax_x, yaxis = ax_y, zaxis = ax_z), showlegend = FALSE)
+```
+
+Det røde punkt svarer til minimum. 
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 6: Minimum for tabsfunktionen
+
+- Aflæs $w_0$- og $w_1$-værdien for minimum på @fig-E.
+
+- Brug disse værdier til at opstille forskriften for sigmoid-funktionen, som bruges til at udregne outputværdien $o$:
+
+$$
+o = \sigma(x) = \frac{1}{1+e^{-(w_0 +w_1 \cdot x)}}
+$$
+
+- Tegn grafen for denne sigmoid-funktion.
+
+- Svar ved hjælp af grafen på følgende spørgsmål:
+   + For hvilke værdier af kundens alder $x$ får vi en outputværdi, som er meget tæt på $0$ -- svarende til at vi er ret sikre på, at kunden *ikke vil* aktivere tilbuddet. 
+   + For hvilke værdier af kundens alder $x$ får vi en outputværdi, som er meget tæt på $1$ -- svarende til at vi er ret sikre på, at kunden *vil* aktivere tilbuddet. 
+   + Hvilken alder $x$ svarer til en outputværdi på $0.5$?
+   
+   
+- Udregn $\sigma(25), \sigma(40)$ og $\sigma(60)$ svarende til de prædikterede outputværdier for træningsdatasættet.
+
+:::
+
+## Aktivitet 4 - Brug af app {.aimat}
+
+
+
