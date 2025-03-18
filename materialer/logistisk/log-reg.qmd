@@ -513,6 +513,11 @@ De tilhørende $a$- og $b$-koordinater er altså dem, der gør vores observation
 #| fig-cap: Graf for en log-likelihoodfunktion. Det sorte punkt angiver, hvor funktionsværdien er størst.
 #| label: fig-likelihood
 library(plotly)
+hovertemplate <- paste0(
+                'a: %{x:.2f}<br>',
+                'b: %{y:.2f}<br>',
+                'L: %{z:.2f}<br>',
+                '<extra></extra>')
 par(mar=c(4,4,0,1))
 mle_data <- data.frame(a = a_mle, b = b_mle, ll = as.numeric(logLik(fit)))
 llik <- readRDS(file.path("data", "llik.rds"))
@@ -521,9 +526,9 @@ ax_x <- list(title = "a")
 ax_y <- list(title = "b")
 ax_z <- list(title = "Log-likelihood")
 plot_ly(showscale = FALSE) |>
-  add_surface(x = llik$a, y = llik$b, z = ~llik$vals) |>
+  add_surface(x = llik$a, y = llik$b, z = ~llik$vals, hovertemplate = hovertemplate) |>
   add_markers(data = mle_data, x = ~a, y = ~b, z = ~ll,
-              marker = list(size = 5, color = "black"), name = NULL) |>
+              marker = list(size = 5, color = "black"), name = NULL, hovertemplate = hovertemplate) |>
   layout(scene = list(xaxis = ax_x, yaxis = ax_y, zaxis = ax_z), showlegend = FALSE)
 ```
 
