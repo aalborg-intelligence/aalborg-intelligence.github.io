@@ -1,0 +1,289 @@
+---
+title: "Simple sprogmodeller"
+image: "images/COLOURBOX35006551.jpg"
+description-meta: "Simple sprogmodeller."
+---
+
+# Simple sprogmodeller
+
+Sandsynligheden for næste ord {#sandsynligheden-for-næste-ord .unnumbered}
+-----------------------------
+
+Vi tager udgangspunkt i en sprogmodel, der skal kunne gætte næste ord i
+en sætning. Hvis vi fx ved, at en sætning starter med
+$$
+\text{"Jeg går en tur i ---"}
+$$
+så skal sprogmodellen prøve at gætte
+det næste ord. Den skulle gerne vælge et af de mest sandsynlige næste
+ord. Vi skriver sandsynligheden for at næste ord er \"skoven\", når
+sætningen starter med \"Jeg går en tur i\", som
+$$
+P(\text{skoven} \mid \text{Jeg går en tur i}).
+$$
+
+Start box: betingede sandsynligheder
+
+Her har vi brugt notationen for betingede sandsynligheder. Hvis $A$ og
+$B$ er to hændelser og $P(B)>0$, så betegner $P(A\mid B)$ *den betingede
+sandsynlighed for $A$ givet $B$*, som er givet ved formlen
+$$
+\label{eq:betinget}
+P(A\mid B) = \frac{P(A\cap B)}{P(B)}
+$$
+Her er $A\cap B$
+*fælleshændelsen*, det vil sige hændelsen, at $A$ og $B$ forekommer
+samtidig. Vi fortolker $P(A\mid B)$ som sandsynligheden for, at
+hændelsen $A$ indtræffer, hvis vi ved, at hændelsen $B$ er indtruffet.
+Dette giver mening i forhold til
+[\[eq:betinget\]](#eq:betinget){reference-type="eqref"
+reference="eq:betinget"}, idet brøken angiver, hvor stor en andel af
+sandsynligheden for $B$, der udgøres af sandsynligheden for, at $A$
+indtræffer samtidig med $B$.
+
+I vores eksempel ovenfor, er $B$ hændelsen, at sætningen starter med
+\"Jeg går en tur i\", mens $A$ er hændelsen, at næste ord er \"skoven\".
+Den betingede sandsynlighed $P(A\mid B)$ er så sandsynligheden for at
+næste ord er \"skoven\", når vi ved, at sætningen starter med \"Jeg går
+en tur i\". Den er givet ved
+$$
+P(A\mid B) = P(\text{skoven} \mid \text{Jeg går en tur i}) = \frac{P(\text{Jeg går en tur i skoven})}{P(\text{Jeg går en tur i})}
+$$
+
+slut box
+
+Hvordan kan vi så finde denne sandsynlighed? Jo, her får vi brug for
+vores korpus af tilgængelig tekst. Vi tæller, hvor mange gange
+ordkombinationerne \"Jeg går en tur i\" og \"Jeg går en tur i skoven\"
+optræder i teksten. Vi har så, at andelen af gange, \"Jeg går en tur i\"
+efterfølges af \"skoven\", er givet ved
+$$
+P(\text{skoven} \mid \text{Jeg går en tur i})=\frac{\text{Antal gange "Jeg går en tur i skoven" optræder}}{\text{Antal gange "Jeg går en tur i" optræder}}
+$$
+Her opstår et problem: det er slet ikke sikkert, at kombinationen \"jeg
+går en tur i\" findes i vores tekstkorpus. Malene laver fodnote Selv
+hvis den gør, er det ikke sikkert, at alle relevante fortsættelser
+(\"byen\", \"parken\", \"haven\", \...) er repræsentereret. Man er
+derfor nødt til at gøre noget smartere. Det kan gøres på mange måder, og
+vi ser først på en naiv tilgang kaldet *$N$-gram sprogmodeller*.
+
+$N$-gram sprogmodeller {#n-gram-sprogmodeller .unnumbered}
+----------------------
+
+I *$N$-gram sprogmodeller* forsøger man også at bestemme sandsynligheden
+for næste ord, men nu baserer man sig kun på de $N-1$ foregående ord.
+Hvis vi skal gætte næste ord efter \"Jeg går en tur i\", ville en
+$4$-gram sprogmodel basere sig på sandsynligheder på formen
+$$
+P(\text{skoven} \mid \text{en tur i})=\frac{\text{Antal gange "en tur i skoven" optræder}}{\text{Antal gange "en tur i" optræder}}
+$$
+Vi tager altså ikke starten på sætningen \"Jeg går\" i betragtning,
+fordi en 4-gram sprogmodel udelukkende kigger på de sidste tre ord \"en
+tur i\".
+
+Som et eksempel på, hvordan $N$-gram sprogmodeller fungerer, ser vi på
+et meget lille tekstkorpus bestående af fire sætninger med seks
+forskellige ord:
+$$
+\begin{aligned}
+&\text{"En hund løber efter en kat.}\\
+&\text{Løber en hund efter en kat?}\\
+&\text{En kat løber ikke efter en hund.}\\
+&\text{Efter en kat løber en hund."}
+\end{aligned}
+$$
+Der er 25 ord i
+teksten, men kun 6 forskellige: en (8), hund (4), løber (4), efter (4),
+kat (4), ikke (1), hvor tallet i parentes angiver antal gange, ordet
+optræder i vores tekst. Vi ignorerer tegnsætning og skelner ikke mellem
+små og store bogstaver.
+
+Et *bigram* er et par af ord, der forekommer efter hinanden i teksten. I
+Tabel 1 nedenfor er der lavet en hyppighedstabel over alle bigram i
+vores tekst. Vi lader som om, teksten starter forfra, så det sidste
+\"hund\" efterfølges af \"En\".
+
+           en   hund   løber   efter   kat   ikke
+  ------- ---- ------ ------- ------- ----- ------
+    en     0     4       0       0      4     0
+   hund    1     0       1       2      0     0
+   løber   2     0       0       1      0     1
+   efter   4     0       0       0      0     0
+    kat    1     0       3       0      0     0
+   ikke    0     0       0       1      0     0
+
+  : Hyppighed af bigram.
+
+[\[tab:my\_label\]]{#tab:my_label label="tab:my_label"}
+
+Tabellen viser hyppigheden af forskellige bigram i vores tekst. Ordet i
+venstre søjle er første ord i bigrammet, og ordet i første række er
+andet ord i bigrammet. Fx betyder de to 4-taller i anden række, at \"en
+hund\" og \"en kat\" hver optræder 4 gange. Der forekommer 12
+forskellige bigram i teksten. Det er dem, hvor der ikke står 0 i
+tabellen. Hvis der står 0, svarer det til et bigram, der ikke
+forekommer.
+
+Hvis det sidste ord i vores sætning er \"ord$_1$\", kan vi beregne
+sandsynligheden for, at næste ord vil være \"ord$_2$\". Det skriver vi
+som
+$$
+P(\text{ord}_2\mid \text{ord}_1) = \frac{\text{Antal gange bigrammet "ord$_1$ ord$_2$" optræder}}{\text{Antal gange "ord$_1$"  optræder}}
+$$
+Hvis fx det seneste ord i vores sætning er \"løber\", så er
+sandsynligheden for at næste ord er \"efter\"
+$$
+P(\text{efter} \mid \text{løber})=\frac{1}{4},
+$$
+idet \"løber\"
+forekommer 4 gange, og 1 af gangene er \"efter\" det næste ord.
+
+Lad os illustrere, hvordan man kan bruge bigram til at danne nye
+sætninger.
+
+-   Vælg et begyndelsesord - lad os sige \"En\".
+
+-   Bigramtabellen siger nu, at der i vores tekst er to muligheder for
+    næste ord, nemlig \"hund\" og \"kat\". De er lige sandsynlige - de
+    optræder begge 4 gange ud af 8. Vi slår plat og krone for at finde
+    næste ord. Det blev \"kat\".
+
+-   Vi har nu \"En kat\" og kigger i bigramtabellen efter et ord, der
+    står efter \"kat\". Der er to muligheder: \"løber\" (3 gange) og
+    \"en\" (1 gang). Vi vælger nu \"løber\" med sandsynlighed 3/4 og
+    \"en\" med sandsynlighed 1/4. Det blev \"løber\".
+
+-   Nu har vi \"En kat løber\". Hvad kommer efter \"løber\"? Det gør
+    \"en\" (2 gange), \"efter\" (1 gang) og \"ikke\" (1 gang). Vi vælger
+    et af ordene \"en\", \"efter\" og \"ikke\" med sandsynlighed hhv
+    2/4, 1/4 og 1/4. Vi får \"en\".
+
+-   Vi har \"En kat løber en\". Næste mulige ord er \"hund\" og \"kat\",
+    som er lige sandsynlige. Vi får \"kat\".
+
+-   Vi slutter her og ender med sætningen \"En kat løber en kat\". Det
+    giver ikke så megen mening.
+
+Det startede meget godt med at danne vores sætning, men på et tidspunkt
+holdt den op med at give mening. Problemet er, at man ikke får ret meget
+af sammenhængen med, når man kun bruger det sidste ord til at gætte det
+næste udfra. Derfor får man let genereret nogle ret underlige sætninger.
+Man kan forbedre det ved at kigge på *trigram*. Et trigram er en sekvens
+på tre ord efter hinanden. I Tabel 2 nedenfor er vist hyppigheden af
+trigram i vores lille tekst.
+
+                 en   hund   løber   efter   kat   ikke
+  ------------- ---- ------ ------- ------- ----- ------
+     en hund     1     0       1       2      0     0
+     en kat      1     0       3       0      0     0
+     hund en     0     1       0       0      0     0
+   hund løber    0     0       0       1      0     0
+   hund efter    2     0       0       0      0     0
+    løber en     0     2       0       0      0     0
+   løber efter   1     0       0       0      0     0
+   løber ikke    0     0       0       1      0     0
+    efter en     0     2       0       0      2     0
+     kat en      0     0       0       0      1     0
+    kat løber    2     0       0       0      0     1
+   ikke efter    1     0       0       0      0     0
+
+  : Hyppighed af trigram.
+
+[\[tab:my\_label\]]{#tab:my_label label="tab:my_label"}
+
+Søjlen til venstre i Tabel 2 er de første to ord i trigrammet, mens
+første række angiver tredje ord. Bemærk, at kun bigram, der faktisk
+forekommer i vores tekstkorpus er vist i første søjle. Anden række viser
+således, at bigrammet \"en hund\" optræder med \"en\", \"løber\" og
+\"efter\" som næste ord. Trigrammet \"en hund efter\" optræder 2 gange i
+vores tekstkorpus.
+
+Man kan nu finde sandsynlighederne for trigrammet \"ord$_1$ ord$_2$
+ord$_3$\" når vi ved at de to første ord er \"ord$_1$ ord$_2$\". Dette
+skriver vi igen som en betinget sandsynlighed
+$$
+P(\text{ord}_3\mid \text{ord}_1\text{ ord}_2) = \frac{\text{Antal gange trigrammet "ord$_1$ ord$_2$ ord$_3$" optræder}}{\text{Antal gange bigrammet "ord$_1$ ord$_2$" optræder}}
+$$
+
+Bruger man informationen i trigram til at generere ny tekst, er det mere
+restriktivt, hvad man kan skrive. Man kan ikke skrive \"En hund en kat
+en hund\", fordi \"hund en kat\" ikke er et trigram i vores tekstkorpus.
+Man kunne derimod godt skrive \"En hund en hund en hund\", da både
+\"hund en hund\" og \"en hund en\" er trigram i vores tekstkorpus.
+
+-   Lad os begynde som i bigram-eksemplets Trin 2, hvor vi har \"En
+    kat\". Der er igen to muligheder: \"en kat løber\" og \"en kat en\".
+    Lad os sige, vores tilfældige valg giver \"en kat løber\"
+
+-   Nu skal vi finde en mulighed til \"kat løber \...\" og der kan vi
+    vælge \"en\" eller \"ikke\". Vi kan ikke vælge \"efter\", som vi
+    kunne i bigram-modellen. Vi rammer måske \"En kat løber ikke\"
+
+-   Vi skal finde et ord til \"løber ikke \...\" og der er nu kun
+    \"efter\" at vælge.
+
+-   Vi har \"en kat løber ikke efter\" og har kun muligheden \"ikke
+    efter en\"
+
+-   Fra \"en kat løber ikke efter en\", kan vi vælge \"hund\" eller
+    \"kat\". Vælger vi \"hund\", får vi \"en kat løber ikke efter en
+    hund\".
+
+Det er et meget lille tekstkorpus, vi har, og det giver naturligvis
+problemer. Man kan ikke generere fornuftige sætninger som \"Løber en kat
+efter en hund?\" (\"kat efter\" er end ikke et bigram i vores lille
+tekstkorpus). Et andet problem opstår, hvis vi ønsker at starte en
+sætning med \"Efter kat\". Dette bigram forekommer ikke i vores
+tekstkorpus, så vi kan slet ikke komme videre.
+
+Selv hvis vi havde store mængder tekst i vores tekstkorpus, er to ord
+ikke meget at gætte næste ord ud fra, da meningen med teksten nemt går
+tabt, når man kun betragter de sidste to ord. For at få et bedre indtryk
+af meningen med sætningen kan man bruge *$N$-gram*, som består af $N$ på
+hinanden følgende ord. Man prøver så at gætte det $N$te ord ud fra de
+$N-1$ foregående. Her er der igen et problem med, at mange $(N-1)$-gram
+slet ikke findes i vores tekstkorpus. Starter vi med sådan et
+$(N-1)$-gram, kan vi ikke komme til at gætte videre. Jo større $N$ er,
+desto større bliver problemet med manglende $N$-gram.
+
+### EGES BØRNEBOG som eksempel - app-?? {#eges-børnebog-som-eksempel---app- .unnumbered}
+
+Her kunne det være fedt med et bigram for Eges korpus Evt. en app, der
+kan generere næste ord\... Måske opgaver baseret på børnebogen?
+
+Mere avancerede sprogmodeller {#mere-avancerede-sprogmodeller .unnumbered}
+-----------------------------
+
+For at kunne gætte næste ord med en $N$-gram sprogmodel, har vi brug for
+et stort $N$ for at få meningen med. Det giver rigtig mange mulige
+kombinationer af de $N-1$ ord, som vi prædikterer næste ord ud fra.
+Mange af dem vil ikke være repræsenteret i vores tekstkorpus, og vi kan
+derfor ikke benytte $N$-gram modellen. Men hvad nu, hvis vores
+tekstkorpus indeholder en ordsekvens, hvis betydning minder om? Måske
+ønsker vi at prædiktere næste ord i sætningen
+$$
+\text{"Min hund har en blød ---"}
+$$
+Og måske står denne kombination af
+ord ikke noget sted i vores tekstkorpus. Til gengæld er der måske et
+sted hvor der står
+$$
+\text{"Min kat har en blød pels"}
+$$
+Hvis vi nu ved,
+at ordene \"hund\" og \"kat\" tit indgår i sammenhænge, der ligner
+hinanden, så kan vi måske erstatte sætningen \"Min hund har en blød\"
+med \"Min kat har en blød\" og bruge det til at gætte, at næste ord skal
+være \"pels\". For at udføre denne idé i praksis, får vi brug for en
+stor sprogmodel, som en model for sprogets betydning. Som et eksempel
+på, hvordan det kan gøres, kan du læse om Word2Vec her. Kort fortalt er
+idéen at repræsentere hvert ord med en vektor, hvor ord, hvis betydning
+minder om hinanden svarer til vektorer, med nogenlunde samme retning og
+længde. Måske et simpelt plot med vektorer for \"hund\", \"kat\" og
+\"æble\" eller lignende\... Når vi har lavet vektorrepræsentationer af
+alle ord i sproget, skal vi bruge dem til at lave prædiktioner af næste
+ord ud fra de foregående. Til det kan man benytte en form for *neuralt
+netværk*, som du kan læse mere om her. I praksis bruges dog en
+*transformer* link, som er endnu mere avanceret, og som i praksis er den
+sprogmodel, der virker bedst til tekstgenerering.
+
