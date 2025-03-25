@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Introduktion til sprogmodeller.">
 
 <title>Introduktion til sprogmodeller – AI MAT - matematikken bag magien</title>
 <style>
@@ -181,11 +180,8 @@ window.Quarto = {
     <h2 id="toc-title">Indhold</h2>
    
   <ul>
-  <li><a href="#introduktion-til-sprogmodeller" id="toc-introduktion-til-sprogmodeller" class="nav-link active" data-scroll-target="#introduktion-til-sprogmodeller">Introduktion til sprogmodeller</a>
-  <ul class="collapse">
-  <li><a href="#prædiktion-af-næste-ord" id="toc-prædiktion-af-næste-ord" class="nav-link" data-scroll-target="#prædiktion-af-næste-ord">Prædiktion af næste ord</a></li>
+  <li><a href="#prædiktion-af-næste-ord" id="toc-prædiktion-af-næste-ord" class="nav-link active" data-scroll-target="#prædiktion-af-næste-ord">Prædiktion af næste ord</a></li>
   <li><a href="#store-sprogmodeller" id="toc-store-sprogmodeller" class="nav-link" data-scroll-target="#store-sprogmodeller">Store sprogmodeller</a></li>
-  </ul></li>
   </ul>
 </nav>
 </nav>
@@ -215,39 +211,27 @@ window.Quarto = {
 </header>
 
 
-<p>Planen er at lave 5 noter, som kan læses i følgende rækkefølge:</p>
-<ul>
-<li><p>Introduktion til sprogmodeller (anbefales),</p></li>
-<li><p>simple sprogmodeller (blød introduktion, kan udelades),</p></li>
-<li><p>Word2Vec (central),</p></li>
-<li><p>Neurale netværk til tekstgenerering (avanceret, kan udelades)</p></li>
-<li><p>Transformeren (avanceret, kan udelades, bygger på "neurale netværk til tekstgenerering")</p></li>
-</ul>
-<p>Nedenfor får I de tre første.</p>
-<section id="introduktion-til-sprogmodeller" class="level1">
-<h1>Introduktion til sprogmodeller</h1>
-<p>Mange former for kunstig intelligens skal kunne håndtere sprog. Det gælder selvfølgelig ChatGPT, franske Le Chat og andre chat-bots og generative AI-programmer. Men I kender det også fra fx oversættelsesprogrammer, tekstbehandlingsprogrammer, der retter grammatik, mobiltelefonens forslag til næste ord i en besked og mailprogrammer, der klassificerer emails som spam ud fra indholdet.</p>
-<p>Sprog er komplekst. Der er flere hundrede tusinde ord i det danske sprog, afhængigt af hvordan man tæller. Disse ord kan sættes sammen til sætninger på et utal af måder. Men et sprog har samtidig struktur. Det har en <em>syntaks</em>, som er regler for, hvilke ord man må bruge, og hvordan sætninger er sat sammen. Noget vanskeligere så har det også en <em>semantik</em>, der handler om betydningen af sætninger. Mens syntaksen langt hen ad vejen følger regler, som man ville kunne programmere en computer til at kende, så er semantikken meget mindre regelret. Hvordan kan en computer fx vide om "en god kost" refererer til mad eller en fejekost? Vi mennesker afgør det normalt ud fra sammenhængen. Vi skal se, at man kan lære en computer at gøre det samme ved hjælp af en <em>sprogmodel</em>. Eftersom denne model skal indgå i et computerprogram, er der naturligvis tale om en matematisk model.</p>
+<p>Mange former for kunstig intelligens skal kunne håndtere sprog. Det gælder selvfølgelig ChatGPT, franske Le Chat og andre chat-bots og generative AI-programmer. Men I kender det også fra for eksempel oversættelsesprogrammer, tekstbehandlingsprogrammer, der retter grammatik, mobiltelefonens forslag til næste ord i en besked og mailprogrammer, der klassificerer emails som spam ud fra indholdet.</p>
+<p>Sprog er komplekst. Der er flere hundrede tusinde ord i det danske sprog, afhængigt af hvordan man tæller. Disse ord kan sættes sammen til sætninger på et utal af måder. Men et sprog har samtidig struktur. Det har en <em>syntaks</em>, som er regler for, hvilke ord man må bruge, og hvordan sætninger er sat sammen. Noget vanskeligere så har det også en <em>semantik</em>, der handler om betydningen af sætninger. Mens syntaksen langt hen ad vejen følger regler, som man ville kunne programmere en computer til at kende, så er semantikken meget mindre regelret. Hvordan kan en computer for eksempel vide, om "en god kost" refererer til mad eller en fejekost? Vi mennesker afgør det normalt ud fra sammenhængen. Vi skal se, at man kan lære en computer at gøre det samme ved hjælp af en <em>sprogmodel</em>. Eftersom denne model skal indgå i et computerprogram, er der naturligvis tale om en matematisk model.</p>
 <section id="prædiktion-af-næste-ord" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="prædiktion-af-næste-ord">Prædiktion af næste ord</h2>
-<p>Fælles for mange sprogmodeller er, at de virker ved at gætte (<em>prædiktere</em>) det næste ord i en sætning ud fra de foregående. Generativ AI virker fx ved at bygge sætninger op et ord ad gangen, hvor hvert ord vælges på baggrund af de foregående ord. Hvis en sætning starter med <span class="math display">\[
-\text{"Jeg går en tur i ---"}
+<p>Fælles for mange sprogmodeller er, at de virker ved at gætte (<em>prædiktere</em>) det næste ord i en sætning ud fra de foregående. Generativ AI virker for eksempel ved at bygge sætninger op et ord ad gangen, hvor hvert ord vælges på baggrund af de foregående ord. Hvis en sætning starter med <span class="math display">\[
+\textrm{"Jeg går en tur i ---"}
 \]</span> så skal sprogmodellen kunne komme med et gæt på det næste ord. Det kunne være ordet "skoven".</p>
 <p>Hvordan kommer sprogmodellen så med et godt gæt? Jo, først skal modellen <em>trænes</em> på store mængder af tilgængelig tekst, et <em>tekstkorpus</em>. På baggrund af dette tekstkorpus skal sprogmodellen så lære, hvilket ord, der sandsynligvis kommer efter "Jeg går en tur i". Det gør den konkret ved at bygge en funktion, der som input tager starten på en sætning og som output giver næste ord. Mere præcist giver funktionen for hvert ord i dens ordforråd sandsynligheden for, at netop dette ord er det næste. Sprogmodellen gætter så på et af de mest sandsynlige ord som det næste. I noten om "Simple sprogmodeller" link ser vi på, hvordan man lidt naivt kunne gøre det ved at tælle, hvor hyppigt forskellige ordkombinationer forekommer, og hvorfor det ikke er en god idé.</p>
 </section>
 <section id="store-sprogmodeller" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="store-sprogmodeller">Store sprogmodeller</h2>
-<p>I stedet må man have fat i en mere avanceret sprogmodel, en såkaldt <em>stor sprogmodel</em> (large language model, LLM). Enhver sprogmodel bygger på viden og hypoteser om, hvordan sprog fungerer. En helt grundlæggende hypotese er, at betydningen af ord kan forstås ved at se på, hvilke sammenhænge, også kaldet <em>kontekst</em>, et ord optræder i. Det er en idé, der bl.a. skyldes den danske sprogforsker <a href="https://lex.dk/Louis_Hjelmslev">Louis Hjelmslev</a> (1899-1965). Vi vil gerne have en model, som har indbygget information om, at</p>
+<p>I stedet må man have fat i en mere avanceret sprogmodel, en såkaldt <em>stor sprogmodel</em> (large language model, LLM). Enhver sprogmodel bygger på viden og hypoteser om, hvordan sprog fungerer. En helt grundlæggende hypotese er, at betydningen af ord kan forstås ved at se på, hvilke sammenhænge, også kaldet <em>kontekst</em>, et ord optræder i. Det er en idé, der blandt andet skyldes den danske sprogforsker <a href="https://lex.dk/Louis_Hjelmslev">Louis Hjelmslev</a> (1899-1965). Vi vil gerne have en model, som har indbygget information om, at</p>
 <ul>
 <li><p>ordet "mus" kan være et lille pattedyr eller en computermus alt efter sammenhængen,</p></li>
 <li><p>ordene "søvn", "sove", "seng", "senge" er relaterede, fordi de ofte indgår i de samme sammenhænge,</p></li>
 <li><p>"op" og "ned" er relaterede ord, selvom de er hinandens modsætninger.</p></li>
 </ul>
-<p>I "Word2Vec" ser vi på en matematisk model for sproget, hvor alle ord bliver repræsenteret som vektorer, der inkorporerer netop denne slags information. Fordelen ved disse vektorer er, at en computer kan regne med dem, samtidig med at de indeholder information om betydning af ordene.</p>
-<p>For at kunne bruge disse vektorer til at gætte næste ord, skal der stadig bygges en funktion, der tager vektorerne som input og giver sandsynligheder for næste ord som output. Da det kræver en meget kompliceret funktion, benyttes der, som i så mange andre avancerede AI-algoritmer, et <em>neuralt netværk</em>. Det er emnet i noten om "Tekstgenerering med neurale netværk" link.</p>
+<p>I noten <a href="../../materialer/sprogmodeller/word2vec.html">Word2Vec</a> ser vi på en matematisk model for sproget, hvor alle ord bliver repræsenteret som vektorer, der inkorporerer netop denne slags information. Fordelen ved disse vektorer er, at en computer kan regne med dem, samtidig med at de indeholder information om betydning af ordene.</p>
+<p>For at kunne bruge disse vektorer til at gætte næste ord, skal der stadig bygges en funktion, der tager vektorerne som input og giver sandsynligheder for næste ord som output. Da det kræver en meget kompliceret funktion, benyttes der, som i så mange andre avancerede AI-algoritmer, et <em>neuralt netværk</em>. Det er emnet i noten om <a href="">Tekstgenerering med neurale netværk</a>.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
