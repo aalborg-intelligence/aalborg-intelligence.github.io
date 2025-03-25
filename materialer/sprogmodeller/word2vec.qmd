@@ -1,21 +1,16 @@
 ---
 title: "Word2vec"
-image: "images/word2vec_simple.png"
-description-meta: "Word2vec."
+image: "images/eks1.png"
+description-meta: "Idéen bag Word2Vec går ud på at repræsentere hvert ord i et sprog med en vektor, hvor ord, hvis betydning minder om hinanden, svarer til vektorer, med nogenlunde samme retning og længde."
 ---
 
-Lad os igen se på en situation, hvor vi gerne vil kunne gætte næste ord
+
+Lad os se på en situation, hvor vi gerne vil kunne gætte næste ord
 i en sætning. Lad os sige, at vi har sætningen
 $$
 \text{"Min hund har en blød ---"}
 $$
-og vil gætte næste ord. Hvis vi
-har en stor mængde tekst til rådighed, et tekstkorpus, kan vi
-selvfølgelig lede efter ordsekvensen \"Min hund har en blød\" og se
-hvilket ord, der oftest kommer efter som beskrevet i **LINK**. Men hvis ikke
-sekvensen forekommer i vores korpus, så har vi et problem. I stedet
-kunne vi lede efter en sætning med en betydning, der minder om \"Min
-hund har en blød\" og se, hvad der kommer efter den. Men hvordan får vi
+og vil gætte næste ord. Hvis vi har en stor mængde tekst til rådighed, et såkaldt **tekstkorpus**, kan vi selvfølgelig lede efter ordsekvensen \"Min hund har en blød\" og se hvilket ord, der oftest kommer efter, som beskrevet i noten om [simple sprogmodeller](simple.qmd). Men hvis ikke sekvensen forekommer i vores korpus, så har vi et problem. I stedet kunne vi lede efter en sætning med en betydning, der minder om \"Min hund har en blød\" og se, hvad der kommer efter den. Men hvordan får vi
 en computer til at forstå betydningen af ord?
 
 Den simpleste måde at repræsentere et ord på i en computer ville være
@@ -64,15 +59,15 @@ a_1\\a_2\\a_3\\ \vdots \\ a_m
 $$
 hvor
 $a_1,a_2,a_3,\ldots,a_m$ er reelle tal. I praksis vælger man $m$ stort,
-fx $m=100$. Man kan regne med $m$-dimensionale vektorer, lige som man
+for eksempel $m=100$. Man kan regne med $m$-dimensionale vektorer, lige som man
 gør i to eller tre dimensioner. Vi kommer for eksempel til at se,
 hvordan man kan finde skalarprodukter. Til gengæld har man ikke mulighed
 for at visualisere en $m$-dimensional vektor som en pil i et
 koordinatsystem, men det har vi heldigvis heller ikke brug for.
 
 I denne note ser vi på algoritmen Word2Vec som et eksempel på, hvordan
-man kan oversætte ord til vektorer, der repræsenterer ordenes betydning. Mere præcist kiger vi på en version af algoritmen, der hedder skip-gram.
-Word2Vec blev opfundet af en gruppe medarbejdere hos Google i 2013. I
+man kan oversætte ord til vektorer, der repræsenterer ordenes betydning. Mere præcist kigger vi på en version af algoritmen, der hedder *skip-gram*.
+Word2Vec blev opfundet af en gruppe medarbejdere hos [Google i 2013](https://code.google.com/archive/p/word2vec/). I
 dag bruges diverse forfininger af algoritmen i mange store
 sprogmodeller.
 
@@ -107,11 +102,11 @@ mens både \"kat\" og \"mis\" ville passe ind. Ordene \"kat\" og \"hund\"
 er altså tætte på hinanden, men ikke så tætte som \"kat\" og \"mis\". Vi
 vil derfor gerne have, at vektorerne for \"hund\" og \"kat\" minder mere
 om hinanden end vektorerne for \"hund\" og \"kælk\", men ikke så meget
-som \"kat\" og \"mis\". Hvad vi forstår ved, at vektorer minder om
+som \"kat\" og \"mis\". @fig-vektorer viser netop et eksempel på, hvordan det kunne se ud. Hvad vi helt præcist forstår ved, at vektorer minder om
 hinanden, det kommer vi tilbage til.
 
 Konteksten er særlig vigtig i forbindelse med ord med flere betydninger.
-Vi forstår fx betydningen af ordet \"marsvin\" forskelligt alt efter om
+Vi forstår for eksempel betydningen af ordet \"marsvin\" forskelligt, alt efter om
 ordet \"hav\" eller ordet \"mælkebøtte\" optræder i nærheden af det.
 
 ## Træningsdata 
@@ -125,12 +120,12 @@ Ved konteksten til et ord vil vi her forstå de ord, der står umiddelbart
 før og efter ordet. Mere præcist vælger vi et vindue, lad os sige på fem
 ord, hvor ordet i midten er det, vi gerne vil kende betydningen af. Vi
 vil kalde dette for *inputordet*. De to første ord og de to sidste ord i
-vinduet er inputordets *kontekstord*. Se fx på sætningen
+vinduet er inputordets *kontekstord*. Se for eksempel på sætningen
+
 $$
-\text{\fbox{Den sorte \textbf{hund} logrer med} halen}
+\boxed{\textrm{ Den sorte }\textbf{hund} \textrm{ logrer med }} \textrm{ halen}
 $$
-Boksen
-angiver vores 5-ords vindue. Det midterste ord \"hund\" er vores
+Boksen angiver vores 5-ords vindue. Det midterste ord \"hund\" er vores
 inputord, ordene \"Den\", \"sorte\", \"logrer\" og \"med\" er
 kontekstord til \"hund\".
 
@@ -138,24 +133,26 @@ Vi starter med at placere vinduet omkring det første ord i vores datasæt
 og noterer dets fire kontekstord (hvoraf de to vil være blanke). Vi
 flytter nu vinduet mod højre et ord ad gangen, og hver gang noterer vi
 inputordet og dets fire kontekstord. Vi gør det for al teksten i vores
-træningsdata og samler informationen i et datasæt som vist i Tabel
-@tab-data. Hver række i tabellen består af et inputord og et af dets kontekstord.[^4]
+træningsdata og samler informationen i et datasæt som vist i
+@tbl-data. Hver række i tabellen består af et inputord og et af dets kontekstord.[^4]
 
-   Input   Kontekst
-  ------- ----------
-     ⋮        ⋮
-   sorte  
-   sorte     Den
-   sorte     hund
-   sorte    logrer
-   hund      Den
-   hund     sorte
-   hund     logrer
-   hund      med
-     ⋮        ⋮
+::: {#tbl-data}
 
-  : Par af input- og kontekstord {#tab-data}
+| Input | Kontekst |
+|:---:|:---:|
+| $\vdots$ | $\vdots$ |
+|  sorte | |  
+|   sorte |    Den |
+|   sorte |    hund |
+|   sorte |   logrer |
+|   hund  |    Den |
+|   hund  |   sorte |
+|   hund  |   logrer |
+|   hund  |    med |
+| $\vdots$ | $\vdots$ |
 
+Par af input- og kontekstord.
+:::
 
 
 [^4]: Når man vil gætte
@@ -174,20 +171,23 @@ datasættet.
 ## Input- og kontekstvektorer 
 
 I første omgang vil vi lade hvert ord $w$ være repræsenteret af to
-vektorer, $\overrightarrow{v}_{w}$ og $\overrightarrow{k}_{w}$, hvor
-$\overrightarrow{v}_{w}$ repræsenterer ordet, når det optræder som
-input, mens $\overrightarrow{k}_{w}$ repræsenterer ordet, når det
-optræder som kontekst. Betydningen af $w$ afgøres som nævnt af, hvordan
+vektorer, $\vec{v}_{w}$ og $\vec{k}_{w}$, hvor
+$\vec{v}_{w}$ repræsenterer ordet, når det optræder som
+input, mens $\vec{k}_{w}$ repræsenterer ordet, når det
+optræder som kontekst. Ordet \"hund\" vil altså være repræsenteret ved vektoren $\vec{v}_{\text{hund}}$, når det optræder som input og ved vektoren $\vec{k}_{\text{hund}}$, når det optræder som kontekst.
+
+
+Betydningen af ordet $w$ afgøres som nævnt af, hvordan
 ordet forholder sig til konteksten. Det vil vi oversætte matematisk til,
-hvordan inputvektoren $\overrightarrow{v}_{w}$ forholder sig til kontekstvektorerne
-$\overrightarrow{k}_{c}$ for diverse kontekstord $c$. Vi vil derfor
-tænke på $\overrightarrow{v}_{w}$ som den vektor, der repræsenterer
+hvordan inputvektoren $\vec{v}_{w}$ forholder sig til kontekstvektorerne
+$\vec{k}_{c}$ for diverse kontekstord $c$. Vi vil derfor
+tænke på $\vec{v}_{w}$ som den vektor, der repræsenterer
 betydningen af ordet, og altså den vi er ude på at bestemme.
 
-For at måle hvordan inputvektoren $\overrightarrow{v}_{w}$ for ordet $w$
-forholder sig til kontekstvektoren $\overrightarrow{k}_{c}$ for ordet
+For at måle hvordan inputvektoren $\vec{v}_{w}$ for ordet $w$
+forholder sig til kontekstvektoren $\vec{k}_{c}$ for ordet
 $c$, vil vi bruge *skalarproduktet*
-$\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{c}$. Husk på at man
+$\vec{v}_{w}\cdot \vec{k}_{c}$. Husk på at man
 finder skalarproduktet mellem to vektorer i to dimensioner ved formlen
 $$
 \begin{pmatrix}
@@ -225,52 +225,61 @@ $$
 
 Vi vil gerne have, at vores input- og kontekstvektorer skal opfylde, at
 hvis $w$ ofte har $c$ som kontekst, så er skalarproduktet
-$\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{c}$ stort, mens en
+$\vec{v}_{w}\cdot \vec{k}_{c}$ stort, mens en
 meget negativ værdi af
-$\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{c}$ indikerer, at $w$
+$\vec{v}_{w}\cdot \vec{k}_{c}$ indikerer, at $w$
 sjældent har $c$ som kontekst.
 
 Hvad fortæller skalarproduktet om, hvordan to vektorer forholder sig til
 hinanden? I 2 og 3 dimensioner kan vi give en geometrisk fortolkning af
 skalarproduktet ved hjælp af formlen 
 $$
-\overrightarrow{a}\cdot\overrightarrow{b} = |\overrightarrow{a}||\overrightarrow{b}| \cos(\angle (\overrightarrow{a},\overrightarrow{b}))
+\vec{a}\cdot\vec{b} = |\vec{a}|\cdot |\vec{b}| \cdot \cos(v)
 $${#eq-skalar}
-hvor $\angle (\overrightarrow{a},\overrightarrow{b})$ er vinklen mellem
-vektorerne $\overrightarrow{a}$ og $\overrightarrow{b}$, og
-$|\overrightarrow{a}|$ betegner længden af $\overrightarrow{a}$, som
+hvor $v$ er vinklen mellem
+vektorerne $\vec{a}$ og $\vec{b}$, og
+$|\vec{a}|$ betegner længden af $\vec{a}$, som
 findes med formlen
 $$
-|\overrightarrow{a}|=\sqrt{\overrightarrow{a}\cdot\overrightarrow{a}}
+|\vec{a}|=\sqrt{\vec{a}\cdot\vec{a}}
 $$
+
+I 2 dimensioner svarer det til
+$$
+|\vec{a}|=\sqrt{a_1^2 + a_2^2}
+$$
+
+
 Cosinus er en aftagende funktion på intervallet $[0^\circ,180^\circ ]$, så jo større
-vinklen $\angle (\overrightarrow{a},\overrightarrow{b})$ er, desto
-mindre vil $\cos(\angle (\overrightarrow{a},\overrightarrow{b}))$ være.
-**FIGUR** Det betyder, at
-$\cos(\angle (\overrightarrow{a},\overrightarrow{b}))$ er størst når
-vinklen mellem $\overrightarrow{a}$ og $\overrightarrow{b}$ er $0^\circ$,
+vinklen $v$ er, desto
+mindre vil $\cos(v)$ være -- se @fig-cos.
+
+![Grafen for $cos(v)$, hvor $v$ er målt i grader.](images/cosinus.png){width=100% #fig-cos}
+
+Det betyder, at $\cos(v)$ er størst når
+vinklen mellem $\vec{a}$ og $\vec{b}$ er $0^\circ$,
 svarende til at vektorerne peger samme vej. Her er
-$\cos(\angle (\overrightarrow{a},\overrightarrow{b}))=1$. Den mindste
-værdi af $\cos(\angle (\overrightarrow{a},\overrightarrow{b}))$ er $-1$,
+$\cos(v)=1$. Den mindste
+værdi af $\cos(v)$ er $-1$,
 som antages ved en vinkel på $180^\circ$, hvor vektorerne peger i modsat
 retning.
 
-Jo mindre vinklen mellem $\overrightarrow{v}_{w}$ og
-$\overrightarrow{k}_{c}$ er, desto større er deres skalarprodukt
-$\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{c}$ altså, og jo oftere
+Det vil sige, jo mindre vinklen mellem $\vec{v}_{w}$ og
+$\vec{k}_{c}$ er, desto større er deres skalarprodukt
+$\vec{v}_{w}\cdot \vec{k}_{c}$ altså, og jo oftere
 har ordet $w$ dermed $c$ som kontekst. Desuden viser
-@eq-skalar, at lange vektorer tæller mere, både positivt og
+(@eq-skalar), at lange vektorer tæller mere, både positivt og
 negativt, end korte vektorer. Ord, der er gode til at forudsige
-konteksten udfra, fx \"logre\", der ofte vil forekomme i hunderelaterede kontekster, vil derfor blive repræsenteret med
+konteksten udfra, for eksempel \"logre\", der ofte vil forekomme i hunderelaterede kontekster, vil derfor blive repræsenteret med
 lange inputvektorer. Ord som \"og\" eller \"er\", der ikke
 indeholder megen information om konteksten, vil blive repræsenteret med kortere inputvektorer. Altså vil
-$|\overrightarrow{v}_{\text{logre}}|$ være større end
-$|\overrightarrow{v}_{\text{og}}|$ og $|\overrightarrow{v}_{\text{er}}|$.
+$|\vec{v}_{\text{logre}}|$ være større end
+$|\vec{v}_{\text{og}}|$ og $|\vec{v}_{\text{er}}|$.
 
 Bemærk også, at hvis to ord ofte optræder i samme kontekst, skal deres
 inputvektorer gerne have nogenlunde samme skalarprodukt med alle
 kontekstvektorer. Formlen
-@eq-skalar viser, at det betyder, at de dels skal have
+(@eq-skalar) viser, at det betyder, at de dels skal have
 nogenlunde samme længde og dels skal have nogenlunde samme vinkel med
 alle kontekstvektorerne. Sidstnævnte kræver, at de selv har nogenlunde samme
 retning. Ord, hvis betydning ligner hinanden, kommer derfor til at svare
@@ -280,7 +289,7 @@ I praksis bruger vi vektorer af højere dimension end 3. Det er måske
 ikke helt oplagt, hvad man skal forstå ved længden af en vektor eller
 vinklen mellem to vektorer i højere dimensioner, men det viser sig, at
 man stadigvæk godt kan give mening til formlen
-@eq-skalar. Intuitionen fra to eller tre dimensioner er
+(@eq-skalar). Intuitionen fra to eller tre dimensioner er
 derfor god at have, selv om vi arbejder med højere dimensioner.
 
 ### Eksempel 1 
@@ -289,57 +298,58 @@ Lad os sige, at vi har fundet en
 vektorrepræsentation, der opfylder det ønskede. Det gav vektorerne
 $$
 \begin{aligned}
-&\overrightarrow{v}_{\text{hund}} =  \begin{pmatrix} 3\\ 2\end{pmatrix}, \quad
-\overrightarrow{v}_{\text{kat}} =  \begin{pmatrix} 2\\ 3\end{pmatrix} \\
-&\overrightarrow{k}_{\text{madskål}}  =  \begin{pmatrix} 3\\3\end{pmatrix}, \quad
-\overrightarrow{k}_{\text{badedragt}} =  \begin{pmatrix} -2\\-1.5 \end{pmatrix}, \quad
-\overrightarrow{k}_{\text{lufte}} =  \begin{pmatrix} 2\\0.5 \end{pmatrix}
+&\vec{v}_{\text{hund}} =  \begin{pmatrix} 3\\ 2\end{pmatrix}, \quad
+\vec{v}_{\text{kat}} =  \begin{pmatrix} 2\\ 3\end{pmatrix} \\
+&\vec{k}_{\text{madskål}}  =  \begin{pmatrix} 3\\3\end{pmatrix}, \quad
+\vec{k}_{\text{badedragt}} =  \begin{pmatrix} -2\\-1.5 \end{pmatrix}, \quad
+\vec{k}_{\text{lufte}} =  \begin{pmatrix} 2\\0.5 \end{pmatrix}
 \end{aligned}
 $$
-Vektorerne er vist herunder, hvor inputvektorer er røde, og
-kontekstvektorer er blå:
+Vektorerne er vist i @fig-eks1, hvor inputvektorer er lyserøde, og
+kontekstvektorer er blå.
 
-**FLOT FIGUR**
+![Repræsentanter for vektorerne i eksempel 1. Inputvektorerne er lyserøde, og
+kontekstvektorerne er blå.](images/eks1.png){width=100% #fig-eks1}
 
 Vi kan udregne skalarprodukterne
 $$
 \begin{aligned}
-&\overrightarrow{v}_{\text{kat}}\cdot \overrightarrow{k}_{\text{madskål}} = \begin{pmatrix} 2\\ 3\end{pmatrix}  \cdot  \begin{pmatrix} 3\\ 3\end{pmatrix} = 2\cdot 3 +  3\cdot 3 = 15 \\ 
-&\overrightarrow{v}_{\text{kat}}\cdot \overrightarrow{k}_{\text{badedragt}} = \begin{pmatrix} 2\\ 3\end{pmatrix}  \cdot  \begin{pmatrix} -2\\ -1.5\end{pmatrix} = 2\cdot (-2) +  3\cdot (-1.5) = -8.5 
+&\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{madskål}} = \begin{pmatrix} 2\\ 3\end{pmatrix}  \cdot  \begin{pmatrix} 3\\ 3\end{pmatrix} = 2\cdot 3 +  3\cdot 3 = 15 \\ 
+&\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{badedragt}} = \begin{pmatrix} 2\\ 3\end{pmatrix}  \cdot  \begin{pmatrix} -2\\ -1.5\end{pmatrix} = 2\cdot (-2) +  3\cdot (-1.5) = -8.5 
 \end{aligned}
 $$
 Vi ser, at
-$\overrightarrow{v}_{\text{kat}}\cdot \overrightarrow{k}_{\text{madskål}}$ er
+$\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{madskål}}$ er
 større end
-$\overrightarrow{v}_{\text{kat}}\cdot \overrightarrow{k}_{\text{badedragt}}$. Det
+$\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{badedragt}}$. Det
 svarer til, at ordet \"kat\" oftere har \"madskål\" som kontekst, end
 det har \"badedragt\". Det ses også ved, at
-$\overrightarrow{k}_{\text{madskål}}$ peger i nogenlunde samme retning som
-$\overrightarrow{v}_{\text{kat}}$, mens $\overrightarrow{k}_{\text{badedragt}}$ peger
+$\vec{k}_{\text{madskål}}$ peger i nogenlunde samme retning som
+$\vec{v}_{\text{kat}}$, mens $\vec{k}_{\text{badedragt}}$ peger
 i en helt anden retning.
 
 Vi kan også udregne
 $$
 \begin{aligned}
-&\overrightarrow{v}_{\text{hund}}\cdot \overrightarrow{k}_{\text{madskål}} = \begin{pmatrix} 3\\ 2\end{pmatrix}  \cdot  \begin{pmatrix} 3\\ 3\end{pmatrix} = 3\cdot 3 +  2\cdot 3 = 15
+&\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{madskål}} = \begin{pmatrix} 3\\ 2\end{pmatrix}  \cdot  \begin{pmatrix} 3\\ 3\end{pmatrix} = 3\cdot 3 +  2\cdot 3 = 15
 \end{aligned}
 $$
 Vi ser, at
-$\overrightarrow{v}_{\text{hund}}\cdot \overrightarrow{k}_{\text{madskål}} =\overrightarrow{v}_{\text{kat}}\cdot \overrightarrow{k}_{\text{madskål}} =15$,
+$\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{madskål}} =\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{madskål}} =15$,
 svarende til at både \"hund\" og \"kat\" ofte har \"madskål\" som
-kontekst. Vi ser da også, at vektorerne $\overrightarrow{v}_{hund}$ og
-$\overrightarrow{v}_{kat}$ peger i nogenlunde samme retning og har
+kontekst. Vi ser da også, at vektorerne $\vec{v}_{hund}$ og
+$\vec{v}_{kat}$ peger i nogenlunde samme retning og har
 nogenlunde samme længde, fordi de tit har samme kontekst. De to vektorer
-er dog ikke helt ens, da der også vil være nogle kontekstord, der er
-ikke er lige hyppige for \"hund\" og \"kat\". Vi kan fx udregne
+er dog ikke helt ens, da der også vil være nogle kontekstord, der
+ikke er lige hyppige for \"hund\" og \"kat\". Vi kan for eksempel udregne
 $$
 \begin{aligned}
-&\overrightarrow{v}_{\text{hund}}\cdot \overrightarrow{k}_{\text{lufte}} = \begin{pmatrix} 3\\ 2\end{pmatrix}  \cdot  \begin{pmatrix} 2\\ 0.5\end{pmatrix} = 3\cdot 2 + 2\cdot 0.5 =7\\
-&\overrightarrow{v}_{\text{kat}}\cdot \overrightarrow{k}_{\text{lufte}} =\begin{pmatrix} 2\\ 3\end{pmatrix}  \cdot  \begin{pmatrix} 2\\ 0.5\end{pmatrix} = 2\cdot 2 + 3\cdot 0.5 = 5.5  
+&\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{lufte}} = \begin{pmatrix} 3\\ 2\end{pmatrix}  \cdot  \begin{pmatrix} 2\\ 0.5\end{pmatrix} = 3\cdot 2 + 2\cdot 0.5 =7\\
+&\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{lufte}} =\begin{pmatrix} 2\\ 3\end{pmatrix}  \cdot  \begin{pmatrix} 2\\ 0.5\end{pmatrix} = 2\cdot 2 + 3\cdot 0.5 = 5.5  
 \end{aligned}
 $$
-Her er $\overrightarrow{v}_{\text{hund}}\cdot \overrightarrow{k}_{\text{lufte}}$
-større end $\overrightarrow{v}_{\text{kat}}\cdot \overrightarrow{k}_{\text{lufte}}$
+Her er $\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{lufte}}$
+større end $\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{lufte}}$
 svarende til, at \"hund\" oftere har \"lufte\" som kontekst, end \"kat\"
 har. 
 
@@ -350,15 +360,15 @@ har.
 Måske har du undret dig over, hvorfor vi har brug for to forskellige
 vektorer for hvert ord. Hvert positivt eksempel forekommer jo to gange i
 vores datasæt, hvor de to ord skiftes til at spille rollen som input og
-kontekst. Alligevel er der ikke symmetri mellem de to ord. Hvis fx
+kontekst. Alligevel er der ikke symmetri mellem de to ord. Hvis for eksempel
 inputordet er \"logre\", er det ret sandsynligt, at \"hund\" er et af
 kontekstordene. Inputordet \"hund\" forekommer derimod i mange
 kontekster, der ikke involverer ordet \"logre\". Sandsynligheden for
 kontekstordet afhænger derfor af, om det er \"hund\" eller \"logre\",
 der er input. Hvis vi kun brugte én vektor for hvert ord,
-$\overrightarrow{u}_{\text{hund}}$ og $\overrightarrow{u}_{\text{logre}}$, ville vi få
+$\vec{u}_{\text{hund}}$ og $\vec{u}_{\text{logre}}$, ville vi få
 samme skalarprodukt
-$\overrightarrow{u}_{\text{hund}}\cdot \overrightarrow{u}_{\text{logre}} =  \overrightarrow{u}_{\text{logre}}\cdot \overrightarrow{u}_{\text{hund}}$,
+$\vec{u}_{\text{hund}}\cdot \vec{u}_{\text{logre}} =  \vec{u}_{\text{logre}}\cdot \vec{u}_{\text{hund}}$,
 og dermed samme sandsynlighed, uanset hvilket ord der var input.
 
 :::
@@ -367,60 +377,66 @@ og dermed samme sandsynlighed, uanset hvilket ord der var input.
 
 ### Opgaver {#opgaver .unnumbered}
 
--   Antag at vi har lavet 4-dimensionale input- og kontekstvektorer
-    således, at jo større skalarproduktet
-    $\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{c}$ er, desto mere
-    sandsynligt er det, at ordet $w$ har $c$ som kontekst. Inputvektoren
-    for \"hund\" og kontekstvektorerne for \"pels\" og \"fjer\" er
-    $$
-    \begin{aligned}
-    \overrightarrow{v}_{\text{hund}}=\begin{pmatrix} 0.5\\2\\1\\-1\end{pmatrix} ,\quad
-    \overrightarrow{k}_{\text{pels}}=\begin{pmatrix} 0\\3\\2\\-2\end{pmatrix},\quad
-    \overrightarrow{k}_{\text{fjer}}=\begin{pmatrix} 1\\-2\\1.5\\0.5\end{pmatrix}
-    \end{aligned}
-    $$
-    Udregn skalarprodukterne
-    $\overrightarrow{v}_{\text{hund}}\cdot \overrightarrow{k}_{\text{pels}}$ og
-    $\overrightarrow{v}_{\text{hund}}\cdot \overrightarrow{k}_{\text{fjer}}$. Passer
-    det med, hvilket af ordene \"pels\" og \"fjer\" der er mest
+Antag, at vi har lavet 4-dimensionale input- og kontekstvektorer
+således, at jo større skalarproduktet
+$\vec{v}_{w}\cdot \vec{k}_{c}$ er, desto mere
+sandsynligt er det, at ordet $w$ har $c$ som kontekst. Inputvektoren
+for \"hund\" og kontekstvektorerne for \"pels\" og \"fjer\" er
+$$
+\begin{aligned}
+\vec{v}_{\text{hund}}=\begin{pmatrix} 0.5\\2\\1\\-1\end{pmatrix} ,\quad
+\vec{k}_{\text{pels}}=\begin{pmatrix} 0\\3\\2\\-2\end{pmatrix},\quad
+\vec{k}_{\text{fjer}}=\begin{pmatrix} 1\\-2\\1.5\\0.5\end{pmatrix}
+\end{aligned}
+$$
+
+-    Udregn skalarprodukterne
+    $\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{pels}}$ og
+    $\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{fjer}}$. 
+-    Passer det med, hvilket af ordene \"pels\" og \"fjer\" der er mest
     sandsynligt som kontekst til \"hund\"?
 
--   Antag at vi har lavet 3-dimensionale input- og kontekstvektorer som
-    beskrevet i afsnittet ovenfor. Så skulle ord, der ofte har samme
-    kontekst, gerne have inputvektorer af nogenlunde samme længde og retning, mens inputvektorerne for ord,
-    der betyder noget helt forskelligt, kan have meget forskellig længde
-    og retning. Antag at inputvektorerne for \"kat\", \"hund\", \"mis\"
-    og \"kælk\" er 
-    $$
-    \begin{aligned}
-    \overrightarrow{v}_{\text{kat}}=\begin{pmatrix}0\\2\\1 \end{pmatrix},\quad
-    \overrightarrow{v}_{\text{hund}}=\begin{pmatrix}0\\1\\1.7\end{pmatrix}, \quad
-    \overrightarrow{v}_{\text{mis}}=\begin{pmatrix}0.4\\2\\0.9\end{pmatrix},\quad
-    \overrightarrow{v}_{\text{kælk}}=\begin{pmatrix} 2\\-1\\0 \end{pmatrix}
-    \end{aligned}
-    $$
-    Find længden af de fire vektorer. Find vinklen mellem
-    $\overrightarrow{v}_{\text{kat}}$ og de tre øvrige vektorer. Stemmer
-    resultatet overens med, hvilke ord der er tættest på \"kat\" i
-    betydning? Tegn vektorerne ind i GeoGebra.
+Antag, at vi har lavet 3-dimensionale input- og kontekstvektorer som
+beskrevet i afsnittet ovenfor. Så skulle ord, der ofte har samme
+kontekst, gerne have inputvektorer af nogenlunde samme længde og retning, mens inputvektorerne for ord,
+der betyder noget helt forskelligt, kan have meget forskellig længde
+og retning. Antag, at inputvektorerne for \"kat\", \"hund\", \"mis\"
+og \"kælk\" er 
+$$
+\begin{aligned}
+\vec{v}_{\text{kat}}=\begin{pmatrix}0\\2\\1 \end{pmatrix},\quad
+\vec{v}_{\text{hund}}=\begin{pmatrix}0\\1\\1.7\end{pmatrix}, \quad
+\vec{v}_{\text{mis}}=\begin{pmatrix}0.4\\2\\0.9\end{pmatrix},\quad
+\vec{v}_{\text{kælk}}=\begin{pmatrix} 2\\-1\\0 \end{pmatrix}
+\end{aligned}
+$$
+
+-    Find længden af de fire vektorer. 
+-    Find vinklen mellem $\vec{v}_{\text{kat}}$ og de tre øvrige vektorer. 
+-    Stemmer resultatet overens med, hvilke ord der er tættest på \"kat\" i
+    betydning? 
+-   Tegn vektorerne ind i GeoGebra. Skriv for eksempel `v(0,2,1)` i inputfeltet i GeoGebra og vælg derefter \"Vis\" $\rightarrow$ \"3D Grafik\".
     
 :::  
 
 ## Model for sandsynligheder 
 
 Som nævnt, vil vi gerne have, at jo større skalarproduktet
-$\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{c}$ er, desto mere
-sandsynligt er det, at ordet $w$ har ordet $c$ som kontekst. Hvis der er $V$ antal ord i sproget, kan vi nummerere de mulige kontekstord som $\text{ord}_1,\text{ord}_2,\ldots,\text{ord}_V$. For hvert af dem får vi et skalarprodukt $\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{\text{ord}_i}$ for $i=1,\ldots,V$. Hvis vi betegner sandsynligheden for, at $\text{ord}_i$ er et kontekstord til $w$, med $P(\text{ord}_i\mid w)$, så vil vi gerne have, at følgende er opfyldt.
+$\vec{v}_{w}\cdot \vec{k}_{c}$ er, desto mere
+sandsynligt er det, at ordet $w$ har ordet $c$ som kontekst. Hvis der er $V$ antal ord i sproget, kan vi nummerere de mulige kontekstord som $\text{ord}_1,\text{ord}_2,\ldots,\text{ord}_V$. For hvert af dem får vi et skalarprodukt $\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}$ for $i=1,\ldots,V$. Hvis vi betegner sandsynligheden for, at $\text{ord}_i$ er et kontekstord til $w$, med $P(\text{ord}_i\mid w)$, så vil vi gerne have, at følgende er opfyldt:
 
-1. For hvert $\text{ord}_i$ er $0\leq P(\text{ord}_i \mid w)\leq 1$, da sandsynligheder skal ligge mellem 0 og 1.
+1. For hvert $\text{ord}_i$ er 
+   $$0\leq P(\text{ord}_i \mid w)\leq 1$$ 
+   da sandsynligheder skal ligge mellem 0 og 1.
 
-2. Den samlede sandsynlighed for at få et af de mulige kontekstord skal være 1, dvs. $P(\text{ord}_1\mid w) + P(\text{ord}_2\mid w) + \dotsm + P(\text{ord}_V\mid w ) = 1$.
+2. Den samlede sandsynlighed for at få et af de mulige kontekstord skal være 1, det vil sige, 
+   $$P(\text{ord}_1\mid w) + P(\text{ord}_2\mid w) + \dotsm + P(\text{ord}_V\mid w ) = 1.$$
 
-3. Jo større skalarproduktet $\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{\text{ord}_i}$ er, desto større er sandsynligheden $P(\text{ord}_i\mid w)$ for at få $\text{ord}_i$ som kontekstord.
+3. Jo større skalarproduktet $\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}$ er, desto større er sandsynligheden $P(\text{ord}_i\mid w)$ for at få $\text{ord}_i$ som kontekstord.
 
 Skalarprodukter kan imidlertid antage alle reelle værdier, så de egner
 sig ikke til at repræsentere sandsynligheder, der jo skal være tal
-mellem 0 og 1. Vi bruger derfor en funktion på skalarprodukterne for at få dem lavet om til sandsynligheder, der opfylder 1.-3. Den funktion, vi vil bruge, hedder *Softmax*. Hvis $\overrightarrow{y}$ er en vektor med $V$ koordinater, så er $\text{Softmax}\big(\overrightarrow{y}\big)=\overrightarrow{z}$, hvor $\overrightarrow{z}$ er en ny vektor med $V$ koordinater. Den $i$te koordinat i $\overrightarrow{z}$ er givet ved
+mellem 0 og 1. Vi bruger derfor en funktion på skalarprodukterne for at få dem lavet om til sandsynligheder, der opfylder punkt 1. til 3 ovenfor. Den funktion, vi vil bruge, hedder *Softmax*. Hvis $\vec{y}$ er en vektor med $V$ koordinater, så er $\text{Softmax}\big(\vec{y}\big)=\vec{z}$, hvor $\vec{z}$ er en ny vektor med $V$ koordinater. Den $i$te koordinat i $\vec{z}$ er givet ved
 $$z_i = \frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}}$$
 Vi viser i boksen nedenfor, at Softmax opfylder:
 
@@ -430,45 +446,51 @@ Vi viser i boksen nedenfor, at Softmax opfylder:
 
 - Hvis $y_i < y_j$, så er $z_i < z_j$.
 
-Lader vi $\overrightarrow{y}$ være vektoren med $i$te koordinat
-$$y_i = \overrightarrow{v}_{w}\cdot \overrightarrow{k}_{\text{ord}_i}$$
-og bruger Softmax på $\overrightarrow{y}$, så får vi en vektor  $\overrightarrow{z}=\text{Softmax}\big(\overrightarrow{y}\big)$, der kan bruges som sandsynligheder. Mere præcist lader vi
-$$P(\text{ord}_i\mid w) = z_i = \frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}} = \frac{e^{\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{\text{ord}_i}}}{e^{\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{\text{ord}_1}} + \dotsm + e^{\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{\text{ord}_V}}}$${#eq-sshmodel}
-Egenskaberne ved softmax sikrer, at 1.-3. er opfyldt.
+Lader vi $\vec{y}$ være vektoren med $i$te koordinat
+$$y_i = \vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}$$
+og bruger Softmax på $\vec{y}$, så får vi en vektor  $\vec{z}=\text{Softmax}\big(\vec{y}\big)$, der kan bruges som sandsynligheder. Mere præcist lader vi
+
+$$
+\begin{aligned}
+P(\text{ord}_i\mid w) &= z_i = \frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}} \\ &= \frac{e^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}}}{e^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + e^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_V}}}
+\end{aligned}
+$${#eq-sshmodel}
+
+Egenskaberne ved softmax sikrer, at punkt 1. til 3. ovenfor er opfyldt.
 
 
 
 
 
-### Eksempel 
+### Eksempel 2
 
-Antag at vores ordforråd kun består af de tre ord \"hund\", \"pels\" og \"fjer\", og at vi har fundet vektorrepræsentationer for de tre ord.
+Antag, at vores ordforråd kun består af de tre ord \"hund\", \"pels\" og \"fjer\", og at vi har fundet vektorrepræsentationer for de tre ord.
 
-Antag at
+Antag, at
     inputvektoren for \"hund\" og kontekstvektorerne for \"fjer\", \"pels\" og
     \"hund\" er givet ved 
     $$
     \begin{aligned}
-    \overrightarrow{v}_{\text{hund}}=\begin{pmatrix} 0.5\\2\end{pmatrix},\quad
-    \overrightarrow{k}_{\text{fjer}}=\begin{pmatrix} 1\\-1 \end{pmatrix}, \quad
-    \overrightarrow{k}_{\text{pels}}=\begin{pmatrix} 0\\1\end{pmatrix},\quad
-    \overrightarrow{k}_{\text{hund}}=\begin{pmatrix} 4\\-1\end{pmatrix}
+    \vec{v}_{\text{hund}}=\begin{pmatrix} 0.5\\2\end{pmatrix},\quad
+    \vec{k}_{\text{fjer}}=\begin{pmatrix} 1\\-1 \end{pmatrix}, \quad
+    \vec{k}_{\text{pels}}=\begin{pmatrix} 0\\1\end{pmatrix},\quad
+    \vec{k}_{\text{hund}}=\begin{pmatrix} 4\\-1\end{pmatrix}
     \end{aligned}
     $$
 Vi beregner først skalarprodukterne 
 $$
 \begin{aligned}
-\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{fjer}} &= 0.5\cdot 1 + 2\cdot (-1)  =-1.5\\
-\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{pels}}&= 0.5\cdot 0 + 2\cdot 1  = 2\\
-\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{hund}} &= 0.5 \cdot 4 + 2 \cdot (-1) = 0
+\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} &= 0.5\cdot 1 + 2\cdot (-1)  =-1.5\\
+\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}}&= 0.5\cdot 0 + 2\cdot 1  = 2\\
+\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} &= 0.5 \cdot 4 + 2 \cdot (-1) = 0
 \end{aligned}
 $$
 Derefter anvender vi Softmax for at finde sandsynlighederne
 $$
 \begin{aligned}
-P(\text{fjer} \mid \text{hund}) &= \frac{e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{fjer}} }}{e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{fjer}} }+e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{pels}} }+e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{hund}} }} = \frac{e^{-1.5}}{e^{-1.5}+e^{2 }+e^{0 }} \approx 0.026\\
-P(\text{pels} \mid \text{hund}) &= \frac{e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{pels}} }}{e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{fjer}} }+e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{pels}} }+e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{hund}} }} = \frac{e^{2}}{e^{-1.5}+e^{2 }+e^{0 }} \approx 0.858\\
-P(\text{hund} \mid \text{hund}) &= \frac{e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{hund}} }}{e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{fjer}} }+e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{pels}} }+e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{hund}} }} = \frac{e^{0}}{e^{-1.5}+e^{2 }+e^{0 }} \approx 0.116
+P(\text{fjer} \mid \text{hund}) &= \frac{e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }}{e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &= \frac{e^{-1.5}}{e^{-1.5}+e^{2 }+e^{0 }} \approx 0.026\\ \\
+P(\text{pels} \mid \text{hund}) &= \frac{e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }}{e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &= \frac{e^{2}}{e^{-1.5}+e^{2 }+e^{0 }} \approx 0.858\\ \\
+P(\text{hund} \mid \text{hund}) &= \frac{e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }}{e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &= \frac{e^{0}}{e^{-1.5}+e^{2 }+e^{0 }} \approx 0.116 
 \end{aligned}
 $$
 "Pels" er altså det mest sandsynlige kontekstord til \"hund\", mens \"fjer\" sjældent er kontekst til \"hund\".
@@ -481,7 +503,7 @@ $$
 
 Vi viser nu de tre egenskaber ved Softmax. 
 
-- $0 < z_i < 1$
+**Egenskab 1: $0 < z_i < 1$**
 
 Husk på at 
 $$z_i=\frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}}$${#eq-softmax}
@@ -490,12 +512,28 @@ $$e^{y_i} < e^{y_1} + \dotsm +e^{y_i} + \dotsm + e^{y_V}$$
 Derfor er 
 $$z_i=\frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}} < \frac{e^{y_1} + \dotsm  + e^{y_V}}{e^{y_1} + \dotsm + e^{y_V}} = 1$$
 
-- $z_1 + \dotsm + z_V = 1$
+Alt i alt har vi altså, at
 
-Ved at indsætte at $z_i$ er givet ved @eq-softmax og sætte på fælles brøkstreg, får vi
-$$z_1 + \dotsm + z_V  = \frac{e^{y_1}}{e^{y_1} + \dotsm + e^{y_V}} + \dotsm + \frac{e^{y_V}}{e^{y_1} + \dotsm + e^{y_V}} = \frac{e^{y_1} + \dotsm + e^{y_V}}{e^{y_1} + \dotsm + e^{y_V}} = 1$$
+$$
+0 < z_i < 1
+$$
 
-- Hvis $y_i < y_j$, så er $z_i < z_j$.
+**Egenskab 2: $z_1 + \dotsm + z_V = 1$**
+
+Ved at indsætte at $z_i$ er givet ved (@eq-softmax) og sætte på fælles brøkstreg, får vi
+$$
+\begin{aligned}
+z_1 &+ \dotsm  + z_V  = \\ & \frac{e^{y_1}}{e^{y_1} + \dotsm + e^{y_V}} + \dotsm + \frac{e^{y_V}}{e^{y_1} + \dotsm + e^{y_V}} = \frac{e^{y_1} + \dotsm + e^{y_V}}{e^{y_1} + \dotsm + e^{y_V}} = 1
+\end{aligned}
+$$
+
+Altså er:
+
+$$
+z_1 + \dotsm + z_V = 1
+$$
+
+**Egenskab 3: Hvis $y_i < y_j$, så er $z_i < z_j$**
 
 Hvis $y_i< y_j$, så er 
 $$e^{y_i} < e^{y_j}$$
@@ -509,23 +547,26 @@ Det betyder netop, at $z_i<z_j$.
 
 ### Opgaver {#opgaver-1 .unnumbered}
 
-- Lad $\overrightarrow{y}$ være vektoren
-$$\overrightarrow{y}= \begin{pmatrix} 1 \\2 \\-1 \end{pmatrix}$$
-Beregn $\overrightarrow{z} = \text{Softmax}(\overrightarrow{y})$.
+Lad $\vec{y}$ være vektoren
+$$\vec{y}= \begin{pmatrix} 1 \\2 \\-1 \end{pmatrix}$$
 
--   Antag, at vores ordforråd består af de tre ord \"sommer\", \"sol\" og \"sne\". Vi har lavet en model for sandsynligheder for kontekstord som i @eq-sshmodel, hvor 
-    inputvektoren for \"sommer\" og kontekstvektorerne for \"sommer\", \"sol\" og
-    \"sne\" er givet ved 
-    $$
-    \begin{aligned}
-    \overrightarrow{v}_{\text{sommer}}=\begin{pmatrix} 1\\1\end{pmatrix},\quad
-    \overrightarrow{k}_{\text{sommer}}=\begin{pmatrix} 1\\-1 \end{pmatrix} ,\quad
-    \overrightarrow{k}_{\text{sol}}=\begin{pmatrix} 0\\2\end{pmatrix},\quad
-    \overrightarrow{k}_{\text{sne}} =\begin{pmatrix} -1\\-2\end{pmatrix}
-    \end{aligned}
-    $$
-    Hvad er sandsynligheden for, at hvert af de tre ord er 
-    kontekst til \"sommer\"? Hvilket af de tre ord optræder oftest som kontekst til sommer?
+- Beregn $\vec{z} = \text{Softmax}(\vec{y})$.
+
+Antag, at vores ordforråd består af de tre ord \"sommer\", \"sol\" og \"sne\". Vi har lavet en model for sandsynligheder for kontekstord som i (@eq-sshmodel), hvor 
+inputvektoren for \"sommer\" og kontekstvektorerne for \"sommer\", \"sol\" og
+\"sne\" er givet ved 
+$$
+\begin{aligned}
+\vec{v}_{\text{sommer}}=\begin{pmatrix} 1\\1\end{pmatrix},\quad
+\vec{k}_{\text{sommer}}=\begin{pmatrix} 1\\-1 \end{pmatrix} ,\quad
+\vec{k}_{\text{sol}}=\begin{pmatrix} 0\\2\end{pmatrix},\quad
+\vec{k}_{\text{sne}} =\begin{pmatrix} -1\\-2\end{pmatrix}
+\end{aligned}
+$$
+
+- Hvad er sandsynligheden for, at hvert af de tre ord er 
+    kontekst til \"sommer\"? 
+- Hvilket af de tre ord optræder oftest som kontekst til sommer?
     
 
 :::
@@ -533,55 +574,70 @@ Beregn $\overrightarrow{z} = \text{Softmax}(\overrightarrow{y})$.
 ## Estimation af vektorrepræsentationer 
 
 Vi mangler stadig at bestemme vektorrepræsentationerne
-$\overrightarrow{v}_{w}$ og $\overrightarrow{k}_{c}$, så modellen i @eq-sshmodel kommer til at passe til virkelig tekst. Her får
+$\vec{v}_{w}$ og $\vec{k}_{c}$, så modellen i (@eq-sshmodel) kommer til at passe til virkelig tekst. Her får
 vi brug for det datasæt, som vi lavede ud fra vores træningsdata. Hver
 række i datasættet bestod af et inputord $w$ og et  kontekstord
 $c$, som forekom i vores træningsdata. Lad os sige, at der er $M$ rækker i vores træningsdata. Vi betegner data
 i den $j$te række med $(w_j,c_j)$ for
 $j=1,\ldots,M$.
-Vores datasæt har altså formen
+Vores datasæt har altså formen (jævnfør @tbl-data):
 
-   Input   Kontekst    
-  ------- --------- 
-   $w_1$   $c_1$  
-   $w_2$   $c_2$    
-   $w_3$   $c_3$   
-     ⋮        ⋮     
 
-  : Eksempel på datatabel[]{label="tab:data"}
+::: {#tbl-data}
+|   Input | Kontekst |    
+|:---:|:---:|
+| $w_1$ | $c_1$ | 
+| $w_2$ | $c_2$ |   
+| $w_3$ | $c_3$ |  
+| $\vdots$ | $\vdots$ | 
+| $w_j$ | $c_j$ |  
+| $\vdots$ | $\vdots$ | 
 
-Vi ser nu på $j$te række. Sandsynligheden for, at $w_j$ har netop $c_j$ som kontekst, er $P(c_j\mid w_j)$. Vi vil nu finde den samlede sandsynlighed for, at inputordene $w_1,\ldots,w_M$ i vores datasæt har henholdsvis $c_1,\ldots,c_M$ som kontekstord. Den kalder vi $P(\text{data})$. Lad os antage, at alle vores par af input- og kontekstord er uafhængige af hinanden.[^2] Så får vi den samlede sandsynlighed ved at gange de enkelte sandsynligheder sammen. 
+Eksempel på datatabel med træningsdata.
+:::
+
+Vi ser nu på $j$te række. Sandsynligheden for, at $w_j$ har netop $c_j$ som kontekst, er $P(c_j\mid w_j)$. Vi vil nu finde den samlede sandsynlighed for, at inputordene $w_1,\ldots,w_M$ i vores datasæt har henholdsvis $c_1,\ldots,c_M$ som kontekstord. Den kalder vi $P(\text{data})$. Lad os antage, at alle vores par af input- og kontekstord er uafhængige af hinanden[^2]. Så får vi den samlede sandsynlighed ved at gange de enkelte sandsynligheder sammen. 
 $$P(\text{data})  = P(c_1\mid w_1) \cdot P(c_2\mid w_2) \dotsm P(c_M\mid w_M)$${#eq-Pdata}
-Hvis vores model fra @eq-sshmodel passer godt til datasættet, skulle denne sandsynlighed gerne være høj. 
+Hvis vores model fra (@eq-sshmodel) passer godt til datasættet, skulle denne sandsynlighed gerne være høj. 
 
-[^2]: I praksis er ordpar, der forekommer i nærheden af hinanden ikke helt uafhængige. Hvis fx parret $(\text{hund},\text{madskål})$ forekommer, er det mere sandsynligt, at $(\text{hund}, \text{fodre})$ forekommer i nærheden, end hvis der havde stået $(\text{hund},\text{hundesnor})$.
+[^2]: I praksis er ordpar, der forekommer i nærheden af hinanden ikke helt uafhængige. Hvis for eksempel parret $(\text{hund},\text{madskål})$ forekommer, er det mere sandsynligt, at $(\text{hund}, \text{fodre})$ forekommer i nærheden, end hvis der havde stået $(\text{hund},\text{hundesnor})$.
 
-Da summer er nemmere at regne på end produkter, vælger vi at tage den naturlige logaritme på begge sider af @eq-Pdata. Ved at bruge logaritmeregnereglen $\ln(ab) = \ln(a) + \ln(b)$ får vi, at
+Da summer er nemmere at regne på end produkter, vælger vi at tage den naturlige logaritme på begge sider af (@eq-Pdata). Ved at bruge logaritmeregnereglen $\ln(ab) = \ln(a) + \ln(b)$ får vi, at
 $$
 \begin{aligned}
 \ln (P(\text{data})) &= \ln\big(P(c_1\mid w_1) \cdot P(c_2\mid w_2) \dotsm P(c_M\mid w_M)\big)\\
 &= \ln(P(c_1\mid w_1)) + \ln(P(c_2\mid w_2)) + \dotsm + \ln(P(c_M\mid w_m)) 
 \end{aligned}
 $$
-Da den naturlige logaritme er en voksende funktion, svarer store værdier af $P(\text{data})$ til store værdier af $\ln (P(\text{data}))$, som igen svarer til små værdier af $-\ln(P(\text{data}))$ **FIGUR?**. Hvis vores model er god, skal 
-$$L= - \ln(\text{data}) = -\ln(P(c_1\mid w_1)) - \ln(P(c_2\mid w_2)) - \dotsm - \ln(P(c_M\mid w_m)) $${#eq-Ldef}
+Da den naturlige logaritme er en voksende funktion, svarer store værdier af $P(\text{data})$ til store værdier af $\ln (P(\text{data}))$, som igen svarer til små værdier af $-\ln(P(\text{data}))$. Dette er illustreret på @fig-natural_ln:
+
+![Grafen for $\ln(x)$ og $-\ln(x)$.](../softmax/images/natural_ln.png){width=80% fig-align='center' #fig-natural_ln}
+
+
+Hvis vores model er god, skal 
+$$
+\begin{aligned}
+L&= - \ln(\text{data}) \\ &= -\ln(P(c_1\mid w_1)) - \ln(P(c_2\mid w_2)) - \dotsm - \ln(P(c_M\mid w_m)) 
+\end{aligned}
+$${#eq-Ldef}
+
 altså gerne være lav[^3]. Vi kalder $L$ for vores *tabsfunktion*. Denne tabsfunktion kaldes også nogle gange for *cross-entropy*.
 
 [^3]: Bemærk, at da $P(c_j\mid w_j)$ er en sandsynlighed, der ligger mellem 0 og 1, er $\ln (P(c_j\mid w_j))$ negativ. Derfor er $-\ln (P(c_j\mid w_j))$ positiv og $L$ er dermed også positiv. Når $L$ gerne skal være lav, betyder det altså, at den skal være så tæt på 0 som muligt. 
 
-Vi kan indsætte vores udtryk for sandsynlighederne fra @eq-sshmodel i @eq-Ldef og få
+Vi kan indsætte vores udtryk for sandsynlighederne fra (@eq-sshmodel) i (@eq-Ldef) og få
 $$
 \begin{aligned}
-L = &-\ln\left(\frac{e^{\overrightarrow{v}_{w_1}\cdot \overrightarrow{k}_{c_1}}}{e^{\overrightarrow{v}_{w_1}\cdot \overrightarrow{k}_{\text{ord}_1}} + \dotsm + e^{\overrightarrow{v}_{w_1}\cdot \overrightarrow{k}_{\text{ord}_V}}}\right)
-- \ln\left(\frac{e^{\overrightarrow{v}_{w_2}\cdot \overrightarrow{k}_{c_2}}}{e^{\overrightarrow{v}_{w_2}\cdot \overrightarrow{k}_{\text{ord}_1}} + \dotsm + e^{\overrightarrow{v}_{w_2}\cdot \overrightarrow{k}_{\text{ord}_V}}}\right)\\
-&- \dotsm - \ln\left(\frac{e^{\overrightarrow{v}_{w_M}\cdot \overrightarrow{k}_{c_M}}}{e^{\overrightarrow{v}_{w_M}\cdot \overrightarrow{k}_{\text{ord}_1}} + \dotsm + e^{\overrightarrow{v}_{w_M}\cdot \overrightarrow{k}_{\text{ord}_V}}}\right) 
+L = &-\ln\left(\frac{e^{\vec{v}_{w_1}\cdot \vec{k}_{c_1}}}{e^{\vec{v}_{w_1}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + e^{\vec{v}_{w_1}\cdot \vec{k}_{\text{ord}_V}}}\right)
+\\ &- \ln\left(\frac{e^{\vec{v}_{w_2}\cdot \vec{k}_{c_2}}}{e^{\vec{v}_{w_2}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + e^{\vec{v}_{w_2}\cdot \vec{k}_{\text{ord}_V}}}\right)
+- \dotsm \\ &- \ln\left(\frac{e^{\vec{v}_{w_M}\cdot \vec{k}_{c_M}}}{e^{\vec{v}_{w_M}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + e^{\vec{v}_{w_M}\cdot \vec{k}_{\text{ord}_V}}}\right) 
 \end{aligned}
 $${#eq-Lfunktion}
 Bemærk her, at $w_j$ og $c_j$ refererer til henholdsvis input- og kontekstordet i $j$te række i datasættet, mens $\text{ord}_i$ refererer til $i$te ord i ordforrådet.
 
-Ligning @eq-Lfunktion viser, at $L$ afhænger af, hvordan vi har valgt input- og kontekstvektorerne. Vi kan betragte altså $L$ som en funktion af input- og kontekstvektorerne. Mere præcist er $L$ en funktion af alle koordinaterne i disse vektorer. For at få den bedst mulige model for vores træningsdata, ønsker vi at bestemme input- og kontekstvektorerne, således at de minimerer $L$.
+Ligning (@eq-Lfunktion) viser, at $L$ afhænger af, hvordan vi har valgt input- og kontekstvektorerne. Vi kan betragte altså $L$ som en funktion af input- og kontekstvektorerne. Mere præcist er $L$ en funktion af alle koordinaterne i disse vektorer. For at få den bedst mulige model for vores træningsdata, ønsker vi at bestemme input- og kontekstvektorerne, således at de minimerer $L$.
  Hvordan finder man minimum for $L$ i praksis? Det kan man
-fx gøre ved hjælp af *gradientnedstigning*, som du kan læse mere om her. **LINK**
+for eksempel gøre ved hjælp af [gradientnedstigning](../gradientnedstigning/gradientnedstigning.qmd), som vi ikke vil komme nærmere ind på her.
 
 Der er rigtig mange ord i det danske sprog. For hvert af dem skal vi
 finde både en input- og en kontekstvektor, der hver har $m$ koordinater.
@@ -594,25 +650,25 @@ store mængder træningsdata til rådighed i form af et tekstkorpus med rigtig m
 
 
 Nu har vi set, hvordan man kan repræsentere et ord $w$ ved en
-inputvektor $\overrightarrow{v}_{w}$ og en kontekstvektor
-$\overrightarrow{k}_{w}$. Vektoren $\overrightarrow{v}_{w}$ er den, der
+inputvektor $\vec{v}_{w}$ og en kontekstvektor
+$\vec{k}_{w}$. Vektoren $\vec{v}_{w}$ er den, der
 viser, hvordan $w$ forholder sig til sin kontekst, så det er den, der
 repræsenterer betydningen af $w$. Normalt vil man derfor arbejde videre
-med $\overrightarrow{v}_{w}$, mens $\overrightarrow{k}_{w}$ smides væk.
-Når vektorerne $\overrightarrow{v}_{w}$ er fundet med Word2Vec, kan man bruge dem til at lave algoritmer til at generere tekst. Det ser vi på i næste afsnit. 
+med $\vec{v}_{w}$, mens $\vec{k}_{w}$ smides væk.
+Når vektorerne $\vec{v}_{w}$ er fundet med Word2Vec, kan man bruge dem til at lave algoritmer til at generere tekst. Det ser vi på i næste afsnit. 
 
-### Eksempel 3 {#eksempel-3 .unnumbered}
+<!-- ### Eksempel 3 {#eksempel-3 .unnumbered} -->
 
-Eges børnebog
+<!-- Eges børnebog -->
 
 ::: {.callout-note collapse="true" appearance="minimal"}
 
 ### Opgaver {#opgaver-3 .unnumbered}
 
 
-For at finde minimum for tabsfunktionen, får man brug for at finde partielle afledte af Softmax-funktionen. Det kan man gøre smart ved hjælp af nedenstående opgave, som viser, at man ikke behøver at kende værdien af $\overrightarrow{y}$ i det punkt, hvor man differentierer, men kun funktionsværdien $\overrightarrow{z}$.
+For at finde minimum for tabsfunktionen, får man brug for at finde partielle afledte af Softmax-funktionen. Det kan man gøre smart ved hjælp af nedenstående opgave, som viser, at man ikke behøver at kende værdien af $\vec{y}$ i det punkt, hvor man differentierer, men kun funktionsværdien $\vec{z}$.
     
-- Vis følgende egenskaber ved de partielle afledte af Softmax-funktionen:
+- Vis ved at bruge udtrykketi (@eq-softmax) følgende egenskaber ved de partielle afledte af Softmax-funktionen:
 
 $$\frac{\partial z_i}{\partial y_i} = z_i(1-z_i),\quad \frac{\partial z_i}{\partial y_j} = -z_iz_j, \quad i\neq j$$
 
@@ -637,19 +693,19 @@ gøres i to trin:
     output giver funktionen det mest sandsynlige næste ord (eller et af
     de mest sandsynlige).
 
-Hvis vi fx har genereret teksten
+Hvis vi for eksempel har genereret teksten
 $$
 \text{"Hunden spiser sit ---"}
 $$
 så
 skal vi prøve at gætte, hvilket ord der kommer efter \"sit\". Vi
 oversætter derfor ordene \"Hunden\", \"spiser\" og \"sit\" til
-vektorerne $\overrightarrow{v}_{\text{Hunden}}$, $\overrightarrow{v}_{\text{spiser}}$
-og $\overrightarrow{v}_{\text{sit}}$. Disse tre vektorer giver vi funktionen
+vektorerne $\vec{v}_{\text{Hunden}}$, $\vec{v}_{\text{spiser}}$
+og $\vec{v}_{\text{sit}}$. Disse tre vektorer giver vi funktionen
 som input, og som output får vi et nyt ord. Det kunne være \"kødben\". Den
-funktion, der bruges i punkt 2., kunne fx være et *neuralt netværk*.
-Du kan læse mere om, hvordan det fungerer i \"Tekstgenerering med
-neurale netværk\".**LINK**
+funktion, der bruges i punkt 2., kunne for eksempel være et *neuralt netværk*.
+Du kan læse mere om, hvordan det fungerer i [Tekstgenerering med
+neurale netværk]().
 
 Det smarte ved at bruge vektorrepræsentationerne er, hvis vi for
 eksempel vil generere næste ord i
@@ -663,5 +719,5 @@ set sætningen \"katten skal have mad\". Hvis den til gengæld har set
 samme kontekst, og dermed har næsten samme vektorrepræsentation, så vil
 man alligevel få \"mad\" som muligt næste ord.
 
-Bemærk, at resultatet af Word2Vec afhænger meget af, hvilket træningsdata vi har brugt. Antag fx at vi kun træner modellen på tekster skrevet af folk, der ikke kan lide hunde. Så vil $\overrightarrow{v}_{\text{hund}}$ have en tendens til at pege i samme retning som andre negativt ladede ord, fordi de ofte optræder sammen med negative kontekstord. Når vi sidenhen genererer ny tekst, vil vi få en tendens til at danne sætninger, der omtaler hunde negativt.
+Bemærk, at resultatet af Word2Vec afhænger meget af, hvilket træningsdata vi har brugt. Antag for eksempel, at vi kun træner modellen på tekster skrevet af folk, der ikke kan lide hunde. Så vil $\vec{v}_{\text{hund}}$ have en tendens til at pege i samme retning som andre negativt ladede ord, fordi de ofte optræder sammen med negative kontekstord. Når vi sidenhen genererer ny tekst, vil vi få en tendens til at danne sætninger, der omtaler hunde negativt.
 
