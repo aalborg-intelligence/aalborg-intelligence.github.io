@@ -1,6 +1,6 @@
 ---
 title: "Word2vec"
-image: "images/sprog.jpg"
+image: "images/word2vec_simple.png"
 description-meta: "Word2vec."
 ---
 
@@ -35,9 +35,16 @@ staves helt anderledes.
 I stedet vil vi gerne repræsentere hvert ord med en vektor. Idéen er, at
 ord, hvis betydning ligner hinanden, skal repræsenteres med vektorer,
 der peger i nogenlunde samme retning og har nogenlunde samme længde, som
-illustreret på Figur ?.
+illustreret på @fig-vektorer.
 
-**SIMPEL FIGUR MED FX TRE VEKTORER, FX HUND, KAT, KÆLK**
+{{< include _geogebra/_geogebra.qmd >}}
+
+::: {#fig-vektorer width=80% fig-align='center'}
+::: {#ggbApplet_vektorer}
+:::
+Eksempel på hvordan fire ord hver bliver repræsenteret som en vektor. Vektorerne, som repræsenterer dyrerne, peger i nogenlunde samme retning sammenlignet med vektoreren, som repræsenterer ordet \"kælk\". Samtidig kan det også ses, at vektorerne, som repræsenterer ordene \"kat\" og \"mis\" ligner hinanden mere end vektoren, som repræsenterer ordet \"hund\". 
+:::
+
 
 I kender vektorer i 2 eller 3 dimensioner og ved, at de kan skrives på
 formen
@@ -69,8 +76,7 @@ Word2Vec blev opfundet af en gruppe medarbejdere hos Google i 2013. I
 dag bruges diverse forfininger af algoritmen i mange store
 sprogmodeller.
 
-Betydning og kontekst {#betydning-og-kontekst .unnumbered}
----------------------
+## Betydning og kontekst
 
 Hvilke egenskaber skal de vektorer, der repræsenterer ord, så have? Jo,
 idéen er, at vektorerne skal indfange betydningen af et ord i den
@@ -108,8 +114,7 @@ Konteksten er særlig vigtig i forbindelse med ord med flere betydninger.
 Vi forstår fx betydningen af ordet \"marsvin\" forskelligt alt efter om
 ordet \"hav\" eller ordet \"mælkebøtte\" optræder i nærheden af det.
 
-Træningsdata {#træningsdata .unnumbered}
-------------
+## Træningsdata 
 
 Vi har altså brug for at vide, hvilken kontekst ordene indgår i. For at
 lære, hvilken kontekst et ord forekommer i, tager vi udgangspunkt i et
@@ -166,8 +171,7 @@ kontekstord. Det vil vi sidenhen
 benytte til at vælge vektorerne, således at sandsynlighederne matcher, hvor hyppigt vi observerer $c$ som kontekstord til $w$  i
 datasættet.
 
-Input- og kontekstvektorer {#input--og-kontekstvektorer .unnumbered}
---------------------------
+## Input- og kontekstvektorer 
 
 I første omgang vil vi lade hvert ord $w$ være repræsenteret af to
 vektorer, $\overrightarrow{v}_{w}$ og $\overrightarrow{k}_{w}$, hvor
@@ -279,7 +283,7 @@ man stadigvæk godt kan give mening til formlen
 @eq-skalar. Intuitionen fra to eller tre dimensioner er
 derfor god at have, selv om vi arbejder med højere dimensioner.
 
-### Eksempel 1 {#eksempel-1 .unnumbered}
+### Eksempel 1 
 
 Lad os sige, at vi har fundet en
 vektorrepræsentation, der opfylder det ønskede. Det gav vektorerne
@@ -402,8 +406,7 @@ og dermed samme sandsynlighed, uanset hvilket ord der var input.
     
 :::  
 
-Model for sandsynligheder {#model-for-sandsynligheder .unnumbered}
--------------------------
+## Model for sandsynligheder 
 
 Som nævnt, vil vi gerne have, at jo større skalarproduktet
 $\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{c}$ er, desto mere
@@ -527,8 +530,7 @@ Beregn $\overrightarrow{z} = \text{Softmax}(\overrightarrow{y})$.
 
 :::
 
-Estimation af vektorrepræsentationer {#estimation-af-vektorer .unnumbered}
-----------------------
+## Estimation af vektorrepræsentationer 
 
 Vi mangler stadig at bestemme vektorrepræsentationerne
 $\overrightarrow{v}_{w}$ og $\overrightarrow{k}_{c}$, så modellen i @eq-sshmodel kommer til at passe til virkelig tekst. Her får
@@ -617,8 +619,7 @@ $$\frac{\partial z_i}{\partial y_i} = z_i(1-z_i),\quad \frac{\partial z_i}{\part
 
 :::
 
-Fra vektorer til tekstgenerering {#fra-vektorer-til-tekstgenerering .unnumbered}
---------------------------------
+## Fra vektorer til tekstgenerering 
 
 I det følgende ser vi på, hvordan vektorrepræsentationerne, som vi fandt
 med Word2Vec, kan bruges til at lave en algoritme, der kan generere ny
