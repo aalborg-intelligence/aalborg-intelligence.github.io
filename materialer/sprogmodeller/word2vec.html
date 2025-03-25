@@ -191,7 +191,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#eksempel" id="toc-eksempel" class="nav-link" data-scroll-target="#eksempel">Eksempel</a></li>
   </ul></li>
-  <li><a href="#estimation-af-vektorer" id="toc-estimation-af-vektorer" class="nav-link" data-scroll-target="#estimation-af-vektorer">Estimation af vektorrepræsentationer</a>
+  <li><a href="#estimation-af-vektorrepræsentationer" id="toc-estimation-af-vektorrepræsentationer" class="nav-link" data-scroll-target="#estimation-af-vektorrepræsentationer">Estimation af vektorrepræsentationer</a>
   <ul class="collapse">
   <li><a href="#eksempel-3" id="toc-eksempel-3" class="nav-link" data-scroll-target="#eksempel-3">Eksempel 3</a></li>
   </ul></li>
@@ -230,8 +230,60 @@ window.Quarto = {
 \]</span> og vil gætte næste ord. Hvis vi har en stor mængde tekst til rådighed, et tekstkorpus, kan vi selvfølgelig lede efter ordsekvensen "Min hund har en blød" og se hvilket ord, der oftest kommer efter som beskrevet i <strong>LINK</strong>. Men hvis ikke sekvensen forekommer i vores korpus, så har vi et problem. I stedet kunne vi lede efter en sætning med en betydning, der minder om "Min hund har en blød" og se, hvad der kommer efter den. Men hvordan får vi en computer til at forstå betydningen af ord?</p>
 <p>Den simpleste måde at repræsentere et ord på i en computer ville være ved at nummerere alle ordene i det danske sprog fra 1 til <span class="math inline">\(V\)</span>, hvor <span class="math inline">\(V\)</span> er det samlede antal ord. Nummeret på et ord giver dog ikke megen information om ordets betydning.</p>
 <p>En anden nærliggende idé kunne være at repræsentere et ord ved bogstaverne i ordet. For at en computer skal kunne forstå det, kunne man give hvert bogstav et tal ud fra bogstavets nummer i alfabetet. Så ville "kat" blive til <span class="math inline">\((11,1,20)\)</span> og "hund" til <span class="math inline">\((8,21,14,4)\)</span>. Stavemåden fortæller dog heller ikke meget om betydningen af et ord. Ordet "mund" staves næsten lige som "hund", men har en helt anden betydning. Omvendt betyder ordet "vovse" næsten det samme som "hund", men staves helt anderledes.</p>
-<p>I stedet vil vi gerne repræsentere hvert ord med en vektor. Idéen er, at ord, hvis betydning ligner hinanden, skal repræsenteres med vektorer, der peger i nogenlunde samme retning og har nogenlunde samme længde, som illustreret på Figur ?.</p>
-<p><strong>SIMPEL FIGUR MED FX TRE VEKTORER, FX HUND, KAT, KÆLK</strong></p>
+<p>I stedet vil vi gerne repræsentere hvert ord med en vektor. Idéen er, at ord, hvis betydning ligner hinanden, skal repræsenteres med vektorer, der peger i nogenlunde samme retning og har nogenlunde samme længde, som illustreret på <a href="#fig-vektorer" class="quarto-xref">figur&nbsp;1</a>.</p>
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<script src="https://cdn.geogebra.org/apps/deployggb.js"></script>
+
+<!-- 
+Alle geogebra filer placeres i mappen _geogebra
+Erstat XXX med nr på app og erstat YYY med navn på ggb-fil -->
+<script>
+var parameters_vektorer = {
+"id": "ggbApplet_vektorer",
+"width":500,
+"height":400,
+"prerelease":false,
+"borderColor":null,
+"showMenuBar":false,
+"showAlgebraInput":false,
+"showToolBar":false,
+"showToolBarHelp":false,
+"showResetIcon":true,
+"enableLabelDrags":false,
+"enableShiftDragZoom":true,
+"enableRightClick":false,
+"errorDialogsActive":false,
+"useBrowserForJS":false,
+"capturingThreshold":null,
+"language":"da",
+// use this instead of ggbBase64 to load a .ggb file
+ "filename":"_geogebra/fig_simple.ggb",
+};
+var applet_vektorer = new GGBApplet(parameters_vektorer, true);
+</script>
+
+
+
+<script>
+window.onload = function() {
+  applet_vektorer.inject('ggbApplet_vektorer');
+  }
+</script>
+
+<div id="fig-vektorer" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" width="80%" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-vektorer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="ggbApplet_vektorer">
+
+</div>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-vektorer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;1: Eksempel på hvordan fire ord hver bliver repræsenteret som en vektor. Vektorerne, som repræsenterer dyrerne, peger i nogenlunde samme retning sammenlignet med vektoreren, som repræsenterer ordet "kælk". Samtidig kan det også ses, at vektorerne, som repræsenterer ordene "kat" og "mis" ligner hinanden mere end vektoren, som repræsenterer ordet "hund".
+</figcaption>
+</figure>
+</div>
 <p>I kender vektorer i 2 eller 3 dimensioner og ved, at de kan skrives på formen <span class="math display">\[
 \begin{pmatrix}
 a_1\\a_2\end{pmatrix}\text{ og } \begin{pmatrix} a_1\\a_2 \\a_3
@@ -242,8 +294,8 @@ a_1\\a_2\\a_3\\ \vdots \\ a_m
 \end{pmatrix}
 \]</span> hvor <span class="math inline">\(a_1,a_2,a_3,\ldots,a_m\)</span> er reelle tal. I praksis vælger man <span class="math inline">\(m\)</span> stort, fx <span class="math inline">\(m=100\)</span>. Man kan regne med <span class="math inline">\(m\)</span>-dimensionale vektorer, lige som man gør i to eller tre dimensioner. Vi kommer for eksempel til at se, hvordan man kan finde skalarprodukter. Til gengæld har man ikke mulighed for at visualisere en <span class="math inline">\(m\)</span>-dimensional vektor som en pil i et koordinatsystem, men det har vi heldigvis heller ikke brug for.</p>
 <p>I denne note ser vi på algoritmen Word2Vec som et eksempel på, hvordan man kan oversætte ord til vektorer, der repræsenterer ordenes betydning. Mere præcist kiger vi på en version af algoritmen, der hedder skip-gram. Word2Vec blev opfundet af en gruppe medarbejdere hos Google i 2013. I dag bruges diverse forfininger af algoritmen i mange store sprogmodeller.</p>
-<section id="betydning-og-kontekst" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="betydning-og-kontekst">Betydning og kontekst</h2>
+<section id="betydning-og-kontekst" class="level2">
+<h2 class="anchored" data-anchor-id="betydning-og-kontekst">Betydning og kontekst</h2>
 <p>Hvilke egenskaber skal de vektorer, der repræsenterer ord, så have? Jo, idéen er, at vektorerne skal indfange betydningen af et ord i den forstand, at ord, hvis betydning minder om hinanden, svarer til vektorer, der ligner hinanden. Og hvordan ved vi så, om to ords betydning minder om hinanden? Betydningen af et ord har noget at gøre med, hvilke sammenhænge det optræder i, når man kigger i rigtig mange dokumenter. Den sproglige sammenhæng, et ord indgår i, kaldes også en <em>kontekst</em>. Ord, der betyder næsten det samme vil altså ofte optræde i samme kontekst. Ordene "hund" og "kat" er for eksempel forskellige, men de vil ofte optræde i sammenhænge, der ligner hinanden. Se for eksempel på sætningerne <span class="math display">\[
 \text{"Min --- har spist af sin madskål"}
 \]</span> og <span class="math display">\[
@@ -253,8 +305,8 @@ a_1\\a_2\\a_3\\ \vdots \\ a_m
 \]</span> mens både "kat" og "mis" ville passe ind. Ordene "kat" og "hund" er altså tætte på hinanden, men ikke så tætte som "kat" og "mis". Vi vil derfor gerne have, at vektorerne for "hund" og "kat" minder mere om hinanden end vektorerne for "hund" og "kælk", men ikke så meget som "kat" og "mis". Hvad vi forstår ved, at vektorer minder om hinanden, det kommer vi tilbage til.</p>
 <p>Konteksten er særlig vigtig i forbindelse med ord med flere betydninger. Vi forstår fx betydningen af ordet "marsvin" forskelligt alt efter om ordet "hav" eller ordet "mælkebøtte" optræder i nærheden af det.</p>
 </section>
-<section id="træningsdata" class="level2 unnumbered page-columns page-full">
-<h2 class="unnumbered anchored" data-anchor-id="træningsdata">Træningsdata</h2>
+<section id="træningsdata" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="træningsdata">Træningsdata</h2>
 <p>Vi har altså brug for at vide, hvilken kontekst ordene indgår i. For at lære, hvilken kontekst et ord forekommer i, tager vi udgangspunkt i et stort tilgængeligt tekstkorpus. Vi kalder dette korpus for vores <em>træningsdata</em>.</p>
 <p>Ved konteksten til et ord vil vi her forstå de ord, der står umiddelbart før og efter ordet. Mere præcist vælger vi et vindue, lad os sige på fem ord, hvor ordet i midten er det, vi gerne vil kende betydningen af. Vi vil kalde dette for <em>inputordet</em>. De to første ord og de to sidste ord i vinduet er inputordets <em>kontekstord</em>. Se fx på sætningen <span class="math display">\[
 \text{\fbox{Den sorte \textbf{hund} logrer med} halen}
@@ -313,8 +365,8 @@ a_1\\a_2\\a_3\\ \vdots \\ a_m
 </table>
 <p>I de næste to afsnit ser vi på, hvordan man kan bruge vektorer til at modellere sandsynligheden for, at et inputord <span class="math inline">\(w\)</span> har <span class="math inline">\(c\)</span> som kontekstord. Det vil vi sidenhen benytte til at vælge vektorerne, således at sandsynlighederne matcher, hvor hyppigt vi observerer <span class="math inline">\(c\)</span> som kontekstord til <span class="math inline">\(w\)</span> i datasættet.</p>
 </section>
-<section id="input--og-kontekstvektorer" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="input--og-kontekstvektorer">Input- og kontekstvektorer</h2>
+<section id="input--og-kontekstvektorer" class="level2">
+<h2 class="anchored" data-anchor-id="input--og-kontekstvektorer">Input- og kontekstvektorer</h2>
 <p>I første omgang vil vi lade hvert ord <span class="math inline">\(w\)</span> være repræsenteret af to vektorer, <span class="math inline">\(\overrightarrow{v}_{w}\)</span> og <span class="math inline">\(\overrightarrow{k}_{w}\)</span>, hvor <span class="math inline">\(\overrightarrow{v}_{w}\)</span> repræsenterer ordet, når det optræder som input, mens <span class="math inline">\(\overrightarrow{k}_{w}\)</span> repræsenterer ordet, når det optræder som kontekst. Betydningen af <span class="math inline">\(w\)</span> afgøres som nævnt af, hvordan ordet forholder sig til konteksten. Det vil vi oversætte matematisk til, hvordan inputvektoren <span class="math inline">\(\overrightarrow{v}_{w}\)</span> forholder sig til kontekstvektorerne <span class="math inline">\(\overrightarrow{k}_{c}\)</span> for diverse kontekstord <span class="math inline">\(c\)</span>. Vi vil derfor tænke på <span class="math inline">\(\overrightarrow{v}_{w}\)</span> som den vektor, der repræsenterer betydningen af ordet, og altså den vi er ude på at bestemme.</p>
 <p>For at måle hvordan inputvektoren <span class="math inline">\(\overrightarrow{v}_{w}\)</span> for ordet <span class="math inline">\(w\)</span> forholder sig til kontekstvektoren <span class="math inline">\(\overrightarrow{k}_{c}\)</span> for ordet <span class="math inline">\(c\)</span>, vil vi bruge <em>skalarproduktet</em> <span class="math inline">\(\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{c}\)</span>. Husk på at man finder skalarproduktet mellem to vektorer i to dimensioner ved formlen <span class="math display">\[
 \begin{pmatrix}
@@ -353,8 +405,8 @@ b_1\\b_2\\b_3\\ \vdots \\b_m
 <p>Jo mindre vinklen mellem <span class="math inline">\(\overrightarrow{v}_{w}\)</span> og <span class="math inline">\(\overrightarrow{k}_{c}\)</span> er, desto større er deres skalarprodukt <span class="math inline">\(\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{c}\)</span> altså, og jo oftere har ordet <span class="math inline">\(w\)</span> dermed <span class="math inline">\(c\)</span> som kontekst. Desuden viser <a href="#eq-skalar" class="quarto-xref">1</a>, at lange vektorer tæller mere, både positivt og negativt, end korte vektorer. Ord, der er gode til at forudsige konteksten udfra, fx "logre", der ofte vil forekomme i hunderelaterede kontekster, vil derfor blive repræsenteret med lange inputvektorer. Ord som "og" eller "er", der ikke indeholder megen information om konteksten, vil blive repræsenteret med kortere inputvektorer. Altså vil <span class="math inline">\(|\overrightarrow{v}_{\text{logre}}|\)</span> være større end <span class="math inline">\(|\overrightarrow{v}_{\text{og}}|\)</span> og <span class="math inline">\(|\overrightarrow{v}_{\text{er}}|\)</span>.</p>
 <p>Bemærk også, at hvis to ord ofte optræder i samme kontekst, skal deres inputvektorer gerne have nogenlunde samme skalarprodukt med alle kontekstvektorer. Formlen <a href="#eq-skalar" class="quarto-xref">1</a> viser, at det betyder, at de dels skal have nogenlunde samme længde og dels skal have nogenlunde samme vinkel med alle kontekstvektorerne. Sidstnævnte kræver, at de selv har nogenlunde samme retning. Ord, hvis betydning ligner hinanden, kommer derfor til at svare til inputvektorer, hvis længde og retning ligner hinanden.</p>
 <p>I praksis bruger vi vektorer af højere dimension end 3. Det er måske ikke helt oplagt, hvad man skal forstå ved længden af en vektor eller vinklen mellem to vektorer i højere dimensioner, men det viser sig, at man stadigvæk godt kan give mening til formlen <a href="#eq-skalar" class="quarto-xref">1</a>. Intuitionen fra to eller tre dimensioner er derfor god at have, selv om vi arbejder med højere dimensioner.</p>
-<section id="eksempel-1" class="level3 unnumbered">
-<h3 class="unnumbered anchored" data-anchor-id="eksempel-1">Eksempel 1</h3>
+<section id="eksempel-1" class="level3">
+<h3 class="anchored" data-anchor-id="eksempel-1">Eksempel 1</h3>
 <p>Lad os sige, at vi har fundet en vektorrepræsentation, der opfylder det ønskede. Det gav vektorerne <span class="math display">\[
 \begin{aligned}
 &amp;\overrightarrow{v}_{\text{hund}} =  \begin{pmatrix} 3\\ 2\end{pmatrix}, \quad
@@ -431,8 +483,8 @@ Opgaver
 </div>
 </section>
 </section>
-<section id="model-for-sandsynligheder" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="model-for-sandsynligheder">Model for sandsynligheder</h2>
+<section id="model-for-sandsynligheder" class="level2">
+<h2 class="anchored" data-anchor-id="model-for-sandsynligheder">Model for sandsynligheder</h2>
 <p>Som nævnt, vil vi gerne have, at jo større skalarproduktet <span class="math inline">\(\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{c}\)</span> er, desto mere sandsynligt er det, at ordet <span class="math inline">\(w\)</span> har ordet <span class="math inline">\(c\)</span> som kontekst. Hvis der er <span class="math inline">\(V\)</span> antal ord i sproget, kan vi nummerere de mulige kontekstord som <span class="math inline">\(\text{ord}_1,\text{ord}_2,\ldots,\text{ord}_V\)</span>. For hvert af dem får vi et skalarprodukt <span class="math inline">\(\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{\text{ord}_i}\)</span> for <span class="math inline">\(i=1,\ldots,V\)</span>. Hvis vi betegner sandsynligheden for, at <span class="math inline">\(\text{ord}_i\)</span> er et kontekstord til <span class="math inline">\(w\)</span>, med <span class="math inline">\(P(\text{ord}_i\mid w)\)</span>, så vil vi gerne have, at følgende er opfyldt.</p>
 <ol type="1">
 <li><p>For hvert <span class="math inline">\(\text{ord}_i\)</span> er <span class="math inline">\(0\leq P(\text{ord}_i \mid w)\leq 1\)</span>, da sandsynligheder skal ligge mellem 0 og 1.</p></li>
@@ -525,8 +577,8 @@ Opgaver
 </div>
 </section>
 </section>
-<section id="estimation-af-vektorer" class="level2 unnumbered page-columns page-full">
-<h2 class="unnumbered anchored" data-anchor-id="estimation-af-vektorer">Estimation af vektorrepræsentationer</h2>
+<section id="estimation-af-vektorrepræsentationer" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="estimation-af-vektorrepræsentationer">Estimation af vektorrepræsentationer</h2>
 <p>Vi mangler stadig at bestemme vektorrepræsentationerne <span class="math inline">\(\overrightarrow{v}_{w}\)</span> og <span class="math inline">\(\overrightarrow{k}_{c}\)</span>, så modellen i <a href="#eq-sshmodel" class="quarto-xref">2</a> kommer til at passe til virkelig tekst. Her får vi brug for det datasæt, som vi lavede ud fra vores træningsdata. Hver række i datasættet bestod af et inputord <span class="math inline">\(w\)</span> og et kontekstord <span class="math inline">\(c\)</span>, som forekom i vores træningsdata. Lad os sige, at der er <span class="math inline">\(M\)</span> rækker i vores træningsdata. Vi betegner data i den <span class="math inline">\(j\)</span>te række med <span class="math inline">\((w_j,c_j)\)</span> for <span class="math inline">\(j=1,\ldots,M\)</span>. Vores datasæt har altså formen</p>
 <table class="table">
 <caption>Eksempel på datatabel<span data-label="tab:data"></span></caption>
@@ -597,8 +649,8 @@ Opgaver
 </div>
 </section>
 </section>
-<section id="fra-vektorer-til-tekstgenerering" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="fra-vektorer-til-tekstgenerering">Fra vektorer til tekstgenerering</h2>
+<section id="fra-vektorer-til-tekstgenerering" class="level2">
+<h2 class="anchored" data-anchor-id="fra-vektorer-til-tekstgenerering">Fra vektorer til tekstgenerering</h2>
 <p>I det følgende ser vi på, hvordan vektorrepræsentationerne, som vi fandt med Word2Vec, kan bruges til at lave en algoritme, der kan generere ny tekst. De fleste tekstgenereringsalgoritmer fungerer ved, at de danner teksten et ord ad gangen. Givet den tekst der allerede er dannet, prøver algoritmen hele tiden at gætte, hvad det næste ord skal være. Det kan gøres i to trin:</p>
 <ol type="1">
 <li><p>Først benyttes Word2Vec til at oversætte alle ordene i sproget til vektorer.</p></li>
