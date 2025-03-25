@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Word2vec.">
+<meta name="description" content="Idéen bag Word2Vec går ud på at repræsentere hvert ord i et sprog med en vektor, hvor ord, hvis betydning minder om hinanden, svarer til vektorer, med nogenlunde samme retning og længde.">
 
 <title>Word2vec – AI MAT - matematikken bag magien</title>
 <style>
@@ -189,12 +189,9 @@ window.Quarto = {
   </ul></li>
   <li><a href="#model-for-sandsynligheder" id="toc-model-for-sandsynligheder" class="nav-link" data-scroll-target="#model-for-sandsynligheder">Model for sandsynligheder</a>
   <ul class="collapse">
-  <li><a href="#eksempel" id="toc-eksempel" class="nav-link" data-scroll-target="#eksempel">Eksempel</a></li>
+  <li><a href="#eksempel-2" id="toc-eksempel-2" class="nav-link" data-scroll-target="#eksempel-2">Eksempel 2</a></li>
   </ul></li>
-  <li><a href="#estimation-af-vektorrepræsentationer" id="toc-estimation-af-vektorrepræsentationer" class="nav-link" data-scroll-target="#estimation-af-vektorrepræsentationer">Estimation af vektorrepræsentationer</a>
-  <ul class="collapse">
-  <li><a href="#eksempel-3" id="toc-eksempel-3" class="nav-link" data-scroll-target="#eksempel-3">Eksempel 3</a></li>
-  </ul></li>
+  <li><a href="#estimation-af-vektorrepræsentationer" id="toc-estimation-af-vektorrepræsentationer" class="nav-link" data-scroll-target="#estimation-af-vektorrepræsentationer">Estimation af vektorrepræsentationer</a></li>
   <li><a href="#fra-vektorer-til-tekstgenerering" id="toc-fra-vektorer-til-tekstgenerering" class="nav-link" data-scroll-target="#fra-vektorer-til-tekstgenerering">Fra vektorer til tekstgenerering</a></li>
   </ul>
 </nav>
@@ -225,9 +222,9 @@ window.Quarto = {
 </header>
 
 
-<p>Lad os igen se på en situation, hvor vi gerne vil kunne gætte næste ord i en sætning. Lad os sige, at vi har sætningen <span class="math display">\[
+<p>Lad os se på en situation, hvor vi gerne vil kunne gætte næste ord i en sætning. Lad os sige, at vi har sætningen <span class="math display">\[
 \text{"Min hund har en blød ---"}
-\]</span> og vil gætte næste ord. Hvis vi har en stor mængde tekst til rådighed, et tekstkorpus, kan vi selvfølgelig lede efter ordsekvensen "Min hund har en blød" og se hvilket ord, der oftest kommer efter som beskrevet i <strong>LINK</strong>. Men hvis ikke sekvensen forekommer i vores korpus, så har vi et problem. I stedet kunne vi lede efter en sætning med en betydning, der minder om "Min hund har en blød" og se, hvad der kommer efter den. Men hvordan får vi en computer til at forstå betydningen af ord?</p>
+\]</span> og vil gætte næste ord. Hvis vi har en stor mængde tekst til rådighed, et såkaldt <strong>tekstkorpus</strong>, kan vi selvfølgelig lede efter ordsekvensen "Min hund har en blød" og se hvilket ord, der oftest kommer efter, som beskrevet i noten om <a href="../../materialer/sprogmodeller/simple.html">simple sprogmodeller</a>. Men hvis ikke sekvensen forekommer i vores korpus, så har vi et problem. I stedet kunne vi lede efter en sætning med en betydning, der minder om "Min hund har en blød" og se, hvad der kommer efter den. Men hvordan får vi en computer til at forstå betydningen af ord?</p>
 <p>Den simpleste måde at repræsentere et ord på i en computer ville være ved at nummerere alle ordene i det danske sprog fra 1 til <span class="math inline">\(V\)</span>, hvor <span class="math inline">\(V\)</span> er det samlede antal ord. Nummeret på et ord giver dog ikke megen information om ordets betydning.</p>
 <p>En anden nærliggende idé kunne være at repræsentere et ord ved bogstaverne i ordet. For at en computer skal kunne forstå det, kunne man give hvert bogstav et tal ud fra bogstavets nummer i alfabetet. Så ville "kat" blive til <span class="math inline">\((11,1,20)\)</span> og "hund" til <span class="math inline">\((8,21,14,4)\)</span>. Stavemåden fortæller dog heller ikke meget om betydningen af et ord. Ordet "mund" staves næsten lige som "hund", men har en helt anden betydning. Omvendt betyder ordet "vovse" næsten det samme som "hund", men staves helt anderledes.</p>
 <p>I stedet vil vi gerne repræsentere hvert ord med en vektor. Idéen er, at ord, hvis betydning ligner hinanden, skal repræsenteres med vektorer, der peger i nogenlunde samme retning og har nogenlunde samme længde, som illustreret på <a href="#fig-vektorer" class="quarto-xref">figur&nbsp;1</a>.</p>
@@ -272,7 +269,7 @@ window.onload = function() {
   }
 </script>
 
-<div id="fig-vektorer" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" width="80%" data-fig-align="center">
+<div id="fig-vektorer" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center" width="80%">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-vektorer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div id="ggbApplet_vektorer">
@@ -292,8 +289,8 @@ a_1\\a_2\end{pmatrix}\text{ og } \begin{pmatrix} a_1\\a_2 \\a_3
 \begin{pmatrix}
 a_1\\a_2\\a_3\\ \vdots \\ a_m
 \end{pmatrix}
-\]</span> hvor <span class="math inline">\(a_1,a_2,a_3,\ldots,a_m\)</span> er reelle tal. I praksis vælger man <span class="math inline">\(m\)</span> stort, fx <span class="math inline">\(m=100\)</span>. Man kan regne med <span class="math inline">\(m\)</span>-dimensionale vektorer, lige som man gør i to eller tre dimensioner. Vi kommer for eksempel til at se, hvordan man kan finde skalarprodukter. Til gengæld har man ikke mulighed for at visualisere en <span class="math inline">\(m\)</span>-dimensional vektor som en pil i et koordinatsystem, men det har vi heldigvis heller ikke brug for.</p>
-<p>I denne note ser vi på algoritmen Word2Vec som et eksempel på, hvordan man kan oversætte ord til vektorer, der repræsenterer ordenes betydning. Mere præcist kiger vi på en version af algoritmen, der hedder skip-gram. Word2Vec blev opfundet af en gruppe medarbejdere hos Google i 2013. I dag bruges diverse forfininger af algoritmen i mange store sprogmodeller.</p>
+\]</span> hvor <span class="math inline">\(a_1,a_2,a_3,\ldots,a_m\)</span> er reelle tal. I praksis vælger man <span class="math inline">\(m\)</span> stort, for eksempel <span class="math inline">\(m=100\)</span>. Man kan regne med <span class="math inline">\(m\)</span>-dimensionale vektorer, lige som man gør i to eller tre dimensioner. Vi kommer for eksempel til at se, hvordan man kan finde skalarprodukter. Til gengæld har man ikke mulighed for at visualisere en <span class="math inline">\(m\)</span>-dimensional vektor som en pil i et koordinatsystem, men det har vi heldigvis heller ikke brug for.</p>
+<p>I denne note ser vi på algoritmen Word2Vec som et eksempel på, hvordan man kan oversætte ord til vektorer, der repræsenterer ordenes betydning. Mere præcist kigger vi på en version af algoritmen, der hedder <em>skip-gram</em>. Word2Vec blev opfundet af en gruppe medarbejdere hos <a href="https://code.google.com/archive/p/word2vec/">Google i 2013</a>. I dag bruges diverse forfininger af algoritmen i mange store sprogmodeller.</p>
 <section id="betydning-og-kontekst" class="level2">
 <h2 class="anchored" data-anchor-id="betydning-og-kontekst">Betydning og kontekst</h2>
 <p>Hvilke egenskaber skal de vektorer, der repræsenterer ord, så have? Jo, idéen er, at vektorerne skal indfange betydningen af et ord i den forstand, at ord, hvis betydning minder om hinanden, svarer til vektorer, der ligner hinanden. Og hvordan ved vi så, om to ords betydning minder om hinanden? Betydningen af et ord har noget at gøre med, hvilke sammenhænge det optræder i, når man kigger i rigtig mange dokumenter. Den sproglige sammenhæng, et ord indgår i, kaldes også en <em>kontekst</em>. Ord, der betyder næsten det samme vil altså ofte optræde i samme kontekst. Ordene "hund" og "kat" er for eksempel forskellige, men de vil ofte optræde i sammenhænge, der ligner hinanden. Se for eksempel på sætningerne <span class="math display">\[
@@ -302,18 +299,21 @@ a_1\\a_2\\a_3\\ \vdots \\ a_m
 \text{"Sikken en blød pels, din --- har"}
 \]</span> Her ville der kunne stå "hund" eller "kat", men nok ikke "kælk" eller "badedragt". Betydningen af ordene "hund" og "kat" er tættere på hinanden end betydningen af "hund" og "kælk". På den anden side kunne der ikke stå "hund" i sætningen <span class="math display">\[
 \text{"Den lille --- har hvide knurhår"}
-\]</span> mens både "kat" og "mis" ville passe ind. Ordene "kat" og "hund" er altså tætte på hinanden, men ikke så tætte som "kat" og "mis". Vi vil derfor gerne have, at vektorerne for "hund" og "kat" minder mere om hinanden end vektorerne for "hund" og "kælk", men ikke så meget som "kat" og "mis". Hvad vi forstår ved, at vektorer minder om hinanden, det kommer vi tilbage til.</p>
-<p>Konteksten er særlig vigtig i forbindelse med ord med flere betydninger. Vi forstår fx betydningen af ordet "marsvin" forskelligt alt efter om ordet "hav" eller ordet "mælkebøtte" optræder i nærheden af det.</p>
+\]</span> mens både "kat" og "mis" ville passe ind. Ordene "kat" og "hund" er altså tætte på hinanden, men ikke så tætte som "kat" og "mis". Vi vil derfor gerne have, at vektorerne for "hund" og "kat" minder mere om hinanden end vektorerne for "hund" og "kælk", men ikke så meget som "kat" og "mis". <a href="#fig-vektorer" class="quarto-xref">figur&nbsp;1</a> viser netop et eksempel på, hvordan det kunne se ud. Hvad vi helt præcist forstår ved, at vektorer minder om hinanden, det kommer vi tilbage til.</p>
+<p>Konteksten er særlig vigtig i forbindelse med ord med flere betydninger. Vi forstår for eksempel betydningen af ordet "marsvin" forskelligt, alt efter om ordet "hav" eller ordet "mælkebøtte" optræder i nærheden af det.</p>
 </section>
 <section id="træningsdata" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="træningsdata">Træningsdata</h2>
 <p>Vi har altså brug for at vide, hvilken kontekst ordene indgår i. For at lære, hvilken kontekst et ord forekommer i, tager vi udgangspunkt i et stort tilgængeligt tekstkorpus. Vi kalder dette korpus for vores <em>træningsdata</em>.</p>
-<p>Ved konteksten til et ord vil vi her forstå de ord, der står umiddelbart før og efter ordet. Mere præcist vælger vi et vindue, lad os sige på fem ord, hvor ordet i midten er det, vi gerne vil kende betydningen af. Vi vil kalde dette for <em>inputordet</em>. De to første ord og de to sidste ord i vinduet er inputordets <em>kontekstord</em>. Se fx på sætningen <span class="math display">\[
-\text{\fbox{Den sorte \textbf{hund} logrer med} halen}
+<p>Ved konteksten til et ord vil vi her forstå de ord, der står umiddelbart før og efter ordet. Mere præcist vælger vi et vindue, lad os sige på fem ord, hvor ordet i midten er det, vi gerne vil kende betydningen af. Vi vil kalde dette for <em>inputordet</em>. De to første ord og de to sidste ord i vinduet er inputordets <em>kontekstord</em>. Se for eksempel på sætningen</p>
+<p><span class="math display">\[
+\boxed{\textrm{ Den sorte }\textbf{hund} \textrm{ logrer med }} \textrm{ halen}
 \]</span> Boksen angiver vores 5-ords vindue. Det midterste ord "hund" er vores inputord, ordene "Den", "sorte", "logrer" og "med" er kontekstord til "hund".</p>
-<p>Vi starter med at placere vinduet omkring det første ord i vores datasæt og noterer dets fire kontekstord (hvoraf de to vil være blanke). Vi flytter nu vinduet mod højre et ord ad gangen, og hver gang noterer vi inputordet og dets fire kontekstord. Vi gør det for al teksten i vores træningsdata og samler informationen i et datasæt som vist i Tabel <span class="citation" data-cites="tab-data">@tab-data</span>. Hver række i tabellen består af et inputord og et af dets kontekstord.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Når man vil gætte det næste ord i en sætning, har man selvfølgelig kun lov til at bruge de ord, der kommer før ordet. Det er dog ikke det, vi er ude på, når vi laver Word2Vec. Vi er ude på at forstå, hvordan et ord forholder sig til dets kontekst, altså de omkringstående ord. Derfor er der ikke noget problem i, at vinduet både indeholder ord før og efter inputordet.</p></div></div><table class="table">
-<caption>Par af input- og kontekstord {#tab-data}</caption>
+<p>Vi starter med at placere vinduet omkring det første ord i vores datasæt og noterer dets fire kontekstord (hvoraf de to vil være blanke). Vi flytter nu vinduet mod højre et ord ad gangen, og hver gang noterer vi inputordet og dets fire kontekstord. Vi gør det for al teksten i vores træningsdata og samler informationen i et datasæt som vist i <a href="#tbl-data" class="quarto-xref">tabel&nbsp;2</a>. Hver række i tabellen består af et inputord og et af dets kontekstord.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Når man vil gætte det næste ord i en sætning, har man selvfølgelig kun lov til at bruge de ord, der kommer før ordet. Det er dog ikke det, vi er ude på, når vi laver Word2Vec. Vi er ude på at forstå, hvordan et ord forholder sig til dets kontekst, altså de omkringstående ord. Derfor er der ikke noget problem i, at vinduet både indeholder ord før og efter inputordet.</p></div></div><div id="tbl-data" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
+<div aria-describedby="tbl-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table">
 <thead>
 <tr class="header">
 <th style="text-align: center;">Input</th>
@@ -322,8 +322,8 @@ a_1\\a_2\\a_3\\ \vdots \\ a_m
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;">⋮</td>
-<td style="text-align: center;">⋮</td>
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">sorte</td>
@@ -358,17 +358,24 @@ a_1\\a_2\\a_3\\ \vdots \\ a_m
 <td style="text-align: center;">med</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">⋮</td>
-<td style="text-align: center;">⋮</td>
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
 </tr>
 </tbody>
 </table>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-tbl margin-caption" id="tbl-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabel&nbsp;1: Par af input- og kontekstord.
+</figcaption>
+</figure>
+</div>
 <p>I de næste to afsnit ser vi på, hvordan man kan bruge vektorer til at modellere sandsynligheden for, at et inputord <span class="math inline">\(w\)</span> har <span class="math inline">\(c\)</span> som kontekstord. Det vil vi sidenhen benytte til at vælge vektorerne, således at sandsynlighederne matcher, hvor hyppigt vi observerer <span class="math inline">\(c\)</span> som kontekstord til <span class="math inline">\(w\)</span> i datasættet.</p>
 </section>
-<section id="input--og-kontekstvektorer" class="level2">
+<section id="input--og-kontekstvektorer" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="input--og-kontekstvektorer">Input- og kontekstvektorer</h2>
-<p>I første omgang vil vi lade hvert ord <span class="math inline">\(w\)</span> være repræsenteret af to vektorer, <span class="math inline">\(\overrightarrow{v}_{w}\)</span> og <span class="math inline">\(\overrightarrow{k}_{w}\)</span>, hvor <span class="math inline">\(\overrightarrow{v}_{w}\)</span> repræsenterer ordet, når det optræder som input, mens <span class="math inline">\(\overrightarrow{k}_{w}\)</span> repræsenterer ordet, når det optræder som kontekst. Betydningen af <span class="math inline">\(w\)</span> afgøres som nævnt af, hvordan ordet forholder sig til konteksten. Det vil vi oversætte matematisk til, hvordan inputvektoren <span class="math inline">\(\overrightarrow{v}_{w}\)</span> forholder sig til kontekstvektorerne <span class="math inline">\(\overrightarrow{k}_{c}\)</span> for diverse kontekstord <span class="math inline">\(c\)</span>. Vi vil derfor tænke på <span class="math inline">\(\overrightarrow{v}_{w}\)</span> som den vektor, der repræsenterer betydningen af ordet, og altså den vi er ude på at bestemme.</p>
-<p>For at måle hvordan inputvektoren <span class="math inline">\(\overrightarrow{v}_{w}\)</span> for ordet <span class="math inline">\(w\)</span> forholder sig til kontekstvektoren <span class="math inline">\(\overrightarrow{k}_{c}\)</span> for ordet <span class="math inline">\(c\)</span>, vil vi bruge <em>skalarproduktet</em> <span class="math inline">\(\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{c}\)</span>. Husk på at man finder skalarproduktet mellem to vektorer i to dimensioner ved formlen <span class="math display">\[
+<p>I første omgang vil vi lade hvert ord <span class="math inline">\(w\)</span> være repræsenteret af to vektorer, <span class="math inline">\(\vec{v}_{w}\)</span> og <span class="math inline">\(\vec{k}_{w}\)</span>, hvor <span class="math inline">\(\vec{v}_{w}\)</span> repræsenterer ordet, når det optræder som input, mens <span class="math inline">\(\vec{k}_{w}\)</span> repræsenterer ordet, når det optræder som kontekst. Ordet "hund" vil altså være repræsenteret ved vektoren <span class="math inline">\(\vec{v}_{\text{hund}}\)</span>, når det optræder som input og ved vektoren <span class="math inline">\(\vec{k}_{\text{hund}}\)</span>, når det optræder som kontekst.</p>
+<p>Betydningen af ordet <span class="math inline">\(w\)</span> afgøres som nævnt af, hvordan ordet forholder sig til konteksten. Det vil vi oversætte matematisk til, hvordan inputvektoren <span class="math inline">\(\vec{v}_{w}\)</span> forholder sig til kontekstvektorerne <span class="math inline">\(\vec{k}_{c}\)</span> for diverse kontekstord <span class="math inline">\(c\)</span>. Vi vil derfor tænke på <span class="math inline">\(\vec{v}_{w}\)</span> som den vektor, der repræsenterer betydningen af ordet, og altså den vi er ude på at bestemme.</p>
+<p>For at måle hvordan inputvektoren <span class="math inline">\(\vec{v}_{w}\)</span> for ordet <span class="math inline">\(w\)</span> forholder sig til kontekstvektoren <span class="math inline">\(\vec{k}_{c}\)</span> for ordet <span class="math inline">\(c\)</span>, vil vi bruge <em>skalarproduktet</em> <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span>. Husk på at man finder skalarproduktet mellem to vektorer i to dimensioner ved formlen <span class="math display">\[
 \begin{pmatrix}
 a_1\\a_2
 \end{pmatrix}
@@ -396,43 +403,67 @@ b_1\\b_2\\b_3\\ \vdots \\b_m
 \end{pmatrix}
 =a_1b_1+a_2b_2+a_3b_3+\dotsm + a_mb_m
 \]</span></p>
-<p>Vi vil gerne have, at vores input- og kontekstvektorer skal opfylde, at hvis <span class="math inline">\(w\)</span> ofte har <span class="math inline">\(c\)</span> som kontekst, så er skalarproduktet <span class="math inline">\(\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{c}\)</span> stort, mens en meget negativ værdi af <span class="math inline">\(\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{c}\)</span> indikerer, at <span class="math inline">\(w\)</span> sjældent har <span class="math inline">\(c\)</span> som kontekst.</p>
+<p>Vi vil gerne have, at vores input- og kontekstvektorer skal opfylde, at hvis <span class="math inline">\(w\)</span> ofte har <span class="math inline">\(c\)</span> som kontekst, så er skalarproduktet <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span> stort, mens en meget negativ værdi af <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span> indikerer, at <span class="math inline">\(w\)</span> sjældent har <span class="math inline">\(c\)</span> som kontekst.</p>
 <p>Hvad fortæller skalarproduktet om, hvordan to vektorer forholder sig til hinanden? I 2 og 3 dimensioner kan vi give en geometrisk fortolkning af skalarproduktet ved hjælp af formlen <span id="eq-skalar"><span class="math display">\[
-\overrightarrow{a}\cdot\overrightarrow{b} = |\overrightarrow{a}||\overrightarrow{b}| \cos(\angle (\overrightarrow{a},\overrightarrow{b}))
-\tag{1}\]</span></span> hvor <span class="math inline">\(\angle (\overrightarrow{a},\overrightarrow{b})\)</span> er vinklen mellem vektorerne <span class="math inline">\(\overrightarrow{a}\)</span> og <span class="math inline">\(\overrightarrow{b}\)</span>, og <span class="math inline">\(|\overrightarrow{a}|\)</span> betegner længden af <span class="math inline">\(\overrightarrow{a}\)</span>, som findes med formlen <span class="math display">\[
-|\overrightarrow{a}|=\sqrt{\overrightarrow{a}\cdot\overrightarrow{a}}
-\]</span> Cosinus er en aftagende funktion på intervallet <span class="math inline">\([0^\circ,180^\circ ]\)</span>, så jo større vinklen <span class="math inline">\(\angle (\overrightarrow{a},\overrightarrow{b})\)</span> er, desto mindre vil <span class="math inline">\(\cos(\angle (\overrightarrow{a},\overrightarrow{b}))\)</span> være. <strong>FIGUR</strong> Det betyder, at <span class="math inline">\(\cos(\angle (\overrightarrow{a},\overrightarrow{b}))\)</span> er størst når vinklen mellem <span class="math inline">\(\overrightarrow{a}\)</span> og <span class="math inline">\(\overrightarrow{b}\)</span> er <span class="math inline">\(0^\circ\)</span>, svarende til at vektorerne peger samme vej. Her er <span class="math inline">\(\cos(\angle (\overrightarrow{a},\overrightarrow{b}))=1\)</span>. Den mindste værdi af <span class="math inline">\(\cos(\angle (\overrightarrow{a},\overrightarrow{b}))\)</span> er <span class="math inline">\(-1\)</span>, som antages ved en vinkel på <span class="math inline">\(180^\circ\)</span>, hvor vektorerne peger i modsat retning.</p>
-<p>Jo mindre vinklen mellem <span class="math inline">\(\overrightarrow{v}_{w}\)</span> og <span class="math inline">\(\overrightarrow{k}_{c}\)</span> er, desto større er deres skalarprodukt <span class="math inline">\(\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{c}\)</span> altså, og jo oftere har ordet <span class="math inline">\(w\)</span> dermed <span class="math inline">\(c\)</span> som kontekst. Desuden viser <a href="#eq-skalar" class="quarto-xref">1</a>, at lange vektorer tæller mere, både positivt og negativt, end korte vektorer. Ord, der er gode til at forudsige konteksten udfra, fx "logre", der ofte vil forekomme i hunderelaterede kontekster, vil derfor blive repræsenteret med lange inputvektorer. Ord som "og" eller "er", der ikke indeholder megen information om konteksten, vil blive repræsenteret med kortere inputvektorer. Altså vil <span class="math inline">\(|\overrightarrow{v}_{\text{logre}}|\)</span> være større end <span class="math inline">\(|\overrightarrow{v}_{\text{og}}|\)</span> og <span class="math inline">\(|\overrightarrow{v}_{\text{er}}|\)</span>.</p>
-<p>Bemærk også, at hvis to ord ofte optræder i samme kontekst, skal deres inputvektorer gerne have nogenlunde samme skalarprodukt med alle kontekstvektorer. Formlen <a href="#eq-skalar" class="quarto-xref">1</a> viser, at det betyder, at de dels skal have nogenlunde samme længde og dels skal have nogenlunde samme vinkel med alle kontekstvektorerne. Sidstnævnte kræver, at de selv har nogenlunde samme retning. Ord, hvis betydning ligner hinanden, kommer derfor til at svare til inputvektorer, hvis længde og retning ligner hinanden.</p>
-<p>I praksis bruger vi vektorer af højere dimension end 3. Det er måske ikke helt oplagt, hvad man skal forstå ved længden af en vektor eller vinklen mellem to vektorer i højere dimensioner, men det viser sig, at man stadigvæk godt kan give mening til formlen <a href="#eq-skalar" class="quarto-xref">1</a>. Intuitionen fra to eller tre dimensioner er derfor god at have, selv om vi arbejder med højere dimensioner.</p>
-<section id="eksempel-1" class="level3">
+\vec{a}\cdot\vec{b} = |\vec{a}|\cdot |\vec{b}| \cdot \cos(v)
+\tag{1}\]</span></span> hvor <span class="math inline">\(v\)</span> er vinklen mellem vektorerne <span class="math inline">\(\vec{a}\)</span> og <span class="math inline">\(\vec{b}\)</span>, og <span class="math inline">\(|\vec{a}|\)</span> betegner længden af <span class="math inline">\(\vec{a}\)</span>, som findes med formlen <span class="math display">\[
+|\vec{a}|=\sqrt{\vec{a}\cdot\vec{a}}
+\]</span></p>
+<p>I 2 dimensioner svarer det til <span class="math display">\[
+|\vec{a}|=\sqrt{a_1^2 + a_2^2}
+\]</span></p>
+<p>Cosinus er en aftagende funktion på intervallet <span class="math inline">\([0^\circ,180^\circ ]\)</span>, så jo større vinklen <span class="math inline">\(v\)</span> er, desto mindre vil <span class="math inline">\(\cos(v)\)</span> være – se <a href="#fig-cos" class="quarto-xref">figur&nbsp;2</a>.</p>
+<div id="fig-cos" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-cos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/cosinus.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-cos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;2: Grafen for <span class="math inline">\(cos(v)\)</span>, hvor <span class="math inline">\(v\)</span> er målt i grader.
+</figcaption>
+</figure>
+</div>
+<p>Det betyder, at <span class="math inline">\(\cos(v)\)</span> er størst når vinklen mellem <span class="math inline">\(\vec{a}\)</span> og <span class="math inline">\(\vec{b}\)</span> er <span class="math inline">\(0^\circ\)</span>, svarende til at vektorerne peger samme vej. Her er <span class="math inline">\(\cos(v)=1\)</span>. Den mindste værdi af <span class="math inline">\(\cos(v)\)</span> er <span class="math inline">\(-1\)</span>, som antages ved en vinkel på <span class="math inline">\(180^\circ\)</span>, hvor vektorerne peger i modsat retning.</p>
+<p>Det vil sige, jo mindre vinklen mellem <span class="math inline">\(\vec{v}_{w}\)</span> og <span class="math inline">\(\vec{k}_{c}\)</span> er, desto større er deres skalarprodukt <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span> altså, og jo oftere har ordet <span class="math inline">\(w\)</span> dermed <span class="math inline">\(c\)</span> som kontekst. Desuden viser (<a href="#eq-skalar" class="quarto-xref">1</a>), at lange vektorer tæller mere, både positivt og negativt, end korte vektorer. Ord, der er gode til at forudsige konteksten udfra, for eksempel "logre", der ofte vil forekomme i hunderelaterede kontekster, vil derfor blive repræsenteret med lange inputvektorer. Ord som "og" eller "er", der ikke indeholder megen information om konteksten, vil blive repræsenteret med kortere inputvektorer. Altså vil <span class="math inline">\(|\vec{v}_{\text{logre}}|\)</span> være større end <span class="math inline">\(|\vec{v}_{\text{og}}|\)</span> og <span class="math inline">\(|\vec{v}_{\text{er}}|\)</span>.</p>
+<p>Bemærk også, at hvis to ord ofte optræder i samme kontekst, skal deres inputvektorer gerne have nogenlunde samme skalarprodukt med alle kontekstvektorer. Formlen (<a href="#eq-skalar" class="quarto-xref">1</a>) viser, at det betyder, at de dels skal have nogenlunde samme længde og dels skal have nogenlunde samme vinkel med alle kontekstvektorerne. Sidstnævnte kræver, at de selv har nogenlunde samme retning. Ord, hvis betydning ligner hinanden, kommer derfor til at svare til inputvektorer, hvis længde og retning ligner hinanden.</p>
+<p>I praksis bruger vi vektorer af højere dimension end 3. Det er måske ikke helt oplagt, hvad man skal forstå ved længden af en vektor eller vinklen mellem to vektorer i højere dimensioner, men det viser sig, at man stadigvæk godt kan give mening til formlen (<a href="#eq-skalar" class="quarto-xref">1</a>). Intuitionen fra to eller tre dimensioner er derfor god at have, selv om vi arbejder med højere dimensioner.</p>
+<section id="eksempel-1" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="eksempel-1">Eksempel 1</h3>
 <p>Lad os sige, at vi har fundet en vektorrepræsentation, der opfylder det ønskede. Det gav vektorerne <span class="math display">\[
 \begin{aligned}
-&amp;\overrightarrow{v}_{\text{hund}} =  \begin{pmatrix} 3\\ 2\end{pmatrix}, \quad
-\overrightarrow{v}_{\text{kat}} =  \begin{pmatrix} 2\\ 3\end{pmatrix} \\
-&amp;\overrightarrow{k}_{\text{madskål}}  =  \begin{pmatrix} 3\\3\end{pmatrix}, \quad
-\overrightarrow{k}_{\text{badedragt}} =  \begin{pmatrix} -2\\-1.5 \end{pmatrix}, \quad
-\overrightarrow{k}_{\text{lufte}} =  \begin{pmatrix} 2\\0.5 \end{pmatrix}
+&amp;\vec{v}_{\text{hund}} =  \begin{pmatrix} 3\\ 2\end{pmatrix}, \quad
+\vec{v}_{\text{kat}} =  \begin{pmatrix} 2\\ 3\end{pmatrix} \\
+&amp;\vec{k}_{\text{madskål}}  =  \begin{pmatrix} 3\\3\end{pmatrix}, \quad
+\vec{k}_{\text{badedragt}} =  \begin{pmatrix} -2\\-1.5 \end{pmatrix}, \quad
+\vec{k}_{\text{lufte}} =  \begin{pmatrix} 2\\0.5 \end{pmatrix}
 \end{aligned}
-\]</span> Vektorerne er vist herunder, hvor inputvektorer er røde, og kontekstvektorer er blå:</p>
-<p><strong>FLOT FIGUR</strong></p>
+\]</span> Vektorerne er vist i <a href="#fig-eks1" class="quarto-xref">figur&nbsp;3</a>, hvor inputvektorer er lyserøde, og kontekstvektorer er blå.</p>
+<div id="fig-eks1" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-eks1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/eks1.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-eks1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;3: Repræsentanter for vektorerne i eksempel 1. Inputvektorerne er lyserøde, og kontekstvektorerne er blå.
+</figcaption>
+</figure>
+</div>
 <p>Vi kan udregne skalarprodukterne <span class="math display">\[
 \begin{aligned}
-&amp;\overrightarrow{v}_{\text{kat}}\cdot \overrightarrow{k}_{\text{madskål}} = \begin{pmatrix} 2\\ 3\end{pmatrix}  \cdot  \begin{pmatrix} 3\\ 3\end{pmatrix} = 2\cdot 3 +  3\cdot 3 = 15 \\
-&amp;\overrightarrow{v}_{\text{kat}}\cdot \overrightarrow{k}_{\text{badedragt}} = \begin{pmatrix} 2\\ 3\end{pmatrix}  \cdot  \begin{pmatrix} -2\\ -1.5\end{pmatrix} = 2\cdot (-2) +  3\cdot (-1.5) = -8.5
+&amp;\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{madskål}} = \begin{pmatrix} 2\\ 3\end{pmatrix}  \cdot  \begin{pmatrix} 3\\ 3\end{pmatrix} = 2\cdot 3 +  3\cdot 3 = 15 \\
+&amp;\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{badedragt}} = \begin{pmatrix} 2\\ 3\end{pmatrix}  \cdot  \begin{pmatrix} -2\\ -1.5\end{pmatrix} = 2\cdot (-2) +  3\cdot (-1.5) = -8.5
 \end{aligned}
-\]</span> Vi ser, at <span class="math inline">\(\overrightarrow{v}_{\text{kat}}\cdot \overrightarrow{k}_{\text{madskål}}\)</span> er større end <span class="math inline">\(\overrightarrow{v}_{\text{kat}}\cdot \overrightarrow{k}_{\text{badedragt}}\)</span>. Det svarer til, at ordet "kat" oftere har "madskål" som kontekst, end det har "badedragt". Det ses også ved, at <span class="math inline">\(\overrightarrow{k}_{\text{madskål}}\)</span> peger i nogenlunde samme retning som <span class="math inline">\(\overrightarrow{v}_{\text{kat}}\)</span>, mens <span class="math inline">\(\overrightarrow{k}_{\text{badedragt}}\)</span> peger i en helt anden retning.</p>
+\]</span> Vi ser, at <span class="math inline">\(\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{madskål}}\)</span> er større end <span class="math inline">\(\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{badedragt}}\)</span>. Det svarer til, at ordet "kat" oftere har "madskål" som kontekst, end det har "badedragt". Det ses også ved, at <span class="math inline">\(\vec{k}_{\text{madskål}}\)</span> peger i nogenlunde samme retning som <span class="math inline">\(\vec{v}_{\text{kat}}\)</span>, mens <span class="math inline">\(\vec{k}_{\text{badedragt}}\)</span> peger i en helt anden retning.</p>
 <p>Vi kan også udregne <span class="math display">\[
 \begin{aligned}
-&amp;\overrightarrow{v}_{\text{hund}}\cdot \overrightarrow{k}_{\text{madskål}} = \begin{pmatrix} 3\\ 2\end{pmatrix}  \cdot  \begin{pmatrix} 3\\ 3\end{pmatrix} = 3\cdot 3 +  2\cdot 3 = 15
+&amp;\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{madskål}} = \begin{pmatrix} 3\\ 2\end{pmatrix}  \cdot  \begin{pmatrix} 3\\ 3\end{pmatrix} = 3\cdot 3 +  2\cdot 3 = 15
 \end{aligned}
-\]</span> Vi ser, at <span class="math inline">\(\overrightarrow{v}_{\text{hund}}\cdot \overrightarrow{k}_{\text{madskål}} =\overrightarrow{v}_{\text{kat}}\cdot \overrightarrow{k}_{\text{madskål}} =15\)</span>, svarende til at både "hund" og "kat" ofte har "madskål" som kontekst. Vi ser da også, at vektorerne <span class="math inline">\(\overrightarrow{v}_{hund}\)</span> og <span class="math inline">\(\overrightarrow{v}_{kat}\)</span> peger i nogenlunde samme retning og har nogenlunde samme længde, fordi de tit har samme kontekst. De to vektorer er dog ikke helt ens, da der også vil være nogle kontekstord, der er ikke er lige hyppige for "hund" og "kat". Vi kan fx udregne <span class="math display">\[
+\]</span> Vi ser, at <span class="math inline">\(\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{madskål}} =\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{madskål}} =15\)</span>, svarende til at både "hund" og "kat" ofte har "madskål" som kontekst. Vi ser da også, at vektorerne <span class="math inline">\(\vec{v}_{hund}\)</span> og <span class="math inline">\(\vec{v}_{kat}\)</span> peger i nogenlunde samme retning og har nogenlunde samme længde, fordi de tit har samme kontekst. De to vektorer er dog ikke helt ens, da der også vil være nogle kontekstord, der ikke er lige hyppige for "hund" og "kat". Vi kan for eksempel udregne <span class="math display">\[
 \begin{aligned}
-&amp;\overrightarrow{v}_{\text{hund}}\cdot \overrightarrow{k}_{\text{lufte}} = \begin{pmatrix} 3\\ 2\end{pmatrix}  \cdot  \begin{pmatrix} 2\\ 0.5\end{pmatrix} = 3\cdot 2 + 2\cdot 0.5 =7\\
-&amp;\overrightarrow{v}_{\text{kat}}\cdot \overrightarrow{k}_{\text{lufte}} =\begin{pmatrix} 2\\ 3\end{pmatrix}  \cdot  \begin{pmatrix} 2\\ 0.5\end{pmatrix} = 2\cdot 2 + 3\cdot 0.5 = 5.5  
+&amp;\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{lufte}} = \begin{pmatrix} 3\\ 2\end{pmatrix}  \cdot  \begin{pmatrix} 2\\ 0.5\end{pmatrix} = 3\cdot 2 + 2\cdot 0.5 =7\\
+&amp;\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{lufte}} =\begin{pmatrix} 2\\ 3\end{pmatrix}  \cdot  \begin{pmatrix} 2\\ 0.5\end{pmatrix} = 2\cdot 2 + 3\cdot 0.5 = 5.5  
 \end{aligned}
-\]</span> Her er <span class="math inline">\(\overrightarrow{v}_{\text{hund}}\cdot \overrightarrow{k}_{\text{lufte}}\)</span> større end <span class="math inline">\(\overrightarrow{v}_{\text{kat}}\cdot \overrightarrow{k}_{\text{lufte}}\)</span> svarende til, at "hund" oftere har "lufte" som kontekst, end "kat" har.</p>
+\]</span> Her er <span class="math inline">\(\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{lufte}}\)</span> større end <span class="math inline">\(\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{lufte}}\)</span> svarende til, at "hund" oftere har "lufte" som kontekst, end "kat" har.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -445,7 +476,7 @@ Hvorfor to vektorer?
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Måske har du undret dig over, hvorfor vi har brug for to forskellige vektorer for hvert ord. Hvert positivt eksempel forekommer jo to gange i vores datasæt, hvor de to ord skiftes til at spille rollen som input og kontekst. Alligevel er der ikke symmetri mellem de to ord. Hvis fx inputordet er "logre", er det ret sandsynligt, at "hund" er et af kontekstordene. Inputordet "hund" forekommer derimod i mange kontekster, der ikke involverer ordet "logre". Sandsynligheden for kontekstordet afhænger derfor af, om det er "hund" eller "logre", der er input. Hvis vi kun brugte én vektor for hvert ord, <span class="math inline">\(\overrightarrow{u}_{\text{hund}}\)</span> og <span class="math inline">\(\overrightarrow{u}_{\text{logre}}\)</span>, ville vi få samme skalarprodukt <span class="math inline">\(\overrightarrow{u}_{\text{hund}}\cdot \overrightarrow{u}_{\text{logre}} =  \overrightarrow{u}_{\text{logre}}\cdot \overrightarrow{u}_{\text{hund}}\)</span>, og dermed samme sandsynlighed, uanset hvilket ord der var input.</p>
+<p>Måske har du undret dig over, hvorfor vi har brug for to forskellige vektorer for hvert ord. Hvert positivt eksempel forekommer jo to gange i vores datasæt, hvor de to ord skiftes til at spille rollen som input og kontekst. Alligevel er der ikke symmetri mellem de to ord. Hvis for eksempel inputordet er "logre", er det ret sandsynligt, at "hund" er et af kontekstordene. Inputordet "hund" forekommer derimod i mange kontekster, der ikke involverer ordet "logre". Sandsynligheden for kontekstordet afhænger derfor af, om det er "hund" eller "logre", der er input. Hvis vi kun brugte én vektor for hvert ord, <span class="math inline">\(\vec{u}_{\text{hund}}\)</span> og <span class="math inline">\(\vec{u}_{\text{logre}}\)</span>, ville vi få samme skalarprodukt <span class="math inline">\(\vec{u}_{\text{hund}}\cdot \vec{u}_{\text{logre}} =  \vec{u}_{\text{logre}}\cdot \vec{u}_{\text{hund}}\)</span>, og dermed samme sandsynlighed, uanset hvilket ord der var input.</p>
 </div>
 </div>
 </div>
@@ -461,22 +492,30 @@ Opgaver
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<p>Antag, at vi har lavet 4-dimensionale input- og kontekstvektorer således, at jo større skalarproduktet <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span> er, desto mere sandsynligt er det, at ordet <span class="math inline">\(w\)</span> har <span class="math inline">\(c\)</span> som kontekst. Inputvektoren for "hund" og kontekstvektorerne for "pels" og "fjer" er <span class="math display">\[
+\begin{aligned}
+\vec{v}_{\text{hund}}=\begin{pmatrix} 0.5\\2\\1\\-1\end{pmatrix} ,\quad
+\vec{k}_{\text{pels}}=\begin{pmatrix} 0\\3\\2\\-2\end{pmatrix},\quad
+\vec{k}_{\text{fjer}}=\begin{pmatrix} 1\\-2\\1.5\\0.5\end{pmatrix}
+\end{aligned}
+\]</span></p>
 <ul>
-<li><p>Antag at vi har lavet 4-dimensionale input- og kontekstvektorer således, at jo større skalarproduktet <span class="math inline">\(\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{c}\)</span> er, desto mere sandsynligt er det, at ordet <span class="math inline">\(w\)</span> har <span class="math inline">\(c\)</span> som kontekst. Inputvektoren for "hund" og kontekstvektorerne for "pels" og "fjer" er <span class="math display">\[
+<li>Udregn skalarprodukterne <span class="math inline">\(\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{pels}}\)</span> og <span class="math inline">\(\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{fjer}}\)</span>.</li>
+<li>Passer det med, hvilket af ordene "pels" og "fjer" der er mest sandsynligt som kontekst til "hund"?</li>
+</ul>
+<p>Antag, at vi har lavet 3-dimensionale input- og kontekstvektorer som beskrevet i afsnittet ovenfor. Så skulle ord, der ofte har samme kontekst, gerne have inputvektorer af nogenlunde samme længde og retning, mens inputvektorerne for ord, der betyder noget helt forskelligt, kan have meget forskellig længde og retning. Antag, at inputvektorerne for "kat", "hund", "mis" og "kælk" er <span class="math display">\[
 \begin{aligned}
-\overrightarrow{v}_{\text{hund}}=\begin{pmatrix} 0.5\\2\\1\\-1\end{pmatrix} ,\quad
-\overrightarrow{k}_{\text{pels}}=\begin{pmatrix} 0\\3\\2\\-2\end{pmatrix},\quad
-\overrightarrow{k}_{\text{fjer}}=\begin{pmatrix} 1\\-2\\1.5\\0.5\end{pmatrix}
+\vec{v}_{\text{kat}}=\begin{pmatrix}0\\2\\1 \end{pmatrix},\quad
+\vec{v}_{\text{hund}}=\begin{pmatrix}0\\1\\1.7\end{pmatrix}, \quad
+\vec{v}_{\text{mis}}=\begin{pmatrix}0.4\\2\\0.9\end{pmatrix},\quad
+\vec{v}_{\text{kælk}}=\begin{pmatrix} 2\\-1\\0 \end{pmatrix}
 \end{aligned}
-\]</span> Udregn skalarprodukterne <span class="math inline">\(\overrightarrow{v}_{\text{hund}}\cdot \overrightarrow{k}_{\text{pels}}\)</span> og <span class="math inline">\(\overrightarrow{v}_{\text{hund}}\cdot \overrightarrow{k}_{\text{fjer}}\)</span>. Passer det med, hvilket af ordene "pels" og "fjer" der er mest sandsynligt som kontekst til "hund"?</p></li>
-<li><p>Antag at vi har lavet 3-dimensionale input- og kontekstvektorer som beskrevet i afsnittet ovenfor. Så skulle ord, der ofte har samme kontekst, gerne have inputvektorer af nogenlunde samme længde og retning, mens inputvektorerne for ord, der betyder noget helt forskelligt, kan have meget forskellig længde og retning. Antag at inputvektorerne for "kat", "hund", "mis" og "kælk" er <span class="math display">\[
-\begin{aligned}
-\overrightarrow{v}_{\text{kat}}=\begin{pmatrix}0\\2\\1 \end{pmatrix},\quad
-\overrightarrow{v}_{\text{hund}}=\begin{pmatrix}0\\1\\1.7\end{pmatrix}, \quad
-\overrightarrow{v}_{\text{mis}}=\begin{pmatrix}0.4\\2\\0.9\end{pmatrix},\quad
-\overrightarrow{v}_{\text{kælk}}=\begin{pmatrix} 2\\-1\\0 \end{pmatrix}
-\end{aligned}
-\]</span> Find længden af de fire vektorer. Find vinklen mellem <span class="math inline">\(\overrightarrow{v}_{\text{kat}}\)</span> og de tre øvrige vektorer. Stemmer resultatet overens med, hvilke ord der er tættest på "kat" i betydning? Tegn vektorerne ind i GeoGebra.</p></li>
+\]</span></p>
+<ul>
+<li>Find længden af de fire vektorer.</li>
+<li>Find vinklen mellem <span class="math inline">\(\vec{v}_{\text{kat}}\)</span> og de tre øvrige vektorer.</li>
+<li>Stemmer resultatet overens med, hvilke ord der er tættest på "kat" i betydning?</li>
+<li>Tegn vektorerne ind i GeoGebra. Skriv for eksempel <code>v(0,2,1)</code> i inputfeltet i GeoGebra og vælg derefter "Vis" <span class="math inline">\(\rightarrow\)</span> "3D Grafik".</li>
 </ul>
 </div>
 </div>
@@ -485,40 +524,46 @@ Opgaver
 </section>
 <section id="model-for-sandsynligheder" class="level2">
 <h2 class="anchored" data-anchor-id="model-for-sandsynligheder">Model for sandsynligheder</h2>
-<p>Som nævnt, vil vi gerne have, at jo større skalarproduktet <span class="math inline">\(\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{c}\)</span> er, desto mere sandsynligt er det, at ordet <span class="math inline">\(w\)</span> har ordet <span class="math inline">\(c\)</span> som kontekst. Hvis der er <span class="math inline">\(V\)</span> antal ord i sproget, kan vi nummerere de mulige kontekstord som <span class="math inline">\(\text{ord}_1,\text{ord}_2,\ldots,\text{ord}_V\)</span>. For hvert af dem får vi et skalarprodukt <span class="math inline">\(\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{\text{ord}_i}\)</span> for <span class="math inline">\(i=1,\ldots,V\)</span>. Hvis vi betegner sandsynligheden for, at <span class="math inline">\(\text{ord}_i\)</span> er et kontekstord til <span class="math inline">\(w\)</span>, med <span class="math inline">\(P(\text{ord}_i\mid w)\)</span>, så vil vi gerne have, at følgende er opfyldt.</p>
+<p>Som nævnt, vil vi gerne have, at jo større skalarproduktet <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span> er, desto mere sandsynligt er det, at ordet <span class="math inline">\(w\)</span> har ordet <span class="math inline">\(c\)</span> som kontekst. Hvis der er <span class="math inline">\(V\)</span> antal ord i sproget, kan vi nummerere de mulige kontekstord som <span class="math inline">\(\text{ord}_1,\text{ord}_2,\ldots,\text{ord}_V\)</span>. For hvert af dem får vi et skalarprodukt <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}\)</span> for <span class="math inline">\(i=1,\ldots,V\)</span>. Hvis vi betegner sandsynligheden for, at <span class="math inline">\(\text{ord}_i\)</span> er et kontekstord til <span class="math inline">\(w\)</span>, med <span class="math inline">\(P(\text{ord}_i\mid w)\)</span>, så vil vi gerne have, at følgende er opfyldt:</p>
 <ol type="1">
-<li><p>For hvert <span class="math inline">\(\text{ord}_i\)</span> er <span class="math inline">\(0\leq P(\text{ord}_i \mid w)\leq 1\)</span>, da sandsynligheder skal ligge mellem 0 og 1.</p></li>
-<li><p>Den samlede sandsynlighed for at få et af de mulige kontekstord skal være 1, dvs. <span class="math inline">\(P(\text{ord}_1\mid w) + P(\text{ord}_2\mid w) + \dotsm + P(\text{ord}_V\mid w ) = 1\)</span>.</p></li>
-<li><p>Jo større skalarproduktet <span class="math inline">\(\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{\text{ord}_i}\)</span> er, desto større er sandsynligheden <span class="math inline">\(P(\text{ord}_i\mid w)\)</span> for at få <span class="math inline">\(\text{ord}_i\)</span> som kontekstord.</p></li>
+<li><p>For hvert <span class="math inline">\(\text{ord}_i\)</span> er <span class="math display">\[0\leq P(\text{ord}_i \mid w)\leq 1\]</span> da sandsynligheder skal ligge mellem 0 og 1.</p></li>
+<li><p>Den samlede sandsynlighed for at få et af de mulige kontekstord skal være 1, det vil sige, <span class="math display">\[P(\text{ord}_1\mid w) + P(\text{ord}_2\mid w) + \dotsm + P(\text{ord}_V\mid w ) = 1.\]</span></p></li>
+<li><p>Jo større skalarproduktet <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}\)</span> er, desto større er sandsynligheden <span class="math inline">\(P(\text{ord}_i\mid w)\)</span> for at få <span class="math inline">\(\text{ord}_i\)</span> som kontekstord.</p></li>
 </ol>
-<p>Skalarprodukter kan imidlertid antage alle reelle værdier, så de egner sig ikke til at repræsentere sandsynligheder, der jo skal være tal mellem 0 og 1. Vi bruger derfor en funktion på skalarprodukterne for at få dem lavet om til sandsynligheder, der opfylder 1.-3. Den funktion, vi vil bruge, hedder <em>Softmax</em>. Hvis <span class="math inline">\(\overrightarrow{y}\)</span> er en vektor med <span class="math inline">\(V\)</span> koordinater, så er <span class="math inline">\(\text{Softmax}\big(\overrightarrow{y}\big)=\overrightarrow{z}\)</span>, hvor <span class="math inline">\(\overrightarrow{z}\)</span> er en ny vektor med <span class="math inline">\(V\)</span> koordinater. Den <span class="math inline">\(i\)</span>te koordinat i <span class="math inline">\(\overrightarrow{z}\)</span> er givet ved <span class="math display">\[z_i = \frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}}\]</span> Vi viser i boksen nedenfor, at Softmax opfylder:</p>
+<p>Skalarprodukter kan imidlertid antage alle reelle værdier, så de egner sig ikke til at repræsentere sandsynligheder, der jo skal være tal mellem 0 og 1. Vi bruger derfor en funktion på skalarprodukterne for at få dem lavet om til sandsynligheder, der opfylder punkt 1. til 3 ovenfor. Den funktion, vi vil bruge, hedder <em>Softmax</em>. Hvis <span class="math inline">\(\vec{y}\)</span> er en vektor med <span class="math inline">\(V\)</span> koordinater, så er <span class="math inline">\(\text{Softmax}\big(\vec{y}\big)=\vec{z}\)</span>, hvor <span class="math inline">\(\vec{z}\)</span> er en ny vektor med <span class="math inline">\(V\)</span> koordinater. Den <span class="math inline">\(i\)</span>te koordinat i <span class="math inline">\(\vec{z}\)</span> er givet ved <span class="math display">\[z_i = \frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}}\]</span> Vi viser i boksen nedenfor, at Softmax opfylder:</p>
 <ul>
 <li><p><span class="math inline">\(0&lt;z_i&lt;1\)</span></p></li>
 <li><p><span class="math inline">\(z_1 + z_2 + \dotsm + z_V = 1\)</span></p></li>
 <li><p>Hvis <span class="math inline">\(y_i &lt; y_j\)</span>, så er <span class="math inline">\(z_i &lt; z_j\)</span>.</p></li>
 </ul>
-<p>Lader vi <span class="math inline">\(\overrightarrow{y}\)</span> være vektoren med <span class="math inline">\(i\)</span>te koordinat <span class="math display">\[y_i = \overrightarrow{v}_{w}\cdot \overrightarrow{k}_{\text{ord}_i}\]</span> og bruger Softmax på <span class="math inline">\(\overrightarrow{y}\)</span>, så får vi en vektor <span class="math inline">\(\overrightarrow{z}=\text{Softmax}\big(\overrightarrow{y}\big)\)</span>, der kan bruges som sandsynligheder. Mere præcist lader vi <span id="eq-sshmodel"><span class="math display">\[P(\text{ord}_i\mid w) = z_i = \frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}} = \frac{e^{\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{\text{ord}_i}}}{e^{\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{\text{ord}_1}} + \dotsm + e^{\overrightarrow{v}_{w}\cdot \overrightarrow{k}_{\text{ord}_V}}} \tag{2}\]</span></span> Egenskaberne ved softmax sikrer, at 1.-3. er opfyldt.</p>
-<section id="eksempel" class="level3">
-<h3 class="anchored" data-anchor-id="eksempel">Eksempel</h3>
-<p>Antag at vores ordforråd kun består af de tre ord "hund", "pels" og "fjer", og at vi har fundet vektorrepræsentationer for de tre ord.</p>
-<p>Antag at inputvektoren for "hund" og kontekstvektorerne for "fjer", "pels" og "hund" er givet ved <span class="math display">\[
+<p>Lader vi <span class="math inline">\(\vec{y}\)</span> være vektoren med <span class="math inline">\(i\)</span>te koordinat <span class="math display">\[y_i = \vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}\]</span> og bruger Softmax på <span class="math inline">\(\vec{y}\)</span>, så får vi en vektor <span class="math inline">\(\vec{z}=\text{Softmax}\big(\vec{y}\big)\)</span>, der kan bruges som sandsynligheder. Mere præcist lader vi</p>
+<p><span id="eq-sshmodel"><span class="math display">\[
+\begin{aligned}
+P(\text{ord}_i\mid w) &amp;= z_i = \frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}} \\ &amp;= \frac{e^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}}}{e^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + e^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_V}}}
+\end{aligned}
+\tag{2}\]</span></span></p>
+<p>Egenskaberne ved softmax sikrer, at punkt 1. til 3. ovenfor er opfyldt.</p>
+<section id="eksempel-2" class="level3">
+<h3 class="anchored" data-anchor-id="eksempel-2">Eksempel 2</h3>
+<p>Antag, at vores ordforråd kun består af de tre ord "hund", "pels" og "fjer", og at vi har fundet vektorrepræsentationer for de tre ord.</p>
+<p>Antag, at inputvektoren for "hund" og kontekstvektorerne for "fjer", "pels" og "hund" er givet ved <span class="math display">\[
     \begin{aligned}
-    \overrightarrow{v}_{\text{hund}}=\begin{pmatrix} 0.5\\2\end{pmatrix},\quad
-    \overrightarrow{k}_{\text{fjer}}=\begin{pmatrix} 1\\-1 \end{pmatrix}, \quad
-    \overrightarrow{k}_{\text{pels}}=\begin{pmatrix} 0\\1\end{pmatrix},\quad
-    \overrightarrow{k}_{\text{hund}}=\begin{pmatrix} 4\\-1\end{pmatrix}
+    \vec{v}_{\text{hund}}=\begin{pmatrix} 0.5\\2\end{pmatrix},\quad
+    \vec{k}_{\text{fjer}}=\begin{pmatrix} 1\\-1 \end{pmatrix}, \quad
+    \vec{k}_{\text{pels}}=\begin{pmatrix} 0\\1\end{pmatrix},\quad
+    \vec{k}_{\text{hund}}=\begin{pmatrix} 4\\-1\end{pmatrix}
     \end{aligned}
     \]</span> Vi beregner først skalarprodukterne <span class="math display">\[
 \begin{aligned}
-\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{fjer}} &amp;= 0.5\cdot 1 + 2\cdot (-1)  =-1.5\\
-\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{pels}}&amp;= 0.5\cdot 0 + 2\cdot 1  = 2\\
-\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{hund}} &amp;= 0.5 \cdot 4 + 2 \cdot (-1) = 0
+\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} &amp;= 0.5\cdot 1 + 2\cdot (-1)  =-1.5\\
+\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}}&amp;= 0.5\cdot 0 + 2\cdot 1  = 2\\
+\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} &amp;= 0.5 \cdot 4 + 2 \cdot (-1) = 0
 \end{aligned}
 \]</span> Derefter anvender vi Softmax for at finde sandsynlighederne <span class="math display">\[
 \begin{aligned}
-P(\text{fjer} \mid \text{hund}) &amp;= \frac{e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{fjer}} }}{e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{fjer}} }+e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{pels}} }+e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{hund}} }} = \frac{e^{-1.5}}{e^{-1.5}+e^{2 }+e^{0 }} \approx 0.026\\
-P(\text{pels} \mid \text{hund}) &amp;= \frac{e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{pels}} }}{e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{fjer}} }+e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{pels}} }+e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{hund}} }} = \frac{e^{2}}{e^{-1.5}+e^{2 }+e^{0 }} \approx 0.858\\
-P(\text{hund} \mid \text{hund}) &amp;= \frac{e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{hund}} }}{e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{fjer}} }+e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{pels}} }+e^{\overrightarrow{v}_{\text{hund}} \cdot \overrightarrow{k}_{\text{hund}} }} = \frac{e^{0}}{e^{-1.5}+e^{2 }+e^{0 }} \approx 0.116
+P(\text{fjer} \mid \text{hund}) &amp;= \frac{e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }}{e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &amp;= \frac{e^{-1.5}}{e^{-1.5}+e^{2 }+e^{0 }} \approx 0.026\\ \\
+P(\text{pels} \mid \text{hund}) &amp;= \frac{e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }}{e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &amp;= \frac{e^{2}}{e^{-1.5}+e^{2 }+e^{0 }} \approx 0.858\\ \\
+P(\text{hund} \mid \text{hund}) &amp;= \frac{e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }}{e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &amp;= \frac{e^{0}}{e^{-1.5}+e^{2 }+e^{0 }} \approx 0.116
 \end{aligned}
 \]</span> “Pels” er altså det mest sandsynlige kontekstord til "hund", mens "fjer" sjældent er kontekst til "hund".</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
@@ -534,17 +579,23 @@ Egenskaber ved Softmax
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Vi viser nu de tre egenskaber ved Softmax.</p>
-<ul>
-<li><span class="math inline">\(0 &lt; z_i &lt; 1\)</span></li>
-</ul>
+<p><strong>Egenskab 1: <span class="math inline">\(0 &lt; z_i &lt; 1\)</span></strong></p>
 <p>Husk på at <span id="eq-softmax"><span class="math display">\[z_i=\frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}} \tag{3}\]</span></span> Da eksponentialfunktionen kun kan antage positive værdier, er både tæller og nævner positive, så <span class="math inline">\(z_i&gt;0\)</span>. Desuden er <span class="math display">\[e^{y_i} &lt; e^{y_1} + \dotsm +e^{y_i} + \dotsm + e^{y_V}\]</span> Derfor er <span class="math display">\[z_i=\frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}} &lt; \frac{e^{y_1} + \dotsm  + e^{y_V}}{e^{y_1} + \dotsm + e^{y_V}} = 1\]</span></p>
-<ul>
-<li><span class="math inline">\(z_1 + \dotsm + z_V = 1\)</span></li>
-</ul>
-<p>Ved at indsætte at <span class="math inline">\(z_i\)</span> er givet ved <a href="#eq-softmax" class="quarto-xref">3</a> og sætte på fælles brøkstreg, får vi <span class="math display">\[z_1 + \dotsm + z_V  = \frac{e^{y_1}}{e^{y_1} + \dotsm + e^{y_V}} + \dotsm + \frac{e^{y_V}}{e^{y_1} + \dotsm + e^{y_V}} = \frac{e^{y_1} + \dotsm + e^{y_V}}{e^{y_1} + \dotsm + e^{y_V}} = 1\]</span></p>
-<ul>
-<li>Hvis <span class="math inline">\(y_i &lt; y_j\)</span>, så er <span class="math inline">\(z_i &lt; z_j\)</span>.</li>
-</ul>
+<p>Alt i alt har vi altså, at</p>
+<p><span class="math display">\[
+0 &lt; z_i &lt; 1
+\]</span></p>
+<p><strong>Egenskab 2: <span class="math inline">\(z_1 + \dotsm + z_V = 1\)</span></strong></p>
+<p>Ved at indsætte at <span class="math inline">\(z_i\)</span> er givet ved (<a href="#eq-softmax" class="quarto-xref">3</a>) og sætte på fælles brøkstreg, får vi <span class="math display">\[
+\begin{aligned}
+z_1 &amp;+ \dotsm  + z_V  = \\ &amp; \frac{e^{y_1}}{e^{y_1} + \dotsm + e^{y_V}} + \dotsm + \frac{e^{y_V}}{e^{y_1} + \dotsm + e^{y_V}} = \frac{e^{y_1} + \dotsm + e^{y_V}}{e^{y_1} + \dotsm + e^{y_V}} = 1
+\end{aligned}
+\]</span></p>
+<p>Altså er:</p>
+<p><span class="math display">\[
+z_1 + \dotsm + z_V = 1
+\]</span></p>
+<p><strong>Egenskab 3: Hvis <span class="math inline">\(y_i &lt; y_j\)</span>, så er <span class="math inline">\(z_i &lt; z_j\)</span></strong></p>
 <p>Hvis <span class="math inline">\(y_i&lt; y_j\)</span>, så er <span class="math display">\[e^{y_i} &lt; e^{y_j}\]</span> Hvis vi dividerer med <span class="math inline">\(e^{y_1} + \dotsm + e^{y_V}\)</span> på begge sider af uligheden, får vi <span class="math display">\[ \frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}} &lt; \frac{e^{y_j}}{e^{y_1} + \dotsm + e^{y_V}} \]</span> Det betyder netop, at <span class="math inline">\(z_i&lt;z_j\)</span>.</p>
 </div>
 </div>
@@ -561,16 +612,21 @@ Opgaver
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<p>Lad <span class="math inline">\(\vec{y}\)</span> være vektoren <span class="math display">\[\vec{y}= \begin{pmatrix} 1 \\2 \\-1 \end{pmatrix}\]</span></p>
 <ul>
-<li><p>Lad <span class="math inline">\(\overrightarrow{y}\)</span> være vektoren <span class="math display">\[\overrightarrow{y}= \begin{pmatrix} 1 \\2 \\-1 \end{pmatrix}\]</span> Beregn <span class="math inline">\(\overrightarrow{z} = \text{Softmax}(\overrightarrow{y})\)</span>.</p></li>
-<li><p>Antag, at vores ordforråd består af de tre ord "sommer", "sol" og "sne". Vi har lavet en model for sandsynligheder for kontekstord som i <a href="#eq-sshmodel" class="quarto-xref">2</a>, hvor inputvektoren for "sommer" og kontekstvektorerne for "sommer", "sol" og "sne" er givet ved <span class="math display">\[
+<li>Beregn <span class="math inline">\(\vec{z} = \text{Softmax}(\vec{y})\)</span>.</li>
+</ul>
+<p>Antag, at vores ordforråd består af de tre ord "sommer", "sol" og "sne". Vi har lavet en model for sandsynligheder for kontekstord som i (<a href="#eq-sshmodel" class="quarto-xref">2</a>), hvor inputvektoren for "sommer" og kontekstvektorerne for "sommer", "sol" og "sne" er givet ved <span class="math display">\[
 \begin{aligned}
-\overrightarrow{v}_{\text{sommer}}=\begin{pmatrix} 1\\1\end{pmatrix},\quad
-\overrightarrow{k}_{\text{sommer}}=\begin{pmatrix} 1\\-1 \end{pmatrix} ,\quad
-\overrightarrow{k}_{\text{sol}}=\begin{pmatrix} 0\\2\end{pmatrix},\quad
-\overrightarrow{k}_{\text{sne}} =\begin{pmatrix} -1\\-2\end{pmatrix}
+\vec{v}_{\text{sommer}}=\begin{pmatrix} 1\\1\end{pmatrix},\quad
+\vec{k}_{\text{sommer}}=\begin{pmatrix} 1\\-1 \end{pmatrix} ,\quad
+\vec{k}_{\text{sol}}=\begin{pmatrix} 0\\2\end{pmatrix},\quad
+\vec{k}_{\text{sne}} =\begin{pmatrix} -1\\-2\end{pmatrix}
 \end{aligned}
-\]</span> Hvad er sandsynligheden for, at hvert af de tre ord er kontekst til "sommer"? Hvilket af de tre ord optræder oftest som kontekst til sommer?</p></li>
+\]</span></p>
+<ul>
+<li>Hvad er sandsynligheden for, at hvert af de tre ord er kontekst til "sommer"?</li>
+<li>Hvilket af de tre ord optræder oftest som kontekst til sommer?</li>
 </ul>
 </div>
 </div>
@@ -579,54 +635,85 @@ Opgaver
 </section>
 <section id="estimation-af-vektorrepræsentationer" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="estimation-af-vektorrepræsentationer">Estimation af vektorrepræsentationer</h2>
-<p>Vi mangler stadig at bestemme vektorrepræsentationerne <span class="math inline">\(\overrightarrow{v}_{w}\)</span> og <span class="math inline">\(\overrightarrow{k}_{c}\)</span>, så modellen i <a href="#eq-sshmodel" class="quarto-xref">2</a> kommer til at passe til virkelig tekst. Her får vi brug for det datasæt, som vi lavede ud fra vores træningsdata. Hver række i datasættet bestod af et inputord <span class="math inline">\(w\)</span> og et kontekstord <span class="math inline">\(c\)</span>, som forekom i vores træningsdata. Lad os sige, at der er <span class="math inline">\(M\)</span> rækker i vores træningsdata. Vi betegner data i den <span class="math inline">\(j\)</span>te række med <span class="math inline">\((w_j,c_j)\)</span> for <span class="math inline">\(j=1,\ldots,M\)</span>. Vores datasæt har altså formen</p>
+<p>Vi mangler stadig at bestemme vektorrepræsentationerne <span class="math inline">\(\vec{v}_{w}\)</span> og <span class="math inline">\(\vec{k}_{c}\)</span>, så modellen i (<a href="#eq-sshmodel" class="quarto-xref">2</a>) kommer til at passe til virkelig tekst. Her får vi brug for det datasæt, som vi lavede ud fra vores træningsdata. Hver række i datasættet bestod af et inputord <span class="math inline">\(w\)</span> og et kontekstord <span class="math inline">\(c\)</span>, som forekom i vores træningsdata. Lad os sige, at der er <span class="math inline">\(M\)</span> rækker i vores træningsdata. Vi betegner data i den <span class="math inline">\(j\)</span>te række med <span class="math inline">\((w_j,c_j)\)</span> for <span class="math inline">\(j=1,\ldots,M\)</span>. Vores datasæt har altså formen (jævnfør <a href="#tbl-data" class="quarto-xref">tabel&nbsp;2</a>):</p>
+<div id="tbl-data" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
+<div aria-describedby="tbl-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Eksempel på datatabel<span data-label="tab:data"></span></caption>
 <thead>
 <tr class="header">
 <th style="text-align: center;">Input</th>
-<th style="text-align: right;">Kontekst</th>
+<th style="text-align: center;">Kontekst</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: center;"><span class="math inline">\(w_1\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(c_1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(c_1\)</span></td>
 </tr>
 <tr class="even">
 <td style="text-align: center;"><span class="math inline">\(w_2\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(c_2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(c_2\)</span></td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;"><span class="math inline">\(w_3\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(c_3\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(c_3\)</span></td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">⋮</td>
-<td style="text-align: right;">⋮</td>
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(w_j\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(c_j\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
 </tr>
 </tbody>
 </table>
-<p>Vi ser nu på <span class="math inline">\(j\)</span>te række. Sandsynligheden for, at <span class="math inline">\(w_j\)</span> har netop <span class="math inline">\(c_j\)</span> som kontekst, er <span class="math inline">\(P(c_j\mid w_j)\)</span>. Vi vil nu finde den samlede sandsynlighed for, at inputordene <span class="math inline">\(w_1,\ldots,w_M\)</span> i vores datasæt har henholdsvis <span class="math inline">\(c_1,\ldots,c_M\)</span> som kontekstord. Den kalder vi <span class="math inline">\(P(\text{data})\)</span>. Lad os antage, at alle vores par af input- og kontekstord er uafhængige af hinanden.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Så får vi den samlede sandsynlighed ved at gange de enkelte sandsynligheder sammen. <span id="eq-Pdata"><span class="math display">\[P(\text{data})  = P(c_1\mid w_1) \cdot P(c_2\mid w_2) \dotsm P(c_M\mid w_M) \tag{4}\]</span></span> Hvis vores model fra <a href="#eq-sshmodel" class="quarto-xref">2</a> passer godt til datasættet, skulle denne sandsynlighed gerne være høj.</p>
-<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;I praksis er ordpar, der forekommer i nærheden af hinanden ikke helt uafhængige. Hvis fx parret <span class="math inline">\((\text{hund},\text{madskål})\)</span> forekommer, er det mere sandsynligt, at <span class="math inline">\((\text{hund}, \text{fodre})\)</span> forekommer i nærheden, end hvis der havde stået <span class="math inline">\((\text{hund},\text{hundesnor})\)</span>.</p></div><div id="fn3"><p><sup>3</sup>&nbsp;Bemærk, at da <span class="math inline">\(P(c_j\mid w_j)\)</span> er en sandsynlighed, der ligger mellem 0 og 1, er <span class="math inline">\(\ln (P(c_j\mid w_j))\)</span> negativ. Derfor er <span class="math inline">\(-\ln (P(c_j\mid w_j))\)</span> positiv og <span class="math inline">\(L\)</span> er dermed også positiv. Når <span class="math inline">\(L\)</span> gerne skal være lav, betyder det altså, at den skal være så tæt på 0 som muligt.</p></div></div><p>Da summer er nemmere at regne på end produkter, vælger vi at tage den naturlige logaritme på begge sider af <a href="#eq-Pdata" class="quarto-xref">4</a>. Ved at bruge logaritmeregnereglen <span class="math inline">\(\ln(ab) = \ln(a) + \ln(b)\)</span> får vi, at <span class="math display">\[
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-tbl margin-caption" id="tbl-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabel&nbsp;2: Eksempel på datatabel med træningsdata.
+</figcaption>
+</figure>
+</div>
+<p>Vi ser nu på <span class="math inline">\(j\)</span>te række. Sandsynligheden for, at <span class="math inline">\(w_j\)</span> har netop <span class="math inline">\(c_j\)</span> som kontekst, er <span class="math inline">\(P(c_j\mid w_j)\)</span>. Vi vil nu finde den samlede sandsynlighed for, at inputordene <span class="math inline">\(w_1,\ldots,w_M\)</span> i vores datasæt har henholdsvis <span class="math inline">\(c_1,\ldots,c_M\)</span> som kontekstord. Den kalder vi <span class="math inline">\(P(\text{data})\)</span>. Lad os antage, at alle vores par af input- og kontekstord er uafhængige af hinanden<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Så får vi den samlede sandsynlighed ved at gange de enkelte sandsynligheder sammen. <span id="eq-Pdata"><span class="math display">\[P(\text{data})  = P(c_1\mid w_1) \cdot P(c_2\mid w_2) \dotsm P(c_M\mid w_M) \tag{4}\]</span></span> Hvis vores model fra (<a href="#eq-sshmodel" class="quarto-xref">2</a>) passer godt til datasættet, skulle denne sandsynlighed gerne være høj.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;I praksis er ordpar, der forekommer i nærheden af hinanden ikke helt uafhængige. Hvis for eksempel parret <span class="math inline">\((\text{hund},\text{madskål})\)</span> forekommer, er det mere sandsynligt, at <span class="math inline">\((\text{hund}, \text{fodre})\)</span> forekommer i nærheden, end hvis der havde stået <span class="math inline">\((\text{hund},\text{hundesnor})\)</span>.</p></div></div><p>Da summer er nemmere at regne på end produkter, vælger vi at tage den naturlige logaritme på begge sider af (<a href="#eq-Pdata" class="quarto-xref">4</a>). Ved at bruge logaritmeregnereglen <span class="math inline">\(\ln(ab) = \ln(a) + \ln(b)\)</span> får vi, at <span class="math display">\[
 \begin{aligned}
 \ln (P(\text{data})) &amp;= \ln\big(P(c_1\mid w_1) \cdot P(c_2\mid w_2) \dotsm P(c_M\mid w_M)\big)\\
 &amp;= \ln(P(c_1\mid w_1)) + \ln(P(c_2\mid w_2)) + \dotsm + \ln(P(c_M\mid w_m))
 \end{aligned}
-\]</span> Da den naturlige logaritme er en voksende funktion, svarer store værdier af <span class="math inline">\(P(\text{data})\)</span> til store værdier af <span class="math inline">\(\ln (P(\text{data}))\)</span>, som igen svarer til små værdier af <span class="math inline">\(-\ln(P(\text{data}))\)</span> <strong>FIGUR?</strong>. Hvis vores model er god, skal <span id="eq-Ldef"><span class="math display">\[L= - \ln(\text{data}) = -\ln(P(c_1\mid w_1)) - \ln(P(c_2\mid w_2)) - \dotsm - \ln(P(c_M\mid w_m))  \tag{5}\]</span></span> altså gerne være lav<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. Vi kalder <span class="math inline">\(L\)</span> for vores <em>tabsfunktion</em>. Denne tabsfunktion kaldes også nogle gange for <em>cross-entropy</em>.</p>
-<p>Vi kan indsætte vores udtryk for sandsynlighederne fra <a href="#eq-sshmodel" class="quarto-xref">2</a> i <a href="#eq-Ldef" class="quarto-xref">5</a> og få <span id="eq-Lfunktion"><span class="math display">\[
+\]</span> Da den naturlige logaritme er en voksende funktion, svarer store værdier af <span class="math inline">\(P(\text{data})\)</span> til store værdier af <span class="math inline">\(\ln (P(\text{data}))\)</span>, som igen svarer til små værdier af <span class="math inline">\(-\ln(P(\text{data}))\)</span>. Dette er illustreret på <a href="#fig-natural_ln" class="quarto-xref">figur&nbsp;4</a>:</p>
+<div id="fig-natural_ln" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-natural_ln-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../softmax/images/natural_ln.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-natural_ln-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;4: Grafen for <span class="math inline">\(\ln(x)\)</span> og <span class="math inline">\(-\ln(x)\)</span>.
+</figcaption>
+</figure>
+</div>
+<p>Hvis vores model er god, skal <span id="eq-Ldef"><span class="math display">\[
 \begin{aligned}
-L = &amp;-\ln\left(\frac{e^{\overrightarrow{v}_{w_1}\cdot \overrightarrow{k}_{c_1}}}{e^{\overrightarrow{v}_{w_1}\cdot \overrightarrow{k}_{\text{ord}_1}} + \dotsm + e^{\overrightarrow{v}_{w_1}\cdot \overrightarrow{k}_{\text{ord}_V}}}\right)
-- \ln\left(\frac{e^{\overrightarrow{v}_{w_2}\cdot \overrightarrow{k}_{c_2}}}{e^{\overrightarrow{v}_{w_2}\cdot \overrightarrow{k}_{\text{ord}_1}} + \dotsm + e^{\overrightarrow{v}_{w_2}\cdot \overrightarrow{k}_{\text{ord}_V}}}\right)\\
-&amp;- \dotsm - \ln\left(\frac{e^{\overrightarrow{v}_{w_M}\cdot \overrightarrow{k}_{c_M}}}{e^{\overrightarrow{v}_{w_M}\cdot \overrightarrow{k}_{\text{ord}_1}} + \dotsm + e^{\overrightarrow{v}_{w_M}\cdot \overrightarrow{k}_{\text{ord}_V}}}\right)
+L&amp;= - \ln(\text{data}) \\ &amp;= -\ln(P(c_1\mid w_1)) - \ln(P(c_2\mid w_2)) - \dotsm - \ln(P(c_M\mid w_m))
+\end{aligned}
+\tag{5}\]</span></span></p>
+<p>altså gerne være lav<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. Vi kalder <span class="math inline">\(L\)</span> for vores <em>tabsfunktion</em>. Denne tabsfunktion kaldes også nogle gange for <em>cross-entropy</em>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Bemærk, at da <span class="math inline">\(P(c_j\mid w_j)\)</span> er en sandsynlighed, der ligger mellem 0 og 1, er <span class="math inline">\(\ln (P(c_j\mid w_j))\)</span> negativ. Derfor er <span class="math inline">\(-\ln (P(c_j\mid w_j))\)</span> positiv og <span class="math inline">\(L\)</span> er dermed også positiv. Når <span class="math inline">\(L\)</span> gerne skal være lav, betyder det altså, at den skal være så tæt på 0 som muligt.</p></div></div><p>Vi kan indsætte vores udtryk for sandsynlighederne fra (<a href="#eq-sshmodel" class="quarto-xref">2</a>) i (<a href="#eq-Ldef" class="quarto-xref">5</a>) og få <span id="eq-Lfunktion"><span class="math display">\[
+\begin{aligned}
+L = &amp;-\ln\left(\frac{e^{\vec{v}_{w_1}\cdot \vec{k}_{c_1}}}{e^{\vec{v}_{w_1}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + e^{\vec{v}_{w_1}\cdot \vec{k}_{\text{ord}_V}}}\right)
+\\ &amp;- \ln\left(\frac{e^{\vec{v}_{w_2}\cdot \vec{k}_{c_2}}}{e^{\vec{v}_{w_2}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + e^{\vec{v}_{w_2}\cdot \vec{k}_{\text{ord}_V}}}\right)
+- \dotsm \\ &amp;- \ln\left(\frac{e^{\vec{v}_{w_M}\cdot \vec{k}_{c_M}}}{e^{\vec{v}_{w_M}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + e^{\vec{v}_{w_M}\cdot \vec{k}_{\text{ord}_V}}}\right)
 \end{aligned}
 \tag{6}\]</span></span> Bemærk her, at <span class="math inline">\(w_j\)</span> og <span class="math inline">\(c_j\)</span> refererer til henholdsvis input- og kontekstordet i <span class="math inline">\(j\)</span>te række i datasættet, mens <span class="math inline">\(\text{ord}_i\)</span> refererer til <span class="math inline">\(i\)</span>te ord i ordforrådet.</p>
-<p>Ligning <a href="#eq-Lfunktion" class="quarto-xref">6</a> viser, at <span class="math inline">\(L\)</span> afhænger af, hvordan vi har valgt input- og kontekstvektorerne. Vi kan betragte altså <span class="math inline">\(L\)</span> som en funktion af input- og kontekstvektorerne. Mere præcist er <span class="math inline">\(L\)</span> en funktion af alle koordinaterne i disse vektorer. For at få den bedst mulige model for vores træningsdata, ønsker vi at bestemme input- og kontekstvektorerne, således at de minimerer <span class="math inline">\(L\)</span>. Hvordan finder man minimum for <span class="math inline">\(L\)</span> i praksis? Det kan man fx gøre ved hjælp af <em>gradientnedstigning</em>, som du kan læse mere om her. <strong>LINK</strong></p>
+<p>Ligning (<a href="#eq-Lfunktion" class="quarto-xref">6</a>) viser, at <span class="math inline">\(L\)</span> afhænger af, hvordan vi har valgt input- og kontekstvektorerne. Vi kan betragte altså <span class="math inline">\(L\)</span> som en funktion af input- og kontekstvektorerne. Mere præcist er <span class="math inline">\(L\)</span> en funktion af alle koordinaterne i disse vektorer. For at få den bedst mulige model for vores træningsdata, ønsker vi at bestemme input- og kontekstvektorerne, således at de minimerer <span class="math inline">\(L\)</span>. Hvordan finder man minimum for <span class="math inline">\(L\)</span> i praksis? Det kan man for eksempel gøre ved hjælp af <a href="../../materialer/gradientnedstigning/gradientnedstigning.html">gradientnedstigning</a>, som vi ikke vil komme nærmere ind på her.</p>
 <p>Der er rigtig mange ord i det danske sprog. For hvert af dem skal vi finde både en input- og en kontekstvektor, der hver har <span class="math inline">\(m\)</span> koordinater. Alt i alt giver det rigtig mange koordinater, der skal bestemmes. Antallet af ord på dansk afhænger lidt af, hvad man forstår ved et ord, men 200.000 er et fornuftigt bud. Hvis vi vil repræsentere hver af dem ved to vektorer af dimension <span class="math inline">\(m=100\)</span>, får man brug for at bestemme 40.000.000 koordinater. For at kunne gøre det meningsfuldt, er man også nødt til at have enormt store mængder træningsdata til rådighed i form af et tekstkorpus med rigtig mange ord.</p>
-<p>Nu har vi set, hvordan man kan repræsentere et ord <span class="math inline">\(w\)</span> ved en inputvektor <span class="math inline">\(\overrightarrow{v}_{w}\)</span> og en kontekstvektor <span class="math inline">\(\overrightarrow{k}_{w}\)</span>. Vektoren <span class="math inline">\(\overrightarrow{v}_{w}\)</span> er den, der viser, hvordan <span class="math inline">\(w\)</span> forholder sig til sin kontekst, så det er den, der repræsenterer betydningen af <span class="math inline">\(w\)</span>. Normalt vil man derfor arbejde videre med <span class="math inline">\(\overrightarrow{v}_{w}\)</span>, mens <span class="math inline">\(\overrightarrow{k}_{w}\)</span> smides væk. Når vektorerne <span class="math inline">\(\overrightarrow{v}_{w}\)</span> er fundet med Word2Vec, kan man bruge dem til at lave algoritmer til at generere tekst. Det ser vi på i næste afsnit.</p>
-<section id="eksempel-3" class="level3 unnumbered">
-<h3 class="unnumbered anchored" data-anchor-id="eksempel-3">Eksempel 3</h3>
-<p>Eges børnebog</p>
+<p>Nu har vi set, hvordan man kan repræsentere et ord <span class="math inline">\(w\)</span> ved en inputvektor <span class="math inline">\(\vec{v}_{w}\)</span> og en kontekstvektor <span class="math inline">\(\vec{k}_{w}\)</span>. Vektoren <span class="math inline">\(\vec{v}_{w}\)</span> er den, der viser, hvordan <span class="math inline">\(w\)</span> forholder sig til sin kontekst, så det er den, der repræsenterer betydningen af <span class="math inline">\(w\)</span>. Normalt vil man derfor arbejde videre med <span class="math inline">\(\vec{v}_{w}\)</span>, mens <span class="math inline">\(\vec{k}_{w}\)</span> smides væk. Når vektorerne <span class="math inline">\(\vec{v}_{w}\)</span> er fundet med Word2Vec, kan man bruge dem til at lave algoritmer til at generere tekst. Det ser vi på i næste afsnit.</p>
+<!-- ### Eksempel 3 {#eksempel-3 .unnumbered} -->
+<!-- Eges børnebog -->
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -639,15 +726,14 @@ Opgaver
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>For at finde minimum for tabsfunktionen, får man brug for at finde partielle afledte af Softmax-funktionen. Det kan man gøre smart ved hjælp af nedenstående opgave, som viser, at man ikke behøver at kende værdien af <span class="math inline">\(\overrightarrow{y}\)</span> i det punkt, hvor man differentierer, men kun funktionsværdien <span class="math inline">\(\overrightarrow{z}\)</span>.</p>
+<p>For at finde minimum for tabsfunktionen, får man brug for at finde partielle afledte af Softmax-funktionen. Det kan man gøre smart ved hjælp af nedenstående opgave, som viser, at man ikke behøver at kende værdien af <span class="math inline">\(\vec{y}\)</span> i det punkt, hvor man differentierer, men kun funktionsværdien <span class="math inline">\(\vec{z}\)</span>.</p>
 <ul>
-<li>Vis følgende egenskaber ved de partielle afledte af Softmax-funktionen:</li>
+<li>Vis ved at bruge udtrykketi (<a href="#eq-softmax" class="quarto-xref">3</a>) følgende egenskaber ved de partielle afledte af Softmax-funktionen:</li>
 </ul>
 <p><span class="math display">\[\frac{\partial z_i}{\partial y_i} = z_i(1-z_i),\quad \frac{\partial z_i}{\partial y_j} = -z_iz_j, \quad i\neq j\]</span></p>
 </div>
 </div>
 </div>
-</section>
 </section>
 <section id="fra-vektorer-til-tekstgenerering" class="level2">
 <h2 class="anchored" data-anchor-id="fra-vektorer-til-tekstgenerering">Fra vektorer til tekstgenerering</h2>
@@ -656,13 +742,13 @@ Opgaver
 <li><p>Først benyttes Word2Vec til at oversætte alle ordene i sproget til vektorer.</p></li>
 <li><p>Dernæst genereres teksten. Givet den tekst, der allerede er dannet, bruger vi en (kompliceret) funktion, der tager vektorrepræsentationerne af de hidtil genererede ord som input. Som output giver funktionen det mest sandsynlige næste ord (eller et af de mest sandsynlige).</p></li>
 </ol>
-<p>Hvis vi fx har genereret teksten <span class="math display">\[
+<p>Hvis vi for eksempel har genereret teksten <span class="math display">\[
 \text{"Hunden spiser sit ---"}
-\]</span> så skal vi prøve at gætte, hvilket ord der kommer efter "sit". Vi oversætter derfor ordene "Hunden", "spiser" og "sit" til vektorerne <span class="math inline">\(\overrightarrow{v}_{\text{Hunden}}\)</span>, <span class="math inline">\(\overrightarrow{v}_{\text{spiser}}\)</span> og <span class="math inline">\(\overrightarrow{v}_{\text{sit}}\)</span>. Disse tre vektorer giver vi funktionen som input, og som output får vi et nyt ord. Det kunne være "kødben". Den funktion, der bruges i punkt 2., kunne fx være et <em>neuralt netværk</em>. Du kan læse mere om, hvordan det fungerer i "Tekstgenerering med neurale netværk".<strong>LINK</strong></p>
+\]</span> så skal vi prøve at gætte, hvilket ord der kommer efter "sit". Vi oversætter derfor ordene "Hunden", "spiser" og "sit" til vektorerne <span class="math inline">\(\vec{v}_{\text{Hunden}}\)</span>, <span class="math inline">\(\vec{v}_{\text{spiser}}\)</span> og <span class="math inline">\(\vec{v}_{\text{sit}}\)</span>. Disse tre vektorer giver vi funktionen som input, og som output får vi et nyt ord. Det kunne være "kødben". Den funktion, der bruges i punkt 2., kunne for eksempel være et <em>neuralt netværk</em>. Du kan læse mere om, hvordan det fungerer i <a href="">Tekstgenerering med neurale netværk</a>.</p>
 <p>Det smarte ved at bruge vektorrepræsentationerne er, hvis vi for eksempel vil generere næste ord i <span class="math display">\[
 \text{"Jeg skal huske, at katten skal have ---"}
 \]</span> Det skulle gerne give "mad" som muligt næste ord. Men måske har sprogmodellen aldrig set sætningen "katten skal have mad". Hvis den til gengæld har set "hunden skal have mad", og modellen ved at "hunden" og "katten" tit har samme kontekst, og dermed har næsten samme vektorrepræsentation, så vil man alligevel få "mad" som muligt næste ord.</p>
-<p>Bemærk, at resultatet af Word2Vec afhænger meget af, hvilket træningsdata vi har brugt. Antag fx at vi kun træner modellen på tekster skrevet af folk, der ikke kan lide hunde. Så vil <span class="math inline">\(\overrightarrow{v}_{\text{hund}}\)</span> have en tendens til at pege i samme retning som andre negativt ladede ord, fordi de ofte optræder sammen med negative kontekstord. Når vi sidenhen genererer ny tekst, vil vi få en tendens til at danne sætninger, der omtaler hunde negativt.</p>
+<p>Bemærk, at resultatet af Word2Vec afhænger meget af, hvilket træningsdata vi har brugt. Antag for eksempel, at vi kun træner modellen på tekster skrevet af folk, der ikke kan lide hunde. Så vil <span class="math inline">\(\vec{v}_{\text{hund}}\)</span> have en tendens til at pege i samme retning som andre negativt ladede ord, fordi de ofte optræder sammen med negative kontekstord. Når vi sidenhen genererer ny tekst, vil vi få en tendens til at danne sætninger, der omtaler hunde negativt.</p>
 
 
 </section>
