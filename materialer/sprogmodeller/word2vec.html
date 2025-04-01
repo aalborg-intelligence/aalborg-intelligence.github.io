@@ -40,7 +40,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-a9a1858958e16a084745df87b4be869b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-e494e1401b6229bb85d7a400511c6e94.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -269,7 +269,7 @@ window.onload = function() {
   }
 </script>
 
-<div id="fig-vektorer" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center" width="80%">
+<div id="fig-vektorer" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" width="80%" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-vektorer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div id="ggbApplet_vektorer">
@@ -291,16 +291,25 @@ a_1\\a_2\\a_3\\ \vdots \\ a_m
 \end{pmatrix}
 \]</span> hvor <span class="math inline">\(a_1,a_2,a_3,\ldots,a_m\)</span> er reelle tal. I praksis vælger man <span class="math inline">\(m\)</span> stort, for eksempel <span class="math inline">\(m=100\)</span>. Man kan regne med <span class="math inline">\(m\)</span>-dimensionale vektorer, lige som man gør i to eller tre dimensioner. Vi kommer for eksempel til at se, hvordan man kan finde skalarprodukter. Til gengæld har man ikke mulighed for at visualisere en <span class="math inline">\(m\)</span>-dimensional vektor som en pil i et koordinatsystem, men det har vi heldigvis heller ikke brug for.</p>
 <p>I denne note ser vi på algoritmen Word2Vec som et eksempel på, hvordan man kan oversætte ord til vektorer, der repræsenterer ordenes betydning. Mere præcist kigger vi på en version af algoritmen, der hedder <em>skip-gram</em>. Word2Vec blev opfundet af en gruppe medarbejdere hos <a href="https://code.google.com/archive/p/word2vec/">Google i 2013</a>. I dag bruges diverse forfininger af algoritmen i mange store sprogmodeller.</p>
+<p><br>
+</p>
 <section id="betydning-og-kontekst" class="level2">
 <h2 class="anchored" data-anchor-id="betydning-og-kontekst">Betydning og kontekst</h2>
-<p>Hvilke egenskaber skal de vektorer, der repræsenterer ord, så have? Jo, idéen er, at vektorerne skal indfange betydningen af et ord i den forstand, at ord, hvis betydning minder om hinanden, svarer til vektorer, der ligner hinanden. Og hvordan ved vi så, om to ords betydning minder om hinanden? Betydningen af et ord har noget at gøre med, hvilke sammenhænge det optræder i, når man kigger i rigtig mange dokumenter. Den sproglige sammenhæng, et ord indgår i, kaldes også en <em>kontekst</em>. Ord, der betyder næsten det samme vil altså ofte optræde i samme kontekst. Ordene "hund" og "kat" er for eksempel forskellige, men de vil ofte optræde i sammenhænge, der ligner hinanden. Se for eksempel på sætningerne <span class="math display">\[
+<p>Hvilke egenskaber skal de vektorer, der repræsenterer ord, så have? Jo, idéen er, at vektorerne skal indfange betydningen af et ord i den forstand, at ord, hvis betydning minder om hinanden, svarer til vektorer, der ligner hinanden. Hvad vi forstår ved, at vektorer ligner hinanden, det kommer vi tilbage til. Men hvordan ved vi, om to ords betydning minder om hinanden?</p>
+<p>Sprogteoretikere, som for eksempel den danske <a href="https://lex.dk/Louis_Hjelmslev">Louis Hjelmslev</a> (1899-1965), har fundet ud af, at vi forstår betydningen af et ord ud fra, hvilke sproglige sammenhænge det optræder i, når man kigger i rigtig mange dokumenter. Ordet “kælk” forekommer for eksempel ofte i nærheden af ord som “sne”, “leg” og “bakke”. Det giver os en idé om betydningen. Den sproglige sammenhæng, et ord indgår i, kaldes også en <em>kontekst</em>. Når vi skal forstå et ord med flere betydninger, kigger vi også på konteksten. Vi forstår for eksempel betydningen af ordet "marsvin" forskelligt alt efter, om ordet "fisk" eller ordet "mælkebøtte" optræder i nærheden af det. Det vil altså sige:</p>
+<div class="highlight centertext">
+<p><strong>Betydningen af et ord er bestemt af den kontekst, ordet indgår i.</strong></p>
+</div>
+<p><br>
+</p>
+<p>To ord, der betyder næsten det samme, vil ofte optræde i samme kontekst. Ordene "hund" og "kat" er for eksempel forskellige, men de vil ofte optræde i sammenhænge, der ligner hinanden. Se bare på sætningerne <span class="math display">\[
 \text{"Min --- har spist af sin madskål"}
 \]</span> og <span class="math display">\[
 \text{"Sikken en blød pels, din --- har"}
 \]</span> Her ville der kunne stå "hund" eller "kat", men nok ikke "kælk" eller "badedragt". Betydningen af ordene "hund" og "kat" er tættere på hinanden end betydningen af "hund" og "kælk". På den anden side kunne der ikke stå "hund" i sætningen <span class="math display">\[
 \text{"Den lille --- har hvide knurhår"}
-\]</span> mens både "kat" og "mis" ville passe ind. Ordene "kat" og "hund" er altså tætte på hinanden, men ikke så tætte som "kat" og "mis". Vi vil derfor gerne have, at vektorerne for "hund" og "kat" minder mere om hinanden end vektorerne for "hund" og "kælk", men ikke så meget som "kat" og "mis". <a href="#fig-vektorer" class="quarto-xref">figur&nbsp;1</a> viser netop et eksempel på, hvordan det kunne se ud. Hvad vi helt præcist forstår ved, at vektorer minder om hinanden, det kommer vi tilbage til.</p>
-<p>Konteksten er særlig vigtig i forbindelse med ord med flere betydninger. Vi forstår for eksempel betydningen af ordet "marsvin" forskelligt, alt efter om ordet "hav" eller ordet "mælkebøtte" optræder i nærheden af det.</p>
+\]</span> mens både "kat" og "mis" ville passe ind. Ordene "kat" og "hund" er altså tætte på hinanden, men ikke så tætte som "kat" og "mis".</p>
+<p>Vi ville jo gerne lave vores vektorer, således at ord, hvis betydning ligner hinanden, svarer til vektorer, der ligner hinanden. Mere præcist vil vi lave dem, således at ord, der ofte har samme kontekst, svarer til vektorer der ligner hinanden. Vi vil derfor gerne have, at vektorerne for "hund" og "kat" minder mere om hinanden end vektorerne for "hund" og "kælk", men ikke så meget som "kat" og "mis". I <a href="#fig-vektorer" class="quarto-xref">figur&nbsp;1</a> ses et eksempel på, hvordan det kunne se ud.</p>
 </section>
 <section id="træningsdata" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="træningsdata">Træningsdata</h2>
@@ -402,8 +411,12 @@ a_1\\a_2\\a_3\\ \vdots\\a_m
 b_1\\b_2\\b_3\\ \vdots \\b_m
 \end{pmatrix}
 =a_1b_1+a_2b_2+a_3b_3+\dotsm + a_mb_m
-\]</span></p>
+\]</span> Det overordnede mål er nu:</p>
+<div class="highlight2">
 <p>Vi vil gerne have, at vores input- og kontekstvektorer skal opfylde, at hvis <span class="math inline">\(w\)</span> ofte har <span class="math inline">\(c\)</span> som kontekst, så er skalarproduktet <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span> stort, mens en meget negativ værdi af <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span> indikerer, at <span class="math inline">\(w\)</span> sjældent har <span class="math inline">\(c\)</span> som kontekst.</p>
+</div>
+<p><br>
+</p>
 <p>Hvad fortæller skalarproduktet om, hvordan to vektorer forholder sig til hinanden? I 2 og 3 dimensioner kan vi give en geometrisk fortolkning af skalarproduktet ved hjælp af formlen <span id="eq-skalar"><span class="math display">\[
 \vec{a}\cdot\vec{b} = |\vec{a}|\cdot |\vec{b}| \cdot \cos(v)
 \tag{1}\]</span></span> hvor <span class="math inline">\(v\)</span> er vinklen mellem vektorerne <span class="math inline">\(\vec{a}\)</span> og <span class="math inline">\(\vec{b}\)</span>, og <span class="math inline">\(|\vec{a}|\)</span> betegner længden af <span class="math inline">\(\vec{a}\)</span>, som findes med formlen <span class="math display">\[
@@ -476,7 +489,14 @@ Hvorfor to vektorer?
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Måske har du undret dig over, hvorfor vi har brug for to forskellige vektorer for hvert ord. Hvert positivt eksempel forekommer jo to gange i vores datasæt, hvor de to ord skiftes til at spille rollen som input og kontekst. Alligevel er der ikke symmetri mellem de to ord. Hvis for eksempel inputordet er "logre", er det ret sandsynligt, at "hund" er et af kontekstordene. Inputordet "hund" forekommer derimod i mange kontekster, der ikke involverer ordet "logre". Sandsynligheden for kontekstordet afhænger derfor af, om det er "hund" eller "logre", der er input. Hvis vi kun brugte én vektor for hvert ord, <span class="math inline">\(\vec{u}_{\text{hund}}\)</span> og <span class="math inline">\(\vec{u}_{\text{logre}}\)</span>, ville vi få samme skalarprodukt <span class="math inline">\(\vec{u}_{\text{hund}}\cdot \vec{u}_{\text{logre}} =  \vec{u}_{\text{logre}}\cdot \vec{u}_{\text{hund}}\)</span>, og dermed samme sandsynlighed, uanset hvilket ord der var input.</p>
+<p>Måske har du undret dig over, hvorfor vi har brug for to forskellige vektorer for hvert ord. Hver gang et ord er kontekst for et andet, gælder det omvendte også. For eksempel er "logrer" kontekst for "hund" i dette vindue:</p>
+<p><span class="math display">\[
+\boxed{\textrm{ Den sorte }\textbf{hund} \textrm{ logrer med }} \textrm{ halen}
+\]</span> Samtidig er "hund" også kontekst for "logrer" i vinduet:</p>
+<p><span class="math display">\[
+\textrm{Den } \boxed{\textrm{ sorte hund }\textbf{logrer} \textrm{ med halen}}
+\]</span></p>
+<p>Alligevel er der ikke symmetri mellem de to ord. Når for eksempel inputordet er "logrer", er det ret sandsynligt, at "hund" er et af kontekstordene. Inputordet "hund" forekommer derimod i mange kontekster, der ikke involverer ordet "logrer". Sandsynligheden for kontekstordet afhænger derfor af, om det er "hund" eller "logrer", der er input. Hvis vi kun brugte én vektor for hvert ord, <span class="math inline">\(\vec{u}_{\text{hund}}\)</span> og <span class="math inline">\(\vec{u}_{\text{logrer}}\)</span>, ville vi få samme skalarprodukt <span class="math inline">\(\vec{u}_{\text{hund}}\cdot \vec{u}_{\text{logrer}} =  \vec{u}_{\text{logrer}}\cdot \vec{u}_{\text{hund}}\)</span>, og dermed samme sandsynlighed, uanset hvilket ord der var input.</p>
 </div>
 </div>
 </div>
@@ -728,7 +748,7 @@ Opgaver
 <div class="callout-body-container callout-body">
 <p>For at finde minimum for tabsfunktionen, får man brug for at finde partielle afledte af Softmax-funktionen. Det kan man gøre smart ved hjælp af nedenstående opgave, som viser, at man ikke behøver at kende værdien af <span class="math inline">\(\vec{y}\)</span> i det punkt, hvor man differentierer, men kun funktionsværdien <span class="math inline">\(\vec{z}\)</span>.</p>
 <ul>
-<li>Vis ved at bruge udtrykketi (<a href="#eq-softmax" class="quarto-xref">3</a>) følgende egenskaber ved de partielle afledte af Softmax-funktionen:</li>
+<li>Vis ved at bruge udtrykket i (<a href="#eq-softmax" class="quarto-xref">3</a>) følgende egenskaber ved de partielle afledte af Softmax-funktionen:</li>
 </ul>
 <p><span class="math display">\[\frac{\partial z_i}{\partial y_i} = z_i(1-z_i),\quad \frac{\partial z_i}{\partial y_j} = -z_iz_j, \quad i\neq j\]</span></p>
 </div>
