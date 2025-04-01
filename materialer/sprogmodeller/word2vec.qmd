@@ -76,13 +76,28 @@ sprogmodeller.
 Hvilke egenskaber skal de vektorer, der repræsenterer ord, så have? Jo,
 idéen er, at vektorerne skal indfange betydningen af et ord i den
 forstand, at ord, hvis betydning minder om hinanden, svarer til
-vektorer, der ligner hinanden. Og hvordan ved vi så, om to ords
-betydning minder om hinanden? Betydningen af et ord har noget at gøre
-med, hvilke sammenhænge det optræder i, når man kigger i rigtig mange
-dokumenter. Den sproglige sammenhæng, et ord indgår i, kaldes også en *kontekst*. Ord, der
-betyder næsten det samme vil altså ofte optræde i samme kontekst. Ordene
+vektorer, der ligner hinanden. Hvad vi forstår ved, at vektorer ligner
+hinanden, det kommer vi tilbage til.
+Men hvordan ved vi, om to ords
+betydning minder om hinanden? 
+
+Sprogteoretikere, som for eksempel den danske [Louis
+Hjelmslev](https://lex.dk/Louis_Hjelmslev) (1899-1965), har fundet ud af, at vi forstår betydningen af et ord ud fra, hvilke sproglige sammenhænge det optræder i, når man kigger i rigtig mange
+dokumenter. Ordet "kælk" forekommer for eksempel ofte i nærheden af ord som "sne", "leg" og "bakke". Det giver os en idé om betydningen. Den sproglige sammenhæng, et ord indgår i, kaldes også en *kontekst*. Når vi skal forstå et ord med flere betydninger, kigger vi også på konteksten. Vi forstår for eksempel betydningen af ordet \"marsvin\" forskelligt alt efter, om
+ordet \"fisk\" eller ordet \"mælkebøtte\" optræder i nærheden af det. Det vil altså sige:
+
+
+::: {.highlight .centertext}
+
+Betydningen af et ord er bestemt af den kontekst, ordet indgår i.
+
+:::
+
+\
+
+To ord, der betyder næsten det samme, vil ofte optræde i samme kontekst. Ordene
 \"hund\" og \"kat\" er for eksempel forskellige, men de vil ofte optræde
-i sammenhænge, der ligner hinanden. Se for eksempel på sætningerne
+i sammenhænge, der ligner hinanden. Se bare på sætningerne
 $$
 \text{"Min --- har spist af sin madskål"}
 $$
@@ -99,15 +114,16 @@ $$
 \text{"Den lille --- har hvide knurhår"}
 $$
 mens både \"kat\" og \"mis\" ville passe ind. Ordene \"kat\" og \"hund\"
-er altså tætte på hinanden, men ikke så tætte som \"kat\" og \"mis\". Vi
-vil derfor gerne have, at vektorerne for \"hund\" og \"kat\" minder mere
-om hinanden end vektorerne for \"hund\" og \"kælk\", men ikke så meget
-som \"kat\" og \"mis\". @fig-vektorer viser netop et eksempel på, hvordan det kunne se ud. Hvad vi helt præcist forstår ved, at vektorer minder om
-hinanden, det kommer vi tilbage til.
+er altså tætte på hinanden, men ikke så tætte som \"kat\" og \"mis\". 
 
-Konteksten er særlig vigtig i forbindelse med ord med flere betydninger.
-Vi forstår for eksempel betydningen af ordet \"marsvin\" forskelligt, alt efter om
-ordet \"hav\" eller ordet \"mælkebøtte\" optræder i nærheden af det.
+
+Vi ville jo gerne lave vores vektorer, således at ord, hvis betydning ligner hinanden, svarer til vektorer, der ligner hinanden. Mere præcist vil vi lave dem, således at ord, der ofte har samme kontekst, svarer til vektorer der ligner hinanden.  Vi vil derfor gerne have, at vektorerne for \"hund\" og \"kat\" minder mere
+om hinanden end vektorerne for \"hund\" og \"kælk\", men ikke så meget
+som \"kat\" og \"mis\". I @fig-vektorer ses et eksempel på, hvordan det kunne se ud. 
+
+
+
+
 
 ## Træningsdata 
 
@@ -222,6 +238,9 @@ b_1\\b_2\\b_3\\ \vdots \\b_m
 \end{pmatrix}
 =a_1b_1+a_2b_2+a_3b_3+\dotsm + a_mb_m
 $$
+Det overordnede mål er nu:
+
+::: {.highlight2 }
 
 Vi vil gerne have, at vores input- og kontekstvektorer skal opfylde, at
 hvis $w$ ofte har $c$ som kontekst, så er skalarproduktet
@@ -229,6 +248,10 @@ $\vec{v}_{w}\cdot \vec{k}_{c}$ stort, mens en
 meget negativ værdi af
 $\vec{v}_{w}\cdot \vec{k}_{c}$ indikerer, at $w$
 sjældent har $c$ som kontekst.
+
+:::
+
+\
 
 Hvad fortæller skalarproduktet om, hvordan to vektorer forholder sig til
 hinanden? I 2 og 3 dimensioner kan vi give en geometrisk fortolkning af
@@ -358,17 +381,27 @@ har.
 ### Hvorfor to vektorer?
 
 Måske har du undret dig over, hvorfor vi har brug for to forskellige
-vektorer for hvert ord. Hvert positivt eksempel forekommer jo to gange i
-vores datasæt, hvor de to ord skiftes til at spille rollen som input og
-kontekst. Alligevel er der ikke symmetri mellem de to ord. Hvis for eksempel
-inputordet er \"logre\", er det ret sandsynligt, at \"hund\" er et af
+vektorer for hvert ord. Hver gang et ord er kontekst for et andet, gælder det omvendte også. For eksempel er \"logrer\" kontekst for \"hund\" i dette vindue:
+
+$$
+\boxed{\textrm{ Den sorte }\textbf{hund} \textrm{ logrer med }} \textrm{ halen}
+$$
+Samtidig er \"hund\" også kontekst for \"logrer\" i vinduet: 
+
+$$
+\textrm{Den } \boxed{\textrm{ sorte hund }\textbf{logrer} \textrm{ med halen}} 
+$$
+
+
+Alligevel er der ikke symmetri mellem de to ord. Når for eksempel
+inputordet er \"logrer\", er det ret sandsynligt, at \"hund\" er et af
 kontekstordene. Inputordet \"hund\" forekommer derimod i mange
-kontekster, der ikke involverer ordet \"logre\". Sandsynligheden for
-kontekstordet afhænger derfor af, om det er \"hund\" eller \"logre\",
+kontekster, der ikke involverer ordet \"logrer\". Sandsynligheden for
+kontekstordet afhænger derfor af, om det er \"hund\" eller \"logrer\",
 der er input. Hvis vi kun brugte én vektor for hvert ord,
-$\vec{u}_{\text{hund}}$ og $\vec{u}_{\text{logre}}$, ville vi få
+$\vec{u}_{\text{hund}}$ og $\vec{u}_{\text{logrer}}$, ville vi få
 samme skalarprodukt
-$\vec{u}_{\text{hund}}\cdot \vec{u}_{\text{logre}} =  \vec{u}_{\text{logre}}\cdot \vec{u}_{\text{hund}}$,
+$\vec{u}_{\text{hund}}\cdot \vec{u}_{\text{logrer}} =  \vec{u}_{\text{logrer}}\cdot \vec{u}_{\text{hund}}$,
 og dermed samme sandsynlighed, uanset hvilket ord der var input.
 
 :::
@@ -668,7 +701,7 @@ Når vektorerne $\vec{v}_{w}$ er fundet med Word2Vec, kan man bruge dem til at l
 
 For at finde minimum for tabsfunktionen, får man brug for at finde partielle afledte af Softmax-funktionen. Det kan man gøre smart ved hjælp af nedenstående opgave, som viser, at man ikke behøver at kende værdien af $\vec{y}$ i det punkt, hvor man differentierer, men kun funktionsværdien $\vec{z}$.
     
-- Vis ved at bruge udtrykketi (@eq-softmax) følgende egenskaber ved de partielle afledte af Softmax-funktionen:
+- Vis ved at bruge udtrykket i (@eq-softmax) følgende egenskaber ved de partielle afledte af Softmax-funktionen:
 
 $$\frac{\partial z_i}{\partial y_i} = z_i(1-z_i),\quad \frac{\partial z_i}{\partial y_j} = -z_iz_j, \quad i\neq j$$
 
@@ -697,8 +730,7 @@ Hvis vi for eksempel har genereret teksten
 $$
 \text{"Hunden spiser sit ---"}
 $$
-så
-skal vi prøve at gætte, hvilket ord der kommer efter \"sit\". Vi
+så skal vi prøve at gætte, hvilket ord der kommer efter \"sit\". Vi
 oversætter derfor ordene \"Hunden\", \"spiser\" og \"sit\" til
 vektorerne $\vec{v}_{\text{Hunden}}$, $\vec{v}_{\text{spiser}}$
 og $\vec{v}_{\text{sit}}$. Disse tre vektorer giver vi funktionen
