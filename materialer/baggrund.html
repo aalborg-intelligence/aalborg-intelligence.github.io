@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Forskellige noter – med forskelligt fokus og sværhedsgrad – om kunstige neurale netværk.">
+<meta name="description" content="Forskellige noter om noget af det baggrundsstof, som de forskellige AI metoder bygger på.">
 
-<title>materialer_nn – AI MAT - matematikken bag magien</title>
+<title>baggrund – AI MAT - matematikken bag magien</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -24,25 +24,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-e494e1401b6229bb85d7a400511c6e94.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-f566325cf577907e9eaf893566fd6138.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,35 +68,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-main-listing-content_NN .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-title','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-main-listing-content_NN'] = new List('listing-main-listing-content_NN', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-Y219BCPS45"></script>
 
 <script type="text/javascript">
@@ -114,35 +83,6 @@ gtag('js', new Date());
 gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -153,8 +93,8 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo">
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -164,38 +104,38 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./undervisningsforlob.html"> 
+    <a class="nav-link" href="../undervisningsforlob.html"> 
 <span class="menu-text">Undervisningsforløb</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./materialer.html"> 
+    <a class="nav-link" href="../materialer.html"> 
 <span class="menu-text">Materialer</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./sro.html"> 
+    <a class="nav-link" href="../sro.html"> 
 <span class="menu-text">SRO</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./srp.html"> 
+    <a class="nav-link" href="../srp.html"> 
 <span class="menu-text">SRP</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./apps.html"> 
+    <a class="nav-link" href="../apps.html"> 
 <span class="menu-text">Apps</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./referencer.html"> 
+    <a class="nav-link" href="../referencer.html"> 
 <span class="menu-text">Referencer</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../about.html"> 
 <span class="menu-text">Om os</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="https://www.youtube.com/@ai-mat"> 
-<span class="menu-text"><img src="./logo/YouTube/youtube-color-darkblue-icon.svg" style="height:2em"></span></a>
+<span class="menu-text"><img src="../logo/YouTube/youtube-color-darkblue-icon.svg" style="height:2em"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -212,17 +152,11 @@ window.Quarto = {
     <h2 id="toc-title">Indhold</h2>
    
   <ul>
-  <li><a href="#materialer-om-kunstige-neurale-netværk" id="toc-materialer-om-kunstige-neurale-netværk" class="nav-link active" data-scroll-target="#materialer-om-kunstige-neurale-netværk">Materialer om kunstige neurale netværk</a>
+  <li><a href="#baggrundsmateriale" id="toc-baggrundsmateriale" class="nav-link active" data-scroll-target="#baggrundsmateriale">Baggrundsmateriale</a>
   <ul class="collapse">
-  <li><a href="#link-til-materialer" id="toc-link-til-materialer" class="nav-link" data-scroll-target="#link-til-materialer">Link til materialer</a></li>
-  <li><a href="#overblik" id="toc-overblik" class="nav-link" data-scroll-target="#overblik">Overblik</a>
-  <ul class="collapse">
-  <li><a href="#perceptroner" id="toc-perceptroner" class="nav-link" data-scroll-target="#perceptroner">Perceptroner</a></li>
-  <li><a href="#kunstige-neuroner" id="toc-kunstige-neuroner" class="nav-link" data-scroll-target="#kunstige-neuroner">Kunstige neuroner</a></li>
-  <li><a href="#simple-neurale-netværk" id="toc-simple-neurale-netværk" class="nav-link" data-scroll-target="#simple-neurale-netværk">Simple neurale netværk</a></li>
-  <li><a href="#simple-kunstige-neurale-netværk-til-multipel-klassifikation" id="toc-simple-kunstige-neurale-netværk-til-multipel-klassifikation" class="nav-link" data-scroll-target="#simple-kunstige-neurale-netværk-til-multipel-klassifikation">Simple kunstige neurale netværk til multipel klassifikation</a></li>
-  <li><a href="#kunstige-neurale-netværk" id="toc-kunstige-neurale-netværk" class="nav-link" data-scroll-target="#kunstige-neurale-netværk">Kunstige neurale netværk</a></li>
-  </ul></li>
+  <li><a href="#funktioner-af-flere-variable" id="toc-funktioner-af-flere-variable" class="nav-link" data-scroll-target="#funktioner-af-flere-variable">Funktioner af flere variable</a></li>
+  <li><a href="#gradientnedstigning" id="toc-gradientnedstigning" class="nav-link" data-scroll-target="#gradientnedstigning">Gradientnedstigning</a></li>
+  <li><a href="#afstande-og-feature-skalering" id="toc-afstande-og-feature-skalering" class="nav-link" data-scroll-target="#afstande-og-feature-skalering">Afstande og feature-skalering</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -237,232 +171,48 @@ window.Quarto = {
 
 
 
-<section id="materialer-om-kunstige-neurale-netværk" class="level1">
-<h1>Materialer om kunstige neurale netværk</h1>
-<p>På denne side finder du forskellige noter om kunstige neurale netværk. Noterne varierer i sværhedsgrad og i matematisk fokus. I afsnittet <a href="#overblik">overblik</a> finder du et samlet overblik, så det er nemmere at orientere sig i de forskellige noter.</p>
-<p>Noterne er skrevet til elever i gymnasiet og kan læses uafhængigt af hinanden. <a href="#overblik">Overblikket</a> er til gengæld nok nemmest at læse for lærerne.</p>
+<section id="baggrundsmateriale" class="level1">
+<h1>Baggrundsmateriale</h1>
+<p>På denne side finder du baggrundsmateriale, som bruges i de forskellige noter om AI. Noterne varierer i sværhedsgrad og i matematisk fokus.</p>
+<p>Noterne er skrevet til elever i gymnasiet. Det er en fordel af læse noten om funktioner af flere variable, inden noten om graditentnedstigning læses. Noten om afstande kan læses uafhængigt af de to andre noter.</p>
 <p>Sværhedsgraden af noterne er klassificeret fra "forholdvis nem" (*) til "svær" (****).</p>
-<section id="link-til-materialer" class="level2">
-<h2 class="anchored" data-anchor-id="link-til-materialer">Link til materialer</h2>
-<div id="listing-main-listing-content_NN" class="quarto-listing quarto-listing-container-grid">
-<div class="list grid quarto-listing-cols-2">
-<div class="g-col-1" data-index="0" data-listing-file-modified-sort="1743503860793" data-listing-reading-time-sort="33" data-listing-word-count-sort="6599">
-<a href="./materialer/perceptron/perceptron.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./materialer/perceptron/images/perceptron.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Perceptroner
-</h5>
-<div class="card-text listing-description">
-Historisk set er forløberen til kunstige neurale netværk de såkaldte perceptroner. Vi vil her forklare, hvad en perceptron er, og vi vil se på opdateringsalgoritmerne <em>percept…</em><em></em>
+<!-- Start på clickable section -->
+<p><a href="funktioner_af_flere_variable/funktioner_af_flere_variable.html" class="quarto-grid-link"></a></p><a href="funktioner_af_flere_variable/funktioner_af_flere_variable.html" class="quarto-grid-link">
+<section id="funktioner-af-flere-variable" class="level3 boxed">
+<h3 class="anchored" data-anchor-id="funktioner-af-flere-variable">Funktioner af flere variable</h3>
+<div class="paddingleft">
+<p><img src="funktioner_af_flere_variable/images/maskine2.png" class="img-fluid" style="float:right;;width:40.0%"></p>
 </div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="1" data-listing-file-modified-sort="1743503860785" data-listing-reading-time-sort="23" data-listing-word-count-sort="4501">
-<a href="./materialer/kunstige_neuroner/kunstige_neuroner.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./materialer/kunstige_neuroner/images/simplet_netvaerk2.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Kunstige neuroner
-</h5>
-<div class="card-text listing-description">
-Vi vil her beskrive <strong>kunstige neuroner</strong>, som er en udvidelse af den klassiske perceptron, men med den tilføjelse at vi her indfører en såkaldt aktiveringsfunktion. De kunstige…
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="2" data-listing-file-modified-sort="1743503860801" data-listing-reading-time-sort="28" data-listing-word-count-sort="5572">
-<a href="./materialer/simple_neurale_net/simple_neurale_net.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./materialer/simple_neurale_net/images/long_simple_NN.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Simple kunstige neurale netværk
-</h5>
-<div class="card-text listing-description">
-Et generelt kunstigt neuralt netværk består af en masse neuroner, som er sat sammen i en række lag. Det kunne for eksempel se ud som i figur&nbsp;1, hvor de grønne neuroner i…
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="3" data-listing-file-modified-sort="1743503860806" data-listing-reading-time-sort="26" data-listing-word-count-sort="5158">
-<a href="./materialer/softmax/softmax.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./materialer/softmax/images/netvaerk_generelt.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Simple kunstige neurale netværk til multipel klassifikation
-</h5>
-<div class="card-text listing-description">
-Et kunstigt neuralt netværk fungerer på den måde, at man på baggrund af en række forskellige informationer gerne vil kunne forudsige en eller anden ting. Det kan være, at…<em></em><em></em><em></em><em></em><em></em>
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="4" data-listing-file-modified-sort="1743503860792" data-listing-reading-time-sort="47" data-listing-word-count-sort="9320">
-<a href="./materialer/neurale_net/neurale_net.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./materialer/neurale_net/images/simple_NN_weights.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Kunstige neurale netværk
-</h5>
-<div class="card-text listing-description">
-Denne note giver en grundig gennemgang af matematikken bag kunstige neurale netværk.
-</div>
-</div>
-</div>
-</a>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div>
-</section>
-<section id="overblik" class="level2">
-<h2 class="anchored" data-anchor-id="overblik">Overblik</h2>
-<p>Helt overordnet kan man sige, at et neuralt netværk er en funktion, der, som input, tager et antal målte variable. Det kunne for eksempel være en vælgers svar på en kandidattest. Som output giver det en klasse/kategori, for eksempel et parti vælgeren bør stemme på. I et neuralt netværk indgår nogle ikke-lineære funktioner kaldet <a href="./undervisningsforloeb/aktiveringsfunktioner.html">aktiveringsfunktioner</a>, som i sig selv er matematisk interessante. For at finde et neuralt netværk, der giver gode klassifikationer, minimeres en <a href="./materialer/tabsfunktioner/tabsfunktioner.html">tabsfunktion</a>. Til det formål får man brug for at finde partielt afledte, som bruges i forbindelse med <a href="./materialer/gradientnedstigning/gradientnedstigning.html">gradientnedstigning</a>.</p>
-<p>En hurtigt gennemgang af hvad AI er – forklaret på et meget overordnet plan findes i videoen her:</p>
-<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/ivrBEopralQ" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
-<p>Et mere detaljeret overblik over de forskellige noter følger her:</p>
-<hr>
-<section id="perceptroner" class="level3">
-<h3 class="anchored" data-anchor-id="perceptroner">Perceptroner</h3>
-<p><img src="materialer/perceptron/images/perceptron.png" class="img-fluid" style="float:right;;width:40.0%"></p>
-<p>Noten beskriver først "Perceptron Learning Algoritmen", som kan bruges i forbindelse med binær klassifikation, men som kun konvergerer, hvis data er lineært separabel. Der gives ikke noget matematisk argument for dette, men det sandsynliggøres, hvorfor algoritmen virker. I behandlingen af "Perceptron Learning Algoritmen" anvendes der ikke eksplicit en tabsfunktion.</p>
-<p>Dernæst beskrives "ADALINE", som også bruges til binær klassifikation, men som konvergerer – også i det tilfælde, hvor data ikke er lineært separabel. Opdateringsreglerne til ADALINE algoritmen udledes ved at minimere <em>squared error</em> tabsfunktionen ved hjælp af gradientnedstigning. Den anvendte aktiveringsfunktion er her identiteten, hvilket gør denne udledning lettere end i de efterfølgende noter.</p>
-<p><span style="color: #8086F2">Sværhedsgrad: *</span></p>
-<table class="table">
-<thead>
-<tr class="header">
-<th style="text-align: center;">Type af klassifikation</th>
-<th style="text-align: center;">Aktiveringsfunktion</th>
-<th style="text-align: center;">Tabsfunktion</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">Binær</td>
-<td style="text-align: center;">Ingen/identiteten</td>
-<td style="text-align: center;">Ingen/<em>squared error</em></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="kunstige-neuroner" class="level3">
-<h3 class="anchored" data-anchor-id="kunstige-neuroner">Kunstige neuroner</h3>
-<p><img src="materialer/kunstige_neuroner/images/simplet_netvaerk2.png" class="img-fluid" style="float:right;;width:40.0%"></p>
-<p>Noten behandler byggestenene til de mere generelle kunstige neurale netværk nemlig de <em>kunstige neuroner</em>. De kunstige neuroner bruges – som de beskrives her – til binær klassifikation. Opdateringsreglerne til justering af vægtene udledes ved at minimere <em>squared error</em> tabsfunktionen ved hjælp af gradientnedstigning. Til forskel fra ADALINE algoritmen anvendes her <strong>sigmoid</strong>-funktionen som aktiveringsfunktion, og der er også henvisning til en side, som beskriver hvilken fordel det har sammenlignet med ADALINE.</p>
+<p>I noten om funktioner af flere variable behandles først funktioner af to variable – herunder snitfunktioner og snitkurver, partielle afledede, gradienten samt betydningen af denne. Herefter gives en kort introduktion til, hvordan dette kan udvides til funktioner af mere end to variable.</p>
 <p><span style="color: #8086F2">Sværhedsgrad: **</span></p>
-<table class="table">
-<thead>
-<tr class="header">
-<th style="text-align: center;">Type af klassifikation</th>
-<th style="text-align: center;">Aktiveringsfunktion</th>
-<th style="text-align: center;">Tabsfunktion</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">Binær</td>
-<td style="text-align: center;">Sigmoid</td>
-<td style="text-align: center;"><em>Squared error</em></td>
-</tr>
-</tbody>
-</table>
 </section>
-<section id="simple-neurale-netværk" class="level3">
-<h3 class="anchored" data-anchor-id="simple-neurale-netværk">Simple neurale netværk</h3>
-<p><img src="materialer/simple_neurale_net/images/long_simple_NN.png" class="img-fluid" style="float:right;;width:40.0%"></p>
-<p>Denne noten behandler et egentlig kunstigt neuralt netværk dog med den væsentlige forsimpling, at der kun er to skjulte lag, hvor hver af disse lag kun består af én kunstige neuron. Det har den fordel, at det nu giver mening at tale om <strong>feedforward</strong> og <strong>backpropagation</strong>, men uden at sidstnævnte drukner i kædereglen af flere variable. Til gengæld bruges der tid på at forklare og anvende den kæderegel, som eleverne allerede kender. Også her udledes opdateringsreglerne ved at minimere <em>squared error</em> tabsfunktionen ved hjælp af gradientnedstigning.</p>
-<p><span style="color: #8086F2">Sværhedsgrad: ***</span></p>
-<table class="table">
-<thead>
-<tr class="header">
-<th style="text-align: center;">Type af klassifikation</th>
-<th style="text-align: center;">Aktiveringsfunktion</th>
-<th style="text-align: center;">Tabsfunktion</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">Binær</td>
-<td style="text-align: center;">Sigmoid</td>
-<td style="text-align: center;"><em>Squared error</em></td>
-</tr>
-</tbody>
-</table>
+</a><p><a href="funktioner_af_flere_variable/funktioner_af_flere_variable.html" class="quarto-grid-link"></a></p>
+<!-- Slut på clickable section -->
+<!-- Start på clickable section -->
+<p><a href="gradientnedstigning/gradientnedstigning.html" class="quarto-grid-link"></a></p><a href="gradientnedstigning/gradientnedstigning.html" class="quarto-grid-link">
+<section id="gradientnedstigning" class="level3 boxed">
+<h3 class="anchored" data-anchor-id="gradientnedstigning">Gradientnedstigning</h3>
+<p><img src="gradientnedstigning/images/minMaxFunc.png" class="img-fluid" style="float:right;;width:40.0%"></p>
+<p>I noten om gradientnedstigning indføres de retningsafledede og det forklares, hvordan de retningsafledede kan udtrykkes som et prikprodukt mellem gradientvektoren og en enhedsvektor i den betragtede retning. Dette leder frem til, hvordan man kan lave optimering ved hjælp af gradientnedstigning.</p>
+<p><span style="color: #8086F2">Sværhedsgrad: **</span></p>
 </section>
-<section id="simple-kunstige-neurale-netværk-til-multipel-klassifikation" class="level3">
-<h3 class="anchored" data-anchor-id="simple-kunstige-neurale-netværk-til-multipel-klassifikation">Simple kunstige neurale netværk til multipel klassifikation</h3>
-<p><img src="materialer/softmax/images/netvaerk_generelt.png" class="img-fluid" style="float:right;;width:40.0%"></p>
-<p>I denne noten behandles det tilfælde, hvor man ikke er interesseret i binær klassifikation, men derimod er ønsket at kunne prædiktere blandt mere end to klasser. Noten er holdt simpel på den måde, at det beskrevne netværk ikke indeholder nogle skjulte lag, men outputlaget består i stedet af flere neuroner. Det får den konsekvens, at den anvendte aktiveringsfunktion nu er den såkaldte <strong>softmax</strong> funktion, som kan se som en udvidelse af sigmoid-funktionen. Derudover behandles også <em>cross-entropy</em> tabsfunktionen, som minimeres ved hjælp af gradientnedstigning.</p>
-<p><span style="color: #8086F2">Sværhedsgrad: ****</span></p>
-<table class="table">
-<thead>
-<tr class="header">
-<th style="text-align: center;">Type af klassifikation</th>
-<th style="text-align: center;">Aktiveringsfunktion</th>
-<th style="text-align: center;">Tabsfunktion</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">Multipel</td>
-<td style="text-align: center;">Softmax</td>
-<td style="text-align: center;"><em>Cross-entropy</em></td>
-</tr>
-</tbody>
-</table>
+<!-- Slut på clickable section -->
+<!-- Start på clickable section -->
+</a><p><a href="gradientnedstigning/gradientnedstigning.html" class="quarto-grid-link"></a><a href="afstande/index_afstande.html" class="quarto-grid-link"></a></p><a href="afstande/index_afstande.html" class="quarto-grid-link">
+<section id="afstande-og-feature-skalering" class="level3 boxed">
+<h3 class="anchored" data-anchor-id="afstande-og-feature-skalering">Afstande og feature-skalering</h3>
+<div class="paddingleft">
+<p><img src="afstande/images/fig_min_max_skalering.png" class="img-fluid" style="float:right;;width:40.0%"></p>
+</div>
+<p>Her findes en samling af flere noter, hvor afstande er omdrejningspunktet. Vi behandler feature-skalering, forskellige afstande mellem punkter i planen, afstande mellem ord og mellem DNA- og RNA-strenge. Desuden er der en note om det abstrakte afstandbegreb – herunder definitionen af en metrik.</p>
+<p><span style="color: #8086F2">Sværhedsgrad: *</span></p>
 </section>
-<section id="kunstige-neurale-netværk" class="level3">
-<h3 class="anchored" data-anchor-id="kunstige-neurale-netværk">Kunstige neurale netværk</h3>
-<p><img src="materialer/neurale_net/images/simple_NN_weights.png" class="img-fluid" style="float:right;;width:40.0%"></p>
-<p>Noten gennemgår et mere generelt kunstigt neuralt netværk med to skjulte lag, som hver består af to neuroner. Netværket bruges her til binær klassifikation, som aktiveringsfunktion anvendes igen sigmoid-funktionen og vægtene opdateres ved at minimere <em>squared error</em> tabsfunktionen ved hjælp af gradientnedstigning. Da de skjulte lag består af flere neuroner end én, må <strong>kædereglen for funktioner af flere variable</strong> bringes i spil for at finde de partielle afledede, som anvendes i forbindelse med gradientnedstigning.</p>
-<p>Desuden gives der i denne note også en forklaring på fordelene ved <em>cross-entropy</em> tabsfunktionen sammenlignet med <em>squared error</em> tabsfunktionen, der linkes til en side hvor opdateringsreglerne i et helt generelt kunstigt neuralt netværk forklares (ved hjælp af en masse indekser!) og endelig gives der en overordnet beskrivelse af <em>convolutional neural networks</em>, som bruges i forbindelse med prædiktion af billeder.</p>
-<p><span style="color: #8086F2">Sværhedsgrad: ****</span></p>
-<table class="table">
-<thead>
-<tr class="header">
-<th style="text-align: center;">Type af klassifikation</th>
-<th style="text-align: center;">Aktiveringsfunktion</th>
-<th style="text-align: center;">Tabsfunktion</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">Primært binær</td>
-<td style="text-align: center;">Sigmoid</td>
-<td style="text-align: center;"><em>Squared error</em></td>
-</tr>
-</tbody>
-</table>
+<!-- Slut på clickable section -->
 
 
+</a></section><a href="afstande/index_afstande.html" class="quarto-grid-link">
 
-</section>
-</section>
-</section>
-
-</main> <!-- /main -->
+</a></main><a href="afstande/index_afstande.html" class="quarto-grid-link"> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -885,9 +635,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-</div> <!-- /content -->
+</a></div><a href="afstande/index_afstande.html" class="quarto-grid-link"> <!-- /content -->
 
 
 
 
-</body></html>
+</a></body></html>
