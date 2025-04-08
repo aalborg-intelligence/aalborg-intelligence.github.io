@@ -52,7 +52,7 @@ Vi vil illustrere gradientnedstigning i et simpelt eksempel:
 
 ### Opgave 2: Minimum for en funktion af to variable
 
-Lad os se på en funktion $f$, som afhænger af to variable $x$ og $y$ (i noten om kunstige neuroner svarer de to variable til et eksempel med to vægte):
+Lad os se på en funktion $f$, som afhænger af to variable $x$ og $y$ (i noten om kunstige neuroner svarer de to variable til et eksempel med to vægte $w_0$ og $w_1$):
 
 $$
 f(x,y)= 0.2x^2-1.2x+0.3y^2-2.4y+8.6
@@ -74,34 +74,36 @@ Vi vil nu bruge gradientnedstigning til at bestemme minimum.
 
 - Bestem de såkaldte *partielle afledede* $\frac{\partial f}{\partial x}$ og $\frac{\partial f}{\partial y}$. Når du for eksempel skal finde $\frac{\partial f}{\partial x}$, så skal du differentiere $f(x,y)$, hvor du tænker på $x$ som den variable og $y$ som en konstant. Tilsvarende med $\frac{\partial f}{\partial y}$.
 
-- Brug de partielle afledede til at opskrives opdateringsreglerne:
+- Brug de partielle afledede til at opskrive opdateringsreglerne:
 
    $$
    \begin{aligned}
-   x^{(ny)} &\leftarrow x - \eta \cdot \frac{\partial f}{\partial x} \\
-   y^{(ny)} &\leftarrow y - \eta \cdot \frac{\partial f}{\partial y} 
+   x^{(\textrm{ny})} &\leftarrow x - \eta \cdot \frac{\partial f}{\partial x} \\
+   y^{(\textrm{ny})} &\leftarrow y - \eta \cdot \frac{\partial f}{\partial y} 
    \end{aligned}
    $$
 
-- Nu stiller vi os et tilfældigt sted på skibakken -- lad og sige i punktet $(6,8,f(6,8))$. Udregn funktionsværdien $f(6,8)$ og indtegn punktet $(6,8,f(6,8))$ i dit koordinatsystem (i GeoGebra skriver du bare $(6,8,f(6,8))$).
+Nu stiller vi os et tilfældigt sted på skibakken -- lad og sige i punktet $(6,8,f(6,8))$. 
 
-- Du skal nu bruge ovenstående opdateringsregler til at finde ned mod \"After Ski\". Vi beslutter os for at vælge en skridtlængde på $\eta = 0.1$. Den første opdatering bliver så:
+- Udregn funktionsværdien $f(6,8)$ og indtegn punktet $(6,8,f(6,8))$ i dit koordinatsystem (i GeoGebra skriver du bare `(6,8,f(6,8))`).
 
-   $$
-   \begin{aligned}
-   x^{(ny)} &\leftarrow 6 - 0.1 \cdot \frac{\partial f}{\partial x}(6,8) \\
-   y^{(ny)} &\leftarrow 8 - 0.1 \cdot \frac{\partial f}{\partial y}(6,8)
-   \end{aligned}
-   $$
+Du skal nu bruge ovenstående opdateringsregler til at finde ned mod \"After Ski\". Vi beslutter os for at vælge en skridtlængde på $\eta = 0.1$. Den første opdatering bliver så:
+
+$$
+\begin{aligned}
+x^{(\textrm{ny})} &\leftarrow 6 - 0.1 \cdot \frac{\partial f}{\partial x}(6,8) \\
+y^{(\textrm{ny})} &\leftarrow 8 - 0.1 \cdot \frac{\partial f}{\partial y}(6,8)
+\end{aligned}
+$$
    
-   *Hint! Her er 
-   $$\frac{\partial f}{\partial x}(6,8)=0.4 \cdot 6-1.2= 1.2$$ 
-   og 
-   $$\frac{\partial f}{\partial y}(6,8)=0.6 \cdot 8-2.4=2.4$$*
+*Hint! Her er 
+$$\frac{\partial f}{\partial x}(6,8)=0.4 \cdot 6-1.2= 1.2$$ 
+og 
+$$\frac{\partial f}{\partial y}(6,8)=0.6 \cdot 8-2.4=2.4$$*
    
-- Udregn funktionsværdien $f(x^{(ny)}, y^{(ny)})$. Er funktionsværdien blevet mindre sammenlignet med $f(6,8)$?
+- Udregn $x^{(\textrm{ny})}$, $y^{(\textrm{ny})}$ og funktionsværdien $f(x^{(\textrm{ny})}, y^{(\textrm{ny})})$. Er funktionsværdien blevet mindre sammenlignet med $f(6,8)$?
 
-- Indtegn punktet $(x^{(ny)},y^{(ny)},f(x^{(ny)},y^{(ny)}))$ i dit koordinatsystem. Kan du se, at du er på vej ned mod skibakken?
+- Indtegn punktet $(x^{(\textrm{ny})},y^{(\textrm{ny})},f(x^{(\textrm{ny})},y^{(\textrm{ny})}))$ i dit koordinatsystem. Kan du se, at du er på vej ned mod skibakken?
 
 :::
 
@@ -115,12 +117,14 @@ Det bliver lidt tungt at skulle lave disse udregninger i hånden. Vi vil derfor 
 
    ![](images/regneark_ggb.png){width=50% fig-align="center"}
 
-   + I celle `A1` skriver du 6 (svarende til $x=6$ der hvor vi starter). 
+   + I celle `A1` skriver du 6 (svarende til $x=6$, der hvor vi starter). 
    + I celle `B1` skriver du 8.
-   + I celle `C1` skriver du `f(A1,B1)`.
+   + I celle `C1` skriver du `f(A1,B1)` (det kræver, at du allerede har defineret funktionen i inputfeltet).
    + I celle `D1` skriver du `(A1,B1,C1)` (læg mærke til at punktet bliver tegnet ind i koordinatsystemet).
 
-- Vi skal nu have skrevet opdateringsreglerne ind. Du har nok tidligere fået, at $\frac{\partial f}{\partial x}=0.4x-1.2$ og $\frac{\partial f}{\partial y}=0.6y-2.4$. Du skal nu udvide regnearket på denne måde:
+Vi skal nu have skrevet opdateringsreglerne ind. Du har nok tidligere fået, at $\frac{\partial f}{\partial x}=0.4x-1.2$ og $\frac{\partial f}{\partial y}=0.6y-2.4$. 
+
+- Du skal udvide regnearket på denne måde:
 
    ![](images/regneark2_ggb.png){width=50% fig-align="center"}
    + I celle `A2` skriver du `= A1 - 0.1*(0.4*A1-1.2)`.

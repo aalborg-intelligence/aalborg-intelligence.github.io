@@ -7,9 +7,11 @@ description-meta: "Idéen bag Word2Vec går ud på at repræsentere hvert ord i 
 
 Lad os se på en situation, hvor vi gerne vil kunne gætte næste ord
 i en sætning. Lad os sige, at vi har sætningen
-$$
-\text{"Min hund har en blød ---"}
-$$
+
+::: {.llm_saetninger}
+\"Min hund har en blød ---\"
+:::
+
 og vil gætte næste ord. Hvis vi har en stor mængde tekst til rådighed, et såkaldt *tekstkorpus*, kan vi selvfølgelig lede efter ordsekvensen \"Min hund har en blød\" og se hvilket ord, der oftest kommer efter, som beskrevet i noten om [simple sprogmodeller](simple.qmd). Men hvis sekvensen ikke forekommer i vores korpus, så har vi et problem. I stedet kunne vi lede efter en sætning med en betydning, der minder om \"Min hund har en blød\" og se, hvad der kommer efter den. Men hvordan får vi
 en computer til at forstå betydningen af ord?
 
@@ -100,21 +102,27 @@ ordet \"fisk\" eller ordet \"mælkebøtte\" optræder i nærheden af det. Det vi
 To ord, der betyder næsten det samme, vil ofte optræde i samme kontekst. Ordene
 \"hund\" og \"kat\" er for eksempel forskellige, men de vil ofte optræde
 i sammenhænge, der ligner hinanden. Se bare på sætningerne
-$$
-\text{"Min --- har spist af sin madskål"}
-$$
+
+::: {.llm_saetninger}
+\"Min --- har spist af sin madskål\"
+:::
+
 og
-$$
-\text{"Sikken en blød pels, din --- har"}
-$$
+
+::: {.llm_saetninger}
+\"Sikken en blød pels, din --- har\"
+:::
+
 Her ville der kunne stå
 \"hund\" eller \"kat\", men nok ikke \"kælk\" eller \"badedragt\".
 Betydningen af ordene \"hund\" og \"kat\" er tættere på hinanden end
 betydningen af \"hund\" og \"kælk\". På den anden side kunne der ikke
 stå \"hund\" i sætningen
-$$
-\text{"Den lille --- har hvide knurhår"}
-$$
+
+::: {.llm_saetninger}
+\"Den lille --- har hvide knurhår\"
+:::
+
 mens både \"kat\" og \"mis\" ville passe ind. Ordene \"kat\" og \"hund\"
 er altså tætte på hinanden, men ikke så tætte som \"kat\" og \"mis\". 
 
@@ -140,9 +148,10 @@ ord, hvor ordet i midten er det, vi gerne vil kende betydningen af. Vi
 vil kalde dette for *inputordet*. De to første ord og de to sidste ord i
 vinduet er inputordets *kontekstord*. Se for eksempel på sætningen
 
-$$
-\boxed{\textrm{ Den sorte }\textbf{hund} \textrm{ logrer med }} \textrm{ halen}
-$$
+::: {.llm_saetninger}
+[ Den sorte **hund** logrer med ]{.boxed_inline} halen 
+:::
+
 Boksen angiver vores 5-ords vindue. Det midterste ord \"hund\" er vores
 inputord, ordene \"Den\", \"sorte\", \"logrer\" og \"med\" er
 kontekstord til \"hund\".
@@ -749,9 +758,11 @@ gøres i to trin:
     de mest sandsynlige).
 
 Hvis vi for eksempel har genereret teksten
-$$
-\text{"Hunden spiser sit ---"}
-$$
+
+::: {.llm_saetninger}
+\"Hunden spiser sit ---\"
+:::
+
 så skal vi prøve at gætte, hvilket ord der kommer efter \"sit\". Vi
 oversætter derfor ordene \"Hunden\", \"spiser\" og \"sit\" til
 vektorerne $\vec{v}_{\text{Hunden}}$, $\vec{v}_{\text{spiser}}$
@@ -763,9 +774,11 @@ neurale netværk](tekstgenerering.qmd).
 
 Det smarte ved at bruge vektorrepræsentationerne er, hvis vi for
 eksempel vil generere næste ord i
-$$
-\text{"Jeg skal huske, at katten skal have ---"}
-$$
+
+::: {.llm_saetninger}
+\"Jeg skal huske, at katten skal have ---\"
+:::
+
 Det skulle gerne
 give \"mad\" som muligt næste ord. Men måske har sprogmodellen aldrig
 set sætningen \"katten skal have mad\". Hvis den til gengæld har set
