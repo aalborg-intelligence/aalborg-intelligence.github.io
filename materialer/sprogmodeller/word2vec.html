@@ -269,7 +269,7 @@ window.onload = function() {
   }
 </script>
 
-<div id="fig-vektorer" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" width="80%" data-fig-align="center">
+<div id="fig-vektorer" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center" width="80%">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-vektorer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div id="ggbApplet_vektorer">
@@ -561,13 +561,13 @@ y_2 \\
 y_V
 \end{pmatrix}
 \]</span></p>
-<p>så er <span class="math inline">\(\text{Softmax}\big(\vec{y}\big)=\vec{z}\)</span>, hvor <span class="math inline">\(\vec{z}\)</span> er en ny vektor med <span class="math inline">\(V\)</span> koordinater. Den <span class="math inline">\(i\)</span>te koordinat i <span class="math inline">\(\vec{z}\)</span> er givet ved <span class="math display">\[z_i = \frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}}\]</span> Vi viser i boksen nedenfor, at Softmax opfylder:</p>
+<p>så er <span class="math inline">\(\text{Softmax}\big(\vec{y}\big)=\vec{z}\)</span>, hvor <span class="math inline">\(\vec{z}\)</span> er en ny vektor med <span class="math inline">\(V\)</span> koordinater. Den <span class="math inline">\(i\)</span>’te koordinat i <span class="math inline">\(\vec{z}\)</span> er givet ved <span class="math display">\[z_i = \frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}}\]</span> Vi viser i boksen nedenfor, at Softmax opfylder:</p>
 <ul>
 <li><p><span class="math inline">\(0&lt;z_i&lt;1\)</span></p></li>
 <li><p><span class="math inline">\(z_1 + z_2 + \dotsm + z_V = 1\)</span></p></li>
 <li><p>Hvis <span class="math inline">\(y_i &lt; y_j\)</span>, så er <span class="math inline">\(z_i &lt; z_j\)</span>.</p></li>
 </ul>
-<p>Lader vi <span class="math inline">\(\vec{y}\)</span> være vektoren med <span class="math inline">\(i\)</span>te koordinat <span class="math display">\[y_i = \vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}\]</span> og bruger Softmax på <span class="math inline">\(\vec{y}\)</span>, så får vi en vektor <span class="math inline">\(\vec{z}=\text{Softmax}\big(\vec{y}\big)\)</span>, der kan bruges som sandsynligheder. Mere præcist lader vi</p>
+<p>Lader vi <span class="math inline">\(\vec{y}\)</span> være vektoren med <span class="math inline">\(i\)</span>’te koordinat <span class="math display">\[y_i = \vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}\]</span> og bruger Softmax på <span class="math inline">\(\vec{y}\)</span>, så får vi en vektor <span class="math inline">\(\vec{z}=\text{Softmax}\big(\vec{y}\big)\)</span>, der kan bruges som sandsynligheder. Mere præcist lader vi</p>
 <p><span id="eq-sshmodel"><span class="math display">\[
 \begin{aligned}
 P(\text{ord}_i\mid w) &amp;= z_i = \frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}} \\ &amp;= \frac{e^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}}}{e^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + e^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_V}}}
@@ -742,7 +742,7 @@ L = &amp;-\ln\left(\frac{e^{\vec{v}_{w_1}\cdot \vec{k}_{c_1}}}{e^{\vec{v}_{w_1}\
 \\ &amp;- \ln\left(\frac{e^{\vec{v}_{w_2}\cdot \vec{k}_{c_2}}}{e^{\vec{v}_{w_2}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + e^{\vec{v}_{w_2}\cdot \vec{k}_{\text{ord}_V}}}\right)
 - \dotsm \\ &amp;- \ln\left(\frac{e^{\vec{v}_{w_M}\cdot \vec{k}_{c_M}}}{e^{\vec{v}_{w_M}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + e^{\vec{v}_{w_M}\cdot \vec{k}_{\text{ord}_V}}}\right)
 \end{aligned}
-\tag{6}\]</span></span> Bemærk her, at <span class="math inline">\(w_j\)</span> og <span class="math inline">\(c_j\)</span> refererer til henholdsvis input- og kontekstordet i <span class="math inline">\(j\)</span>te række i datasættet, mens <span class="math inline">\(\text{ord}_i\)</span> refererer til <span class="math inline">\(i\)</span>te ord i ordforrådet.</p>
+\tag{6}\]</span></span> Bemærk her, at <span class="math inline">\(w_j\)</span> og <span class="math inline">\(c_j\)</span> refererer til henholdsvis input- og kontekstordet i <span class="math inline">\(j\)</span>te række i datasættet, mens <span class="math inline">\(\text{ord}_i\)</span> refererer til <span class="math inline">\(i\)</span>’te ord i ordforrådet.</p>
 <p>Ligning (<a href="#eq-Lfunktion" class="quarto-xref">6</a>) viser, at <span class="math inline">\(L\)</span> afhænger af, hvordan vi har valgt input- og kontekstvektorerne. Vi kan altså betragte <span class="math inline">\(L\)</span> som en funktion af input- og kontekstvektorerne. Mere præcist er <span class="math inline">\(L\)</span> en funktion af alle koordinaterne i disse vektorer. For at få den bedst mulige model for vores træningsdata, ønsker vi at bestemme input- og kontekstvektorerne, således at de minimerer <span class="math inline">\(L\)</span>. Hvordan finder man minimum for <span class="math inline">\(L\)</span> i praksis? Det kan man for eksempel gøre ved hjælp af <a href="../../materialer/gradientnedstigning/gradientnedstigning.html">gradientnedstigning</a>, som vi ikke vil komme nærmere ind på her.</p>
 <p>Der er rigtig mange ord i det danske sprog. For hvert af dem skal vi finde både en input- og en kontekstvektor, der hver har <span class="math inline">\(m\)</span> koordinater. Alt i alt giver det rigtig mange koordinater, der skal bestemmes. Antallet af ord på dansk afhænger lidt af, hvad man forstår ved et ord, men 200.000 er et fornuftigt bud. Hvis vi vil repræsentere hver af dem ved to vektorer af dimension <span class="math inline">\(m=100\)</span>, får man brug for at bestemme 40.000.000 koordinater. For at kunne gøre det meningsfuldt, er man også nødt til at have enormt store mængder træningsdata til rådighed i form af et tekstkorpus med rigtig mange ord.</p>
 <p>Nu har vi set, hvordan man kan repræsentere et ord <span class="math inline">\(w\)</span> ved en inputvektor <span class="math inline">\(\vec{v}_{w}\)</span> og en kontekstvektor <span class="math inline">\(\vec{k}_{w}\)</span>. Vektoren <span class="math inline">\(\vec{v}_{w}\)</span> er den, der viser, hvordan <span class="math inline">\(w\)</span> forholder sig til sin kontekst, så det er den, der repræsenterer betydningen af <span class="math inline">\(w\)</span>. Normalt vil man derfor arbejde videre med <span class="math inline">\(\vec{v}_{w}\)</span>, mens <span class="math inline">\(\vec{k}_{w}\)</span> smides væk. Når vektorerne <span class="math inline">\(\vec{v}_{w}\)</span> er fundet med Word2Vec, kan man bruge dem til at lave algoritmer til at generere tekst. Det ser vi på i næste afsnit.</p>
@@ -778,7 +778,7 @@ Opgave 3
 </ol>
 <p>Hvis vi for eksempel har genereret teksten <span class="math display">\[
 \text{"Hunden spiser sit ---"}
-\]</span> så skal vi prøve at gætte, hvilket ord der kommer efter "sit". Vi oversætter derfor ordene "Hunden", "spiser" og "sit" til vektorerne <span class="math inline">\(\vec{v}_{\text{Hunden}}\)</span>, <span class="math inline">\(\vec{v}_{\text{spiser}}\)</span> og <span class="math inline">\(\vec{v}_{\text{sit}}\)</span>. Disse tre vektorer giver vi funktionen som input, og som output får vi et nyt ord. Det kunne være "kødben". Den funktion, der bruges i punkt 2., kunne for eksempel være et <em>neuralt netværk</em>. Du kan læse mere om, hvordan det fungerer i <a href="">Tekstgenerering med neurale netværk</a>.</p>
+\]</span> så skal vi prøve at gætte, hvilket ord der kommer efter "sit". Vi oversætter derfor ordene "Hunden", "spiser" og "sit" til vektorerne <span class="math inline">\(\vec{v}_{\text{Hunden}}\)</span>, <span class="math inline">\(\vec{v}_{\text{spiser}}\)</span> og <span class="math inline">\(\vec{v}_{\text{sit}}\)</span>. Disse tre vektorer giver vi funktionen som input, og som output får vi et nyt ord. Det kunne være "kødben". Den funktion, der bruges i punkt 2., kunne for eksempel være et <em>neuralt netværk</em>. Du kan læse mere om, hvordan det fungerer i <a href="../../materialer/sprogmodeller/tekstgenerering.html">Tekstgenerering med neurale netværk</a>.</p>
 <p>Det smarte ved at bruge vektorrepræsentationerne er, hvis vi for eksempel vil generere næste ord i <span class="math display">\[
 \text{"Jeg skal huske, at katten skal have ---"}
 \]</span> Det skulle gerne give "mad" som muligt næste ord. Men måske har sprogmodellen aldrig set sætningen "katten skal have mad". Hvis den til gengæld har set "hunden skal have mad", og modellen ved at "hunden" og "katten" tit har samme kontekst, og dermed har næsten samme vektorrepræsentation, så vil man alligevel få "mad" som muligt næste ord.</p>
