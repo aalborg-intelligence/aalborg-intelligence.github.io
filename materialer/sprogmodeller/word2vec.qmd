@@ -440,7 +440,8 @@ og \"kælk\" er
 $$
 \begin{aligned}
 \vec{v}_{\text{kat}}=\begin{pmatrix}0\\2\\1 \end{pmatrix},\quad
-\vec{v}_{\text{hund}}=\begin{pmatrix}0\\1.2\\1.8\end{pmatrix}, \quad
+\vec{v}_{\text{hund}}=\begin{pmatrix}0\\1.2\\1.8\end{pmatrix}, \\
+\\
 \vec{v}_{\text{mis}}=\begin{pmatrix}-0.5\\2\\0.8\end{pmatrix},\quad
 \vec{v}_{\text{kælk}}=\begin{pmatrix} 0\\-1\\-2 \end{pmatrix}
 \end{aligned}
@@ -605,17 +606,18 @@ inputvektoren for \"sommer\" og kontekstvektorerne for \"sommer\", \"sol\" og
 $$
 \begin{aligned}
 \vec{v}_{\text{sommer}}=\begin{pmatrix} 1\\1\end{pmatrix},\quad
-\vec{k}_{\text{sommer}}=\begin{pmatrix} 1\\-1 \end{pmatrix} ,\quad
+\vec{k}_{\text{sommer}}=\begin{pmatrix} 1\\-1 \end{pmatrix} ,\\
+\\
 \vec{k}_{\text{sol}}=\begin{pmatrix} 0\\2\end{pmatrix},\quad
 \vec{k}_{\text{sne}} =\begin{pmatrix} -1\\-2\end{pmatrix}
 \end{aligned}
 $$
 
 
-b) Hvilket af de tre ord optræder oftest som kontekst til sommer?
-
-c) Hvad er sandsynligheden for, at hvert af de tre ord er 
+b) Hvad er sandsynligheden for, at hvert af de tre ord er 
     kontekst til \"sommer\"?     
+
+c) Passer svaret fra b. med, hvilket af de tre ord, som du umiddelbart vil tænke, oftest optræder som kontekst til sommer?
 
 :::
 
@@ -631,7 +633,7 @@ $j=1,\ldots,M$.
 Vores datasæt har altså formen (jævnfør @tbl-data):
 
 
-::: {#tbl-data}
+::: {#tbl-data2}
 |   Input | Kontekst |    
 |:---:|:---:|
 | $w_1$ | $c_1$ | 
@@ -644,19 +646,24 @@ Vores datasæt har altså formen (jævnfør @tbl-data):
 Eksempel på datatabel med træningsdata.
 :::
 
+Bemærk, at hvert inputord godt kan optræde flere gange i ovenstående tabel, som vi også så det i @tbl-data.
+
 Vi ser nu på $j$te række. Sandsynligheden for, at $w_j$ har netop $c_j$ som kontekst, er $P(c_j\mid w_j)$. Vi vil nu finde den samlede sandsynlighed for, at inputordene $w_1,\ldots,w_M$ i vores datasæt har henholdsvis $c_1,\ldots,c_M$ som kontekstord. Den kalder vi $P(\text{data})$. Lad os antage, at alle vores par af input- og kontekstord er uafhængige af hinanden[^2]. Så får vi den samlede sandsynlighed ved at gange de enkelte sandsynligheder sammen. 
 $$P(\text{data})  = P(c_1\mid w_1) \cdot P(c_2\mid w_2) \dotsm P(c_M\mid w_M)$${#eq-Pdata}
 Hvis vores model fra (@eq-sshmodel) passer godt til datasættet, skulle denne sandsynlighed gerne være høj. 
 
 [^2]: I praksis er ordpar, der forekommer i nærheden af hinanden ikke helt uafhængige. Hvis for eksempel parret $(\text{hund},\text{madskål})$ forekommer, er det mere sandsynligt, at $(\text{hund}, \text{fodre})$ forekommer i nærheden, end hvis der havde stået $(\text{hund},\text{hundesnor})$.
 
-Da summer er nemmere at regne på end produkter, vælger vi at tage den naturlige logaritme på begge sider af (@eq-Pdata). Ved at bruge logaritmeregnereglen $\ln(ab) = \ln(a) + \ln(b)$ får vi, at
+Da summer er nemmere at regne på end produkter[^5], vælger vi at tage den naturlige logaritme på begge sider af (@eq-Pdata). Ved at bruge logaritmeregnereglen $\ln(ab) = \ln(a) + \ln(b)$ får vi, at
 $$
 \begin{aligned}
 \ln (P(\text{data})) &= \ln\big(P(c_1\mid w_1) \cdot P(c_2\mid w_2) \dotsm P(c_M\mid w_M)\big)\\
 &= \ln(P(c_1\mid w_1)) + \ln(P(c_2\mid w_2)) + \dotsm + \ln(P(c_M\mid w_m)) 
 \end{aligned}
 $$
+
+[^5]: For eksempel er det meget nemmere at differentiere summer end produkt!
+
 Da den naturlige logaritme er en voksende funktion, svarer store værdier af $P(\text{data})$ til store værdier af $\ln (P(\text{data}))$, som igen svarer til små værdier af $-\ln(P(\text{data}))$. Dette er illustreret på @fig-natural_ln:
 
 ![Grafen for $\ln(x)$ og $-\ln(x)$.](../softmax/images/natural_ln.png){width=60% fig-align='center' #fig-natural_ln}
