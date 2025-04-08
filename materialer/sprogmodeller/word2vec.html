@@ -269,7 +269,7 @@ window.onload = function() {
   }
 </script>
 
-<div id="fig-vektorer" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center" width="80%">
+<div id="fig-vektorer" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" width="80%" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-vektorer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div id="ggbApplet_vektorer">
@@ -318,7 +318,7 @@ a_1\\a_2\\a_3\\ \vdots \\ a_m
 <p><span class="math display">\[
 \boxed{\textrm{ Den sorte }\textbf{hund} \textrm{ logrer med }} \textrm{ halen}
 \]</span> Boksen angiver vores 5-ords vindue. Det midterste ord "hund" er vores inputord, ordene "Den", "sorte", "logrer" og "med" er kontekstord til "hund".</p>
-<p>Vi starter med at placere vinduet omkring det første ord i vores datasæt og noterer dets fire kontekstord (hvoraf de to vil være blanke). Vi flytter nu vinduet mod højre et ord ad gangen, og hver gang noterer vi inputordet og dets fire kontekstord. Vi gør det for al teksten i vores træningsdata og samler informationen i et datasæt som vist i <a href="#tbl-data" class="quarto-xref">tabel&nbsp;2</a>. Hver række i tabellen består af et inputord og et af dets kontekstord.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>Vi starter med at placere vinduet omkring det første ord i vores datasæt og noterer dets fire kontekstord (hvoraf de to vil være blanke). Vi flytter nu vinduet mod højre et ord ad gangen, og hver gang noterer vi inputordet og dets fire kontekstord. Vi gør det for al teksten i vores træningsdata og samler informationen i et datasæt som vist i <a href="#tbl-data" class="quarto-xref">tabel&nbsp;1</a>. Hver række i tabellen består af et inputord og et af dets kontekstord.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Når man vil gætte det næste ord i en sætning, har man selvfølgelig kun lov til at bruge de ord, der kommer før ordet. Det er dog ikke det, vi er ude på, når vi laver Word2Vec. Vi er ude på at forstå, hvordan et ord forholder sig til dets kontekst, altså de omkringstående ord. Derfor er der ikke noget problem i, at vinduet både indeholder ord før og efter inputordet.</p></div></div><div id="tbl-data" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-tbl figure page-columns page-full">
 <div aria-describedby="tbl-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -526,7 +526,8 @@ Opgave 1
 <p>Antag, at vi har lavet 3-dimensionale input- og kontekstvektorer som beskrevet i afsnittet ovenfor. Så skulle ord, der ofte har samme kontekst, gerne have inputvektorer af nogenlunde samme længde og retning, mens inputvektorerne for ord, der betyder noget helt forskelligt, kan have meget forskellig længde og retning. Antag, at inputvektorerne for "kat", "hund", "mis" og "kælk" er <span class="math display">\[
 \begin{aligned}
 \vec{v}_{\text{kat}}=\begin{pmatrix}0\\2\\1 \end{pmatrix},\quad
-\vec{v}_{\text{hund}}=\begin{pmatrix}0\\1.2\\1.8\end{pmatrix}, \quad
+\vec{v}_{\text{hund}}=\begin{pmatrix}0\\1.2\\1.8\end{pmatrix}, \\
+\\
 \vec{v}_{\text{mis}}=\begin{pmatrix}-0.5\\2\\0.8\end{pmatrix},\quad
 \vec{v}_{\text{kælk}}=\begin{pmatrix} 0\\-1\\-2 \end{pmatrix}
 \end{aligned}
@@ -649,14 +650,15 @@ Opgave 2
 <p>Antag, at vores ordforråd består af de tre ord "sommer", "sol" og "sne". Vi har lavet en model for sandsynligheder for kontekstord som i (<a href="#eq-sshmodel" class="quarto-xref">2</a>), hvor inputvektoren for "sommer" og kontekstvektorerne for "sommer", "sol" og "sne" er givet ved <span class="math display">\[
 \begin{aligned}
 \vec{v}_{\text{sommer}}=\begin{pmatrix} 1\\1\end{pmatrix},\quad
-\vec{k}_{\text{sommer}}=\begin{pmatrix} 1\\-1 \end{pmatrix} ,\quad
+\vec{k}_{\text{sommer}}=\begin{pmatrix} 1\\-1 \end{pmatrix} ,\\
+\\
 \vec{k}_{\text{sol}}=\begin{pmatrix} 0\\2\end{pmatrix},\quad
 \vec{k}_{\text{sne}} =\begin{pmatrix} -1\\-2\end{pmatrix}
 \end{aligned}
 \]</span></p>
 <ol start="2" type="a">
-<li><p>Hvilket af de tre ord optræder oftest som kontekst til sommer?</p></li>
 <li><p>Hvad er sandsynligheden for, at hvert af de tre ord er kontekst til "sommer"?</p></li>
+<li><p>Passer svaret fra b. med, hvilket af de tre ord, som du umiddelbart vil tænke, oftest optræder som kontekst til sommer?</p></li>
 </ol>
 </div>
 </div>
@@ -665,10 +667,10 @@ Opgave 2
 </section>
 <section id="estimation-af-vektorrepræsentationer" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="estimation-af-vektorrepræsentationer">Estimation af vektorrepræsentationer</h2>
-<p>Vi mangler stadig at bestemme vektorrepræsentationerne <span class="math inline">\(\vec{v}_{w}\)</span> og <span class="math inline">\(\vec{k}_{c}\)</span>, så modellen i (<a href="#eq-sshmodel" class="quarto-xref">2</a>) kommer til at passe til virkelig tekst. Her får vi brug for det datasæt, som vi lavede ud fra vores træningsdata. Hver række i datasættet bestod af et inputord <span class="math inline">\(w\)</span> og et kontekstord <span class="math inline">\(c\)</span>, som forekom i vores træningsdata. Lad os sige, at der er <span class="math inline">\(M\)</span> rækker i vores træningsdata. Vi betegner data i den <span class="math inline">\(j\)</span>te række med <span class="math inline">\((w_j,c_j)\)</span> for <span class="math inline">\(j=1,\ldots,M\)</span>. Vores datasæt har altså formen (jævnfør <a href="#tbl-data" class="quarto-xref">tabel&nbsp;2</a>):</p>
-<div id="tbl-data" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<p>Vi mangler stadig at bestemme vektorrepræsentationerne <span class="math inline">\(\vec{v}_{w}\)</span> og <span class="math inline">\(\vec{k}_{c}\)</span>, så modellen i (<a href="#eq-sshmodel" class="quarto-xref">2</a>) kommer til at passe til virkelig tekst. Her får vi brug for det datasæt, som vi lavede ud fra vores træningsdata. Hver række i datasættet bestod af et inputord <span class="math inline">\(w\)</span> og et kontekstord <span class="math inline">\(c\)</span>, som forekom i vores træningsdata. Lad os sige, at der er <span class="math inline">\(M\)</span> rækker i vores træningsdata. Vi betegner data i den <span class="math inline">\(j\)</span>te række med <span class="math inline">\((w_j,c_j)\)</span> for <span class="math inline">\(j=1,\ldots,M\)</span>. Vores datasæt har altså formen (jævnfør <a href="#tbl-data" class="quarto-xref">tabel&nbsp;1</a>):</p>
+<div id="tbl-data2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-tbl figure page-columns page-full">
-<div aria-describedby="tbl-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-data2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
 <thead>
 <tr class="header">
@@ -704,18 +706,20 @@ Opgave 2
 </tbody>
 </table>
 </div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-tbl margin-caption" id="tbl-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-tbl margin-caption" id="tbl-data2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabel&nbsp;2: Eksempel på datatabel med træningsdata.
 </figcaption>
 </figure>
 </div>
+<p>Bemærk, at hvert inputord godt kan optræde flere gange i ovenstående tabel, som vi også så det i <a href="#tbl-data" class="quarto-xref">tabel&nbsp;1</a>.</p>
 <p>Vi ser nu på <span class="math inline">\(j\)</span>te række. Sandsynligheden for, at <span class="math inline">\(w_j\)</span> har netop <span class="math inline">\(c_j\)</span> som kontekst, er <span class="math inline">\(P(c_j\mid w_j)\)</span>. Vi vil nu finde den samlede sandsynlighed for, at inputordene <span class="math inline">\(w_1,\ldots,w_M\)</span> i vores datasæt har henholdsvis <span class="math inline">\(c_1,\ldots,c_M\)</span> som kontekstord. Den kalder vi <span class="math inline">\(P(\text{data})\)</span>. Lad os antage, at alle vores par af input- og kontekstord er uafhængige af hinanden<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Så får vi den samlede sandsynlighed ved at gange de enkelte sandsynligheder sammen. <span id="eq-Pdata"><span class="math display">\[P(\text{data})  = P(c_1\mid w_1) \cdot P(c_2\mid w_2) \dotsm P(c_M\mid w_M) \tag{4}\]</span></span> Hvis vores model fra (<a href="#eq-sshmodel" class="quarto-xref">2</a>) passer godt til datasættet, skulle denne sandsynlighed gerne være høj.</p>
-<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;I praksis er ordpar, der forekommer i nærheden af hinanden ikke helt uafhængige. Hvis for eksempel parret <span class="math inline">\((\text{hund},\text{madskål})\)</span> forekommer, er det mere sandsynligt, at <span class="math inline">\((\text{hund}, \text{fodre})\)</span> forekommer i nærheden, end hvis der havde stået <span class="math inline">\((\text{hund},\text{hundesnor})\)</span>.</p></div></div><p>Da summer er nemmere at regne på end produkter, vælger vi at tage den naturlige logaritme på begge sider af (<a href="#eq-Pdata" class="quarto-xref">4</a>). Ved at bruge logaritmeregnereglen <span class="math inline">\(\ln(ab) = \ln(a) + \ln(b)\)</span> får vi, at <span class="math display">\[
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;I praksis er ordpar, der forekommer i nærheden af hinanden ikke helt uafhængige. Hvis for eksempel parret <span class="math inline">\((\text{hund},\text{madskål})\)</span> forekommer, er det mere sandsynligt, at <span class="math inline">\((\text{hund}, \text{fodre})\)</span> forekommer i nærheden, end hvis der havde stået <span class="math inline">\((\text{hund},\text{hundesnor})\)</span>.</p></div><div id="fn3"><p><sup>3</sup>&nbsp;For eksempel er det meget nemmere at differentiere summer end produkt!</p></div></div><p>Da summer er nemmere at regne på end produkter<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, vælger vi at tage den naturlige logaritme på begge sider af (<a href="#eq-Pdata" class="quarto-xref">4</a>). Ved at bruge logaritmeregnereglen <span class="math inline">\(\ln(ab) = \ln(a) + \ln(b)\)</span> får vi, at <span class="math display">\[
 \begin{aligned}
 \ln (P(\text{data})) &amp;= \ln\big(P(c_1\mid w_1) \cdot P(c_2\mid w_2) \dotsm P(c_M\mid w_M)\big)\\
 &amp;= \ln(P(c_1\mid w_1)) + \ln(P(c_2\mid w_2)) + \dotsm + \ln(P(c_M\mid w_m))
 \end{aligned}
-\]</span> Da den naturlige logaritme er en voksende funktion, svarer store værdier af <span class="math inline">\(P(\text{data})\)</span> til store værdier af <span class="math inline">\(\ln (P(\text{data}))\)</span>, som igen svarer til små værdier af <span class="math inline">\(-\ln(P(\text{data}))\)</span>. Dette er illustreret på <a href="#fig-natural_ln" class="quarto-xref">figur&nbsp;4</a>:</p>
+\]</span></p>
+<p>Da den naturlige logaritme er en voksende funktion, svarer store værdier af <span class="math inline">\(P(\text{data})\)</span> til store værdier af <span class="math inline">\(\ln (P(\text{data}))\)</span>, som igen svarer til små værdier af <span class="math inline">\(-\ln(P(\text{data}))\)</span>. Dette er illustreret på <a href="#fig-natural_ln" class="quarto-xref">figur&nbsp;4</a>:</p>
 <div id="fig-natural_ln" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-natural_ln-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -731,8 +735,8 @@ Figur&nbsp;4: Grafen for <span class="math inline">\(\ln(x)\)</span> og <span cl
 L&amp;= - \ln(\text{data}) \\ &amp;= -\ln(P(c_1\mid w_1)) - \ln(P(c_2\mid w_2)) - \dotsm - \ln(P(c_M\mid w_m))
 \end{aligned}
 \tag{5}\]</span></span></p>
-<p>altså gerne være lav<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. Vi kalder <span class="math inline">\(L\)</span> for vores <em>tabsfunktion</em>. Denne tabsfunktion kaldes også nogle gange for <em>cross-entropy</em>.</p>
-<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Bemærk, at da <span class="math inline">\(P(c_j\mid w_j)\)</span> er en sandsynlighed, der ligger mellem 0 og 1, er <span class="math inline">\(\ln (P(c_j\mid w_j))\)</span> negativ. Derfor er <span class="math inline">\(-\ln (P(c_j\mid w_j))\)</span> positiv og <span class="math inline">\(L\)</span> er dermed også positiv. Når <span class="math inline">\(L\)</span> gerne skal være lav, betyder det altså, at den skal være så tæt på 0 som muligt.</p></div></div><p>Vi kan indsætte vores udtryk for sandsynlighederne fra (<a href="#eq-sshmodel" class="quarto-xref">2</a>) i (<a href="#eq-Ldef" class="quarto-xref">5</a>) og få <span id="eq-Lfunktion"><span class="math display">\[
+<p>altså gerne være lav<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Vi kalder <span class="math inline">\(L\)</span> for vores <em>tabsfunktion</em>. Denne tabsfunktion kaldes også nogle gange for <em>cross-entropy</em>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Bemærk, at da <span class="math inline">\(P(c_j\mid w_j)\)</span> er en sandsynlighed, der ligger mellem 0 og 1, er <span class="math inline">\(\ln (P(c_j\mid w_j))\)</span> negativ. Derfor er <span class="math inline">\(-\ln (P(c_j\mid w_j))\)</span> positiv og <span class="math inline">\(L\)</span> er dermed også positiv. Når <span class="math inline">\(L\)</span> gerne skal være lav, betyder det altså, at den skal være så tæt på 0 som muligt.</p></div></div><p>Vi kan indsætte vores udtryk for sandsynlighederne fra (<a href="#eq-sshmodel" class="quarto-xref">2</a>) i (<a href="#eq-Ldef" class="quarto-xref">5</a>) og få <span id="eq-Lfunktion"><span class="math display">\[
 \begin{aligned}
 L = &amp;-\ln\left(\frac{e^{\vec{v}_{w_1}\cdot \vec{k}_{c_1}}}{e^{\vec{v}_{w_1}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + e^{\vec{v}_{w_1}\cdot \vec{k}_{\text{ord}_V}}}\right)
 \\ &amp;- \ln\left(\frac{e^{\vec{v}_{w_2}\cdot \vec{k}_{c_2}}}{e^{\vec{v}_{w_2}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + e^{\vec{v}_{w_2}\cdot \vec{k}_{\text{ord}_V}}}\right)
