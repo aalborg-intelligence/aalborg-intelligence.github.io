@@ -40,7 +40,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-f566325cf577907e9eaf893566fd6138.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-3f1baabbe97172b0c05a6a1f63051586.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -216,9 +216,11 @@ window.Quarto = {
 <p>I denne note vil vi beskrive et helt simpelt – og naivt – bud på en sprogmodel. Selvom modellen, som præsenteres her, er for simpel, giver den alligevel en god forståelse for den grundlæggende idé bag de store sprogmodeller.</p>
 <section id="sandsynligheden-for-næste-ord" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="sandsynligheden-for-næste-ord">Sandsynligheden for næste ord</h2>
-<p>Vi tager udgangspunkt i en sprogmodel, der skal kunne gætte næste ord i en sætning. Hvis vi for eksempel ved, at en sætning starter med <span class="math display">\[
-\textrm{"Jeg går en tur i ---"}
-\]</span> så skal sprogmodellen prøve at gætte det næste ord. Den skulle gerne vælge et af de mest sandsynlige næste ord. Vi skriver sandsynligheden for at næste ord er "skoven", når sætningen starter med "Jeg går en tur i", som <span class="math display">\[
+<p>Vi tager udgangspunkt i en sprogmodel, der skal kunne gætte næste ord i en sætning. Hvis vi for eksempel ved, at en sætning starter med</p>
+<div class="llm_saetninger">
+<p>"Jeg går en tur i —"</p>
+</div>
+<p>så skal sprogmodellen prøve at gætte det næste ord. Den skulle gerne vælge et af de mest sandsynlige næste ord. Vi skriver sandsynligheden for at næste ord er "skoven", når sætningen starter med "Jeg går en tur i", som <span class="math display">\[
 P(\textrm{skoven} \mid \textrm{Jeg går en tur i}).
 \]</span></p>
 <p>Denne sandsynlighed kaldes for en <em>betinget sandsynlighed</em>, som du kan læse mere om i boksen herunder.</p>
@@ -260,14 +262,14 @@ P(\textrm{skoven} \mid \textrm{Jeg går en tur i})= \\ \frac{\textrm{Antal gange
 <p>I <em><span class="math inline">\(N\)</span>-gram sprogmodeller</em> forsøger man også at bestemme sandsynligheden for næste ord, men nu baserer man sig kun på de <span class="math inline">\(N-1\)</span> foregående ord. Hvis vi skal gætte næste ord efter "Jeg går en tur i", ville en <span class="math inline">\(4\)</span>-gram sprogmodel basere sig på sandsynligheder på formen <span class="math display">\[
 P(\textrm{skoven} \mid \textrm{en tur i})=\frac{\textrm{Antal gange "en tur i skoven" optræder}}{\textrm{Antal gange "en tur i" optræder}}
 \]</span> Vi tager altså ikke starten på sætningen "Jeg går" i betragtning, fordi en 4-gram sprogmodel udelukkende kigger på de sidste tre ord "en tur i".</p>
-<p>Som et eksempel på, hvordan <span class="math inline">\(N\)</span>-gram sprogmodeller fungerer, ser vi på et meget lille tekstkorpus bestående af fire sætninger med seks forskellige ord: <span class="math display">\[
-\begin{aligned}
-&amp;\textrm{"En hund løber efter en kat.}\\
-&amp;\textrm{Løber en hund efter en kat?}\\
-&amp;\textrm{En kat løber ikke efter en hund.}\\
-&amp;\textrm{Efter en kat løber en hund."}
-\end{aligned}
-\]</span> Der er 25 ord i teksten, men kun 6 forskellige: en (8), hund (4), løber (4), efter (4), kat (4), ikke (1), hvor tallet i parentes angiver antal gange, ordet optræder i vores tekst. Vi ignorerer tegnsætning og skelner ikke mellem små og store bogstaver.</p>
+<p>Som et eksempel på, hvordan <span class="math inline">\(N\)</span>-gram sprogmodeller fungerer, ser vi på et meget lille tekstkorpus bestående af fire sætninger med seks forskellige ord:</p>
+<div class="llm_saetninger">
+<p>" En hund løber efter en kat.<br>
+Løber en hund efter en kat?<br>
+En kat løber ikke efter en hund.<br>
+Efter en kat løber en hund."</p>
+</div>
+<p>Der er 25 ord i teksten, men kun 6 forskellige: en (8), hund (4), løber (4), efter (4), kat (4), ikke (1), hvor tallet i parentes angiver antal gange, ordet optræder i vores tekst. Vi ignorerer tegnsætning og skelner ikke mellem små og store bogstaver.</p>
 <p>Et <em>bigram</em> er et par af ord, der forekommer efter hinanden i teksten. I <a href="#tbl-hyp_bigram" class="quarto-xref">tabel&nbsp;1</a> nedenfor er der lavet en hyppighedstabel over alle bigram i vores tekst. Vi lader som om, teksten starter forfra, så det sidste "hund" efterfølges af "En".</p>
 <div id="tbl-hyp_bigram" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-tbl figure page-columns page-full">
@@ -518,11 +520,15 @@ P(\textrm{ord}_3\mid \textrm{ord}_1\textrm{ ord}_2) = \\ \frac{\textrm{Antal gan
 </section>
 <section id="mere-avancerede-sprogmodeller" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="mere-avancerede-sprogmodeller">Mere avancerede sprogmodeller</h2>
-<p>For at kunne gætte næste ord med en <span class="math inline">\(N\)</span>-gram sprogmodel, har vi brug for et stort <span class="math inline">\(N\)</span> for at få meningen med. Det giver rigtig mange mulige kombinationer af de <span class="math inline">\(N-1\)</span> ord, som vi prædikterer næste ord ud fra. Mange af dem vil ikke være repræsenteret i vores tekstkorpus, og vi kan derfor ikke benytte <span class="math inline">\(N\)</span>-gram modellen. Men hvad nu, hvis vores tekstkorpus indeholder en ordsekvens, hvis betydning minder om? Måske ønsker vi at prædiktere næste ord i sætningen <span class="math display">\[
-\textrm{"Min hund har en blød ---"}
-\]</span> Og måske står denne kombination af ord ikke noget sted i vores tekstkorpus. Til gengæld er der måske et sted, hvor der står <span class="math display">\[
-\textrm{"Min kat har en blød pels"}
-\]</span> Hvis vi nu ved, at ordene "hund" og "kat" tit indgår i sammenhænge, der ligner hinanden, så kan vi måske erstatte sætningen "Min hund har en blød" med "Min kat har en blød" og bruge det til at gætte, at næste ord skal være "pels". For at udføre denne idé i praksis, får vi brug for en stor sprogmodel, som en model for sprogets betydning. Et eksempel på, hvordan det kan gøres, er den algoritme, som kaldes for <a href="../../materialer/sprogmodeller/word2vec.html">Word2Vec</a>. Kort fortalt er idéen at repræsentere hvert ord med en vektor, hvor ord, hvis betydning minder om hinanden, svarer til vektorer, med nogenlunde samme retning og længde. Et konkret eksempel på det ses i <a href="#fig-vektorer" class="quarto-xref">figur&nbsp;1</a>.</p>
+<p>For at kunne gætte næste ord med en <span class="math inline">\(N\)</span>-gram sprogmodel, har vi brug for et stort <span class="math inline">\(N\)</span> for at få meningen med. Det giver rigtig mange mulige kombinationer af de <span class="math inline">\(N-1\)</span> ord, som vi prædikterer næste ord ud fra. Mange af dem vil ikke være repræsenteret i vores tekstkorpus, og vi kan derfor ikke benytte <span class="math inline">\(N\)</span>-gram modellen. Men hvad nu, hvis vores tekstkorpus indeholder en ordsekvens, hvis betydning minder om? Måske ønsker vi at prædiktere næste ord i sætningen</p>
+<div class="llm_saetninger">
+<p>"Min hund har en blød —"</p>
+</div>
+<p>Og måske står denne kombination af ord ikke noget sted i vores tekstkorpus. Til gengæld er der måske et sted, hvor der står</p>
+<div class="llm_saetninger">
+<p>"Min kat har en blød pels"</p>
+</div>
+<p>Hvis vi nu ved, at ordene "hund" og "kat" tit indgår i sammenhænge, der ligner hinanden, så kan vi måske erstatte sætningen "Min hund har en blød" med "Min kat har en blød" og bruge det til at gætte, at næste ord skal være "pels". For at udføre denne idé i praksis, får vi brug for en stor sprogmodel, som en model for sprogets betydning. Et eksempel på, hvordan det kan gøres, er den algoritme, som kaldes for <a href="../../materialer/sprogmodeller/word2vec.html">Word2Vec</a>. Kort fortalt er idéen at repræsentere hvert ord med en vektor, hvor ord, hvis betydning minder om hinanden, svarer til vektorer, med nogenlunde samme retning og længde. Et konkret eksempel på det ses i <a href="#fig-vektorer" class="quarto-xref">figur&nbsp;1</a>.</p>
 
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta charset="utf-8">

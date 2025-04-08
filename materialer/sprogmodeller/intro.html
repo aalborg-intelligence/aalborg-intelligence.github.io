@@ -40,7 +40,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-f566325cf577907e9eaf893566fd6138.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-3f1baabbe97172b0c05a6a1f63051586.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -216,9 +216,11 @@ window.Quarto = {
 <p>Sprog er komplekst. Der er flere hundrede tusinde ord i det danske sprog, afhængigt af hvordan man tæller. Disse ord kan sættes sammen til sætninger på et utal af måder. Men et sprog har samtidig struktur. Det har en <em>syntaks</em>, som er regler for, hvilke ord man må bruge, og hvordan sætninger er sat sammen. Noget vanskeligere så har det også en <em>semantik</em>, der handler om betydningen af sætninger. Mens syntaksen langt hen ad vejen følger regler, som man ville kunne programmere en computer til at kende, så er semantikken meget mindre regelret. Hvordan kan en computer for eksempel vide, om "en god kost" refererer til mad eller en fejekost? Vi mennesker afgør det normalt ud fra sammenhængen. Vi skal se, at man kan lære en computer at gøre det samme ved hjælp af en <em>sprogmodel</em>. Eftersom denne model skal indgå i et computerprogram, er der naturligvis tale om en matematisk model.</p>
 <section id="prædiktion-af-næste-ord" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="prædiktion-af-næste-ord">Prædiktion af næste ord</h2>
-<p>Fælles for mange sprogmodeller er, at de virker ved at gætte (<em>prædiktere</em>) det næste ord i en sætning ud fra de foregående. Generativ AI virker for eksempel ved at bygge sætninger op et ord ad gangen, hvor hvert ord vælges på baggrund af de foregående ord. Hvis en sætning starter med <span class="math display">\[
-\textrm{"Jeg går en tur i ---"}
-\]</span> så skal sprogmodellen kunne komme med et gæt på det næste ord. Det kunne være ordet "skoven".</p>
+<p>Fælles for mange sprogmodeller er, at de virker ved at gætte (<em>prædiktere</em>) det næste ord i en sætning ud fra de foregående. Generativ AI virker for eksempel ved at bygge sætninger op et ord ad gangen, hvor hvert ord vælges på baggrund af de foregående ord. Hvis en sætning starter med</p>
+<div class="llm_saetninger">
+<p>"Jeg går en tur i —"</p>
+</div>
+<p>så skal sprogmodellen kunne komme med et gæt på det næste ord. Det kunne være ordet "skoven".</p>
 <p>Hvordan kommer sprogmodellen så med et godt gæt? Jo, først skal modellen <em>trænes</em> på store mængder af tilgængelig tekst, et <em>tekstkorpus</em>. På baggrund af dette tekstkorpus skal sprogmodellen så lære, hvilket ord, der sandsynligvis kommer efter "Jeg går en tur i". Det gør den konkret ved at bygge en funktion, der som input tager starten på en sætning og som output giver næste ord. Mere præcist giver funktionen for hvert ord i dens ordforråd sandsynligheden for, at netop dette ord er det næste. Sprogmodellen gætter så på et af de mest sandsynlige ord som det næste. Et eksempel kan ses i <a href="#tbl-pred" class="quarto-xref">tabel&nbsp;1</a>. Her kan man se, at "skoven" og "byen" er gode bud på det næste ord i sætningen "Jeg går en tur i".</p>
 <div id="tbl-pred" class="bordered quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-tbl figure page-columns page-full">

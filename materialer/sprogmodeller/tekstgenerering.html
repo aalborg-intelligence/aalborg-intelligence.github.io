@@ -40,7 +40,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-f566325cf577907e9eaf893566fd6138.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-3f1baabbe97172b0c05a6a1f63051586.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -213,9 +213,11 @@ window.Quarto = {
 
 
 <p>Vi har set, hvordan man kan få repræsenteret alle ord i ordforrådet som vektorer med <a href="../../materialer/sprogmodeller/word2vec.html">Word2Vec</a>. Næste skridt er at bruge disse vektorer til at generere tekst. I denne note ser vi på, hvordan det for eksempel kan gøres ved hjælp af <em>neurale netværk</em>. I praksis foretages tekstgenerering som regel ved hjælp af en særlig smart algoritme kaldet <em>transformeren</em>, der i en vis forstand laver Word2Vec og neurale netværk på én gang. Når du har læst denne note, kan du læse videre om <a href="">tranformeren her</a>.</p>
-<p>Vi vil gerne kunne generere en tekst ét ord ad gangen. Lad os som eksempel sige, at vi har fået lavet sætningen <span class="math display">\[
-\text{"En hund og en kat ---"}
-\]</span> og skal generere næste ord. Lige som med <a href="../../materialer/sprogmodeller/simple.html#n-gram-sprogmodeller"><span class="math inline">\(N\)</span>-grams</a> gør vi det lidt simplere ved kun at kigge på de sidste <span class="math inline">\(N-1\)</span> ord i sætningen. Vi vil sætte <span class="math inline">\(N=4\)</span> i denne note, så vi gætter næste ord på baggrund af de 3 foregående. I praksis ville man bruge et større <span class="math inline">\(N\)</span>. I eksemplet skal vi så gætte næste ord efter "og en kat". Til det bruger vi et neuralt netværk, som er en slags funktion, der tager de tre seneste ord som input. Som output giver netværket for hvert ord i ordforrådet en sandsynlighed for, at det er det næste ord.</p>
+<p>Vi vil gerne kunne generere en tekst ét ord ad gangen. Lad os som eksempel sige, at vi har fået lavet sætningen</p>
+<div class="llm_saetninger">
+<p>"En hund og en kat —"</p>
+</div>
+<p>og skal generere næste ord. Lige som med <a href="../../materialer/sprogmodeller/simple.html#n-gram-sprogmodeller"><span class="math inline">\(N\)</span>-grams</a> gør vi det lidt simplere ved kun at kigge på de sidste <span class="math inline">\(N-1\)</span> ord i sætningen. Vi vil sætte <span class="math inline">\(N=4\)</span> i denne note, så vi gætter næste ord på baggrund af de 3 foregående. I praksis ville man bruge et større <span class="math inline">\(N\)</span>. I eksemplet skal vi så gætte næste ord efter "og en kat". Til det bruger vi et neuralt netværk, som er en slags funktion, der tager de tre seneste ord som input. Som output giver netværket for hvert ord i ordforrådet en sandsynlighed for, at det er det næste ord.</p>
 <p>I eksemplet er vores input til det neurale netværk altså "og en kat". For hvert af de tre ord, har vi lavet en vektorrepræsentation med <a href="../../materialer/sprogmodeller/word2vec.html">Word2Vec</a>. Hvis vektorerne fra Word2Vec har <span class="math inline">\(m\)</span> koordinater, samler vi de tre vektorer i én vektor <span class="math inline">\(\vec{x}\)</span> med <span class="math inline">\(3m\)</span> koordinater, hvor de første <span class="math inline">\(m\)</span> koordinater er vektoren for "og", de næste <span class="math inline">\(m\)</span> koordinater er vektoren for "en", og de sidste <span class="math inline">\(m\)</span> koordinater er vektoren for "kat". Hvis for eksempel vores vektorer for "og", "en" og "kat" er <span class="math display">\[
 \vec{v}_{\text{og}}=\begin{pmatrix} 2\\1 \end{pmatrix}, \quad \vec{v}_{\text{en}}=\begin{pmatrix} -1\\3 \end{pmatrix}, \quad \vec{v}_{\text{kat}}=\begin{pmatrix} 7\\-4 \end{pmatrix}
 \]</span> så er vores input til det neurale netværk vektoren <span class="math display">\[
@@ -280,9 +282,11 @@ d\cdot(1+3m +V) +V = 50 \cdot (1 + 3 \cdot 3+2000) + 2000 =102500
 <section id="træning-af-netværket" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="træning-af-netværket">Træning af netværket</h2>
 <p>Som sagt indgår der ret mange vægte i modellen. Indtil nu har vi ikke sagt, hvilken værdi disse vægte skal have. Husk på, at vores neurale netværk skal give os sandsynligheden for, at et ord er næste ord i en sætning, når vi kender de 3 foregående ord. For at lære, hvilket ord der typisk kommer efter tre givne ord i virkelige tekster, får vi endnu engang brug for noget træningsdata i form af vores store tekstkorpus. Ud fra dette tekstkorpus laver vi et datasæt bestående af alle 4-gram, det vil sige alle sekvenser på 4 ord, der forekommer i teksten. De tre første ord kalder vi input, og det sidste kalder vi <em>target</em>.</p>
-<p>Hvis for eksempel vores træningsdata består af sætningen <span class="math display">\[
-\text{"Solen skinner, og en kat løber på græsplænen."}
-\]</span> så laver vi en datatabel<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> som i <a href="#tbl-data" class="quarto-xref">tabel&nbsp;1</a>.</p>
+<p>Hvis for eksempel vores træningsdata består af sætningen</p>
+<div class="llm_saetninger">
+<p>"Solen skinner, og en kat løber på græsplænen."</p>
+</div>
+<p>så laver vi en datatabel<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> som i <a href="#tbl-data" class="quarto-xref">tabel&nbsp;1</a>.</p>
 <div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Vi ignorerer tegnsætning.</p></div></div><div id="tbl-data" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-tbl figure page-columns page-full">
 <div aria-describedby="tbl-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -363,9 +367,11 @@ Figur&nbsp;2: Grafen for <span class="math inline">\(\ln(x)\)</span> og <span cl
 <section id="tekstgenerering" class="level2">
 <h2 class="anchored" data-anchor-id="tekstgenerering">Tekstgenerering</h2>
 <p>Las os sige, at vi har fået trænet vores neurale netværk. Det vil sige, at vi har bestemt de vægte, der skal indgå. Så er vores neurale netværk en fastlagt funktion. Når vi giver netværket en inputvektor <span class="math inline">\(\vec{x}\)</span>, beregner det en outputvektor <span class="math inline">\(\vec{z}\)</span> af sandsynligheder ved brug af de valgte vægte.</p>
-<p>Vi kan nu gå i gang med at generere tekst. Lad os sige, at vi har dannet de første ord i en sætning. Det kunne være <span class="math display">\[
-\text{"En hund og en kat ---"}
-\]</span> Vi tager de <span class="math inline">\(3\)</span> sidste ord "og", "en" og "kat" og oversætter dem til en vektor <span class="math inline">\(\vec{x}\)</span>. Denne vektor giver vi som input til det neurale netværk. For hvert ord i ordforrådet beregner det neurale netværk sandsynligheden for, at det er det næste ord. Det kan være at "løber" får sandsynligheden 1/2, "spiser" får sandsynligheden 1/3, mens alle andre ord får meget små sandsynligheder. En mulighed er så at vælge det mest sandsynlige ord som det næste. Det ville være "løber" i vores eksempel. Det viser sig dog, at det giver for lidt variation i de sætninger, der dannes. I stedet kan man vælge et tilfældigt næste ord ud fra deres sandsynligheder. I vores eksempel ville vi vælge "løber" med sandsynlighed 1/2, "spiser" med sandsynlighed 1/3, og så videre.</p>
+<p>Vi kan nu gå i gang med at generere tekst. Lad os sige, at vi har dannet de første ord i en sætning. Det kunne være</p>
+<div class="llm_saetninger">
+<p>"En hund og en kat —"</p>
+</div>
+<p>Vi tager de <span class="math inline">\(3\)</span> sidste ord "og", "en" og "kat" og oversætter dem til en vektor <span class="math inline">\(\vec{x}\)</span>. Denne vektor giver vi som input til det neurale netværk. For hvert ord i ordforrådet beregner det neurale netværk sandsynligheden for, at det er det næste ord. Det kan være at "løber" får sandsynligheden 1/2, "spiser" får sandsynligheden 1/3, mens alle andre ord får meget små sandsynligheder. En mulighed er så at vælge det mest sandsynlige ord som det næste. Det ville være "løber" i vores eksempel. Det viser sig dog, at det giver for lidt variation i de sætninger, der dannes. I stedet kan man vælge et tilfældigt næste ord ud fra deres sandsynligheder. I vores eksempel ville vi vælge "løber" med sandsynlighed 1/2, "spiser" med sandsynlighed 1/3, og så videre.</p>
 
 
 </section>

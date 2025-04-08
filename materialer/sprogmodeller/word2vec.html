@@ -40,7 +40,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-f566325cf577907e9eaf893566fd6138.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-3f1baabbe97172b0c05a6a1f63051586.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -222,9 +222,11 @@ window.Quarto = {
 </header>
 
 
-<p>Lad os se på en situation, hvor vi gerne vil kunne gætte næste ord i en sætning. Lad os sige, at vi har sætningen <span class="math display">\[
-\text{"Min hund har en blød ---"}
-\]</span> og vil gætte næste ord. Hvis vi har en stor mængde tekst til rådighed, et såkaldt <em>tekstkorpus</em>, kan vi selvfølgelig lede efter ordsekvensen "Min hund har en blød" og se hvilket ord, der oftest kommer efter, som beskrevet i noten om <a href="../../materialer/sprogmodeller/simple.html">simple sprogmodeller</a>. Men hvis sekvensen ikke forekommer i vores korpus, så har vi et problem. I stedet kunne vi lede efter en sætning med en betydning, der minder om "Min hund har en blød" og se, hvad der kommer efter den. Men hvordan får vi en computer til at forstå betydningen af ord?</p>
+<p>Lad os se på en situation, hvor vi gerne vil kunne gætte næste ord i en sætning. Lad os sige, at vi har sætningen</p>
+<div class="llm_saetninger">
+<p>"Min hund har en blød —"</p>
+</div>
+<p>og vil gætte næste ord. Hvis vi har en stor mængde tekst til rådighed, et såkaldt <em>tekstkorpus</em>, kan vi selvfølgelig lede efter ordsekvensen "Min hund har en blød" og se hvilket ord, der oftest kommer efter, som beskrevet i noten om <a href="../../materialer/sprogmodeller/simple.html">simple sprogmodeller</a>. Men hvis sekvensen ikke forekommer i vores korpus, så har vi et problem. I stedet kunne vi lede efter en sætning med en betydning, der minder om "Min hund har en blød" og se, hvad der kommer efter den. Men hvordan får vi en computer til at forstå betydningen af ord?</p>
 <p>Den simpleste måde at repræsentere et ord på i en computer ville være ved at nummerere alle ordene i det danske sprog fra 1 til <span class="math inline">\(V\)</span>, hvor <span class="math inline">\(V\)</span> er det samlede antal ord. Nummeret på et ord giver dog ikke megen information om ordets betydning.</p>
 <p>En anden nærliggende idé kunne være at repræsentere et ord ved bogstaverne i ordet. For at en computer skal kunne forstå det, kunne man give hvert bogstav et tal ud fra bogstavets nummer i alfabetet. Så ville "kat" blive til <span class="math inline">\((11,1,20)\)</span> og "hund" til <span class="math inline">\((8,21,14,4)\)</span>. Stavemåden fortæller dog heller ikke meget om betydningen af et ord. Ordet "mund" staves næsten lige som "hund", men har en helt anden betydning. Omvendt betyder ordet "vovse" næsten det samme som "hund", men staves helt anderledes.</p>
 <p>I stedet vil vi gerne repræsentere hvert ord med en vektor. Idéen er, at ord, hvis betydning ligner hinanden, skal repræsenteres med vektorer, der peger i nogenlunde samme retning og har nogenlunde samme længde, som illustreret på <a href="#fig-vektorer" class="quarto-xref">figur&nbsp;1</a>.</p>
@@ -269,7 +271,7 @@ window.onload = function() {
   }
 </script>
 
-<div id="fig-vektorer" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center" width="80%">
+<div id="fig-vektorer" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" width="80%" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-vektorer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div id="ggbApplet_vektorer">
@@ -302,22 +304,29 @@ a_1\\a_2\\a_3\\ \vdots \\ a_m
 </div>
 <p><br>
 </p>
-<p>To ord, der betyder næsten det samme, vil ofte optræde i samme kontekst. Ordene "hund" og "kat" er for eksempel forskellige, men de vil ofte optræde i sammenhænge, der ligner hinanden. Se bare på sætningerne <span class="math display">\[
-\text{"Min --- har spist af sin madskål"}
-\]</span> og <span class="math display">\[
-\text{"Sikken en blød pels, din --- har"}
-\]</span> Her ville der kunne stå "hund" eller "kat", men nok ikke "kælk" eller "badedragt". Betydningen af ordene "hund" og "kat" er tættere på hinanden end betydningen af "hund" og "kælk". På den anden side kunne der ikke stå "hund" i sætningen <span class="math display">\[
-\text{"Den lille --- har hvide knurhår"}
-\]</span> mens både "kat" og "mis" ville passe ind. Ordene "kat" og "hund" er altså tætte på hinanden, men ikke så tætte som "kat" og "mis".</p>
+<p>To ord, der betyder næsten det samme, vil ofte optræde i samme kontekst. Ordene "hund" og "kat" er for eksempel forskellige, men de vil ofte optræde i sammenhænge, der ligner hinanden. Se bare på sætningerne</p>
+<div class="llm_saetninger">
+<p>"Min — har spist af sin madskål"</p>
+</div>
+<p>og</p>
+<div class="llm_saetninger">
+<p>"Sikken en blød pels, din — har"</p>
+</div>
+<p>Her ville der kunne stå "hund" eller "kat", men nok ikke "kælk" eller "badedragt". Betydningen af ordene "hund" og "kat" er tættere på hinanden end betydningen af "hund" og "kælk". På den anden side kunne der ikke stå "hund" i sætningen</p>
+<div class="llm_saetninger">
+<p>"Den lille — har hvide knurhår"</p>
+</div>
+<p>mens både "kat" og "mis" ville passe ind. Ordene "kat" og "hund" er altså tætte på hinanden, men ikke så tætte som "kat" og "mis".</p>
 <p>Vi ville jo gerne lave vores vektorer, således at ord, hvis betydning ligner hinanden, svarer til vektorer, der ligner hinanden. Mere præcist vil vi lave dem, således at ord, der ofte har samme kontekst, svarer til vektorer, der ligner hinanden. Vi vil derfor gerne have, at vektorerne for "hund" og "kat" minder mere om hinanden end vektorerne for "hund" og "kælk", men ikke så meget som "kat" og "mis". I <a href="#fig-vektorer" class="quarto-xref">figur&nbsp;1</a> ses et eksempel på, hvordan det kunne se ud.</p>
 </section>
 <section id="træningsdata" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="træningsdata">Træningsdata</h2>
 <p>Vi har altså brug for at vide, hvilken kontekst ordene indgår i. For at lære, hvilken kontekst et ord forekommer i, tager vi udgangspunkt i et stort tilgængeligt tekstkorpus. Vi kalder dette korpus for vores <em>træningsdata</em>.</p>
 <p>Ved konteksten til et ord vil vi her forstå de ord, der står umiddelbart før og efter ordet. Mere præcist vælger vi et vindue, lad os sige på fem ord, hvor ordet i midten er det, vi gerne vil kende betydningen af. Vi vil kalde dette for <em>inputordet</em>. De to første ord og de to sidste ord i vinduet er inputordets <em>kontekstord</em>. Se for eksempel på sætningen</p>
-<p><span class="math display">\[
-\boxed{\textrm{ Den sorte }\textbf{hund} \textrm{ logrer med }} \textrm{ halen}
-\]</span> Boksen angiver vores 5-ords vindue. Det midterste ord "hund" er vores inputord, ordene "Den", "sorte", "logrer" og "med" er kontekstord til "hund".</p>
+<div class="llm_saetninger">
+<p><span class="boxed_inline">Den sorte <strong>hund</strong> logrer med</span> halen</p>
+</div>
+<p>Boksen angiver vores 5-ords vindue. Det midterste ord "hund" er vores inputord, ordene "Den", "sorte", "logrer" og "med" er kontekstord til "hund".</p>
 <p>Vi starter med at placere vinduet omkring det første ord i vores datasæt og noterer dets fire kontekstord (hvoraf de to vil være blanke). Vi flytter nu vinduet mod højre et ord ad gangen, og hver gang noterer vi inputordet og dets fire kontekstord. Vi gør det for al teksten i vores træningsdata og samler informationen i et datasæt som vist i <a href="#tbl-data" class="quarto-xref">tabel&nbsp;1</a>. Hver række i tabellen består af et inputord og et af dets kontekstord.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Når man vil gætte det næste ord i en sætning, har man selvfølgelig kun lov til at bruge de ord, der kommer før ordet. Det er dog ikke det, vi er ude på, når vi laver Word2Vec. Vi er ude på at forstå, hvordan et ord forholder sig til dets kontekst, altså de omkringstående ord. Derfor er der ikke noget problem i, at vinduet både indeholder ord før og efter inputordet.</p></div></div><div id="tbl-data" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-tbl figure page-columns page-full">
@@ -776,12 +785,16 @@ Opgave 3
 <li><p>Først benyttes Word2Vec til at oversætte alle ordene i sproget til vektorer.</p></li>
 <li><p>Dernæst genereres teksten. Givet den tekst, der allerede er dannet, bruger vi en (kompliceret) funktion, der tager vektorrepræsentationerne af de hidtil genererede ord som input. Som output giver funktionen det mest sandsynlige næste ord (eller et af de mest sandsynlige).</p></li>
 </ol>
-<p>Hvis vi for eksempel har genereret teksten <span class="math display">\[
-\text{"Hunden spiser sit ---"}
-\]</span> så skal vi prøve at gætte, hvilket ord der kommer efter "sit". Vi oversætter derfor ordene "Hunden", "spiser" og "sit" til vektorerne <span class="math inline">\(\vec{v}_{\text{Hunden}}\)</span>, <span class="math inline">\(\vec{v}_{\text{spiser}}\)</span> og <span class="math inline">\(\vec{v}_{\text{sit}}\)</span>. Disse tre vektorer giver vi funktionen som input, og som output får vi et nyt ord. Det kunne være "kødben". Den funktion, der bruges i punkt 2., kunne for eksempel være et <em>neuralt netværk</em>. Du kan læse mere om, hvordan det fungerer i <a href="../../materialer/sprogmodeller/tekstgenerering.html">Tekstgenerering med neurale netværk</a>.</p>
-<p>Det smarte ved at bruge vektorrepræsentationerne er, hvis vi for eksempel vil generere næste ord i <span class="math display">\[
-\text{"Jeg skal huske, at katten skal have ---"}
-\]</span> Det skulle gerne give "mad" som muligt næste ord. Men måske har sprogmodellen aldrig set sætningen "katten skal have mad". Hvis den til gengæld har set "hunden skal have mad", og modellen ved at "hunden" og "katten" tit har samme kontekst, og dermed har næsten samme vektorrepræsentation, så vil man alligevel få "mad" som muligt næste ord.</p>
+<p>Hvis vi for eksempel har genereret teksten</p>
+<div class="llm_saetninger">
+<p>"Hunden spiser sit —"</p>
+</div>
+<p>så skal vi prøve at gætte, hvilket ord der kommer efter "sit". Vi oversætter derfor ordene "Hunden", "spiser" og "sit" til vektorerne <span class="math inline">\(\vec{v}_{\text{Hunden}}\)</span>, <span class="math inline">\(\vec{v}_{\text{spiser}}\)</span> og <span class="math inline">\(\vec{v}_{\text{sit}}\)</span>. Disse tre vektorer giver vi funktionen som input, og som output får vi et nyt ord. Det kunne være "kødben". Den funktion, der bruges i punkt 2., kunne for eksempel være et <em>neuralt netværk</em>. Du kan læse mere om, hvordan det fungerer i <a href="../../materialer/sprogmodeller/tekstgenerering.html">Tekstgenerering med neurale netværk</a>.</p>
+<p>Det smarte ved at bruge vektorrepræsentationerne er, hvis vi for eksempel vil generere næste ord i</p>
+<div class="llm_saetninger">
+<p>"Jeg skal huske, at katten skal have —"</p>
+</div>
+<p>Det skulle gerne give "mad" som muligt næste ord. Men måske har sprogmodellen aldrig set sætningen "katten skal have mad". Hvis den til gengæld har set "hunden skal have mad", og modellen ved at "hunden" og "katten" tit har samme kontekst, og dermed har næsten samme vektorrepræsentation, så vil man alligevel få "mad" som muligt næste ord.</p>
 <p>Bemærk, at resultatet af Word2Vec afhænger meget af, hvilket træningsdata vi har brugt. Antag for eksempel, at vi kun træner modellen på tekster skrevet af folk, der ikke kan lide hunde. Så vil <span class="math inline">\(\vec{v}_{\text{hund}}\)</span> have en tendens til at pege i samme retning som andre negativt ladede ord, fordi de ofte optræder sammen med negative kontekstord. Når vi sidenhen genererer ny tekst, vil vi få en tendens til at danne sætninger, der omtaler hunde negativt.</p>
 
 
