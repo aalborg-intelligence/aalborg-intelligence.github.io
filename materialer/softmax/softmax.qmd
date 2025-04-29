@@ -219,13 +219,13 @@ $$
 Som aktiveringsfunktion $\alpha$ vil vi bruge en funktion, som kaldes for **softmax**, fordi den præcis har de egenskaber, som vi efterspørger -- det ser vi lige om lidt. På baggrund af alle $z$-værdierne beregnes $o_j$ ved hjælp af **softmax** på denne måde:
 
 $$
-o_j = \alpha(z_j) = \frac{e^{z_j}}{\sum_{i=1}^J e^{z_i}}.
+o_j = \alpha(z_j) = \frac{\mathrm{e}^{z_j}}{\sum_{i=1}^J \mathrm{e}^{z_i}}.
 $$
 
-For det første kan vi se, at både tæller og nævner er positive. Derfor må $o_j>0$. For det andet er $e^{z_j} < \sum_{i=1}^J e^{z_i}$ og derfor er
+For det første kan vi se, at både tæller og nævner er positive. Derfor må $o_j>0$. For det andet er $\mathrm{e}^{z_j} < \sum_{i=1}^J \mathrm{e}^{z_i}$ og derfor er
 
 $$
-o_j =  \frac{e^{z_j}}{\sum_{i=1}^J e^{z_i}} < \frac{\sum_{i=1}^J e^{z_i}}{\sum_{i=1}^J e^{z_i}} = 1.
+o_j =  \frac{\mathrm{e}^{z_j}}{\sum_{i=1}^J \mathrm{e}^{z_i}} < \frac{\sum_{i=1}^J \mathrm{e}^{z_i}}{\sum_{i=1}^J \mathrm{e}^{z_i}} = 1.
 $$
 
 Altså er
@@ -238,9 +238,9 @@ hvilket betyder, at $o_j$ kan opfattes som en sandsynlighed. Endelig er
 
 $$
 \begin{aligned}
-o_1 + o_2 + \cdots + o_J &= \frac{e^{z_1}}{\sum_{i=1}^J e^{z_i}} + \frac{e^{z_2}}{\sum_{i=1}^J e^{z_i}} + \cdots + \frac{e^{z_J}}{\sum_{i=1}^J e^{z_i}} \\
-&= \frac{e^{z_1} + e^{z_2} + \cdots + e^{z_J}}{\sum_{i=1}^J e^{z_i}} \\ 
-&= \frac{\sum_{i=1}^J e^{z_i}}{\sum_{i=1}^J e^{z_i}} = 1,
+o_1 + o_2 + \cdots + o_J &= \frac{\mathrm{e}^{z_1}}{\sum_{i=1}^J \mathrm{e}^{z_i}} + \frac{\mathrm{e}^{z_2}}{\sum_{i=1}^J \mathrm{e}^{z_i}} + \cdots + \frac{\mathrm{e}^{z_J}}{\sum_{i=1}^J \mathrm{e}^{z_i}} \\
+&= \frac{\mathrm{e}^{z_1} + \mathrm{e}^{z_2} + \cdots + \mathrm{e}^{z_J}}{\sum_{i=1}^J \mathrm{e}^{z_i}} \\ 
+&= \frac{\sum_{i=1}^J \mathrm{e}^{z_i}}{\sum_{i=1}^J \mathrm{e}^{z_i}} = 1,
 \end{aligned}
 $$
 
@@ -249,7 +249,7 @@ hvilket også var et krav til de beregnede outputværdier.
 I det helt specielle tilfælde, hvor der kun er to output neuroner, vil softmax-funktionen for $o_1$ blot være en funktion af to variable:
 
 $$
-o_1 = \frac{e^{z_1}}{e^{z_1} + e^{z_2}}
+o_1 = \frac{\mathrm{e}^{z_1}}{\mathrm{e}^{z_1} + \mathrm{e}^{z_2}}
 $$
 
 Grafen for denne funktion er vist i @fig-softmax. Her ses det tydeligt, at værdien af $o_1$ ligger i intervallet $]0,1[$.
@@ -258,7 +258,7 @@ Grafen for denne funktion er vist i @fig-softmax. Her ses det tydeligt, at værd
 ::: {#fig-softmax}
 ::: {#ggbApplet_softmax}
 :::
-Grafen for softmax funktionen $o_1 = \frac{e^{z_1}}{e^{z_1} + e^{z_2}}$.
+Grafen for softmax funktionen $o_1 = \frac{\mathrm{e}^{z_1}}{\mathrm{e}^{z_1} + \mathrm{e}^{z_2}}$.
 :::
 
 
@@ -284,11 +284,11 @@ Herefter beregnes outputværdierne:
 
 $$
 \begin{aligned}
-o_1 &= \frac{e^{z_1}}{\sum_{i=1}^J e^{z_i}} \\
+o_1 &= \frac{\mathrm{e}^{z_1}}{\sum_{i=1}^J \mathrm{e}^{z_i}} \\
 & \,\,\, \vdots \\
-o_j &= \frac{e^{z_j}}{\sum_{i=1}^J e^{z_i}} \\
+o_j &= \frac{\mathrm{e}^{z_j}}{\sum_{i=1}^J \mathrm{e}^{z_i}} \\
 & \,\,\, \vdots \\
-o_J &= \frac{e^{z_J}}{\sum_{i=1}^J e^{z_i}} \\
+o_J &= \frac{\mathrm{e}^{z_J}}{\sum_{i=1}^J \mathrm{e}^{z_i}} \\
 \end{aligned}
 $$ {#eq-o_j}
 :::
@@ -530,7 +530,7 @@ hvor vi har brugt, at $\ln(o_i)$ differentieret er $\frac{1}{o_i}$.
 Nu er
 
 $$
-o_i = \frac{e^{z_i}}{\sum_{l=1}^J e^{z_l}}.
+o_i = \frac{\mathrm{e}^{z_i}}{\sum_{l=1}^J \mathrm{e}^{z_l}}.
 $$
 
 Da $o_i$ er udtrykt ved en brøk, får vi brug for kvotientreglen, når vi skal differentiere $o_i$:
@@ -545,8 +545,8 @@ Hvis $i \neq j$, får vi
 
 $$
 \begin{aligned}
-\frac{\partial o_i}{\partial z_j} &= \frac{0 \cdot (\sum_{l=1}^J e^{z_l}) - e^{z_i} \cdot e^{z_j}}{\left ( \sum_{l=1}^J e^{z_l} \right )^2} \\
-&= - \frac{e^{z_i}}{\sum_{l=1}^J e^{z_l}} \cdot \frac{e^{z_j}}{\sum_{l=1}^J e^{z_l}} = - o_i \cdot o_j, \quad \quad i \neq j
+\frac{\partial o_i}{\partial z_j} &= \frac{0 \cdot (\sum_{l=1}^J \mathrm{e}^{z_l}) - \mathrm{e}^{z_i} \cdot \mathrm{e}^{z_j}}{\left ( \sum_{l=1}^J \mathrm{e}^{z_l} \right )^2} \\
+&= - \frac{\mathrm{e}^{z_i}}{\sum_{l=1}^J \mathrm{e}^{z_l}} \cdot \frac{\mathrm{e}^{z_j}}{\sum_{l=1}^J \mathrm{e}^{z_l}} = - o_i \cdot o_j, \quad \quad i \neq j
 \end{aligned}
 $$
 
@@ -556,9 +556,9 @@ Hvis $i=j$, får vi
 
 $$
 \begin{aligned}
-\frac{\partial o_i}{\partial z_j} &= \frac{\partial o_j}{\partial z_j} = \frac{e^{z_j} \cdot (\sum_{l=1}^J e^{z_l}) - e^{z_j} \cdot e^{z_j}}{\left ( \sum_{l=1}^J e^{z_l} \right )^2} \\
-&= \frac{e^{z_j} \cdot (\sum_{l=1}^J e^{z_l})}{\left ( \sum_{l=1}^J e^{z_l} \right )^2} - \frac{(e^{z_j})^2}{\left ( \sum_{l=1}^J e^{z_l} \right )^2} \\
-&= \frac{e^{z_j}}{\sum_{l=1}^J e^{z_l}} - \left ( \frac{e^{z_j}}{\sum_{l=1}^J e^{z_l}} \right)^2 \\
+\frac{\partial o_i}{\partial z_j} &= \frac{\partial o_j}{\partial z_j} = \frac{\mathrm{e}^{z_j} \cdot (\sum_{l=1}^J \mathrm{e}^{z_l}) - \mathrm{e}^{z_j} \cdot \mathrm{e}^{z_j}}{\left ( \sum_{l=1}^J \mathrm{e}^{z_l} \right )^2} \\
+&= \frac{\mathrm{e}^{z_j} \cdot (\sum_{l=1}^J \mathrm{e}^{z_l})}{\left ( \sum_{l=1}^J \mathrm{e}^{z_l} \right )^2} - \frac{(\mathrm{e}^{z_j})^2}{\left ( \sum_{l=1}^J \mathrm{e}^{z_l} \right )^2} \\
+&= \frac{\mathrm{e}^{z_j}}{\sum_{l=1}^J \mathrm{e}^{z_l}} - \left ( \frac{\mathrm{e}^{z_j}}{\sum_{l=1}^J \mathrm{e}^{z_l}} \right)^2 \\
 & = o_j-o_j^2 = o_j(1-o_j), \quad \quad i = j
 \end{aligned}
 $$
@@ -694,7 +694,7 @@ Samlet set trænes netværket på denne måde:
    og
 
    $$
-   o_j^{(m)} = \frac{e^{z_j^{(m)}}}{\sum_{i=1}^J e^{z_i^{(m)}}} 
+   o_j^{(m)} = \frac{\mathrm{e}^{z_j^{(m)}}}{\sum_{i=1}^J \mathrm{e}^{z_i^{(m)}}} 
    $$ 
 
    for $j=1, 2, \dots, J$.

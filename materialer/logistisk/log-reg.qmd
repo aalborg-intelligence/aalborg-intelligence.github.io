@@ -281,36 +281,36 @@ $$
 Vi skal så isolere $p$ for at udtrykke $p$ som funktion af $y$.
 Vi tager først eksponentialfunktionen på begge sider af udtrykket og får
 $$
-e^y =  \frac{p}{1-p}. 
+\mathrm{e}^y =  \frac{p}{1-p}. 
 $$
 Så ganger vi med $(1-p)$ på begge sider.
 Det giver
 $$
-e^y(1-p) =p.
+\mathrm{e}^y(1-p) =p.
 $$
 Hvis parentesen ophæves, får vi
 $$
-e^y - p\cdot e^y =p.
+\mathrm{e}^y - p\cdot \mathrm{e}^y =p.
 $$
 
-Vi kan så lægge $p\cdot e^y$ til på begge sider og sætte $p$ uden for parantes.
+Vi kan så lægge $p\cdot \mathrm{e}^y$ til på begge sider og sætte $p$ uden for parantes.
 Det giver
 \begin{align*}
-e^y &= p \cdot e^y+p  \\
-e^y &= p\cdot (e^y+1).
+\mathrm{e}^y &= p \cdot \mathrm{e}^y+p  \\
+\mathrm{e}^y &= p\cdot (\mathrm{e}^y+1).
 \end{align*}
 Endelig kan vi isolere $p$ og få
 $$
-\frac{e^y}{e^y+1} =p.
+\frac{\mathrm{e}^y}{\mathrm{e}^y+1} =p.
 $$
-Her er $p$ egentlig isoleret, men vi kan vælge at forkorte brøken med $e^y$ for at få et andet udtryk for $p$
+Her er $p$ egentlig isoleret, men vi kan vælge at forkorte brøken med $\mathrm{e}^y$ for at få et andet udtryk for $p$
 $$
-p=\frac{\frac{e^y}{e^y}}{\frac{e^y+1}{e^y}}=\frac{\frac{e^y}{e^y}}{\frac{e^y}{e^y}+\frac{1}{e^y}}    =\frac{1}{1+e^{-y}} .
+p=\frac{\frac{\mathrm{e}^y}{\mathrm{e}^y}}{\frac{\mathrm{e}^y+1}{\mathrm{e}^y}}=\frac{\frac{\mathrm{e}^y}{\mathrm{e}^y}}{\frac{\mathrm{e}^y}{\mathrm{e}^y}+\frac{1}{\mathrm{e}^y}}    =\frac{1}{1+\mathrm{e}^{-y}} .
 $$
 
 Sammenlagt har vi vist, at den inverse funktion til logit er *den standard logistiske funktion* (også nogle gange kaldet *sigmoid-funktionen*) 
 $$
-f(y) = \frac{1}{1+e^{-y}}.
+f(y) = \frac{1}{1+\mathrm{e}^{-y}}.
 $$
 Grafen for den standard logistiske funktion er indtegnet i @fig-logit-fkt.
 Vi ser, at grafen har en karakteristisk S-form, som vokser fra $0$ mod $1$.
@@ -325,7 +325,7 @@ plot((-100:100)/10, sigmoid((-100:100)/10), type="l", xlim=c(-10,10), ylim=c(0,1
 
 Bruger vi den inverse til $\text{logit}$ på begge sider af lighedstegnet i den logistiske regressionsmodel i (@eq-logit_model), får vi isoleret $p(x)$
 $$
-p(x) = \frac{1}{1+e^{-(ax+b)}}.
+p(x) = \frac{1}{1+\mathrm{e}^{-(ax+b)}}.
 $${#eq-p-logistisk}
 Det ligner altså den standard logistiske funktion, men med $(ax+b)$ indsat på $y$'s plads.
 Denne funktion kaldes *den generelle logistiske funktion*. 
@@ -350,11 +350,11 @@ $$
 
 Hvis man gør dette for den standard logistiske funktion, får man netop den generelle logistiske funktion
 $$
-f(ax+b)= \frac{1}{1+e^{-(ax+b)}}.
+f(ax+b)= \frac{1}{1+\mathrm{e}^{-(ax+b)}}.
 $$
 Sammenlignet med den standard logistiske funktion får man altså en $S$-formet kurve, der vokser $a$ gange så hurtigt og er forskudt med $\frac{-b}{a}$. 
 
-I app'en herunder ser du grafen for $f(x)=\frac{1}{1+e^{-(ax+b)}}$.
+I app'en herunder ser du grafen for $f(x)=\frac{1}{1+\mathrm{e}^{-(ax+b)}}$.
 Hvis du trækker i skyderne for $a$ og $b$, kan du se, hvordan kurven ændrer form.
 Den stiplede linje har ligning $x=\frac{-b}{a}$ og svarer altså til den vandrette forskydning af grafen for den standard logistiske funktion. På figuren er der desuden 9 punkter, som du kan få grafen til at passe bedst muligt med.
 
@@ -372,16 +372,16 @@ Det var en generel logistisk funktion, der blev brugt til at lave den S-formede 
 En anden måde at fortolke konstanterne $a$ og $b$ på er ved at gå tilbage til at se på oddsene.
 For at få et udtryk for oddsene i den logistiske regressionsmodel, kan vi anvende eksponentialfunktionen på begge sider i (@eq-log-model) og få
 $$
-O(x) = e^{ax + b} = e^b \cdot e^{ax}=e^b \cdot (e^{a})^x.
+O(x) = \mathrm{e}^{ax + b} = \mathrm{e}^b \cdot \mathrm{e}^{ax}=\mathrm{e}^b \cdot (\mathrm{e}^{a})^x.
 $$ 
-Hvis $e^b$ kaldes $b_{ny}$, og $e^{a}$ kaldes $a_{ny}$, ses at
+Hvis $\mathrm{e}^b$ kaldes $b_{ny}$, og $\mathrm{e}^{a}$ kaldes $a_{ny}$, ses at
 $$
 O(x)=b_{ny}\cdot a_{ny}^x
 $$
-er en eksponentiel udvikling med fremskrivningsfaktor $a_{ny}=e^a$.
-Derved vil odds for sygdom stige med $r=e^a-1$ procent, hver gang blodtrykket stiger med $1$mmHg.
-Hvis $a$ er positiv, er $e^a>1$, og oddsene vokser altså eksponentielt.
-Hvis derimod $a$ er negativ, er $e^a<1$, og dermed aftager oddsene eksponentielt. 
+er en eksponentiel udvikling med fremskrivningsfaktor $a_{ny}=\mathrm{e}^a$.
+Derved vil odds for sygdom stige med $r=\mathrm{e}^a-1$ procent, hver gang blodtrykket stiger med $1$mmHg.
+Hvis $a$ er positiv, er $\mathrm{e}^a>1$, og oddsene vokser altså eksponentielt.
+Hvis derimod $a$ er negativ, er $\mathrm{e}^a<1$, og dermed aftager oddsene eksponentielt. 
 
 Har vi f.eks. en logit model 
 $$
@@ -389,23 +389,23 @@ $$
 $$
 så er den procentvist vækst i odds, når $x$ vokser med 1
 $$
-r = e^a-1 = e^{0.2}-1 \approx `{r} exp(0.2)-1`.
+r = \mathrm{e}^a-1 = \mathrm{e}^{0.2}-1 \approx `{r} exp(0.2)-1`.
 $$
 Altså vokser odds med ca. 22%, når $x$ vokser med 1 i modellen.
 
-I forbindelse med logistisk regression kaldes $e^a$ også for *odds-ratioen*.
+I forbindelse med logistisk regression kaldes $\mathrm{e}^a$ også for *odds-ratioen*.
 For at forstå hvorfor, kan vi forestille os to patienter, en med blodtryk $x_1$ og en med blodtryk $x_2$.
 De har dermed oddsene
 \begin{align*}
-O(x_1) &= e^b \cdot e^{ax_1}\\
-O(x_2) &= e^b \cdot e^{ax_2}.
+O(x_1) &= \mathrm{e}^b \cdot \mathrm{e}^{ax_1}\\
+O(x_2) &= \mathrm{e}^b \cdot \mathrm{e}^{ax_2}.
 \end{align*}
 Lad os se på forholdet (ratioen) mellem de to personers odds:
 $$
-\frac{O(x_1)}{O(x_2)} = \frac{e^b \cdot e^{ax_1}}{ e^b \cdot e^{ax_2}} = \frac{e^{ax_1}}{e^{ax_2}} = e^{ax_1 - ax_2} = e^{a(x_1 - x_2)} = (e^{a} )^{x_1-x_2}.
+\frac{O(x_1)}{O(x_2)} = \frac{\mathrm{e}^b \cdot \mathrm{e}^{ax_1}}{ \mathrm{e}^b \cdot \mathrm{e}^{ax_2}} = \frac{\mathrm{e}^{ax_1}}{\mathrm{e}^{ax_2}} = \mathrm{e}^{ax_1 - ax_2} = \mathrm{e}^{a(x_1 - x_2)} = (\mathrm{e}^{a} )^{x_1-x_2}.
 $$
 Forholdet mellem oddsene afhænger altså kun af forskellen $x_1 - x_2$ mellem de to personers blodtryk.
-Hvis person 1 er har et blodtryk, der er 1mmHg højere end person 2, bliver forholdet (ratioen) mellem oddsene lige præcis $e^a$. 
+Hvis person 1 er har et blodtryk, der er 1mmHg højere end person 2, bliver forholdet (ratioen) mellem oddsene lige præcis $\mathrm{e}^a$. 
 
 
 
@@ -439,11 +439,11 @@ Her angiver  $x_i$ altså blodtrykket hos den $i$'te person, og $y_i$ er en vari
 For hvert par $(x_i,y_i)$ kan vi nu forsøge at beregne sandsynligheden $p_i$ for at $i$'te person faktisk har den sygsomsstatus $y_i$, som vi observerer.
 Hvis den $i$'te person er syg, dvs. $y_i=1$, er $p_i$ altså sandsynligheden for at være syg, når blodtrykket er $x_i$, så
 $$
-p_i= p(x_i)  = \frac{ 1}{1 + e^{-(ax_i  + b)}}.
+p_i= p(x_i)  = \frac{ 1}{1 + \mathrm{e}^{-(ax_i  + b)}}.
 $${#eq-y1}
 Hvis patienten er rask, altså $y_i=0$, er $p_i$ sandsynligheden for at være rask, når blodtrykket er $x_i$, det vil sige
 $$
-p_i=1-	p(x_i)  = 1- \frac{ 1}{1 + e^{-(ax_i  + b)}}. 
+p_i=1-	p(x_i)  = 1- \frac{ 1}{1 + \mathrm{e}^{-(ax_i  + b)}}. 
 $${#eq-y0}
 Vi kan opskrive et samlet udtryk for $p_i$ uden at opdele efter værdien af $y_i$, nemlig 
 $$
@@ -549,8 +549,8 @@ Der er lavet et par celler til de ukendte parametre $a$ og $b$, som med fordel k
 Det oprindelige datasæt indsættes i søjlerne $x_i$ og $y_i$.
 I de næste søjler beregnes odds, $p(x_i)$ og $\ln(p_i)$ med formlerne[^6]
 \begin{align*}
-odds &= e^{ax_i + b}\\
-p(x_i) &= \frac{e^{ax_i + b}}{1+e^{ax_i +b}} = \frac{odds}{1+odds}\\
+odds &= \mathrm{e}^{ax_i + b}\\
+p(x_i) &= \frac{\mathrm{e}^{ax_i + b}}{1+\mathrm{e}^{ax_i +b}} = \frac{odds}{1+odds}\\
 \ln(p_i)&= {y_i}\cdot \ln(p(x_i))+(1-y_i)\cdot \ln(1-p(x_i)).
 \end{align*}
 
@@ -570,11 +570,11 @@ Tryk på **løs**.
 
 Finder man $a$ og $b$ ved hjælp af maksimum likelihood metoden i vores dataeksempel, fås følgende funktionsudtryk for sandsynlighederne og oddsene
 $$
-	p(x) = \frac{1}{1+e^{-`{r} a_mle_pretty` x +`{r} abs(b_mle_pretty)`}}, \qquad O(x)=e^{`{r} a_mle_pretty` x - `{r} abs(b_mle_pretty)`}.
+	p(x) = \frac{1}{1+\mathrm{e}^{-`{r} a_mle_pretty` x +`{r} abs(b_mle_pretty)`}}, \qquad O(x)=\mathrm{e}^{`{r} a_mle_pretty` x - `{r} abs(b_mle_pretty)`}.
 $$
 
 Grafen for $p$ er vist på @fig-S.
-Vi får en odds-ratio på $e^{`{r} a_mle_pretty`} \approx `{r} OR_mle`$.
+Vi får en odds-ratio på $\mathrm{e}^{`{r} a_mle_pretty`} \approx `{r} OR_mle`$.
 Odds for hjerte-kar-sygdom stiger derfor med en faktor `{r} OR_mle` (altså `{r} 100*(OR_mle-1)`\%), for hver gang blodtrykket stiger med $1$ mmHg. 
  
 
@@ -634,11 +634,11 @@ Nu er der fire ukendte konstanter $a_1$, $a_2$, $a_3$ og $b$ i modellen, som ska
 Dette kaldes *den multiple regressionsmodel*.
 Ved at tage eksponentialfunktionen får vi en formel for oddsene
 $$
-	 O(x_1,x_2,x_3) = e^{a_1x_1 + a_2x_2 +a_3x_3 + b}.
+	 O(x_1,x_2,x_3) = \mathrm{e}^{a_1x_1 + a_2x_2 +a_3x_3 + b}.
 $$
 Man kan også bruge den standard logistiske funktion og få en formel for sandsynligheden
 $$
-	p(x_1,x_2,x_3) = \frac{1}{1+e^{-(a_1x_1 + a_2x_2 +a_3x_3 + b)}}.
+	p(x_1,x_2,x_3) = \frac{1}{1+\mathrm{e}^{-(a_1x_1 + a_2x_2 +a_3x_3 + b)}}.
 $$
 
 
@@ -646,12 +646,12 @@ Hvordan skal vi forstå denne model? Jo, lad os forestille os en patient med ald
 Hvis vedkommende begynder at ryge $1$ cigaret mere om dagen (og vi forestiller os at alder og blodtryk er uændret) så vil odds-ratioen være 
 $$
 \begin{aligned}
-	\frac{O(x_1,x_2,x_3+1)}{O(x_1,x_2,x_3)} &= \frac{ e^{a_1x_1 + a_2x_2 +a_3(x_3+1) + b}}{e^{a_1x_1 + a_2x_2 +a_3x_3 + b}} \\
-	&=\frac{e^{a_1x_1} \cdot e^{a_2x_2} \cdot e^{a_3x_3} \cdot e^{a_3} \cdot e^b}{e^{a_1x_1} \cdot e^{a_2x_2} \cdot e^{a_3x_3}\cdot e^b} \\ &=e^{a_3}.
+	\frac{O(x_1,x_2,x_3+1)}{O(x_1,x_2,x_3)} &= \frac{ \mathrm{e}^{a_1x_1 + a_2x_2 +a_3(x_3+1) + b}}{\mathrm{e}^{a_1x_1 + a_2x_2 +a_3x_3 + b}} \\
+	&=\frac{\mathrm{e}^{a_1x_1} \cdot \mathrm{e}^{a_2x_2} \cdot \mathrm{e}^{a_3x_3} \cdot \mathrm{e}^{a_3} \cdot \mathrm{e}^b}{\mathrm{e}^{a_1x_1} \cdot \mathrm{e}^{a_2x_2} \cdot \mathrm{e}^{a_3x_3}\cdot \mathrm{e}^b} \\ &=\mathrm{e}^{a_3}.
 \end{aligned}
 $$
-Den ekstra daglige cigaret vil altså øge odds for sygdom med en faktor $e^{a_3}$.
-Tilsvarende har $e^{a_1}$ og $e^{a_2}$ fortolkninger som odds-ratioer, når henholdsvis blodtryk og alder stiger med 1, mens alle andre variable fastholdes.
+Den ekstra daglige cigaret vil altså øge odds for sygdom med en faktor $\mathrm{e}^{a_3}$.
+Tilsvarende har $\mathrm{e}^{a_1}$ og $\mathrm{e}^{a_2}$ fortolkninger som odds-ratioer, når henholdsvis blodtryk og alder stiger med 1, mens alle andre variable fastholdes.
 Selv om modellen tager alle tre variable i betragtning, giver odds-ratioerne et mål for den individuelle effekt af hver af de tre variable.
 
 Maximum likelihood metoden kan igen benyttes til at estimere parametrene $a_1,a_2,a_3$ og $b$.
@@ -661,17 +661,17 @@ Vi vil ikke gå i detaljer med, hvordan denne maksimering finder sted.
 [Framingham datasættet](https://biolincc.nhlbi.nih.gov/studies/framcohort/) er et rigtigt datasæt, der indeholder data for hjerte-kar-sygdom og de tre risikofaktorer $x_1$, $x_2$ og $x_3$.
 Estimerer man $a_1,a_2,a_3$ og $b$ på en udvalgt del af dette datasæt, får man 
 $$
-	O(x_1,x_2,x_3) = e^{0.06x_1 + 0.02x_2 + 0.02x_3 -6.77 }.
+	O(x_1,x_2,x_3) = \mathrm{e}^{0.06x_1 + 0.02x_2 + 0.02x_3 -6.77 }.
 $$
-Odds for hjerte-kar-sygdom stiger således med en faktor $e^{0.02}\approx 1.02$ (altså med 2\%), for hver cigaret man ryger om dagen.
-Tilsvarende stiger odds for sygdom med en faktor $e^{0.06}\approx 1.06$,  for hvert år ældre man bliver, og med en faktor $e^{0.02}\approx 1.02$, for hver gang blodtrykket stiger med 1 mmHg. 
+Odds for hjerte-kar-sygdom stiger således med en faktor $\mathrm{e}^{0.02}\approx 1.02$ (altså med 2\%), for hver cigaret man ryger om dagen.
+Tilsvarende stiger odds for sygdom med en faktor $\mathrm{e}^{0.06}\approx 1.06$,  for hvert år ældre man bliver, og med en faktor $\mathrm{e}^{0.02}\approx 1.02$, for hver gang blodtrykket stiger med 1 mmHg. 
 
 
 ## Prædiktion
 Når vi har fundet en god model for sammenhængen mellem sygdom og forskellige risikofaktorer, kan vi bruge den til at forudsige (prædiktere), om en ny patient er syg.
 Som eksempel kan vi se på den multiple regressionsmodel, hvor risikoen for hjerte-kar-sygdom var givet ved 
 $$
-	p(x_1,x_2,x_3) = \frac{1}{1+e^{-(0.06x_1 + 0.02x_2 +0.02x_3 -6.77)}},
+	p(x_1,x_2,x_3) = \frac{1}{1+\mathrm{e}^{-(0.06x_1 + 0.02x_2 +0.02x_3 -6.77)}},
 $$
 hvor $x_1$ var alderen, $x_2$ var blodtrykket, og $x_3$ var antal cigaretter.
 
@@ -686,7 +686,7 @@ Den mest oplagte prædiktionsregel er at prædiktere det mest sandsynlige:
 Lad os for eksempel sige, at vores patient er 30 år gammel, har et blodtryk på $145$ mmHg og ryger 7 cigaretter om dagen.
 Ifølge vores model vil hans risiko for hjerte-kar-sygdom være 
 $$
-	p(30,145,7) = \frac{1}{1+e^{-(0.06\cdot 30 + 0.02\cdot 145 +0.02\cdot 7 -6.77)}}\approx 0.127.
+	p(30,145,7) = \frac{1}{1+\mathrm{e}^{-(0.06\cdot 30 + 0.02\cdot 145 +0.02\cdot 7 -6.77)}}\approx 0.127.
 $$
 Hans risiko er på 12.7\%. Hvis vi skal lave en prædiktion, vil vi sige, at han er rask, da dette vil være det mest sandsynlige. 
 
@@ -743,17 +743,17 @@ $$
 hvor $k>0$ er en konstant.
 Denne ligning kaldes *den logistiske differentialligning*, og løsningen er givet ved
 $$
-I(x)=\frac{M}{1+c\cdot e^{-M\cdot k\cdot x}},
+I(x)=\frac{M}{1+c\cdot \mathrm{e}^{-M\cdot k\cdot x}},
 $$
 hvor $c>0$ igen er en konstant, som kan bestemmes, hvis man kender antallet af smittede $I(0)$ til tiden $x=0$.
 Sætter vi $c=\exp(-b)$ og $a=Mk$, får vi
 $$
-I(x)=\frac{M}{1+e^{-b}\cdot e^{-a\cdot x}} = \frac{M}{1+e^{-(a\cdot x+b)}}.
+I(x)=\frac{M}{1+\mathrm{e}^{-b}\cdot \mathrm{e}^{-a\cdot x}} = \frac{M}{1+\mathrm{e}^{-(a\cdot x+b)}}.
 $$
 På dag $x$ vil en tilfældigt udvalgt person have en sandsynlighed på  $p(x)=I(x)/M$ for at være smittet.
 Denne sandsynlighed vil være beskrevet af en logistisk funktion 
 $$
-p(x)=\frac{I(x)}{M} = \frac{1}{1+e^{-(a\cdot x+b)}}.
+p(x)=\frac{I(x)}{M} = \frac{1}{1+\mathrm{e}^{-(a\cdot x+b)}}.
 $$
 Dette genkender vi som en logistisk regressionsmodel for sandsynligheden $p(x)$.
 
@@ -762,7 +762,7 @@ Derved får vi et datasæt med punkter $(x,y)$, hvor $x$ er antal dage, og $y$ e
 Vi kan nu finde $a$ og $b$ ved at lave logistisk regression på dette datasæt og finde et udtryk for $p(x)$.
 Hvis vi gerne vil vide, hvor mange der faktisk er syge efter $x$ dage, ganger vi bare sandsynligheden for at være syg op med befolkningstallet
 $$
-I(x)=M\cdot p(x)=\frac{M}{1+e^{-(a\cdot x+b)}}.
+I(x)=M\cdot p(x)=\frac{M}{1+\mathrm{e}^{-(a\cdot x+b)}}.
 $$ 
 Det er dog ikke ved alle eksempler, det er muligt at lave denne kobling mellem de to emner.
 Logistisk vækst vedrører en udvikling i tid, dvs. $x$-variablen skal angive tid.
