@@ -28,43 +28,43 @@ Ved hjælp af logaritmeregnereglen $ln(a/b)=ln(a)-ln(b)$ får vi
 $$ l(a,b)=\sum_{i=1}^n \left(\ln(1-p(x_i))+y_i\cdot \ln\left(\frac{p(x_i)}{1-p(x_i)}\right)\right).$$
 Her opsplitter vi til to summer, hvor den ene ikke afhænger af $y_i$.
 $$ l(a,b)=\sum_{i=1}^n \ln(1-p(x_i))+\sum_{i=1}^n y_i\cdot \ln\left(\frac{p(x_i)}{1-p(x_i)}\right).$${#eq-lab2}
-Nu har vi fået styr på udtrykket for $l(a,b)$, som dog afhænger af $p(x_i)$. Vi udnytter nu, at vi havde udtrykket $$p(x_i) = \frac{1}{1+e^{-(a\cdot x_i+b)}}$$
+Nu har vi fået styr på udtrykket for $l(a,b)$, som dog afhænger af $p(x_i)$. Vi udnytter nu, at vi havde udtrykket $$p(x_i) = \frac{1}{1+\mathrm{e}^{-(a\cdot x_i+b)}}$$
 og
 $$\ln\left(\frac{p(x_i)}{1-p(x_i)}\right)=ax_i + b.$$
 Indsættes dette i (@eq-lab2), får vi
-$$l(a,b)=\sum_{i=1}^n \ln\left(1-\frac{1}{1+e^{-(a\cdot x_i+b)}}\right)+\sum_{i=1}^n y_i\cdot (ax_i+b).$$
-Udtrykket i logaritmen sættes på fælles brøkstreg, og brøken forlænges med $e^{a\cdot x_i+b}$
+$$l(a,b)=\sum_{i=1}^n \ln\left(1-\frac{1}{1+\mathrm{e}^{-(a\cdot x_i+b)}}\right)+\sum_{i=1}^n y_i\cdot (ax_i+b).$$
+Udtrykket i logaritmen sættes på fælles brøkstreg, og brøken forlænges med $\mathrm{e}^{a\cdot x_i+b}$
 
 $$
 \begin{aligned}
-l(a,b)&=\sum_{i=1}^n \ln\left(\frac{e^{-(a\cdot x_i+b)}}{1+e^{-(a\cdot x_i+b)}}\right)+\sum_{i=1}^n y_i\cdot (ax_i+b) \\ &=\sum_{i=1}^n \ln\left(\frac{1}{1+e^{a\cdot x_i+b}}\right)+\sum_{i=1}^n y_i\cdot (ax_i+b)
+l(a,b)&=\sum_{i=1}^n \ln\left(\frac{\mathrm{e}^{-(a\cdot x_i+b)}}{1+\mathrm{e}^{-(a\cdot x_i+b)}}\right)+\sum_{i=1}^n y_i\cdot (ax_i+b) \\ &=\sum_{i=1}^n \ln\left(\frac{1}{1+\mathrm{e}^{a\cdot x_i+b}}\right)+\sum_{i=1}^n y_i\cdot (ax_i+b)
 \end{aligned}
 $$
 Her benytter vi igen regnereglen $\ln(a/b)=\ln(a)-\ln(b)$.
-$$ l(a,b)=\sum_{i=1}^n\big(\ln(1)-\ln(1+e^{a\cdot x_i+b})\big)+\sum_{i=1}^n y_i\cdot (ax_i+b).$$
+$$ l(a,b)=\sum_{i=1}^n\big(\ln(1)-\ln(1+\mathrm{e}^{a\cdot x_i+b})\big)+\sum_{i=1}^n y_i\cdot (ax_i+b).$$
 Da $\ln(1)=0$, har vi endelig 
 $$
-l(a,b)=\sum_{i=1}^n \big(-\ln(1+e^{a\cdot x_i+b})\big)+\sum_{i=1}^n y_i\cdot (ax_i+b).
+l(a,b)=\sum_{i=1}^n \big(-\ln(1+\mathrm{e}^{a\cdot x_i+b})\big)+\sum_{i=1}^n y_i\cdot (ax_i+b).
 $${#eq-l-simpel}
 
 
 ### Partielt afledede
 Vi finder nu de partielt afledte af $l(a,b)$ ved at differentiere (@eq-l-simpel).
 Lad os først se på $\frac{\partial l(a,b)}{\partial b}$. I den første sum i (@eq-l-simpel) skal vi se hvert led som en sammensat funktion, hvor den indre funktion har et led, som også er en sammensat funktion. Så får vi
-$$\frac{\partial l(a,b)}{\partial b}= \sum_{i=1}^n -\frac{1}{1+e^{a\cdot x_i+b}}\cdot (0+e^{a\cdot x_i+b})\cdot(0+1) +\sum_{i=1}^n y_i\cdot (0+1).$$
+$$\frac{\partial l(a,b)}{\partial b}= \sum_{i=1}^n -\frac{1}{1+\mathrm{e}^{a\cdot x_i+b}}\cdot (0+\mathrm{e}^{a\cdot x_i+b})\cdot(0+1) +\sum_{i=1}^n y_i\cdot (0+1).$$
 Ved at reducere fås
-$$\frac{\partial l(a,b)}{\partial b}= \sum_{i=1}^n -\frac{e^{a\cdot x_i+b}}{1+e^{a\cdot x_i+b}} +\sum_{i=1}^n y_i$$
+$$\frac{\partial l(a,b)}{\partial b}= \sum_{i=1}^n -\frac{\mathrm{e}^{a\cdot x_i+b}}{1+\mathrm{e}^{a\cdot x_i+b}} +\sum_{i=1}^n y_i$$
 Ved at bruge at
 $$
-p(x) = \frac{1}{1+e^{-(ax+b)}}= \frac{e^{(ax+b)}}{1+e^{(ax+b)}}
+p(x) = \frac{1}{1+\mathrm{e}^{-(ax+b)}}= \frac{\mathrm{e}^{(ax+b)}}{1+\mathrm{e}^{(ax+b)}}
 $${#eq-p-logistisk}
 i forbindelse med den første sum og efterfølgende samle leddene i en sum, fås
 $$\frac{\partial l(a,b)}{\partial b}= \sum_{i=1}^n -p(x_i) +\sum_{i=1}^n y_i=\sum_{i=1}^n (y_i-p(x_i)).$$
 
 Nu ser vi på $\frac{\partial l(a,b)}{\partial a}$ på tilsvarende måde.
-$$\frac{\partial l(a,b)}{\partial a}= \sum_{i=1}^n -\frac{1}{1+e^{a\cdot x_i+b}}\cdot (0+e^{a\cdot x_i+b})\cdot(1\cdot x_i+0) +\sum_{i=1}^n y_i\cdot (1\cdot x_i+0)$$
+$$\frac{\partial l(a,b)}{\partial a}= \sum_{i=1}^n -\frac{1}{1+\mathrm{e}^{a\cdot x_i+b}}\cdot (0+\mathrm{e}^{a\cdot x_i+b})\cdot(1\cdot x_i+0) +\sum_{i=1}^n y_i\cdot (1\cdot x_i+0)$$
 Der reduceres
-$$\frac{\partial l(a,b)}{\partial a}= \sum_{i=1}^n -\frac{e^{a\cdot x_i+b}}{1+e^{a\cdot x_i+b}}\cdot x_i +\sum_{i=1}^n y_i\cdot x_i.$$
+$$\frac{\partial l(a,b)}{\partial a}= \sum_{i=1}^n -\frac{\mathrm{e}^{a\cdot x_i+b}}{1+\mathrm{e}^{a\cdot x_i+b}}\cdot x_i +\sum_{i=1}^n y_i\cdot x_i.$$
 Igen bruges (@eq-p-logistisk) til at få
 $$\frac{\partial l(a,b)}{\partial a}= \sum_{i=1}^n -p(x_i)\cdot x_i +\sum_{i=1}^n y_i\cdot x_i=\sum_{i=1}^n (y_i\cdot x_i-p(x_i)\cdot x_i).$$
 
