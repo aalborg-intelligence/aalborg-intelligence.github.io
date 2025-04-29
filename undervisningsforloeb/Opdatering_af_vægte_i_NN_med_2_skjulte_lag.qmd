@@ -16,7 +16,7 @@ categories:
 
 Forudsætningerne kan med fordel dækkes ved hjælp af [noten om simple neurale netværk](../materialer/simple_neurale_net/simple_neurale_net.qmd){target="_blank"}, da notationen derfra vil blive anvendt i dette forløb.
 
-**Tidsforbrug:** Ca. 90 minutter.
+**Tidsforbrug:** Ca. 90 minutter for den teoretiske del med manuellen beregninger. Yderligere 30-60 minutter for den mere eksperimentelle del med brug af app til at træne netværket.
 
 :::
 
@@ -185,6 +185,38 @@ Fra [noten om simple neurale netværk](../materialer/simple_neurale_net/simple_n
 ** mangler **
 Her mangler noget med at bruge appen (der ikke er klar endnu) til at optimere vægtene, og efterfølgende lave prediktion.
 -->
+
+## Et større datasæt, mange iterationer og prediktion
+Det giver naturligvis ikke så meget mening med så lille et datasæt, og da slet ikke med blot en opdatering af vægtene. Lad os derfor se på et større datasæt, hvor vi laver mange iterationer med opdateringer, så vi kan se, om det neurale netværk reelt kan noget.
+
+Lad os se, om vi kan få et neuralt netværk til at "opdage" følgende sammenhæng ud fra en lidt større mængde træningsdata. 
+
+Hvis $4 < x_1 + x_2 < 7$ er det positiv, så targetværdien er $1$. Ellers er det negativt, og targetværdien er $0$. Det stemmer med det meget lille datasæt, vi indtil nu har anvendt. 
+
+I denne [Excelfil](../undervisningsforloeb/Opdatering_af_vægte/træningsdata200punkter) er der 200 linjer med træningsdata, som vi vil bruge til at træne et neutralt netværk med 2 skjulte lag. Men vi vil helt sikkert ikke selv lave opdateringerne af vægtene manuelt. I stedet vil vi bruge denne app.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 7: Træn netværket
+* Indlæs træningsdata fra Excelfilen. 
+* Vælg 2 lag med hver 1 neuron og sæt vægtene til 0,5. Sæt learning rate til 0,01, og vælg sigmoid og cross-entropy.
+* Fjern værdien ved start-vægte. Med flere neuroner i samme lag, fungerer det ikke, hvis de alle har samme værdi.
+* Træn nætværket med 1000 iterationer. 
+* Ser netværket ud til at have fundet et (lokalt) minimum endnu? Hvis ikke, så prøv med flere iterationer
+* (svær) Se på værdien af tabsfunktionen. Del den værdi med antal træningsdata. Beregn, hvilket outværdi det svarer til, at tabsfunktionen for det enkelte træningspunkt giver.
+:::
+
+Kig på facit til opgave 7, inden du går videre. Især er svaret på det sidste, svære spørgsmål vigtigt for, at det neurale netværk nok skal forbedres.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 8: Forbedringer af netværksstrukturen
+Advarsel - beregningerne kan komme til at tage længere tid, det kræver rigtigt mange udregninger at træne et neuralt netværk, selv kun med 200 simple datapunkter.
+* Øg antal neuroner i hvert lag til 3.
+* Øg antal iterationer til 100000.
+* Gør learning rate mindre til 0,0001.
+* Vurder, om værdien af tabsfunktionen er blevet lille nok til, at du er tilfreds.
+:::
+
+
 
 
 ## Løsninger til opgaver
