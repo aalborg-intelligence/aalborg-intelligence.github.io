@@ -63,7 +63,7 @@ div.csl-indent {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-0815c480559380816a4d1ea211a47e91.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-f5808d28ca86b288a92bb47b498e84e1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-54f08ed3740c18728e089b4309aec698.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -356,7 +356,7 @@ r_1 \cdot x_1 + r_2 \cdot x_2 + r_3 \cdot x_3 + r_4 \cdot x_4 + r_0
 <p>Værdierne <span class="math inline">\(r_1, r_2, r_3\)</span> og <span class="math inline">\(r_4\)</span> kalder man for vægte. Hvis for eksempel <span class="math inline">\(r_1\)</span> er stor og <span class="math inline">\(r_2, r_3\)</span> og <span class="math inline">\(r_4\)</span> er tæt på <span class="math inline">\(0\)</span>, så vil <span class="math inline">\(r_1 \cdot x_1\)</span> også blive stor (med mindre <span class="math inline">\(x_1\)</span> er meget tæt på <span class="math inline">\(0\)</span>) og <span class="math inline">\(r_2 \cdot x_2+r_3 \cdot x_3+r_4 \cdot x_4\)</span> vil være tæt på <span class="math inline">\(0\)</span>. På den måde vil inputværdien <span class="math inline">\(x_1\)</span> altså få stor indflydelse på udtrykket i (<a href="#eq-linkom" class="quarto-xref">2</a>) - man siger, at <span class="math inline">\(x_1\)</span> kommer til at vægte højt.</p>
 <p>Værdien <span class="math inline">\(r_0\)</span> kaldes for en "bias" og det er altså en konstant størrelse, som bliver lagt til uafhængig af inputværdierne. Du skal tænke på ovenstående udtryk, som du tænker på en lineær funktion <span class="math inline">\(y=a \cdot x + b\)</span>. Her er der bare lige lidt flere <span class="math inline">\(x\)</span>-værdier og <span class="math inline">\(a\)</span> og <span class="math inline">\(b\)</span> er skiftet ud med <span class="math inline">\(r\)</span>’er.</p>
 <p>Værdien af udtrykket i (<a href="#eq-linkom" class="quarto-xref">2</a>) kan være et hvilket som helst reelt tal. Ofte vil man være interesseret i, at den værdi der "kommer ud af" neuronen er et tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>. Til det bruges ofte den såkaldte "sigmoid"-funktion, som er defineret sådan her: <span id="eq-sigmoid"><span class="math display">\[
-\sigma(x)=\frac{1}{1+e^{-x}}
+\sigma(x)=\frac{1}{1+\mathrm{e}^{-x}}
 \tag{3}\]</span></span> Grafen for sigmoid-funktionen ses i <a href="#fig-sigmoid_graf" class="quarto-xref">figur&nbsp;4</a>. Her kan man se, hvordan ethvert reelt tal bliver afbildet over i et tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>.</p>
 <div class="cell page-columns page-full">
 <div class="cell-output-display page-columns page-full">
@@ -386,12 +386,12 @@ y' = y \cdot (1 - y).
 <p>Det er netop sigmoid-funktionen, som bruges til at udregne <span class="math inline">\(y_1\)</span>: <span id="eq-y_1_1"><span class="math display">\[
 y_1=\sigma(r_1 \cdot x_1 + r_2 \cdot x_2+r_3 \cdot x_3+r_4 \cdot x_4+r_0)
 \tag{4}\]</span></span> Det vil sige, at <span id="eq-y_1_2"><span class="math display">\[
-y_1=\frac{1}{1+e^{-(r_1 \cdot x_1 + r_2 \cdot x_2+r_3 \cdot x_3+r_4 \cdot x_4+r_0)}}
+y_1=\frac{1}{1+\mathrm{e}^{-(r_1 \cdot x_1 + r_2 \cdot x_2+r_3 \cdot x_3+r_4 \cdot x_4+r_0)}}
 \tag{5}\]</span></span></p>
 <p>Nu beregnes <span class="math inline">\(y_2\)</span> helt tilsvarende, men med andre vægte. Før kaldte vi vægtene for <span class="math inline">\(r_1, r_2\)</span> osv. De nye vægte vælger vi nu at kalde for <span class="math inline">\(s_1, s_2, \dots\)</span>, som det også er vist på <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a>. Vi definerer altså <span id="eq-y_2_1"><span class="math display">\[
 y_2=\sigma(s_1 \cdot x_1 + s_2 \cdot x_2+s_3 \cdot x_3+s_4 \cdot x_4+s_0)
 \tag{6}\]</span></span> Det vil sige, at <span id="eq-y_2_2"><span class="math display">\[
-y_2=\frac{1}{1+e^{-(s_1 \cdot x_1 + s_2 \cdot x_2+s_3 \cdot x_3+s_4 \cdot x_4+s_0)}}
+y_2=\frac{1}{1+\mathrm{e}^{-(s_1 \cdot x_1 + s_2 \cdot x_2+s_3 \cdot x_3+s_4 \cdot x_4+s_0)}}
 \tag{7}\]</span></span></p>
 <p>Nu sker der det, at (de lysegrønne) neuroner i det andet lag "fyrer" deres <span class="math inline">\(y\)</span>-værdier frem til alle neuronerne i det tredje lag. Disse værdier bliver nu brugt som inputs til beregning af de nye <span class="math inline">\(z\)</span>-værdier (se igen <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a>. Vi kan nu, som vi har gjort ovenfor, definere de nye <span class="math inline">\(z\)</span>-værdier i det tredje lag, idet vi nu kalder vægtene for <span class="math inline">\(v_1, v_2, u_1\)</span> og <span class="math inline">\(u_2\)</span>, som det er vist på <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a>. Den eneste forskel fra tidligere er, at disse neuroner i vores eksempel kun modtager to og ikke fire inputværdier: <span id="eq-z_1"><span class="math display">\[
 z_1=\sigma(v_1 \cdot y_1 + v_2 \cdot y_2 + v_0)
@@ -1126,7 +1126,7 @@ Kort beskrivelse
 </thead>
 <tbody class="list">
 
-<tr data-index="0" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1745913819849" data-listing-reading-time-sort="2" data-listing-word-count-sort="301" data-listing-title-sort="Aktiveringsfunktioner" data-listing-filename-sort="aktiveringsfunktioner.qmd">
+<tr data-index="0" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1745928562868" data-listing-reading-time-sort="2" data-listing-word-count-sort="301" data-listing-title-sort="Aktiveringsfunktioner" data-listing-filename-sort="aktiveringsfunktioner.qmd">
 <td>
 <a href="../../undervisningsforloeb/aktiveringsfunktioner.html" class="title listing-title">Aktiveringsfunktioner</a>
 </td>
@@ -1136,7 +1136,7 @@ Kort beskrivelse
 
 </tr>
 
-<tr data-index="1" data-categories="QS1uaXZlYXUlMkNCaW90ZWtub2xvZ2klMkNLb3J0" data-listing-file-modified-sort="1745913820629" data-listing-reading-time-sort="1" data-listing-word-count-sort="148" data-listing-title-sort="Screeningsprogrammer" data-listing-filename-sort="screeningsprogrammer.qmd">
+<tr data-index="1" data-categories="QS1uaXZlYXUlMkNCaW90ZWtub2xvZ2klMkNLb3J0" data-listing-file-modified-sort="1745928563642" data-listing-reading-time-sort="1" data-listing-word-count-sort="148" data-listing-title-sort="Screeningsprogrammer" data-listing-filename-sort="screeningsprogrammer.qmd">
 <td>
 <a href="../../undervisningsforloeb/screeningsprogrammer.html" class="title listing-title">Screeningsprogrammer</a>
 </td>
@@ -1146,7 +1146,7 @@ Kort beskrivelse
 
 </tr>
 
-<tr data-index="2" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1745913820234" data-listing-reading-time-sort="3" data-listing-word-count-sort="576" data-listing-title-sort="Opklar et mord!" data-listing-filename-sort="opklar_et_mord.qmd">
+<tr data-index="2" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1745928563244" data-listing-reading-time-sort="3" data-listing-word-count-sort="576" data-listing-title-sort="Opklar et mord!" data-listing-filename-sort="opklar_et_mord.qmd">
 <td>
 <a href="../../undervisningsforloeb/opklar_et_mord.html" class="title listing-title">Opklar et mord!</a>
 </td>
@@ -1156,7 +1156,7 @@ Kort beskrivelse
 
 </tr>
 
-<tr data-index="3" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1745913819840" data-listing-reading-time-sort="4" data-listing-word-count-sort="607" data-listing-title-sort="Opdatering af vægte i en kunstig neuron" data-listing-filename-sort="Opdatering_af_vægte_i_en_kunstig_neuron.qmd">
+<tr data-index="3" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1745928562859" data-listing-reading-time-sort="4" data-listing-word-count-sort="607" data-listing-title-sort="Opdatering af vægte i en kunstig neuron" data-listing-filename-sort="Opdatering_af_vægte_i_en_kunstig_neuron.qmd">
 <td>
 <a href="../../undervisningsforloeb/Opdatering_af_vægte_i_en_kunstig_neuron.html" class="title listing-title">Opdatering af vægte i en kunstig neuron</a>
 </td>
@@ -1166,7 +1166,7 @@ Kort beskrivelse
 
 </tr>
 
-<tr data-index="4" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1745913819840" data-listing-reading-time-sort="5" data-listing-word-count-sort="823" data-listing-title-sort="Opdatering af vægte i et simpelt neuralt netværk med to skjulte lag" data-listing-filename-sort="Opdatering_af_vægte_i_NN_med_2_skjulte_lag.qmd">
+<tr data-index="4" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1745928562859" data-listing-reading-time-sort="5" data-listing-word-count-sort="823" data-listing-title-sort="Opdatering af vægte i et simpelt neuralt netværk med to skjulte lag" data-listing-filename-sort="Opdatering_af_vægte_i_NN_med_2_skjulte_lag.qmd">
 <td>
 <a href="../../undervisningsforloeb/Opdatering_af_vægte_i_NN_med_2_skjulte_lag.html" class="title listing-title">Opdatering af vægte i et simpelt neuralt netværk med to skjulte lag</a>
 </td>
@@ -1176,7 +1176,7 @@ Kort beskrivelse
 
 </tr>
 
-<tr data-index="5" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1745913819840" data-listing-reading-time-sort="4" data-listing-word-count-sort="703" data-listing-title-sort="Opdatering af vægte i et simpelt neuralt netværk med ét skjult lag (men med *cross-entropy* som tabsfunktion)" data-listing-filename-sort="Opdatering_af_vægte_i_NN_med_1_skjult_lag.qmd">
+<tr data-index="5" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1745928562859" data-listing-reading-time-sort="4" data-listing-word-count-sort="703" data-listing-title-sort="Opdatering af vægte i et simpelt neuralt netværk med ét skjult lag (men med *cross-entropy* som tabsfunktion)" data-listing-filename-sort="Opdatering_af_vægte_i_NN_med_1_skjult_lag.qmd">
 <td>
 <a href="../../undervisningsforloeb/Opdatering_af_vægte_i_NN_med_1_skjult_lag.html" class="title listing-title">Opdatering af vægte i et simpelt neuralt netværk med ét skjult lag (men med <em>cross-entropy</em> som tabsfunktion)</a>
 </td>

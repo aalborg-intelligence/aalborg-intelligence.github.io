@@ -41,7 +41,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-0815c480559380816a4d1ea211a47e91.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-f5808d28ca86b288a92bb47b498e84e1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-54f08ed3740c18728e089b4309aec698.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -260,7 +260,7 @@ h_j&amp;=f(w_{j,0}+w_{j,1}x_1+w_{j,2}x_2+\ldots +w_{j,3m}x_{3m})\\
 h_{d}&amp;=f(w_{d,0}+w_{d,1}x_1+w_{d,2}x_2+\ldots +w_{d,3m}x_{3m})\\\end{aligned}
 \]</span></p>
 <div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Man kan gøre sit neurale netværk mere fleksibelt ved at have flere skjulte lag. For at holde forklaringen simpel vil vi dog kun gennemgå tilfældet med ét skjult lag her.</p></div></div><p>Funktionen <span class="math inline">\(f\)</span>, der indgår, er en <em>aktiveringsfunktion</em>. Man kan for eksempel bruge sigmoid-funktionen <span class="math display">\[
-f(x)=\frac{1}{1+e^{-x}}
+f(x)=\frac{1}{1+\mathrm{e}^{-x}}
 \]</span> Du kan læse mere om <a href="../../undervisningsforloeb/aktiveringsfunktioner.html">aktiveringsfunktioner her</a>. Desuden indgår der <span class="math inline">\(d \cdot (3m+1)\)</span> <em>vægte</em> på formen <span class="math inline">\(w_{j,k}\)</span>. Vægtene er reelle konstanter. Når vi om lidt træner det neurale netværk, forsøger vi at bestemme værdien af disse vægte.</p>
 <p>De mørkeblå cirkler til højre i <a href="#fig-NN_tekst" class="quarto-xref">figur&nbsp;1</a> udgør <em>outputlaget</em>. I outputlaget laves vektoren <span class="math inline">\(\vec{h}\)</span> om til outputvektoren <span class="math inline">\(\vec{z}\)</span> med <span class="math inline">\(V\)</span> koordinater svarende til cirklerne til højre. Igen viser pilene, at hver koordinat i <span class="math inline">\(\vec{z}\)</span> er en funktion af koordinaterne i <span class="math inline">\(\vec{h}\)</span>. Funktionen udregnes i to trin:</p>
 <ul>
@@ -268,7 +268,7 @@ f(x)=\frac{1}{1+e^{-x}}
 y_i=u_{i,0}+u_{i,1}h_1+u_{i,2}h_2+\ldots + u_{i,d}h_{d}
 \]</span> Igen indgår der nogle vægte <span class="math inline">\(u_{i,j}\)</span>. Dem er der i alt <span class="math inline">\((d+1)\cdot V\)</span> af.</p></li>
 <li><p>Derefter laver vi <span class="math inline">\(\vec{y}\)</span> om til sandsynligheder. Det gør vi ved at bruge softmax-funktionen, som blev introduceret i <a href="../../materialer/sprogmodeller/word2vec.html">noten om Word2Vec</a>. Softmax-funktionen tager en <span class="math inline">\(V\)</span>-dimensional vektor <span class="math inline">\(\vec{y}\)</span> som input og giver en ny <span class="math inline">\(V\)</span>-dimensional vektor <span class="math inline">\(\vec{z}=\text{Softmax}(\vec{y})\)</span> som output. Den <span class="math inline">\(i\)</span>’te koordinat i <span class="math inline">\(\vec{z}\)</span> udregnes som <span class="math display">\[
-z_i=\frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}}
+z_i=\frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}
 \]</span> Vi så i <a href="../../materialer/sprogmodeller/word2vec.html">Word2Vec-noten</a>, at <span class="math inline">\(\vec{z}\)</span> opfylder (<a href="#eq-betingelse1" class="quarto-xref">1</a>) og (<a href="#eq-betingelse2" class="quarto-xref">2</a>), således at det giver mening at tænke på <span class="math inline">\(\vec{z}\)</span> som en vektor af sandsynligheder. Dette <span class="math inline">\(\vec{z}\)</span> er vores outputvektor.</p></li>
 </ul>
 <p>Samlet set er der ret mange vægte i modellen. Der er <span class="math inline">\(d\cdot (3m+1)\)</span> vægte i det skjulte lag og <span class="math inline">\((d+1)\cdot V\)</span> vægte i ouputlaget. I alt bliver det <span class="math inline">\(d\cdot(1+3m +V) +V\)</span> vægte.</p>

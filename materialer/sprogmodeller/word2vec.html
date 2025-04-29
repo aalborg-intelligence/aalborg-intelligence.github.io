@@ -41,7 +41,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-0815c480559380816a4d1ea211a47e91.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-f5808d28ca86b288a92bb47b498e84e1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-54f08ed3740c18728e089b4309aec698.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -571,7 +571,7 @@ y_2 \\
 y_V
 \end{pmatrix}
 \]</span></p>
-<p>så er <span class="math inline">\(\text{Softmax}\big(\vec{y}\big)=\vec{z}\)</span>, hvor <span class="math inline">\(\vec{z}\)</span> er en ny vektor med <span class="math inline">\(V\)</span> koordinater. Den <span class="math inline">\(i\)</span>’te koordinat i <span class="math inline">\(\vec{z}\)</span> er givet ved <span class="math display">\[z_i = \frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}}\]</span> Vi viser i boksen nedenfor, at Softmax opfylder:</p>
+<p>så er <span class="math inline">\(\text{Softmax}\big(\vec{y}\big)=\vec{z}\)</span>, hvor <span class="math inline">\(\vec{z}\)</span> er en ny vektor med <span class="math inline">\(V\)</span> koordinater. Den <span class="math inline">\(i\)</span>’te koordinat i <span class="math inline">\(\vec{z}\)</span> er givet ved <span class="math display">\[z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}\]</span> Vi viser i boksen nedenfor, at Softmax opfylder:</p>
 <ul>
 <li><p><span class="math inline">\(0&lt;z_i&lt;1\)</span></p></li>
 <li><p><span class="math inline">\(z_1 + z_2 + \dotsm + z_V = 1\)</span></p></li>
@@ -580,7 +580,7 @@ y_V
 <p>Lader vi <span class="math inline">\(\vec{y}\)</span> være vektoren med <span class="math inline">\(i\)</span>’te koordinat <span class="math display">\[y_i = \vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}\]</span> og bruger Softmax på <span class="math inline">\(\vec{y}\)</span>, så får vi en vektor <span class="math inline">\(\vec{z}=\text{Softmax}\big(\vec{y}\big)\)</span>, der kan bruges som sandsynligheder. Mere præcist lader vi</p>
 <p><span id="eq-sshmodel"><span class="math display">\[
 \begin{aligned}
-P(\text{ord}_i\mid w) &amp;= z_i = \frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}} \\ &amp;= \frac{e^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}}}{e^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + e^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_V}}}
+P(\text{ord}_i\mid w) &amp;= z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \\ &amp;= \frac{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}}}{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_V}}}
 \end{aligned}
 \tag{2}\]</span></span></p>
 <p>Egenskaberne ved softmax sikrer, at punkt 1. til 3. ovenfor er opfyldt.</p>
@@ -602,9 +602,9 @@ P(\text{ord}_i\mid w) &amp;= z_i = \frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}} \\
 \end{aligned}
 \]</span> Derefter anvender vi Softmax for at finde sandsynlighederne <span class="math display">\[
 \begin{aligned}
-P(\text{fjer} \mid \text{hund}) &amp;= \frac{e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }}{e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &amp;= \frac{e^{-1.5}}{e^{-1.5}+e^{2 }+e^{0 }} \approx 0.026\\ \\
-P(\text{pels} \mid \text{hund}) &amp;= \frac{e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }}{e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &amp;= \frac{e^{2}}{e^{-1.5}+e^{2 }+e^{0 }} \approx 0.858\\ \\
-P(\text{hund} \mid \text{hund}) &amp;= \frac{e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }}{e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+e^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &amp;= \frac{e^{0}}{e^{-1.5}+e^{2 }+e^{0 }} \approx 0.116
+P(\text{fjer} \mid \text{hund}) &amp;= \frac{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }}{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &amp;= \frac{\mathrm{e}^{-1.5}}{\mathrm{e}^{-1.5}+\mathrm{e}^{2 }+\mathrm{e}^{0 }} \approx 0.026\\ \\
+P(\text{pels} \mid \text{hund}) &amp;= \frac{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }}{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &amp;= \frac{\mathrm{e}^{2}}{\mathrm{e}^{-1.5}+\mathrm{e}^{2 }+\mathrm{e}^{0 }} \approx 0.858\\ \\
+P(\text{hund} \mid \text{hund}) &amp;= \frac{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }}{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &amp;= \frac{\mathrm{e}^{0}}{\mathrm{e}^{-1.5}+\mathrm{e}^{2 }+\mathrm{e}^{0 }} \approx 0.116
 \end{aligned}
 \]</span> “Pels” er altså det mest sandsynlige kontekstord til "hund", mens "fjer" sjældent er kontekst til "hund".</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
@@ -621,7 +621,7 @@ Egenskaber ved Softmax
 <div class="callout-body-container callout-body">
 <p>Vi viser nu de tre egenskaber ved Softmax.</p>
 <p><strong>Egenskab 1: <span class="math inline">\(0 &lt; z_i &lt; 1\)</span></strong></p>
-<p>Husk på at <span id="eq-softmax"><span class="math display">\[z_i=\frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}} \tag{3}\]</span></span> Da eksponentialfunktionen kun kan antage positive værdier, er både tæller og nævner positive, så <span class="math inline">\(z_i&gt;0\)</span>. Desuden er <span class="math display">\[e^{y_i} &lt; e^{y_1} + \dotsm +e^{y_i} + \dotsm + e^{y_V}\]</span> Derfor er <span class="math display">\[z_i=\frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}} &lt; \frac{e^{y_1} + \dotsm  + e^{y_V}}{e^{y_1} + \dotsm + e^{y_V}} = 1\]</span></p>
+<p>Husk på at <span id="eq-softmax"><span class="math display">\[z_i=\frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \tag{3}\]</span></span> Da eksponentialfunktionen kun kan antage positive værdier, er både tæller og nævner positive, så <span class="math inline">\(z_i&gt;0\)</span>. Desuden er <span class="math display">\[\mathrm{e}^{y_i} &lt; \mathrm{e}^{y_1} + \dotsm +\mathrm{e}^{y_i} + \dotsm + \mathrm{e}^{y_V}\]</span> Derfor er <span class="math display">\[z_i=\frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} &lt; \frac{\mathrm{e}^{y_1} + \dotsm  + \mathrm{e}^{y_V}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} = 1\]</span></p>
 <p>Alt i alt har vi altså, at</p>
 <p><span class="math display">\[
 0 &lt; z_i &lt; 1
@@ -629,7 +629,7 @@ Egenskaber ved Softmax
 <p><strong>Egenskab 2: <span class="math inline">\(z_1 + \dotsm + z_V = 1\)</span></strong></p>
 <p>Ved at indsætte at <span class="math inline">\(z_i\)</span> er givet ved (<a href="#eq-softmax" class="quarto-xref">3</a>) og sætte på fælles brøkstreg, får vi <span class="math display">\[
 \begin{aligned}
-z_1 &amp;+ \dotsm  + z_V  = \\ &amp; \frac{e^{y_1}}{e^{y_1} + \dotsm + e^{y_V}} + \dotsm + \frac{e^{y_V}}{e^{y_1} + \dotsm + e^{y_V}} = \frac{e^{y_1} + \dotsm + e^{y_V}}{e^{y_1} + \dotsm + e^{y_V}} = 1
+z_1 &amp;+ \dotsm  + z_V  = \\ &amp; \frac{\mathrm{e}^{y_1}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} + \dotsm + \frac{\mathrm{e}^{y_V}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} = \frac{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} = 1
 \end{aligned}
 \]</span></p>
 <p>Altså er:</p>
@@ -637,7 +637,7 @@ z_1 &amp;+ \dotsm  + z_V  = \\ &amp; \frac{e^{y_1}}{e^{y_1} + \dotsm + e^{y_V}} 
 z_1 + \dotsm + z_V = 1
 \]</span></p>
 <p><strong>Egenskab 3: Hvis <span class="math inline">\(y_i &lt; y_j\)</span>, så er <span class="math inline">\(z_i &lt; z_j\)</span></strong></p>
-<p>Hvis <span class="math inline">\(y_i&lt; y_j\)</span>, så er <span class="math display">\[e^{y_i} &lt; e^{y_j}\]</span> Hvis vi dividerer med <span class="math inline">\(e^{y_1} + \dotsm + e^{y_V}\)</span> på begge sider af uligheden, får vi <span class="math display">\[ \frac{e^{y_i}}{e^{y_1} + \dotsm + e^{y_V}} &lt; \frac{e^{y_j}}{e^{y_1} + \dotsm + e^{y_V}} \]</span> Det betyder netop, at <span class="math inline">\(z_i&lt;z_j\)</span>.</p>
+<p>Hvis <span class="math inline">\(y_i&lt; y_j\)</span>, så er <span class="math display">\[\mathrm{e}^{y_i} &lt; \mathrm{e}^{y_j}\]</span> Hvis vi dividerer med <span class="math inline">\(\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}\)</span> på begge sider af uligheden, får vi <span class="math display">\[ \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} &lt; \frac{\mathrm{e}^{y_j}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \]</span> Det betyder netop, at <span class="math inline">\(z_i&lt;z_j\)</span>.</p>
 </div>
 </div>
 </div>
@@ -748,9 +748,9 @@ L&amp;= - \ln(\text{data}) \\ &amp;= -\ln(P(c_1\mid w_1)) - \ln(P(c_2\mid w_2)) 
 <p>altså gerne være lav<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Vi kalder <span class="math inline">\(L\)</span> for vores <em>tabsfunktion</em>. Denne tabsfunktion kaldes også nogle gange for <em>cross-entropy</em>.</p>
 <div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Bemærk, at da <span class="math inline">\(P(c_j\mid w_j)\)</span> er en sandsynlighed, der ligger mellem 0 og 1, er <span class="math inline">\(\ln (P(c_j\mid w_j))\)</span> negativ. Derfor er <span class="math inline">\(-\ln (P(c_j\mid w_j))\)</span> positiv og <span class="math inline">\(L\)</span> er dermed også positiv. Når <span class="math inline">\(L\)</span> gerne skal være lav, betyder det altså, at den skal være så tæt på 0 som muligt.</p></div></div><p>Vi kan indsætte vores udtryk for sandsynlighederne fra (<a href="#eq-sshmodel" class="quarto-xref">2</a>) i (<a href="#eq-Ldef" class="quarto-xref">5</a>) og få <span id="eq-Lfunktion"><span class="math display">\[
 \begin{aligned}
-L = &amp;-\ln\left(\frac{e^{\vec{v}_{w_1}\cdot \vec{k}_{c_1}}}{e^{\vec{v}_{w_1}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + e^{\vec{v}_{w_1}\cdot \vec{k}_{\text{ord}_V}}}\right)
-\\ &amp;- \ln\left(\frac{e^{\vec{v}_{w_2}\cdot \vec{k}_{c_2}}}{e^{\vec{v}_{w_2}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + e^{\vec{v}_{w_2}\cdot \vec{k}_{\text{ord}_V}}}\right)
-- \dotsm \\ &amp;- \ln\left(\frac{e^{\vec{v}_{w_M}\cdot \vec{k}_{c_M}}}{e^{\vec{v}_{w_M}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + e^{\vec{v}_{w_M}\cdot \vec{k}_{\text{ord}_V}}}\right)
+L = &amp;-\ln\left(\frac{\mathrm{e}^{\vec{v}_{w_1}\cdot \vec{k}_{c_1}}}{\mathrm{e}^{\vec{v}_{w_1}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w_1}\cdot \vec{k}_{\text{ord}_V}}}\right)
+\\ &amp;- \ln\left(\frac{\mathrm{e}^{\vec{v}_{w_2}\cdot \vec{k}_{c_2}}}{\mathrm{e}^{\vec{v}_{w_2}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w_2}\cdot \vec{k}_{\text{ord}_V}}}\right)
+- \dotsm \\ &amp;- \ln\left(\frac{\mathrm{e}^{\vec{v}_{w_M}\cdot \vec{k}_{c_M}}}{\mathrm{e}^{\vec{v}_{w_M}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w_M}\cdot \vec{k}_{\text{ord}_V}}}\right)
 \end{aligned}
 \tag{6}\]</span></span> Bemærk her, at <span class="math inline">\(w_j\)</span> og <span class="math inline">\(c_j\)</span> refererer til henholdsvis input- og kontekstordet i <span class="math inline">\(j\)</span>te række i datasættet, mens <span class="math inline">\(\text{ord}_i\)</span> refererer til <span class="math inline">\(i\)</span>’te ord i ordforrådet.</p>
 <p>Ligning (<a href="#eq-Lfunktion" class="quarto-xref">6</a>) viser, at <span class="math inline">\(L\)</span> afhænger af, hvordan vi har valgt input- og kontekstvektorerne. Vi kan altså betragte <span class="math inline">\(L\)</span> som en funktion af input- og kontekstvektorerne. Mere præcist er <span class="math inline">\(L\)</span> en funktion af alle koordinaterne i disse vektorer. For at få den bedst mulige model for vores træningsdata, ønsker vi at bestemme input- og kontekstvektorerne, således at de minimerer <span class="math inline">\(L\)</span>. Hvordan finder man minimum for <span class="math inline">\(L\)</span> i praksis? Det kan man for eksempel gøre ved hjælp af <a href="../../materialer/gradientnedstigning/gradientnedstigning.html">gradientnedstigning</a>, som vi ikke vil komme nærmere ind på her.</p>
