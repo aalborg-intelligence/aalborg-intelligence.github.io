@@ -1,0 +1,426 @@
+---
+title: "Del 3: Kunstige neuroner og tabsfunktioner"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+::: {.estimeret_tid}
+
+Forventet tid ca. 1-2 x 90 min.
+
+Vi anbefaler, at alle arbejder med alle aktiviteterne *bortset* fra aktivitet 2, som er en ekstra udfordring til de dygtige.
+
+:::
+
+## Aktivitet 1 - Tabsfunktioner {.aimat}
+
+Vi vil her se lidt nærmere på tabsfunktionen, men baseret på et meget lille træningsdatasæt.
+
+Vi ser igen på medlemsapp'en til Good Food, som vi også beskrev i [noten om kunstige neuroner](../../materialer/kunstige_neuroner/kunstige_neuroner.qmd#medlemsapp-til-good-food). Nu vil vi bare nøjes med at se på kundens alder, som inputvariabel:
+
+* $x$: kundens alder målt i år
+
+Targetværdien er igen:
+
+$$
+t=
+\begin{cases}
+1 & \textrm{hvis tilbuddet aktiveres} \\
+0 & \textrm{hvis tilbuddet ikke aktiveres} \\
+\end{cases}
+$$
+
+Træningsdatasættet består af følgende tre træningseksempler:
+
+::: {#tbl-goodfood}
+|Nr. på træningseksempel $m$ | Kundens alder $x^{(m)}$ | Targetværdi $t^{(m)}$ |
+|:---:|:---:|:---:|
+| $1$ | $25$ | $0$ |
+| $2$ | $40$ | $0$ |
+| $3$ | $60$ | $1$ |
+Et meget lille træningsdatasæt til Good Food app'en.
+::: 
+
+Tabsfunktionen bliver så:
+
+$$
+\begin{aligned}
+E &= \frac{1}{2} \sum_{m=1}^3 (t^{(m)}-\sigma(w_0 + w_1 \cdot x^{(m)}))^2 \\
+ & = \frac{1}{2}  ((t^{(1)}-\sigma(w_0 + w_1 \cdot x^{(1)}))^2 +\\
+ &\quad  \qquad (t^{(2)}-\sigma(w_0 + w_1 \cdot x^{(2)}))^2 + \\
+  &\quad \qquad (t^{(3)}-\sigma(w_0 + w_1 \cdot x^{(3)}))^2) \\
+\end{aligned}
+$$ {#eq-loss}
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 1: Tabsfunktion
+
+- Opskriv forskriften for tabsfunktionen $E$ ved at indsætte træningseksemplerne fra @tbl-goodfood i tabsfunktionen defineret i (@eq-loss).
+
+:::
+
+I flere CAS programmer kan det give problemer at tegne grafen for $E$, selvom du nu har forskriften for funktionen. Derfor kommer grafen her:
+
+
+```{r message=FALSE, warning=FALSE}
+#| fig-cap: Grafen for tabsfunktionen baseret på det lille træningsdatasæt i @tbl-goodfood.
+#| label: fig-E
+library(plotly)
+hovertemplate <- paste0(
+                'w0: %{y:.2f}<br>',
+                'w1: %{x:.2f}<br>',
+                'E: %{z:.2f}<br>',
+                '<extra></extra>')
+par(mar=c(4,4,0,1))
+tabs_data <- readRDS(file.path("data", "tabsfunktioner.rds"))
+# contour(llik$a, llik$b, llik$vals, xlab = "a", ylab = "b", levels = c(-1028, -1030, -1034, -1038, -1046, -1052, -1084), labels = "")
+ax_x <- list(title = "w1")
+ax_y <- list(title = "w0")
+ax_z <- list(title = "Squared error")
+plot_ly(showscale = FALSE) |>
+  add_surface(x = tabs_data$w1, y = tabs_data$w0, z = tabs_data$squared_vals, hovertemplate=hovertemplate) |>
+  add_markers(x = tabs_data$squared_w1, y = tabs_data$squared_w0, z = tabs_data$squared_opt,
+              marker = list(size = 5, color = "#F288B9"), name = NULL, hovertemplate=hovertemplate) |>
+  layout(scene = list(xaxis = ax_x, yaxis = ax_y, zaxis = ax_z), showlegend = FALSE)
+```
+
+Prøv at dreje lidt rundt på grafen. Det lyserøde punkt svarer til minimum. 
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 2: Minimum for tabsfunktionen
+
+- Aflæs $w_0$- og $w_1$-værdien for minimum på @fig-E.
+
+- Brug disse værdier til at opstille forskriften for sigmoid-funktionen, som bruges til at udregne outputværdien $o$:
+
+$$
+o = \sigma(x) = \frac{1}{1+\mathrm{e}^{-(w_0 +w_1 \cdot x)}}
+$$ {#eq-sigma}
+
+- Tegn grafen for denne sigmoid-funktion.
+
+- Svar ved hjælp af grafen på følgende spørgsmål:
+   + For hvilke værdier af kundens alder $x$ får vi en outputværdi, som er meget tæt på $0$ svarende til, at vi er ret sikre på, at kunden *ikke vil* aktivere tilbuddet. 
+   + For hvilke værdier af kundens alder $x$ får vi en outputværdi, som er meget tæt på $1$ svarende til, at vi er ret sikre på, at kunden *vil* aktivere tilbuddet. 
+
+:::
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 3: Outputværdier
+
+Brug de $w_0$- og $w_1$-værdier for minimum som du aflæste i opgave 2.
+
+- Udregn $\sigma(25), \sigma(40)$ og $\sigma(60)$ svarende til de prædikterede outputværdier for træningsdatasættet.
+
+- Hvordan stemmer disse værdier overens med targetværdierne i @tbl-goodfood?
+
+
+:::
+
+I [noten om kunstige neuroner](../../materialer/kunstige_neuroner/kunstige_neuroner.qmd#hvordan-bestemmes-vægtene) forklarede vi, hvordan man bruger de fundne vægte (minimumsstedet for tabsfunktionen) til at lave en prædiktion. Det gøres på denne måde:
+
+$$
+\textrm{Kunden aktiverer tilbuddet: }
+\begin{cases}
+\textrm{Ja} & \textrm{hvis } o \geq 0.5\\
+\textrm{Nej} & \textrm{hvis } o < 0.5\\
+\end{cases}
+$$ {#eq-pred}
+
+hvor i vores tilfælde
+
+$$
+o = \sigma(w_0 + w_1\cdot x_1).
+$$
+
+Vi vil nu se på, hvad det helt konkret betyder i vores lille eksempel.
+
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 4: Prædiktion
+
+Brug de $w_0$- og $w_1$-værdier for minimum, som du aflæste i opgave 2.
+
+Se på grafen for sigmoid-funktionen, som du også tegnede i opgave 2.
+
+- Hvilken alder $x$ svarer til en outputværdi på $0.5$?
+
+Lad os regne lidt på det:
+
+- Løs ligningen
+
+   $$
+   \frac{1}{1+\mathrm{e}^{-(w_0 +w_1 \cdot x)}}=0.5
+   $$
+   hvor du stadig bruger de $w_0$- og $w_1$-værdier for minimum, som du aflæste i opgave 2.
+   
+- Se på reglen for hvornår vi vil sige, at en kunde aktiverer et tilbud i (@eq-pred). Oversæt denne regel til kundens alder: Hvilken aldergruppe vil vi mene aktiverer tilbudet, og hvilken aldersgruppe vil ikke aktivere tilbudet?
+
+:::
+
+
+
+
+## Aktivitet 2 - Slow learning {.aimat}
+
+På grafen for tabsfunktionen i @fig-E kan man se, at der er tre plateauer[^1] foruden det mørkelilla plateau, hvor minimum er. Disse tre plateauer vil vi undersøge i den næste opgave.
+
+[^1]: Et plateau betyder et fladt område på grafen.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 5: Plateauer på grafen for tabsfunktionen
+
+- Aflæs sammenhørende værdier af $(w_0,w_1)$ et eller andet sted på henholdsvis det gule, grønne og blå plateau på grafen i @fig-E:
+
+| Plateau | $w_0$ | $w_1$ |
+|:---:|:---:|:---:|
+| Gul | | |
+| Grøn | | |
+| Blå | | |
+: {.bordered}
+
+\
+
+For hver af de tre tilfælde (gult, grønt og blåt plateau) skal du nu gøre følgende: 
+
+- Tegn grafen for sigmoid-funktionen, som bruges til at udregne outputværdien $o$:
+
+$$
+o = \sigma(x) = \frac{1}{1+\mathrm{e}^{-(w_0 +w_1 \cdot x)}}
+$$
+
+Vi vil nu undersøge, hvor mange af træningseksemplerne i @tbl-goodfood, som bliver klassificeret korrekt i hvert af de tre tilfælde.
+
+- Brug (@eq-sigma) til at udfylde nedenstående tabel:
+
+| Plateau | $o^{(1)}=\sigma(25)$ | $o^{(2)}=\sigma(40)$ | $o^{(3)}=\sigma(60)$ |
+|:---:|:---:|:---:|:---:|
+| Gul | | | | | 
+| Grøn | | | | |
+| Blå | | | | | 
+: {.bordered}
+
+
+- Brug det du lige har regnet ud og @tbl-goodfood til at udfylde nedenstående tabel (værdien af tabsfunktionen findes ved at indsætte i (@eq-loss)):
+
+| Plateau | Antal korrekt klassificeret| Værdi af tabsfunktion |
+|:---:|:---:|:---:|
+| Gul | | | |
+| Grøn | | | |
+| Blå | | | | 
+: {.bordered}
+
+
+- Hvordan hænger antallet af korrekt klassificerede træningseksempler sammen med værdien af tabsfunktionen (hint: se på udtrykket for tabsfunktionen i (@eq-loss))? 
+
+:::
+
+Når man laver gradientnedstigning, starter man i en tilfældig værdi af $(w_0,w_1)$. 
+
+I [noten om kunstige neuroner](../../materialer/kunstige_neuroner/kunstige_neuroner.qmd#hvordan-bestemmes-vægtene) udledte vi opdateringsregler for vægtene. I vores simple tilfælde med kun én inputvariabel bliver opdateringsreglerne for $w_0$ og $w_1$ følgende:
+
+$$
+\begin{aligned}
+w_0^{(\textrm{ny})} \leftarrow & w_0 + \eta \cdot \sum_{m=1}^{3} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \\
+w_1^{(\textrm{ny})} \leftarrow & w_1 + \eta \cdot \sum_{m=1}^{3} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x^{(m)}
+\end{aligned}
+$$ {#eq-opdatering}
+
+Vi vil nu undersøge, hvad der sker, hvis man starter gradientnedstigningen på det grønne plateau.
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 6: Gradientnedstigning i GeoGebra
+
+- Vælg en $(w_0,w_1)$-værdi et sted på det grønne plateau.
+
+Vi vil lave gradientnedstigning i GeoGebra:
+
+- Vi starter med at definere træningsdatasættet, sigmoid-funktionen og vores learning rate $\eta$ (kald sigmoid-funktionen for $f$). Det gør vi ved i inputfeltet for eksempel at skrive `x1=25` for at angive inputværdien for det første træningseksempel. Algebra vinduet skal gerne ende med at se sådan her ud:
+
+   ![](images/algebra_vindue.png){width=30% fig-align="center"}
+
+- Åbn et regneark: Vælg \"Vis\" $\rightarrow$ \"Regneark\".
+
+I den første række skal vi have lavet nogle overskrifter:
+
+- Stil dig i celle `A1` og skriv `"w0"`. Vi vil altså i kolonne A gemme alle $w_0$-værdier. Det skal ende med at se sådan her ud:
+
+   ![](images/raekke1.png){width=70% fig-align="center"}
+
+Her skal for eksempel `o1` svarer til $o^{(1)}$, hvor
+
+$$
+o^{(1)}=\sigma(w_0+w_1 \cdot x^{(1)})
+$$ {#eq-o1}
+
+og `E` er værdien af tabsfunktionen defineret i (@eq-loss). Vi definerer $o^{(1)}$, $o^{(2)}$ og $o^{(3)}$, fordi det gør de efterfølgende udtryk lidt nemmere at udregne.
+
+Vi skal nu have indsat den $(w_0,w_1)$-værdi, som du tidligere aflæste på det grønne plateau.
+
+- Indskriv den aflæste $w_0$-værdi i celle `A2` og $w_1$-værdien i celle `B2`.
+
+Vi skal have udregnet $o^{(1)}$, $o^{(2)}$, $o^{(3)}$ og $E$:
+
+- I celle `C2` skriver du `=f(A2+B2*x1)`, hvilket svarer til udtrykket i (@eq-o1), fordi vi har defineret funktionen $f$ som sigmoid-funktionen.
+
+- Definér $o^{(2)}$ og $o^{(3)}$ i celle `D2` og `E2` på tilsvarende vis (husk at bruge `x2` og `x3` i stedet for `x1`).
+
+- I celle `F2` defineres $E$ ved at skrive `=0.5*((t1-C2)^2+(t2-D2)^2+(t3-E2)^2)`, hvilket svarer til udtrykket i (@eq-loss). 
+
+
+Vi skal nu have lavet den første opdatering af vægtene i celle `A3` og `B3`:
+
+- I celle `A3` skriver du: `=A2+eta*((t1-C2)*C2*(1-C2)+(t2-D2)*D2*(1-D2)+(t3-E2)*E2*(1-E2))`. Det svarer til den første opdateringsregel i (@eq-opdatering). 
+
+- I celle `B3` skriver du det, der svarer til den anden opdateringsregel i (@eq-opdatering).
+
+- Celle `C3`-`F3`opdateres ved, at du markerer celle `C2`-`F2` og tager ved den lille kasse i nederste hjørne og trække en række ned.
+
+- Du kan nu lave lige så mange opdateringer du vil ved at markere celle `A3`-`F3` og trække ned.
+
+
+:::
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 7: Slow learning
+
+- Lav mindst 500 opdateringer af vægtene, baseret på det regneark du kontruerede i opgave 6.
+
+- Hvilke værdier af vægtene og tabsfunktionen ender du med? Hvis du tænker, at der må være noget galt, så er der *ikke* noget galt! Gå bare videre til den næste opgave!
+
+- Se igen på grafen i @fig-E. Kan du ud fra den forklare, hvorfor dine værdier af vægtene og tabsfunktionen nok ikke rigtigt har ændret sig? 
+
+:::
+
+Det fænomen, som du lige har set i opgave 7, kaldes for **slow learning**. Man kan simpelthen risikere, at gradientnedstigningen ikke rigtig rykker sig ud af flækken, fordi man er kommet til at starte på et af de plateauer, som ses i @fig-E. Det er ikke fordi, at man ikke ender i minimum på et tidspunkt, det tager bare *meget lang tid*, fordi man så at sige, skal gå langt på det flade stykke, inden der sker noget.
+
+I den næste opgave, skal vi ud fra opdateringsreglerne i (@eq-opdatering) se på, hvorfor slow learning opstår.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 8: Hvorfor slow learning?
+
+Vi forestiller os, at vi har fået valgt nogle uheldige værdier af $w_0$ og $w_1$, så vi for de tre træningseksempler er i denne situation (husk på at outputværdien udregnes på baggrund af vægtene $w_0$ og $w_1$):
+
+| Nr. på træningseksempel $m$ | Targetværdi $t^{(m)}$ | Outputværdi $o^{(m)}$ |
+|:---:|:---:|:---:|
+| $1$ | $0$ | Tæt på $1$ |
+| $2$ | $0$ | Tæt på $1$ |
+| $3$ | $1$ | Tæt på $0$ |
+: {.bordered}
+
+\
+
+- Hvilken værdi har tabsfunktionen cirka i dette tilfælde (brug (@eq-loss))?
+
+I opdateringsreglen for $w_0$ i (@eq-opdatering) indgår følgende led i summen:
+
+$$
+(t^{(m)}-o^{(m)}) \cdot o^{(m)}\cdot (1-o^{(m)})
+$$
+
+og tilsvarende i opdateringsreglen for $w_1$:
+
+$$
+(t^{(m)}-o^{(m)}) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x^{(m)}
+$$
+
+- Hvad vil værdien af alle disse opdateringsled cirka være i dette tilfælde? Og hvordan forklarer det slow learning?
+
+:::
+
+Som vi lige har set, opstår problemet med slow learning altså i de tilfælde, hvor outputværdien fra neuronen fejlagtigt enten er tæt[^1] på $0$ eller $1$. I det tilfælde vil enten $o^{(m)}$ eller $1-o^{(m)}$ være tæt på $0$ -- og når vi ganger med et tal, som er tæt på $0$, så vil resultatet også være tæt på $0$. Derfor bliver vægtene næsten ikke opdateret, selvom neuronen er \"helt galt på den\". 
+
+[^1]: Når en neuron beregner en outputværdi, som enten er tæt på $0$ eller $1$, så siger man også, at neuronen er *mættet*.
+
+Problemet kan ledes tilbage til valget af den kvadratiske tabsfunktion, og vi vil i del 6 af dette forløb se på et bedre alternativ til denne tabsfunktion.
+
+Lad os undersøge, hvad der sker, når man starter gradientnedstigning på kanten af et plateau.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 9: Knap så meget slow learning
+
+- Brug @fig-E til at vælge en $(w_0,w_1)$-værdi, som er på kanten af det grønne plateau.
+
+- Brug regnearket fra de to forrige opgaver og indskriv de nye værdier af $w_0$ og $w_1$ i celle `A2` og `B2`. Når du har gjort det og trykket \"Enter\", skulle hele regnearket gerne blive opdateret.
+
+- Gå ned til den sidste opdatering i regnearket. 
+  + Hvilken værdi af $w_0$, $w_1$ og $E$ ender du med? Svarer det til minimum (det lyserøde punkt på grafen i @fig-E)?
+  + Aflæs i kolonne `C`, `D` og `E` de udregnede outputværdier $o^{(1)}$, $o^{(2)}$ og $o^{(3)}$. Stemmer de overens med targetværdierne i @tbl-goodfood?
+
+:::
+
+I ovenstående opgave ender du formentlig med en værdi af tabsfunktionen på rundt regnet $0$, svarende til at alle tre træningseksempler er klassificeret korrekt. Det svarer til, at du er endt nede i det mørkelilla plateau i @fig-E. 
+
+Faktisk har lige netop denne tabsfunktion slet ikke et minimum, fordi alle $(w_0,w_1)$-værdier i det mørkelilla plateau giver en værdi af tabsfunktionen på rundt regnet $0$. Værdien af tabsfunktionen kan komme så sæt på $0$, som det skal være, men bliver aldrig helt $0$. 
+
+I den næste opgave vil vi se nærmere på de forskellige værdier af $(w_0,w_1)$ i det mørkelilla plateau.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 10: Det mørkelilla plateau
+
+- Definer den sigmoid-funktion, som er baseret på de værdier af $w_0$ og $w_1$, som du fandt i opgave 9. Kald funktionen for $h$:
+
+   $$
+   h(x)= \frac{1}{1+\mathrm{e}^{-(w_0+w_1 \cdot x)}}
+   $$
+   Tegn grafen for $h$ i GeoGebra.
+   
+- Definer den sigmoid-funktion, som er baseret på det markerede \"minimum\" i @fig-E.    Vi kalder funktionen for $g$:
+
+   $$
+   g(x)= \frac{1}{1+\mathrm{e}^{-(-50.0 + 1.01 \cdot x)}}
+   $$
+   Tegn grafen for $g$ i GeoGebra.
+   
+- Hvad er forskellen på de to grafen? Hvilken af graferne er mest stejl?
+
+Husk på, at i vores datasæt har vi værdier af inputvariablen $x$ på henholdsvis $25$, $40$ og $60$.
+
+- Er der nogen forskel på de to grafer for $h$ og $g$ i forhold til at prædiktere træningseksemplerne korrekt?
+
+I opgave 4 så vi på ligningen
+$$
+\frac{1}{1+\mathrm{e}^{-(w_0 + w_1 \cdot x)}} = 0.5
+$$
+som bruges til prædiktion.
+
+- Løs denne ligning generelt -- det vil sige, at $x$ skal udtrykkes ved hjælp af $w_0$ og $w_1$.
+
+- Se på reglen for hvornår vi vil sige, at en kunde aktiverer et tilbud i (@eq-pred). På baggrund af ovenstående løsning skal du for funktionen $h$ og $g$ oversætte denne regel til kundens alder: Hvilken aldergruppe vil vi mene aktiverer tilbudet, og hvilken aldersgruppe vil ikke aktivere tilbudet?
+   
+- Er der i virkeligheden den store forskel på funktionerne $h$ og $g$ i forhold til at prædiktere, hvornår en kunde vil aktivere et tilbud? 
+   
+:::
+
+Som vi lige har set, er der altså ikke den helt store forskel på $(w_0,w_1)$-værdierne i det mørkelilla plateau. Det skyldes, at vores træningsdata er så ekstremt simpelt. Hvis vi vælger en aldersgrænse i intervallet $]40,60[$ og prædikterer, at alle under denne aldersgrænse ikke vil aktivere tilbudet, mens alle over vil, så vil vi være i stand til at prædiktere alle træningseksempler korrekt. 
+
+Som du så i forrige opgave, svarer det til, at hvis bare forholdet 
+
+$$
+\frac{-w_0}{w_1}
+$$
+
+ligger mellem $40$ og $60$, så prædikterer vi alle træningseksempler korrekt. Det er netop det, der karakteriserer det mørkelille plateau i @fig-E: Alle $w_0$ og $w_1$ værdier her har den egenskab, at $-w_0/w_1$ ligger mellem $40$ og $60$. Den eneste forskel er, at nogle værdier er $(w_0,w_1)$ giver en mere stejl graf for sigmoid-funktionen, som du også så i opgave 10. Og jo stejlere graf desto tættere vil de prædikterede outputværdier komme på enten $0$ eller $1$ og dermed vil tabsfunktionen i (@eq-loss) komme tættere på $0$ (fordi de kvadrerede afvigelser mellem target og output vil komme tættere på $0$).
+
+
+
+
+
+

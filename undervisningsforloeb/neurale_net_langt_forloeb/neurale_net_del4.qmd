@@ -1,0 +1,313 @@
+---
+title: "Del 4: Træning af kunstig neuron"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+::: 
+Forventet tid ca. 1 x 90 min.
+
+Aktivitet 3 handler om et eksempel på \"slow learning\" og kan derfor springes over.
+
+:::{.estimeret_tid}
+
+
+## Aktivitet 1 - Datasæt {.aimat}
+
+De træningsdata i @tbl-goodfood, som vi har brugt i de foregående aktiviteter, er i virkeligheden alt, alt for simple. 
+
+::: {#tbl-goodfood}
+|Nr. på træningseksempel $m$ | Kundens alder $x^{(m)}$ | Targetværdi $t^{(m)}$ |
+|:---:|:---:|:---:|
+| $1$ | $25$ | $0$ |
+| $2$ | $40$ | $0$ |
+| $3$ | $60$ | $1$ |
+Et meget lille træningsdatasæt til Good Food app'en.
+::: 
+
+For det første er tre træningseksempler alt for få. For det andet kan man jo bare kigge på træningsdata og lave en regel ud fra dem. Det kunne for eksempel være: Hvis kunden er 55 år eller under, så tror vi ikke, at hun vil aktivere tilbudet, og omvendt hvis kunden er over 55 år. Det behøver man jo ikke fancy AI metoder til at indse! For det tredje er det urealistisk, at alder alene kan afgøre, om en kunde aktiverer et tilbud eller ej. Man vil typisk inddrage andre inputvariable som for eksempel køn, forbrug og så videre. 
+
+Vi vil derfor her se på et langt mere realistik eksempel, hvor træningsdatasættet er større og med flere inputvariable. 
+
+
+```{r}
+#| echo: false
+#| message: false
+# library(ggplot2)
+N <- 100
+set.seed(42)
+alder <- 13 + round(70*rbeta(N, 2, 3))
+mu_forbrug <- ifelse(alder<40, 70*alder, 3000)
+forbrug <- round(rnorm(N, mu_forbrug, sd = 800))
+mu <- -2*scale(alder) + 2*scale(forbrug)
+prob <- exp(mu)/(1+exp(mu))
+dat <- data.frame(Alder = alder, Forbrug = forbrug, prob, 
+                  Aktiveret = factor(ifelse(rbinom(N, size = 1, prob = prob), "Ja", "Nej")))
+dat$Kon <- NA
+for(i in 1:nrow(dat)){
+  dat$Kon[i] <- ifelse(dat$Aktiveret[i]=="Ja", sample(0:1, size = 1,prob=c(0.7,0.3)), sample(0:1,size = 1,prob=c(0.3,0.7)))
+}
+
+#writexl::write_xlsx(dat[order(dat$Kon),c("Alder","Forbrug","Kon","Aktiveret"#)],
+#path = here::here("undervisningsforloeb", "neurale_net_langt_forloeb", #"data", "goodfood.xlsx")
+#)
+# summary(dat)
+#fig <- ggplot(dat, aes(Alder, Forbrug, color = Aktiveret, shape = Aktiveret)) +
+#  theme_minimal() +
+#  geom_point(size = 2) + facet_wrap(~kon)
+#fig
+# source("adaline.R")
+# out <- adaline(Aktiveret ~ Alder + Forbrug, data = dat)
+# out$w
+#          bias         Alder       Forbrug 
+# -0.2975679652 -0.0374751270  0.0007693097 
+```
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 1: Datasæt
+
+- Download dette [datasæt](data/goodfood.xlsx) og prøv at åbne det i Excel. 
+
+:::
+
+I datasættet er der tre inputvariable: \"alder\" (målt i år), \"forbrug\" (målt i kroner) og \"køn\" (kon, hvor 0 svarer til kvinder og 1 svarer til mænd). Targetvariablen kaldes for \"aktiveret\" (hvor \"ja\" svarer til at kunden har aktiveret tilbudet og \"nej\" svarer til at kunden ikke har aktiveret tilbudet). Vi har altså følgende inputvariable:
+
+* $x_1$: kundens alder målt i år
+* $x_2$: kundens forbrug i Good Food den seneste måned målt i kr.
+* $x_3$: kundens køn (0 svarer til kvinder og 1 svarer til mænd)
+
+I den næste opgave skal vi prøve at lave to plots for at visualisere datasættet.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 2: Plots
+
+Vi laver først et plot for kvinderne.
+
+- Start med at kopiere den første halvdel af datasættet over i et regneark i GeoGebra svarende til data for alle kvinderne, det vil sige hvor \"kon=1\" (heldigvis er datasættet sorteret efter \"kon\", så det er lige til at gå til).
+
+- I celle `E2` skriver du `(A2,B2)`. Det giver dig koordinatsættet for alder og forbrug for det første træningseksempel.
+
+- Tag ved den lille kasse i nederste hjørne af celle `E2` og trække ned, så du får udfyldt kolonne `E` for hele datasættet.
+
+- Gå over i \"Tegneblokken\" og ændr på akserne, så du kan se alle punkterne[^1]. 
+
+[^1]: Tryk på ikonet \"Flyt tegnefladen\" og hold cursoren henover for eksempel $y$-aksen. Når cursoren ændrer sig til en dobbeltpil, kan du ved at holde venstre musetast nede ændre på enhederne på aksen.
+
+- Gå tilbage til regnearket og markér alle punkterne i kolonne `E`. Højreklik og vælg \"vis navn\" (det skulle gerne fjerne navngivningen af punkterne i koordinatsystemet).
+
+Vi vil nu farve de punkter, som svarer til et træningseksempel, hvor tilbudet et blevet aktiveret for blåt og tilsvarende rødt, hvis tilbudet ikke er blevet aktiveret. Husk på at denne information findes i kolonne `D`.
+
+- Markér det første punkt i celle `E2`. Højreklik og vælg \"Egenskaber\". Vælg her fanen \"Avanceret\". 
+
+- I det felt, hvor der står \"Rød\", skriver du `If(D2="Nej",1,0)`. 
+
+- I det felt, hvor der står \"Blå\", skriver du `If(D2="Ja",1,0)`. 
+
+Det kommer til at se sådan her ud (hvis du har GeoGebra på dansk bliver \"If\" lavet om til \"Hvis\"):
+
+![](images/egenskaber_avanceret.png){width=60% fig-align="center"}
+
+::: {.description}
+**Forklaring:** I GeoGebra repræsenteres farver ved hjælp af en rød/grøn/blå (RGB) farvemodel. Mængden af rød repræsenteres her som et tal mellem 0 og 1 og tilsvarende med grøn og blå. Når vi i feltet ved \"Rød\" skriver `If(D2="Nej",1,0)`, så betyder det, at hvis værdien i celle `D2` er \"Nej\" (kunden har ikke aktiveret tilbudet), så skal mængden af rød være 1 og 0 ellers. Og tilsvarende for mængden af blå, hvis `D2` har værdien \"Ja\".
+
+:::
+
+- Marker igen celle `E2` og tag ved den lille kasse i nederste hjørne af celle `E2` og trække ned, så du igen får udfyldt kolonne `E` for hele datasættet. Punkterne skulle nu gerne være farvet som ønsket.
+
+- Indsæt nogle tekstfelter i tegneblokken (tryk på ikonet \"Skyder\" og vælg \"Tekst\"), så du får angivet, hvad der er ud af akserne, hvad de røde og blå punkter betyder, og at plottet er for kvinder.
+
+- Vil du i dette koordinatsystem kunne indlægge en rette linje, som (for de fleste punkter) vil kunne bruges til at adskille de blå punkter fra de røde? Notér ligningen for en sådan linje.
+
+- Lav et tilsvarende plot for mændene.
+
+:::
+
+
+## Aktivitet 2 - Brug af app {.aimat}
+
+I denne aktivitet skal vi træne en kunstig neuron på datasættet fra opgave 1. Det vil sige, at vi skal have bestemt vægtene $w_0$, $w_1$, $w_2$ og $w_3$, så vi kan bruge sigmoid-funktionen til at beregne outputværdien $o$:
+
+$$
+o = \frac{1}{1+\mathbb{e}^{-(w_0+w_1 \cdot x_1+w_2 \cdot x_2+w_3 \cdot x_3)}}
+$$
+
+Udfra outputværdien vil vi prædiktere targetværdien på denne måde:
+
+$$
+\textrm{Kunden aktiverer tilbuddet: }
+\begin{cases}
+\textrm{Ja} & \textrm{hvis } o \geq 0.5\\
+\textrm{Nej} & \textrm{hvis } o < 0.5\\
+\end{cases}
+$$ {#eq-pred}
+
+Vægtene bestemmer vi ved at træne en kunstig neuron (det vil sige, at vi minimerer tabsfunktionen ved hjælp af gradientnedstigning):
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 3: Træning af kunstig neuron
+
+- Åbn [neuron app'en](https://apps01.math.aau.dk/ai/neuron){target="blank"}.
+
+- Upload [datasættet](data/goodfood.xlsx) (under \"Browse...\").
+
+- Lav følgende indstillinger:
+  
+  + Vælg \"Aktiveret\" som target-variabel.
+  
+  + Vælg \"Ja\" som target-værdi.
+  
+  + Vælg \"Alder\", \"Forbrug\" og \"Kon\" som feature-variable (det vil sige inputvariable). Og sørg for at indtaste dem i den rækkefølge.
+  
+  + Lad alle startvægtene stå til $0$.
+  
+  + Behold en learning rate ($\eta$) på $0.001$.
+  
+  + Behold antal iterationer på $1000$.
+  
+  + Slideren ved \"Antal fold\" lader du være.
+  
+  + Vælg \"squared error\" som tabsfunktion.
+  
+  + Behold \"sigmoid\" som aktiveringsfunktion.
+  
+  + Behold fluebenet ved \"Brug feature-skalering\".
+
+- Tryk på \"Kør!\".
+
+Vi starter med at undersøge, om det ser ud som om, at vi har fundet et minimum for tabsfunktionen. En graf for tabsfunktionen som funktion af antal opdateringer af vægtene ses til højre i app'en.
+
+- Ser det ud som om, at vi ved den sidste iteration har fundet minimum for tabsfunktionen (flader grafen ud eller er den stadig \"på vej nedad bakke\")?
+
+- Prøv at sætte antal iterationer til $10000$ (det tager lige lidt længere tid). Tænker du, at vi har fundet minimum nu?
+
+- Notér værdien af vægtene $w_0$, $w_1$, $w_2$ og $w_3$, som står i tabellen ovenfor grafen for tabsfunktionen i højreside.
+
+- Notér slutværdien af tabsfunktionen (som står lige under grafen).
+
+:::
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 4: Prædiktion ud fra vægtene
+
+I (@eq-pred) laver vi en skillelinje ved $o=0.5$. Det svarer til ligningen:
+
+$$
+\frac{1}{1+\mathrm{e}^{-(w_0+w_1 \cdot x_1+w_2 \cdot x_2+w_3 \cdot x_3)}} = 0.5
+$$
+
+- Vis, at denne ligning er ensbetydende med ligningen
+
+   $$
+   w_0+w_1 \cdot x_1+w_2 \cdot x_2+w_3 \cdot x_3 = 0
+   $$ {#eq-linje}
+   
+- Overbevis dig selv om, at hvis
+   
+   $$w_0+w_1 \cdot x_1+w_2 \cdot x_2+w_3 \cdot x_3>0$$ 
+   
+:::
+
+Vi husker nu på, at $x_3$ angiver kundens køn. Det vil sige, at for kvinder er $x_3=0$, og for mænd er $x_3=1$. Det betyder, at vi kan lave en version af ligningen i (@eq-linje) for kvinder og en anden for mænd:
+
+$$
+\begin{aligned}
+&\textrm{Kvinder:} \quad w_0+w_1 \cdot x_1+w_2 \cdot x_2 = 0 \\
+&\textrm{Mænd:} \quad w_0+w_1 \cdot x_1+w_2 \cdot x_2+w_3 = 0
+\end{aligned}
+$$ {#eq-linje2}
+
+Den generelle ligning for en ret linje er på formen
+
+$$
+a \cdot x + b \cdot y + c = 0
+$$
+
+Vi kan derfor se, at de to ligninger i (@eq-linje2) begge er på formen for en ret linje. I næste opgave skal vi have tegnet de tilhørende rette linjer:
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 5: Skillelinjer
+
+Brug de vægte som du fandt i opgave 3.
+
+- Brug de plots som du lavede i opgave 2 og indtegn de rette linjer med ligningerne i (@eq-linje2) (selvfølgelig skal du tegne linjen for kvinder i det plot du lavede for kvinder og tilsvarende med mændene).
+
+- Er de to linjer gode til at adskille de blå punkter fra de røde?
+
+- Er de to linjer, som er baseret på den kunstige neuron, bedre end de linjer, som du selv tegnede i opgave 2?
+
+:::
+
+På baggrund af de to plots i opgave 5 skal vi have lavet en såkaldt **confusion matrix** og derefter beregnet en **klassifikationsnøjagtighed**.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 6: Confusion matrix og klassifikationsnøjagtighed
+
+Brug de to plots med de to skillelinjer, som du indtegnede i opgave 5. I vores eksempel vil det være sådan, at hvis et punkt ligger over skillelinjen, så vil vi prædiktere, at punktet er blåt og omvendt, hvis det ligger under skillelinjen.
+
+- Udfyld tabellen herunder -- det er denne tabel, som kaldes for en **confusion matrix**. Når du for eksempel skal udfylde prædikteret blå og faktisk rød, så tæller du (i begge plots) hvor mange røde punkter, som ligger over de to skillelinjer.
+
+|  | Prædikteret blå (tilbud aktiveret)  | Prædikteret rød (tilbud ikke-aktiveret) |
+|:---:|:---:|:---:|
+| **Faktisk blå (tilbud aktiveret)** | | |
+| **Faktisk rød (tilbud ikke-aktiveret)** | | |
+: {.bordered}
+
+Den andel af punkterne, som er blevet klassificeret korrekt, kaldes for  **klassifikationsnøjagtigheden** -- eller på engelsk *classification accuracy* (CA).
+
+- Udregn på baggrund af din confusion matrix klassifikationsnøjagtigheden. Tjek dit resultat med resultatet fra app'en i opgave 3 (klassifikationsnøjagtigheden står under \"Model information\" til højre). Hvis du ikke får det samme, har du nok talt forkert!
+
+:::
+
+## Aktivitet 3 - Eksempel på slow learning {.aimat}
+
+I aktivitet 2 i [del 3](neurale_net_del3.qmd) så vi, at man kan starte et sted på grafen for tabsfunktionen, som resulterer i \"slow learning\". Det vil sige, at det kan umiddelbart se ud som om, at man har fundet et minimum for tabsfunktionen, men i virkeligheden er man landet i et plateau eller lignede sted, hvor værdien af tabsfunktionen kun ændrer sig langsomt.
+
+Det skal vi se et konkret eksempel på nu.
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 7: Slow learning
+
+- Åbn igen [neuron app'en](https://apps01.math.aau.dk/ai/neuron){target="blank"} og upload [datasættet](data/goodfood.xlsx) (under \"Browse...\").
+
+- Vælg de samme indstillinger som i opgave 3, men sæt start-vægtene til $10$ og vælg at antallet af iterationer skal være $1000$. 
+
+- Tryk på \"Kør!\". Ser det ud som om, at vi har fundet et minimum?
+
+- Sæt antal iterationer op til $10000$. Er det bedre?
+
+- Prøv med $35000$ (og hav lidt tålmodighed -- det tager lidt tid). Ser det ud som om, at vi har fundet minimum nu? Notér klassifikationsnøjagtigheden (CA) i dette tilfælde.
+
+- Sæt antal iterationer op til $100000$. Er det bedre? Notér CA.
+
+- Sæt antal iterationer op til $200000$. Notér CA.
+
+- Notér nu værdien af vægtene $w_0$, $w_1$, $w_2$ og $w_3$, som står i tabellen ovenfor grafen for tabsfunktionen i højreside.
+
+- Notér slutværdien af tabsfunktionen (som står lige under grafen). Sammenlign med slutværdien af tabsfunktionen, som du fandt i opgave 3.
+
+:::
+
+Du har måske bemærket, at du har fået nogle andre værdier af vægtene her i opgave 7, end du gjorde i opgave 3. Lad os se lidt nærmere på det.
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 8: Et andet minimum
+
+
+
+:::
