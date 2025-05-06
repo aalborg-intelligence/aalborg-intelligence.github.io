@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="En øvelse i at forstå, hvad softmax gør og kan.">
 
-<title>Del 2: Odds – AI MAT - matematikken bag magien</title>
+<title>Softmax - hvad kan det? – AI MAT - matematikken bag magien</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,24 +24,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<link href="../../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
-<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-de070a7b0ab54f8780927367ac907214.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-54f08ed3740c18728e089b4309aec698.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de070a7b0ab54f8780927367ac907214.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-54f08ed3740c18728e089b4309aec698.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -122,8 +123,8 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo">
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -133,38 +134,38 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../undervisningsforlob.html"> 
+    <a class="nav-link" href="../undervisningsforlob.html"> 
 <span class="menu-text">Undervisningsforløb</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../materialer.html"> 
+    <a class="nav-link" href="../materialer.html"> 
 <span class="menu-text">Materialer</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../sro.html"> 
+    <a class="nav-link" href="../sro.html"> 
 <span class="menu-text">SRO</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../srp.html"> 
+    <a class="nav-link" href="../srp.html"> 
 <span class="menu-text">SRP</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../apps.html"> 
+    <a class="nav-link" href="../apps.html"> 
 <span class="menu-text">Apps</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../referencer.html"> 
+    <a class="nav-link" href="../referencer.html"> 
 <span class="menu-text">Referencer</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../about.html"> 
+    <a class="nav-link" href="../about.html"> 
 <span class="menu-text">Om os</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="https://www.youtube.com/@ai-mat"> 
-<span class="menu-text"><img src="../../logo/YouTube/youtube-color-darkblue-icon.svg" style="height:2em"></span></a>
+<span class="menu-text"><img src="../logo/YouTube/youtube-color-darkblue-icon.svg" style="height:2em"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -181,8 +182,9 @@ window.Quarto = {
     <h2 id="toc-title">Indhold</h2>
    
   <ul>
-  <li><a href="#aktivitet-1" id="toc-aktivitet-1" class="nav-link active" data-scroll-target="#aktivitet-1">Aktivitet 1</a></li>
-  <li><a href="#aktivitet-2" id="toc-aktivitet-2" class="nav-link" data-scroll-target="#aktivitet-2">Aktivitet 2</a></li>
+  <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
+  <li><a href="#eksempel" id="toc-eksempel" class="nav-link" data-scroll-target="#eksempel">Eksempel</a></li>
+  <li><a href="#løsninger-til-opgaver" id="toc-løsninger-til-opgaver" class="nav-link" data-scroll-target="#løsninger-til-opgaver">Løsninger til opgaver</a></li>
   </ul>
 </nav>
 </nav>
@@ -195,8 +197,12 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Del 2: Odds</h1>
-</div>
+<h1 class="title">Softmax - hvad kan det?</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">C-niveau</div>
+    <div class="quarto-category">Kort</div>
+  </div>
+  </div>
 
 
 
@@ -212,57 +218,120 @@ window.Quarto = {
 </header>
 
 
-<p><span class="estimeret_tid">Forventet tid ca. 75 min.</span></p>
-<section id="aktivitet-1" class="level2 aimat">
-<h2 class="aimat anchored" data-anchor-id="aktivitet-1">Aktivitet 1</h2>
-<p>Start med at se denne video (eller læs afsnittet <a href="../../materialer/logistisk/log-reg.html#odds">odds</a>):</p>
-<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/-LdsFDOvlFY?si=iKBPLs0vSDlUbBLt" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
-</section>
-<section id="aktivitet-2" class="level2 aimat">
-<h2 class="aimat anchored" data-anchor-id="aktivitet-2">Aktivitet 2</h2>
-<p>Lav nedenstående opgave.</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout callout-style-simple callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 1
+Forudsætninger og tidsforbrug
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
-<li><p>Lad <span class="math inline">\(p=4/7\)</span>. Hvad er de tilhørende odds?</p></li>
-<li><p>Antag at oddsene er <span class="math inline">\(O=3/2\)</span>. Hvad er den tilsvarende sandsynlighed?</p></li>
+<li>Eksponentialfunktioner, herunder <span class="math inline">\(e^x\)</span>.</li>
+<li>Sandsynlighedsfelter</li>
 </ul>
-<p>Fodboldholdene AFC og BFC spiller mod hinanden. Der spilles med forlænget spilletid og straffesparkskonkurrence indtil, der er fundet en vinder. Det er dobbelt så sandsynligt, at AFC vinder som, at BFC vinder.</p>
+<p><strong>Tidsforbrug:</strong> Ca. 60 minutter</p>
+</div>
+</div>
+</div>
+<section id="formål" class="level3 purpose">
+<h3 class="anchored" data-anchor-id="formål">Formål</h3>
+<p>Formålet med dette forløb er</p>
 <ul>
-<li><p>Hvad er (de matematiske) odds for at AFC vinder?</p></li>
-<li><p>Hvad er sandsynligheden for at AFC vinder?</p></li>
+<li>at se, at eksponentialfunktioner, eller mere konkret <span class="math inline">\(e^x\)</span>, kan bruges til andet end funktioner med procentvækst.</li>
+<li>at bruge sandsynlighedsfelter til noget lidt mere kompliceret end terningkast.</li>
+<li>at blive introduceret til Softmax, som senere anvendes i visse neurale netværk bl.a. i forbindelse med store sprogmodeller.</li>
 </ul>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-important no-icon callout-titled">
+</section>
+<section id="eksempel" class="level2">
+<h2 class="anchored" data-anchor-id="eksempel">Eksempel</h2>
+<p>Du er blevet ansat som sengetester af IKEA til 138 kr. i timen - dit drømmejob. Du skal sove på 4 typer af boxmadresser og give hver af dem point fra 1 til 5.</p>
+<p>Efter at have sovet dejligt længe og tjent nogle gode penge, er resultatet følgende:</p>
+<ul>
+<li>Skotterud 3 point</li>
+<li>Snarum 2 point</li>
+<li>Stuvland 3 point</li>
+<li>Stavanger 5 point</li>
+</ul>
+<p>IKEA vil så på baggrund af din særdeles grundige videnskabelige test justere deres produktion, så de producerer de 4 typer boxmadresser i forhold til dine resultater. De vil naturligvis producere flest Stavanger og færrest Snarum, men hvor mange procent af hver slags skal de producere?</p>
+<p>Vi skal altså have lavet et ikke-symmetrisk sandsynlighedsfelt, hvor udfaldsrummet er de 4 typer madresser og sandsynlighederne tilsammen giver 1, som det jo skal.</p>
+<p>Det simpleste ville nok være at lægge alle pointene sammen, og så dividere pointtallet for hver madres med summen.</p>
+<p><span class="math display">\[P(Skotterud) = \frac{3}{3+2+3+5} \approx 23,1\%\]</span></p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Lærergennemgang
+Opgave 1: Udregn sandsynligherne
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Din lærer vil vise, at oddsfunktionen <span class="math inline">\(O(p)\)</span> er voksende ved at differentiere og indse at <span class="math inline">\(O'(p)&gt;0\)</span>. Hvis du ikke kan vente, kan du jo prøve selv!</li>
+<li>Udregn sandsynlighederne for hver af de 3 andre typer boxmadresser.</li>
+<li>Læg sandsynlighederne sammen og se, at det giver 1.</li>
 </ul>
 </div>
 </div>
 </div>
+<p>Det fungerer jo sådan set meget godt. Der er dog nogle ting, som gør, at man ofte gør det lidt mere kompliceret.</p>
+<ul>
+<li>hvis nogle af pointene er negative, risikerer man at skulle dividere med 0.</li>
+<li>hvis nogle af pointene er negative, kan brøken give et negativt tal.</li>
+</ul>
+<p>Metoden er, at man opløfter tallet <span class="math inline">\(\mathrm{e}\)</span> i hvert pointal, og derefter regne sandsynlighederne på samme måde som før.</p>
+<p>Så bliver <span class="math display">\[P(Skotterud) = \frac{\mathrm{e}^{3}}{\mathrm{e}^{3}+\mathrm{e}^2+\mathrm{e}^3+\mathrm{e}^{5}} \approx 10,2\%\]</span></p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 2: Udregn sandsynligherne med Softmax
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Udregn sandsynlighederne for hver af de 3 andre typer boxmadresser med Softmax metoden.</li>
+<li>Læg sandsynlighederne sammen og se, at det giver 1</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Bemærk, at sandsynlighederne her er blevet mere forskellige med Softmax, end da du regnede i første omgang.</p>
+<p>Hvis pointene bliver store og forskellige, vil næsten al sandsynligheden samle sig omkring den største værdi. Det kan naturligvis være ønskeligt i situationer, hvor “the winner takes it all”, men i andre situationer kan det ses som et problem.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 3: Udregn sandsynligherne for store forskellige værdier
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Udregn sandsynligheden for 16 point med Softmax, hvis de fire pointtal er 2, 9, 11 og 16.</li>
+</ul>
+</div>
+</div>
+</div>
+<p>I mange anvendelse med Softmax indgår der derfor andre ting, så dette ikke er et problem, men det kan du måske komme til i 2.g eller 3.g. f.eks. i <a href="../materialer/softmax/softmax.html">Simple kunstige neurale netværk til multiple klassifikation</a> eller <a href="../materialer/sprogmodeller/word2vec.html">WordToVec</a>.</p>
+</section>
+<section id="løsninger-til-opgaver" class="level2">
+<h2 class="anchored" data-anchor-id="løsninger-til-opgaver">Løsninger til opgaver</h2>
+<p>Er det nødvendigt?</p>
+<p><span target="_blank">Facitliste</span>.</p>
 
 
 </section>
