@@ -41,7 +41,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-de070a7b0ab54f8780927367ac907214.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-54f08ed3740c18728e089b4309aec698.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-167529fdd6e1f3ba435ac961d99b5b32.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -231,10 +231,10 @@ Forudsætninger og tidsforbrug
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Eksponentialfunktioner, herunder <span class="math inline">\(e^x\)</span>.</li>
-<li>Sandsynlighedsfelter</li>
+<li>Eksponentialfunktioner, herunder <span class="math inline">\(\mathrm{e}^x\)</span>.</li>
+<li>Sandsynlighedsfelter.</li>
 </ul>
-<p><strong>Tidsforbrug:</strong> Ca. 60 minutter</p>
+<p><strong>Tidsforbrug:</strong> Ca. 60 minutter.</p>
 </div>
 </div>
 </div>
@@ -242,14 +242,14 @@ Forudsætninger og tidsforbrug
 <h3 class="anchored" data-anchor-id="formål">Formål</h3>
 <p>Formålet med dette forløb er</p>
 <ul>
-<li>at se, at eksponentialfunktioner, eller mere konkret <span class="math inline">\(e^x\)</span>, kan bruges til andet end funktioner med procentvækst.</li>
+<li>at se, at eksponentialfunktioner, eller mere konkret <span class="math inline">\(\mathrm{e}^x\)</span>, kan bruges til andet end funktioner med procentvækst.</li>
 <li>at bruge sandsynlighedsfelter til noget lidt mere kompliceret end terningkast.</li>
-<li>at blive introduceret til Softmax, som senere anvendes i visse neurale netværk bl.a. i forbindelse med store sprogmodeller.</li>
+<li>at blive introduceret til Softmax, som senere anvendes i visse neurale netværk blandt andet i forbindelse med store sprogmodeller.</li>
 </ul>
 </section>
 <section id="eksempel" class="level2">
 <h2 class="anchored" data-anchor-id="eksempel">Eksempel</h2>
-<p>Du er blevet ansat som sengetester af IKEA til 138 kr. i timen - dit drømmejob. Du skal sove på 4 typer af boxmadresser og give hver af dem point fra 1 til 5.</p>
+<p>Du er blevet ansat som sengetester af IKEA til 138 kr. i timen – dit drømmejob. Du skal sove på 4 typer af boxmadrasser og give hver af dem point fra 1 til 5.</p>
 <p>Efter at have sovet dejligt længe og tjent nogle gode penge, er resultatet følgende:</p>
 <ul>
 <li>Skotterud 3 point</li>
@@ -257,10 +257,10 @@ Forudsætninger og tidsforbrug
 <li>Stuvland 3 point</li>
 <li>Stavanger 5 point</li>
 </ul>
-<p>IKEA vil så på baggrund af din særdeles grundige videnskabelige test justere deres produktion, så de producerer de 4 typer boxmadresser i forhold til dine resultater. De vil naturligvis producere flest Stavanger og færrest Snarum, men hvor mange procent af hver slags skal de producere?</p>
-<p>Vi skal altså have lavet et ikke-symmetrisk sandsynlighedsfelt, hvor udfaldsrummet er de 4 typer madresser og sandsynlighederne tilsammen giver 1, som det jo skal.</p>
-<p>Det simpleste ville nok være at lægge alle pointene sammen, og så dividere pointtallet for hver madres med summen.</p>
-<p><span class="math display">\[P(Skotterud) = \frac{3}{3+2+3+5} \approx 23,1\%\]</span></p>
+<p>IKEA vil så på baggrund af din særdeles grundige videnskabelige test justere deres produktion, så de producerer de 4 typer boxmadrasser i forhold til dine resultater. De vil naturligvis producere flest Stavanger og færrest Snarum, men hvor mange procent af hver slags skal de producere?</p>
+<p>Vi skal altså have lavet et ikke-symmetrisk sandsynlighedsfelt, hvor udfaldsrummet er de 4 typer madrasser og sandsynlighederne tilsammen giver 1, som det jo skal.</p>
+<p>Det simpleste ville nok være at lægge alle pointene sammen, og så dividere pointtallet for hver madras med summen.</p>
+<p><span class="math display">\[P(\mathrm{ Skotterud }) = \frac{3}{3+2+3+5} \approx 23,1\%\]</span></p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -274,19 +274,19 @@ Opgave 1: Udregn sandsynligherne
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Udregn sandsynlighederne for hver af de 3 andre typer boxmadresser.</li>
+<li>Udregn sandsynlighederne for hver af de 3 andre typer boxmadrasser.</li>
 <li>Læg sandsynlighederne sammen og se, at det giver 1.</li>
 </ul>
 </div>
 </div>
 </div>
-<p>Det fungerer jo sådan set meget godt. Der er dog nogle ting, som gør, at man ofte gør det lidt mere kompliceret.</p>
+<p>Det fungerer jo sådan set meget godt. Der er dog nogle ting, som gør, at man ofte gør det lidt mere kompliceret:</p>
 <ul>
-<li>hvis nogle af pointene er negative, risikerer man at skulle dividere med 0.</li>
-<li>hvis nogle af pointene er negative, kan brøken give et negativt tal.</li>
+<li>Hvis nogle af pointene er negative, risikerer man at skulle dividere med 0.</li>
+<li>Hvis nogle af pointene er negative, kan brøken give et negativt tal.</li>
 </ul>
-<p>Metoden er, at man opløfter tallet <span class="math inline">\(\mathrm{e}\)</span> i hvert pointal, og derefter regne sandsynlighederne på samme måde som før.</p>
-<p>Så bliver <span class="math display">\[P(Skotterud) = \frac{\mathrm{e}^{3}}{\mathrm{e}^{3}+\mathrm{e}^2+\mathrm{e}^3+\mathrm{e}^{5}} \approx 10,2\%\]</span></p>
+<p>Metoden er, at man opløfter tallet <span class="math inline">\(\mathrm{e}\)</span> i hvert pointtal, og derefter regne sandsynlighederne på samme måde som før.</p>
+<p>Så bliver <span class="math display">\[P(\mathrm{ Skotterud }) = \frac{\mathrm{e}^{3}}{\mathrm{e}^{3}+\mathrm{e}^2+\mathrm{e}^3+\mathrm{e}^{5}} \approx 10,2\%\]</span></p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -300,14 +300,14 @@ Opgave 2: Udregn sandsynligherne med Softmax
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Udregn sandsynlighederne for hver af de 3 andre typer boxmadresser med Softmax metoden.</li>
-<li>Læg sandsynlighederne sammen og se, at det giver 1</li>
+<li>Udregn sandsynlighederne for hver af de 3 andre typer boxmadrasser med Softmax metoden.</li>
+<li>Læg sandsynlighederne sammen og se, at det giver 1.</li>
 </ul>
 </div>
 </div>
 </div>
 <p>Bemærk, at sandsynlighederne her er blevet mere forskellige med Softmax, end da du regnede i første omgang.</p>
-<p>Hvis pointene bliver store og forskellige, vil næsten al sandsynligheden samle sig omkring den største værdi. Det kan naturligvis være ønskeligt i situationer, hvor “the winner takes it all”, men i andre situationer kan det ses som et problem.</p>
+<p>Hvis pointene bliver store og forskellige, vil næsten al sandsynligheden samle sig omkring den største værdi. Det kan naturligvis være ønskeligt i situationer, hvor "the winner takes it all", men i andre situationer kan det ses som et problem.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -326,7 +326,7 @@ Opgave 3: Udregn sandsynligherne for store forskellige værdier
 </div>
 </div>
 </div>
-<p>I mange anvendelse med Softmax indgår der derfor andre ting, så dette ikke er et problem, men det kan du måske komme til i 2.g eller 3.g. f.eks. i <a href="../materialer/softmax/softmax.html">Simple kunstige neurale netværk til multiple klassifikation</a> eller <a href="../materialer/sprogmodeller/word2vec.html">WordToVec</a>.</p>
+<p>I mange anvendelser med Softmax indgår der derfor andre ting, så dette ikke er et problem, men det kan du måske komme til i 2.g eller 3.g. f.eks. i <a href="../materialer/softmax/softmax.html">Simple kunstige neurale netværk til multiple klassifikation</a> eller <a href="../materialer/sprogmodeller/word2vec.html">WordToVec</a>.</p>
 </section>
 <section id="løsninger-til-opgaver" class="level2">
 <h2 class="anchored" data-anchor-id="løsninger-til-opgaver">Løsninger til opgaver</h2>
