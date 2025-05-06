@@ -1,5 +1,5 @@
 ---
-title: "Del 3: Kunstige neuroner og tabsfunktioner"
+title: "Del 3: Tabsfunktioner og opdateringsregler"
 ---
 
 
@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 Forventet tid ca. 1-2 x 90 min.
 
-Vi anbefaler, at alle arbejder med alle aktiviteterne *bortset* fra aktivitet 2, som er en ekstra udfordring til de dygtige.
+Vi anbefaler, at alle arbejder med alle aktiviteterne *bortset* fra aktivitet 3, som er en ekstra udfordring til de dygtige.
 
 :::
 
@@ -168,9 +168,51 @@ Lad os regne lidt på det:
 :::
 
 
+## Aktivitet 2 - Opdateringsregler  {.aimat}
+
+Når minimum for tabsfunktionen skal bestemmes bruges gradientnedstigning, som vi behandlede i [del 2](neurale_net_del2.qmd). Vi vil her opskrive opdateringsreglerne for $w_0$ og $w_1$, men i det helt simple tilfælde, hvor vi kun ser på ét træningseksempel ad gangen. 
+
+Vi betragter derfor tabsfunktionen
+
+$$
+E=\frac{1}{2} \left (t-\sigma(w_0 + w_1 \cdot x) \right )^2
+$$ {#eq-E_simple}
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 5: Partielle afledede og opdateringsregler
+
+- Bestem de partielle afledede $\frac{\partial E}{\partial w_0}$ og $\frac{\partial E}{\partial w_1}$ af tabsfunktionen i (@eq-E_simple). 
+
+   Husk på, at du fra [del 1](neurale_net_del1.qmd) ved, at
+
+   $$
+   \sigma'(x) = \sigma(x) \cdot (1-\sigma(x))=o \cdot (1-o)
+   $$
+   da outputværdien $o=\sigma(x)$.
+
+- Brug de partielle afledede til at opskrive opdateringsreglerne:
+
+   $$
+   \begin{aligned}
+   w_0^{\mathrm{(ny)}} &\leftarrow w_0 - \eta \cdot \frac{\partial E}{\partial w_0} \\
+   w_1^{\mathrm{(ny)}} &\leftarrow w_1 - \eta \cdot \frac{\partial E}{\partial w_1}
+   \end{aligned}
+   $$
+   
+[Valgfri udfordring]{.fremhaev}
+
+- Udled opdateringsreglerne i det tilfælde, hvor vi bruger den generelle tabsfunktion:
+
+   $$
+   E = \frac{1}{2} \sum_{m=1}^M (t^{(m)}-\sigma(w_0 + w_1 \cdot x^{(m)}))^2 
+   $$
+   hvor $M$ er antallet af træningseksempler.
+   
+:::
 
 
-## Aktivitet 2 - Slow learning {.aimat}
+## Aktivitet 3 - Slow learning {.aimat}
 
 På grafen for tabsfunktionen i @fig-E kan man se, at der er tre plateauer[^1] foruden det mørkelilla plateau, hvor minimum er. Disse tre plateauer vil vi undersøge i den næste opgave.
 
@@ -178,7 +220,7 @@ På grafen for tabsfunktionen i @fig-E kan man se, at der er tre plateauer[^1] f
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 5: Plateauer på grafen for tabsfunktionen
+### Opgave 6: Plateauer på grafen for tabsfunktionen
 
 - Aflæs sammenhørende værdier af $(w_0,w_1)$ et eller andet sted på henholdsvis det gule, grønne og blå plateau på grafen i @fig-E:
 
@@ -241,7 +283,7 @@ Vi vil nu undersøge, hvad der sker, hvis man starter gradientnedstigningen på 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 6: Gradientnedstigning i GeoGebra
+### Opgave 7: Gradientnedstigning i GeoGebra
 
 - Vælg en $(w_0,w_1)$-værdi et sted på det grønne plateau.
 
@@ -296,9 +338,9 @@ Vi skal nu have lavet den første opdatering af vægtene i celle `A3` og `B3`:
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 7: Slow learning
+### Opgave 8: Slow learning
 
-- Lav mindst 500 opdateringer af vægtene, baseret på det regneark du kontruerede i opgave 6.
+- Lav mindst 500 opdateringer af vægtene, baseret på det regneark du kontruerede i opgave 7.
 
 - Hvilke værdier af vægtene og tabsfunktionen ender du med? Hvis du tænker, at der må være noget galt, så er der *ikke* noget galt! Gå bare videre til den næste opgave!
 
@@ -306,13 +348,13 @@ Vi skal nu have lavet den første opdatering af vægtene i celle `A3` og `B3`:
 
 :::
 
-Det fænomen, som du lige har set i opgave 7, kaldes for **slow learning**. Man kan simpelthen risikere, at gradientnedstigningen ikke rigtig rykker sig ud af flækken, fordi man er kommet til at starte på et af de plateauer, som ses i @fig-E. Det er ikke fordi, at man ikke ender i minimum på et tidspunkt, det tager bare *meget lang tid*, fordi man så at sige, skal gå langt på det flade stykke, inden der sker noget.
+Det fænomen, som du lige har set i opgave 8, kaldes for **slow learning**. Man kan simpelthen risikere, at gradientnedstigningen ikke rigtig rykker sig ud af flækken, fordi man er kommet til at starte på et af de plateauer, som ses i @fig-E. Det er ikke fordi, at man ikke ender i minimum på et tidspunkt, det tager bare *meget lang tid*, fordi man så at sige, skal gå langt på det flade stykke, inden der sker noget.
 
 I den næste opgave, skal vi ud fra opdateringsreglerne i (@eq-opdatering) se på, hvorfor slow learning opstår.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 8: Hvorfor slow learning?
+### Opgave 9: Hvorfor slow learning?
 
 Vi forestiller os, at vi har fået valgt nogle uheldige værdier af $w_0$ og $w_1$, så vi for de tre træningseksempler er i denne situation (husk på at outputværdien udregnes på baggrund af vægtene $w_0$ og $w_1$):
 
@@ -353,7 +395,7 @@ Lad os undersøge, hvad der sker, når man starter gradientnedstigning på kante
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 9: Knap så meget slow learning
+### Opgave 10: Knap så meget slow learning
 
 - Brug @fig-E til at vælge en $(w_0,w_1)$-værdi, som er på kanten af det grønne plateau.
 
