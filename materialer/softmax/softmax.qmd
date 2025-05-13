@@ -10,7 +10,7 @@ Et kunstigt neuralt netværk fungerer på den måde, at man på baggrund af en r
 
 ## Hvor hårdt skal du arbejde i matematiktimerne?
 
-Du kender det sikkert godt. Der er gruppearbejde i matematiktimen, og du gider egentlig ikke. Det er nemmere bare at snige sin mobiltelefon i lommen og drible i kantinen. På den anden side er du også ambitiøs og vil gerne have en god karakter til eksamen. What to do? 
+Du kender det sikkert godt. Der er gruppearbejde i matematiktimen, og du gider egentlig ikke. Det er nemmere bare at snige sin mobiltelefon i lommen og drible i kantinen. På den anden side er du også ambitiøs og vil gerne have en god karakter til eksamen. Din lærer er også frustreret. Hun vil gerne være over de elever, som ellers ville stikke af, så de får lært noget sjovt matematik. What to do? Svaret er selvfølgelig, at vi skal have udviklet en AI assistent til din lærer, så hun får hjælp til at hjælpe jer!
 
 ![](images/matematiktime.jpg){width=50% fig-align='center'}
 
@@ -23,7 +23,7 @@ Lad os sige at du svarer på følgende tre spørgsmål på en skala fra 1 til 10
 * $x_3$: Hvor godt vil jeg gerne klare mig til eksamen? (1=\"Jeg er ligeglad\", 10=\"Det skal gå så godt som muligt\").
 
 
-Baseret på disse tre spørgsmål er der nu følgende fire valg, du kan træffe:
+Baseret på disse tre spørgsmål er der nu følgende fire valg, du kan træffe (eller som din lærer måske bare i stilhed observerer):
 
 1. Jeg bliver i klassen, hvor læreren kan hjælpe mig, og regner alt det, jeg kan.
 2. Jeg sætter mig ud og regner opgaverne, så godt jeg kan.
@@ -72,7 +72,7 @@ $$
 t_1 + t_2 + t_3 + t_4 = 1.
 $$ {#eq-one_not}
 
-På grund af denne egenskab kalder man også $\vec{t}$ for en **one hot vektor**. Det får vi brug for senere.
+Da netop én af koordinaterne i $\vec t$ er $1$, mens resten er $0$, kalder man også $\vec{t}$ for en **one hot vektor**. Det får vi brug for senere.
 
 ## Træningsdata
 
@@ -97,7 +97,7 @@ Træningsdata fra 12 elever.
 :::
  
 
-For eksempel har elev nummer 1 sovet fantastisk, eleven synes at emnet er vildt spændende, og eleven vil gerne klare sig rigtig godt til eksamen -- denne elev vælger derfor at blive i klassen. Targetværdien for denne elev er:
+For eksempel har elev nummer 1 sovet fantastisk, eleven synes, at emnet er vildt spændende, og eleven vil gerne klare sig rigtig godt til eksamen -- denne elev vælger derfor at blive i klassen. Targetværdien for denne elev er:
 
 $$
 \vec{t}=
@@ -151,7 +151,7 @@ I eksemplet ovenfor var $n=3$, fordi vi svarede på tre spørgsmål.
 
 Disse $n$ inputvariable er vist i @fig-netvaerk_generelt som lilla cirkler. De grønne cirkler repræsenterer $J$ output neuroner (i vores eksempel er $J=4$, fordi der skal træffes et valg blandt 4 muligheder). 
 
-![Neuralt netværk med $n$ input neuroner og $m$ output neuroner.](images/netvaerk_generelt.png){width=50% #fig-netvaerk_generelt}
+![Neuralt netværk med $n$ input neuroner og $J$ output neuroner.](images/netvaerk_generelt.png){width=50% #fig-netvaerk_generelt}
 
 Vi ønsker at træne netværket, så $o_1$ bliver sandsynligheden for at et givent træningseksempel tilhører klasse $1$, $o_2$ skal være sandsynligheden for at træningseksemplet tilhører klasse $2$ og så videre. Hvis man vil skrive det lidt kompakt op, kan man samle alle outputværdierne i en vektor:
 
@@ -173,7 +173,7 @@ Det vil sige, at det skal være sådan, at
 
 $$
 o_1 + o_2 + \cdots + o_J = 1
-$$
+$$ {#eq-sum_o_1}
 
 fordi sandsynlighederne for de $J$ forskellige muligheder til sammen skal give 1.
 
@@ -207,20 +207,20 @@ I alt er der $(n+1)\cdot J$ forskellige vægte (det vil sige i vores eksempel vi
 Alle $z$-værdierne kan antage et hvilket som helst reelt tal og kan alene af den grund ikke fortolkes som en sandsynlighed. Vi bruger derfor en såkaldt **aktiveringsfunktion** $\alpha$ på alle $z$-værdierne, så vi kan få beregnet en outputværdi, som kan fortolkes som en sandsynlighed:
 
 $$
-o_j = \alpha(z_j),
+o_j = \alpha(z_1, z_2, \dots, z_J),
 $$
 
 hvor
 
 $$
-0 \leq \alpha(z_j) \leq 1.
+0 \leq \alpha(z_1, z_2, \dots, z_J) \leq 1.
 $$
 
 Som aktiveringsfunktion $\alpha$ vil vi bruge en funktion, som kaldes for **softmax**, fordi den præcis har de egenskaber, som vi efterspørger -- det ser vi lige om lidt. På baggrund af alle $z$-værdierne beregnes $o_j$ ved hjælp af **softmax** på denne måde:
 
 $$
-o_j = \alpha(z_j) = \frac{\mathrm{e}^{z_j}}{\sum_{i=1}^J \mathrm{e}^{z_i}}.
-$$
+o_j = \alpha(z_1, z_2, \dots, z_J) = \frac{\mathrm{e}^{z_j}}{\sum_{i=1}^J \mathrm{e}^{z_i}}.
+$$ {#eq-o_j_softmax}
 
 For det første kan vi se, at både tæller og nævner er positive. Derfor må $o_j>0$. For det andet er $\mathrm{e}^{z_j} < \sum_{i=1}^J \mathrm{e}^{z_i}$ og derfor er
 
@@ -244,7 +244,7 @@ o_1 + o_2 + \cdots + o_J &= \frac{\mathrm{e}^{z_1}}{\sum_{i=1}^J \mathrm{e}^{z_i
 \end{aligned}
 $$
 
-hvilket også var et krav til de beregnede outputværdier.
+hvilket også var det krav, vi stillede til de beregnede outputværdier i (@eq-sum_o_1).
 
 I det helt specielle tilfælde, hvor der kun er to output neuroner, vil softmax-funktionen for $o_1$ blot være en funktion af to variable:
 
@@ -262,7 +262,7 @@ Grafen for softmax funktionen $o_1 = \frac{\mathrm{e}^{z_1}}{\mathrm{e}^{z_1} + 
 :::
 
 
-Det betyder, at hvis $o$-værdierne beregnes på denne måde, er der altså tale om en sandsynlighedsfordeling. Beregningen af alle $z$- og $o$-værdier kan udføres, hvis bare man kender alle vægtene. I et neuralt netværk kaldes disse udregninger for **feedforward** og er opsummeret herunder.
+Det betyder, at hvis $o$-værdierne beregnes som defineret i (@eq-o_j_softmax), er der altså tale om en sandsynlighedsfordeling. Beregningen af alle $z$- og $o$-værdier kan udføres, hvis bare man kender alle vægtene. I et neuralt netværk kaldes disse udregninger for **feedforward** og er opsummeret herunder.
 
 
 ::: {.callout-note collapse="false" appearance="minimal"} 
@@ -310,7 +310,7 @@ Hvordan, det rent faktisk lader sig gøre, kommer her.
 
 ## Cross-entropy tabsfunktionen
 
-Forestil dig at vi bare har valgt nogle tilfældige værdier af vægtene. På den baggrund kan vi for et givent sæt af inputværdier beregne outputværdierne ved hjælp af feedforward-udtrykkene i (@eq-o_j). Vi vil som eksempel se på elev nummer 7 fra @tbl-trainingdata. Denne elev har  valgt mulighed 2 (gå uden for klassen for at regne opgaver) og har derfor targetværdi
+Forestil dig, at vi bare har valgt nogle tilfældige værdier af vægtene. På den baggrund kan vi for et givent sæt af inputværdier beregne outputværdierne ved hjælp af feedforward-udtrykkene i (@eq-o_j). Vi vil som eksempel se på elev nummer 7 fra @tbl-trainingdata. Denne elev har  valgt mulighed 2 (gå uden for klassen for at regne opgaver) og har derfor targetværdi
 
 $$
 \vec t = 
@@ -334,7 +334,7 @@ $$
 \end{pmatrix}
 $$ {#eq-o_bad}
 
-Det svarer til at vægtene ikke har fået nogle \"gode\" værdier, fordi denne outputvektor svarer til, at der kun er $10 \%$ chance for at eleven vælger mulighed 2. Hvis vægtene i stedet havde haft værdier, som ville resultere i denne outputvektor
+Det svarer til, at vægtene ikke har fået nogle \"gode\" værdier, fordi denne outputvektor svarer til, at der kun er $10 \%$ chance for at eleven vælger mulighed 2. Hvis vægtene i stedet havde haft værdier, som ville resultere i denne outputvektor
 
 $$
 \vec o = 
@@ -374,7 +374,7 @@ I @fig-natural_ln har vi tegnet grafen for den naturlige logaritme-funktion samt
 
 Da $0<o_j<1$ kan vi for det første se, at $-\ln(o_j) >0$. Det vil sige, at tabsfunktionen er positiv.
 
-Husk nu på at $t_j=1$. Hvis vægtene i vores neurale netværk er \"indstillet\" godt, så skal $o_j$ være tæt på 1. I @fig-natural_ln kan vi se, at det svarer til, at $-\ln(o_j)$ er tæt på $0$. Det betyder, at værdien af tabsfunktionen er lille. 
+Husk nu på, at $t_j=1$. Hvis vægtene i vores neurale netværk er \"indstillet\" godt, så skal $o_j$ være tæt på 1. I @fig-natural_ln kan vi se, at det svarer til, at $-\ln(o_j)$ er tæt på $0$. Det betyder, at værdien af tabsfunktionen er lille. 
 Omvendt hvis vægtene er \"indstillet\" dårligt, så $o_j$ er tæt på $0$ (selvom $t_j=1$), så vil $-\ln(o_j)$ være et stort positivt tal. Altså er værdien af tabsfunktionen stor.
 
 Det betyder, at tabsfunktionen på den måde måler \"kvaliteten\" af netværket:
@@ -468,7 +468,7 @@ $$
 
 Det viser sig, at denne gradient peger i den retning, hvor funktionsværdien *vokser mest*. Omvendt vil minus gradienten $-\nabla f(x_1, x_2, \dots, x_n)$ pege i den retning, hvor funktionsværdien *aftager mest*. Hvis vi derfor står et vilkårligt sted på grafen for $f$ og går et lille skridt i den negative gradientens retning, så vil vi være på vej ned mod et minimum (eventuelt kun lokalt). Når vi har gået det lille skridt, udregner vi gradienten igen og bevæger os igen et lille skridt i den negative gradients retning[^1]. Sådan fortsætter man indstil funktionsværdien ikke ændrer sig ret meget -- det svarer forhåbentlig til, at vi har fundet et (lokalt) minimum.
 
-[^1]: Du kan tænke på gradienten som et kompas, der hele tiden viser dig, hvilken vej du skal gå for at bevæge dig ned mod et minimum.
+[^1]: Du kan tænke på *minus* gradienten som et kompas, der hele tiden viser dig, hvilken vej du skal gå for at bevæge dig ned mod et minimum.
 
 Nu hedder vores funktion ikke $f$, men $E$, og $E$ afhænger af alle vægtene $w_{j,k}$. Derfor, når vægten $w_{j,k}$ skal opdateres, så gør vi følgende:
 
@@ -486,7 +486,7 @@ $$
 
 Hvis vi ser på @fig-netvaerk_generelt_wjk og (@eq-z_j) kan vi se, at $w_{j,k}$ kun har indflydelse på $z_j$. Til gengæld har alle $z$-værdierne indflydelse på alle $o$-værdierne på grund af udtrykket i (@eq-o_j).
 
-![Neuralt netværk hvor vægtene fra de $n$ input neuroner over til den $i$'te output neuron er vist.](images/netvaerk_generelt_wjk.png){width=50% #fig-netvaerk_generelt_wjk}
+![Neuralt netværk hvor vægtene fra de $n$ input neuroner over til den $j$'te output neuron er vist.](images/netvaerk_generelt_wjk.png){width=50% #fig-netvaerk_generelt_wjk}
 
 Derfor kan vi ved hjælp af kædereglen for flere variable finde den partielle afledede af $E$ med hensyn til $w_{j,k}$ på denne måde
 
@@ -509,7 +509,7 @@ $$ {#eq-partialE_w_jk}
 
 
 
-Vi starter med at regne på den sidste faktor $\frac{\partial z_j}{\partial w_{j,k}}$ (fordi den er nemmeste!). Ifølge (@eq-z_j) er
+Vi starter med at regne på den sidste faktor $\frac{\partial z_j}{\partial w_{j,k}}$ (fordi den er nemmest!). Ifølge (@eq-z_j) er
 
 $$
 \begin{aligned}
@@ -518,6 +518,12 @@ $$
 \end{aligned}
 $$ {#eq-partial_z_j_w_jk}
 
+Bemærk, at hvis vi differentierer med hensyn til $w_{j,0}$ så er
+
+$$
+\frac{\partial z_j}{\partial w_{j,0}} = 1.
+$$
+Men definerer vi en ekstra inputværdi $x_0$, som altid er $1$, så gælder udtrykket i (@eq-partial_z_j_w_jk) stadigvæk -- også når $k=0$.
 
 For at bestemme den første faktor $\frac{\partial E}{\partial z_j}$ bruger vi definitionen af tabsfunktionen i (@eq-cross_entropy) og differentierer ledvist:
 
@@ -525,7 +531,7 @@ $$
 \frac{\partial E}{\partial z_j} = - \sum_{i=1}^J t_i \cdot \frac{1}{o_i} \cdot \frac{\partial o_i}{\partial z_j},
 $$ {#eq-partialE_z_j}
 
-hvor vi har brugt, at $\ln(o_i)$ differentieret er $\frac{1}{o_i}$.
+hvor vi har brugt kædereglen og, at $\ln(o_i)$ differentieret er $\frac{1}{o_i}$.
 
 Nu er
 
@@ -607,6 +613,8 @@ $$
 w_{j,k}^{(\textrm{ny})} \leftarrow w_{j,k} + \eta \cdot (t_j - o_j) \cdot x_k
 $$
 
+hvor $x_k=1$, hvis $k=0$.
+
 ![](images/netvaerk_generelt_wjk_zoom.png){width=50% fig-align='center'}
 :::
 
@@ -678,6 +686,8 @@ $$
 w_{j,k}^{(\textrm{ny})} \leftarrow w_{j,k} + \eta \cdot \sum_{m=1}^M (t_j^{(m)} - o_j^{(m)}) \cdot x_k^{(m)}
 $$
 
+hvor $x_k^{(m)}=1$, hvis $k=0$.
+
 ![](images/netvaerk_generelt_wjk_zoom.png){width=50% fig-align='center'}
 :::
 
@@ -727,14 +737,14 @@ Vi har nu fået udledt opdateringsreglerne for alle vægtene, og vi vil derfor p
 |$10$ |$10$ | $2$ | $2$ | ${\color{#F2B33D} 3}$ |  $0.00$ |  $0.00$ |  $1.00$ |  $0.00$ |
 |$11$ |$1$ | $1$ | $3$ | ${\color{#F288B9} 4}$ |  $0.00$ |  $0.02$ |  $0.00$ |  $0.98$ |
 |$12$ |$5$ | $2$ | $2$ | ${\color{#F288B9} 4}$ |  $0.00$ |  $0.02$ |  $0.02$ |  $0.96$ |
-Træningsdata fra 12 elever inklusion de bergende outputværdier.
+Træningsdata fra 12 elever inklusiv de beregnede outputværdier.
 :::
 
 [^4]: Bemærk, at hvis $o_1+o_2+o_3+ o_4$ ikke giver $1$, så skyldes det afrunding.
 
-Et netværk vil altid være forholdsvis godt til at prædiktere korrekt på de data, som netværket er trænet på. Det kan du læse mere om i noten om [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd). Med det i baghovedet kan vi alligevel se fra @tbl-prediction se, at den prædikterede sandsynlighed for det valg, som hver elev træffer, er høj. For eksempel vælger elev nr. 1 også valg 1 (at blive i klassen), og den prædikterede sandsynlighed for dette valg er $o_1 = 0.98$. 
+Et netværk vil altid være forholdsvis godt til at prædiktere korrekt på de data, som netværket er trænet på. Det kan du læse mere om i noten om [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd). Med det i baghovedet kan vi alligevel se fra @tbl-prediction, at den prædikterede sandsynlighed for det valg, som hver elev træffer, er høj. For eksempel vælger elev nr. 1 også valg 1 (at blive i klassen), og den prædikterede sandsynlighed for dette valg er $o_1 = 0.98$. 
 
-For elev nr. 2 kan vi se, at vores AI assistent er i tvivl om ($o_1=o_2=0.50$), om den skal anbefale valg 1 eller 2 (eleven har valgt 1). For elev nr. 7 vil vores AI assisten anbefale valg 1 ($o_1 = 0.70$), men eleven træffer i virkeligheden valg 2. De resterende anbefalinger er korrekte.
+For elev nr. 2 kan vi se, at vores AI assistent er i tvivl om ($o_1=o_2=0.50$), om den skal prædiktere valg 1 eller 2 (eleven har valgt 1). For elev nr. 7 vil vores AI assistent prædiktere valg 1 ($o_1 = 0.70$), men eleven træffer i virkeligheden valg 2. De resterende anbefalinger er korrekte.
 
 På @fig-trainingdata_prediction_wrong er elev 2 og 7 fremhævet ved, at de tilhørende punkter er tegnet større. Hvis man drejer lidt rundt på figuren, kan man se, at de to punkter ligger forholdsvis tæt på hinanden og i nærheden af andre mørkeblå punkter, så det er ikke helt så underligt, at netværket netop har svært ved at prædiktere, som det gør.
 
@@ -745,8 +755,7 @@ På @fig-trainingdata_prediction_wrong er elev 2 og 7 fremhævet ved, at de tilh
 Punktplot af træningsdata fra @tbl-prediction. Punkternes farve angiver valget (mørkeblå svarer til 1, lyseblå svarer til 2, gul svarer til 3 og lyserød svarer til 4). De to punkter, som er tegnet større, svarer til elev 2 og 7, hvor netværket ikke prædikterer korrekt.
 :::
 
-
-Nu er idéen jo ikke at komme med et godt råd til de elever, som allerede har truffet et valg (svarende til at prædiktere på træningsdata), men derimod at vejlede kommende elever.
+Nu er idéen jo ikke at komme med et godt råd til de elever, som allerede har truffet et valg (svarende til at prædiktere på træningsdata), men derimod at læreren får et værktøj til at vejlede kommende elever.
 
 Byd derfor velkommen til tre nye elever:
 
@@ -756,7 +765,7 @@ Byd derfor velkommen til tre nye elever:
 
 * Til sidst kommer Mads -- lidt for sent i øvrigt... Mads har nemlig spillet computer den halve nat ($x_1=3$), han synes, at emnet er ret interessant ($x_2=8$), men han er pænt ligeglad med, hvordan det går til eksamen ($x_3=2$).
 
-Alle tre elever hiver straks deres ny AI assistent op af lommen, indtaster svaret på de tre spørgsmål og beder om en anbefaling. Her er, hvad der kommer ud af det:
+Ved timens start svarer alle tre elever straks på de tre spørgsmål, som læreren indtaster i sin AI assistent. Her er, hvad der kommer ud af det:
 
 
 | Elev | $x_1$ | $x_2$ | $x_3$ | $o_1$ | $o_2$ | $o_3$ | $o_4$ | Valg | 
@@ -766,7 +775,9 @@ Alle tre elever hiver straks deres ny AI assistent op af lommen, indtaster svare
 |Mads |$3$ | $8$ | $2$  |  $0.00$ |  $1.00$ |  $0.00$ |  $0.00$ | ${\color{#8086F2} 2}$ |
 
  
-Anton bliver anbefalet, at gå i kantinen (valg 3), mens Signe og Mads bliver anbefalet at gå ud for at regne opgaver (valg 2). Det kan godt se ud som om, at $x_2$ (interessen for emnet) er forholdsvis afgørende for den endelig anbefaling. Hvis du tager et kig på @fig-trainingdata, vil du også opdage, at hvis $x_2<5$, så er alle punkter lyserøde eller gule (svarende til valg 3 og 4), mens alle punkter, hvor $x_2 \geq 5$ er lyse- eller mørkeblå (valg 1 og 2). Det kunne jo få en til at tænke, om det i virkeligheden ville være nok at svare på spørgsmål 2, uden at det går udover klassifikationsnøjagtigheden. Det vil man kunne undersøge ved at lave en model med kun $x_2$ som inputvariabel og en anden model med alle tre inputvariable og så for eksempel vurdere de to modellers klassifikationsnøjagtighed ved hjælp af [krydsvalidering](../krydsvalidering/krydsvalidering.qmd), men det ligger uden for formålet med denne note.
+Det prædikteres, at Anton vil gå i kantinen (valg 3), mens Signe og Mads vil gå ud for at regne opgaver (valg 2). Læreren ved derfor nu, at hun skal være ekstra opmærksom på Anton. 
+
+Det kan godt se ud som om, at $x_2$ (interessen for emnet) er forholdsvis afgørende for den endelig anbefaling. Hvis du tager et kig på @fig-trainingdata, vil du også opdage, at hvis $x_2<5$, så er alle punkter lyserøde eller gule (svarende til valg 3 og 4), mens alle punkter, hvor $x_2 \geq 5$ er lyse- eller mørkeblå (valg 1 og 2). Det kunne jo få en til at tænke, om det i virkeligheden ville være nok at svare på spørgsmål 2, uden at det går udover klassifikationsnøjagtigheden. Det vil man kunne undersøge ved at lave en model med kun $x_2$ som inputvariabel og en anden model med alle tre inputvariable og så for eksempel vurdere de to modellers klassifikationsnøjagtighed ved hjælp af [krydsvalidering](../krydsvalidering/krydsvalidering.qmd), men det ligger uden for formålet med denne note.
 
 I @fig-trainingdata_tre_nye_elever er de tre nye elever indtegnet sammen med træningsdata. Når man ser, hvordan de tre nye elever ligger i forhold til de andre punkter i træningsdata, så giver det faktisk god mening, at Anton bliver \"farvet\" gul, mens Signe og Mads bliver \"farvet\" lyseblå.
 
