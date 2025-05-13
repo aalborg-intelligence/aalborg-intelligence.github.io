@@ -10,10 +10,10 @@ categories:
 ::: {.callout-caution collapse="true" appearance="minimal"}
 ### Forudsætninger og tidsforbrug
 
-+ Eksponentialfunktioner, herunder $e^x$.
-+ Sandsynlighedsfelter
++ Eksponentialfunktioner, herunder $\mathrm{e}^x$.
++ Sandsynlighedsfelter.
 
-**Tidsforbrug:** Ca. 60 minutter 
+**Tidsforbrug:** Ca. 60 minutter. 
 
 :::
 
@@ -23,14 +23,15 @@ categories:
 
 Formålet med dette forløb er 
 
-* at se, at eksponentialfunktioner, eller mere konkret $e^x$, kan bruges til andet end funktioner med procentvækst.
+* at se, at eksponentialfunktioner, eller mere konkret $\mathrm{e}^x$, kan bruges til andet end funktioner med procentvækst.
 * at bruge sandsynlighedsfelter til noget lidt mere kompliceret end terningkast.
-* at blive introduceret til Softmax, som senere anvendes i visse neurale netværk bl.a. i forbindelse med store sprogmodeller.
+* at blive introduceret til Softmax, som senere anvendes i visse neurale netværk blandt andet i forbindelse med store sprogmodeller.
 
 :::
 
 ## Sengetester i IKEA
-Du er blevet ansat som sengetester af IKEA til 138 kr. i timen - dit drømmejob. Du skal sove på 4 typer af boxmadrasser og give hver af dem point fra 1 til 5.
+Du er blevet ansat som sengetester af IKEA til 138 kr. i timen -- dit drømmejob. Du skal sove på 4 typer af boxmadrasser og give hver af dem point fra 1 til 5.
+
 
 Efter at have sovet dejligt længe og tjent nogle gode penge, er resultatet følgende for 4 forskellige af IKEA's madrasser:
 
@@ -39,41 +40,41 @@ Efter at have sovet dejligt længe og tjent nogle gode penge, er resultatet føl
 * Stuvland 3 point
 * Stavanger 5 point
 
-IKEA vil så på baggrund af din særdeles grundige videnskabelige test justere deres produktion, så de producerer de 4 typer boxmadresser i forhold til dine resultater. De vil naturligvis producere flest Stavanger og færrest Snarum, men hvor mange procent af hver slags skal de producere?
+IKEA vil så på baggrund af din særdeles grundige videnskabelige test justere deres produktion, så de producerer de 4 typer boxmadrasser i forhold til dine resultater. De vil naturligvis producere flest Stavanger og færrest Snarum, men hvor mange procent af hver slags skal de producere?
 
-Vi skal altså have lavet et ikke-symmetrisk sandsynlighedsfelt, hvor udfaldsrummet er de 4 typer madresser og sandsynlighederne tilsammen giver 1, som det jo skal.
+Vi skal altså have lavet et ikke-symmetrisk sandsynlighedsfelt, hvor udfaldsrummet er de 4 typer madrasser og sandsynlighederne tilsammen giver 1, som det jo skal.
 
-Det simpleste ville nok være at lægge alle pointene sammen, og så dividere pointtallet for hver madres med summen. 
+Det simpleste ville nok være at lægge alle pointene sammen, og så dividere pointtallet for hver madras med summen. 
 
-$$P(Skotterud) = \frac{3}{3+2+3+5} \approx 23,1\%$$
+$$P(\mathrm{ Skotterud }) = \frac{3}{3+2+3+5} \approx 23,1\%$$
 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 1: Udregn sandsynligherne
-* Udregn sandsynlighederne for hver af de 3 andre typer boxmadresser.
+* Udregn sandsynlighederne for hver af de 3 andre typer boxmadrasser.
 * Læg sandsynlighederne sammen og se, at det giver 1.
 
 :::
 
-Det fungerer jo sådan set meget godt. Der er dog nogle ting, som gør, at man ofte gør det lidt mere kompliceret.
+Det fungerer jo sådan set meget godt. Der er dog nogle ting, som gør, at man ofte gør det lidt mere kompliceret:
 
-* hvis nogle af pointene er negative, risikerer man at skulle dividere med 0.
-* hvis nogle af pointene er negative, kan brøken give et negativt tal.
+* Hvis nogle af pointene er negative, risikerer man at skulle dividere med 0.
+* Hvis nogle af pointene er negative, kan brøken give et negativt tal.
 
-Metoden er, at man opløfter tallet $\mathrm{e}$ i hvert pointal, og derefter regne sandsynlighederne på samme måde som før.
+Metoden er, at man opløfter tallet $\mathrm{e}$ i hvert pointtal, og derefter regne sandsynlighederne på samme måde som før.
 
-Så bliver $$P(Skotterud) = \frac{\mathrm{e}^{3}}{\mathrm{e}^{3}+\mathrm{e}^2+\mathrm{e}^3+\mathrm{e}^{5}} \approx 10,2\%$$
+Så bliver $$P(\mathrm{ Skotterud }) = \frac{\mathrm{e}^{3}}{\mathrm{e}^{3}+\mathrm{e}^2+\mathrm{e}^3+\mathrm{e}^{5}} \approx 10,2\%$$
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 2: Udregn sandsynligherne med Softmax
-* Udregn sandsynlighederne for hver af de 3 andre typer boxmadresser med Softmax metoden.
-* Læg sandsynlighederne sammen og se, at det giver 1
+* Udregn sandsynlighederne for hver af de 3 andre typer boxmadrasser med Softmax metoden.
+* Læg sandsynlighederne sammen og se, at det giver 1.
 
 :::
 
 Bemærk, at sandsynlighederne her er blevet mere forskellige med Softmax, end da du regnede i første omgang.
 
-Hvis pointene bliver store og forskellige, vil næsten al sandsynligheden samle sig omkring den største værdi. Det kan naturligvis være ønskeligt i situationer, hvor "the winner takes it all", men i andre situationer kan det ses som et problem.
+Hvis pointene bliver store og forskellige, vil næsten al sandsynligheden samle sig omkring den største værdi. Det kan naturligvis være ønskeligt i situationer, hvor \"the winner takes it all\", men i andre situationer kan det ses som et problem.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 3: Udregn sandsynligherne for store forskellige værdier
@@ -81,7 +82,7 @@ Hvis pointene bliver store og forskellige, vil næsten al sandsynligheden samle 
 
 :::
 
-I mange anvendelse med Softmax indgår der derfor andre ting, så dette ikke er et problem, men det kan du måske komme til i 2.g eller 3.g. f.eks. i [Simple kunstige neurale netværk til multiple klassifikation](/materialer/softmax/softmax.qmd) eller [WordToVec](/materialer/sprogmodeller/word2vec.qmd).
+I mange anvendelser med Softmax indgår der derfor andre ting, så dette ikke er et problem, men det kan du måske komme til i 2.g eller 3.g. f.eks. i [Simple kunstige neurale netværk til multiple klassifikation](/materialer/softmax/softmax.qmd) eller [WordToVec](/materialer/sprogmodeller/word2vec.qmd).
 
 
 ## Løsninger til opgaver

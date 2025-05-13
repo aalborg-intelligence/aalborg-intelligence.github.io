@@ -7,12 +7,13 @@ title: "Del 4: Træning af kunstig neuron"
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-::: 
+::: {.estimeret_tid}
+
 Forventet tid ca. 1 x 90 min.
 
 Aktivitet 3 handler om et eksempel på \"slow learning\" og kan derfor springes over.
 
-:::{.estimeret_tid}
+::: 
 
 
 ## Aktivitet 1 - Datasæt {.aimat}
@@ -75,7 +76,7 @@ for(i in 1:nrow(dat)){
 
 :::
 
-I datasættet er der tre inputvariable: \"alder\" (målt i år), \"forbrug\" (målt i kroner) og \"køn\" (kon, hvor 0 svarer til kvinder og 1 svarer til mænd). Targetvariablen kaldes for \"aktiveret\" (hvor \"ja\" svarer til at kunden har aktiveret tilbudet og \"nej\" svarer til at kunden ikke har aktiveret tilbudet). Vi har altså følgende inputvariable:
+I datasættet er der tre inputvariable: \"alder\" (målt i år), \"forbrug\" (målt i kroner) og \"køn\" (kon, hvor 0 svarer til kvinder og 1 svarer til mænd). Targetvariablen kaldes for \"aktiveret\" (hvor \"ja\" svarer til, at kunden har aktiveret tilbudet, og \"nej\" svarer til, at kunden ikke har aktiveret tilbudet). Vi har altså følgende inputvariable:
 
 * $x_1$: kundens alder målt i år
 * $x_2$: kundens forbrug i Good Food den seneste måned målt i kr.
@@ -89,7 +90,7 @@ I den næste opgave skal vi prøve at lave to plots for at visualisere datasætt
 
 Vi laver først et plot for kvinderne.
 
-- Start med at kopiere den første halvdel af datasættet over i et regneark i GeoGebra svarende til data for alle kvinderne, det vil sige hvor \"kon=1\" (heldigvis er datasættet sorteret efter \"kon\", så det er lige til at gå til).
+- Start med at kopiere den første halvdel af datasættet over i et regneark i GeoGebra svarende til data for alle kvinderne, det vil sige hvor \"kon=0\" (heldigvis er datasættet sorteret efter \"kon\", så det er lige til at gå til).
 
 - I celle `E2` skriver du `(A2,B2)`. Det giver dig koordinatsættet for alder og forbrug for det første træningseksempel.
 
@@ -120,9 +121,9 @@ Det kommer til at se sådan her ud (hvis du har GeoGebra på dansk bliver \"If\"
 
 - Marker igen celle `E2` og tag ved den lille kasse i nederste hjørne af celle `E2` og trække ned, så du igen får udfyldt kolonne `E` for hele datasættet. Punkterne skulle nu gerne være farvet som ønsket.
 
-- Indsæt nogle tekstfelter i tegneblokken (tryk på ikonet \"Skyder\" og vælg \"Tekst\"), så du får angivet, hvad der er ud af akserne, hvad de røde og blå punkter betyder, og at plottet er for kvinder.
+- Indsæt nogle tekstfelter i tegneblokken (tryk på ikonet \"Skyder\" og vælg \"Tekst\"): Angiv, hvad der er ud af akserne, hvad de røde og blå punkter betyder, og at plottet er for kvinder.
 
-- Vil du i dette koordinatsystem kunne indlægge en rette linje, som (for de fleste punkter) vil kunne bruges til at adskille de blå punkter fra de røde? Notér ligningen for en sådan linje.
+- Indlæg i dette koordinatsystem en rette linje, som (for de fleste punkter) vil kunne bruges til at adskille de blå punkter fra de røde? Notér ligningen for en sådan linje.
 
 - Lav et tilsvarende plot for mændene.
 
@@ -134,7 +135,7 @@ Det kommer til at se sådan her ud (hvis du har GeoGebra på dansk bliver \"If\"
 I denne aktivitet skal vi træne en kunstig neuron på datasættet fra opgave 1. Det vil sige, at vi skal have bestemt vægtene $w_0$, $w_1$, $w_2$ og $w_3$, så vi kan bruge sigmoid-funktionen til at beregne outputværdien $o$:
 
 $$
-o = \frac{1}{1+\mathbb{e}^{-(w_0+w_1 \cdot x_1+w_2 \cdot x_2+w_3 \cdot x_3)}}
+o = \frac{1}{1+\mathrm{e}^{-(w_0+w_1 \cdot x_1+w_2 \cdot x_2+w_3 \cdot x_3)}}
 $$
 
 Udfra outputværdien vil vi prædiktere targetværdien på denne måde:
@@ -184,13 +185,13 @@ Vægtene bestemmer vi ved at træne en kunstig neuron (det vil sige, at vi minim
 
 Vi starter med at undersøge, om det ser ud som om, at vi har fundet et minimum for tabsfunktionen. En graf for tabsfunktionen som funktion af antal opdateringer af vægtene ses til højre i app'en.
 
-- Ser det ud som om, at vi ved den sidste iteration har fundet minimum for tabsfunktionen (flader grafen ud eller er den stadig \"på vej nedad bakke\")?
+- Ser det ud som om, at vi ved den sidste iteration har fundet minimum for tabsfunktionen (flader grafen ud eller er den stadig \"på vej nedad bakke\")? Notér slutværdien af tabsfunktionen (som står lige under grafen).
 
 - Prøv at sætte antal iterationer til $10000$ (det tager lige lidt længere tid). Tænker du, at vi har fundet minimum nu?
 
 - Notér værdien af vægtene $w_0$, $w_1$, $w_2$ og $w_3$, som står i tabellen ovenfor grafen for tabsfunktionen i højreside.
 
-- Notér slutværdien af tabsfunktionen (som står lige under grafen).
+- Notér igen slutværdien af tabsfunktionen. Er værdien af tabsfunktionen blevet mindre sammenlignet med værdien ved $1000$ iterationer?
 
 :::
 
@@ -210,10 +211,6 @@ $$
    $$
    w_0+w_1 \cdot x_1+w_2 \cdot x_2+w_3 \cdot x_3 = 0
    $$ {#eq-linje}
-   
-- Overbevis dig selv om, at hvis
-   
-   $$w_0+w_1 \cdot x_1+w_2 \cdot x_2+w_3 \cdot x_3>0$$ 
    
 :::
 
@@ -238,9 +235,9 @@ Vi kan derfor se, at de to ligninger i (@eq-linje2) begge er på formen for en r
 
 ### Opgave 5: Skillelinjer
 
-Brug de vægte som du fandt i opgave 3.
+Brug de vægte som du fandt i opgave 3 (med $10000$ iterationer).
 
-- Brug de plots som du lavede i opgave 2 og indtegn de rette linjer med ligningerne i (@eq-linje2) (selvfølgelig skal du tegne linjen for kvinder i det plot du lavede for kvinder og tilsvarende med mændene).
+- Brug de plots som du lavede i opgave 2 og indtegn de rette linjer med ligningerne i (@eq-linje2) (du skal selvfølgelig tegne linjen for kvinder i det plot, du lavede for kvinder og tilsvarende med mændene).
 
 - Er de to linjer gode til at adskille de blå punkter fra de røde?
 
@@ -272,7 +269,7 @@ Den andel af punkterne, som er blevet klassificeret korrekt, kaldes for  **klass
 
 ## Aktivitet 3 - Eksempel på slow learning {.aimat}
 
-I aktivitet 2 i [del 3](neurale_net_del3.qmd) så vi, at man kan starte et sted på grafen for tabsfunktionen, som resulterer i \"slow learning\". Det vil sige, at det kan umiddelbart se ud som om, at man har fundet et minimum for tabsfunktionen, men i virkeligheden er man landet i et plateau eller lignede sted, hvor værdien af tabsfunktionen kun ændrer sig langsomt.
+I aktivitet 2 i [del 3](neurale_net_del3.qmd) så vi, at man kan starte et sted på grafen for tabsfunktionen, som resulterer i \"slow learning\". Det vil sige, at det umiddelbart kan se ud som om, at man har fundet et minimum for tabsfunktionen, men i virkeligheden er man landet i et plateau eller lignede sted, hvor værdien af tabsfunktionen kun ændrer sig langsomt.
 
 Det skal vi se et konkret eksempel på nu.
 
@@ -285,19 +282,17 @@ Det skal vi se et konkret eksempel på nu.
 
 - Vælg de samme indstillinger som i opgave 3, men sæt start-vægtene til $10$ og vælg at antallet af iterationer skal være $1000$. 
 
-- Tryk på \"Kør!\". Ser det ud som om, at vi har fundet et minimum?
+- Tryk på \"Kør!\". Ser det ud som om, at vi har fundet et minimum? Notér slutværdien af tabsfunktionen.
 
 - Sæt antal iterationer op til $10000$. Er det bedre?
 
-- Prøv med $35000$ (og hav lidt tålmodighed -- det tager lidt tid). Ser det ud som om, at vi har fundet minimum nu? Notér klassifikationsnøjagtigheden (CA) i dette tilfælde.
+- Prøv med $35000$ (og hav lidt tålmodighed -- det tager lidt tid). Ser det ud som om, at vi har fundet minimum nu? Notér både slutværdien for tabsfunktionen og klassifikationsnøjagtigheden (CA) i dette tilfælde.
 
-- Sæt antal iterationer op til $100000$. Er det bedre? Notér CA.
+- Sæt antal iterationer op til $100000$. Er det bedre? Notér slutværdien for tabsfunktionen og CA.
 
-- Sæt antal iterationer op til $200000$. Notér CA.
+- Sæt antal iterationer op til $200000$. Notér slutværdien for tabsfunktionen og CA.
 
 - Notér nu værdien af vægtene $w_0$, $w_1$, $w_2$ og $w_3$, som står i tabellen ovenfor grafen for tabsfunktionen i højreside.
-
-- Notér slutværdien af tabsfunktionen (som står lige under grafen). Sammenlign med slutværdien af tabsfunktionen, som du fandt i opgave 3.
 
 :::
 
@@ -308,6 +303,18 @@ Du har måske bemærket, at du har fået nogle andre værdier af vægtene her i 
 
 ### Opgave 8: Et andet minimum
 
+Brug de vægte som du fandt i opgave 7 (med $200000$ iterationer).
 
+- Brug de plots som du lavede i opgave 2 og indtegn de rette linjer med ligningerne i (@eq-linje2) (du skal selvfølgelig tegne linjen for kvinder i det plot, du lavede for kvinder og tilsvarende med mændene).
+
+I hvert plot har du nu to forskellige linjer, som kan bruges til at adskille de blå punkter fra de røde. 
+
+- Er den ene linje bedre end den anden?
+
+- Sammenlign slutværdien af tabsfunktionen, som du fandt i opgave 3 (hvor start-vægtene var sat til $0$ og antallet af iterationer var $10000$) med slutværdien af tabsfunktionen, som du fandt i opgave 7 (hvor start-vægtene var sat til $10$ og antallet af iterationer var $200000$). Hvilken værdi er mindst?
+
+Der er her sket det, at vi har fundet to forskellige lokale minima for tabsfunktionen. Spørgsmål er, om der i praksis er den store forskel på de to:
+
+- Sammenlign slutværdien af CA, som du fandt i opgave 6 (hvor start-vægtene var sat til $0$ og antallet af iterationer var $10000$) med CA, som du fandt i opgave 7 (hvor start-vægtene var sat til $10$ og antallet af iterationer var $200000$). Er der reelt nogen forskel på hvor gode de to forskellige modeller er til at prædiktere på træningsdatasættet?
 
 :::

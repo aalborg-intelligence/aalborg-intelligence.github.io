@@ -1,0 +1,173 @@
+---
+title: "Del 5: Krydsvalidering og modeludvælgelse"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+::: {.estimeret_tid}
+
+Forventet tid ca. 1 x 90 min.
+
+Aktivitet 4 er en fortsættlse af eksemplet om \"slow learning\" og kan derfor springes over.
+
+::: 
+
+## Aktivitet 1 - Krydsvalidering {.aimat}
+
+Start med at se denne video som handler om **krydsvalidering** (eksemplet i videoen handler om polynomier, men det er principperne omkring træningsdata, testdata og krydsvalidering, som du skal hæfte dig ved):
+
+{{< video https://www.youtube.com/embed/uA2OziaNeL0?si=-rL5gKHvtMoAUZc6 >}}
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 1: Arbejdsspørgsmål til videoen
+
+- Hvad betyder træningsdata og testdata?
+- Forklar krydsvalidering med dine egne ord.
+- Hvorfor er det vigtigt at teste en model på data, som ikke er brugt i forbindelse med træning af modellen?
+
+:::
+
+Hvis du vil vide mere, kan du læse i noten om [overfitting, modeludvælgelse og kyrdsvalidering](../../krydsvalidering/krydsvalidering.qmd).
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 2: Klassifikationsnøjagtighed
+
+- Åbn igen [neuron app'en](https://apps01.math.aau.dk/ai/neuron){target="blank"} og upload [datasættet](data/goodfood.xlsx) (under \"Browse...\").
+
+- Træn en kunstig neuron med start-vægte på $0$ og antal iterationer på $10000$, som du gjorde det i opgave 3 i [del 4](neurale_net_del4.qmd), men slå nu \"Krydsvalidering\" til og sæt antal fold til $5$.
+
+- Sammenlign klassifikationsnøjagtigheden (CA) øverst (som er baseret på træningsdatasættet) med CA under grafen for tabsfunktionen, som er baseret på $5$-folds krydsvalidering. Hvilket tal er mindst og giver det god mening?
+
+- Når man laver $5$-folds krydsvalidering, laves inddelingen i foldene tilfældigt. Prøv derfor at trykke \"Kør!\" flere gange, og du vil formentlig se, at CA ændrer sig.
+
+
+
+:::
+
+
+## Aktivitet 2 - Modeludvælgelse {.aimat}
+
+Se denne video, som handler om **overfitting** (igen handler eksemplet i videoen om polynomier, men det er princippet omkring overfitting, som du skal hæfte dig ved):
+
+{{< video https://www.youtube.com/embed/8W0iXbOqe6Y?si=205Wv-thi3SlhVGh >}}
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 3: Arbejdsspørgsmål til videoen
+
+- Forklar overfitting med dine egne ord.
+- Kan du nu mere præcist forklare, hvorfor det er vigtigt at teste en model på data, som ikke er brugt i forbindelse med træning af modellen?
+
+:::
+
+I eksemplet med Good Food app'en er der også en risiko for, at vi har overfittet. Det kan for eksempel være, at en eller flere af inputvariablene faktisk ikke bidrager til klassifikationsnøjagtigheden, men i virkeligheden bare er støj. Det vil vi undersøge i den næste opgave.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 4: Overfitting
+
+Vi vil undersøge, hvad der sker, hvis vi på skift fjerner én af de tre inputvariable. 
+
+- Brug [neuron app'en](https://apps01.math.aau.dk/ai/neuron){target="blank"} med samme indstillinger, som i opgave 2. 
+
+- Udfyld nedenstående tabel. 
+
+   *Forklaring: Med __CA (på træningsdata)__ menes den værdi for klassifikationsnøjagtigheden, som       man får, når man bruger samme datasæt til både at træne og teste på (denne værdi kan ses øverst      til højre i app'en). Med __CA1-CA5__ menes de værdier af klassifikationsnøjagtigheden, som man       får, når man kører app'en fem forskellige gange uden af ændre på indstillingerne.* 
+
+| Inputvariable | CA (på træningsdata)  | CA1 | CA2 | CA3 | CA4 | CA5 |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| {Alder, Forbrug, Kon} | | | | | | |
+| {Alder, Forbrug} | | | | | | |
+| {Alder, Kon} | | | | | | |
+| {Forbrug, Kon} | | | | | | |
+: {.bordered}
+
+- Forklar hvorfor **CA (på træningsdata)** er størst, når alle tre inputvariable er med i modellen.
+
+- Vil du på baggrund af **CA1-CA5** mene, at der er én af de tre inputvariable, som kan undværes i modellen. Med andre ord: Er der tegn på, at vi har overfittet ved at bruge alle tre inputvariable?
+
+:::
+
+## Aktivitet 3 - Prædiktion {.aimat}
+
+Du har nu fundet en model, som du mener, kan bruges til at prædiktere, om en fremtidig kunde vil aktivere et tilbud eller ej. I den næste opgave vil vi afprøve den.
+
+Husk først på hvordan vi beregner outputværdien $o$ ved hjælp af sigmoid-funktionen:
+
+$$
+o = \sigma(x_1, x_2, x_3) = \frac{1}{1+\mathrm{e}^{-(w_0 +w_1 \cdot x_1 + w_2 \cdot x_2 + w_3 \cdot x_3)}}
+$$
+hvor 
+
+* $x_1$: kundens alder målt i år
+* $x_2$: kundens forbrug i Good Food den seneste måned målt i kr.
+* $x_3$: kundens køn (0 svarer til kvinder og 1 svarer til mænd)
+
+Herefter laves den endelige prædiktion på denne måde:
+
+$$
+\textrm{Kunden aktiverer tilbuddet: }
+\begin{cases}
+\textrm{Ja} & \textrm{hvis } o \geq 0.5\\
+\textrm{Nej} & \textrm{hvis } o < 0.5\\
+\end{cases}
+$$
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 5: Prædiktion
+
+Notér $w_0$, $w_1$, $w_2$ og $w_3$ for din endelige model. 
+
+Og byd så velkommen til otte nye \"Good Food\" kunder!
+
+| Kunde  | Alder | Forbrug | Køn | 
+|:---:|:---:|:---:|:---:|
+| Ditte | 32 | 1100 | Kvinde |
+| Helena | 32 | 2500 | Kvinde |
+| Susanne | 60 | 2500 | Kvinde |
+| Helle | 60 | 3500 | Kvinde |
+| Rasmus | 32 | 1100 | Mand |
+| Mikkel | 32 | 2500 | Mand |
+| Henrik | 60 | 2500 | Mand |
+| Jan | 60 | 3500 | Mand |
+: {.bordered}
+
+- Udregn for hver af de otte nye kunder sandsynligheden for, at de hver især aktiverer \"Good Food\"s tilbud.
+
+- Hvilke af kunderne vil du vælge at præsentere tilbudet for, og hvilke kunder skal ikke se tilbudet?
+
+:::
+
+
+
+## Aktivitet 4 - Slow learning {.aimat}
+
+I opgave 8 i [del 4](neurale_net_del4.qmd) bestemte vi vægtene for to forskellige minima for tabsfunktionen. På det tidspunkt konkludererede vi på baggrund af CA (på træningsdata), at der ikke var nogen forskel på de to modeller. Vi vil nu lave sammenligningen baseret på krydsvalidering.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 6: To minima - er der forskel?
+
+- Brug [neuron app'en](https://apps01.math.aau.dk/ai/neuron){target="blank"}, hvor start-vægtene er sat til $0$ og antal iterationer til $10000$. Tryk på \"Kør!\" fem gange og nedskrive de fem værdier for klassifikationsnøjagtigheden baseret på $5$-folds krydsvalidering.
+
+- Gentag ovenstående men med start-vægte på $10$ og antal iterationer på $200000$. Udfyld nedenstående tabel:
+
+| Start-vægte | Antal iterationer  | CA1 | CA2 | CA3 | CA4 | CA5 |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| $0$ | $10000$ | | | | | |
+| $10$ | $200000$ | | | | | |
+: {.bordered}
+
+- Vil du stadig sige, at de to modeller er lige gode?
+
+:::
+
+
