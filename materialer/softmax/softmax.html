@@ -223,7 +223,7 @@ window.Quarto = {
 <p>Et kunstigt neuralt netværk fungerer på den måde, at man på baggrund af en række forskellige informationer gerne vil kunne forudsige en eller anden ting. Det kan være, at man på baggrund af en række forskellige blodprøveværdier vil forudsige, om en patient har en bestemt sygdom. Det kunne også være, at man baseret på svarene fra en række forskellige spørgsgmål vil udtale sig om, om en person vil stemme på rød eller blå blok. De nævnte eksempler kalder man for <em>binær klassifikation</em> – fordi der i hvert tilfælde er to muligheder: <em>syg</em>/<em>ikke syg</em> og <em>rød blok</em>/<em>blå blok</em>. Men det er ikke svært at forestille sig scenarier, hvor der kan være mere end to klasser. For eksempel er eksemplet med rød og blå nok tvivlsomt. Her ville det måske være bedre at prøve at forudsige et bestemt parti. Denne note handler om, hvordan man udvider en simpel <a href="../../materialer/kunstige_neuroner/kunstige_neuroner.html">kunstig neuron</a>, så den ikke kun kan bruges til binær klassifikation, men derimod til at forudsige hvilke blandt flere klasser et givent tilfælde befinder sig i. Lad os starte med et eksempel.</p>
 <section id="hvor-hårdt-skal-du-arbejde-i-matematiktimerne" class="level2">
 <h2 class="anchored" data-anchor-id="hvor-hårdt-skal-du-arbejde-i-matematiktimerne">Hvor hårdt skal du arbejde i matematiktimerne?</h2>
-<p>Du kender det sikkert godt. Der er gruppearbejde i matematiktimen, og du gider egentlig ikke. Det er nemmere bare at snige sin mobiltelefon i lommen og drible i kantinen. På den anden side er du også ambitiøs og vil gerne have en god karakter til eksamen. What to do?</p>
+<p>Du kender det sikkert godt. Der er gruppearbejde i matematiktimen, og du gider egentlig ikke. Det er nemmere bare at snige sin mobiltelefon i lommen og drible i kantinen. På den anden side er du også ambitiøs og vil gerne have en god karakter til eksamen. Din lærer er også frustreret. Hun vil gerne være over de elever, som ellers ville stikke af, så de får lært noget sjovt matematik. What to do? Svaret er selvfølgelig, at vi skal have udviklet en AI assistent til din lærer, så hun får hjælp til at hjælpe jer!</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/matematiktime.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
@@ -235,7 +235,7 @@ window.Quarto = {
 <li><p><span class="math inline">\(x_2\)</span>: Hvor spændende er det emne, vi er i gang med lige nu? (1="Mega kedeligt", 10="Det er awesome").</p></li>
 <li><p><span class="math inline">\(x_3\)</span>: Hvor godt vil jeg gerne klare mig til eksamen? (1="Jeg er ligeglad", 10="Det skal gå så godt som muligt").</p></li>
 </ul>
-<p>Baseret på disse tre spørgsmål er der nu følgende fire valg, du kan træffe:</p>
+<p>Baseret på disse tre spørgsmål er der nu følgende fire valg, du kan træffe (eller som din lærer måske bare i stilhed observerer):</p>
 <ol type="1">
 <li>Jeg bliver i klassen, hvor læreren kan hjælpe mig, og regner alt det, jeg kan.</li>
 <li>Jeg sætter mig ud og regner opgaverne, så godt jeg kan.</li>
@@ -270,7 +270,7 @@ t_4 \\
 <p><span id="eq-one_not"><span class="math display">\[
 t_1 + t_2 + t_3 + t_4 = 1.
 \tag{1}\]</span></span></p>
-<p>På grund af denne egenskab kalder man også <span class="math inline">\(\vec{t}\)</span> for en <strong>one hot vektor</strong>. Det får vi brug for senere.</p>
+<p>Da netop én af koordinaterne i <span class="math inline">\(\vec t\)</span> er <span class="math inline">\(1\)</span>, mens resten er <span class="math inline">\(0\)</span>, kalder man også <span class="math inline">\(\vec{t}\)</span> for en <strong>one hot vektor</strong>. Det får vi brug for senere.</p>
 </section>
 <section id="træningsdata" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="træningsdata">Træningsdata</h2>
@@ -381,7 +381,7 @@ Tabel&nbsp;1: Træningsdata fra 12 elever.
 </figcaption>
 </figure>
 </div>
-<p>For eksempel har elev nummer 1 sovet fantastisk, eleven synes at emnet er vildt spændende, og eleven vil gerne klare sig rigtig godt til eksamen – denne elev vælger derfor at blive i klassen. Targetværdien for denne elev er:</p>
+<p>For eksempel har elev nummer 1 sovet fantastisk, eleven synes, at emnet er vildt spændende, og eleven vil gerne klare sig rigtig godt til eksamen – denne elev vælger derfor at blive i klassen. Targetværdien for denne elev er:</p>
 <p><span class="math display">\[
 \vec{t}=
 \begin{pmatrix}
@@ -555,7 +555,7 @@ x_1, x_2, \dots, x_n.
 <img src="images/netvaerk_generelt.png" class="img-fluid figure-img" style="width:50.0%">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-netvaerk_generelt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;2: Neuralt netværk med <span class="math inline">\(n\)</span> input neuroner og <span class="math inline">\(m\)</span> output neuroner.
+Figur&nbsp;2: Neuralt netværk med <span class="math inline">\(n\)</span> input neuroner og <span class="math inline">\(J\)</span> output neuroner.
 </figcaption>
 </figure>
 </div>
@@ -571,9 +571,9 @@ o_J
 \]</span></p>
 <p>I vores eksempel vil det svare til, at <span class="math inline">\(o_1\)</span> skal være sandsynligheden for, at du bliver i klassen og regner opgaver (mulighed 1), <span class="math inline">\(o_2\)</span> skal være sandsynligheden for, at du sætter dig ud og regner opgaver og så videre.</p>
 <p>Det vil sige, at det skal være sådan, at</p>
-<p><span class="math display">\[
+<p><span id="eq-sum_o_1"><span class="math display">\[
 o_1 + o_2 + \cdots + o_J = 1
-\]</span></p>
+\tag{2}\]</span></span></p>
 <p>fordi sandsynlighederne for de <span class="math inline">\(J\)</span> forskellige muligheder til sammen skal give 1.</p>
 <p>Vi vil starte med at se på, hvordan vi på baggrund af inputvariablene <span class="math inline">\(x_1, x_2, \cdots, x_n\)</span> kan beregne de <span class="math inline">\(J\)</span> outputværdier, så ovenstående er opfyldt. På <a href="#fig-netvaerk_generelt" class="quarto-xref">figur&nbsp;2</a> illustrerer de forskelligt farvede pile, at alle <span class="math inline">\(n\)</span> inputvariable sendes frem i netværket til alle <span class="math inline">\(J\)</span> outputværdier. Så for eksempel sendes <span class="math inline">\(x_1, x_2, \cdots, x_n\)</span> frem til <span class="math inline">\(o_1\)</span> (vist ved de lyseblå pile), ligesom de også sendes frem til <span class="math inline">\(o_2\)</span> (vist ved de mellemblå pile) og så videre.</p>
 <p>For at forklare den beregning der så foregår, har vi i <a href="#fig-netvaerk_generelt_wj" class="quarto-xref">figur&nbsp;3</a> kun vist de pile, som går fra inputvariablene frem til den <span class="math inline">\(j\)</span>’te outputværdi.</p>
@@ -600,16 +600,16 @@ z_2 = w_{2,0} + w_{2,1} \cdot x_1 + w_{2,2} \cdot x_2 + \cdots + w_{2,n} \cdot x
 <p>I alt er der <span class="math inline">\((n+1)\cdot J\)</span> forskellige vægte (det vil sige i vores eksempel vil der være <span class="math inline">\((3+1)\cdot4=16\)</span> vægte).</p>
 <p>Alle <span class="math inline">\(z\)</span>-værdierne kan antage et hvilket som helst reelt tal og kan alene af den grund ikke fortolkes som en sandsynlighed. Vi bruger derfor en såkaldt <strong>aktiveringsfunktion</strong> <span class="math inline">\(\alpha\)</span> på alle <span class="math inline">\(z\)</span>-værdierne, så vi kan få beregnet en outputværdi, som kan fortolkes som en sandsynlighed:</p>
 <p><span class="math display">\[
-o_j = \alpha(z_j),
+o_j = \alpha(z_1, z_2, \dots, z_J),
 \]</span></p>
 <p>hvor</p>
 <p><span class="math display">\[
-0 \leq \alpha(z_j) \leq 1.
+0 \leq \alpha(z_1, z_2, \dots, z_J) \leq 1.
 \]</span></p>
 <p>Som aktiveringsfunktion <span class="math inline">\(\alpha\)</span> vil vi bruge en funktion, som kaldes for <strong>softmax</strong>, fordi den præcis har de egenskaber, som vi efterspørger – det ser vi lige om lidt. På baggrund af alle <span class="math inline">\(z\)</span>-værdierne beregnes <span class="math inline">\(o_j\)</span> ved hjælp af <strong>softmax</strong> på denne måde:</p>
-<p><span class="math display">\[
-o_j = \alpha(z_j) = \frac{\mathrm{e}^{z_j}}{\sum_{i=1}^J \mathrm{e}^{z_i}}.
-\]</span></p>
+<p><span id="eq-o_j_softmax"><span class="math display">\[
+o_j = \alpha(z_1, z_2, \dots, z_J) = \frac{\mathrm{e}^{z_j}}{\sum_{i=1}^J \mathrm{e}^{z_i}}.
+\tag{3}\]</span></span></p>
 <p>For det første kan vi se, at både tæller og nævner er positive. Derfor må <span class="math inline">\(o_j&gt;0\)</span>. For det andet er <span class="math inline">\(\mathrm{e}^{z_j} &lt; \sum_{i=1}^J \mathrm{e}^{z_i}\)</span> og derfor er</p>
 <p><span class="math display">\[
 o_j =  \frac{\mathrm{e}^{z_j}}{\sum_{i=1}^J \mathrm{e}^{z_i}} &lt; \frac{\sum_{i=1}^J \mathrm{e}^{z_i}}{\sum_{i=1}^J \mathrm{e}^{z_i}} = 1.
@@ -626,7 +626,7 @@ o_1 + o_2 + \cdots + o_J &amp;= \frac{\mathrm{e}^{z_1}}{\sum_{i=1}^J \mathrm{e}^
 &amp;= \frac{\sum_{i=1}^J \mathrm{e}^{z_i}}{\sum_{i=1}^J \mathrm{e}^{z_i}} = 1,
 \end{aligned}
 \]</span></p>
-<p>hvilket også var et krav til de beregnede outputværdier.</p>
+<p>hvilket også var det krav, vi stillede til de beregnede outputværdier i (<a href="#eq-sum_o_1" class="quarto-xref">2</a>).</p>
 <p>I det helt specielle tilfælde, hvor der kun er to output neuroner, vil softmax-funktionen for <span class="math inline">\(o_1\)</span> blot være en funktion af to variable:</p>
 <p><span class="math display">\[
 o_1 = \frac{\mathrm{e}^{z_1}}{\mathrm{e}^{z_1} + \mathrm{e}^{z_2}}
@@ -644,7 +644,7 @@ Figur&nbsp;4: Grafen for softmax funktionen <span class="math inline">\(o_1 = \f
 </figcaption>
 </figure>
 </div>
-<p>Det betyder, at hvis <span class="math inline">\(o\)</span>-værdierne beregnes på denne måde, er der altså tale om en sandsynlighedsfordeling. Beregningen af alle <span class="math inline">\(z\)</span>- og <span class="math inline">\(o\)</span>-værdier kan udføres, hvis bare man kender alle vægtene. I et neuralt netværk kaldes disse udregninger for <strong>feedforward</strong> og er opsummeret herunder.</p>
+<p>Det betyder, at hvis <span class="math inline">\(o\)</span>-værdierne beregnes som defineret i (<a href="#eq-o_j_softmax" class="quarto-xref">3</a>), er der altså tale om en sandsynlighedsfordeling. Beregningen af alle <span class="math inline">\(z\)</span>- og <span class="math inline">\(o\)</span>-værdier kan udføres, hvis bare man kender alle vægtene. I et neuralt netværk kaldes disse udregninger for <strong>feedforward</strong> og er opsummeret herunder.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -666,7 +666,7 @@ z_j &amp;= w_{j,0} + w_{j,1} \cdot x_1 + w_{j,2} \cdot x_2 + \cdots + w_{j,n} \c
 &amp; \,\,\, \vdots \\
 z_J &amp;= w_{J,0} + w_{J,1} \cdot x_1 + w_{J,2} \cdot x_2 + \cdots + w_{J,n} \cdot x_n \\
 \end{aligned}
-\tag{2}\]</span></span></p>
+\tag{4}\]</span></span></p>
 <p>Herefter beregnes outputværdierne:</p>
 <p><span id="eq-o_j"><span class="math display">\[
 \begin{aligned}
@@ -676,7 +676,7 @@ o_j &amp;= \frac{\mathrm{e}^{z_j}}{\sum_{i=1}^J \mathrm{e}^{z_i}} \\
 &amp; \,\,\, \vdots \\
 o_J &amp;= \frac{\mathrm{e}^{z_J}}{\sum_{i=1}^J \mathrm{e}^{z_i}} \\
 \end{aligned}
-\tag{3}\]</span></span></p>
+\tag{5}\]</span></span></p>
 </div>
 </div>
 </div>
@@ -685,12 +685,12 @@ o_J &amp;= \frac{\mathrm{e}^{z_J}}{\sum_{i=1}^J \mathrm{e}^{z_i}} \\
 o_1 = 0.5, \quad 0_2 = 0.5, \quad o_3=0, \quad o_4=0
 \]</span> fuldstændig uafhængig af svarene på de tre spørgsmål.</p>
 <p>Det svarer til, at cirka halvdelen af elever bliver i klassen og regner opgaver, mens den anden halvdel sætter sig ud og regner. Til gengæld er der <em>ingen</em>, som går i kantinen og feder den, ligsom der heller ikke er nogle, som bare går hjem.</p>
-<p>For at vores nye AI assistent skal give et nogenlunde retvisende billede af virkeligheden (det vil sige elevernes valg og ikke lærerens ønsker!) skal vi have fundet nogle outputværdier, som for det første afhænger af inputværdierne (man kan jo se på <a href="#fig-trainingdata" class="quarto-xref">figur&nbsp;1</a> at inputværdierne har indflydelse), og som for det andet rent faktisk giver en realistisk sandsynlighed for hver af de fire muligheder. Det gør vi ved at blive ved med at "skrue" på alle vægtene indtil, at de beregnede outputværdier i (<a href="#eq-o_j" class="quarto-xref">3</a>) giver et godt bud på sandsynlighederne for de 4 muligheder.</p>
+<p>For at vores nye AI assistent skal give et nogenlunde retvisende billede af virkeligheden (det vil sige elevernes valg og ikke lærerens ønsker!) skal vi have fundet nogle outputværdier, som for det første afhænger af inputværdierne (man kan jo se på <a href="#fig-trainingdata" class="quarto-xref">figur&nbsp;1</a> at inputværdierne har indflydelse), og som for det andet rent faktisk giver en realistisk sandsynlighed for hver af de fire muligheder. Det gør vi ved at blive ved med at "skrue" på alle vægtene indtil, at de beregnede outputværdier i (<a href="#eq-o_j" class="quarto-xref">5</a>) giver et godt bud på sandsynlighederne for de 4 muligheder.</p>
 <p>Hvordan, det rent faktisk lader sig gøre, kommer her.</p>
 </section>
 <section id="cross-entropy-tabsfunktionen" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="cross-entropy-tabsfunktionen">Cross-entropy tabsfunktionen</h2>
-<p>Forestil dig at vi bare har valgt nogle tilfældige værdier af vægtene. På den baggrund kan vi for et givent sæt af inputværdier beregne outputværdierne ved hjælp af feedforward-udtrykkene i (<a href="#eq-o_j" class="quarto-xref">3</a>). Vi vil som eksempel se på elev nummer 7 fra <a href="#tbl-trainingdata" class="quarto-xref">tabel&nbsp;1</a>. Denne elev har valgt mulighed 2 (gå uden for klassen for at regne opgaver) og har derfor targetværdi</p>
+<p>Forestil dig, at vi bare har valgt nogle tilfældige værdier af vægtene. På den baggrund kan vi for et givent sæt af inputværdier beregne outputværdierne ved hjælp af feedforward-udtrykkene i (<a href="#eq-o_j" class="quarto-xref">5</a>). Vi vil som eksempel se på elev nummer 7 fra <a href="#tbl-trainingdata" class="quarto-xref">tabel&nbsp;1</a>. Denne elev har valgt mulighed 2 (gå uden for klassen for at regne opgaver) og har derfor targetværdi</p>
 <p><span id="eq-target"><span class="math display">\[
 \vec t =
 \begin{pmatrix}
@@ -699,7 +699,7 @@ o_1 = 0.5, \quad 0_2 = 0.5, \quad o_3=0, \quad o_4=0
 0 \\
 0 \\
 \end{pmatrix}
-\tag{4}\]</span></span></p>
+\tag{6}\]</span></span></p>
 <p>En bestemt "indstilling" af vægtene kunne for eksempel give denne outputvektor:</p>
 <p><span id="eq-o_bad"><span class="math display">\[
 \vec o =
@@ -709,8 +709,8 @@ o_1 = 0.5, \quad 0_2 = 0.5, \quad o_3=0, \quad o_4=0
 0.03 \\
 0.02 \\
 \end{pmatrix}
-\tag{5}\]</span></span></p>
-<p>Det svarer til at vægtene ikke har fået nogle "gode" værdier, fordi denne outputvektor svarer til, at der kun er <span class="math inline">\(10 \%\)</span> chance for at eleven vælger mulighed 2. Hvis vægtene i stedet havde haft værdier, som ville resultere i denne outputvektor</p>
+\tag{7}\]</span></span></p>
+<p>Det svarer til, at vægtene ikke har fået nogle "gode" værdier, fordi denne outputvektor svarer til, at der kun er <span class="math inline">\(10 \%\)</span> chance for at eleven vælger mulighed 2. Hvis vægtene i stedet havde haft værdier, som ville resultere i denne outputvektor</p>
 <p><span id="eq-o_good"><span class="math display">\[
 \vec o =
 \begin{pmatrix}
@@ -719,9 +719,9 @@ o_1 = 0.5, \quad 0_2 = 0.5, \quad o_3=0, \quad o_4=0
 0.03 \\
 0.02 \\
 \end{pmatrix}
-\tag{6}\]</span></span></p>
-<p>så vil vi straks være mere tilfredse med vores AI assistent, fordi sandsynligheden for mulighed 2 nu er steget til <span class="math inline">\(85 \%\)</span>. Faktisk vil vi allerhelst kunne vælge vægtene, så outputvektoren for elev nummer 7 kommer så tæt som muligt på targetvektoren i (<a href="#eq-target" class="quarto-xref">4</a>) – og noget tilsvarende skal gerne gøre sig gældende for de øvrige 11 elever i træningsdata.</p>
-<p>Vi har derfor brug for en metode til at vælge vægtene, så outputvektoren i (<a href="#eq-o_good" class="quarto-xref">6</a>) bliver "belønnet" fremfor outputvektoren i (<a href="#eq-o_bad" class="quarto-xref">5</a>). For at gøre det definerer man en såkaldt <strong>tabsfunktion</strong>. Vi vil her bruge en tabsfunktion, som kaldes for <strong>cross-entropy</strong>.</p>
+\tag{8}\]</span></span></p>
+<p>så vil vi straks være mere tilfredse med vores AI assistent, fordi sandsynligheden for mulighed 2 nu er steget til <span class="math inline">\(85 \%\)</span>. Faktisk vil vi allerhelst kunne vælge vægtene, så outputvektoren for elev nummer 7 kommer så tæt som muligt på targetvektoren i (<a href="#eq-target" class="quarto-xref">6</a>) – og noget tilsvarende skal gerne gøre sig gældende for de øvrige 11 elever i træningsdata.</p>
+<p>Vi har derfor brug for en metode til at vælge vægtene, så outputvektoren i (<a href="#eq-o_good" class="quarto-xref">8</a>) bliver "belønnet" fremfor outputvektoren i (<a href="#eq-o_bad" class="quarto-xref">7</a>). For at gøre det definerer man en såkaldt <strong>tabsfunktion</strong>. Vi vil her bruge en tabsfunktion, som kaldes for <strong>cross-entropy</strong>.</p>
 <p>For at holde tingene simple starter vi med at se på ét træningseksempel ad gangen (til sidst generaliserer vi). <em>Cross-entropy</em> tabsfunktionen er defineret sådan her:</p>
 <p><span class="math display">\[
 E = - \sum_{j=1}^J t_j \cdot \ln(o_j)
@@ -746,7 +746,7 @@ Figur&nbsp;5: Grafen for <span class="math inline">\(\ln(x)\)</span> og <span cl
 </figure>
 </div>
 <p>Da <span class="math inline">\(0&lt;o_j&lt;1\)</span> kan vi for det første se, at <span class="math inline">\(-\ln(o_j) &gt;0\)</span>. Det vil sige, at tabsfunktionen er positiv.</p>
-<p>Husk nu på at <span class="math inline">\(t_j=1\)</span>. Hvis vægtene i vores neurale netværk er "indstillet" godt, så skal <span class="math inline">\(o_j\)</span> være tæt på 1. I <a href="#fig-natural_ln" class="quarto-xref">figur&nbsp;5</a> kan vi se, at det svarer til, at <span class="math inline">\(-\ln(o_j)\)</span> er tæt på <span class="math inline">\(0\)</span>. Det betyder, at værdien af tabsfunktionen er lille. Omvendt hvis vægtene er "indstillet" dårligt, så <span class="math inline">\(o_j\)</span> er tæt på <span class="math inline">\(0\)</span> (selvom <span class="math inline">\(t_j=1\)</span>), så vil <span class="math inline">\(-\ln(o_j)\)</span> være et stort positivt tal. Altså er værdien af tabsfunktionen stor.</p>
+<p>Husk nu på, at <span class="math inline">\(t_j=1\)</span>. Hvis vægtene i vores neurale netværk er "indstillet" godt, så skal <span class="math inline">\(o_j\)</span> være tæt på 1. I <a href="#fig-natural_ln" class="quarto-xref">figur&nbsp;5</a> kan vi se, at det svarer til, at <span class="math inline">\(-\ln(o_j)\)</span> er tæt på <span class="math inline">\(0\)</span>. Det betyder, at værdien af tabsfunktionen er lille. Omvendt hvis vægtene er "indstillet" dårligt, så <span class="math inline">\(o_j\)</span> er tæt på <span class="math inline">\(0\)</span> (selvom <span class="math inline">\(t_j=1\)</span>), så vil <span class="math inline">\(-\ln(o_j)\)</span> være et stort positivt tal. Altså er værdien af tabsfunktionen stor.</p>
 <p>Det betyder, at tabsfunktionen på den måde måler "kvaliteten" af netværket:</p>
 <ul>
 <li><p>For et godt netværk (med gode indstillinger af vægtene) vil tabsfunktionen have en lille, men positiv værdi.</p></li>
@@ -808,8 +808,8 @@ E &amp;= - \left( 0 \cdot \ln(0.10) + 1 \cdot \ln(0.85) + 0 \cdot \ln(0.03) + 0 
 <p>Vi skal bestemme de værdier af vægtene, som minimerer tabsfunktionen</p>
 <p><span id="eq-cross_entropy"><span class="math display">\[
 E = - \sum_{i=1}^J t_i \cdot \ln(o_i)
-\tag{7}\]</span></span></p>
-<p>Husk på at outputværdierne <span class="math inline">\(o_i\)</span> afhænger af <span class="math inline">\(z\)</span>-værdierne via (<a href="#eq-o_j" class="quarto-xref">3</a>), mens <span class="math inline">\(z\)</span>-værdierne afhænger af vægtene via (<a href="#eq-z_j" class="quarto-xref">2</a>). Altså afhænger tabsfunktionen også indirekte af alle vægtene.</p>
+\tag{9}\]</span></span></p>
+<p>Husk på at outputværdierne <span class="math inline">\(o_i\)</span> afhænger af <span class="math inline">\(z\)</span>-værdierne via (<a href="#eq-o_j" class="quarto-xref">5</a>), mens <span class="math inline">\(z\)</span>-værdierne afhænger af vægtene via (<a href="#eq-z_j" class="quarto-xref">4</a>). Altså afhænger tabsfunktionen også indirekte af alle vægtene.</p>
 <p>Når man skal minimere <a href="../../materialer/funktioner_af_flere_variable/funktioner_af_flere_variable.html">en funktion, som afhænger af flere variable</a> (her vægtene), kan man finde alle de partielle afledede og sætte dem lig med <span class="math inline">\(0\)</span> (ligesom du sikkert er vant til, at løse <span class="math inline">\(f'(x)=0\)</span>, hvis du skal bestemme minimum for funktionen <span class="math inline">\(f\)</span>). Det vil give lige så mange ligninger, som der er vægte, og desuden vil ligningerne være koblet med hinanden. Det betyder, at denne fremgangsmåde er beregningsmæssig tung og/eller vil kræve alt for meget plads på en computer. Derfor vælger man i stedet at bruge en approksimativ metode, som kaldes for <a href="../../materialer/gradientnedstigning/gradientnedstigning.html">gradientnedstigning</a>. Vi vil her kort forklare, hvad det går ud på.</p>
 <p>Hvis en funktion <span class="math inline">\(f\)</span> afhænger af <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> så kaldes den vektor, som består af alle de partielle afledede for gradienten:</p>
 <p><span class="math display">\[
@@ -822,23 +822,23 @@ E = - \sum_{i=1}^J t_i \cdot \ln(o_i)
 \end{pmatrix}.
 \]</span></p>
 <p>Det viser sig, at denne gradient peger i den retning, hvor funktionsværdien <em>vokser mest</em>. Omvendt vil minus gradienten <span class="math inline">\(-\nabla f(x_1, x_2, \dots, x_n)\)</span> pege i den retning, hvor funktionsværdien <em>aftager mest</em>. Hvis vi derfor står et vilkårligt sted på grafen for <span class="math inline">\(f\)</span> og går et lille skridt i den negative gradientens retning, så vil vi være på vej ned mod et minimum (eventuelt kun lokalt). Når vi har gået det lille skridt, udregner vi gradienten igen og bevæger os igen et lille skridt i den negative gradients retning<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Sådan fortsætter man indstil funktionsværdien ikke ændrer sig ret meget – det svarer forhåbentlig til, at vi har fundet et (lokalt) minimum.</p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Du kan tænke på gradienten som et kompas, der hele tiden viser dig, hvilken vej du skal gå for at bevæge dig ned mod et minimum.</p></div></div><p>Nu hedder vores funktion ikke <span class="math inline">\(f\)</span>, men <span class="math inline">\(E\)</span>, og <span class="math inline">\(E\)</span> afhænger af alle vægtene <span class="math inline">\(w_{j,k}\)</span>. Derfor, når vægten <span class="math inline">\(w_{j,k}\)</span> skal opdateres, så gør vi følgende:</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Du kan tænke på <em>minus</em> gradienten som et kompas, der hele tiden viser dig, hvilken vej du skal gå for at bevæge dig ned mod et minimum.</p></div></div><p>Nu hedder vores funktion ikke <span class="math inline">\(f\)</span>, men <span class="math inline">\(E\)</span>, og <span class="math inline">\(E\)</span> afhænger af alle vægtene <span class="math inline">\(w_{j,k}\)</span>. Derfor, når vægten <span class="math inline">\(w_{j,k}\)</span> skal opdateres, så gør vi følgende:</p>
 <p><span id="eq-w_jk-opdatering_grad"><span class="math display">\[
 w_{j,k}^{\textrm{ny}} \leftarrow w_{j,k} - \eta \cdot \frac{\partial E}{\partial w_{j,k}}.
-\tag{8}\]</span></span></p>
+\tag{10}\]</span></span></p>
 <p>Tallet <span class="math inline">\(\eta\)</span> kaldes for en <strong>learning rate</strong> og er typisk et lille tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>. Det svarer til den skridtlængde vi bruger, når vi går i den negative gradients retning.</p>
 <p>Det vil sige for at opdatere <span class="math inline">\(w_{j,k}\)</span>-vægten, skal vi have udregnet den partielle afledede</p>
 <p><span class="math display">\[
 \frac{\partial E}{\partial w_{j,k}}.
 \]</span></p>
-<p>Hvis vi ser på <a href="#fig-netvaerk_generelt_wjk" class="quarto-xref">figur&nbsp;6</a> og (<a href="#eq-z_j" class="quarto-xref">2</a>) kan vi se, at <span class="math inline">\(w_{j,k}\)</span> kun har indflydelse på <span class="math inline">\(z_j\)</span>. Til gengæld har alle <span class="math inline">\(z\)</span>-værdierne indflydelse på alle <span class="math inline">\(o\)</span>-værdierne på grund af udtrykket i (<a href="#eq-o_j" class="quarto-xref">3</a>).</p>
+<p>Hvis vi ser på <a href="#fig-netvaerk_generelt_wjk" class="quarto-xref">figur&nbsp;6</a> og (<a href="#eq-z_j" class="quarto-xref">4</a>) kan vi se, at <span class="math inline">\(w_{j,k}\)</span> kun har indflydelse på <span class="math inline">\(z_j\)</span>. Til gengæld har alle <span class="math inline">\(z\)</span>-værdierne indflydelse på alle <span class="math inline">\(o\)</span>-værdierne på grund af udtrykket i (<a href="#eq-o_j" class="quarto-xref">5</a>).</p>
 <div id="fig-netvaerk_generelt_wjk" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-netvaerk_generelt_wjk-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/netvaerk_generelt_wjk.png" class="img-fluid figure-img" style="width:50.0%">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-netvaerk_generelt_wjk-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;6: Neuralt netværk hvor vægtene fra de <span class="math inline">\(n\)</span> input neuroner over til den <span class="math inline">\(i\)</span>’te output neuron er vist.
+Figur&nbsp;6: Neuralt netværk hvor vægtene fra de <span class="math inline">\(n\)</span> input neuroner over til den <span class="math inline">\(j\)</span>’te output neuron er vist.
 </figcaption>
 </figure>
 </div>
@@ -846,26 +846,30 @@ Figur&nbsp;6: Neuralt netværk hvor vægtene fra de <span class="math inline">\(
 <p><span class="math display">\[
 \frac{\partial E}{\partial w_{j,k}} = \sum_{i=1}^J \frac{\partial E}{\partial z_i} \cdot \frac{\partial z_i}{\partial w_{j,k}}
 \]</span></p>
-<p>Men da <span class="math inline">\(w_{j,k}\)</span> kun har indflydelse på <span class="math inline">\(z_j\)</span> (jævnfør <a href="#fig-netvaerk_generelt_wjk" class="quarto-xref">figur&nbsp;6</a> og (<a href="#eq-z_j" class="quarto-xref">2</a>)), så vil</p>
+<p>Men da <span class="math inline">\(w_{j,k}\)</span> kun har indflydelse på <span class="math inline">\(z_j\)</span> (jævnfør <a href="#fig-netvaerk_generelt_wjk" class="quarto-xref">figur&nbsp;6</a> og (<a href="#eq-z_j" class="quarto-xref">4</a>)), så vil</p>
 <p><span class="math display">\[
 \frac{\partial z_i}{\partial w_{j,k}}=0 \qquad \text{når} \qquad i \neq j
 \]</span></p>
 <p>og derfor kan vi nøjes med følgende forsimplede udtryk:</p>
 <p><span id="eq-partialE_w_jk"><span class="math display">\[
 \frac{\partial E}{\partial w_{j,k}} = \frac{\partial E}{\partial z_j} \cdot \frac{\partial z_j}{\partial w_{j,k}}
-\tag{9}\]</span></span></p>
-<p>Vi starter med at regne på den sidste faktor <span class="math inline">\(\frac{\partial z_j}{\partial w_{j,k}}\)</span> (fordi den er nemmeste!). Ifølge (<a href="#eq-z_j" class="quarto-xref">2</a>) er</p>
+\tag{11}\]</span></span></p>
+<p>Vi starter med at regne på den sidste faktor <span class="math inline">\(\frac{\partial z_j}{\partial w_{j,k}}\)</span> (fordi den er nemmest!). Ifølge (<a href="#eq-z_j" class="quarto-xref">4</a>) er</p>
 <p><span id="eq-partial_z_j_w_jk"><span class="math display">\[
 \begin{aligned}
 \frac{\partial z_j}{\partial w_{j,k}} &amp;= \frac{\partial }{\partial w_{j,k}} \left ( w_{j,0} + w_{j,1} \cdot x_1 + w_{j,2} \cdot x_2 + \cdots +  w_{j,k} \cdot x_k + \cdots +  w_{j,n} \cdot x_n \right) \\
 &amp;= x_k
 \end{aligned}
-\tag{10}\]</span></span></p>
-<p>For at bestemme den første faktor <span class="math inline">\(\frac{\partial E}{\partial z_j}\)</span> bruger vi definitionen af tabsfunktionen i (<a href="#eq-cross_entropy" class="quarto-xref">7</a>) og differentierer ledvist:</p>
+\tag{12}\]</span></span></p>
+<p>Bemærk, at hvis vi differentierer med hensyn til <span class="math inline">\(w_{j,0}\)</span> så er</p>
+<p><span class="math display">\[
+\frac{\partial z_j}{\partial w_{j,0}} = 1.
+\]</span> Men definerer vi en ekstra inputværdi <span class="math inline">\(x_0\)</span>, som altid er <span class="math inline">\(1\)</span>, så gælder udtrykket i (<a href="#eq-partial_z_j_w_jk" class="quarto-xref">12</a>) stadigvæk – også når <span class="math inline">\(k=0\)</span>.</p>
+<p>For at bestemme den første faktor <span class="math inline">\(\frac{\partial E}{\partial z_j}\)</span> bruger vi definitionen af tabsfunktionen i (<a href="#eq-cross_entropy" class="quarto-xref">9</a>) og differentierer ledvist:</p>
 <p><span id="eq-partialE_z_j"><span class="math display">\[
 \frac{\partial E}{\partial z_j} = - \sum_{i=1}^J t_i \cdot \frac{1}{o_i} \cdot \frac{\partial o_i}{\partial z_j},
-\tag{11}\]</span></span></p>
-<p>hvor vi har brugt, at <span class="math inline">\(\ln(o_i)\)</span> differentieret er <span class="math inline">\(\frac{1}{o_i}\)</span>.</p>
+\tag{13}\]</span></span></p>
+<p>hvor vi har brugt kædereglen og, at <span class="math inline">\(\ln(o_i)\)</span> differentieret er <span class="math inline">\(\frac{1}{o_i}\)</span>.</p>
 <p>Nu er</p>
 <p><span class="math display">\[
 o_i = \frac{\mathrm{e}^{z_i}}{\sum_{l=1}^J \mathrm{e}^{z_l}}.
@@ -882,7 +886,7 @@ o_i = \frac{\mathrm{e}^{z_i}}{\sum_{l=1}^J \mathrm{e}^{z_l}}.
 &amp;= - \frac{\mathrm{e}^{z_i}}{\sum_{l=1}^J \mathrm{e}^{z_l}} \cdot \frac{\mathrm{e}^{z_j}}{\sum_{l=1}^J \mathrm{e}^{z_l}} = - o_i \cdot o_j, \quad \quad i \neq j
 \end{aligned}
 \]</span></p>
-<p>hvor sidste lighedstegn følger af definitionen i (<a href="#eq-o_j" class="quarto-xref">3</a>).</p>
+<p>hvor sidste lighedstegn følger af definitionen i (<a href="#eq-o_j" class="quarto-xref">5</a>).</p>
 <p>Hvis <span class="math inline">\(i=j\)</span>, får vi</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -892,7 +896,7 @@ o_i = \frac{\mathrm{e}^{z_i}}{\sum_{l=1}^J \mathrm{e}^{z_l}}.
 &amp; = o_j-o_j^2 = o_j(1-o_j), \quad \quad i = j
 \end{aligned}
 \]</span></p>
-<p>Vi kan nu indsætte i (<a href="#eq-partialE_z_j" class="quarto-xref">11</a>):</p>
+<p>Vi kan nu indsætte i (<a href="#eq-partialE_z_j" class="quarto-xref">13</a>):</p>
 <p><span class="math display">\[
 \begin{aligned}
 \frac{\partial E}{\partial z_j} &amp;= - \left ( \sum_{\substack{i=1 \\ i \neq j }}^J t_i \cdot \frac{1}{o_i} \cdot (-o_i \cdot o_j) \right ) - t_j \cdot \frac{1}{o_j} \cdot o_j \cdot (1-o_j) \\
@@ -912,11 +916,11 @@ o_i = \frac{\mathrm{e}^{z_i}}{\sum_{l=1}^J \mathrm{e}^{z_l}}.
 <p><span class="math display">\[
 \frac{\partial E}{\partial z_j} = o_j - t_j = -(t_j-o_j)
 \]</span></p>
-<p>Vi indsætter i (<a href="#eq-partialE_w_jk" class="quarto-xref">9</a>) og får</p>
+<p>Vi indsætter i (<a href="#eq-partialE_w_jk" class="quarto-xref">11</a>) og får</p>
 <p><span id="eq-partialE_partial_wjk_final"><span class="math display">\[
 \frac{\partial E}{\partial w_{j,k}} = \underbrace{-(t_j - o_j)}_{\frac{\partial E}{\partial z_j}} \cdot \underbrace{x_k}_{\frac{\partial z_j}{\partial w_{j,k}}}
-\tag{12}\]</span></span></p>
-<p>Bruger vi opdateringsreglen for <span class="math inline">\(w_{j,k}\)</span>-vægten i (<a href="#eq-w_jk-opdatering_grad" class="quarto-xref">8</a>), ender vi med følgende:</p>
+\tag{14}\]</span></span></p>
+<p>Bruger vi opdateringsreglen for <span class="math inline">\(w_{j,k}\)</span>-vægten i (<a href="#eq-w_jk-opdatering_grad" class="quarto-xref">10</a>), ender vi med følgende:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -933,6 +937,7 @@ Opdateringsregel for <span class="math inline">\(w_{i,k}\)</span>-vægten (baser
 <p><span class="math display">\[
 w_{j,k}^{(\textrm{ny})} \leftarrow w_{j,k} + \eta \cdot (t_j - o_j) \cdot x_k
 \]</span></p>
+<p>hvor <span class="math inline">\(x_k=1\)</span>, hvis <span class="math inline">\(k=0\)</span>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/netvaerk_generelt_wjk_zoom.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
@@ -976,7 +981,7 @@ E = \sum_{m=1}^M E^{(m)}
 \]</span> Vi kan heldigvis differentiere ledvist og får derfor</p>
 <p><span class="math display">\[
 \frac{\partial E}{\partial w_{j,k}} = \sum_{m=1}^M \frac{\partial E^{(m)}}{\partial w_{j,k}}
-\]</span> I det foregående afsnit var det netop <span class="math inline">\(\frac{\partial E^{(m)}}{\partial w_{j,k}}\)</span> vi udledte i (<a href="#eq-partialE_partial_wjk_final" class="quarto-xref">12</a>) – dog uden at specificere nummeret på træningseksemplet:</p>
+\]</span> I det foregående afsnit var det netop <span class="math inline">\(\frac{\partial E^{(m)}}{\partial w_{j,k}}\)</span> vi udledte i (<a href="#eq-partialE_partial_wjk_final" class="quarto-xref">14</a>) – dog uden at specificere nummeret på træningseksemplet:</p>
 <p><span class="math display">\[
 \frac{\partial E^{(m)}}{\partial w_{j,k}} = -(t_j^{(m)} - o_j^{(m)}) \cdot x_k^{(m)}
 \]</span></p>
@@ -999,6 +1004,7 @@ Opdateringsregel for <span class="math inline">\(w_{i,k}\)</span>-vægten (baser
 <p><span class="math display">\[
 w_{j,k}^{(\textrm{ny})} \leftarrow w_{j,k} + \eta \cdot \sum_{m=1}^M (t_j^{(m)} - o_j^{(m)}) \cdot x_k^{(m)}
 \]</span></p>
+<p>hvor <span class="math inline">\(x_k^{(m)}=1\)</span>, hvis <span class="math inline">\(k=0\)</span>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/netvaerk_generelt_wjk_zoom.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
@@ -1029,7 +1035,7 @@ w_{j,k}^{(\textrm{ny})} \leftarrow w_{j,k} + \eta \cdot \sum_{m=1}^M (t_j^{(m)} 
 </section>
 <section id="tilbage-til-eksemplet" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="tilbage-til-eksemplet">Tilbage til eksemplet</h2>
-<p>Vi har nu fået udledt opdateringsreglerne for alle vægtene, og vi vil derfor prøve at træne et netværk ved hjælp af træningsdata i <a href="#tbl-trainingdata" class="quarto-xref">tabel&nbsp;1</a>. Hvis vi til start sætter alle vægtene til <span class="math inline">\(0.5\)</span>, vælger en learning rate på <span class="math inline">\(0.001\)</span> og laver i alt <span class="math inline">\(100000\)</span> iterationer (det vil sige, at vægtene alt i alt opdateres <span class="math inline">\(100000\)</span> gange), så nærmer vi os et minimum for tabsfunktionen. Alle outputværdierne kan nu beregnes ved hjælp af (<a href="#eq-o_j" class="quarto-xref">3</a>). Gør vi det for alle data i træningsdatasættet, får vi følgende<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
+<p>Vi har nu fået udledt opdateringsreglerne for alle vægtene, og vi vil derfor prøve at træne et netværk ved hjælp af træningsdata i <a href="#tbl-trainingdata" class="quarto-xref">tabel&nbsp;1</a>. Hvis vi til start sætter alle vægtene til <span class="math inline">\(0.5\)</span>, vælger en learning rate på <span class="math inline">\(0.001\)</span> og laver i alt <span class="math inline">\(100000\)</span> iterationer (det vil sige, at vægtene alt i alt opdateres <span class="math inline">\(100000\)</span> gange), så nærmer vi os et minimum for tabsfunktionen. Alle outputværdierne kan nu beregnes ved hjælp af (<a href="#eq-o_j" class="quarto-xref">5</a>). Gør vi det for alle data i træningsdatasættet, får vi følgende<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
 <div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Bemærk, at hvis <span class="math inline">\(o_1+o_2+o_3+ o_4\)</span> ikke giver <span class="math inline">\(1\)</span>, så skyldes det afrunding.</p></div></div><div id="tbl-prediction" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-tbl figure page-columns page-full">
 <div aria-describedby="tbl-prediction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1195,12 +1201,12 @@ w_{j,k}^{(\textrm{ny})} \leftarrow w_{j,k} + \eta \cdot \sum_{m=1}^M (t_j^{(m)} 
 </table>
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-tbl margin-caption" id="tbl-prediction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabel&nbsp;2: Træningsdata fra 12 elever inklusion de bergende outputværdier.
+Tabel&nbsp;2: Træningsdata fra 12 elever inklusiv de beregnede outputværdier.
 </figcaption>
 </figure>
 </div>
-<p>Et netværk vil altid være forholdsvis godt til at prædiktere korrekt på de data, som netværket er trænet på. Det kan du læse mere om i noten om <a href="../../materialer/krydsvalidering/krydsvalidering.html">Overfitting, modeludvælgelse og krydsvalidering</a>. Med det i baghovedet kan vi alligevel se fra <a href="#tbl-prediction" class="quarto-xref">tabel&nbsp;2</a> se, at den prædikterede sandsynlighed for det valg, som hver elev træffer, er høj. For eksempel vælger elev nr. 1 også valg 1 (at blive i klassen), og den prædikterede sandsynlighed for dette valg er <span class="math inline">\(o_1 = 0.98\)</span>.</p>
-<p>For elev nr. 2 kan vi se, at vores AI assistent er i tvivl om (<span class="math inline">\(o_1=o_2=0.50\)</span>), om den skal anbefale valg 1 eller 2 (eleven har valgt 1). For elev nr. 7 vil vores AI assisten anbefale valg 1 (<span class="math inline">\(o_1 = 0.70\)</span>), men eleven træffer i virkeligheden valg 2. De resterende anbefalinger er korrekte.</p>
+<p>Et netværk vil altid være forholdsvis godt til at prædiktere korrekt på de data, som netværket er trænet på. Det kan du læse mere om i noten om <a href="../../materialer/krydsvalidering/krydsvalidering.html">Overfitting, modeludvælgelse og krydsvalidering</a>. Med det i baghovedet kan vi alligevel se fra <a href="#tbl-prediction" class="quarto-xref">tabel&nbsp;2</a>, at den prædikterede sandsynlighed for det valg, som hver elev træffer, er høj. For eksempel vælger elev nr. 1 også valg 1 (at blive i klassen), og den prædikterede sandsynlighed for dette valg er <span class="math inline">\(o_1 = 0.98\)</span>.</p>
+<p>For elev nr. 2 kan vi se, at vores AI assistent er i tvivl om (<span class="math inline">\(o_1=o_2=0.50\)</span>), om den skal prædiktere valg 1 eller 2 (eleven har valgt 1). For elev nr. 7 vil vores AI assistent prædiktere valg 1 (<span class="math inline">\(o_1 = 0.70\)</span>), men eleven træffer i virkeligheden valg 2. De resterende anbefalinger er korrekte.</p>
 <p>På <a href="#fig-trainingdata_prediction_wrong" class="quarto-xref">figur&nbsp;7</a> er elev 2 og 7 fremhævet ved, at de tilhørende punkter er tegnet større. Hvis man drejer lidt rundt på figuren, kan man se, at de to punkter ligger forholdsvis tæt på hinanden og i nærheden af andre mørkeblå punkter, så det er ikke helt så underligt, at netværket netop har svært ved at prædiktere, som det gør.</p>
 <div id="fig-trainingdata_prediction_wrong" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
@@ -1214,14 +1220,14 @@ Figur&nbsp;7: Punktplot af træningsdata fra <a href="#tbl-prediction" class="qu
 </figcaption>
 </figure>
 </div>
-<p>Nu er idéen jo ikke at komme med et godt råd til de elever, som allerede har truffet et valg (svarende til at prædiktere på træningsdata), men derimod at vejlede kommende elever.</p>
+<p>Nu er idéen jo ikke at komme med et godt råd til de elever, som allerede har truffet et valg (svarende til at prædiktere på træningsdata), men derimod at læreren får et værktøj til at vejlede kommende elever.</p>
 <p>Byd derfor velkommen til tre nye elever:</p>
 <ul>
 <li><p>Den første elev, som træder ind ad døren er Anton. Anton har sovet fuldstændig fantastisk (<span class="math inline">\(x_1=10\)</span>), han synes, at det emne, vi er i gang med, er pænt kedeligt (<span class="math inline">\(x_2=2\)</span>). Til gengæld har Anton høje ambitioner om at klare sig godt til eksamen (<span class="math inline">\(x_3=9\)</span>).</p></li>
 <li><p>Herefter følger Signe. Signe bøvler lidt med sin søvn (<span class="math inline">\(x_1=4\)</span>), hun synes, at emnet vi er i gang med er semi godt <span class="math inline">\(x_2=5\)</span>, og så har Signe skyhøje forventninger til eksamen (<span class="math inline">\(x_3=10\)</span>).</p></li>
 <li><p>Til sidst kommer Mads – lidt for sent i øvrigt… Mads har nemlig spillet computer den halve nat (<span class="math inline">\(x_1=3\)</span>), han synes, at emnet er ret interessant (<span class="math inline">\(x_2=8\)</span>), men han er pænt ligeglad med, hvordan det går til eksamen (<span class="math inline">\(x_3=2\)</span>).</p></li>
 </ul>
-<p>Alle tre elever hiver straks deres ny AI assistent op af lommen, indtaster svaret på de tre spørgsmål og beder om en anbefaling. Her er, hvad der kommer ud af det:</p>
+<p>Ved timens start svarer alle tre elever straks på de tre spørgsmål, som læreren indtaster i sin AI assistent. Her er, hvad der kommer ud af det:</p>
 <table class="table">
 <colgroup>
 <col style="width: 11%">
@@ -1283,7 +1289,8 @@ Figur&nbsp;7: Punktplot af træningsdata fra <a href="#tbl-prediction" class="qu
 </tr>
 </tbody>
 </table>
-<p>Anton bliver anbefalet, at gå i kantinen (valg 3), mens Signe og Mads bliver anbefalet at gå ud for at regne opgaver (valg 2). Det kan godt se ud som om, at <span class="math inline">\(x_2\)</span> (interessen for emnet) er forholdsvis afgørende for den endelig anbefaling. Hvis du tager et kig på <a href="#fig-trainingdata" class="quarto-xref">figur&nbsp;1</a>, vil du også opdage, at hvis <span class="math inline">\(x_2&lt;5\)</span>, så er alle punkter lyserøde eller gule (svarende til valg 3 og 4), mens alle punkter, hvor <span class="math inline">\(x_2 \geq 5\)</span> er lyse- eller mørkeblå (valg 1 og 2). Det kunne jo få en til at tænke, om det i virkeligheden ville være nok at svare på spørgsmål 2, uden at det går udover klassifikationsnøjagtigheden. Det vil man kunne undersøge ved at lave en model med kun <span class="math inline">\(x_2\)</span> som inputvariabel og en anden model med alle tre inputvariable og så for eksempel vurdere de to modellers klassifikationsnøjagtighed ved hjælp af <a href="../../materialer/krydsvalidering/krydsvalidering.html">krydsvalidering</a>, men det ligger uden for formålet med denne note.</p>
+<p>Det prædikteres, at Anton vil gå i kantinen (valg 3), mens Signe og Mads vil gå ud for at regne opgaver (valg 2). Læreren ved derfor nu, at hun skal være ekstra opmærksom på Anton.</p>
+<p>Det kan godt se ud som om, at <span class="math inline">\(x_2\)</span> (interessen for emnet) er forholdsvis afgørende for den endelig anbefaling. Hvis du tager et kig på <a href="#fig-trainingdata" class="quarto-xref">figur&nbsp;1</a>, vil du også opdage, at hvis <span class="math inline">\(x_2&lt;5\)</span>, så er alle punkter lyserøde eller gule (svarende til valg 3 og 4), mens alle punkter, hvor <span class="math inline">\(x_2 \geq 5\)</span> er lyse- eller mørkeblå (valg 1 og 2). Det kunne jo få en til at tænke, om det i virkeligheden ville være nok at svare på spørgsmål 2, uden at det går udover klassifikationsnøjagtigheden. Det vil man kunne undersøge ved at lave en model med kun <span class="math inline">\(x_2\)</span> som inputvariabel og en anden model med alle tre inputvariable og så for eksempel vurdere de to modellers klassifikationsnøjagtighed ved hjælp af <a href="../../materialer/krydsvalidering/krydsvalidering.html">krydsvalidering</a>, men det ligger uden for formålet med denne note.</p>
 <p>I <a href="#fig-trainingdata_tre_nye_elever" class="quarto-xref">figur&nbsp;8</a> er de tre nye elever indtegnet sammen med træningsdata. Når man ser, hvordan de tre nye elever ligger i forhold til de andre punkter i træningsdata, så giver det faktisk god mening, at Anton bliver "farvet" gul, mens Signe og Mads bliver "farvet" lyseblå.</p>
 <div id="fig-trainingdata_tre_nye_elever" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
