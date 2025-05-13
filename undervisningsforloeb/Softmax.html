@@ -184,6 +184,7 @@ window.Quarto = {
   <ul>
   <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
   <li><a href="#sengetester-i-ikea" id="toc-sengetester-i-ikea" class="nav-link" data-scroll-target="#sengetester-i-ikea">Sengetester i IKEA</a></li>
+  <li><a href="#softmax" id="toc-softmax" class="nav-link" data-scroll-target="#softmax">Softmax</a></li>
   <li><a href="#løsninger-til-opgaver" id="toc-løsninger-til-opgaver" class="nav-link" data-scroll-target="#løsninger-til-opgaver">Løsninger til opgaver</a></li>
   </ul>
 </nav>
@@ -285,48 +286,72 @@ Opgave 1: Udregn sandsynligherne
 <li>Hvis nogle af pointene er negative, risikerer man at skulle dividere med 0.</li>
 <li>Hvis nogle af pointene er negative, kan brøken give et negativt tal.</li>
 </ul>
-<p>Metoden er, at man opløfter tallet <span class="math inline">\(\mathrm{e}\)</span> i hvert pointtal, og derefter regne sandsynlighederne på samme måde som før.</p>
-<p>Så bliver <span class="math display">\[P(\mathrm{ Skotterud }) = \frac{\mathrm{e}^{3}}{\mathrm{e}^{3}+\mathrm{e}^2+\mathrm{e}^3+\mathrm{e}^{5}} \approx 10,2\%\]</span></p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 2: Udregn sandsynligherne med Softmax
+Opgave 2: Hvad sker der med negative værdier?
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Udregn sandsynlighederne for hver af de 3 andre typer boxmadrasser med Softmax metoden.</li>
-<li>Læg sandsynlighederne sammen og se, at det giver 1.</li>
+<li>Beregn “sandsynlighederne” med samme metode, hvis de fire værdier i stedet var -1, 0, 1 og 2.</li>
+<li>Forklar, hvorfor resultaterne ikke kan være sandsynligheder.</li>
 </ul>
 </div>
 </div>
 </div>
-<p>Bemærk, at sandsynlighederne her er blevet mere forskellige med Softmax, end da du regnede i første omgang.</p>
-<p>Hvis pointene bliver store og forskellige, vil næsten al sandsynligheden samle sig omkring den største værdi. Det kan naturligvis være ønskeligt i situationer, hvor "the winner takes it all", men i andre situationer kan det ses som et problem.</p>
+</section>
+<section id="softmax" class="level2">
+<h2 class="anchored" data-anchor-id="softmax">Softmax</h2>
+<p>Man benytter derfor nogle gange metoden Softmax, hvor man opløfter tallet <span class="math inline">\(\mathrm{e}\)</span> i hvert pointtal, og derefter regne sandsynlighederne på samme måde som før.</p>
+<p>Så bliver <span class="math display">\[P(\mathrm{ Skotterud }) = \frac{\mathrm{e}^{3}}{\mathrm{e}^{3}+\mathrm{e}^2+\mathrm{e}^3+\mathrm{e}^{5}} \approx 10,2\%\]</span></p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 3: Udregn sandsynligherne for store forskellige værdier
+Opgave 3: Udregn sandsynligherne med Softmax
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Udregn sandsynligheden for 16 point med Softmax, hvis de fire pointtal er 2, 9, 11 og 16.</li>
+<li><p>Udregn sandsynlighederne for hver af de 3 andre typer boxmadrasser fra opgave 1 med Softmax metoden.</p></li>
+<li><p>Læg sandsynlighederne sammen og se, at det giver 1.</p></li>
+<li><p>Udregn på samme måde sandsynlighederne ud fra pointallene fra opgave 2 med Softmax.</p></li>
+<li><p>Læg sandsynlighederne sammen og se, at det giver 1.</p></li>
 </ul>
 </div>
 </div>
 </div>
-<p>I mange anvendelser med Softmax indgår der derfor andre ting, så dette ikke er et problem, men det kan du måske komme til i 2.g eller 3.g. f.eks. i <a href="../materialer/softmax/softmax.html">Simple kunstige neurale netværk til multiple klassifikation</a> eller <a href="../materialer/sprogmodeller/word2vec.html">WordToVec</a>.</p>
+<p>Bemærk, at sandsynlighederne for de 4 typer madrasser er blevet mere forskellige med Softmax, end da du regnede i første omgang.</p>
+<p>Hvis pointene bliver store og forskellige, vil næsten al sandsynligheden samle sig omkring den største værdi med Softmax. Det kan naturligvis være ønskeligt i situationer, hvor "the winner takes it all", men i andre situationer kan det ses som et problem.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 4: Udregn sandsynligherne for store forskellige værdier
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Udregn sandsynligheder både med metoden fra opgave 1 og med Softmax, hvis de fire pointtal er 2, 9, 11 og 16.</li>
+</ul>
+</div>
+</div>
+</div>
+<p>I mange anvendelser med Softmax er det derfor netop meningen, at hovedparten af sandsynligheder gives til tilfældet med flest point eller at der er mange tilfælde med næsten samme pointal. Det kan du måske komme til i 2.g eller 3.g. f.eks. i <a href="../materialer/softmax/softmax.html">Simple kunstige neurale netværk til multiple klassifikation</a> eller <a href="../materialer/sprogmodeller/word2vec.html">WordToVec</a>.</p>
 </section>
 <section id="løsninger-til-opgaver" class="level2">
 <h2 class="anchored" data-anchor-id="løsninger-til-opgaver">Løsninger til opgaver</h2>
