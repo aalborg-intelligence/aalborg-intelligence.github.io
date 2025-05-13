@@ -1,0 +1,163 @@
+---
+title: "Facit til forløb Softmax"
+
+description-meta: ''
+image: ""
+categories:
+---
+
+```{r, include = FALSE}
+snarum1 <- 2/(3+2+3+5)
+stuvland1 <- 3/(3+2+3+5)
+stavanger1 <- 5/(3+2+3+5)
+
+```  
+
+::: {.callout-note collapse="true" appearance="minimal"}  
+### Facit til opgave 1
+snarum1
+stuvland1
+stavanger1
+
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}  
+### Facit til opgave 2
+$o$-værdierne er 
+
+`r o`
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}  
+### Facit til opgave 3
+$\delta_w^{(m)}$-værdierne er:
+   $$
+   \begin{aligned}
+   \delta_w^{(m)} &= (t^{(m)}-o^{(m)} )  \\
+   \end{aligned}
+   $$
+
+  Opdateringsregler for $w$-vægtene:
+   $$
+   \begin{aligned}
+   w_0^{\textrm{ny}} & \leftarrow w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
+   w_1^{\textrm{ny}} & \leftarrow w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot y^{(m)}\\
+   \end{aligned}
+   $$
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}  
+### Facit til opgave 4
+* $\delta_w$-værdierne er 
+
+   `r dw`
+
+* Summen 
+
+    $\sum_{m=1}^3 \delta_w^{(m)} =$ `r sum(dw)`
+    
+
+* $w_0$-vægten opdateres til
+
+   $w_{0}^{ny}=$ `r w0` 
+
+* Summen 
+
+    $\sum_{m=1}^{3} \delta_w^{(m)} \cdot y^{(m)}=$ `r sum(dw*y)`
+
+* $w_1$-vægten opdateres til
+
+   $w_{1}^{ny}=$ `r w1` 
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}  
+### Facit til opgave 5
+
+$\delta_r^{(m)}$-værdierne er:
+$$
+   \begin{aligned}
+   \delta_r^{(m)} &= \delta_w^{(m)} \cdot w_1 \cdot y^{(m)} \cdot (1-y^{(m)})
+   \end{aligned}
+   $$
+Opdateringsreglerne for $r$-vægtene:
+
+$$
+   \begin{aligned}
+   r_0^{\textrm{ny}} & \leftarrow  r_0 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot 1 \\
+   r_1^{\textrm{ny}} & \leftarrow  r_1 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)} \\
+   r_2^{\textrm{ny}} & \leftarrow  r_2 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_2^{(m)}
+   \end{aligned}
+   $$
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}  
+### Facit til opgave 6
+* $\delta_r$-værdierne er 
+
+   `r formatC(dr,format="f",digits=7)`
+   
+* Summen 
+
+   $\sum_{m=1}^M \delta_r^{(m)}=$ `r formatC(sum(dr),format="f",digits=7)`
+   
+* $r_0$-vægten opdateres til
+
+   $r_{0}^{ny}=$ `r r0` 
+
+* Summen 
+
+   $\sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)}=$ `r formatC(sum(dr*X1),format="f",digits=7)`
+
+* $r_1$-vægten opdateres til
+
+   $r_{1}^{ny}=$ `r r1`
+
+* Summen 
+
+   $\sum_{m=1}^M \delta_r^{(m)} \cdot x_2^{(m)}=$ `r sum(dr*X2)`
+   
+* $r_2$-vægten opdateres til
+
+   $r_{2}^{ny}=$ `r r2`
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}  
+### Facit til opgave 7
+* Værdien af tabsfunktionen før opdatering `r tab0`
+* Værdien af tabsfunktionen efter første opdatering `r tab1`
+:::
+
+```{r, include = FALSE}
+
+
+# Baglæns forløb (backpropagation)
+  dw <- (t - o)
+  dr <- dw * w1 * y * (1 - y)
+  
+  # Opdater vægtene og bias
+  w0 <- w0 + eta * sum(dw)
+  w1 <- w1 + eta * sum(dw * y)
+
+  r0 <- r0 + eta * sum(dr)
+  r1 <- r1 + eta * sum(dr * X1)
+  r2 <- r2 + eta * sum(dr * X2)
+
+  
+# Forløb fremad
+  s <- r1 * X1 + r2 * X2 + r0
+  y <- sigmoid(r1 * X1 + r2 * X2 + r0)
+  o <- sigmoid(w1 * y + w0)
+  
+  tab2 <- cross_entropy_loss(o, t) 
+```  
+
+::: {.callout-note collapse="true" appearance="minimal"}  
+### Facit til opgave 8
+* $w_0 =$ `r w0`
+* $w_1 =$ `r w1`
+* $r_0 =$ `r r0`
+* $r_1 =$ `r r1`
+* $r_2 =$ `r r2`
+* Værdien af tabsfunktionen efter anden opdatering `r tab2`
+
+:::
