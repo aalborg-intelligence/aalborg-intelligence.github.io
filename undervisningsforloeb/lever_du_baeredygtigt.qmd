@@ -1,0 +1,210 @@
+---
+title: ""
+image: "/"
+description-meta: ""
+categories:
+  - B-niveau
+  - Kort
+---
+
+::: {.callout-caution collapse="true" appearance="minimal"}
+### Forudsætninger og tidsforbrug
+Forløbet kræver kendskab til:
+
++ Lineære funktioner.
++ Bedste rette linje (lineær regression).
++ Andengradspolynomier.
+
+**Tidsforbrug:** Ca. 1-2 x 90 minutter.
+
+:::
+
+
+::: {.purpose}
+
+### Formål
+
+Vi skal i dette forløb snuse til, hvad kunstig intelligens er for noget. Vi tager udgangspunkt i lineære funktioner af både en og to variable. Dernæst skal vi se på, hvordan man finder toppunktet for en parabel med en såkaldt *iterativ* metode. Herefter vil vi se på, hvordan denne metode kan bruges til at finde bedste rette linje. Endelig slutter vi af med at træne et simpelt kunstigt neuralt netværk.
+
+
+:::
+
+## Funktioner
+
+Et taxafirma -- lad os kalde det \"Taxa1\" -- tager 10 kroner for hver kørt kilometer. Prisens afhængighed af afstanden kan så beskrives med formlen:
+$$
+        \textrm{Pris} = \textrm{Afstand} \cdot  10
+$$
+hvor afstanden måles i kilometer, og prisen fås i kroner. Situationen kan illustreres, som vist i @fig-taxa1.
+
+![Illustration af hvordan prisen for \"Taxa1\" kan beregnes ved hjælp af afstanden.](lever_du_baeredygtigt/images/taxa1.png){width=50% #fig-taxa1}
+
+Et andet taxafirma -- lad os kalde det \"Taxa2\" -- tager kun 5 kroner for hver kørt kilometer men tager så desuden 3 kroner for hvert minut turen tager. Prisens afhængighed af både afstand og tid kan så beskrives med formlen:
+$$
+        \textrm{Pris} = \textrm{Afstand} \cdot 5  +  \textrm{Tid} \cdot 3
+$$
+hvor afstanden måles i kilometer, tiden måles i minutter og prisen fås i kroner. Det kan illusteres sådan her:
+
+![Illustration af hvordan prisen for \"Taxa2\" kan beregnes ved hjælp af afstanden.](lever_du_baeredygtigt/images/taxa2.png){width=50% #fig-taxa2}
+
+Det brugte input kaldes de uafhængige variable, det beregnede output kaldes den afhængige variabel og sammenhængen, der beskriver, hvordan output afhænger af input, kalder vi en funktion. 
+
+For \"Taxa1\" er prisen en funktion af én variabel -- afstanden -- og tallet 10 er en parameter, der bruges til at fastlægge funktionen.
+
+For \"Taxa2\" er prisen en funktion af to variable -- afstand og tid -- og tallene 3 og 5 er parametre, der bruges til at fastlægge funktionen.
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 1: \"Taxa1\"
+
+- Beregn prisen for at køre 6 kilometer med firmaet \"Taxa1\".
+
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 2: \"Taxa2\"
+
+- Beregn prisen for at køre 6 kilometer med firmaet \"Taxa2\", hvis turen tager 12 minutter.
+
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 3: Sammenligning
+
+- Beregn gennemsnitsfarten for turen i opgave 2.
+
+-  Overvej, om man kan sige noget om, hvornår det bedst kan betale sig at bruge henholdsvis \"Taxa1\" og \"Taxa2\".
+
+:::
+
+## Neurale net
+
+Et kunstigt neuralt net forsøger at efterligne hjernen med et antal hjerneceller (neuroner) og forbindelser mellem dem. Man kan illustrere det således:
+
+![Illustration af et simpelt neuralt netværk.](lever_du_baeredygtigt/images/NN_simple.png){width=75% #fig-NN_simple}
+
+Det kan være meget kompliceret med mange knudepunkter i mange lag og med mange forbindelser.
+
+Uanset om input er tal, tekster, billeder, film eller andet, så bliver det altid oversat til et antal tal, så der kan sendes et tal til hvert knudepunkt i inputlaget.
+
+Alle forbindelserne har tilknyttet en parameter (også kaldet en vægt), som bliver ganget på tallet, inden det bliver sendt videre. Det samlede input til et knudepunkt er i det meste simple tilfælde summen af de sendte bidrag fra knudepunkterne i laget før[^1].
+
+[^1]: Ofte anvender man også en såkaldt aktiveringsfunktion. Det kan du læse mere om [her](aktiveringsfunktioner.qmd).
+
+Til sidst ender man med et tal i hvert knudepunkt i outputlaget, som så kan oversættes tilbage til tal, tekster, billeder, film eller andet.
+
+Bemærk, at alle vægtene knyttet til forbindelserne mellem knudepunkterne fastlægger den funktion, som beskriver hvordan output afhænger af input. 
+
+For at få et velfungerende neuralt net skal man altså forsøge at vælge disse vægte, så man får det ønskede output. Det gøres i en iterativ proces, hvor man gradvist træner det neurale net ved hjælp af store mængder træningsdata.
+
+Vi kan illustrere funktionen fra \"Taxa2\" med samme billede, hvor en konkret taxatur bliver oversat til 2 tal, afstand og tid:
+
+![Et lille neuralt netværk som illustrerer den funktion, som kan udregne prisen for en taxatur med \"Taxa2\".](lever_du_baeredygtigt/images/NN_taxa2.png){width=75% #fig-NN_taxa2}
+
+De næste to eksempler [Toppunkt for en parabel](lever_du_baeredygtigt.qmd#toppunkt-for-en-parabel) og [Bedste rette linje](lever_du_baeredygtigt.qmd#bedste-rette-linje) skal illustrere metoderne bag den iterative proces, der bruges til at træne neurale net. 
+
+Formålet er derfor at finde gode tilnærmede bud til $x$-koordinaten i toppunktet og til tallene $a$ og $b$ for den bedste rette linje $y=ax+b$ uden at bruge de eksakte formler, der jo faktisk findes til de to eksempler.
+
+## Toppunkt for en parabel
+
+Grafen for et andengradspolynomium er en parabel, og hvis tallet foran $x^2$ er positivt, vender grenene opad. Toppunktets $x$-værdi er derfor den $x$-værdi, der giver den mindst mulige $y$-værdi. Se @fig-toppunkt.
+
+![Toppunktet for en parabel hvor grenene vender opad.](lever_du_baeredygtigt/images/toppunkt.png){width=75% #fig-toppunkt}
+
+Når vi ønsker at finde toppunktets $x$-værdi med en iterativ proces, kan vi gøre følgende:
+
+- Vælg en tilfældig $x$-værdi ($x_{start}$) og udregn den tilhørende $y$-værdi.
+- Det er næppe den rigtige $x$-værdi for toppunktet, men vi kan komme tættere på den rigtige værdi ved enten at skrue lidt op for $x$ eller lidt ned for $x$ for at gå ned ad bakken mod minimum.
+- Vi afgør om vi skal skrue op eller ned for $x$ ved at udregne en $y$-værdi for en $x$-værdi, der er lidt større end den valgte, og sammenligne den med $y$-værdien i den valgte $x$-værdi ($x_{ny}$). 
+
+- Får vi en større $y$-værdi, så er vi på vej væk fra minimum, og vi skal derfor skrue lidt ned for $x$. Se @fig-toppunkt_larger_y. 
+
+![I den nye $x$-værdi er $y$-værdien blevet større.](lever_du_baeredygtigt/images/toppunkt_larger_y.png){width=75% #fig-toppunkt_larger_y}
+
+- Får vi en mindre $y$-værdi, så er vi på vej hen mod minimum, og vi skal derfor skrue lidt op for $x$. Se @fig-toppunkt_smaller_y.
+
+![I den nye $x$-værdi er $y$-værdien blevet mindre.](lever_du_baeredygtigt/images/toppunkt_smaller_y.png){width=75% #fig-toppunkt_smaller_y}
+
+       
+Vi gentager nu processen indtil en tilfredsstillende præcision er opnået. Vi kan vælge at tage mindre skridt, når vi tror, at vi er tæt på toppunktet. Det kan vi se, når de to beregnede $y$-værdier er ret ens.   
+
+Lad os se på et eksempel.
+
+::: {.example}
+
+**Eksempel: Iterativ bestemmelse af toppunkt**
+
+Vi ser på andengradspolynomiet med forskrift
+
+$$
+f(x)=2x^2-20x+55
+$$
+Vi starter med at gætte på en $x$-værdi på $4$:
+
+$$
+x_{start} = 4
+$$
+og skruer lidt op for $x$-værdien:
+
+$$
+x_{ny} = 4.2
+$$
+
+Vi beregner funktionsværdier:
+
+$$
+\begin{aligned}
+f(4) &= 7 \\
+f(4.2) &= 6.28
+\end{aligned}
+$$
+
+Da $y$-værdien er blevet mindre ved at skrue op for $x$, vælger vi at skrue op for $x$. Vi sætter derfor
+
+$$
+\begin{aligned}
+x_{start} &= 4.2 \\
+x_{ny} &= 4.4
+\end{aligned}
+$$
+
+og udregnet funktionsværdier
+
+$$
+\begin{aligned}
+f(4.2) &= 6.28 \\
+f(4.4) &= 5.72 \\
+\end{aligned}
+$$
+
+Da $y$-værdien igen er blevet mindre ved at skrue op for $x$, vælger vi at skrue op for $x$.
+
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 4: Iterativ metode
+
+- Regn selv videre på eksemplet ovenfor og bestem på den måde et godt bud på $x$-koordinaten i toppunktet.
+
+   *OBS! Lad her være med at bruge jeres egen lettere metode. Opgaven skal illustrere en iterativ proces brugt i en    situation, hvor en sådan lettere metode ikke findes.*
+   
+- Brug nu toppunktsformlen til at udregne $x$-koordinaten i toppunktet. Hvor tæt kom du på det rigtige svar, da du brugte den iterative metode?
+
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 5: Iterativ metode
+
+- Brug samme metode som i opgave 4, men med jeres eget startgæt og skridtlængde til at bestemme et godt bud på $x$-koordinaten i toppunktet for andengradspolynomiet med forskrift $f(x)=x^2-4x+11$.
+
+
+:::
+
+## Bedste rette linje
+
+![](lever_du_baeredygtigt/images/bedste_rette_linje_illustration.png){width=75% #fig-bedste_rette_linje}
