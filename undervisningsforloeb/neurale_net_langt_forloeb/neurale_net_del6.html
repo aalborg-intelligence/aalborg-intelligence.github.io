@@ -181,7 +181,9 @@ window.Quarto = {
     <h2 id="toc-title">Indhold</h2>
    
   <ul>
-  <li><a href="#aktivitet-1---cross-entropy-tabsfunktionen" id="toc-aktivitet-1---cross-entropy-tabsfunktionen" class="nav-link active" data-scroll-target="#aktivitet-1---cross-entropy-tabsfunktionen">Aktivitet 1 - Cross entropy tabsfunktionen</a></li>
+  <li><a href="#aktivitet-1---cross-entropy-tabsfunktionen" id="toc-aktivitet-1---cross-entropy-tabsfunktionen" class="nav-link active" data-scroll-target="#aktivitet-1---cross-entropy-tabsfunktionen">Aktivitet 1 - Cross-entropy tabsfunktionen</a></li>
+  <li><a href="#aktivitet-2---nye-opdateringsregler" id="toc-aktivitet-2---nye-opdateringsregler" class="nav-link" data-scroll-target="#aktivitet-2---nye-opdateringsregler">Aktivitet 2 - Nye opdateringsregler</a></li>
+  <li><a href="#aktivitet-3---væk-med-slow-learning" id="toc-aktivitet-3---væk-med-slow-learning" class="nav-link" data-scroll-target="#aktivitet-3---væk-med-slow-learning">Aktivitet 3 - Væk med slow learning!</a></li>
   </ul>
 </nav>
 </nav>
@@ -213,36 +215,274 @@ window.Quarto = {
 
 <div class="estimeret_tid">
 <p>Forventet tid ca. 1 x 90 min.</p>
-<p>Hele denne del er en fortsættlse af eksemplet om "slow learning" og kan derfor springes over.</p>
+<p>Hele denne del er en fortsættelse af eksemplet om "slow learning" og kan derfor springes over. Alternativt kan man nøjes med at springe opgave 3 over.</p>
 </div>
 <section id="aktivitet-1---cross-entropy-tabsfunktionen" class="level2 aimat">
-<h2 class="aimat anchored" data-anchor-id="aktivitet-1---cross-entropy-tabsfunktionen">Aktivitet 1 - Cross entropy tabsfunktionen</h2>
+<h2 class="aimat anchored" data-anchor-id="aktivitet-1---cross-entropy-tabsfunktionen">Aktivitet 1 - Cross-entropy tabsfunktionen</h2>
 <p>I <a href="../../undervisningsforloeb/neurale_net_langt_forloeb/neurale_net_del3.html">del 3</a> så vi, at der kan opstå problemer med slow learning. Det opstår på grund af opdateringsreglerne:</p>
 <p><span id="eq-opdatering"><span class="math display">\[
 \begin{aligned}
-w_0^{(\textrm{ny})} \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{3} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \\
-w_1^{(\textrm{ny})} \leftarrow &amp; w_1 + \eta \cdot \sum_{m=1}^{3} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x^{(m)}
+w_0^{(\textrm{ny})} \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \\
+w_1^{(\textrm{ny})} \leftarrow &amp; w_1 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x^{(m)}
 \end{aligned}
 \tag{1}\]</span></span></p>
-<p>hvor man kan være i den uheldige situation, at man har fået startet gradientnedstigning i en <span class="math inline">\((w_0, w_1)\)</span> værdi, hvor neuron er fejlagtigt "mættet". Det betyder, at den prædikterer en outputværdi <span class="math inline">\(o\)</span> tæt på <span class="math inline">\(0\)</span>, selvom target er <span class="math inline">\(1\)</span> og omvendt, når target er <span class="math inline">\(0\)</span>. I begge tilfælde vil opdateringsleddet i (<a href="#eq-opdatering" class="quarto-xref">1</a>) være tæt på <span class="math inline">\(0\)</span> – enten fordi <span class="math inline">\(o^{(m)}\)</span> er tæt på <span class="math inline">\(0\)</span> eller fordi <span class="math inline">\(1-o^{(m)}\)</span> er tæt på <span class="math inline">\(0\)</span>.</p>
-<p>Vi skal i denne del se på, at det skyldes valget af <em>squared error</em> tabsfunktionen.</p>
-<p><a href="../../materialer/tabsfunktioner/tabsfunktioner.html">Noten om tabsfunktioner</a></p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<p>hvor man kan være i den uheldige situation, at man har fået startet gradientnedstigning i en <span class="math inline">\((w_0, w_1)\)</span> værdi, hvor neuronen fejlagtigt er "mættet". Det betyder, at den prædikterer en outputværdi <span class="math inline">\(o\)</span> tæt på <span class="math inline">\(0\)</span>, selvom target er <span class="math inline">\(1\)</span> og omvendt, når target er <span class="math inline">\(0\)</span>. I begge tilfælde vil opdateringsleddet i (<a href="#eq-opdatering" class="quarto-xref">1</a>) være tæt på <span class="math inline">\(0\)</span> – enten fordi <span class="math inline">\(o^{(m)}\)</span> er tæt på <span class="math inline">\(0\)</span> eller fordi <span class="math inline">\(1-o^{(m)}\)</span> er tæt på <span class="math inline">\(0\)</span>.</p>
+<p>Vi skal i denne del se på, at det skyldes valget af <em>squared error</em> tabsfunktionen. I det simple tilfælde med kun én inputvariabel, så vi i <a href="../../undervisningsforloeb/neurale_net_langt_forloeb/neurale_net_del3.html">del 3</a>, at <em>squared error</em> tabsfunktionen var defineret ved:</p>
+<p><span class="math display">\[
+E = \frac{1}{2} \sum_{m=1}^M (t^{(m)}-\sigma(w_0 + w_1 \cdot x^{(m)}))^2
+\]</span> hvor det <span class="math inline">\(m\)</span>’te træningseksempel består af inputværdien <span class="math inline">\(x^{(m)}\)</span> (den <span class="math inline">\(m\)</span>’te kundes alder) med tilhørende targetværdi <span class="math inline">\(t^{(m)}\)</span> (som er <span class="math inline">\(1\)</span>, hvis den <span class="math inline">\(m\)</span>’te kunde aktiverer tilbudet og <span class="math inline">\(0\)</span> ellers).</p>
+<p>Holder vi det helt simpelt og betragter ét træningseksempel ad gangen, så er <em>squared error</em> tabsfunktionen på formen</p>
+<p><span id="eq-squared_error"><span class="math display">\[
+E = \frac{1}{2} (t-o)^2= \frac{1}{2} (t-\sigma(w_0 + w_1 \cdot x))^2
+\tag{2}\]</span></span></p>
+<p>Nu er der dog ingen almen gyldig naturlov, som siger, at vi absolut skal bruge <em>squared error</em> tabsfunktionen. Til gengæld stiller vi nogle generelle krav til en tabsfunktion, som afspejler, at den netop skal bruges til at måle et <em>tab</em> eller en <em>fejl</em> ved en AI model. Derfor skal en tabsfunktion <span class="math inline">\(E\)</span> overordnet set have følgende egenskaber:</p>
+<div class="callout callout-style-simple callout-caution no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 1:
+Egenskaber ved en tabsfunktion <span class="math inline">\(E\)</span>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-
+<ul>
+<li><p>Tabsfunktionen skal være positiv eller <span class="math inline">\(0\)</span>: <span class="math inline">\(E \geq 0\)</span> (vi vil ikke operere med negative fejl).</p></li>
+<li><p>Hvis AI modellen er god til at prædiktere, skal <span class="math inline">\(E\)</span> være tæt på <span class="math inline">\(0\)</span>, mens hvis AI modellen er dårlig til at prædiktere, skal <span class="math inline">\(E\)</span> være langt væk fra <span class="math inline">\(0\)</span>.</p></li>
+</ul>
 </div>
 </div>
 </div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 1: Egenskaber ved <em>squared error</em> tabsfunktionen
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Gør rede for at <em>squared error</em> tabsfunktionen i (<a href="#eq-squared_error" class="quarto-xref">2</a>) opfylder de egenskaber, som en tabsfunktion skal have.</li>
+</ul>
+</div>
+</div>
+</div>
+<p>En anden ofte anvendt tabsfunktion er <em>cross-entropy</em> tabsfunktionen. Generelt er den defineret sådan her:</p>
+<p><span class="math display">\[
+\begin{aligned}
+E = - \sum_{m=1}^{M} \left (t^{(m)} \cdot \ln(o^{(m)}) + (1-t^{(m)}) \cdot \ln(1-o^{(m)})  \right)
+\end{aligned}
+\]</span></p>
+<p>Ser vi igen kun på ét træningseksempel ad gangen får vi det lidt simplere udtryk:</p>
+<p><span id="eq-cross_entropy"><span class="math display">\[
+\begin{aligned}
+E = - \left (t \cdot \ln(o) + (1-t) \cdot \ln(1-o)  \right),
+\end{aligned}
+\tag{3}\]</span></span></p>
+<p>hvor outputværdien <span class="math inline">\(o\)</span> er</p>
+<p><span class="math display">\[
+o = \sigma(w_0+w_1 \cdot x)
+\]</span></p>
+<p>i det tilfælde, hvor der kun er én inputvariabel.</p>
+<p>Vi skal nu se, at <em>cross-entropy</em> tabsfunktionen rent faktisk opfylder kravene til en tabsfunktion.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 2: Egenskaber ved <em>cross-entropy</em> tabsfunktionen
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Opskriv et udtryk for tabsfunktionen i (<a href="#eq-cross_entropy" class="quarto-xref">3</a>) i det tilfælde, hvor <span class="math inline">\(t=0\)</span>.</p></li>
+<li><p>Opskriv et udtryk for tabsfunktionen i (<a href="#eq-cross_entropy" class="quarto-xref">3</a>) i det tilfælde, hvor <span class="math inline">\(t=1\)</span>.</p></li>
+<li><p>Tegn grafen for <span class="math inline">\(\ln(x)\)</span> og for <span class="math inline">\(-\ln(x)\)</span>. Hvad er sammenhængen mellem de to grafer?</p></li>
+<li><p>Vi ved, at <span class="math inline">\(0&lt;o&lt;1\)</span>. Argumenter for, at det må betyde, at <span class="math inline">\(0&lt;1-o&lt;1\)</span>.</p></li>
+<li><p>Brug grafen for <span class="math inline">\(-\ln(x)\)</span> til at argumentere for, at <em>cross-entropy</em> tabsfunktionen er positiv.</p></li>
+</ul>
+<p>Vi skal nu se, at hvis den kunstige neuron er god til at prædiktere, så er værdien af <span class="math inline">\(E\)</span> tæt på <span class="math inline">\(0\)</span>. At være god til at prædiktere betyder, at</p>
+<div class="centertext">
+<p>Hvis <span class="math inline">\(t=0\)</span>, så er <span class="math inline">\(o\)</span> tæt på <span class="math inline">\(0\)</span>.</p>
+<p>Hvis <span class="math inline">\(t=1\)</span>, så er <span class="math inline">\(o\)</span> tæt på <span class="math inline">\(1\)</span>.</p>
+</div>
+<ul>
+<li>Brug udtrykket for tabsfunktionen, når <span class="math inline">\(t\)</span> er henholdsvis <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span> til at argumentere for, at <em>cross-entropy</em> tabsfunktionen er tæt på <span class="math inline">\(0\)</span>, når den kunstige neuron er god til at prædiktere.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="aktivitet-2---nye-opdateringsregler" class="level2 aimat">
+<h2 class="aimat anchored" data-anchor-id="aktivitet-2---nye-opdateringsregler">Aktivitet 2 - Nye opdateringsregler</h2>
+<p>Vi skal nu have bestemt opdateringsreglerne for vægtene, når vi bruger <em>cross-entropy</em> tabsfunktionen.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 3: Partielle afledede og opdateringsregler (valgfri)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Bestem de partielle afledede <span class="math inline">\(\frac{\partial E}{\partial w_0}\)</span> og <span class="math inline">\(\frac{\partial E}{\partial w_1}\)</span> af tabsfunktionen i (<a href="#eq-cross_entropy" class="quarto-xref">3</a>), hvor</p>
+<p><span class="math display">\[
+o = \sigma(w_0+w_1 \cdot x)
+\]</span></p>
+<p>Husk på, at du fra <a href="../../undervisningsforloeb/neurale_net_langt_forloeb/neurale_net_del1.html">del 1</a> ved, at</p>
+<p><span class="math display">\[
+\sigma'(x) = \sigma(x) \cdot (1-\sigma(x))=o \cdot (1-o)
+\]</span> da outputværdien <span class="math inline">\(o=\sigma(x)\)</span>.</p></li>
+<li><p>Brug de partielle afledede til at opskrive opdateringsreglerne:</p>
+<p><span class="math display">\[
+\begin{aligned}
+w_0^{\mathrm{(ny)}} &amp;\leftarrow w_0 - \eta \cdot \frac{\partial E}{\partial w_0} \\
+w_1^{\mathrm{(ny)}} &amp;\leftarrow w_1 - \eta \cdot \frac{\partial E}{\partial w_1}
+\end{aligned}
+\]</span></p></li>
+</ul>
+<p><span class="fremhaev">Valgfri udfordring</span></p>
+<ul>
+<li><p>Udled opdateringsreglerne i det tilfælde, hvor vi bruger den generelle tabsfunktion:</p>
+<p><span class="math display">\[
+E = \frac{1}{2} \sum_{m=1}^M (t^{(m)}-\sigma(w_0 + w_1 \cdot x^{(m)}))^2
+\]</span> hvor <span class="math inline">\(M\)</span> er antallet af træningseksempler.</p></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="aktivitet-3---væk-med-slow-learning" class="level2 aimat">
+<h2 class="aimat anchored" data-anchor-id="aktivitet-3---væk-med-slow-learning">Aktivitet 3 - Væk med slow learning!</h2>
+<p>Hvis du har lavet opgave 3 rigtig, skulle du gerne ende med følgende opdateringsregler:</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opdateringsregler baseret på <em>cross-entropy</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><span id="eq-opdatering_simple_cross"><span class="math display">\[
+\begin{aligned}
+w_0^{(\textrm{ny})} \leftarrow &amp; w_0 + \eta \cdot (t-o) \\
+w_1^{(\textrm{ny})} \leftarrow &amp; w_1 + \eta \cdot (t-o) \cdot x
+\end{aligned}
+\tag{4}\]</span></span></p>
+</div>
+</div>
+</div>
+<p>Til sammenligning vil opdateringsreglerne for <em>squared error</em> tabsfunktionen i (<a href="#eq-opdatering" class="quarto-xref">1</a>), i det tilfælde hvor vi kun opdaterer vægtene for ét træningseksempel ad gangen se sådan her ud:</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opdateringsregler baseret på <em>squared error</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><span id="eq-opdatering_simple_squared"><span class="math display">\[
+\begin{aligned}
+w_0^{(\textrm{ny})} \leftarrow &amp; w_0 + \eta \cdot (t-o) \cdot o\cdot (1-o) \\
+w_1^{(\textrm{ny})} \leftarrow &amp; w_1 + \eta \cdot (t-o) \cdot o\cdot (1-o) \cdot x
+\end{aligned}
+\tag{5}\]</span></span></p>
+</div>
+</div>
+</div>
+<p>Det er nu tydeligt, at faktoren <span class="math inline">\(o \cdot (1-o)\)</span> – som var den størrelse, der gav anledning til <em>slow learning</em> – er forsvundet fra opdateringsreglerne baseret på <em>cross-entropy</em>. Det betyder, at hvis man er i en situation, hvor <span class="math inline">\(t=1\)</span> og <span class="math inline">\(o\)</span> er tæt på <span class="math inline">\(0\)</span> eller omvendt, så vil vægtene baseret på <em>cross-entropy</em> tabsfunktionen hurtigt blive opdateret. Hvorimod det ikke er tilfældet, hvis opdateringen af vægtene er baseret på <em>squared error</em> tabsfunktionen. Det skyldes simpelthen, at valget af sigmoid-funktionen som aktiveringsfunktion passer meget bedre sammen med <em>cross-entropy</em> tabsfunktionen, end den gør med <em>squared error</em> tabsfunktionen.</p>
+<p>Lad os se hvordan det virker i praksis.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 4: Træning af kunstig neuron med forskellige tabsfunktioner
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Åbn <a href="https://apps01.math.aau.dk/ai/neuron" target="blank">neuron app’en</a>.</p></li>
+<li><p>Upload <a href="data/goodfood.xlsx">datasættet</a> (under "Browse…").</p></li>
+<li><p>Lav følgende indstillinger:</p>
+<ul>
+<li><p>Vælg "Aktiveret" som target-variabel.</p></li>
+<li><p>Vælg "Ja" som target-værdi.</p></li>
+<li><p>Vælg "Alder", "Forbrug" og "Kon" som feature-variable (det vil sige inputvariable). Og sørg for at indtaste dem i den rækkefølge.</p></li>
+<li><p>Lad alle startvægtene stå til <span class="math inline">\(0\)</span>.</p></li>
+<li><p>Behold en learning rate (<span class="math inline">\(\eta\)</span>) på <span class="math inline">\(0.001\)</span>.</p></li>
+<li><p>Behold antal iterationer på <span class="math inline">\(1000\)</span>.</p></li>
+<li><p>Slideren ved "Antal fold" lader du være.</p></li>
+<li><p>Vælg "squared error" som tabsfunktion.</p></li>
+<li><p>Behold "sigmoid" som aktiveringsfunktion.</p></li>
+<li><p>Behold fluebenet ved "Brug feature-skalering".</p></li>
+</ul></li>
+<li><p>Tryk på "Kør!".</p></li>
+<li><p>Ser det ud som om, at vi har fundet et minimum for tabsfunktionen (se på grafen for tabsfunktionen til højre)?</p></li>
+<li><p>Notér klassifikationsnøjagtigheden (CA).</p></li>
+</ul>
+<p>Vi vil nu undersøge, om der er nogen forskel, hvis vi bruger <em>cross entropy</em> som tabsfunktion.</p>
+<ul>
+<li>Gentag ovenstående men vælg i stedet "cross entropy" som tabsfunktion. Er der nogen forskel?</li>
+</ul>
+<p><em>Obs! Slutværdien af de to forskellige tabsfunktioner er <u>ikke</u> sammenlignelige.</em></p>
+</div>
+</div>
+</div>
+<p>Vi har tidligere set, at vi fik problemer med <em>slow learning</em>, hvis vi valgte <em>squared error</em> som tabsfunktion og satte start-vægtene til <span class="math inline">\(10\)</span>. Lad os se hvordan det går, hvis vi i stedet bruger <em>cross-entropy</em>:</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 5: Træning af kunstig neuron med forskellige tabsfunktioner
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Brug igen <a href="https://apps01.math.aau.dk/ai/neuron" target="blank">neuron app’en</a> fra forrige opgave og vælg de samme indstillinger bortset fra, at du nu sætter:</p>
+<ul>
+<li><p>Alle startvægte til <span class="math inline">\(10\)</span>.</p></li>
+<li><p>"Antal iterationer" til henholdsvis <span class="math inline">\(1000\)</span>, <span class="math inline">\(10000\)</span> og <span class="math inline">\(100000\)</span> (den sidste tager lidt tid).</p></li>
+<li><p>"Tabsfunktion" til "squared error".</p></li>
+<li><p>Tryk på "Kør!".</p></li>
+<li><p>Notér i alle tre tilfælde klassifikationsnøjagtigheden og slutværdien af tabsfunktionen.</p></li>
+</ul>
+<p>Du skulle gerne genfinde problemet med <em>slow learning</em> her. Lad os undersøge, om <em>cross-entropy</em> som tabsfunktion løser problemet med <em>slow learning</em>.</p>
+<ul>
+<li><p>Gentag ovenstående, men vælg "cross-entropy" som tabsfunktion.</p></li>
+<li><p>Hvor mange iterationer er nødvendige for at få en klassifikationsnøjagtighed på omkring <span class="math inline">\(0.85\)</span>, hvis du bruger <em>cross-entropy</em> som tabsfunktion?</p></li>
+</ul>
+</div>
+</div>
+</div>
+<p>Hvis du vil vide mere om tabsfunktioner, kan du læse i <a href="../../materialer/tabsfunktioner/tabsfunktioner.html">noten om tabsfunktioner</a>.</p>
 
 
 </section>
