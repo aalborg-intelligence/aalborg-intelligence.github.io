@@ -11,33 +11,266 @@ knitr::opts_chunk$set(echo = FALSE)
 
 Forventet tid ca. 1 x 90 min.
 
-Hele denne del er en fortsættlse af eksemplet om \"slow learning\" og kan derfor springes over.
+Hele denne del er en fortsættelse af eksemplet om \"slow learning\" og kan derfor springes over. Alternativt kan man nøjes med at springe opgave 3 over.
 
 ::: 
 
-## Aktivitet 1 - Cross entropy tabsfunktionen {.aimat}
+## Aktivitet 1 - Cross-entropy tabsfunktionen {.aimat}
 
 I [del 3](neurale_net_del3.qmd) så vi, at der kan opstå problemer med slow learning. Det opstår på grund af opdateringsreglerne:
 
 $$
 \begin{aligned}
-w_0^{(\textrm{ny})} \leftarrow & w_0 + \eta \cdot \sum_{m=1}^{3} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \\
-w_1^{(\textrm{ny})} \leftarrow & w_1 + \eta \cdot \sum_{m=1}^{3} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x^{(m)}
+w_0^{(\textrm{ny})} \leftarrow & w_0 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \\
+w_1^{(\textrm{ny})} \leftarrow & w_1 + \eta \cdot \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x^{(m)}
 \end{aligned}
 $$ {#eq-opdatering}
 
-hvor man kan være i den uheldige situation, at man har fået startet gradientnedstigning i en $(w_0, w_1)$ værdi, hvor neuron er fejlagtigt \"mættet\". Det betyder, at den prædikterer en outputværdi $o$ tæt på $0$, selvom target er $1$ og omvendt, når target er $0$. I begge tilfælde vil opdateringsleddet i (@eq-opdatering) være tæt på $0$ -- enten fordi $o^{(m)}$ er tæt på $0$ eller fordi $1-o^{(m)}$ er tæt på $0$.
+hvor man kan være i den uheldige situation, at man har fået startet gradientnedstigning i en $(w_0, w_1)$ værdi, hvor neuronen fejlagtigt er \"mættet\". Det betyder, at den prædikterer en outputværdi $o$ tæt på $0$, selvom target er $1$ og omvendt, når target er $0$. I begge tilfælde vil opdateringsleddet i (@eq-opdatering) være tæt på $0$ -- enten fordi $o^{(m)}$ er tæt på $0$ eller fordi $1-o^{(m)}$ er tæt på $0$.
 
-Vi skal i denne del se på, at det skyldes valget af *squared error* tabsfunktionen.
+Vi skal i denne del se på, at det skyldes valget af *squared error* tabsfunktionen. I det simple tilfælde med kun én inputvariabel, så vi i [del 3](neurale_net_del3.qmd), at *squared error* tabsfunktionen var defineret ved:
 
-[Noten om tabsfunktioner](../../materialer/tabsfunktioner/tabsfunktioner.qmd)
+$$
+E = \frac{1}{2} \sum_{m=1}^M (t^{(m)}-\sigma(w_0 + w_1 \cdot x^{(m)}))^2
+$$
+hvor det $m$'te træningseksempel består af inputværdien $x^{(m)}$ (den $m$'te kundes alder) med tilhørende targetværdi $t^{(m)}$ (som er $1$, hvis den $m$'te kunde aktiverer tilbudet og $0$ ellers).
+
+Holder vi det helt simpelt og betragter ét træningseksempel ad gangen, så er *squared error* tabsfunktionen på formen
+
+$$
+E = \frac{1}{2} (t-o)^2= \frac{1}{2} (t-\sigma(w_0 + w_1 \cdot x))^2
+$$ {#eq-squared_error}
 
 
+Nu er der dog ingen almen gyldig naturlov, som siger, at vi absolut skal bruge *squared error* tabsfunktionen. Til gengæld stiller vi nogle generelle krav til en tabsfunktion, som afspejler, at den netop skal bruges til at måle et *tab* eller en *fejl* ved en AI model. Derfor skal en tabsfunktion $E$ overordnet set have følgende egenskaber:
+
+::: {.callout-caution collapse="false" appearance="minimal"}
+### Egenskaber ved en tabsfunktion $E$
+
+* Tabsfunktionen skal være positiv eller $0$: $E \geq 0$ (vi vil ikke operere med negative fejl). 
+
+* Hvis AI modellen er god til at prædiktere, skal $E$ være tæt på $0$, mens hvis AI modellen er dårlig til at prædiktere, skal $E$ være langt væk fra $0$.
+
+:::
 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 1: 
+### Opgave 1: Egenskaber ved *squared error* tabsfunktionen
+
+* Gør rede for at *squared error* tabsfunktionen i (@eq-squared_error) opfylder de egenskaber, som en tabsfunktion skal have.
 
 
 :::
+
+
+En anden ofte anvendt tabsfunktion er *cross-entropy* tabsfunktionen. Generelt er den defineret sådan her:
+
+$$
+\begin{aligned}
+E = - \sum_{m=1}^{M} \left (t^{(m)} \cdot \ln(o^{(m)}) + (1-t^{(m)}) \cdot \ln(1-o^{(m)})  \right)
+\end{aligned}
+$$
+
+Ser vi igen kun på ét træningseksempel ad gangen får vi det lidt simplere udtryk:
+
+$$
+\begin{aligned}
+E = - \left (t \cdot \ln(o) + (1-t) \cdot \ln(1-o)  \right),
+\end{aligned}
+$$ {#eq-cross_entropy}
+
+hvor outputværdien $o$ er
+
+$$
+o = \sigma(w_0+w_1 \cdot x)
+$$
+
+i det tilfælde, hvor der kun er én inputvariabel.
+
+Vi skal nu se, at *cross-entropy* tabsfunktionen rent faktisk opfylder kravene til en tabsfunktion.
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 2: Egenskaber ved *cross-entropy* tabsfunktionen
+
+* Opskriv et udtryk for tabsfunktionen i (@eq-cross_entropy) i det tilfælde, hvor $t=0$.
+
+* Opskriv et udtryk for tabsfunktionen i (@eq-cross_entropy) i det tilfælde, hvor $t=1$.
+
+* Tegn grafen for $\ln(x)$ og for $-\ln(x)$. Hvad er sammenhængen mellem de to grafer?
+
+* Vi ved, at $0<o<1$. Argumenter for, at det må betyde, at $0<1-o<1$. 
+
+* Brug grafen for $-\ln(x)$ til at argumentere for, at *cross-entropy* tabsfunktionen er positiv.
+
+
+Vi skal nu se, at hvis den kunstige neuron er god til at prædiktere, så er værdien af $E$ tæt på $0$. At være god til at prædiktere betyder, at
+
+::: {.centertext}
+
+Hvis $t=0$, så er $o$ tæt på $0$.
+
+Hvis $t=1$, så er $o$ tæt på $1$.
+
+:::
+
+* Brug udtrykket for tabsfunktionen, når $t$ er henholdsvis $0$ og $1$ til at argumentere for, at *cross-entropy* tabsfunktionen er tæt på $0$, når den kunstige neuron er god til at prædiktere.
+
+
+:::
+
+## Aktivitet 2 - Nye opdateringsregler {.aimat}
+
+Vi skal nu have bestemt opdateringsreglerne for vægtene, når vi bruger *cross-entropy* tabsfunktionen.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 3: Partielle afledede og opdateringsregler (valgfri)
+
+- Bestem de partielle afledede $\frac{\partial E}{\partial w_0}$ og $\frac{\partial E}{\partial w_1}$ af tabsfunktionen i (@eq-cross_entropy), hvor
+
+   $$
+   o = \sigma(w_0+w_1 \cdot x)
+   $$
+
+   Husk på, at du fra [del 1](neurale_net_del1.qmd) ved, at
+
+   $$
+   \sigma'(x) = \sigma(x) \cdot (1-\sigma(x))=o \cdot (1-o)
+   $$
+   da outputværdien $o=\sigma(x)$.
+
+- Brug de partielle afledede til at opskrive opdateringsreglerne:
+
+   $$
+   \begin{aligned}
+   w_0^{\mathrm{(ny)}} &\leftarrow w_0 - \eta \cdot \frac{\partial E}{\partial w_0} \\
+   w_1^{\mathrm{(ny)}} &\leftarrow w_1 - \eta \cdot \frac{\partial E}{\partial w_1}
+   \end{aligned}
+   $$
+   
+[Valgfri udfordring]{.fremhaev}
+
+- Udled opdateringsreglerne i det tilfælde, hvor vi bruger den generelle tabsfunktion:
+
+   $$
+   E = \frac{1}{2} \sum_{m=1}^M (t^{(m)}-\sigma(w_0 + w_1 \cdot x^{(m)}))^2 
+   $$
+   hvor $M$ er antallet af træningseksempler.
+
+
+:::
+
+## Aktivitet 3 - Væk med slow learning! {.aimat}
+
+Hvis du har lavet opgave 3 rigtig, skulle du gerne ende med følgende opdateringsregler:
+
+::: {.callout-note collapse="false" appearance="minimal"} 
+### Opdateringsregler baseret på *cross-entropy*
+
+$$
+\begin{aligned}
+w_0^{(\textrm{ny})} \leftarrow & w_0 + \eta \cdot (t-o) \\
+w_1^{(\textrm{ny})} \leftarrow & w_1 + \eta \cdot (t-o) \cdot x
+\end{aligned}
+$$ {#eq-opdatering_simple_cross}
+
+:::
+
+
+Til sammenligning vil opdateringsreglerne for *squared error* tabsfunktionen i (@eq-opdatering), i det tilfælde
+hvor vi kun opdaterer vægtene for ét træningseksempel ad gangen se sådan her ud:
+
+::: {.callout-note collapse="false" appearance="minimal"} 
+### Opdateringsregler baseret på *squared error*
+
+$$
+\begin{aligned}
+w_0^{(\textrm{ny})} \leftarrow & w_0 + \eta \cdot (t-o) \cdot o\cdot (1-o) \\
+w_1^{(\textrm{ny})} \leftarrow & w_1 + \eta \cdot (t-o) \cdot o\cdot (1-o) \cdot x
+\end{aligned}
+$$ {#eq-opdatering_simple_squared}
+
+:::
+
+Det er nu tydeligt, at faktoren $o \cdot (1-o)$ -- som var den størrelse, der gav anledning til *slow learning* -- er forsvundet fra opdateringsreglerne baseret på *cross-entropy*. Det betyder, at hvis man er i en situation, hvor $t=1$ og $o$ er tæt på $0$ eller omvendt, så vil vægtene baseret på *cross-entropy* tabsfunktionen hurtigt blive opdateret. Hvorimod det ikke er tilfældet, hvis opdateringen af vægtene er baseret på *squared error* tabsfunktionen. Det skyldes simpelthen, at valget af sigmoid-funktionen som aktiveringsfunktion passer meget bedre sammen med *cross-entropy* tabsfunktionen, end den gør med *squared error* tabsfunktionen.
+
+Lad os se hvordan det virker i praksis.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 4: Træning af kunstig neuron med forskellige tabsfunktioner
+
+- Åbn [neuron app'en](https://apps01.math.aau.dk/ai/neuron){target="blank"}.
+
+- Upload [datasættet](data/goodfood.xlsx) (under \"Browse...\").
+
+- Lav følgende indstillinger:
+  
+  + Vælg \"Aktiveret\" som target-variabel.
+  
+  + Vælg \"Ja\" som target-værdi.
+  
+  + Vælg \"Alder\", \"Forbrug\" og \"Kon\" som feature-variable (det vil sige inputvariable). Og sørg for at indtaste dem i den rækkefølge.
+  
+  + Lad alle startvægtene stå til $0$.
+  
+  + Behold en learning rate ($\eta$) på $0.001$.
+  
+  + Behold antal iterationer på $1000$.
+  
+  + Slideren ved \"Antal fold\" lader du være.
+  
+  + Vælg \"squared error\" som tabsfunktion.
+  
+  + Behold \"sigmoid\" som aktiveringsfunktion.
+  
+  + Behold fluebenet ved \"Brug feature-skalering\".
+
+- Tryk på \"Kør!\".
+
+- Ser det ud som om, at vi har fundet et minimum for tabsfunktionen (se på grafen for tabsfunktionen til højre)?
+
+- Notér klassifikationsnøjagtigheden (CA). 
+
+Vi vil nu undersøge, om der er nogen forskel, hvis vi bruger *cross entropy* som tabsfunktion.
+
+- Gentag ovenstående men vælg i stedet \"cross entropy\" som tabsfunktion. Er der nogen forskel?
+
+*Obs! Slutværdien af de to forskellige tabsfunktioner er [ikke]{.underline} sammenlignelige.*
+
+:::
+
+Vi har tidligere set, at vi fik problemer med *slow learning*, hvis vi valgte *squared error* som tabsfunktion og satte start-vægtene til $10$. Lad os se hvordan det går, hvis vi i stedet bruger *cross-entropy*:
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 5: Træning af kunstig neuron med forskellige tabsfunktioner
+
+Brug igen [neuron app'en](https://apps01.math.aau.dk/ai/neuron){target="blank"} fra forrige opgave og vælg de samme indstillinger bortset fra, at du nu sætter:
+
+- Alle startvægte til $10$.
+
+- \"Antal iterationer\" til henholdsvis $1000$, $10000$ og $100000$ (den sidste tager lidt tid).
+
+- \"Tabsfunktion\" til \"squared error\".
+
+- Tryk på \"Kør!\".
+
+- Notér i alle tre tilfælde klassifikationsnøjagtigheden og slutværdien af tabsfunktionen.
+
+Du skulle gerne genfinde problemet med *slow learning* her. Lad os undersøge, om *cross-entropy* som tabsfunktion løser problemet med *slow learning*.
+
+- Gentag ovenstående, men vælg \"cross-entropy\" som tabsfunktion. 
+
+- Hvor mange iterationer er nødvendige for at få en klassifikationsnøjagtighed på omkring $0.85$, hvis du bruger *cross-entropy* som tabsfunktion?
+
+
+:::
+
+Hvis du vil vide mere om tabsfunktioner, kan du læse i [noten om tabsfunktioner](../../materialer/tabsfunktioner/tabsfunktioner.qmd).
+
+
