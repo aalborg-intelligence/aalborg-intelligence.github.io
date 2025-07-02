@@ -33,12 +33,17 @@ $$
 så skal vi lave en algoritme, der gætter næste ord. Både $N$-gram modeller og neurale netværk tager de seneste $N-1$ ord i betragtning for at gætte det næste. Hvis $N=4$ skal vi altså gætte næste ord efter \"fodrer den
 med\". Det skal nok være en form for dyremad, men der kunne stå mange forskellige ting, for eksempel \"hø\" eller \"fuglefrø\". I dette tilfælde er vi nødt til at gå helt tilbage til ordet \"hund\" for at vide, hvilket dyr der er tale om og dermed hvilken slags mad, den skal have. Det smarte ved transformeren er, at den tager alle de hidtidige ord i betragtning. Dog lægger den mest vægt på de nærmeste ord.
 
-Husk på, at da vi lavede Word2Vec, lod vi vektoren $\vec{v}_{\text{ord}}$ repræsentere betydningen af ordet. For at gætte næste ord i en sætning blev vektorerne for de $N-1$ foregående ord brugt som input til et neuralt netværk. Hver vektor $\vec{v}_{\text{ord}}$ blev brugt som en fast vektor uanset hvilke ord, der stod i nærheden af det. Men betydningen af et ord kan ændre sig alt efter konteksten. Se for eksempel på
+
+
+Husk på, at da vi lavede Word2Vec, lod vi vektoren $\vec{v}_{\text{ord}}$ repræsentere betydningen af ordet. For at gætte næste ord i en sætning blev vektorerne for de $N-1$ foregående ord brugt som input til et neuralt netværk. 
+Hver vektor $\vec{v}_{\text{ord}}$ blev brugt som en fast vektor uanset hvilke ord, der stod i nærheden af det. Men betydningen af et ord kan ændre sig alt efter konteksten. Se for eksempel på
 $$\text{"Orkesteret skal spille ---"}$$ Kigger vi udelukkende på ordet \"spille\", kan der stå mange ting bagefter, for eksempel \"ludo\", \"tennis\" eller \"koncert\". Men når vi ser, at ordet \"orkesteret\" optræder
 inden, så ved vi, at der nok er tale om en slags musik. Det kunne derfor give mening at lade ordet \"spille\" repræsentere ved forskellige vektorer, alt efter om det indgår i en musikkontekst, en sportskontekst
-eller en brætspilskontekst. Det er netop idéen i transformeren: Vi vil lade vektorrepræsentationen af et ord afhænge af konteksten. Vi er altså *opmærksomme på*, hvilke ord der går forud, når vi laver vektorrepræsentationen. Derfor siges transformeren at have *opmærksomhed på sig selv*[^2]. 
+eller en brætspilskontekst. Det er netop idéen i transformeren: Vi vil lade vektorrepræsentationen af et ord afhænge af konteksten. Vi er altså *opmærksomme på* konteksten når vi laver vektorrepræsentationen. Derfor siges transformeren at have *opmærksomhed på sig selv*[^2].
 
 [^2]: På engelsk siges transformeren at have *self-attention*.
+
+Når transformeren skal bruges til at generere tekst, beregner den både nye vektorrepræsentationer og bruger dem til at gætte næste ord. Da vi kun har adgang til de forudgående ord når vi genererer tekst, er det vigtigt at vektorrepræsentationerne også kun dannes ud fra den forudgående tekst. Dette er anderledes end Word2Vec, hvor vektorrepræsentationerne blev beregnet én gang for alle på baggrund af træningsdata, hvor vi havde kendskab til både de ordene før og efter fokusordet. 
 
 ## Vektorregning
 
@@ -169,7 +174,7 @@ $$
 Her bliver vi ikke rigtig klogere på, om der er tale om sport eller musik. Vi får altså ikke megen ny viden om betydningen af \"spille\". Her ville det derfor give mere mening at vælge 
 
 $$
-\vec{w}_{\text{spille}} = \vec{v}_{\text{spille}} = 0\cdot \vec{v}_{\text{orkesteret}}+1\cdot \vec{v}_{\text{spille}}
+\vec{w}_{\text{spille}} = \vec{v}_{\text{spille}} = 0\cdot \vec{v}_{\text{manden}}+1\cdot \vec{v}_{\text{spille}}
 $$
 
 Helt generelt, hvis der i stedet for \"orkesteret\" havde stået et ord med vektorrepræsentation $\vec{v}_{\text{ord}}$ ville vi sætte
@@ -223,11 +228,11 @@ Lad $\vec{v}_1 = \begin{pmatrix} 1\\ 3\end{pmatrix}$ og $\vec{v}_2 = \begin{pmat
   med
   $c_1,c_2\geq 0$ ligger tættere på $\vec{v}_1$ jo større $c_1$ er?
 
-Lad $\vec{v}_1 = \begin{pmatrix} 1\\ 2\\ 0\end{pmatrix}$, $\vec{v}_2 = \begin{pmatrix} 1\\-1\\2\end{pmatrix}$ og $\vec{v}_3 = \begin{pmatrix} 0\\0\\1\end{pmatrix}$.
+Lad $\vec{v}_1 = \begin{pmatrix} 1\\ 2\\ 0\\ -3\end{pmatrix}$ og $\vec{v}_2 = \begin{pmatrix} 1\\-1\\2\\ 4\end{pmatrix}$.
     
 * Beregn
   $$
-  2\vec{v}_1+\vec{v}_2-2\vec{v}_3 
+  2\vec{v}_1+\vec{v}_2 
   $$
 
 :::
@@ -235,7 +240,7 @@ Lad $\vec{v}_1 = \begin{pmatrix} 1\\ 2\\ 0\end{pmatrix}$, $\vec{v}_2 = \begin{pm
 ## Et opmærksomhedslag 
 
 Lad os sige, at vi har et stykke tekst, og at det $i$te ord i teksten er vores fokusord, som vi gerne vil finde en vektorrepræsentation for. Som udgangspunkt er betydningen af det $i$te ord repræsenteret af vektoren
-$\vec{v}_i$. Transformeren opdaterer vektoren $\vec{v}_{i}$ til $\vec{w}_{i}$ på baggrund af alle de ord, der går forud. Man kan forstille sig, at vi trækker vektoren $\vec{v}_{i}$ lidt i retning af alle vektorerne
+$\vec{v}_i$. Transformeren opdaterer vektoren $\vec{v}_{i}$ til $\vec{w}_{i}$ på baggrund af alle de ord, der går forud.  Man kan forstille sig, at vi trækker vektoren $\vec{v}_{i}$ lidt i retning af alle vektorerne
 $\vec{v}_{j}$ med $j<i$ svarende til alle de ord, der går forud i teksten. Hvor meget hvert ord trækker, afhænger af, hvor meget det siger om betydningen af det $i$te ord. Vi opdaterer således $\vec{v}_i$ til
 
 $$
@@ -257,7 +262,7 @@ $$
 
 ville $c_{1,3}$ være stor, fordi ordet \"orkesteret\" er vigtigt for at forstå betydningen af \"spille\",
 mens $c_{2,3}$ ville være mindre, fordi ordet \"skal\" ikke fortæller så meget om betydningen af \"spille\". Desuden vil $c_{3,3}$ være stor, da ordet \"spille\" selvfølgelig indeholder megen information om sin egen
-betydning. Hvordan bestemmer vi så konstanterne $c_{j,i}$? Jo, i stedet for at lade hvert ord repræsentere ved to vektorer som i Word2Vec[^3], lader transformeren hvert ord svare til hele tre vektorer[^4] $\vec{v}_{\text{ord}}$, $\vec{k}_{\text{ord}}$ og $\vec{q}_{\text{ord}}$. Som i Word2Vec repræsenterer $\vec{v}_{\text{ord}}$ fokusordets betydning, og $\vec{k}_{\text{ord}}$ repræsenterer ordet, når det optræder som kontekst (da vi er ude på at gætte næste ord, består konteksten til et ord af alle de ord, der står før i teksten). Den ekstra vektor $\vec{q}_{\text{ord}}$ repræsenterer også fokusordet, men bruges til at afgøre, hvilke ord der er vigtige for at forstå fokusordets betydning. Vektorerne $\vec{k}_{\text{ord}}$ og $\vec{q}_{\text{ord}}$ skal have samme dimension, mens $\vec{v}_{\text{ord}}$ godt kan have en anden dimension.
+betydning. Hvordan bestemmer vi så konstanterne $c_{j,i}$? Jo, i stedet for at lade hvert ord repræsentere ved to vektorer som i Word2Vec[^3], lader transformeren hvert ord svare til hele tre vektorer[^4] $\vec{v}_{\text{ord}}$, $\vec{k}_{\text{ord}}$ og $\vec{q}_{\text{ord}}$. Som i Word2Vec repræsenterer $\vec{v}_{\text{ord}}$ fokusordets betydning, og $\vec{k}_{\text{ord}}$ repræsenterer ordet, når det optræder som kontekst (da vi er ude på at gætte næste ord, består konteksten til et ord af alle de ord, der står før i teksten). Den ekstra vektor $\vec{q}_{\text{ord}}$ repræsenterer også fokusordet, men bruges til at afgøre, hvilke ord der er vigtige for at forstå fokusordets betydning. Vektorerne $\vec{k}_{\text{ord}}$ og $\vec{q}_{\text{ord}}$ skal have samme dimension, mens $\vec{v}_{\text{ord}}$ godt kan have en anden dimension. Alle vektorerne $\vec{v}_{\text{ord}}$, $\vec{k}_{\text{ord}}$ og $\vec{q}_{\text{ord}}$ bliver bestemt, når vi træner transformeren.
 
 [^3]: Hvor hvert ord blev repræsenteret ved en fokus- og en kontekstvektor.
 [^4]: I litteraturen kaldes de tre vektorer $\vec{k}_{\text{ord}}$, $\vec{q}_{\text{ord}}$ og
@@ -298,24 +303,24 @@ Processen, der opdaterer vektorrepræsentationen af et ord på baggrund af de fo
     \node at (6,0) {ord$_i$};
     
 %    \node[gul] at (-0.5,0.5) {$\vec{q}_1$};
-    \node[lysblaa] at (0,0.5) {$\vec{k}_1$};
+    \node[gron] at (0,0.5) {$\vec{k}_1$};
     \node[morkblaa] at (0.5,0.5) {$\vec{v}_1$};
 
  %       \node[gul] at (1.5,0.5) {$\vec{q}_2$};
-    \node[lysblaa] at (2,0.5) {$\vec{k}_2$};
+    \node[gron] at (2,0.5) {$\vec{k}_2$};
     \node[morkblaa] at (2.5,0.5) {$\vec{v}_2$};
 
     \node[gul] at (5.5,0.5) {$\vec{q}_i$};
-    \node[lysblaa] at (6,0.5) {$\vec{k}_i$};
+    \node[gron] at (6,0.5) {$\vec{k}_i$};
     \node[morkblaa] at (6.5,0.5) {$\vec{v}_i$};
 
        \node[pink] at (0,2.5) {$c_{1,i}$};
     \node[pink] at (2,2.5) {$c_{2,i}$};
     \node[pink] at (6,2.5) {$c_{i,i}$};
 
-    \draw[lysblaa,->] (0,0.8) -- (0,1.2);
-    \draw[lysblaa,->] (2,0.8) -- (2,1.2);
-    \draw[lysblaa,->] (6,0.8) -- (6,1.2);
+    \draw[gron,->] (0,0.8) -- (0,1.2);
+    \draw[gron,->] (2,0.8) -- (2,1.2);
+    \draw[gron,->] (6,0.8) -- (6,1.2);
 
     \draw[gul,->] (5.5,0.8) -- (0.1,1.2);
     \draw[gul,->] (5.5,0.8) -- (2.1,1.2);
@@ -333,7 +338,7 @@ Processen, der opdaterer vektorrepræsentationen af et ord på baggrund af de fo
     \node at (4,3.5) {$\dotsm$};
     \node at (5,3.5) {$+$}; 
      \node at (7,3.5) {$=$}; 
-      \node[gron] at (8,3.6) {$\vec{w}_i$}; 
+      \node[lysblaa] at (8,3.6) {$\vec{w}_i$}; 
 
        \draw[pink,->] (0,2.8) -- (0,3.2);
     \draw[pink,->] (2,2.8) -- (2,3.2);
@@ -364,7 +369,7 @@ $$
 &&\vec{v}_1= \begin{pmatrix} -1\\ 1\end{pmatrix}\\
 &\text{skal:}&&\vec{q}_2 = \begin{pmatrix}0\\3\end{pmatrix}, &&\vec{k}_2=\begin{pmatrix}2\\-1\end{pmatrix},
 &&\vec{v}_2= \begin{pmatrix} 0.5\\ -1\end{pmatrix}\\
-&\text{spille:}&&\vec{q}_3 = \begin{pmatrix}1\\2\end{pmatrix}, &&\vec{k}_3=\begin{pmatrix}2\\0.5\end{pmatrix},
+&\text{spille:}&&\vec{q}_3 = \begin{pmatrix}1\\2\end{pmatrix}, &&\vec{k}_3=\begin{pmatrix}1\\1\end{pmatrix},
 &&\vec{v}_3= \begin{pmatrix} 1\\ 1\end{pmatrix}\\
 \end{aligned}
 $$
@@ -375,9 +380,29 @@ $$
 \begin{aligned} 
 &\vec{k}_1\cdot \vec{q}_3=\begin{pmatrix}0\\1\end{pmatrix}  \cdot \begin{pmatrix}1\\2\end{pmatrix} =0\cdot 1 + 1\cdot 2 = 2  \\
 &\vec{k}_2\cdot \vec{q}_3=\begin{pmatrix}2\\-1\end{pmatrix}\cdot  \begin{pmatrix}1\\2\end{pmatrix} = 2\cdot 1 + (-1)\cdot 2 =0\\
-&\vec{k}_3\cdot \vec{q}_3= \begin{pmatrix}2\\0.5\end{pmatrix} \cdot  \begin{pmatrix}1\\2\end{pmatrix} = 2\cdot 1 + 0.5 \cdot 2=3
+&\vec{k}_3\cdot \vec{q}_3= \begin{pmatrix}1 \\1\end{pmatrix} \cdot  \begin{pmatrix}1\\2\end{pmatrix} = 1\cdot 1 + 1 \cdot 2=3
 \end{aligned}
 $$
+
+På @fig-ekskq er vektorerne $\vec{k}_{\text{orkesteret}}$, $\vec{k}_{\text{skal}}$, $\vec{k}_{\text{spille}}$ og $\vec{q}_{\text{spille}}$ indtegnet i et koordinatsystem. Det ses, at $\vec{k}_{\text{spille}}$ er den vektor, der peger mest i retning af $\vec{q}_{\text{spille}}$ svarende til største skalarprodukt, mens $\vec{k}_{\text{skal}}$ peger mindst i retning af $\vec{q}_{\text{spille}}$ svarende til det mindste skalarprodukt. Det svarer til, at \"spille\" har meget at sige om sin egen betydning, mens \"skal\" ikke har meget at sige om betydningen af \"spille\". Vektorerne $\vec{q}_{\text{orkesteret}}$ og $\vec{q}_{\text{skal}}$ bliver ikke brugt.
+
+```{tikz, out.width='40%', engine.opts=color_opts}
+#| echo: false
+#| fig-cap: Vektorerne $\vec{k}_{\text{orkesteret}}$, $\vec{k}_{\text{skal}}$, $\vec{k}_{\text{spille}}$ og $\vec{q}_{\text{spille}}$. 
+#| label: fig-ekskq
+\begin{tikzpicture}
+\draw[->] (-2,0)--(2,0);
+\draw[->] (0,-1) -- (0,2);
+\draw[->,gron] (0,0) -- (0,1);
+\node[gron] at (0,1.3) {$\vec{k}_{\text{orkesteret}}$};
+\draw[->,gron] (0,0) -- (2,-1);
+\node[gron] at (2,-1.2) {$\vec{k}_{\text{skal}}$};
+\draw[->,gron] (0,0) -- (1,1);
+\node[gron] at (1.3,1.3) {$\vec{k}_{\text{spille}}$};
+\draw[->,gul] (0,0) -- (1,2);
+\node[gul] at (1.6,2) {$\vec{q}_{\text{spille}}$};
+\end{tikzpicture}
+```
 
 Vi bruger softmax på skalarprodukterne for at finde konstanterne $c_{1,3}$, $c_{2,3}$ og $c_{3,3}$.
 
@@ -406,12 +431,12 @@ $$
 \end{aligned}
 $$ 
 
-Nedenfor er vektorerne $\vec{v}_{\text{orkesteret}}$, $\vec{v}_{\text{skal}}$, $\vec{v}_{\text{spille}}$
+På @fig-eks1 er vektorerne $\vec{v}_{\text{orkesteret}}$, $\vec{v}_{\text{skal}}$, $\vec{v}_{\text{spille}}$
 og $\vec{w}_{\text{spille}}$ indtegnet i et koordinatsystem. Det ses, at $\vec{w}_{\text{spille}}$ er blevet trukket i retning af $\vec{v}_{\text{orkesteret}}$ i forhold til $\vec{v}_{\text{spille}}$.
 
 ```{tikz, out.width='40%', engine.opts=color_opts}
 #| echo: false
-#| fig-cap: Vektorerne $\vec{v}_{\text{orkesteret}}$, $\vec{v}_{\text{skal}}$, $\vec{v}_{\text{spille}}$ og $\vec{w}_{\text{spille}}$ indtegnet i et koordinatsystem. Bemærk, at $\vec{w}_{\text{spille}}$ er blevet trukket i retning af $\vec{v}_{\text{orkesteret}}$ i forhold til $\vec{v}_{\text{spille}}$.
+#| fig-cap: Vektorerne $\vec{v}_{\text{orkesteret}}$, $\vec{v}_{\text{skal}}$, $\vec{v}_{\text{spille}}$ og $\vec{w}_{\text{spille}}$ indtegnet i et koordinatsystem. 
 #| label: fig-eks1
 \begin{tikzpicture}
 \draw[->] (-2,0)--(2,0);
@@ -466,12 +491,15 @@ Vi vil nu se, at den opdaterede vektor $\vec{w}_3$ for \"marsvinet\" bliver truk
 
 ::: 
 
-### En transformerblok
+## En transformerblok
+
+Opmærksomhedslaget er det centrale element i tranformeren. Vi skitserer nu, hvordan resten af transformernetværket er opbygget for at give et indtryk af algoritmens kompleksitet, men en del detaljer er udeladt. 
 
 Man kan lave flere opmærksomhedslag parallelt. Hvis der er $K$ parallelle opmærksomhedslag, så oversætter det $k$te lag det $i$te ord til tre vektorer $\vec{q}^{k}_{i}$, $\vec{k}^{k}_{i}$ og $\vec{v}^{k}_{i}$ og beregner
 en ny vektor $\vec{w}^{k}_{i}$, hvor $k=1,\ldots,K$. Man kan forestille sig, at de forskellige opmærksomhedslag indfanger forskellige aspekter ved sætningen. Et holder måske styr på grammatikken, mens et andet fokuserer på betydningen af ordene. Men i stedet for at lægge os fast på, hvad hvert lag skal gøre, lader vi det være op til algoritmen selv at vælge nogle passende vektorer. I praksis er det derfor umuligt at gå ind og se præcis, hvad hvert lag gør.
 
-Outputvektorerne $\vec{w}^{k}_i$ fra de forskellige lag sættes i forlængelse af hinanden til en samlet outputvektor $\vec{x}_i$ af længde $Km$. Som det næste køres $\vec{x}_i$ gennem et neuralt netværk, ligesom vi så i [noten om neurale netværk til tekstgenerering](tekstgenerering.qmd), bortset fra at vi ikke bruger softmax til sidst. Det vil sige, at koordinaterne i $\vec{x}_i$ bruges som input i det neurale netværk. Outputtet
+Indtil videre er $\vec{w}_i^k$ dannet ud fra de oprindelige $\vec{v}_i^k$ ved hjælp af simple operationer som addition og skalering. Det viser sig dog at være for simpelt til at fungere godt i praksis. Derfor transformeres outputet fra opmærksomhedslagene med et neuralt netværk.
+Mere præcist sættes outputvektorerne $\vec{w}^{k}_i$ fra de forskellige lag i forlængelse af hinanden til en samlet outputvektor $\vec{x}_i$ af længde $Km$. Koordinaterne i den lange vektor $\vec{x}_i$ bruges som input til et neuralt netværk, ligesom vi så i [noten om neurale netværk til tekstgenerering](tekstgenerering.qmd), bortset fra at vi ikke bruger softmax til sidst. Outputtet
 bliver en ny vektor $\vec{y}_i$. 
 
 Tilsammen udgør de parallelle opmærksomhedslag og det efterfølgende neurale netværk en *transformerblok*. Strukturen er skitseret på @fig-transformerblok. Undervejs sker der forskellige transformationer af vektorerne, som viser sig at gøre de numeriske beregninger mere stabile. Vi vil ikke beskrive disse i detaljer, da de
@@ -524,7 +552,7 @@ ikke er centrale for forståelsen.
 \end{tikzpicture}
 ```
 
-### Transformernetværket 
+## Transformernetværket 
 
 Når vi så har beregnet outputvektorerne $\vec{y}_i$ fra en transformerblok for alle positioner $i$, kan vi bruge dem som input til en ny transformerblok. I hvert opmærksomhedslag inden for den næste transformerblok oversættes vektoren $\vec{y}_i$ (ikke det oprindelige ord) til tre nye vektorer. Så beregner transformerblokken en ny $\vec{y}_i$, som kan bruges som input til endnu en transformerblok og så videre. Tilsammen udgør disse transformerblokke et *transformernetværk*, som er skitseret på @fig-transformer.
 
@@ -554,7 +582,7 @@ Når vi så har beregnet outputvektorerne $\vec{y}_i$ fra en transformerblok for
 \end{tikzpicture}
 ```
 
-Egentlig var vi jo ude på at lave en algoritme, der kan gætte det næste ord, altså det $(i+1)$te ord. Det sker i den sidste prædiktionsblok i transformernetværket, se @fig-transformer. Den tager vektoren $\vec{y}_i$, der kommer ud fra den sidste transformerblok, og omregner den for hvert ord i ordforrådet til en sandsynlighed for, at det ord er det næste.
+Egentlig var vi jo ude på at lave en algoritme, der kan gætte det næste ord, altså det $(i+1)$te ord. Det sker i den sidste prædiktionsblok i transformernetværket, se @fig-transformer. Vektoren $\vec{y}_i$, der kommer ud fra den sidste transformerblok, indeholder information om betydningen af $i$te ord samt alle de ord, der går forud. I prædiktionslaget omregnes $\vec{y}_i$ til sandsynligheder for næste ord.
 
 For hvert ord i ordforrådet udregner vi først en score $s_{\text{ord}}$, der måler, hvor sandsynligt det er, at ordet er det næste. Store værdier betyder, at ordet er sandsynligt som næste ord. Til at beregne scoren bruger vi en fast vektor $\vec{a}_{\text{ord}}$ for hvert ord og omregner $\vec{y}_i$ til scoren 
 
@@ -568,7 +596,7 @@ $$
 \vec{p} = \text{Softmax}(\vec{s})
 $$ 
 
-Når man har disse sandsynligheder, kan man begynde at generere tekst, for eksempel ved hele tiden at vælge det mest sandsynlige næste ord.
+Når man har disse sandsynligheder, kan man begynde at generere tekst, for eksempel ved hele tiden at vælge blandt de mest  sandsynlige næste ord.
 
 ## Træning af netværket
 
