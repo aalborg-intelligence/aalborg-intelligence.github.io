@@ -116,7 +116,7 @@ window.Quarto = {
 
 </head>
 
-<body class="floating nav-fixed quarto-light">
+<body class="floating nav-fixed slimcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -198,7 +198,7 @@ window.Quarto = {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -219,33 +219,132 @@ window.Quarto = {
 </header>
 
 
-<p>De kraftige sprogmodeller, der indgår i de nyeste former for sproglig kunstig intelligens, benytter ikke helt den tilgang, vi hidtil har beskrevet, hvor man først laver Word2Vec og derefter træner et neuralt netværk til at prædiktere ord. I stedet bruges en videreudvikling, kaldet <em>transformeren</em>, der kombinerer de to trin i én algoritme. I Chat-GPT står GPT for eksempel for "Generative Pre-trained Transformer". Nedenfor beskriver vi nogle af de centrale dele af transformeren. (Fodnote: Den version af transformeneren, der beskrives her er en <em>decoder-only transformer</em>, som er den, der indgår i GPT teknologien.) Bemærk, at selv om vi prøver at give en intuition for, hvad transformeren gør, så er der ingen, der helt forstår i detaljer, hvorfor den virker.</p>
-<section id="opmærksomhed" class="level2">
+<p>De kraftige sprogmodeller, der indgår i de nyeste former for sproglig kunstig intelligens, benytter ikke helt den tilgang, vi hidtil har beskrevet, hvor man først laver Word2Vec og derefter træner et neuralt netværk til at prædiktere ord. I stedet bruges en videreudvikling, kaldet <em>transformeren</em>, der kombinerer de to trin i én algoritme. I Chat-GPT står GPT for eksempel for "Generative Pre-trained Transformer". Nedenfor beskriver vi nogle af de centrale dele af transformeren<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Bemærk, at selv om vi prøver at give en intuition for, hvad transformeren gør, så er der ingen, der helt forstår i detaljer, hvorfor den virker.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Den version af transformeneren, der beskrives her er en <em>decoder-only transformer</em>, som er den, der indgår i GPT teknologien.</p></div></div><section id="opmærksomhed" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="opmærksomhed">Opmærksomhed</h2>
 <p>Vi er ude på at lave en algoritme, der genererer ny tekst ét ord ad gangen. Hvis vi for eksempel har genereret teksten</p>
 <p><span class="math display">\[
 \text{"Min hund er sulten, så jeg fodrer den med ---"}
 \]</span></p>
 <p>så skal vi lave en algoritme, der gætter næste ord. Både <span class="math inline">\(N\)</span>-gram modeller og neurale netværk tager de seneste <span class="math inline">\(N-1\)</span> ord i betragtning for at gætte det næste. Hvis <span class="math inline">\(N=4\)</span> skal vi altså gætte næste ord efter "fodrer den med". Det skal nok være en form for dyremad, men der kunne stå mange forskellige ting, for eksempel "hø" eller "fuglefrø". I dette tilfælde er vi nødt til at gå helt tilbage til ordet "hund" for at vide, hvilket dyr der er tale om og dermed hvilken slags mad, den skal have. Det smarte ved transformeren er, at den tager alle de hidtidige ord i betragtning. Dog lægger den mest vægt på de nærmeste ord.</p>
-<p>Husk på, at da vi lavede Word2Vec, lod vi vektoren <span class="math inline">\(\vec{v}_{\text{ord}}\)</span> repræsentere betydningen af ordet. For at gætte næste ord i en sætning blev vektorerne for de <span class="math inline">\(N-1\)</span> foregående ord brugt som input til et neuralt netværk. Hver vektor <span class="math inline">\(\vec{v}_{\text{ord}}\)</span> blev brugt som en fast vektor uanset hvilke ord, der stod i nærheden af det. Men betydningen af et ord kan ændre sig alt efter konteksten. Se for eksempel på <span class="math display">\[\text{"Orkesteret skal spille ---"}\]</span> Kigger vi udelukkende på ordet "spille", kan der stå mange ting bagefter, for eksempel "ludo", "tennis" eller "koncert". Men når vi ser, at ordet "orkesteret" optræder inden, så ved vi, at der nok er tale om en slags musik. Det kunne derfor give mening at lade ordet "spille" repræsentere ved forskellige vektorer, alt efter om det indgår i en musikkontekst, en sportskontekst eller en brætspilskontekst. Det er netop idéen i transformeren: Vi vil lade vektorrepræsentationen af et ord afhænge af konteksten. Vi er altså <em>opmærksomme på</em>, hvilke ord der går forud, når vi laver vektorrepræsentationen. Derfor siges transformeren at have <em>opmærksomhed på sig selv</em>. (fodnote: på engelsk siges transformeren at have <em>self-attention</em>.)</p>
-</section>
-<section id="vektorregning" class="level2">
+<p>Husk på, at da vi lavede Word2Vec, lod vi vektoren <span class="math inline">\(\vec{v}_{\text{ord}}\)</span> repræsentere betydningen af ordet. For at gætte næste ord i en sætning blev vektorerne for de <span class="math inline">\(N-1\)</span> foregående ord brugt som input til et neuralt netværk. Hver vektor <span class="math inline">\(\vec{v}_{\text{ord}}\)</span> blev brugt som en fast vektor uanset hvilke ord, der stod i nærheden af det. Men betydningen af et ord kan ændre sig alt efter konteksten. Se for eksempel på <span class="math display">\[\text{"Orkesteret skal spille ---"}\]</span> Kigger vi udelukkende på ordet "spille", kan der stå mange ting bagefter, for eksempel "ludo", "tennis" eller "koncert". Men når vi ser, at ordet "orkesteret" optræder inden, så ved vi, at der nok er tale om en slags musik. Det kunne derfor give mening at lade ordet "spille" repræsentere ved forskellige vektorer, alt efter om det indgår i en musikkontekst, en sportskontekst eller en brætspilskontekst. Det er netop idéen i transformeren: Vi vil lade vektorrepræsentationen af et ord afhænge af konteksten. Vi er altså <em>opmærksomme på</em>, hvilke ord der går forud, når vi laver vektorrepræsentationen. Derfor siges transformeren at have <em>opmærksomhed på sig selv</em><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;På engelsk siges transformeren at have <em>self-attention</em>.</p></div></div></section>
+<section id="vektorregning" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="vektorregning">Vektorregning</h2>
 <p>Som udgangspunkt lader vi ordet "spille" være repræsenteret af en fast vektor <span class="math inline">\(\vec{v}_{\text{spille}}\)</span>. Vi modificerer derefter vores vektorrepræsentation <span class="math inline">\(\vec{v}_{\text{spille}}\)</span> til en ny vektor <span class="math inline">\(\vec{w}_{\text{spille}}\)</span> afhængigt af hvilke ord, der kommer før. Hvis ordet "orkesteret" kommer inden, så kan man forestille sig, at det trækker <span class="math inline">\(\vec{v}_{\text{spille}}\)</span> i en musikretning, mens hvis ordet havde været "landsholdet", så ville det trække <span class="math inline">\(\vec{v}_{\text{spille}}\)</span> i en sportsretning.</p>
-<p>Vi vil modificere <span class="math inline">\(\vec{v}_{\text{spille}}\)</span> ved hjælp af vektoraddition og skalarmultiplikation. Husk på, at man lægger to 2-dimensionale vektorer sammen koordinatvis: <span class="math display">\[\begin{pmatrix}a_1\\ a_2\end{pmatrix} + \begin{pmatrix}b_1\\ b_2\end{pmatrix} = \begin{pmatrix}a_1+b_1\\ a_2+b_2\end{pmatrix}\]</span> Geometrisk lægger man vektorerne <span class="math inline">\(\vec{a}\)</span> og <span class="math inline">\(\vec{b}\)</span> sammen ved først at tegne <span class="math inline">\(\vec{a}\)</span> og derefter tegne <span class="math inline">\(\vec{b}\)</span> med udgangspunkt, der hvor <span class="math inline">\(\vec{a}\)</span> slutter. Vektoren <span class="math inline">\(\vec{a} + \vec{b}\)</span> er så den vektor, der starter samme sted som <span class="math inline">\(\vec{a}\)</span> og slutter der hvor <span class="math inline">\(\vec{b}\)</span> slutter.</p>
-<p>Dette kan vi nu benytte til at opdatere vektoren for "spille", når vi ved, at "orkesteret" står inden. Hvis vi har vektorerne <span class="math inline">\(\vec{v}_{\text{spille}}\)</span> og <span class="math inline">\(\vec{v}_{\text{orkesteret}}\)</span>, så kunne vi opdatere <span class="math inline">\(\vec{v}_{\text{spille}}\)</span> til <span class="math display">\[\vec{w}_{\text{spille}} = \vec{v}_{\text{orkesteret}}+\vec{v}_{\text{spille}}\]</span> Det er illustreret på Figur <a href="#fig:spille" data-reference-type="ref" data-reference="fig:spille">[fig:spille]</a>. Det ses, at retningen på <span class="math inline">\(\vec{v}_{\text{spille}}\)</span> er blevet trukket over mod <span class="math inline">\(\vec{v}_{\text{orkesteret}}\)</span> og væk fra <span class="math inline">\(\vec{v}_{\text{landsholdet}}\)</span>.</p>
-<p>Der er dog et andet problem: Den nye vektor <span class="math inline">\(\vec{w}_{\text{spille}}\)</span> er meget lang i forhold til de oprindelige. Det løser vi ved at skalere de to vektorer ned, inden vi lægger dem sammen. Man kan skalere en vektor med et tal <span class="math inline">\(c\in \mathbb{R}\)</span> ved at gange hver koordinat med <span class="math inline">\(c\)</span>: <span class="math display">\[c\begin{pmatrix}
+<p>Vi vil modificere <span class="math inline">\(\vec{v}_{\text{spille}}\)</span> ved hjælp af vektoraddition og skalarmultiplikation. Husk på, at man lægger to 2-dimensionale vektorer sammen koordinatvis:</p>
+<p><span class="math display">\[
+\begin{pmatrix}a_1\\
+a_2\end{pmatrix} + \begin{pmatrix}b_1\\
+b_2\end{pmatrix} = \begin{pmatrix}a_1+b_1\\
+a_2+b_2\end{pmatrix}
+\]</span></p>
+<p>Geometrisk lægger man vektorerne <span class="math inline">\(\vec{a}\)</span> og <span class="math inline">\(\vec{b}\)</span> sammen ved først at tegne <span class="math inline">\(\vec{a}\)</span> og derefter tegne <span class="math inline">\(\vec{b}\)</span> med udgangspunkt, der hvor <span class="math inline">\(\vec{a}\)</span> slutter. Vektoren <span class="math inline">\(\vec{a} + \vec{b}\)</span> er så den vektor, der starter samme sted som <span class="math inline">\(\vec{a}\)</span> og slutter, der hvor <span class="math inline">\(\vec{b}\)</span> slutter.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-vektor_add" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-vektor_add-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="transformeren_files/figure-html/fig-vektor_add-1.png" class="img-fluid figure-img" style="width:25.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-vektor_add-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;1: Illustration af vektoraddition.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Dette kan vi nu benytte til at opdatere vektoren for "spille", når vi ved, at "orkesteret" står inden. Hvis vi har vektorerne <span class="math inline">\(\vec{v}_{\text{spille}}\)</span> og <span class="math inline">\(\vec{v}_{\text{orkesteret}}\)</span>, så kunne vi opdatere <span class="math inline">\(\vec{v}_{\text{spille}}\)</span> til</p>
+<p><span class="math display">\[
+\vec{w}_{\text{spille}} = \vec{v}_{\text{orkesteret}}+\vec{v}_{\text{spille}}
+\]</span></p>
+<p>Det er illustreret på <a href="#fig-spille" class="quarto-xref">figur&nbsp;2</a>. Det ses, at retningen på <span class="math inline">\(\vec{v}_{\text{spille}}\)</span> er blevet trukket over mod <span class="math inline">\(\vec{v}_{\text{orkesteret}}\)</span> og væk fra <span class="math inline">\(\vec{v}_{\text{landsholdet}}\)</span>.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-spille" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-spille-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="transformeren_files/figure-html/fig-spille-1.png" class="img-fluid figure-img" style="width:40.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-spille-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;2: Illustration som viser, at <span class="math inline">\(\vec{w}_{\text{spille}} = \vec{v}_{\text{orkesteret}}+\vec{v}_{\text{spille}}\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Der er dog et andet problem: Den nye vektor <span class="math inline">\(\vec{w}_{\text{spille}}\)</span> er meget lang i forhold til de oprindelige. Det løser vi ved at skalere de to vektorer ned, inden vi lægger dem sammen. Man kan skalere en vektor med et tal <span class="math inline">\(c\in \mathbb{R}\)</span> ved at gange hver koordinat med <span class="math inline">\(c\)</span>:</p>
+<p><span class="math display">\[
+c\begin{pmatrix}
     a_1\\a_2
 \end{pmatrix} = \begin{pmatrix}
     ca_1\\ca_2
-\end{pmatrix}\]</span> Hvis <span class="math inline">\(c&gt;0\)</span>, er <span class="math inline">\(c\vec{a}\)</span> en vektor, der peger i samme retning som <span class="math inline">\(\vec{a}\)</span>, men er <span class="math inline">\(c\)</span> gange så lang. Hvis <span class="math inline">\(c&lt;0\)</span>, er vektoren <span class="math inline">\(|c|\)</span> gange så lang som <span class="math inline">\(\vec{a}\)</span>, men peger i modsat retning.</p>
-<p>I vores eksempel kunne man skalere begge vektorer med en faktor <span class="math inline">\(\frac{1}{2}\)</span> inden man lægger dem sammen, således at <span class="math display">\[\vec{w}_{\text{spille}} = \frac{1}{2}\cdot \vec{v}_{\text{orkesteret}}+\frac{1}{2}\cdot \vec{v}_{\text{spille}}\]</span> Dette er skitseret i Figur <a href="#fig:spille2" data-reference-type="ref" data-reference="fig:spille2">[fig:spille2]</a>.</p>
-<p>Den nye vektor <span class="math inline">\(\vec{w}_{\text{spille}}\)</span> er mere sammenlignelig med den oprindelige <span class="math inline">\(\vec{v}_{\text{spille}}\)</span> i Figur <a href="#fig:spille" data-reference-type="ref" data-reference="fig:spille">[fig:spille]</a>. Vi kunne have gjort noget tilsvarende hvis der havde stået <span class="math display">\[\text{Landsholdet skal spille ---}\]</span> Så ville <span class="math inline">\(\vec{w}_{\text{spille}}\)</span> blive trukket i retning af <span class="math inline">\(\vec{v}_{\text{landsholdet}}\)</span> i stedet. Men hvad nu, hvis der havde stået <span class="math display">\[\text{Manden skal spille ---}\]</span> Her bliver vi ikke rigtig klogere på, om der er tale om sport eller musik. Vi får altså ikke megen ny viden om betydningen af "spille". Her ville det derfor give mere mening at vælge <span class="math display">\[\vec{w}_{\text{spille}} = \vec{v}_{\text{spille}} = 0\cdot \vec{v}_{\text{orkesteret}}+1\cdot \vec{v}_{\text{spille}}\]</span> Helt generelt, hvis der i stedet for "orkesteret" havde stået et ord med vektorrepræsentation <span class="math inline">\(\vec{v}_{\text{ord}}\)</span> ville vi sætte <span class="math display">\[\vec{w}_{\text{spille}} = c_1 \cdot \vec{v}_{\text{ord}}+c_2 \cdot \vec{v}_{\text{spille}}\]</span> hvor <span class="math inline">\(c_1\)</span> og <span class="math inline">\(c_2\)</span> er ikke-negative konstanter med <span class="math inline">\(c_1+c_2=1\)</span>. Hvis kontekstordet er meget relevant for at forstå betydningen af "spille", vælges <span class="math inline">\(c_1\)</span> stor, mens <span class="math inline">\(c_1\)</span> vælges tæt på 0, hvis kontekstordet ikke giver megen ny information om betydningen. Hvordan vi mere præcist vælger <span class="math inline">\(c_1\)</span> og <span class="math inline">\(c_2\)</span>, vender vi tilbage til i næste afsnit, hvor vi også skal se på, hvordan man kan inddrage information fra mere end et af de foregående ord.</p>
-<p>Inden vi afslutter dette afsnit, minder vi om, at det normalt er for lidt at repræsentere ord ved 2-dimensionale vektorer. I stedet repræsenterer vi dem ved <span class="math inline">\(m\)</span>-dimensionale vektorer. Man kan lægge <span class="math inline">\(m\)</span>-dimensionale vektorer sammen og skalere dem med en konstant ligesom i to dimensioner: <span class="math display">\[\begin{pmatrix}a_1\\ a_2 \\ \vdots\\a_m\end{pmatrix} + \begin{pmatrix}b_1\\ b_2\\ \vdots\\b_m\end{pmatrix} =  \begin{pmatrix}a_1+b_1\\ a_2+b_2\\ \vdots\\a_m+b_m\end{pmatrix}\]</span> og <span class="math display">\[c\begin{pmatrix}
+\end{pmatrix}
+\]</span></p>
+<p>Hvis <span class="math inline">\(c&gt;0\)</span>, er <span class="math inline">\(c\vec{a}\)</span> en vektor, der peger i samme retning som <span class="math inline">\(\vec{a}\)</span>, men er <span class="math inline">\(c\)</span> gange så lang. Hvis <span class="math inline">\(c&lt;0\)</span>, er vektoren <span class="math inline">\(|c|\)</span> gange så lang som <span class="math inline">\(\vec{a}\)</span>, men peger i modsat retning.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-skalar" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-skalar-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="transformeren_files/figure-html/fig-skalar-1.png" class="img-fluid figure-img" style="width:40.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-skalar-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;3: Illustration af <span class="math inline">\(\vec v\)</span> ganget med henholdsvis <span class="math inline">\(2\)</span> og <span class="math inline">\(-2\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>I vores eksempel kunne man skalere begge vektorer med en faktor <span class="math inline">\(\frac{1}{2}\)</span>, inden man lægger dem sammen, således at</p>
+<p><span class="math display">\[
+\vec{w}_{\text{spille}} = \frac{1}{2}\cdot \vec{v}_{\text{orkesteret}}+\frac{1}{2}\cdot \vec{v}_{\text{spille}}
+\]</span></p>
+<p>Dette er skitseret i <a href="#fig-spille2" class="quarto-xref">figur&nbsp;4</a>.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-spille2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-spille2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="transformeren_files/figure-html/fig-spille2-1.png" class="img-fluid figure-img" style="width:50.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-spille2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;4: Illustration af <span class="math inline">\(\vec{w}_{\text{spille}} = \frac{1}{2}\cdot \vec{v}_{\text{orkesteret}}+\frac{1}{2}\cdot \vec{v}_{\text{spille}}\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Den nye vektor <span class="math inline">\(\vec{w}_{\text{spille}}\)</span> er mere sammenlignelig med den oprindelige <span class="math inline">\(\vec{v}_{\text{spille}}\)</span> i <a href="#fig-spille" class="quarto-xref">figur&nbsp;2</a>. Vi kunne have gjort noget tilsvarende hvis der havde stået</p>
+<p><span class="math display">\[
+\text{Landsholdet skal spille ---}
+\]</span></p>
+<p>Så ville <span class="math inline">\(\vec{w}_{\text{spille}}\)</span> blive trukket i retning af <span class="math inline">\(\vec{v}_{\text{landsholdet}}\)</span> i stedet. Men hvad nu, hvis der havde stået</p>
+<p><span class="math display">\[
+\text{Manden skal spille ---}
+\]</span></p>
+<p>Her bliver vi ikke rigtig klogere på, om der er tale om sport eller musik. Vi får altså ikke megen ny viden om betydningen af "spille". Her ville det derfor give mere mening at vælge</p>
+<p><span class="math display">\[
+\vec{w}_{\text{spille}} = \vec{v}_{\text{spille}} = 0\cdot \vec{v}_{\text{orkesteret}}+1\cdot \vec{v}_{\text{spille}}
+\]</span></p>
+<p>Helt generelt, hvis der i stedet for "orkesteret" havde stået et ord med vektorrepræsentation <span class="math inline">\(\vec{v}_{\text{ord}}\)</span> ville vi sætte</p>
+<p><span class="math display">\[
+\vec{w}_{\text{spille}} = c_1 \cdot \vec{v}_{\text{ord}}+c_2 \cdot \vec{v}_{\text{spille}}
+\]</span></p>
+<p>hvor <span class="math inline">\(c_1\)</span> og <span class="math inline">\(c_2\)</span> er ikke-negative konstanter med <span class="math inline">\(c_1+c_2=1\)</span>. Hvis kontekstordet er meget relevant for at forstå betydningen af "spille", vælges <span class="math inline">\(c_1\)</span> stor, mens <span class="math inline">\(c_1\)</span> vælges tæt på 0, hvis kontekstordet ikke giver megen ny information om betydningen. Hvordan vi mere præcist vælger <span class="math inline">\(c_1\)</span> og <span class="math inline">\(c_2\)</span>, vender vi tilbage til i næste afsnit, hvor vi også skal se på, hvordan man kan inddrage information fra mere end et af de foregående ord.</p>
+<p>Inden vi afslutter dette afsnit, minder vi om, at det normalt er for lidt at repræsentere ord ved 2-dimensionale vektorer. I stedet repræsenterer vi dem ved <span class="math inline">\(m\)</span>-dimensionale vektorer. Man kan lægge <span class="math inline">\(m\)</span>-dimensionale vektorer sammen og skalere dem med en konstant ligesom i to dimensioner:</p>
+<p><span class="math display">\[
+\begin{pmatrix}a_1\\ a_2 \\ \vdots\\a_m\end{pmatrix} + \begin{pmatrix}b_1\\ b_2\\ \vdots\\b_m\end{pmatrix} =  \begin{pmatrix}a_1+b_1\\ a_2+b_2\\ \vdots\\a_m+b_m\end{pmatrix}
+\]</span></p>
+<p>og</p>
+<p><span class="math display">\[
+c\begin{pmatrix}
     a_1\\a_2\\ \vdots\\a_m
 \end{pmatrix} = \begin{pmatrix}
     ca_1\\ca_2\\ \vdots\\ca_m
-\end{pmatrix}\]</span> I tre dimensioner kan vektoraddition visualiseres på samme måde som i det 2-dimensionale tilfælde, men i højere dimensioner er det ikke muligt at visualisere hvad der foregår.</p>
+\end{pmatrix}
+\]</span></p>
+<p>I tre dimensioner kan vektoraddition visualiseres på samme måde som i det 2-dimensionale tilfælde, men i højere dimensioner er det ikke muligt at visualisere hvad der foregår.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -258,48 +357,129 @@ Opgave 1
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
+<p>Lad <span class="math inline">\(\vec{v}_1 = \begin{pmatrix} 1\\ 3\end{pmatrix}\)</span> og <span class="math inline">\(\vec{v}_2 = \begin{pmatrix} 3\\1\end{pmatrix}\)</span>.</p>
 <ul>
-<li><p>Lad <span class="math inline">\(\vec{v}_1 = \begin{pmatrix} 1\\ 3\end{pmatrix}\)</span> og <span class="math inline">\(\vec{v}_2 = \begin{pmatrix} 3\\1\end{pmatrix}\)</span>.</p>
-<ul>
-<li><p>Beregn vektorerne <span class="math display">\[\begin{aligned}
-\vec{w}_1 = \frac{1}{3} \vec{v}_1 + \frac{2}{3} \vec{v}_2 \\
-\vec{w}_2 = \frac{1}{2} \vec{v}_1 + \frac{1}{2} \vec{v}_2 \\
-\vec{w}_3 = \frac{2}{3} \vec{v}_1 + \frac{1}{3} \vec{v}_2 \\\end{aligned}\]</span></p></li>
+<li><p>Beregn vektorerne <span class="math display">\[
+\begin{aligned}
+\vec{w}_1 = \frac{1}{3} \vec{v}_1 + \frac{2}{3} \vec{v}_2 \\ \\
+\vec{w}_2 = \frac{1}{2} \vec{v}_1 + \frac{1}{2} \vec{v}_2 \\ \\
+\vec{w}_3 = \frac{2}{3} \vec{v}_1 + \frac{1}{3} \vec{v}_2 \\
+\end{aligned}
+\]</span></p></li>
 <li><p>Indtegn <span class="math inline">\(\vec{w}_1\)</span>, <span class="math inline">\(\vec{w}_2\)</span> og <span class="math inline">\(\vec{w}_3\)</span> i et koordinatsystem sammen med <span class="math inline">\(\vec{v}_1\)</span> og <span class="math inline">\(\vec{v}_2\)</span>.</p></li>
-<li><p>Passer resultatet med, at vektoren <span class="math display">\[c_1\vec{v}_1 + c_2\vec{v}_2\]</span> med <span class="math inline">\(c_1,c_2\geq 0\)</span> ligger tættere på <span class="math inline">\(\vec{v}_1\)</span> jo større <span class="math inline">\(c_1\)</span> er?</p></li>
-</ul></li>
-<li><p>Lad <span class="math inline">\(\vec{v}_1 = \begin{pmatrix} 1\\ 2\\ 0\end{pmatrix}\)</span>, <span class="math inline">\(\vec{v}_2 = \begin{pmatrix} 1\\-1\\2\end{pmatrix}\)</span> og <span class="math inline">\(\vec{v}_3 = \begin{pmatrix} 0\\0\\1\end{pmatrix}\)</span>. Beregn <span class="math display">\[2\vec{v}_1+\vec{v}_2-2\vec{v}_3\]</span></p></li>
+<li><p>Passer resultatet med, at vektoren <span class="math display">\[
+c_1\vec{v}_1 + c_2\vec{v}_2
+\]</span> med <span class="math inline">\(c_1,c_2\geq 0\)</span> ligger tættere på <span class="math inline">\(\vec{v}_1\)</span> jo større <span class="math inline">\(c_1\)</span> er?</p></li>
+</ul>
+<p>Lad <span class="math inline">\(\vec{v}_1 = \begin{pmatrix} 1\\ 2\\ 0\end{pmatrix}\)</span>, <span class="math inline">\(\vec{v}_2 = \begin{pmatrix} 1\\-1\\2\end{pmatrix}\)</span> og <span class="math inline">\(\vec{v}_3 = \begin{pmatrix} 0\\0\\1\end{pmatrix}\)</span>.</p>
+<ul>
+<li>Beregn <span class="math display">\[
+2\vec{v}_1+\vec{v}_2-2\vec{v}_3
+\]</span></li>
 </ul>
 </div>
 </div>
 </div>
 </section>
-<section id="et-opmærksomhedslag" class="level2">
+<section id="et-opmærksomhedslag" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="et-opmærksomhedslag">Et opmærksomhedslag</h2>
-<p>Lad os sige, at vi har et stykke tekst, og at det <span class="math inline">\(i\)</span>te ord i teksten er vores fokusord, som vi gerne vil finde en vektorrepræsentation for. Som udgangspunkt er betydningen af det <span class="math inline">\(i\)</span>te ord repræsenteret af vektoren <span class="math inline">\(\vec{v}_i\)</span>. Transformeren opdaterer vektoren <span class="math inline">\(\vec{v}_{i}\)</span> til <span class="math inline">\(\vec{w}_{i}\)</span> på baggrund af alle de ord, der går forud. Man kan forstille sig, at vi trækker vektoren <span class="math inline">\(\vec{v}_{i}\)</span> lidt i retning af alle vektorerne <span class="math inline">\(\vec{v}_{j}\)</span> med <span class="math inline">\(j&lt;i\)</span> svarende til alle de ord, der går forud i teksten. Hvor meget hvert ord trækker, afhænger af, hvor meget det siger om betydningen af det <span class="math inline">\(i\)</span>te ord. Vi opdaterer således <span class="math inline">\(\vec{v}_i\)</span> til <span class="math display">\[\vec{w}_{i} = c_{1,i}\vec{v}_1 +c_{2,i}\vec{v}_2 + \dotsm + c_{i,i} \vec{v}_i\]</span> hvor <span class="math inline">\(\vec{v}_1,\ldots,\vec{v}_{i-1}\)</span> er vektorrepræsentationerne for de <span class="math inline">\(i-1\)</span> ord, der går forud for det <span class="math inline">\(i\)</span>te ord. Desuden indgår nogle konstanter <span class="math inline">\(c_{j,i}\geq 0\)</span>, som er valgt, således at <span class="math display">\[\label{sum_1}
-   c_{1,i} + c_{2,i} + \dotsm + c_{i,i}=1\]</span> Denne betingelse sikrer, at vi ikke risikerer at få meget lange vektorer ud. Konstanten <span class="math inline">\(c_{j,i}\)</span> bestemmer, hvor meget <span class="math inline">\(\vec{v}_i\)</span> bliver trukket i retning af <span class="math inline">\(\vec{v}_j\)</span>. Hvis <span class="math inline">\(j\)</span>te ord har stor indflydelse på betydningen af <span class="math inline">\(i\)</span>te ord, skal <span class="math inline">\(c_{j,i}\)</span> være stor, så <span class="math inline">\(\vec{v}_i\)</span> bliver trukket forholdsvis langt over mod <span class="math inline">\(\vec{v}_j\)</span>. Hvis omvendt det <span class="math inline">\(j\)</span>te ord ikke indeholder nogen information om betydningen af <span class="math inline">\(i\)</span>te ord, skal <span class="math inline">\(c_{j,i}\)</span> være 0. Dermed bliver <span class="math inline">\(\vec{v}_i\)</span> ikke trukket i retning af <span class="math inline">\(\vec{v}_j\)</span>. I sætningen <span class="math display">\[\text{"Orkesteret skal spille ---"}\]</span> ville <span class="math inline">\(c_{1,3}\)</span> være stor, fordi ordet "orkesteret" er vigtigt for at forstå betydningen af "spille", mens <span class="math inline">\(c_{2,3}\)</span> ville være mindre, fordi ordet "skal" ikke fortæller så meget om betydningen af "spille". Desuden vil <span class="math inline">\(c_{3,3}\)</span> være stor, da ordet "spille" selvfølgelig indeholder megen information om sin egen betydning.</p>
-<p>Hvordan bestemmer vi så konstanterne <span class="math inline">\(c_{j,i}\)</span>? Jo, i stedet for at lade hvert ord repræsentere ved to vektorer som i Word2Vec (fodnote: nemlig fokus- og kontekstvektoren), lader transformeren hvert ord svare til hele tre vektorer <span class="math inline">\(\vec{v}_{\text{ord}}\)</span>, <span class="math inline">\(\vec{k}_{\text{ord}}\)</span> og <span class="math inline">\(\vec{q}_{\text{ord}}\)</span>. (Fodnote: I litteraturen kaldes de tre vektorer <span class="math inline">\(\vec{k}_{\text{ord}}\)</span>, <span class="math inline">\(\vec{q}_{\text{ord}}\)</span> og <span class="math inline">\(\vec{v}_{\text{ord}}\)</span> for key, query og value.) Som i Word2Vec repræsenterer <span class="math inline">\(\vec{v}_{\text{ord}}\)</span> fokusordets betydning, og <span class="math inline">\(\vec{k}_{\text{ord}}\)</span> repræsenterer ordet når det optræder som kontekst. (Da vi er ude på at gætte næste ord, består konteksten til et ord af alle de ord, der står før i teksten). Den ekstra vektor <span class="math inline">\(\vec{q}_{\text{ord}}\)</span> repræsenterer også fokusordet, men bruges til at afgøre, hvilke ord der er er vigtige for at forstå fokusordets betydning. Vektorerne <span class="math inline">\(\vec{k}_{\text{ord}}\)</span> og <span class="math inline">\(\vec{q}_{\text{ord}}\)</span> skal have samme dimension, mens <span class="math inline">\(\vec{v}_{\text{ord}}\)</span> godt kan have en anden dimension.</p>
-<p>Lad os igen fokusere på det <span class="math inline">\(i\)</span>te ord. Vi bruger vektorerne <span class="math inline">\(\vec{k}_{j}\)</span> og <span class="math inline">\(\vec{q}_{i}\)</span> til at måle, hvor meget det <span class="math inline">\(j\)</span>te kontekstord fortæller om betydningen af det <span class="math inline">\(i\)</span>te ord. Mere præcist bruger vi skalarproduktet <span class="math display">\[\vec{k}_j \cdot \vec{q}_i\]</span> Store værdier af <span class="math inline">\(\vec{k}_j \cdot \vec{q}_i\)</span> svarer til, at det <span class="math inline">\(j\)</span>te ord indeholder megen information om betydningen af det <span class="math inline">\(i\)</span>te ord, mens meget negative værdier betyder, at det <span class="math inline">\(j\)</span>te kontekstord ikke fortæller ret meget om betydningen af det <span class="math inline">\(i\)</span>te ord. For at sikre at betingelsen <a href="#sum_1" data-reference-type="eqref" data-reference="sum_1">[sum_1]</a> er overholdt, transformerer vi skalarprodukterne med en softmax funktion, se (LINK TIL Word2Vec). Vi laver derfor en vektor <span class="math display">\[\vec{c}_i = \text{Softmax}({\vec{k}_1 \cdot \vec{q}_i},  {\vec{k}_2 \cdot \vec{q}_i},\ldots,  {\vec{k}_i \cdot \vec{q}_i} )\]</span> hvis <span class="math inline">\(j\)</span>te koordinat er <span class="math display">\[c_{j,i} = \frac{e^{\vec{k}_j \cdot \vec{q}_i}}{ e^{\vec{k}_1 \cdot \vec{q}_i}+e^{\vec{k}_2 \cdot \vec{q}_i}+\dotsm +e^{\vec{k}_i \cdot \vec{q}_i}}\]</span> Dette sikrer, at <span class="math inline">\(c_{j,i}\)</span>’erne er tal mellem 0 og 1, som opfylder Ligning <a href="#sum_1" data-reference-type="eqref" data-reference="sum_1">[sum_1]</a>. Hvis <span class="math inline">\(\vec{k}_j \cdot \vec{q}_i\)</span> er meget stor bliver <span class="math inline">\(c_{j,i}\)</span> tæt på 1, mens meget negative <span class="math inline">\(\vec{k}_j \cdot \vec{q}_i\)</span> svarer til <span class="math inline">\(c_{j,i}\)</span> tæt på 0.</p>
-<p>Processen, der opdaterer vektorrepræsentationen af et ord på baggrund af de foregående ord, kaldes et <em>opmærksomhedslag</em> (Fodnote: På engelsk <em>attention head</em>) og udgør den centrale del af transformeren. Figur <a href="#fig:attention" data-reference-type="ref" data-reference="fig:attention">[fig:attention]</a> viser skematisk, hvordan de forskellige vektorer bruges i beregningen af <span class="math inline">\(\vec{w}_i\)</span>. Bemærk at vi ikke har taget højde for, at betydningen af det <span class="math inline">\(i\)</span>te ord afhænger mest af de ord, der står lige i nærheden af det, og i mindre grad af ord langt væk. Derfor modificerer transformeren vektorerne for hvert ord afhængigt af ordets position i sætningen. Vi vil ikke gå i dybden med, hvordan det gøres.</p>
-<div id="exm-eks1" class="theorem example">
-<p><span class="theorem-title"><strong>Eksempel 1</strong></span> Betragt igen sætningen "Orkesteret skal spille". Lad os sige, at de tre ord har følgende vektorrepræsentationer. <span class="math display">\[\begin{aligned}
+<p>Lad os sige, at vi har et stykke tekst, og at det <span class="math inline">\(i\)</span>te ord i teksten er vores fokusord, som vi gerne vil finde en vektorrepræsentation for. Som udgangspunkt er betydningen af det <span class="math inline">\(i\)</span>te ord repræsenteret af vektoren <span class="math inline">\(\vec{v}_i\)</span>. Transformeren opdaterer vektoren <span class="math inline">\(\vec{v}_{i}\)</span> til <span class="math inline">\(\vec{w}_{i}\)</span> på baggrund af alle de ord, der går forud. Man kan forstille sig, at vi trækker vektoren <span class="math inline">\(\vec{v}_{i}\)</span> lidt i retning af alle vektorerne <span class="math inline">\(\vec{v}_{j}\)</span> med <span class="math inline">\(j&lt;i\)</span> svarende til alle de ord, der går forud i teksten. Hvor meget hvert ord trækker, afhænger af, hvor meget det siger om betydningen af det <span class="math inline">\(i\)</span>te ord. Vi opdaterer således <span class="math inline">\(\vec{v}_i\)</span> til</p>
+<p><span class="math display">\[
+\vec{w}_{i} = c_{1,i}\vec{v}_1 +c_{2,i}\vec{v}_2 + \dotsm + c_{i,i} \vec{v}_i
+\]</span></p>
+<p>hvor <span class="math inline">\(\vec{v}_1,\ldots,\vec{v}_{i-1}\)</span> er vektorrepræsentationerne for de <span class="math inline">\(i-1\)</span> ord, der går forud for det <span class="math inline">\(i\)</span>te ord. Desuden indgår nogle konstanter <span class="math inline">\(c_{j,i}\geq 0\)</span>, som er valgt, således at</p>
+<p><span id="eq-sum_1"><span class="math display">\[
+c_{1,i} + c_{2,i} + \dotsm + c_{i,i}=1
+\tag{1}\]</span></span></p>
+<p>Denne betingelse sikrer, at vi ikke risikerer at få meget lange vektorer ud. Konstanten <span class="math inline">\(c_{j,i}\)</span> bestemmer, hvor meget <span class="math inline">\(\vec{v}_i\)</span> bliver trukket i retning af <span class="math inline">\(\vec{v}_j\)</span>. Hvis det <span class="math inline">\(j\)</span>te ord har stor indflydelse på betydningen af det <span class="math inline">\(i\)</span>te ord, skal <span class="math inline">\(c_{j,i}\)</span> være stor, så <span class="math inline">\(\vec{v}_i\)</span> bliver trukket forholdsvis langt over mod <span class="math inline">\(\vec{v}_j\)</span>. Hvis omvendt det <span class="math inline">\(j\)</span>te ord ikke indeholder nogen information om betydningen af det <span class="math inline">\(i\)</span>te ord, skal <span class="math inline">\(c_{j,i}\)</span> være 0. Dermed bliver <span class="math inline">\(\vec{v}_i\)</span> ikke trukket i retning af <span class="math inline">\(\vec{v}_j\)</span>. I sætningen</p>
+<p><span class="math display">\[
+\text{"Orkesteret skal spille ---"}
+\]</span></p>
+<p>ville <span class="math inline">\(c_{1,3}\)</span> være stor, fordi ordet "orkesteret" er vigtigt for at forstå betydningen af "spille", mens <span class="math inline">\(c_{2,3}\)</span> ville være mindre, fordi ordet "skal" ikke fortæller så meget om betydningen af "spille". Desuden vil <span class="math inline">\(c_{3,3}\)</span> være stor, da ordet "spille" selvfølgelig indeholder megen information om sin egen betydning. Hvordan bestemmer vi så konstanterne <span class="math inline">\(c_{j,i}\)</span>? Jo, i stedet for at lade hvert ord repræsentere ved to vektorer som i Word2Vec<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, lader transformeren hvert ord svare til hele tre vektorer<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> <span class="math inline">\(\vec{v}_{\text{ord}}\)</span>, <span class="math inline">\(\vec{k}_{\text{ord}}\)</span> og <span class="math inline">\(\vec{q}_{\text{ord}}\)</span>. Som i Word2Vec repræsenterer <span class="math inline">\(\vec{v}_{\text{ord}}\)</span> fokusordets betydning, og <span class="math inline">\(\vec{k}_{\text{ord}}\)</span> repræsenterer ordet, når det optræder som kontekst (da vi er ude på at gætte næste ord, består konteksten til et ord af alle de ord, der står før i teksten). Den ekstra vektor <span class="math inline">\(\vec{q}_{\text{ord}}\)</span> repræsenterer også fokusordet, men bruges til at afgøre, hvilke ord der er vigtige for at forstå fokusordets betydning. Vektorerne <span class="math inline">\(\vec{k}_{\text{ord}}\)</span> og <span class="math inline">\(\vec{q}_{\text{ord}}\)</span> skal have samme dimension, mens <span class="math inline">\(\vec{v}_{\text{ord}}\)</span> godt kan have en anden dimension.</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Hvor hvert ord blev repræsenteret ved en fokus- og en kontekstvektor.</p></div><div id="fn4"><p><sup>4</sup>&nbsp;I litteraturen kaldes de tre vektorer <span class="math inline">\(\vec{k}_{\text{ord}}\)</span>, <span class="math inline">\(\vec{q}_{\text{ord}}\)</span> og <span class="math inline">\(\vec{v}_{\text{ord}}\)</span> for key, query og value.</p></div></div><p>Lad os igen fokusere på det <span class="math inline">\(i\)</span>te ord. Vi bruger vektorerne <span class="math inline">\(\vec{k}_{j}\)</span> og <span class="math inline">\(\vec{q}_{i}\)</span> til at måle, hvor meget det <span class="math inline">\(j\)</span>te kontekstord fortæller om betydningen af det <span class="math inline">\(i\)</span>te ord. Mere præcist bruger vi skalarproduktet</p>
+<p><span class="math display">\[
+\vec{k}_j \cdot \vec{q}_i
+\]</span></p>
+<p>Store værdier af <span class="math inline">\(\vec{k}_j \cdot \vec{q}_i\)</span> svarer til, at det <span class="math inline">\(j\)</span>te ord indeholder megen information om betydningen af det <span class="math inline">\(i\)</span>te ord, mens meget negative værdier betyder, at det <span class="math inline">\(j\)</span>te kontekstord ikke fortæller ret meget om betydningen af det <span class="math inline">\(i\)</span>te ord. For at sikre at betingelsen i (<a href="#eq-sum_1" class="quarto-xref">1</a>) er overholdt, transformerer vi skalarprodukterne med en softmax funktion (se <a href="../../materialer/sprogmodeller/word2vec.html">noten om Word2Vec</a>). Vi laver derfor en vektor</p>
+<p><span class="math display">\[
+\vec{c}_i = \text{Softmax}({\vec{k}_1 \cdot \vec{q}_i},  {\vec{k}_2 \cdot \vec{q}_i},\ldots,  {\vec{k}_i \cdot \vec{q}_i} )
+\]</span></p>
+<p>hvis <span class="math inline">\(j\)</span>te koordinat er</p>
+<p><span class="math display">\[
+c_{j,i} = \frac{e^{\vec{k}_j \cdot \vec{q}_i}}{ e^{\vec{k}_1 \cdot \vec{q}_i}+e^{\vec{k}_2 \cdot \vec{q}_i}+\dotsm +e^{\vec{k}_i \cdot \vec{q}_i}}
+\]</span> Dette sikrer, at <span class="math inline">\(c_{j,i}\)</span>’erne er tal mellem 0 og 1, som opfylder ligning (<a href="#eq-sum_1" class="quarto-xref">1</a>). Hvis <span class="math inline">\(\vec{k}_j \cdot \vec{q}_i\)</span> er meget stor bliver <span class="math inline">\(c_{j,i}\)</span> tæt på 1, mens meget negative <span class="math inline">\(\vec{k}_j \cdot \vec{q}_i\)</span> svarer til <span class="math inline">\(c_{j,i}\)</span> tæt på 0.</p>
+<p>Processen, der opdaterer vektorrepræsentationen af et ord på baggrund af de foregående ord, kaldes et <em>opmærksomhedslag</em><a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> og udgør den centrale del af transformeren. I <a href="#fig-attention" class="quarto-xref">figur&nbsp;5</a> ses skematisk, hvordan de forskellige vektorer bruges i beregningen af <span class="math inline">\(\vec{w}_i\)</span>. Bemærk at vi ikke har taget højde for, at betydningen af det <span class="math inline">\(i\)</span>te ord afhænger mest af de ord, der står lige i nærheden af det, og i mindre grad af ord langt væk. Derfor modificerer transformeren vektorerne for hvert ord afhængigt af ordets position i sætningen. Vi vil ikke gå i dybden med, hvordan det gøres.</p>
+<div class="no-row-height column-margin column-container"><div id="fn5"><p><sup>5</sup>&nbsp;På engelsk <em>attention head</em>.</p></div></div><div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-attention" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-attention-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="transformeren_files/figure-html/fig-attention-1.png" class="img-fluid figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-attention-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;5: Opdatering af vektorrepræsentationen for <span class="math inline">\(\text{ord}_{i}\)</span> ved hjælp af opmærksomhed på forudgående ord. Bemærk, at kun <span class="math inline">\(\vec{q}_i\)</span> benyttes når <span class="math inline">\(\vec{v}_i\)</span> opdateres, mens <span class="math inline">\(\vec{q}_1,\ldots,\vec{q}_{i-1}\)</span> ikke benyttes.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Lad os se på et eksempel.</p>
+<div id="exm-eks1" class="theorem example page-columns page-full">
+<p><span class="theorem-title"><strong>Eksempel 1</strong></span> Betragt igen sætningen "Orkesteret skal spille". Lad os sige, at de tre ord har følgende vektorrepræsentationer.</p>
+<p><span class="math display">\[
+\begin{aligned}
 &amp;\text{orkesteret:} &amp;&amp;\vec{q}_1 = \begin{pmatrix}4\\-1\end{pmatrix}, &amp;&amp;\vec{k}_1=\begin{pmatrix}0\\1\end{pmatrix},
 &amp;&amp;\vec{v}_1= \begin{pmatrix} -1\\ 1\end{pmatrix}\\
 &amp;\text{skal:}&amp;&amp;\vec{q}_2 = \begin{pmatrix}0\\3\end{pmatrix}, &amp;&amp;\vec{k}_2=\begin{pmatrix}2\\-1\end{pmatrix},
 &amp;&amp;\vec{v}_2= \begin{pmatrix} 0.5\\ -1\end{pmatrix}\\
 &amp;\text{spille:}&amp;&amp;\vec{q}_3 = \begin{pmatrix}1\\2\end{pmatrix}, &amp;&amp;\vec{k}_3=\begin{pmatrix}2\\0.5\end{pmatrix},
-&amp;&amp;\vec{v}_3= \begin{pmatrix} 1\\ 1\end{pmatrix}\\\end{aligned}\]</span> Lad os nu beregne den opdaterede vektor <span class="math inline">\(\vec{w}_3\)</span> for "spille". Først regnes skalarprodukterne <span class="math display">\[\begin{aligned}
+&amp;&amp;\vec{v}_3= \begin{pmatrix} 1\\ 1\end{pmatrix}\\
+\end{aligned}
+\]</span></p>
+<p>Lad os nu beregne den opdaterede vektor <span class="math inline">\(\vec{w}_3\)</span> for "spille". Først regnes skalarprodukterne</p>
+<p><span class="math display">\[
+\begin{aligned}
 &amp;\vec{k}_1\cdot \vec{q}_3=\begin{pmatrix}0\\1\end{pmatrix}  \cdot \begin{pmatrix}1\\2\end{pmatrix} =0\cdot 1 + 1\cdot 2 = 2  \\
 &amp;\vec{k}_2\cdot \vec{q}_3=\begin{pmatrix}2\\-1\end{pmatrix}\cdot  \begin{pmatrix}1\\2\end{pmatrix} = 2\cdot 1 + (-1)\cdot 2 =0\\
-&amp;\vec{k}_3\cdot \vec{q}_3= \begin{pmatrix}2\\0.5\end{pmatrix} \cdot  \begin{pmatrix}1\\2\end{pmatrix} = 2\cdot 1 + 0.5 \cdot 2=3\end{aligned}\]</span> Vi bruger softmax på skalarprodukterne for at finde konstanterne <span class="math inline">\(c_{1,3}\)</span>, <span class="math inline">\(c_{2,3}\)</span> og <span class="math inline">\(c_{3,3}\)</span>. <span class="math display">\[\begin{aligned}
+&amp;\vec{k}_3\cdot \vec{q}_3= \begin{pmatrix}2\\0.5\end{pmatrix} \cdot  \begin{pmatrix}1\\2\end{pmatrix} = 2\cdot 1 + 0.5 \cdot 2=3
+\end{aligned}
+\]</span></p>
+<p>Vi bruger softmax på skalarprodukterne for at finde konstanterne <span class="math inline">\(c_{1,3}\)</span>, <span class="math inline">\(c_{2,3}\)</span> og <span class="math inline">\(c_{3,3}\)</span>.</p>
+<p><span class="math display">\[
+\begin{aligned}
 c_{1,3} = \frac{e^{\vec{k}_1\cdot \vec{q}_3}}{e^{\vec{k}_1\cdot \vec{q}_3}+e^{\vec{k}_2\cdot \vec{q}_3}+e^{\vec{k}_3\cdot \vec{q}_3}} = \frac{e^{2}}{e^{2}+e^{0}+e^{3} }\approx 0.259\\
 c_{2,3} = \frac{e^{\vec{k}_2\cdot \vec{q}_3}}{e^{\vec{k}_1\cdot \vec{q}_3}+e^{\vec{k}_2\cdot \vec{q}_3}+e^{\vec{k}_3\cdot \vec{q}_3}} = \frac{e^{0}}{e^{2}+e^{0}+e^{3} }\approx 0.035\\
-c_{3,3} = \frac{e^{\vec{k}_3\cdot \vec{q}_3}}{e^{\vec{k}_1\cdot \vec{q}_3}+e^{\vec{k}_2\cdot \vec{q}_3}+e^{\vec{k}_3\cdot \vec{q}_3}} = \frac{e^{3}}{e^{2}+e^{0}+e^{3} }\approx 0.705\\\end{aligned}\]</span> Nu kan vi beregne <span class="math display">\[\begin{aligned}
+c_{3,3} = \frac{e^{\vec{k}_3\cdot \vec{q}_3}}{e^{\vec{k}_1\cdot \vec{q}_3}+e^{\vec{k}_2\cdot \vec{q}_3}+e^{\vec{k}_3\cdot \vec{q}_3}} = \frac{e^{3}}{e^{2}+e^{0}+e^{3} }\approx 0.705\\
+\end{aligned}
+\]</span> Bemærk (bortset fra afrunding), at</p>
+<p><span class="math display">\[
+c_{1,3} + c_{2,3} + c_{3,3} = 1
+\]</span></p>
+<p>Nu kan vi beregne</p>
+<p><span class="math display">\[
+\begin{aligned}
 \vec{w}_3 &amp; =c_{1,3}\vec{v}_1 + c_{2,3}\vec{v}_2 + c_{3,3}\vec{v}_3  \\
 &amp; = 0.259\begin{pmatrix} -1\\ 1\end{pmatrix} + 0.035\begin{pmatrix} 0.5\\ -1\end{pmatrix} + 0.705\begin{pmatrix} 1\\ 1\end{pmatrix} \\
 &amp; =\begin{pmatrix} -0.259\\ 0.259\end{pmatrix} + \begin{pmatrix} 0.0175\\ -0.035\end{pmatrix} + \begin{pmatrix} 0.705\\ 0.705\end{pmatrix} \\
 &amp; = \begin{pmatrix} -0.259 +  0.0175 + 0.705\\ 0.259-0.035+0.705 \end{pmatrix}\\
-&amp;=\begin{pmatrix} 0.464\\ 0.929 \end{pmatrix}\end{aligned}\]</span> Nedenfor er vektorerne <span class="math inline">\(\vec{v}_{\text{orkesteret}}\)</span>, <span class="math inline">\(\vec{v}_{\text{skal}}\)</span>, <span class="math inline">\(\vec{v}_{\text{spille}}\)</span> og <span class="math inline">\(\vec{w}_{\text{spille}}\)</span> indtegnet i et koordinatsystem. Det ses at <span class="math inline">\(\vec{w}_{\text{spille}}\)</span> er blevet trukket i retning af <span class="math inline">\(\vec{v}_{\text{orkesteret}}\)</span> i forhold til <span class="math inline">\(\vec{v}_{\text{spille}}\)</span>.</p>
+&amp;=\begin{pmatrix} 0.464\\ 0.929 \end{pmatrix}
+\end{aligned}
+\]</span></p>
+<p>Nedenfor er vektorerne <span class="math inline">\(\vec{v}_{\text{orkesteret}}\)</span>, <span class="math inline">\(\vec{v}_{\text{skal}}\)</span>, <span class="math inline">\(\vec{v}_{\text{spille}}\)</span> og <span class="math inline">\(\vec{w}_{\text{spille}}\)</span> indtegnet i et koordinatsystem. Det ses, at <span class="math inline">\(\vec{w}_{\text{spille}}\)</span> er blevet trukket i retning af <span class="math inline">\(\vec{v}_{\text{orkesteret}}\)</span> i forhold til <span class="math inline">\(\vec{v}_{\text{spille}}\)</span>.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-eks1" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-eks1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="transformeren_files/figure-html/fig-eks1-1.png" class="img-fluid figure-img" style="width:40.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-eks1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;6: Vektorerne <span class="math inline">\(\vec{v}_{\text{orkesteret}}\)</span>, <span class="math inline">\(\vec{v}_{\text{skal}}\)</span>, <span class="math inline">\(\vec{v}_{\text{spille}}\)</span> og <span class="math inline">\(\vec{w}_{\text{spille}}\)</span> indtegnet i et koordinatsystem. Bemærk, at <span class="math inline">\(\vec{w}_{\text{spille}}\)</span> er blevet trukket i retning af <span class="math inline">\(\vec{v}_{\text{orkesteret}}\)</span> i forhold til <span class="math inline">\(\vec{v}_{\text{spille}}\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </div>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
@@ -313,13 +493,18 @@ Opgave 2
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Betragt sætningen "Der svømmer marsvinet". Her har "svømmer" stor betydning for vores opfattelse af ordet "marsvinet", mens "der" ikke giver os ret meget ny information. Lad os sige, at de tre ord har vektorrepræsentationerne <span class="math display">\[\begin{aligned}
+<p>Betragt sætningen "Der svømmer marsvinet". Her har "svømmer" stor betydning for vores opfattelse af ordet "marsvinet", mens "der" ikke giver os ret meget ny information. Lad os sige, at de tre ord har vektorrepræsentationerne</p>
+<p><span class="math display">\[
+\begin{aligned}
 &amp;\text{der}&amp;&amp;
 \vec{q}_1 = \begin{pmatrix}0\\-5\end{pmatrix},&amp;&amp; \vec{k}_1=\begin{pmatrix}4\\-1\end{pmatrix},&amp;&amp;\vec{v}_1= \begin{pmatrix} -1\\ -1\end{pmatrix}\\
 &amp;\text{svømmer}&amp;&amp;
 \vec{q}_2 = \begin{pmatrix}3\\-7\end{pmatrix},&amp;&amp; \vec{k}_2=\begin{pmatrix}1\\2\end{pmatrix},&amp;&amp;\vec{v}_2= \begin{pmatrix} -2\\ 2\end{pmatrix}\\
 &amp;\text{marsvinet}&amp;&amp;
-\vec{q}_3 = \begin{pmatrix}0\\1\end{pmatrix}, &amp;&amp;\vec{k}_3=\begin{pmatrix}-1\\2\end{pmatrix},&amp;&amp;\vec{v}_3= \begin{pmatrix} 1\\ 2\end{pmatrix}\\\end{aligned}\]</span> Vi vil nu se, at den opdaterede vektor <span class="math inline">\(\vec{w}_3\)</span> for "marsvinet" bliver trukket meget i retning af "svømmer", men i mindre grad i retning af "der".</p>
+\vec{q}_3 = \begin{pmatrix}0\\1\end{pmatrix}, &amp;&amp;\vec{k}_3=\begin{pmatrix}-1\\2\end{pmatrix},&amp;&amp;\vec{v}_3= \begin{pmatrix} 1\\ 2\end{pmatrix}\\
+\end{aligned}
+\]</span></p>
+<p>Vi vil nu se, at den opdaterede vektor <span class="math inline">\(\vec{w}_3\)</span> for "marsvinet" bliver trukket meget i retning af "svømmer", men i mindre grad i retning af "der".</p>
 <ul>
 <li><p>Beregn <span class="math inline">\(\vec{w}_3\)</span> ved at følge nedenstående skridt:</p>
 <ul>
@@ -327,33 +512,70 @@ Opgave 2
 <li><p>Brug softmax til at beregne konstanterne <span class="math inline">\(c_{1,3}\)</span>, <span class="math inline">\(c_{2,3}\)</span> og <span class="math inline">\(c_{3,3}\)</span>.</p></li>
 <li><p>Beregn <span class="math display">\[\vec{w}_3 = c_{1,3}\vec{v}_1 + c_{2,3}\vec{v}_2 + c_{3,3}\vec{v}_3\]</span></p></li>
 </ul></li>
-<li><p>Tegn vektorerne <span class="math inline">\(\vec{v}_1\)</span>, <span class="math inline">\(\vec{v}_2\)</span>, <span class="math inline">\(\vec{v}_3\)</span> og <span class="math inline">\(\vec{w}_3\)</span> ind i et koordinatsystem og overvej, hvordan <span class="math inline">\(\vec{w}_3\)</span> ligger i forhold til <span class="math inline">\(\vec{v}_1\)</span>, <span class="math inline">\(\vec{v}_2\)</span>, <span class="math inline">\(\vec{v}_3\)</span> og <span class="math inline">\(\vec{w}_3\)</span>.</p></li>
+<li><p>Tegn vektorerne <span class="math inline">\(\vec{v}_1\)</span>, <span class="math inline">\(\vec{v}_2\)</span>, <span class="math inline">\(\vec{v}_3\)</span> og <span class="math inline">\(\vec{w}_3\)</span> ind i et koordinatsystem og overvej, hvordan <span class="math inline">\(\vec{w}_3\)</span> ligger i forhold til <span class="math inline">\(\vec{v}_1\)</span>, <span class="math inline">\(\vec{v}_2\)</span> og <span class="math inline">\(\vec{v}_3\)</span>.</p></li>
 <li><p>Tegn vektorerne <span class="math inline">\(\vec{k}_1\)</span>, <span class="math inline">\(\vec{k}_2\)</span>, <span class="math inline">\(\vec{k}_3\)</span> og <span class="math inline">\(\vec{q}_3\)</span> ind i et koordinatsystem. Passer det med, at kontekstvektoren for de ord, der har mest at sige om betydningen af ordet "marsvinet", peger mest i retning af <span class="math inline">\(\vec{q}_3\)</span>?</p></li>
 </ul>
 </div>
 </div>
 </div>
-<section id="en-transformerblok" class="level3">
+<section id="en-transformerblok" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="en-transformerblok">En transformerblok</h3>
 <p>Man kan lave flere opmærksomhedslag parallelt. Hvis der er <span class="math inline">\(K\)</span> parallelle opmærksomhedslag, så oversætter det <span class="math inline">\(k\)</span>te lag det <span class="math inline">\(i\)</span>te ord til tre vektorer <span class="math inline">\(\vec{q}^{k}_{i}\)</span>, <span class="math inline">\(\vec{k}^{k}_{i}\)</span> og <span class="math inline">\(\vec{v}^{k}_{i}\)</span> og beregner en ny vektor <span class="math inline">\(\vec{w}^{k}_{i}\)</span>, hvor <span class="math inline">\(k=1,\ldots,K\)</span>. Man kan forestille sig, at de forskellige opmærksomhedslag indfanger forskellige aspekter ved sætningen. Et holder måske styr på grammatikken, mens et andet fokuserer på betydningen af ordene. Men i stedet for at lægge os fast på, hvad hvert lag skal gøre, lader vi det være op til algoritmen selv at vælge nogle passende vektorer. I praksis er det derfor umuligt at gå ind og se præcis, hvad hvert lag gør.</p>
-<p>Outputvektorerne <span class="math inline">\(\vec{w}^{k}_i\)</span> fra de forskellige lag sættes i forlængelse af hinanden til en samlet outputvektor <span class="math inline">\(\vec{x}_i\)</span> af længde <span class="math inline">\(Km\)</span>. Som det næste køres <span class="math inline">\(\vec{x}_i\)</span> gennem et neuralt netværk, ligesom vi så i noten "Tekstgenerering med neurale netværk", bortset fra at vi ikke bruger softmax til sidst. Det vil sige, at koordinaterne i <span class="math inline">\(\vec{x}_i\)</span> bruges som input i det neurale netværk. Outputtet bliver en ny vektor <span class="math inline">\(\vec{y}_i\)</span>.</p>
-<p>Tilsammen udgør de parallelle opmærksomhedslag og det efterfølgende neurale netværk en <em>transformerblok</em>. Strukturen er skitseret på Figur <a href="#fig:transformerblok" data-reference-type="ref" data-reference="fig:transformerblok">[fig:transformerblok]</a>. Undervejs sker der forskellige transformationer af vektorerne, som viser sig at gøre de numeriske beregninger mere stabile. Vi vil ikke beskrive disse i detaljer, da de ikke er centrale for forståelsen.</p>
+<p>Outputvektorerne <span class="math inline">\(\vec{w}^{k}_i\)</span> fra de forskellige lag sættes i forlængelse af hinanden til en samlet outputvektor <span class="math inline">\(\vec{x}_i\)</span> af længde <span class="math inline">\(Km\)</span>. Som det næste køres <span class="math inline">\(\vec{x}_i\)</span> gennem et neuralt netværk, ligesom vi så i <a href="../../materialer/sprogmodeller/tekstgenerering.html">noten om neurale netværk til tekstgenerering</a>, bortset fra at vi ikke bruger softmax til sidst. Det vil sige, at koordinaterne i <span class="math inline">\(\vec{x}_i\)</span> bruges som input i det neurale netværk. Outputtet bliver en ny vektor <span class="math inline">\(\vec{y}_i\)</span>.</p>
+<p>Tilsammen udgør de parallelle opmærksomhedslag og det efterfølgende neurale netværk en <em>transformerblok</em>. Strukturen er skitseret på <a href="#fig-transformerblok" class="quarto-xref">figur&nbsp;7</a>. Undervejs sker der forskellige transformationer af vektorerne, som viser sig at gøre de numeriske beregninger mere stabile. Vi vil ikke beskrive disse i detaljer, da de ikke er centrale for forståelsen.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-transformerblok" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-transformerblok-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="transformeren_files/figure-html/fig-transformerblok-1.png" class="img-fluid figure-img" style="width:60.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-transformerblok-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;7: En transformerblok.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="transformernetværket" class="level3">
+<section id="transformernetværket" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="transformernetværket">Transformernetværket</h3>
-<p>Når vi så har beregnet outputvektorerne <span class="math inline">\(\vec{y}_i\)</span> fra en transformerblok for alle positioner <span class="math inline">\(i\)</span>, kan vi bruge dem som input til en ny transformerblok. I hvert opmærksomhedslag inden for den næste transformerblok oversættes vektoren <span class="math inline">\(\vec{y}_i\)</span> (ikke det oprindelige ord) til tre nye vektorer. Så beregner transformerblokken en ny <span class="math inline">\(\vec{y}_i\)</span>, som kan bruges som input til endnu en transformerblok og så videre. Tilsammen udgør disse transformerblokke et <em>transformernetværk</em>, som er skitseret på Figur <a href="#fig:transformer" data-reference-type="ref" data-reference="fig:transformer">[fig:transformer]</a>.</p>
-<p>Egentlig var vi jo ude på at lave en algoritme, der kan gætte det næste ord, altså det <span class="math inline">\((i+1)\)</span>ste ord. Det sker i den sidste prædiktionsblok i transformernetværket, se Figur <a href="#fig:transformer" data-reference-type="ref" data-reference="fig:transformer">[fig:transformer]</a>. Den tager vektoren <span class="math inline">\(\vec{y}_i\)</span>, der kommer ud fra den sidste transformerblok, og omregner den for hvert ord i ordforrådet til en sandsynlighed for, at det ord er det næste.</p>
-<p>For hvert ord i ordforrådet udregner vi først en score <span class="math inline">\(s_{\text{ord}}\)</span>, der måler, hvor sandsynligt det er, at ordet er det næste. Store værdier betyder, at ordet er sandsynligt som næste ord. Til at beregne scoren bruger vi en fast vektor <span class="math inline">\(\vec{a}_{\text{ord}}\)</span> for hvert ord og omregner <span class="math inline">\(\vec{y}_i\)</span> til scoren <span class="math display">\[s_{\text{ord}} = \vec{a}_{\text{ord}}\cdot \vec{y}_i\]</span> Disse scores samles i en vektor <span class="math inline">\(\vec{s}\)</span> med <span class="math inline">\(V\)</span> koordinater, hvor <span class="math inline">\(V\)</span> var antallet af ord i ordforrådet. Endelig omdannes <span class="math inline">\(\vec{s}\)</span> til en vektor af sandsynligheder ved endnu engang at bruge softmax-funktionen (se "Tekstgenerering med neurale netværk" LINK). <span class="math display">\[\vec{p} = \text{Softmax}(\vec{s})\]</span> Når man har disse sandsynligheder, kan man begynde at generere tekst, for eksempel ved hele tiden at vælge det mest sandsynlige næste ord.</p>
+<p>Når vi så har beregnet outputvektorerne <span class="math inline">\(\vec{y}_i\)</span> fra en transformerblok for alle positioner <span class="math inline">\(i\)</span>, kan vi bruge dem som input til en ny transformerblok. I hvert opmærksomhedslag inden for den næste transformerblok oversættes vektoren <span class="math inline">\(\vec{y}_i\)</span> (ikke det oprindelige ord) til tre nye vektorer. Så beregner transformerblokken en ny <span class="math inline">\(\vec{y}_i\)</span>, som kan bruges som input til endnu en transformerblok og så videre. Tilsammen udgør disse transformerblokke et <em>transformernetværk</em>, som er skitseret på <a href="#fig-transformer" class="quarto-xref">figur&nbsp;8</a>.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-transformer" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-transformer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="transformeren_files/figure-html/fig-transformer-1.png" class="img-fluid figure-img" style="width:25.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-transformer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;8: Transformernetværket.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Egentlig var vi jo ude på at lave en algoritme, der kan gætte det næste ord, altså det <span class="math inline">\((i+1)\)</span>te ord. Det sker i den sidste prædiktionsblok i transformernetværket, se <a href="#fig-transformer" class="quarto-xref">figur&nbsp;8</a>. Den tager vektoren <span class="math inline">\(\vec{y}_i\)</span>, der kommer ud fra den sidste transformerblok, og omregner den for hvert ord i ordforrådet til en sandsynlighed for, at det ord er det næste.</p>
+<p>For hvert ord i ordforrådet udregner vi først en score <span class="math inline">\(s_{\text{ord}}\)</span>, der måler, hvor sandsynligt det er, at ordet er det næste. Store værdier betyder, at ordet er sandsynligt som næste ord. Til at beregne scoren bruger vi en fast vektor <span class="math inline">\(\vec{a}_{\text{ord}}\)</span> for hvert ord og omregner <span class="math inline">\(\vec{y}_i\)</span> til scoren</p>
+<p><span class="math display">\[
+s_{\text{ord}} = \vec{a}_{\text{ord}}\cdot \vec{y}_i
+\]</span></p>
+<p>Disse scores samles i en vektor <span class="math inline">\(\vec{s}\)</span> med <span class="math inline">\(V\)</span> koordinater, hvor <span class="math inline">\(V\)</span> var antallet af ord i ordforrådet. Endelig omdannes <span class="math inline">\(\vec{s}\)</span> til en vektor af sandsynligheder ved endnu engang at bruge softmax-funktionen (se <a href="../../materialer/sprogmodeller/tekstgenerering.html">noten om neurale netværk til tekstgenerering</a>):</p>
+<p><span class="math display">\[
+\vec{p} = \text{Softmax}(\vec{s})
+\]</span></p>
+<p>Når man har disse sandsynligheder, kan man begynde at generere tekst, for eksempel ved hele tiden at vælge det mest sandsynlige næste ord.</p>
 </section>
 </section>
 <section id="træning-af-netværket" class="level2">
 <h2 class="anchored" data-anchor-id="træning-af-netværket">Træning af netværket</h2>
 <p>I alt indeholder transformernetværket rigtig mange vægte, der skal bestemmes, før vi kan begynde at generere tekst. Hvert opmærksomhedslag skal bruge vægte til at lave koordinaterne i de tre forskellige vektorer. Hver transformerblok indeholder desuden et neuralt netværk, som skal bruge et sæt af vægte. Endelig skal der i det sidste trin bruges <span class="math inline">\(V\)</span> vektorer på formen <span class="math inline">\(\vec{a}_{\text{ord}}\)</span>.</p>
 <p>Den præcise struktur af GPT-4 netværket, som er fundamentet for Chat-GPT, er en forretningshemmelighed. En tidligere version, GPT-2, brugte 12 transformerblokke med 12 parallelle opmærksomhedslag i hvert, altså 144 opmærksomhedslag i alt. I alt havde GPT-2 omkring 1,5 milliarder vægte. Det er dog intet mod GPT-4, der vurderes at have omkring 1 billion vægte.</p>
-<p>For at bestemme så mange vægte skal der bruges enorme mængder træningsdata. Til at træne GPT-2 blev der for eksempel brugt 8 millioner dokumenter. I træningsdata kender vi hele tiden det næste ord. For at måle hvor godt det passer med de sandsynligheder for næste ord, som transformeren giver, beregnes en cross-entropy tabsfunktion, se (LINK). Transformeren trænes til at minimere denne cross-entropy, således at den er god til at forudsige næste ord i træningsdata. Når transformeren er trænet, bliver den som regel fintunet til den opgave, den skal udføre, for eksempel at oversætte en tekst eller besvare et spørgsmål.</p>
+<p>For at bestemme så mange vægte skal der bruges enorme mængder træningsdata. Til at træne GPT-2 blev der for eksempel brugt 8 millioner dokumenter. I træningsdata kender vi hele tiden det næste ord. For at måle hvor godt det passer med de sandsynligheder for næste ord, som transformeren giver, beregnes en cross-entropy tabsfunktion (se <a href="../../materialer/tabsfunktioner/tabsfunktioner.html">noten om tabsfunktioner</a>). Transformeren trænes til at minimere denne cross-entropy, således at den er god til at forudsige næste ord i træningsdata. Når transformeren er trænet, bliver den som regel fintunet til den opgave, den skal udføre, for eksempel at oversætte en tekst eller besvare et spørgsmål.</p>
 
 
 </section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
