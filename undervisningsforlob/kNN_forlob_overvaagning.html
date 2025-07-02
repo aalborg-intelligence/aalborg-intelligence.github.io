@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Nogle lande overvåger deres borgere. Men hvordan gør man mon det? I dette forløb bliver I ansat af efterretningstjenesten i landet Monitorbian for at hjælpe dem med at overvåge deres borgere.">
+
+<title>Overvågning i Monitorbian – AI MAT - matematikken bag magien</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-5f396f0d7eb5b5756f9d659d452ebaa5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-Y219BCPS45"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+ 
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'analytics_storage': 'denied'
+  });
+gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="floating nav-fixed slimcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../undervisningsforlob/index.html"> 
+<span class="menu-text">Undervisningsforløb</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../materialer/index.html"> 
+<span class="menu-text">Materialer</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../sro/index.html"> 
+<span class="menu-text">SRO</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../srp/index.html"> 
+<span class="menu-text">SRP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../apps/index.html"> 
+<span class="menu-text">Apps</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../referencer/index.html"> 
+<span class="menu-text">Referencer</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">Om os</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.youtube.com/@ai-mat"> 
+<span class="menu-text"><img src="../logo/YouTube/youtube-color-darkblue-icon.svg" style="height:2em"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indhold</h2>
+   
+  <ul>
+  <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
+  <li><a href="#velkommen-til-monitorbian" id="toc-velkommen-til-monitorbian" class="nav-link" data-scroll-target="#velkommen-til-monitorbian">Velkommen til Monitorbian</a>
+  <ul class="collapse">
+  <li><a href="#features" id="toc-features" class="nav-link" data-scroll-target="#features">Features</a></li>
+  <li><a href="#træningsdata" id="toc-træningsdata" class="nav-link" data-scroll-target="#træningsdata">Træningsdata</a></li>
+  <li><a href="#nærmeste-naboer-knn" id="toc-nærmeste-naboer-knn" class="nav-link" data-scroll-target="#nærmeste-naboer-knn">Nærmeste naboer (kNN)</a></li>
+  <li><a href="#valg-af-k-og-testdata" id="toc-valg-af-k-og-testdata" class="nav-link" data-scroll-target="#valg-af-k-og-testdata">Valg af <span class="math inline">\(k\)</span> og testdata</a></li>
+  <li><a href="#knn-i-programmet-orange" id="toc-knn-i-programmet-orange" class="nav-link" data-scroll-target="#knn-i-programmet-orange">kNN i programmet Orange</a></li>
+  <li><a href="#videre-overvejelser" id="toc-videre-overvejelser" class="nav-link" data-scroll-target="#videre-overvejelser">Videre overvejelser</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Overvågning i Monitorbian</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">C-niveau</div>
+    <div class="quarto-category">Kort</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Forudsætninger og tidsforbrug
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Forløbet kræver kendskab til:</p>
+<ul>
+<li>Koordinatsystemer.</li>
+<li>Punkter og afstande mellem punkter.</li>
+<li>Procentregning.</li>
+</ul>
+<p><strong>Tidsforbrug:</strong> Ca. 90 minutter (uden brug af Orange).</p>
+</div>
+</div>
+</div>
+<section id="formål" class="level3 purpose">
+<h3 class="anchored" data-anchor-id="formål">Formål</h3>
+<p>Nogle lande overvåger deres borgere. Men hvordan gør man mon det? I dette forløb bliver I ansat af efterretningstjenesten i landet Monitorbian for at hjælpe dem med at overvåge deres borgere.</p>
+<p>Formålet med forløbet er, at I skal lære at bruge den AI metode, som kaldes for “k nærmeste naboer”. Så kom med til Monitorbian!</p>
+</section>
+<section id="velkommen-til-monitorbian" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="velkommen-til-monitorbian">Velkommen til Monitorbian</h2>
+<p>Landet <em>Monitorbian</em> ønsker at blive en vaskeægte overvågningsstat! Men efterretningstjenesten i Monitorbian ved meget lidt om overvågning. Derfor har de ansat jer som intelligence officerer til at løse denne opgave. Tillykke med jeres nye job! Lad os smøge ærmerne op og komme i gang! <span class="emoji" data-emoji="smile">😄</span></p>
+<p>I Monitorbian findes der to forskellige slags indbyggere: Nogle nedstammer fra Anders And, mens andre nedstammer fra Fedtmule. På <a href="#fig-indbyggere" class="quarto-xref">figur&nbsp;1</a> kan du se, hvordan de forskellige indbyggere ser ud.</p>
+<div id="fig-indbyggere" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-indbyggere-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="kNN_forlob_overvaagning_filer/images/to_indbyggere.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-indbyggere-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;1: Billede af de to slags indbyggere i Monitorbian. Indbyggeren til venstre nedstammer fra Anders And, mens indbyggeren til højre nedstammer fra Fedtmule.
+</figcaption>
+</figure>
+</div>
+<section id="features" class="level3">
+<h3 class="anchored" data-anchor-id="features">Features</h3>
+<p>For at overvåge indbyggerne er vi nødt til at identificere nogle egenskaber ved indbyggerne, som kan bruges til at adskille dem fra hinanden. Sådan en egenskab kaldes for en <em>feature</em>. En feature kunne for eksempel være en indbyggers vægt. Det vil være en god feature, hvis de to forskellige slags indbyggere har forholdsvis forskellig vægt. En anden feature kunne være øjenfarve, men hvis det ikke på en eller anden måde kan være med til at skelne de to slags indbyggere fra hinanden, så vil øjenfarve være et dårlig valg af feature i denne sammenhæng.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 1: Features
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Se på billedet i <a href="#fig-indbyggere" class="quarto-xref">figur&nbsp;1</a> og find på nogle flere features.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="træningsdata" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="træningsdata">Træningsdata</h3>
+<p>Som I lige har set i opgave 1, er der rigtig mange egenskaber ved indbyggerne, der kan bruges som features. Men som intelligence officerer er vi nødt til at træffe et valg og beslutte os for, hvad vi vil gå videre med. I har derfor netop været til møde i sikkerhedsudvalget, hvor det er blevet besluttet, at højde (målt i <span class="math inline">\(cm\)</span>) og fodareal (målt i <span class="math inline">\(cm^2\)</span>) er de to features, som I skal arbejde videre med. Disse to features er forholdsvis nemme at scanne, og fremadrettet bliver det derfor sådan, at hver gang en indbygger i Monitorbian går ind i en offentlig bygning, så bliver vedkommende scannet og højde og fodareal bliver målt.</p>
+<p>I skal nu have lavet en algoritme<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, som kan forudsige, hvilken slags indbygger der er tale om – alene baseret på viden om en given indbyggers højde og fodareal. Man siger, at vi gerne vil <em>klassificere</em> indbyggerne – her i to klasser: Anders And og Fedtmule.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Tænk på en <em>algoritme</em> som en slags opskrift, som kan bruges til at forudsige hvilken slags indbygger, der er tale om.</p></div><div id="fn2"><p><sup>2</sup>&nbsp;Man siger også, at vi gerne vil <em>prædiktere</em> hvilken slags indbygger, der er tale om.</p></div></div><p>For at gøre det har vi brug for <em>træningsdata</em>. Træningsdata består af en masse data fra forskellige indbyggere, hvor de to features er blevet målt samtidig med, at det for hver indbygger er angivet om vedkommende nedstammer fra Anders And eller fra Fedtmule. Denne sidste oplysning er jo lige præcis den oplysning, som vi gerne fremadrettet vil kunne forudsige<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. I træningsdata angiver vi altså den værdi, som vi gerne vil prædiktere. Derfor kalder man også denne værdi for en <em>targetværdi</em>.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 2: Træningsdata
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Nedenstående viser en tabel med <a href="kNN_forlob_overvaagning_filer/images/monitorbian.zip">træningsdata</a><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, men targetværdien mangler. Angiv targetværdien ("Anders And" eller "Fedtmule").</p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Indbygger</th>
+<th style="text-align: center;">Fodareal (<span class="math inline">\(cm^2\)</span>)</th>
+<th style="text-align: center;">Højde (<span class="math inline">\(cm\)</span>)</th>
+<th style="text-align: center;">Targetværdi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person01.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">197</td>
+<td style="text-align: center;">123</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person02.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">214</td>
+<td style="text-align: center;">155</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person03.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">255</td>
+<td style="text-align: center;">115</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person04.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">297</td>
+<td style="text-align: center;">96</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person05.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">213</td>
+<td style="text-align: center;">74</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person06.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">173</td>
+<td style="text-align: center;">138</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person07.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">272</td>
+<td style="text-align: center;">115</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person08.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">235</td>
+<td style="text-align: center;">94</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person09.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">311</td>
+<td style="text-align: center;">99</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person10.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">334</td>
+<td style="text-align: center;">116</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person11.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">276</td>
+<td style="text-align: center;">151</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person12.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">283</td>
+<td style="text-align: center;">92</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person13.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">234</td>
+<td style="text-align: center;">132</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person14.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">172</td>
+<td style="text-align: center;">97</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person15.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">278</td>
+<td style="text-align: center;">74</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person16.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">241</td>
+<td style="text-align: center;">75</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person17.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">220</td>
+<td style="text-align: center;">62</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person18.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">249</td>
+<td style="text-align: center;">86</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person19.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">138</td>
+<td style="text-align: center;">96</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><img src="kNN_forlob_overvaagning_filer/images/person20.webp" class="img-fluid" style="width:50.0%"></td>
+<td style="text-align: center;">252</td>
+<td style="text-align: center;">93</td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Billederne er i øvrigt genereret med en AI billedgenerator i programmet <a href="https://www.craiyon.com/">craiyon</a>.</p></div></div></section>
+<section id="nærmeste-naboer-knn" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="nærmeste-naboer-knn">Nærmeste naboer (kNN)</h3>
+<p>Der findes en lang række af metoder til at lave klassifikation, som er det, vi har brug for her. Nogle af dem bruger meget avanceret matematik og enorme computerkræfter og kan anvendes til diagnosticering af sygdomme, klassificere dokumenter i forskellig typer, genkende objekter i billeder og videoer. Helt så avancerede metoder får vi dog ikke brug for her.</p>
+<p>Vi vil i stedet fokusere på én af de simpleste, men alligevel effektive metoder til at klassificere observationer. Metoden kaldes på engelsk <em>k-nearest neighbors</em> eller på dansk <em>k-nærmeste naboer</em>, og forkortes ofte som <em>kNN</em>. <em>kNN</em> er baseret på den simple antagelse, at observationer, som er tæt på hinanden, også ligner hinanden. I vores eksempel vil det være, at indbyggere, som har cirka samme højde og fodareal, vil vi antage, hører til i den samme klasse.</p>
+<p>For at bestemme hvilke naboer, der ligger tæt på hinanden, er vi nødt til at kunne beregne afstanden mellem to punkter. Du husker nok, at afstanden <span class="math inline">\(d\)</span> mellem punktet <span class="math inline">\(P(x_1,y_1)\)</span> og punktet <span class="math inline">\(Q(x_2,y_2)\)</span> er</p>
+<p><span id="eq-dist"><span class="math display">\[
+d = \sqrt{(x_2-x_1)^2+(y_2-y_1)^2}
+\tag{1}\]</span></span></p>
+<p>På <a href="#fig-data" class="quarto-xref">figur&nbsp;2</a> nedenfor ser I de træningsdata, som I selv angav en targetværdi for i den foregående opgave. Måske var det for nogle af indbyggerne svært at afgøre oprindelsen alene ved at se på billedet – og måske var det nemt nok, men her ses i hvert tilfælde den korrekte klassificering<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Man kan forestille sig, at en sådan klassificering er baseret på yderligere test og undersøgelser, som man normalvis ikke vil have til rådighed.</p></div></div><div id="fig-data" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="kNN_forlob_overvaagning_filer/images/data.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;2: Datasættet med fodareal ud af <span class="math inline">\(x\)</span>-aksen og højde op af <span class="math inline">\(y\)</span>-aksen. De røde punkter svarer til Fedtmule-indbyggere, mens de blå svarer til Anders And-indbyggere.
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 3: Afstande
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Beregn afstanden fra det grå punkt til de syv punkter, som er markeret i <a href="#fig-data_afstande" class="quarto-xref">figur&nbsp;3</a> herunder. Sørg for at skrive de beregnede afstande ned – du skal bruge dem senere!</p>
+</div>
+</div>
+</div>
+<div id="fig-data_afstande" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-data_afstande-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="kNN_forlob_overvaagning_filer/images/data_afstande.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-data_afstande-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;3: Et udsnit af data med et nyt gråt punkt indsat. De røde punkter svarer til Fedtmule-indbyggere, mens de blå svarer til Anders And-indbyggere.
+</figcaption>
+</figure>
+</div>
+<p>Når <span class="math inline">\(k\)</span>-nærmeste naboer bruges til at klassificere en ny indbygger benyttes en <em>flertalsafstemning</em> (også kaldet <em>majoritetsbeslutning</em>). Det vil sige, at en ny indbygger bliver prædikteret til at tilhøre den klasse, som de fleste af indbyggerens <span class="math inline">\(k\)</span>-nærmeste naboer tilhører. Hvis for eksempel <span class="math inline">\(k=5\)</span>, og vi har en ny indbygger, som vi gerne vil afgøre klassen for, så ser vi simpelthen på de 5 nærmeste naboer til denne indbygger og tæller op, hvilke klasser de tilhører. Hvis to af dem nedstammer fra Anders And og tre fra Fedtmule, så vil en flertalsafstemning sige, at den nye indbygger nok er i Fedtmule-klassen. Man kan komme ud for, at præcis halvdelen af de <span class="math inline">\(k\)</span> nærmeste naboer nedstammer fra Anders And, mens præcis den anden halvdel nedstammer fra Fedtmule. I det tilfælde vil vi sige, at klassifikationen er <em>uafklaret</em>.</p>
+<p>Denne idé vil vi nu bruge.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 4: Afstand til ny og ukendt indbygger
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>I <a href="#fig-data_afstande" class="quarto-xref">figur&nbsp;3</a> svarer det grå punkt til en ny indbygger, som skal klassificeres, og de nærmeste naboer svarer til de punkter, som du lige har beregnet afstanden til. Baseret på en flertalsafstemning blandt de fem nærmeste naboer (det vil sige, at <span class="math inline">\(k=5\)</span>) vil du så sige, at den nye indbygger stammer fra Fedtmule eller fra Anders And?</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 5: Flertalsafstemning for forskellige værdier af <span class="math inline">\(k\)</span>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Der er ingen, som siger, at vi skal se på de fem nærmeste naboer. Vi kan lige så godt se på dén nærmeste nabo, på de to nærmeste naboer eller på de tre nærmeste naboer. Vi vil nu se på, hvad der sker, hvis vi ændrer på antallet af nærmeste naboer <span class="math inline">\(k\)</span>.</p>
+<p>Se igen på <a href="#fig-data_afstande" class="quarto-xref">figur&nbsp;3</a> og de afstande, som du beregnede i opgave 3. Du skal nu for forskellige værdier af <span class="math inline">\(k\)</span> afgøre, om den nye indbygger skal klassificeres som en Fedtmule- eller en Anders And-indbygger.</p>
+<p>Udfyld en tabel som nedenstående (med "andel" mener vi den andel, som afgør flertalsafstemningen – hvis for eksempel der er tre ud af fire punkter, som er blå eller røde, skal andelen sættes til 3/4).</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th><span class="math inline">\(k\)</span></th>
+<th>Blå/Rød/Uafklaret (prædiktion)</th>
+<th>Andel</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="valg-af-k-og-testdata" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="valg-af-k-og-testdata">Valg af <span class="math inline">\(k\)</span> og testdata</h3>
+<p>Som du har set ovenfor, vil forskellige valg af <span class="math inline">\(k\)</span> give forskellige resultater. Så hvordan vælger vi mon den bedst mulige værdi af <span class="math inline">\(k\)</span>? For at afgøre det vil vi opdele vores data i to dele: <em>træningsdata</em> og <em>testdata</em>. Det kunne for eksempel være sådan, at af alle de data vi har, så bruger vi 80% som træningsdata. Det er træningsdata, som vi bruger til at lave prædiktionen med. De resterende 20% af data vil vi lade være <em>testdata</em>, hvor vi bruger testdata til at måle, hvor nøjagtig vores algoritme er.</p>
+<p>Idéen er nu denne:</p>
+<ul>
+<li>Vi vælger en værdi af <span class="math inline">\(k\)</span> – det kunne for eksempel være <span class="math inline">\(k=5\)</span>.</li>
+<li>Vi ser så på hver eneste indbygger i testdata og lader som om, at vi <em>ikke</em> kender denne indbyggers oprindelse. Det vil sige, at vi lader som om, at vi ikke kender targetværdien. Vi vil nu bruge træningsdata til at lave en prædiktion for denne indbygger baseret på den valgte værdi af <span class="math inline">\(k\)</span>. Men da vi jo i virkeligheden godt kender denne indbyggers oprindelse, så får vi nu mulighed for at afgøre, om prædiktionen er rigtig eller forkert.</li>
+</ul>
+<p>Lad os forestille os, at vi har 500 data i alt, og at vi lader 20% af disse være testdata. Det vil sige, at testdata består af 100 datapunkter. For hvert af disse datapunkter laver vi en prædiktion. Så enten prædikterer vi, at datapunktet er blåt eller rødt baseret på en flertalsafstemning af de <span class="math inline">\(k\)</span> nærmeste naboer i træningsdatasættet. Holder vi denne prædiktion op mod den faktiske værdi, kan vi opstille en såkaldt <em>confusion tabel</em>. Et eksempel på en sådan ses her:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th>Prædikteret blå</th>
+<th>Prædikteret rød</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Faktisk blå</strong></td>
+<td>56</td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td><strong>Faktisk rød</strong></td>
+<td>7</td>
+<td>68</td>
+</tr>
+</tbody>
+</table>
+<!-- : Eksempel på confusion tabel. -->
+<p>Der er 140 datapunkter i alt, og vi kan her se, at 56 datapunkter blev prædikteret til at være blå og faktisk også er blå. Tilsvarende er 68 af datapunkterne prædikteret til at være røde, mens de faktiske også er røde. I alt 7+9=16 datapunkter har fået prædikteret en forkert farve sammenlignet med deres faktiske farve. Altså kan vi her se, at med den valgte værdi af <span class="math inline">\(k\)</span> har vores <em>kNN</em> algoritme lavet en fejl i <span class="math display">\[
+\frac{16}{140} \approx 11.4 \%
+\]</span> af tilfældene, mens den har prædikteret korrekt i <span class="math display">\[
+\frac{56+68}{140} = \frac{124}{140} \approx 88.6 \%
+\]</span> af tilfældene. Vi kan nu lave tilsvarende beregninger for forskellige værdier af <span class="math inline">\(k\)</span> og helt enkelt vælge den værdi af <span class="math inline">\(k\)</span>, som giver den mindste fejlprocent, når vi tester på vores testdata.</p>
+<p>Vi ser nu igen på vores simple datasæt, og deler det op i et træningsdatasæt og et testdatasæt. På <a href="#fig-data_test" class="quarto-xref">figur&nbsp;4</a> er testdata markeret med et kryds. Vi vil for forskellige værdier af <span class="math inline">\(k\)</span> prædiktere farven på testdata (samtidig med at vi jo godt kender den faktiske værdi).</p>
+<div id="fig-data_test" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-data_test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="kNN_forlob_overvaagning_filer/images/data_test.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-data_test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;4: Testdata er markeret med et kryds.
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 6: Valg af <span class="math inline">\(k\)</span>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Brug app’en herunder til at afgøre den prædikterede værdi af hvert testdata for <span class="math inline">\(k=1, 2, 3, 4, 5\)</span>. Du kan for hvert testdatapunkt få tegnet en cirkel rundt om (hvor du kan justere på radius), som kan hjælpe dig med at finde de nærmeste naboer. Udfyld en tabel som nedenstående (husk at den prædikterede farve kan være blå, rød eller uafklaret) – skriv den enten ned på et stykke papir eller brug <a href="kNN_forlob_overvaagning_filer/excel/Prædiktion_for_forskellige_værdier_af_k.xlsx">Prædiktion for forskellige værdier af k</a>.</li>
+</ul>
+<table class="table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Testdata</th>
+<th>Faktisk</th>
+<th>Prædiktion <span class="math inline">\(k=1\)</span></th>
+<th>Prædiktion <span class="math inline">\(k=2\)</span></th>
+<th>Prædiktion <span class="math inline">\(k=3\)</span></th>
+<th>Prædiktion <span class="math inline">\(k=4\)</span></th>
+<th>Prædiktion <span class="math inline">\(k=5\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Rød</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Rød</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Blå</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>Blå</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>Udfyld for hver værdi af <span class="math inline">\(k\)</span> en confusion tabel. Hvis den prædikterede farve er uafklaret, skal det tælle som en fejl. Skriv igen ned på papir eller brug <a href="kNN_forlob_overvaagning_filer/excel/Confusion_tabeller.xlsx">Confusion tabeller</a>.</p></li>
+<li><p>Udregn for hver værdi af <span class="math inline">\(k\)</span> fejlprocenten. Hvilken værdi af <span class="math inline">\(k\)</span> giver den mindste fejlprocent?</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<script src="https://cdn.geogebra.org/apps/deployggb.js"></script>
+
+<!-- 
+Alle geogebra filer placeres i mappen _geogebra
+Erstat XXX med nr på app og erstat YYY med navn på ggb-fil -->
+<script>
+var parameters1 = {
+"id": "ggbApplet1",
+"width":750,
+"height":750,
+"showMenuBar":false,
+"showAlgebraInput":false,
+"showToolBar":false,
+"perspective": "G",
+"showToolBarHelp":false,
+"showResetIcon":false,
+"enableLabelDrags":false,
+"enableShiftDragZoom":false,
+"enableRightClick":false,
+"errorDialogsActive":false,
+"useBrowserForJS":false,
+"allowStyleBar":false,
+"preventFocus":false,
+"showZoomButtons":false,
+"capturingThreshold":3,
+// add code here to run when the applet starts
+"appletOnLoad":function(api){ /* api.evalCommand('Segment((1,2),(3,4))');*/ },
+"showFullscreenButton":true,
+"scale":1,
+"disableAutoScale":false,
+"allowUpscale":false,
+"clickToLoad":false,
+"appName":"classic",
+"buttonRounding":0.7,
+"buttonShadows":false,
+"language":"da",
+// use this instead of ggbBase64 to load a material from geogebra.org
+// "material_id":"RHYH3UQ8",
+// use this instead of ggbBase64 to load a .ggb file
+"filename":"kNN_forlob_overvaagning_filer/_geogebra/data_test.ggb",
+};
+// is3D=is 3D applet using 3D view, AV=Algebra View, SV=Spreadsheet View, CV=CAS View, EV2=Graphics View 2, CP=Construction Protocol, PC=Probability Calculator DA=Data Analysis, FI=Function Inspector, macro=Macros
+var views1 = {'is3D': 0,'AV': 0,'SV': 0,'CV': 0,'EV2': 0,'CP': 0,'PC': 0,'DA': 0,'FI': 0,'macro': 0};
+var applet1 = new GGBApplet(parameters1, '5.0', views1);
+</script>
+
+<script>
+window.onload = function() {
+  applet1.inject('ggbApplet1');
+  //applet2.inject('ggbApplet2');
+  //applet3.inject('ggbApplet3');
+  //applet4.inject('ggbApplet4');
+  }
+</script>
+
+<div id="ggbApplet1">
+
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Bonusopgave (svær og kan springes over): Hvilke muligheder er der?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Se på tabellen i opgave 5 <strong>Flertalsafstemning for forskellige værdier af <span class="math inline">\(k\)</span> </strong> ovenfor.</p>
+<ul>
+<li>Får man altid den samme prædiktion for alle værdier af <span class="math inline">\(k\)</span>?</li>
+</ul>
+<p>Vi forestiller os nu, at vi har et nyt datasæt, som vi ikke har lavet beregninger på.</p>
+<ul>
+<li>Er det muligt, at der kommer til at stå blå ved <span class="math inline">\(k=1\)</span> og samtidig rød ved <span class="math inline">\(k=2\)</span>?</li>
+<li>For hvilke værdier af <span class="math inline">\(k\)</span> kan der stå uafklaret?</li>
+<li>Hvilke mulige andele kan optræde i tabellen for <span class="math inline">\(k=1, 2, 3, 4, 5\)</span>?</li>
+<li>Prøv at opstille alle muligheder for tabeller (for <span class="math inline">\(k=1, 2, 3\)</span>).</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="knn-i-programmet-orange" class="level3">
+<h3 class="anchored" data-anchor-id="knn-i-programmet-orange">kNN i programmet Orange</h3>
+<p>Her til sidst skal vi lege lidt med et gratis program, som hedder <a href="https://orangedatamining.com/">Orange</a>. Du kan få hjælp til at installere programmet <a href="https://www.youtube.com/watch?v=g8-wIwVfAw0">her</a>.</p>
+<p>Start med at se denne video:</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/J1ZWQwak2Q4?si=W9VNvdXB4jl0hWsv" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 7: kNN i Orange baseret på features
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Installer Orange.</li>
+<li>Opbyg modellen, som det er vist i videoen ovenfor. For at gøre det får du brug for de <a href="kNN_forlob_overvaagning_filer/data/Træningsdata.xlsx">træningsdata</a> og <a href="kNN_forlob_overvaagning_filer/data/Testdata.xlsx">testdata</a>, som vi har brugt i det foregående.</li>
+<li>Prøv at ændre på værdien af <span class="math inline">\(k\)</span> (<span class="math inline">\(k=1, 2, 3, 4, 5\)</span>) og se om du i Orange kan genskabe resultaterne fra opgave 6.</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Det er også muligt at bruge <em>kNN</em> uden selv at udvælge features. I stedet kan man bruge billederne fra tabellen i opgave 2 direkte. Se her hvordan man gør det:</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/RsOu1pvqTFk" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 8: kNN i Orange baseret på billeder
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Find selv på en værdi som du gerne vil prædiktere ud fra billeder.</li>
+<li>Tag billeder som kan bruges som træningsdata og opbyg en model, som det er vist i videoen ovenfor.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="videre-overvejelser" class="level3">
+<h3 class="anchored" data-anchor-id="videre-overvejelser">Videre overvejelser</h3>
+<p>Der er flere ting, man kunne overveje at arbejde videre med. For eksempel kunne man sagtens forestille sig, at det kunne give mening med mere end to features. Afstandsformlen i (<a href="#eq-dist" class="quarto-xref">1</a>) kan faktisk sagtens udvides til flere dimensioner end to. Man finder eksempelvis afstanden mellem to punkter <span class="math inline">\((x_1,y_1,z_1)\)</span> og <span class="math inline">\((x_2,y_2,z_2)\)</span> i et tredimentionelt koordinatsystem på denne måde: <span class="math display">\[
+d = \sqrt{(x_2-x_1)^2+(y_2-y_1)^2+(z_2-z_1)^2}
+\]</span> Og det er nok ikke svært at forestille sig, at man kan udvide denne formel yderligere. Det betyder, at man stadig kan bruge <span class="math inline">\(k\)</span> nærmeste naboer som metode i det tilfælde, hvor man har mere end to features.</p>
+<p>En anden ting at overveje er den skala, vi måler features på. Vi har for eksempel valgt at måle i <span class="math inline">\(cm^2\)</span> og i <span class="math inline">\(cm\)</span>. Men hvad hvis vi havde målt i <span class="math inline">\(m^2\)</span> og i <span class="math inline">\(m\)</span>? Det er faktisk ikke helt ligegyldigt hvilken skala, man bruger, og derfor vælger man som regel også at <em>skalere</em> alle ens data, så de kommer på en sammenlignelig skala. Det kan du læse meget mere om i vores materiale om <a href="../materialer/afstande/feature_scaling.html">feature-skalering</a>.</p>
+
+
+</section>
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/aimat\.dk");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

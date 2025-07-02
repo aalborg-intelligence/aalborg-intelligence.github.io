@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Et andengradspolynomium kan have enten ingen, én eller to rødder. I skal her lære om, hvordan man kan bruge kunstig intelligens til at bestemme antallet af rødder i et andengradspolynomium.">
+
+<title>AI og rødder i andengradspolynomier – AI MAT - matematikken bag magien</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-5f396f0d7eb5b5756f9d659d452ebaa5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-Y219BCPS45"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+ 
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'analytics_storage': 'denied'
+  });
+gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="floating nav-fixed slimcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../undervisningsforlob/index.html"> 
+<span class="menu-text">Undervisningsforløb</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../materialer/index.html"> 
+<span class="menu-text">Materialer</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../sro/index.html"> 
+<span class="menu-text">SRO</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../srp/index.html"> 
+<span class="menu-text">SRP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../apps/index.html"> 
+<span class="menu-text">Apps</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../referencer/index.html"> 
+<span class="menu-text">Referencer</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">Om os</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.youtube.com/@ai-mat"> 
+<span class="menu-text"><img src="../logo/YouTube/youtube-color-darkblue-icon.svg" style="height:2em"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indhold</h2>
+   
+  <ul>
+  <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
+  <li><a href="#andengradspolynomier-og-rødder" id="toc-andengradspolynomier-og-rødder" class="nav-link" data-scroll-target="#andengradspolynomier-og-rødder">Andengradspolynomier og rødder</a></li>
+  <li><a href="#træningsdata" id="toc-træningsdata" class="nav-link" data-scroll-target="#træningsdata">Træningsdata</a></li>
+  <li><a href="#træning-af-kunstig-intelligens" id="toc-træning-af-kunstig-intelligens" class="nav-link" data-scroll-target="#træning-af-kunstig-intelligens">Træning af kunstig intelligens</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">AI og rødder i andengradspolynomier</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">B-niveau</div>
+    <div class="quarto-category">Kort</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Forudsætninger og tidsforbrug
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Forløbet kræver kendskab til:</p>
+<ul>
+<li>Rette linjer.</li>
+<li>Andengradspolynomier og rødder.</li>
+</ul>
+<p><strong>Tidsforbrug:</strong> Ca. 90 minutter.</p>
+<p>Vi anbefaler, at I i dette forløb arbejder i grupper på 3-4 elever.</p>
+</div>
+</div>
+</div>
+<section id="formål" class="level3 purpose">
+<h3 class="anchored" data-anchor-id="formål">Formål</h3>
+<p>Et andengradspolynomium kan have enten ingen, én eller to rødder. Vi vil her undersøge,om man mon kan bruge kunstig intelligens til at bestemme antallet af rødder i et andengradspolynomium.</p>
+<p>Formålet er dog <em>ikke</em> at bruge eksisterende AI metoder til at bestemme antallet af rødder, men derimod at I selv får kendskab til, hvordan sådan nogle metoder fungerer. I skal altså lære lidt om nogle af de principper, der ligger bag diverse AI algoritmer.</p>
+</section>
+<section id="andengradspolynomier-og-rødder" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="andengradspolynomier-og-rødder">Andengradspolynomier og rødder</h2>
+<p>Lad os lige starte med at minde om, at et andengradspolynomium er en funktion med en forskrift på formen <span class="math display">\[
+f(x)=ax^2 + bx + c, \quad a \neq 0
+\]</span> Grafen for et andengradspolynomium kaldes som bekendt for en <em>parabel</em>. I <a href="#fig-antal_roedder" class="quarto-xref">figur&nbsp;1</a> ses tre eksempler på sådanne parabler.</p>
+<div id="fig-antal_roedder" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-antal_roedder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="polynomium_filer/antal_roedder.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-antal_roedder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;1: Graferne for tre forskellige andengradspolynomier.
+</figcaption>
+</figure>
+</div>
+<p>Hvis vi løser andengradsligningen <span class="math display">\[
+f(x)=ax^2 + bx + c=0
+\]</span> finder vi andengradspolynomiets rødder. Men at løse <span class="math inline">\(f(x)=0\)</span>, svarer netop til at bestemme, hvor den tilhørende parabel skærer <span class="math inline">\(x\)</span>-aksen. I <a href="#fig-antal_roedder" class="quarto-xref">figur&nbsp;1</a> kan vi se, at den grønne parabel skærer <span class="math inline">\(x\)</span>-aksen to steder. Det vil sige, at det tilhørende andengradspolynomium har to rødder. Den røde parabel skærer <span class="math inline">\(x\)</span>-aksen ét sted – det tilhørende andengradspolynomium har altså én rod. Endelig kan vi se, at den blå parabel slet ikke skærer <span class="math inline">\(x\)</span>-aksen, og det tilhørende andengradspolynomium har derfor ingen rødder.</p>
+<p>Du husker nok, hvordan man bestemmer antallet af rødder i et andengradspolynomium. Vi har brug for diskriminanten <span class="math inline">\(d\)</span>:</p>
+<p><span id="eq-d"><span class="math display">\[
+d = b^2-4ac
+\tag{1}\]</span></span></p>
+<p>Og der gælder så, at <span class="math display">\[
+\begin{aligned}
+&amp;d&lt;0: \quad f \text{ har ingen rødder} \\
+&amp;d=0: \quad f \text{ har én rod} \\
+&amp;d&gt;0: \quad f \text{ har to rødder} \\
+\end{aligned}
+\]</span></p>
+<p>Idéen er nu at undersøge, om vi kan bruge kunstig intelligens til at afgøre<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, om et andengradspolynomium overhovedet har nogle rødder alene ude fra de tre koefficienter <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span> og <span class="math inline">\(c\)</span> – og helt uden at kende noget til diskriminantformlen i (<a href="#eq-d" class="quarto-xref">1</a>)!</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Det er klart, at der er intet nyt under solen her. Vi kan jo bare selv beregne diskriminanten og svare på spørgsmålet. Men formålet er her at lære lidt om, hvad det vil sige at bruge kunstig intelligens i et tilfælde, hvor vi allerede selv kender svaret. Desuden findes der ingen lukkede løsningsformler for at bestemme rødder i et polynomium, så snart graden af polynomiet er <span class="math inline">\(5\)</span> eller derover. Så idéen kan generaliseres, og så er den måske slet ikke så tosset endda!</p></div></div><p>Inden vi går i gang, vil vi starte med at indse, at i stedet for at løse ligningen</p>
+<p><span id="eq-andengradsligning"><span class="math display">\[
+A x^2 + Bx + C = 0, \quad \quad A \neq 0
+\tag{2}\]</span></span></p>
+<p>(hvis du undrer dig, så er det med vilje, at vi lige nu bruger store bogstaver til koefficienterne), så kan vi lige så godt løse en ligning på formen</p>
+<p><span class="math display">\[
+x^2 + bx +c =0
+\]</span> hvor altså <span class="math inline">\(a=1\)</span>. Det virker måske som en forsimpling, men da vi i (<a href="#eq-andengradsligning" class="quarto-xref">2</a>) har antaget, at <span class="math inline">\(A \neq 0,\)</span> så kan vi dividere igennem med <span class="math inline">\(A\)</span> og få</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{A}{A} x^2 + \frac{B}{A} x + \frac{C}{A} &amp;= \frac{0}{A} \quad \Leftrightarrow \\
+x^2 + \frac{B}{A} x + \frac{C}{A} &amp;= 0.
+\end{aligned}
+\]</span></p>
+<p>Det betyder, at når vi skal bestemme rødder i andengradspolynomier, så er det tilstrækkeligt, at betragte andengradspolynomier med en forskrift på formen</p>
+<p><span class="math display">\[
+f(x)=x^2+bx+c,
+\]</span> hvor <span class="math inline">\(b=B/A\)</span> og <span class="math inline">\(c=C/A\)</span>. Man kan altså bare tage sit oprindelige andengradspolynomium <span class="math inline">\(g(x)=Ax^2+Bx+C\)</span> og dividerer igennem med <span class="math inline">\(A\)</span>. Lad os illustrere det med et eksempel.</p>
+<div id="exm-a1" class="theorem example page-columns page-full">
+<p><span class="theorem-title"><strong>Eksempel 1</strong></span> Betragt andengradspolynomiet med forskriften</p>
+<p><span class="math display">\[
+g(x)=-4x^2+8x+12
+\]</span> Her har vi <span class="math inline">\(A=-4, B=8\)</span> og <span class="math inline">\(C=12\)</span>. Løser vi ligningen <span class="math inline">\(g(x)=0\)</span>, finder vi ud af, at <span class="math inline">\(g\)</span> har to rødder nemlig <span class="math inline">\(-1\)</span> og <span class="math inline">\(3\)</span>. Dividerer vi forskriften for <span class="math inline">\(g\)</span> igennem med <span class="math inline">\(A=-4\)</span> fås et nyt andengradspolynomium <span class="math inline">\(f\)</span> med forskrift</p>
+<p><span class="math display">\[
+f(x)=x^2-2x-3
+\]</span> Her er koefficienterne <span class="math inline">\(a=1, b=-2\)</span> og <span class="math inline">\(c=-3\)</span>. Men <span class="math inline">\(f\)</span> har præcis samme rødder som <span class="math inline">\(g\)</span> – nemlig <span class="math inline">\(-1\)</span> og <span class="math inline">\(3\)</span>. Dette ses også illustreret i <a href="#fig-samme-roedder" class="quarto-xref">figur&nbsp;2</a>, hvor grafen for <span class="math inline">\(g\)</span> og <span class="math inline">\(f\)</span> begge skærer <span class="math inline">\(x\)</span>-aksen i <span class="math inline">\(-1\)</span> og <span class="math inline">\(3\)</span>.</p>
+<div id="fig-samme-roedder" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-samme-roedder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="polynomium_filer/samme-roedder.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-samme-roedder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;2: Grafen for <span class="math inline">\(g(x)=-4x^2+8x+12\)</span> (den blå) og <span class="math inline">\(f(x)=x^2-2x-3\)</span> (den grønne), som begge skærer <span class="math inline">\(x\)</span>-aksen samme sted. Det vil sige, at <span class="math inline">\(g\)</span> og <span class="math inline">\(f\)</span> har de samme rødder. I dette tilfælde <span class="math inline">\(-1\)</span> og <span class="math inline">\(3\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="træningsdata" class="level2">
+<h2 class="anchored" data-anchor-id="træningsdata">Træningsdata</h2>
+<p>I dette eksempel vil vi nøjes med at se på, om vi kan bruge en metode fra kunstig intelligens, så vi forhåbentlig kan få svar på, om et givent andengradspolynomium enten har <em>ingen</em> eller <em>en eller to</em> rødder. Vi vil altså gerne finde en metode, som for en given parabel kan svare på, om parablen skærer <span class="math inline">\(x\)</span>-aksen eller ej (og altså ikke hvor mange gange den eventuelt skærer <span class="math inline">\(x\)</span>-aksen).</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 1: Rødder eller ej?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Overvej følgende:</p>
+<ul>
+<li>Hvordan laver man et andengradspolynomium, der har én eller to rødder?</li>
+<li>Hvordan laver man et andengradspolynomium, som ingen rødder har?</li>
+</ul>
+</div>
+</div>
+</div>
+<p>For at bruge kunstig intelligens skal vi have lavet en masse eksempler på forskellige andengradspolynomier (det vil her sige med forskellige værdier af <span class="math inline">\(b\)</span> og <span class="math inline">\(c\)</span>) samtidig med, at vi også finder ud af, om det tilhørende andengradspolynomium har rødder eller ej. Den værdi, der angiver om et polynomium har rødder eller ej, kalder man for en <strong>targetværdi</strong>. Man kunne for eksempel gøre det ved at sige, at hvis et andengradspolynomium har én eller to rødder, så sætter vi targetværdien til <span class="math inline">\(1\)</span>, og hvis et andengradspolynomium ikke har nogle rødder, så sætter vi targetværdien til <span class="math inline">\(-1\)</span>. Tænk på det som en lille label du sætter på hvert eksempel, hvor du fortæller, hvad det rigtige svar er – <em>“det er altså det her, jeg gerne vil have, at du lærer!”</em>. Samlet set kalder man de forskellige eksempler inklusiv targetværdien for <strong>træningsdata</strong>.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 2: Træningsdata
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><strong>Alle</strong> i gruppen skal nu:</p>
+<ul>
+<li>Finde et andengradspolynomium som ikke har nogle rødder (husk at <span class="math inline">\(a=1\)</span>). Notér din værdi af <span class="math inline">\(b\)</span> og <span class="math inline">\(c\)</span> og sæt her targetværdien <span class="math inline">\(t\)</span> til <span class="math inline">\(-1\)</span>.</li>
+<li>Finde et andengradspolynomium som har én eller to rødder (husk at <span class="math inline">\(a=1\)</span>). Notér din værdi af <span class="math inline">\(b\)</span> og <span class="math inline">\(c\)</span> og sæt her targetværdien <span class="math inline">\(t\)</span> til <span class="math inline">\(1\)</span>.</li>
+</ul>
+<p>Når alle har gjort det, skal I:</p>
+<ul>
+<li>Indsætte jeres forskellige værdier for <span class="math inline">\(b, c\)</span> og <span class="math inline">\(t\)</span> i et regneark, som er opbygget på denne måde:</li>
+</ul>
+<p><img src="polynomium_filer/regneark.png" class="img-fluid"></p>
+<p>Disse data er nu præcis det, man kalder for <strong>træningsdata</strong>.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 3: Træningsdata, fortsat
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>I skal nu:</p>
+<ul>
+<li>Indtegn jeres værdier af <span class="math inline">\(b\)</span> og <span class="math inline">\(c\)</span> i et koordinatsystem, hvor værdien af <span class="math inline">\(b\)</span> er på <span class="math inline">\(x\)</span>-aksen, og værdien af <span class="math inline">\(c\)</span> er på <span class="math inline">\(y\)</span>-aksen. Hvis <span class="math inline">\((b,c)\)</span>-punktet svarer til et andegradspolynomium, som har rødder (det vil sige, at <span class="math inline">\(t=1\)</span>), farves punktet rødt og ellers farves det blåt (det vil sige, at <span class="math inline">\(t=-1\)</span>). I videoen herunder er det vist, hvordan man gør i GeoGebra:</li>
+</ul>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/xdkEqfM1nsQ?si=wlVqH7Wnnc8J3Ra9" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+</div>
+</div>
+</div>
+</section>
+<section id="træning-af-kunstig-intelligens" class="level2">
+<h2 class="anchored" data-anchor-id="træning-af-kunstig-intelligens">Træning af kunstig intelligens</h2>
+<p>En simpel metode inden for kunstig intelligens er at prøve at bestemme en ret linje, som kan bruges til at adskille de røde punkter fra de blå punkter i det punktplot, som I har lavet i opgave 3.</p>
+<p>Hvis man skal have en computer til at gøre det, så vil man typisk starte med en hel tilfældig ret linje med en ligning på formen</p>
+<p><span class="math display">\[y=a \cdot x+b\]</span></p>
+<p>og så prøve at opdatere hældningen <span class="math inline">\(a\)</span> og skæring med <span class="math inline">\(y\)</span>-aksen <span class="math inline">\(b\)</span>, sådan at linjen bliver bedre og bedre til at adskille de røde punkter fra de blå.</p>
+<p>Nu ser vi jo på andengradspolynomier med en forskrift på formen <span class="math inline">\(f(x)=x^2+bx+c\)</span>. Det vil sige, at <span class="math inline">\(b\)</span> allerede har en betydning. Derfor er det ikke så hensigtsmæssigt at bruge <span class="math inline">\(b\)</span> igen i ligningen for en ret linje. Derfor vælger vi her at beskrive den rette linje med en ligning på formen</p>
+<p><span class="math display">\[
+y = w_1 \cdot x + w_0
+\]</span> Det vil altså sige, at <span class="math inline">\(w_1\)</span> er linjens hældning, og <span class="math inline">\(w_0\)</span> er linjens skæring med <span class="math inline">\(y\)</span>-aksen.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 4: Bestemmelse af en linje som kan adskille de røde punkter fra de blå
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>I inputfeltet i GeoGebra skal du taste: <code>y=w1*x+w0</code>.</li>
+<li>Når GeoGebra spørger, om du vil oprette skydere for <code>w0</code> og <code>w1</code>, svarer du "Opret skydere".</li>
+<li>Træk i skyderne for <code>w0</code> og <code>w1</code> og prøv om du kan finde en ret linje, som kan adskille de røde punkter fra de blå.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 5: Flere træningsdata
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Afgør om følgende andengradspolynomier har rødder og tilføj dem til dit træningsdata (husk ingen rødder svarer til at <span class="math inline">\(t=-1\)</span> og det tilhørende punkt farves blåt, mens én eller to rødder svarer til <span class="math inline">\(t=1\)</span> og punktet farves rødt):</li>
+</ul>
+<p><span class="math display">\[
+\begin{aligned}
+f_1(x) &amp;= x^2 + 10x + 26 \\
+f_2(x) &amp;= x^2 + 10x + 24\\
+f_3(x) &amp;= x^2 + 5x + 6\\
+f_4(x) &amp;= x^2 + 5x + 7 \\
+f_5(x) &amp;= x^2 + 2x + 1\\
+f_6(x) &amp;= x^2 + 2x + 2 \\
+\end{aligned}
+\]</span></p>
+<ul>
+<li>Kan det lade sig gøre at adskille de to grupper med den rette linje, du fandt i opgave 4?</li>
+<li>Hvis ikke kan du så bestemme en ny ret linje, som kan adskille de røde punkter fra de blå?</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Som du netop har opdaget, er det en umulig opgave, vi har givet os selv! Vi kan ikke finde en ret linje, som i alle tilfælde kan bruges til at adskille de røde punkter fra de blå. <span class="emoji" data-emoji="confused">😕</span></p>
+<p>Lad os se på hvorfor. Som tidligere nævnt har vores linje en ligning på formen</p>
+<p><span class="math display">\[
+y=w_1 \cdot x + w_0
+\]</span></p>
+<p>Men nu har vi <span class="math inline">\(b\)</span>-værdier ud af <span class="math inline">\(x\)</span>-aksen og <span class="math inline">\(c\)</span>-værdier op af <span class="math inline">\(y\)</span>-aksen, så i virkeligheden ser ligningen sådan her ud:</p>
+<p><span id="eq-ligning_bc"><span class="math display">\[
+c=w_1 \cdot b + w_0
+\tag{3}\]</span></span></p>
+<p>hvor <span class="math inline">\(b\)</span> og <span class="math inline">\(c\)</span> jo svarer til koefficinter i forskellige andengradspolymonier med forskrift <span class="math inline">\(f(x)=x^2+bx+c\)</span>.</p>
+<p>Vi husker nu på formlen for diskriminanten <span class="math inline">\(d=b^2-4ac=b^2-4c\)</span>, da <span class="math inline">\(a=1\)</span> i vores eksempel. Skillelinjen for om andengradspolynomiet har ingen eller flere rødder, går netop ved <span class="math inline">\(d=0\)</span>. Det vil sige</p>
+<p><span id="eq-d1"><span class="math display">\[
+b^2-4c =0
+\tag{4}\]</span></span></p>
+<p>som kan omskrives til</p>
+<p><span id="eq-d2"><span class="math display">\[
+c = \frac{1}{4}b^2
+\tag{5}\]</span></span></p>
+<p>Men vi kan ikke finde nogle værdier af <span class="math inline">\(w_0\)</span> og <span class="math inline">\(w_1\)</span>, så udtrykket i (<a href="#eq-ligning_bc" class="quarto-xref">3</a>) kommer til at svare til udtrykket i (<a href="#eq-d2" class="quarto-xref">5</a>). Det er fordi, at i (<a href="#eq-ligning_bc" class="quarto-xref">3</a>) indgår der kun et <span class="math inline">\(b\)</span>, mens der i (<a href="#eq-d2" class="quarto-xref">5</a>) indgår et <span class="math inline">\(b^2\)</span>. Denne observation giver os imidlertid også en løsning på vores problem. I stedet for at lade træningsdata bestå af <span class="math inline">\(b\)</span>- og <span class="math inline">\(c\)</span>-værdier, så vil vi i stedet lade træningsdata bestå af <span class="math inline">\(b^2\)</span>- og <span class="math inline">\(c\)</span>-værdier! Det vil sige, at vi ud af <span class="math inline">\(x\)</span>-aksen vil afsætte <span class="math inline">\(b^2\)</span> og op af <span class="math inline">\(y\)</span>-aksen, vil vi afsætte <span class="math inline">\(c.\)</span></p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 6: Transformerede træningsdata
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Brug dit regneark fra tidligere og udregn <span class="math inline">\(b^2\)</span>.</p></li>
+<li><p>Indtegn dine værdier af <span class="math inline">\(b^2\)</span> og <span class="math inline">\(c\)</span> i et nyt koordinatsystem, hvor værdien af <span class="math inline">\(b^2\)</span> er på <span class="math inline">\(x\)</span>-aksen, og værdien af <span class="math inline">\(c\)</span> er på <span class="math inline">\(y\)</span>-aksen. Hvis <span class="math inline">\((b^2,c)\)</span>-punktet svarer til et andegradspolynomium, som har rødder, farves punktet rødt og ellers farves det blåt.</p></li>
+<li><p>Hvilken linje kan du vælge til at adskille de to grupper?</p></li>
+</ul>
+</div>
+</div>
+</div>
+<p>Idéen med at prøve at adskille to grupper af punkter med en ret linje bruges blandt andet i den AI-metode, som kaldes for <a href="../materialer/perceptron/perceptron.html">perceptroner</a>. Metoden kan bruges, når man gerne vil kunne adskille to grupper af punkter fra hinanden baseret på en række forskellige værdier – disse værdier kalder man for <strong>features</strong>. Du kender måske kandidattests, hvor man på baggrund af svarene fra en række spørgsmål gerne vil kunne forudsige, om en person vil stemme på rød eller blå blok til det næste valg. Det kunne man for eksempel bruge en perceptron til at hjælpe med at afgøre, og det kan du læse meget mere om <a href="../materialer/perceptron/perceptron.html#sec-kandidattest">her</a>.</p>
+<p>Hvis du vil prøve at bruge den metode på dine data om andengradspolynomier, kan du gøre det <a href="https://apps01.math.aau.dk/adaline/">her</a>.</p>
+
+
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/aimat\.dk");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
