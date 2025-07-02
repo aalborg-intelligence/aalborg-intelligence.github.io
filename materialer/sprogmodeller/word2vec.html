@@ -272,7 +272,7 @@ window.onload = function() {
   }
 </script>
 
-<div id="fig-vektorer" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center" width="80%">
+<div id="fig-vektorer" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" width="80%" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-vektorer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div id="ggbApplet_vektorer">
@@ -580,7 +580,11 @@ Egenskaber ved Softmax
 <div class="callout-body-container callout-body">
 <p>Vi viser nu de tre egenskaber ved Softmax.</p>
 <p><strong>Egenskab 1: <span class="math inline">\(0 &lt; z_i &lt; 1\)</span></strong></p>
-<p>Husk på at <span id="eq-softmax"><span class="math display">\[z_i=\frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \tag{3}\]</span></span> Da eksponentialfunktionen kun kan antage positive værdier, er både tæller og nævner positive, så <span class="math inline">\(z_i&gt;0\)</span>. Desuden er <span class="math display">\[\mathrm{e}^{y_i} &lt; \mathrm{e}^{y_1} + \dotsm +\mathrm{e}^{y_i} + \dotsm + \mathrm{e}^{y_V}\]</span> Derfor er <span class="math display">\[z_i=\frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} &lt; \frac{\mathrm{e}^{y_1} + \dotsm  + \mathrm{e}^{y_V}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} = 1\]</span></p>
+<p>Husk på, at</p>
+<p><span id="eq-softmax"><span class="math display">\[
+z_i=\frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}
+\tag{3}\]</span></span></p>
+<p>Da eksponentialfunktionen kun kan antage positive værdier, er både tæller og nævner positive, så <span class="math inline">\(z_i&gt;0\)</span>. Desuden er <span class="math display">\[\mathrm{e}^{y_i} &lt; \mathrm{e}^{y_1} + \dotsm +\mathrm{e}^{y_i} + \dotsm + \mathrm{e}^{y_V}\]</span> Derfor er <span class="math display">\[z_i=\frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} &lt; \frac{\mathrm{e}^{y_1} + \dotsm  + \mathrm{e}^{y_V}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} = 1\]</span></p>
 <p>Alt i alt har vi altså, at</p>
 <p><span class="math display">\[
 0 &lt; z_i &lt; 1
@@ -649,14 +653,18 @@ Tabel&nbsp;2: Eksempel på datatabel med træningsdata.
 </figure>
 </div>
 <p>Bemærk, at hvert inputord godt kan optræde flere gange i ovenstående tabel, som vi også så det i <a href="#tbl-data" class="quarto-xref">tabel&nbsp;1</a>.</p>
-<p>Vi ser nu på <span class="math inline">\(j\)</span>te række. Sandsynligheden for, at <span class="math inline">\(w_j\)</span> har netop <span class="math inline">\(c_j\)</span> som kontekst, er <span class="math inline">\(P(c_j\mid w_j)\)</span>. Vi vil nu finde den samlede sandsynlighed for, at inputordene <span class="math inline">\(w_1,\ldots,w_M\)</span> i vores datasæt har henholdsvis <span class="math inline">\(c_1,\ldots,c_M\)</span> som kontekstord. Den kalder vi <span class="math inline">\(P(\text{data})\)</span>. Lad os antage, at alle vores par af input- og kontekstord er uafhængige af hinanden<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Så får vi den samlede sandsynlighed ved at gange de enkelte sandsynligheder sammen. <span id="eq-Pdata"><span class="math display">\[P(\text{data})  = P(c_1\mid w_1) \cdot P(c_2\mid w_2) \dotsm P(c_M\mid w_M) \tag{4}\]</span></span> Hvis vores model fra (<a href="#eq-sshmodel" class="quarto-xref">2</a>) passer godt til datasættet, skulle denne sandsynlighed gerne være høj.</p>
-<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;I praksis er ordpar, der forekommer i nærheden af hinanden ikke helt uafhængige. Hvis for eksempel parret <span class="math inline">\((\text{hund},\text{madskål})\)</span> forekommer, er det mere sandsynligt, at <span class="math inline">\((\text{hund}, \text{fodre})\)</span> forekommer i nærheden, end hvis der havde stået <span class="math inline">\((\text{hund},\text{hundesnor})\)</span>.</p></div><div id="fn3"><p><sup>3</sup>&nbsp;For eksempel er det meget nemmere at differentiere summer end produkt!</p></div></div><p>Da summer er nemmere at regne på end produkter<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, vælger vi at tage den naturlige logaritme på begge sider af (<a href="#eq-Pdata" class="quarto-xref">4</a>). Ved at bruge logaritmeregnereglen <span class="math inline">\(\ln(ab) = \ln(a) + \ln(b)\)</span> får vi, at <span class="math display">\[
+<p>Vi ser nu på <span class="math inline">\(j\)</span>te række. Sandsynligheden for, at <span class="math inline">\(w_j\)</span> har netop <span class="math inline">\(c_j\)</span> som kontekst, er <span class="math inline">\(P(c_j\mid w_j)\)</span>. Vi vil nu finde den samlede sandsynlighed for, at inputordene <span class="math inline">\(w_1,\ldots,w_M\)</span> i vores datasæt har henholdsvis <span class="math inline">\(c_1,\ldots,c_M\)</span> som kontekstord. Den kalder vi <span class="math inline">\(P(\text{data})\)</span>. Lad os antage, at alle vores par af input- og kontekstord er uafhængige af hinanden<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Så får vi den samlede sandsynlighed ved at gange de enkelte sandsynligheder sammen:</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;I praksis er ordpar, der forekommer i nærheden af hinanden ikke helt uafhængige. Hvis for eksempel parret <span class="math inline">\((\text{hund},\text{madskål})\)</span> forekommer, er det mere sandsynligt, at <span class="math inline">\((\text{hund}, \text{fodre})\)</span> forekommer i nærheden, end hvis der havde stået <span class="math inline">\((\text{hund},\text{hundesnor})\)</span>.</p></div></div><p><span id="eq-Pdata"><span class="math display">\[
+P(\text{data})  = P(c_1\mid w_1) \cdot P(c_2\mid w_2) \dotsm P(c_M\mid w_M)
+\tag{4}\]</span></span></p>
+<p>Hvis vores model fra (<a href="#eq-sshmodel" class="quarto-xref">2</a>) passer godt til datasættet, skulle denne sandsynlighed gerne være høj.</p>
+<p>Da summer er nemmere at regne på end produkter<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, vælger vi at tage den naturlige logaritme på begge sider af (<a href="#eq-Pdata" class="quarto-xref">4</a>). Ved at bruge logaritmeregnereglen <span class="math inline">\(\ln(ab) = \ln(a) + \ln(b)\)</span> får vi, at <span class="math display">\[
 \begin{aligned}
 \ln (P(\text{data})) &amp;= \ln\big(P(c_1\mid w_1) \cdot P(c_2\mid w_2) \dotsm P(c_M\mid w_M)\big)\\
 &amp;= \ln(P(c_1\mid w_1)) + \ln(P(c_2\mid w_2)) + \dotsm + \ln(P(c_M\mid w_m))
 \end{aligned}
 \]</span></p>
-<p>Da den naturlige logaritme er en voksende funktion, svarer store værdier af <span class="math inline">\(P(\text{data})\)</span> til store værdier af <span class="math inline">\(\ln (P(\text{data}))\)</span>, som igen svarer til små værdier af <span class="math inline">\(-\ln(P(\text{data}))\)</span>. Dette er illustreret på <a href="#fig-natural_ln" class="quarto-xref">figur&nbsp;4</a>:</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;For eksempel er det meget nemmere at differentiere summer end produkt!</p></div></div><p>Da den naturlige logaritme er en voksende funktion, svarer store værdier af <span class="math inline">\(P(\text{data})\)</span> til store værdier af <span class="math inline">\(\ln (P(\text{data}))\)</span>, som igen svarer til små værdier af <span class="math inline">\(-\ln(P(\text{data}))\)</span>. Dette er illustreret på <a href="#fig-natural_ln" class="quarto-xref">figur&nbsp;4</a>:</p>
 <div id="fig-natural_ln" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-natural_ln-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
