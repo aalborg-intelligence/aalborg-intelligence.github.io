@@ -1,5 +1,5 @@
 ## Data
-datadir <- here::here("undervisningsforloeb/neurale_net_langt_forloeb/data")
+datadir <- here::here("undervisningsforlob/neurale_net_langt_forloeb/data")
 dat <- data.frame(x=c(25,40,60),t=c(0,0,1))
 
 w1_grid <- seq(-1,1.5,length.out=400)
