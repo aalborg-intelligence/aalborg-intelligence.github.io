@@ -145,27 +145,27 @@ stort tilgængeligt tekstkorpus. Vi kalder dette korpus for vores
 Ved konteksten til et ord vil vi her forstå de ord, der står umiddelbart
 før og efter ordet. Mere præcist vælger vi et vindue, lad os sige på fem
 ord, hvor ordet i midten er det, vi gerne vil kende betydningen af. Vi
-vil kalde dette for *inputordet*. De to første ord og de to sidste ord i
-vinduet er inputordets *kontekstord*. Se for eksempel på sætningen
+vil kalde dette for *fokusordet*. De to første ord og de to sidste ord i
+vinduet er fokusordets *kontekstord*. Se for eksempel på sætningen
 
 ::: {.llm_saetninger}
 [ Den sorte **hund** logrer med ]{.boxed_inline} halen 
 :::
 
 Boksen angiver vores 5-ords vindue. Det midterste ord \"hund\" er vores
-inputord, ordene \"Den\", \"sorte\", \"logrer\" og \"med\" er
+fokusord, ordene \"Den\", \"sorte\", \"logrer\" og \"med\" er
 kontekstord til \"hund\".
 
 Vi starter med at placere vinduet omkring det første ord i vores datasæt
 og noterer dets fire kontekstord (hvoraf de to vil være blanke). Vi
 flytter nu vinduet mod højre et ord ad gangen, og hver gang noterer vi
-inputordet og dets fire kontekstord. Vi gør det for al teksten i vores
+fokusordet og dets fire kontekstord. Vi gør det for al teksten i vores
 træningsdata og samler informationen i et datasæt som vist i
-@tbl-data. Hver række i tabellen består af et inputord og et af dets kontekstord.[^4]
+@tbl-data. Hver række i tabellen består af et fokusord og et af dets kontekstord.[^4]
 
 ::: {#tbl-data}
 
-| Input | Kontekst |
+| Fokus | Kontekst |
 |:---:|:---:|
 | $\vdots$ | $\vdots$ |
 |  sorte | |  
@@ -178,7 +178,7 @@ træningsdata og samler informationen i et datasæt som vist i
 |   hund  |    med |
 | $\vdots$ | $\vdots$ |
 
-Par af input- og kontekstord.
+Par af fokus- og kontekstord.
 :::
 
 
@@ -187,31 +187,31 @@ det næste ord i en sætning, har man selvfølgelig kun lov til at bruge de
 ord, der kommer før ordet. Det er dog ikke det, vi er ude på, når vi
 laver Word2Vec. Vi er ude på at forstå, hvordan et ord forholder sig til
 dets kontekst, altså de omkringstående ord. Derfor er der ikke noget
-problem i, at vinduet både indeholder ord før og efter inputordet. 
+problem i, at vinduet både indeholder ord før og efter fokusordet. 
 
 I de næste to afsnit ser vi på,
-hvordan man kan bruge vektorer til at modellere sandsynligheden for, at et inputord $w$ har $c$ som
+hvordan man kan bruge vektorer til at modellere sandsynligheden for, at et fokusord $w$ har $c$ som
 kontekstord. Det vil vi sidenhen
 benytte til at vælge vektorerne, således at sandsynlighederne matcher, hvor hyppigt vi observerer $c$ som kontekstord til $w$  i
 datasættet.
 
-## Input- og kontekstvektorer 
+## Fokus- og kontekstvektorer 
 
 I første omgang vil vi lade hvert ord $w$ være repræsenteret af to
 vektorer, $\vec{v}_{w}$ og $\vec{k}_{w}$, hvor
 $\vec{v}_{w}$ repræsenterer ordet, når det optræder som
-input, mens $\vec{k}_{w}$ repræsenterer ordet, når det
-optræder som kontekst. Ordet \"hund\" vil altså være repræsenteret ved vektoren $\vec{v}_{\text{hund}}$, når det optræder som input og ved vektoren $\vec{k}_{\text{hund}}$, når det optræder som kontekst.
+fokus, mens $\vec{k}_{w}$ repræsenterer ordet, når det
+optræder som kontekst. Ordet \"hund\" vil altså være repræsenteret ved vektoren $\vec{v}_{\text{hund}}$, når det optræder som fokus og ved vektoren $\vec{k}_{\text{hund}}$, når det optræder som kontekst.
 
 
 Betydningen af ordet $w$ afgøres som nævnt af, hvordan
 ordet forholder sig til konteksten. Det vil vi oversætte matematisk til,
-hvordan inputvektoren $\vec{v}_{w}$ forholder sig til kontekstvektorerne
+hvordan fokusvektoren $\vec{v}_{w}$ forholder sig til kontekstvektorerne
 $\vec{k}_{c}$ for diverse kontekstord $c$. Vi vil derfor
 tænke på $\vec{v}_{w}$ som den vektor, der repræsenterer
 betydningen af ordet, og altså den vi er ude på at bestemme.
 
-For at måle hvordan inputvektoren $\vec{v}_{w}$ for ordet $w$
+For at måle hvordan fokusvektoren $\vec{v}_{w}$ for ordet $w$
 forholder sig til kontekstvektoren $\vec{k}_{c}$ for ordet
 $c$, vil vi bruge *skalarproduktet*
 $\vec{v}_{w}\cdot \vec{k}_{c}$. Husk på, at man
@@ -253,7 +253,7 @@ Det overordnede mål er nu:
 
 ::: {.highlight2 }
 
-Vi vil gerne have, at vores input- og kontekstvektorer skal opfylde, at
+Vi vil gerne have, at vores fokus- og kontekstvektorer skal opfylde, at
 hvis $w$ ofte har $c$ som kontekst, så er skalarproduktet
 $\vec{v}_{w}\cdot \vec{k}_{c}$ stort, mens en
 meget negativ værdi af
@@ -305,19 +305,19 @@ har ordet $w$ dermed $c$ som kontekst. Desuden viser
 (@eq-skalar), at lange vektorer tæller mere, både positivt og
 negativt, end korte vektorer. Ord, der er gode til at forudsige
 konteksten udfra, for eksempel \"logre\", der ofte vil forekomme i hunderelaterede kontekster, vil derfor blive repræsenteret med
-lange inputvektorer. Ord som \"og\" eller \"er\", der ikke
-indeholder megen information om konteksten, vil blive repræsenteret med kortere inputvektorer. Altså vil
+lange fokusvektorer. Ord som \"og\" eller \"er\", der ikke
+indeholder megen information om konteksten, vil blive repræsenteret med kortere fokusvektorer. Altså vil
 $|\vec{v}_{\text{logre}}|$ være større end
 $|\vec{v}_{\text{og}}|$ og $|\vec{v}_{\text{er}}|$.
 
 Bemærk også, at hvis to ord ofte optræder i samme kontekst, skal deres
-inputvektorer gerne have nogenlunde samme skalarprodukt med alle
+fokusvektorer gerne have nogenlunde samme skalarprodukt med alle
 kontekstvektorer. Formlen
 (@eq-skalar) viser, at det betyder, at de dels skal have
 nogenlunde samme længde og dels skal have nogenlunde samme vinkel med
 alle kontekstvektorerne. Sidstnævnte kræver, at de selv har nogenlunde samme
 retning. Ord, hvis betydning ligner hinanden, kommer derfor til at svare
-til inputvektorer, hvis længde og retning ligner hinanden.
+til fokusvektorer, hvis længde og retning ligner hinanden.
 
 I praksis bruger vi vektorer af højere dimension end 3. Det er måske
 ikke helt oplagt, hvad man skal forstå ved længden af en vektor eller
@@ -339,10 +339,10 @@ $$
 \vec{k}_{\text{lufte}} =  \begin{pmatrix} 2\\0.5 \end{pmatrix}
 \end{aligned}
 $$
-Vektorerne er vist i @fig-eks1, hvor inputvektorer er lyserøde, og
+Vektorerne er vist i @fig-eks1, hvor fokusvektorer er lyserøde, og
 kontekstvektorer er blå.
 
-![Repræsentanter for vektorerne i eksempel 1. Inputvektorerne er lyserøde, og
+![Repræsentanter for vektorerne i eksempel 1. Fokusvektorerne er lyserøde, og
 kontekstvektorerne er blå.](images/eks1.png){width=80% #fig-eks1}
 
 Vi kan udregne skalarprodukterne
@@ -405,15 +405,15 @@ $$
 
 
 Alligevel er der ikke symmetri mellem de to ord. Når for eksempel
-inputordet er \"logrer\", er det ret sandsynligt, at \"hund\" er et af
-kontekstordene. Inputordet \"hund\" forekommer derimod i mange
+fokusordet er \"logrer\", er det ret sandsynligt, at \"hund\" er et af
+kontekstordene. Fokusordet \"hund\" forekommer derimod i mange
 kontekster, der ikke involverer ordet \"logrer\". Sandsynligheden for
 kontekstordet afhænger derfor af, om det er \"hund\" eller \"logrer\",
-der er input. Hvis vi kun brugte én vektor for hvert ord,
+der er i fokus. Hvis vi kun brugte én vektor for hvert ord,
 $\vec{u}_{\text{hund}}$ og $\vec{u}_{\text{logrer}}$, ville vi få
 samme skalarprodukt
 $\vec{u}_{\text{hund}}\cdot \vec{u}_{\text{logrer}} =  \vec{u}_{\text{logrer}}\cdot \vec{u}_{\text{hund}}$,
-og dermed samme sandsynlighed, uanset hvilket ord der var input.
+og dermed samme sandsynlighed, uanset hvilket ord der var i fokus.
 
 :::
 
@@ -478,7 +478,7 @@ Egenskaberne ved softmax sikrer, at punkt 1. til 3. ovenfor er opfyldt.
 Antag, at vores ordforråd kun består af de tre ord \"hund\", \"pels\" og \"fjer\", og at vi har fundet vektorrepræsentationer for de tre ord.
 
 Antag, at
-    inputvektoren for \"hund\" og kontekstvektorerne for \"fjer\", \"pels\" og
+    fokusvektoren for \"hund\" og kontekstvektorerne for \"fjer\", \"pels\" og
     \"hund\" er givet ved 
     $$
     \begin{aligned}
@@ -560,30 +560,30 @@ Det betyder netop, at $z_i<z_j$.
 Vi mangler stadig at bestemme vektorrepræsentationerne
 $\vec{v}_{w}$ og $\vec{k}_{c}$, så modellen i (@eq-sshmodel) kommer til at passe til virkelig tekst. Her får
 vi brug for det datasæt, som vi lavede ud fra vores træningsdata. Hver
-række i datasættet bestod af et inputord $w$ og et  kontekstord
+række i datasættet bestod af et fokusord $w$ og et  kontekstord
 $c$, som forekom i vores træningsdata. Lad os sige, at der er $M$ rækker i vores træningsdata. Vi betegner data
-i den $j$te række med $(w_j,c_j)$ for
+i den $j$te række med $(w^{(j)},c^{(j)}$ for
 $j=1,\ldots,M$.
 Vores datasæt har altså formen (jævnfør @tbl-data):
 
 
 ::: {#tbl-data2}
-|   Input | Kontekst |    
+|   Fokus | Kontekst |    
 |:---:|:---:|
-| $w_1$ | $c_1$ | 
-| $w_2$ | $c_2$ |   
-| $w_3$ | $c_3$ |  
+| $w^{(1)}$ | $c^{(1)}$ | 
+| $w^{(2)}$ | $c^{(2)}$ |   
+| $w^{(3)}$ | $c^{(3)}$ |  
 | $\vdots$ | $\vdots$ | 
-| $w_j$ | $c_j$ |  
+| $w^{(j)}$ | $c^{(j)}$ |  
 | $\vdots$ | $\vdots$ | 
 
 Eksempel på datatabel med træningsdata.
 :::
 
-Bemærk, at hvert inputord godt kan optræde flere gange i ovenstående tabel, som vi også så det i @tbl-data.
+Bemærk, at hvert fokusord godt kan optræde flere gange i ovenstående tabel, som vi også så det i @tbl-data.
 
-Vi ser nu på $j$te række. Sandsynligheden for, at $w_j$ har netop $c_j$ som kontekst, er $P(c_j\mid w_j)$. Vi vil nu finde den samlede sandsynlighed for, at inputordene $w_1,\ldots,w_M$ i vores datasæt har henholdsvis $c_1,\ldots,c_M$ som kontekstord. Den kalder vi $P(\text{data})$. Lad os antage, at alle vores par af input- og kontekstord er uafhængige af hinanden[^2]. Så får vi den samlede sandsynlighed ved at gange de enkelte sandsynligheder sammen. 
-$$P(\text{data})  = P(c_1\mid w_1) \cdot P(c_2\mid w_2) \dotsm P(c_M\mid w_M)$${#eq-Pdata}
+Vi ser nu på $j$te række. Sandsynligheden for, at $w^{(j)}$ har netop $c^{(j)}$ som kontekst, er $P(c^{(j)}\mid w^{(j)}$. Vi vil nu finde den samlede sandsynlighed for, at fokusordene $w^{(1)},\ldots,w^{(M)}$ i vores datasæt har henholdsvis $c^{(1)},\ldots,c^{(M)}$ som kontekstord. Den kalder vi $P(\text{data})$. Lad os antage, at alle vores par af fokus- og kontekstord er uafhængige af hinanden[^2]. Så får vi den samlede sandsynlighed ved at gange de enkelte sandsynligheder sammen. 
+$$P(\text{data})  = P(c^{(1)}\mid w^{(1)} \cdot P(c^{(2)}\mid w^{(2)} \dotsm P(c^{(M)}\mid w^{(M)}$${#eq-Pdata}
 Hvis vores model fra (@eq-sshmodel) passer godt til datasættet, skulle denne sandsynlighed gerne være høj. 
 
 [^2]: I praksis er ordpar, der forekommer i nærheden af hinanden ikke helt uafhængige. Hvis for eksempel parret $(\text{hund},\text{madskål})$ forekommer, er det mere sandsynligt, at $(\text{hund}, \text{fodre})$ forekommer i nærheden, end hvis der havde stået $(\text{hund},\text{hundesnor})$.
@@ -591,8 +591,8 @@ Hvis vores model fra (@eq-sshmodel) passer godt til datasættet, skulle denne sa
 Da summer er nemmere at regne på end produkter[^5], vælger vi at tage den naturlige logaritme på begge sider af (@eq-Pdata). Ved at bruge logaritmeregnereglen $\ln(ab) = \ln(a) + \ln(b)$ får vi, at
 $$
 \begin{aligned}
-\ln (P(\text{data})) &= \ln\big(P(c_1\mid w_1) \cdot P(c_2\mid w_2) \dotsm P(c_M\mid w_M)\big)\\
-&= \ln(P(c_1\mid w_1)) + \ln(P(c_2\mid w_2)) + \dotsm + \ln(P(c_M\mid w_m)) 
+\ln (P(\text{data})) &= \ln\big(P(c^{(1)}\mid w^{(1)} \cdot P(c^{(2)}\mid w^{(2)} \dotsm P(c^{(M)}\mid w^{(M)} \big)\\
+&= \ln(P(c^{(1)}\mid w^{(1)}) + \ln(P(c^{(2)}\mid w^{(2)}) + \dotsm + \ln(P(c^{(M)}\mid w^{(M)}) 
 \end{aligned}
 $$
 
@@ -606,30 +606,30 @@ Da den naturlige logaritme er en voksende funktion, svarer store værdier af $P(
 Hvis vores model er god, skal 
 $$
 \begin{aligned}
-L&= - \ln(\text{data}) \\ &= -\ln(P(c_1\mid w_1)) - \ln(P(c_2\mid w_2)) - \dotsm - \ln(P(c_M\mid w_m)) 
+L&= - \ln(\text{data}) \\ &= -\ln(P(c^{(1)}\mid w^{(1)}) - \ln(P(c^{(2)}\mid w^{(2)}) - \dotsm - \ln(P(c^{(M)}\mid w^{(M)}) 
 \end{aligned}
 $${#eq-Ldef}
 
 altså gerne være lav[^3]. Vi kalder $L$ for vores *tabsfunktion*. Denne tabsfunktion kaldes også nogle gange for *cross-entropy*.
 
-[^3]: Bemærk, at da $P(c_j\mid w_j)$ er en sandsynlighed, der ligger mellem 0 og 1, er $\ln (P(c_j\mid w_j))$ negativ. Derfor er $-\ln (P(c_j\mid w_j))$ positiv og $L$ er dermed også positiv. Når $L$ gerne skal være lav, betyder det altså, at den skal være så tæt på 0 som muligt. 
+[^3]: Bemærk, at da $P(c^{(j)}\mid w^{(j)}$ er en sandsynlighed, der ligger mellem 0 og 1, er $\ln (P(c^{(j)}\mid w^{(j)})$ negativ. Derfor er $-\ln (P(c^{(j)}\mid w^{(j)})$ positiv og $L$ er dermed også positiv. Når $L$ gerne skal være lav, betyder det altså, at den skal være så tæt på 0 som muligt. 
 
 Vi kan indsætte vores udtryk for sandsynlighederne fra (@eq-sshmodel) i (@eq-Ldef) og få
 $$
 \begin{aligned}
-L = &-\ln\left(\frac{\mathrm{e}^{\vec{v}_{w_1}\cdot \vec{k}_{c_1}}}{\mathrm{e}^{\vec{v}_{w_1}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w_1}\cdot \vec{k}_{\text{ord}_V}}}\right)
-\\ &- \ln\left(\frac{\mathrm{e}^{\vec{v}_{w_2}\cdot \vec{k}_{c_2}}}{\mathrm{e}^{\vec{v}_{w_2}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w_2}\cdot \vec{k}_{\text{ord}_V}}}\right)
-- \dotsm \\ &- \ln\left(\frac{\mathrm{e}^{\vec{v}_{w_M}\cdot \vec{k}_{c_M}}}{\mathrm{e}^{\vec{v}_{w_M}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w_M}\cdot \vec{k}_{\text{ord}_V}}}\right) 
+L = &-\ln\left(\frac{\mathrm{e}^{\vec{v}_{w^{(1)}}\cdot \vec{k}_{c^{(1)}}}}{\mathrm{e}^{\vec{v}_{w^{(1)}}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w^{(1)}}\cdot \vec{k}_{\text{ord}_V}}}\right)
+\\ &- \ln\left(\frac{\mathrm{e}^{\vec{v}_{w^{(2)}}\cdot \vec{k}_{c^{(2)}}}}{\mathrm{e}^{\vec{v}_{w^{(2)}}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w^{(2)}}\cdot \vec{k}_{\text{ord}_V}}}\right)
+- \dotsm \\ &- \ln\left(\frac{\mathrm{e}^{\vec{v}_{w^{(M)}}\cdot \vec{k}_{c^{(M)}}}}{\mathrm{e}^{\vec{v}_{w^{(M)}}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w^{(M)}}\cdot \vec{k}_{\text{ord}_V}}}\right) 
 \end{aligned}
 $${#eq-Lfunktion}
-Bemærk her, at $w_j$ og $c_j$ refererer til henholdsvis input- og kontekstordet i $j$te række i datasættet, mens $\text{ord}_i$ refererer til $i$'te ord i ordforrådet.
+Bemærk her, at $w^{(j)}$ og $c^{(j)}$ refererer til henholdsvis fokus- og kontekstordet i $j$te række i datasættet, mens $\text{ord}_i$ refererer til $i$'te ord i ordforrådet.
 
-Ligning (@eq-Lfunktion) viser, at $L$ afhænger af, hvordan vi har valgt input- og kontekstvektorerne. Vi kan altså betragte $L$ som en funktion af input- og kontekstvektorerne. Mere præcist er $L$ en funktion af alle koordinaterne i disse vektorer. For at få den bedst mulige model for vores træningsdata, ønsker vi at bestemme input- og kontekstvektorerne, således at de minimerer $L$.
+Ligning (@eq-Lfunktion) viser, at $L$ afhænger af, hvordan vi har valgt fokus- og kontekstvektorerne. Vi kan altså betragte $L$ som en funktion af fokus- og kontekstvektorerne. Mere præcist er $L$ en funktion af alle koordinaterne i disse vektorer. For at få den bedst mulige model for vores træningsdata, ønsker vi at bestemme fokus- og kontekstvektorerne, således at de minimerer $L$.
  Hvordan finder man minimum for $L$ i praksis? Det kan man
 for eksempel gøre ved hjælp af [gradientnedstigning](../gradientnedstigning/gradientnedstigning.qmd), som vi ikke vil komme nærmere ind på her.
 
 Der er rigtig mange ord i det danske sprog. For hvert af dem skal vi
-finde både en input- og en kontekstvektor, der hver har $m$ koordinater.
+finde både en fokus- og en kontekstvektor, der hver har $m$ koordinater.
 Alt i alt giver det rigtig mange koordinater, der skal bestemmes.
 Antallet af ord på dansk afhænger lidt af, hvad man forstår ved et ord,
 men 200.000 er et fornuftigt bud. Hvis vi vil repræsentere hver af dem ved to
@@ -639,7 +639,7 @@ store mængder træningsdata til rådighed i form af et tekstkorpus med rigtig m
 
 
 Nu har vi set, hvordan man kan repræsentere et ord $w$ ved en
-inputvektor $\vec{v}_{w}$ og en kontekstvektor
+fokusvektor $\vec{v}_{w}$ og en kontekstvektor
 $\vec{k}_{w}$. Vektoren $\vec{v}_{w}$ er den, der
 viser, hvordan $w$ forholder sig til sin kontekst, så det er den, der
 repræsenterer betydningen af $w$. Normalt vil man derfor arbejde videre
