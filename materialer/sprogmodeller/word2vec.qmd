@@ -516,8 +516,12 @@ Vi viser nu de tre egenskaber ved Softmax.
 
 **Egenskab 1: $0 < z_i < 1$**
 
-Husk på at 
-$$z_i=\frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}$${#eq-softmax}
+Husk på, at
+
+$$
+z_i=\frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}
+$$ {#eq-softmax}
+
 Da eksponentialfunktionen kun kan antage positive værdier, er både tæller og nævner positive, så $z_i>0$. Desuden er 
 $$\mathrm{e}^{y_i} < \mathrm{e}^{y_1} + \dotsm +\mathrm{e}^{y_i} + \dotsm + \mathrm{e}^{y_V}$$
 Derfor er 
@@ -582,8 +586,11 @@ Eksempel på datatabel med træningsdata.
 
 Bemærk, at hvert fokusord godt kan optræde flere gange i ovenstående tabel, som vi også så det i @tbl-data.
 
-Vi ser nu på $j$te række. Sandsynligheden for, at $w^{(j)}$ har netop $c^{(j)}$ som kontekst, er $P(c^{(j)}\mid w^{(j)}$. Vi vil nu finde den samlede sandsynlighed for, at fokusordene $w^{(1)},\ldots,w^{(M)}$ i vores datasæt har henholdsvis $c^{(1)},\ldots,c^{(M)}$ som kontekstord. Den kalder vi $P(\text{data})$. Lad os antage, at alle vores par af fokus- og kontekstord er uafhængige af hinanden[^2]. Så får vi den samlede sandsynlighed ved at gange de enkelte sandsynligheder sammen. 
+
+Vi ser nu på $j$te række. Sandsynligheden for, at $w^{(j)}$ har netop $c^{(j)}$ som kontekst, er $P(c^{(j)}\mid w^{(j)}$. Vi vil nu finde den samlede sandsynlighed for, at fokusordene $w^{(1)},\ldots,w^{(M)}$ i vores datasæt har henholdsvis $c^{(1)},\ldots,c^{(M)}$ som kontekstord. Den kalder vi $P(\text{data})$. Lad os antage, at alle vores par af fokus- og kontekstord er uafhængige af hinanden[^2]. Så får vi den samlede sandsynlighed ved at gange de enkelte sandsynligheder sammen:
+
 $$P(\text{data})  = P(c^{(1)}\mid w^{(1)} \cdot P(c^{(2)}\mid w^{(2)} \dotsm P(c^{(M)}\mid w^{(M)}$${#eq-Pdata}
+
 Hvis vores model fra (@eq-sshmodel) passer godt til datasættet, skulle denne sandsynlighed gerne være høj. 
 
 [^2]: I praksis er ordpar, der forekommer i nærheden af hinanden ikke helt uafhængige. Hvis for eksempel parret $(\text{hund},\text{madskål})$ forekommer, er det mere sandsynligt, at $(\text{hund}, \text{fodre})$ forekommer i nærheden, end hvis der havde stået $(\text{hund},\text{hundesnor})$.
