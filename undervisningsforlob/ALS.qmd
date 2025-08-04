@@ -1,0 +1,283 @@
+---
+title: "Kommunikation med tankens kraft"
+description-meta: "Mennesker, som lider af nervesygdommen ALS, mister gradvist muligheden for at kommunikere med andre mennesker, fordi deres evne til at tale og bevæge sig gradvist svækkes. Dette forløb handler om, hvordan kunstig intelligens kan bruges til at hjælpe ALS patienter med at kommunikere ved hjælp af tankens kraft!"
+image: "ALS_filer/brain.png"
+categories:
+  - C-niveau
+  - Kort
+---
+
+::: {.fremhaev2 }
+
+Dette forløb er udviklet i samarbejde med Mads Rovsing Jochumsen, Institut for Medicin og Sundhedsteknologi, AAU.
+
+:::
+
+
+::: {.callout-caution collapse="true" appearance="minimal"}
+### Forudsætninger og tidsforbrug
+Forløbet kræver kendskab til:
+
++ Koordinatsystemer.
++ Rette linjer.
++ Procentregning.
+
+**Tidsforbrug:** Ca. 2 x 90 minutter.
+
+:::
+
+::: {.purpose}
+
+### Formål
+
+Mennesker, som lider af nervesygdommen ALS, mister på et tidspunkt muligheden for at kommunikere med andre mennesker, fordi deres evne til at tale og bevæge sig gradvist svækkes.
+
+Dette forløb handler om, hvordan kunstig intelligens kan bruges til at hjælpe ALS patienter med at kommunikere ved hjælp af tankens kraft!
+
+Der er oplagte samarbejdsmuligheder med biologi og/eller psykologi/filosofi, som de sidste to opgaver illustrerer. 
+
+:::
+
+## Introduktion
+
+Start med at se denne video, hvor Mads Rovsing Jochumsen fra Institut for Medicin og Sundhedsteknologi introducerer idéen om kommunikation ved tankens kraft:
+
+{{< video https://youtu.be/VR3JgFrJ1Ts?si=SayakFZE-bXgPSWT >}}
+
+
+## Binært kontrolsignal
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 1: Hjernestyring med binært kontrolsignal
+
+* Find eksempler på teknologi/applikationer man kan styre med hjernen ved at have et binært[^1]
+kontrolsignal, som for eksempel kobles sammen med en menu. Det behøver ikke
+at være begrænset til patienter med motorisk handicap.
+
+[^1]: Det betyder, at der er to valgmuligheder. For eksempel ja/nej, tænd/sluk eller 0/1.
+
+* Estimer hvor lang tid det vil tage at stave ordet \"MUSIK\", hvis der benyttes en roterende menu
+med valgmuligheder i forhold til bogstaver, tegn, mellemrum og slet (se for eksempel figuren herunder). Brugeren har 2 sekunder til at vælge et punkt i menuen (med et binært kontrolsignal fra
+hjernen) før den går videre til næste punkt. Estimer tiden det vil tage, hvis:
+  - der ikke bliver lavet fejl.
+  - der bliver lavet 1 fejl.
+  - der bliver lavet 2 fejl.
+
+![](ALS_filer/menu.png)
+
+:::
+
+
+## Træning af en AI model
+
+Vi forestiller os, at der er blevet optaget hjernesignaler fra en person, der tænker på en bevægelse med foden, når han/hun ønsker at vælge et bestemt punkt i menuen. Til alle andre tidspunkter sidder personen og slapper af, og derfor optages kun den almindelige baggrundshjerneaktivitet. Der er altså her tale om et binært kontrolsignal: enten tænker personen på at bevæge foden, eller også tænker han/hun *ikke* på at bevæge foden. 
+
+Hjernesignalerne er opsamlet med en samplingsfrekvens på 500 Hz, hvilket betyder, at der er 500 målepunkter per sekund (amplitude i $\mu$V). Hver optagelse er to sekunder lang, og dermed er der 1000 målepunkter (2 x samplingsfrekvens). 
+
+Data er blevet opdelt i to faner: I den første fane er der hjernesignaler for målinger af 15 imaginære bevægelser og 15 målinger af baggrundshjerneaktivitet, som skal bruges til at træne en AI model, så den kan se forskel på de to forskellige slags hjernesignaler. Disse data kaldes for **træningsdata**. I den anden fane er der henholdsvis 10 gentagelser af imaginære bevægelser og af baggrundshjerneaktivitet, som skal bruges til at teste, hvor god vores AI model er. Disse data kaldes for **testdata**. Data ligger i [excel-filen her](ALS_filer/data-ALS.xlsx).
+
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 2: Plot af træningsdata
+
+Hent excel-filen med data og gør følgende for de data, som ligger i fanen \"Data til træning\":
+
+* Plot følgende gentagelser af den imaginære bevægelse: 1, 5, 10 og 15 (det vil sige 4 figurer i
+alt). Du kan gøre det sådan her:
+
+  - Stil dig i en tom celle nederst i excel-arket.
+  - Vælg \"Indsæt\" $\rightarrow$ \"Diagrammer\". Her vælger du et punktdiagram (på den måde får du et tomt diagram).
+  - Højreklik på det tomme diagram og tryk på \"Vælg data...\".
+  - Markér nu data for den første gentagelse. Det kommer til at se sådan her ud:
+  
+  ![](ALS_filer/excel_vejl1.png)
+  
+  - Tryk på \"OK\".
+  - Ændr diagramtitlen til \"Imaginær bevægelse 1\" (dobbeltklik, hvor der står \"Diagramtitel\").
+  - Gør nu noget tilsvarende for imaginær bevægelse gentalgelse 5. Du kan med fordel kopiere det, du lige har skrevet i \"Diagramdataområde\" ovenfor og ændre det til `='Data til træning'!$F$3:$F$1002`, fordi data for imaginær bevægelse gentalgelse 5 står i kolonne `F`.
+  - Fortsæt på samme måde med imaginær bevægelse gentagelse 10 og 15.
+  
+* Plot på tilsvarende vis følgende gentagelser af baggrundshjerneaktivitet: 1, 5, 10 og 15 (det vil sige 4 figurer i alt).
+  
+* Kan du umiddelbart se, om der er noget, som adskiller de imaginære bevægelser fra baggrundshjerneaktiviteterne?
+
+:::
+
+I stedet for at se på hver af de 15 gentagelser enkeltvist, vil vi nu prøve at se på gennemsnittet henover de 15 gentagelser:
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 3: Plot af gennemsnitsmålinger (træningsdata)
+
+* Udregn gennemsnittet af de 15 gentagelser for de imaginære bevægelser. Gør sådan her:
+  - Stil dig i celle `Q2` og skriv `Gns` (for gennemsnit).
+  - Stil dig i celle `Q3` og skriv `=MIDDEL(B3:P3)`.
+  - Du kan nu tage ved den lille kasse i nederste højre hjørne af celle `Q3` og trække den ned, så du får beregnet alle 1000 gennemsnitsværdier (du ender altså med en 2-sekundersoptagelse som er et gennemsnit af de 15 gentagelser).
+
+* Plot nu gennemsnittet på tværs af de 15 imaginære bevægelser i jeres træningsdata.
+
+* Udregn og plot på tilsvarende vis gennemsnittet på tværs af de 15 målinger af baggrundshjerneaktivitet i jeres træningsdata.
+
+* Kan du på de to plots af gennemsnittene se, om der er noget, som adskiller de imaginære bevægelser fra baggrundshjerneaktiviteterne?
+
+::: 
+
+For at kunne lave en simpel AI model, som kan kende forskel på en imaginær bevægelse og en baggrundshjerneaktivitet, er vi nødt til på en eller anden måde at \"koge\" de 1000 målinger (svarende til at vi har målt hjerneaktiviteten i 2 sekunder) ned til nogle ganske få målinger, som på en eller anden måde opsummerer den information, som de 1000 målinger giver. Denne opsummering af information kalder man for en **feature**. Vi starter med noget simpelt:
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 4: Maksimal amplitude
+
+* Aflæs/udregn den maksimale amplitude ved det mest negative punkt for de to grafer fra den foregående opgave (du kan med fordel bruge minimumsfunktionen `MIN`).
+
+*Hvis vi skal kalde det for amplituden så forudsætter vi, at målingerne svinger omkring 0 - er det rimeligt?*
+
+* Vil den maksimale amplitude kunne bruges som en feature, der kan adskille de imaginære bevægelser fra baggrundshjerneaktiviteterne?
+
+:::
+
+Det kunne godt se ud som om, at amplituden på en eller anden måde kan bruges som feature. 
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 5: Udregning af to features
+
+Vi starter med at udregne følgende to features for hver af den 15 imaginære bevægelser og for hver af de 15 målinger af baggrundshjerneaktiviteterne:
+
+* **Feature 1:** Middelamplituden fra målepunkt 250 til 750. Det vil for eksempel sige, at for den første imaginære bevægelse finder du middelværdien af målepunkterne fra 250 til 750: `=MIDDEL(B$252:B$752)` (bemærk, at `$` ikke er nødvendig, men er en hjælp, hvis du vil kopiere kommandoen senere).
+
+* **Feature 2:** Differensen imellem middelamplituden udregnet fra måling 1 til 250 og middelamplituden udregnet mellem måling 251 til 500. For den første imaginære bevægelse er det: 
+
+   `=MIDDEL(B$3:B$252)-MIDDEL(B$253:B$502)` 
+   
+   Dette skal gøres for alt data, både bevægelse og baggrundshjerneaktivitet samt trænings- og testdata! Du kan med fordel stille det op på denne måde (hvor resultatet af de to første beregninger også er vist):
+
+  ![](ALS_filer/excel_vejl2.png)
+
+*Hvorfor lige de to features? Og hvorfor skal de sidste 250 målinger ikke med overhovedet?*
+
+:::
+
+
+Vi skal nu på baggrund af disse to features se, om vi kan få adskilt målinger, som stammer fra en imaginær bevægelse, fra målinger, som stammer fra en baggrundshjerneaktivitet. 
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 6: Plot af features
+
+Det nemmeste er at arbejde videre i GeoGebra, så vi starter lige med at kopiere de data, som du beregnede i forrige opgave over i GeoGebra:
+
+* Kopiere *hele* det område fra træningsdata, som er vist i figuren ovenfor, og sæt det ind i et regneark i GeoGebra (vælg \"Vis\" $\rightarrow$ \"Regneark\").
+
+* Stil dig i celle `D3` og skriv: `(B3,C3)`. Træk i cellen så du får udregnet koordinatet til i alt 15 punkter (svarende til feature 1 og 2 for de 15 imaginære bevægelser). Punkterne skulle nu gerne dukke op i tegneblokken.
+
+* Markér de 15 punkter i regnearket og højreklik. Tryk på \"vis navn\" (punkternes navne skulle gerne forsvinde i tengeblokken).
+
+* Markér igen de 15 punkter i regnearket og højreklik. Vælg \"Egenskaber\". Ændr farven på punkterne til rød. Ændr også stilen på punkterne til et kryds: Vælg \"Stil\" og \"Punktmarkering\". 
+
+Hvert rødt kryds svarer nu til en måling af en imaginær bevægelse fra træningsdatasættet repræsenteret ved de to features. 
+
+* Gør noget tilsvarende for de beregnede features for baggrundshjerneaktivitet (fra træningsdata), men farv punkterne blå i stedet for.
+
+* Indtegn en linje i koordinatsystemet, som kan adskille de to forskellige typer af punkter fra hinanden. 
+
+:::
+
+Det skulle gerne være sådan, at du har indtegnet en linje, som kan adskille de røde krydser fra de blå. Denne linje kan nu bruges til at afgøre, om en person for eksempel har sagt ja eller nej til en kategori eller et bogstav i en menu.
+
+Lad os sige, at Magnus (fra videoen) gerne vil skrive \"HEJ\". Det kan foregå sådan her:
+
+1) I 2 sekunder får Magnus vist den første del af menuen, som er markeret med lysblå her:
+
+![](ALS_filer/HEJ_1.png){width=40% fig-align="center"}
+
+2) Magnus skal ikke bruge nogle af bogstaverne i denne del af menuen, så han slapper bare af. I de 2 sekunder der går, laver vi 1000 målinger af Magnus' hjerneaktivitet og udregner herefter de to features, som beskrevet i opgave 5. Det giver anledning til ét punkt, som vi indtegner i koordinatsystemet. Vi kan se, at punktet ligger på den side af linjen, hvor de blå punkter ligger. Det betyder, at vi fortolker det som baggrundshjerneaktivitet og går derfor frem i menuen og viser Magnus denne del:
+
+![](ALS_filer/HEJ_2.png){width=40% fig-align="center"}
+
+
+3) Magnus vil gerne skrive ét af bogstaverne på denne menu -- nemlig \"H\". Derfor laver Magnus nu en imaginær bevægelse med sin fod i 2 sekunder[^2]. Imens laver vi de 1000 målinger af Magnus' hjerneaktivitet og beregner derefter de to features, som plottes ind i koordinatsystemet. Vi ser, at punkterne ligger på den side af linjen, hvor de røde punkter ligger, hvilket betyder, at vi nu ved, at Magnus gerne vil skrive enten H, I, J, K, L, M eller N. Derfor får Magnus vist disse syv bogstaver (samt muligheden \"EXIT\") på skift i 2 sekunder. Vi starter med \"H\":
+
+[^2]: Bemærk, at Magnus *ikke* bevæger foden, for det kan han ikke. Men han *tænker* på at bevæge foden. Det er derfor, at bevægelsen kaldes for *imaginær*.
+
+
+![](ALS_filer/HEJ_3.png){width=30% fig-align="center"}
+
+4) Magnus vil gerne skrive \"H\", og derfor laver han igen den imaginære bevægelse med foden, som vi registerer på samme måde som tidligere. På et eller andet tilknyttet display skrives der nu \"H\".
+
+5) Vi går tilbage til punkt 1, og da Magnus skal skrive \"E\" som det næste, laver han med det samme den imaginære bevægelse med foden. Sådan fortsættes indtil Magnus har fået skrevet \"HEJ\".
+
+Men hvor godt virker det mon? Der må jo nogle gange ske fejl, fordi alle målinger er behæftet med måleusikkerhed. Det er heller ikke sikkert, at der findes en rette linje, som *altid* kan skille de røde krydser fra de blå. Og selv hvis der er, er det ikke sikkert, at vi baseret på træningsdata har fundet den helt rigtige linje.
+
+Det er her, at testdatasættet kommer ind i billedet. Det skal nemlig hjælpe os med at vurdere, hvor god vores AI model er, når vi prøver at bruge den på ukendt data.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 7: Vurdering af modellen
+
+* Gør som i opgave 6, men plot nu features fra *testdatasættet*. Brug de samme farver (rød for imaginær bevægelse og blå for baggrundshjerneaktivitet), men vælg en anden stil (for eksempel runde punkter), så du kan kende forskel på testdata og træningsdata.
+
+Alle de punkter fra testdatasættet som ligger på den side af linjen, hvor de røde krydser ligger, fortolker vi, som om de kommer fra en imaginær bevægelse. Tilsvarende med alle de punkter fra testdatasættet som ligger på den side af linjen, hvor de blå krydser ligger, vil vi fortolke, som om de stammer fra baggrundshjerneaktivitet. Denne fortolkning kan enten være rigtig eller forkert, hvilket næste delopgave illustrerer.
+
+* Udfyld tabellen herunder -- denne tabel kaldes for en **confusion matrix**. Når du for eksempel skal udfylde det øverste felt til venstre, så tæller du alle de røde punkter fra testdatasættet, som ligger på den side af linjen med de røde krydser. 
+
+|  | Ligger på den side af linjen med de røde krydser  | Ligger på den side af linjen med de blå krydser |
+|:---:|:---:|:---:|
+| **Faktisk imaginær bevægelse** | | |
+| **Faktisk baggrundshjerneaktivitet** | | |
+: {.bordered}
+
+
+Den andel af punkterne, som er blevet klassificeret korrekt, kaldes for  **klassifikationsnøjagtigheden** -- eller på engelsk *classification accuracy* (CA).
+
+- Udregn på baggrund af din confusion matrix klassifikationsnøjagtigheden. 
+
+
+:::
+
+
+De næste opgaver kan besvares, hvis forløbet anvendes i samarbejde med biologi og/eller psykologi/filosofi.
+
+## Samarbejde med biologi
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 8: Fysiologi og patofysiologi
+
+* Hvilke hjerneområder er de vigtigste i forhold til at sende signal ned til musklerne om at starte
+en bevægelse?
+
+* Hvordan startes en bevægelse efter \"kontrolsignalet\" om at starte en bevægelse har forladt
+hjernens cortex?
+
+* Beskriv hvad der sker med nervesystemet, når det rammes af ALS (amyotrofisk lateral
+sklerose).
+
+* Beskriv progressionen af sygdommen og hvilke funktioner patienten mister over tid. Findes
+der hjælpemidler der kan erstatte de tabte funktioner eller afhjælpe handicappet?
+
+:::
+
+
+## Samarbejde med psykologi eller filosofi
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 9: Etik
+
+* Er det ansvarligt at indoperere elektroder i hjernen? Hvilke fordele og ulemper er der ved
+henholdsvis den non-invasive (electroencephalography) og invasive (electrocorticography)
+måde at måle hjerneaktivitet på?
+
+* Hvor \"dårlig\" skal en patient være før han/hun tilbydes at få indopereret en elektrode i hjernen?
+
+* Skal man stole på et ønske om aktiv dødshjælp, der er kommunikeret via hjernestyring? Er der
+en risiko for hacking?
+
+:::

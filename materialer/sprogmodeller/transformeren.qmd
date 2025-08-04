@@ -43,7 +43,7 @@ eller en brætspilskontekst. Det er netop idéen i transformeren: Vi vil lade ve
 
 [^2]: På engelsk siges transformeren at have *self-attention*.
 
-Når transformeren skal bruges til at generere tekst, beregner den både nye vektorrepræsentationer og bruger dem til at gætte næste ord. Da vi kun har adgang til de forudgående ord når vi genererer tekst, er det vigtigt at vektorrepræsentationerne også kun dannes ud fra den forudgående tekst. Dette er anderledes end Word2Vec, hvor vektorrepræsentationerne blev beregnet én gang for alle på baggrund af træningsdata, hvor vi havde kendskab til både de ordene før og efter fokusordet. 
+Når transformeren skal bruges til at generere tekst, beregner den både nye vektorrepræsentationer og bruger dem til at gætte næste ord. Da vi kun har adgang til de forudgående ord, når vi genererer tekst, er det vigtigt, at vektorrepræsentationerne også kun dannes ud fra den forudgående tekst. Dette er anderledes end Word2Vec, hvor vektorrepræsentationerne blev beregnet én gang for alle på baggrund af træningsdata, hvor vi havde kendskab både til ordene før og efter fokusordet. 
 
 ## Vektorregning
 
@@ -288,7 +288,7 @@ c_{j,i} = \frac{e^{\vec{k}_j \cdot \vec{q}_i}}{ e^{\vec{k}_1 \cdot \vec{q}_i}+e^
 $$
 Dette sikrer, at $c_{j,i}$'erne er tal mellem 0 og 1, som opfylder ligning (@eq-sum_1). Hvis $\vec{k}_j \cdot \vec{q}_i$ er meget stor bliver $c_{j,i}$ tæt på 1, mens meget negative $\vec{k}_j \cdot \vec{q}_i$ svarer til $c_{j,i}$ tæt på 0.
 
-Processen, der opdaterer vektorrepræsentationen af et ord på baggrund af de foregående ord, kaldes et *opmærksomhedslag*[^5] og udgør den centrale del af transformeren. I @fig-attention ses skematisk, hvordan de forskellige vektorer bruges i beregningen af $\vec{w}_i$. Bemærk at vi ikke har taget højde for, at betydningen af det $i$te ord afhænger mest af de ord, der står lige i nærheden af det, og i mindre grad af ord langt væk. Derfor modificerer transformeren vektorerne for hvert ord afhængigt af ordets position i sætningen. Vi vil ikke gå i dybden med, hvordan det gøres.
+Processen, der opdaterer vektorrepræsentationen af et ord på baggrund af de foregående ord, kaldes et *opmærksomhedslag*[^5] og udgør den centrale del af transformeren. I @fig-attention ses skematisk, hvordan de forskellige vektorer bruges i beregningen af $\vec{w}_i$. Bemærk, at vi ikke har taget højde for, at betydningen af det $i$te ord afhænger mest af de ord, der står lige i nærheden af det, og i mindre grad af ord langt væk. Derfor modificerer transformeren vektorerne for hvert ord afhængigt af ordets position i sætningen. Vi vil ikke gå i dybden med, hvordan det gøres.
 
 [^5]: På engelsk *attention head*.
 
