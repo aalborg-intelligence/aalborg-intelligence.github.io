@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Mennesker, som lider af nervesygdommen ALS, mister gradvist muligheden for at kommunikere med andre mennesker, fordi deres evne til at tale og bevæge sig gradvist svækkes. Dette forløb handler om, hvordan kunstig intelligens kan bruges til at hjælpe ALS patienter med at kommunikere ved hjælp af tankens kraft!">
+
+<title>Kommunikation med tankens kraft – AI MAT - matematikken bag magien</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-50adae69b969a79616f6f61fc6303160.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-Y219BCPS45"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+ 
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'analytics_storage': 'denied'
+  });
+gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="floating nav-fixed slimcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../undervisningsforlob/index.html"> 
+<span class="menu-text">Undervisningsforløb</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../materialer/index.html"> 
+<span class="menu-text">Materialer</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../sro/index.html"> 
+<span class="menu-text">SRO</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../srp/index.html"> 
+<span class="menu-text">SRP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../apps/index.html"> 
+<span class="menu-text">Apps</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../referencer/index.html"> 
+<span class="menu-text">Referencer</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">Om os</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.youtube.com/@ai-mat"> 
+<span class="menu-text"><img src="../logo/YouTube/youtube-color-darkblue-icon.svg" style="height:2em"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indhold</h2>
+   
+  <ul>
+  <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
+  <li><a href="#introduktion" id="toc-introduktion" class="nav-link" data-scroll-target="#introduktion">Introduktion</a></li>
+  <li><a href="#binært-kontrolsignal" id="toc-binært-kontrolsignal" class="nav-link" data-scroll-target="#binært-kontrolsignal">Binært kontrolsignal</a></li>
+  <li><a href="#træning-af-en-ai-model" id="toc-træning-af-en-ai-model" class="nav-link" data-scroll-target="#træning-af-en-ai-model">Træning af en AI model</a></li>
+  <li><a href="#samarbejde-med-biologi" id="toc-samarbejde-med-biologi" class="nav-link" data-scroll-target="#samarbejde-med-biologi">Samarbejde med biologi</a></li>
+  <li><a href="#samarbejde-med-psykologi-eller-filosofi" id="toc-samarbejde-med-psykologi-eller-filosofi" class="nav-link" data-scroll-target="#samarbejde-med-psykologi-eller-filosofi">Samarbejde med psykologi eller filosofi</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Kommunikation med tankens kraft</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">C-niveau</div>
+    <div class="quarto-category">Kort</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="fremhaev2">
+<p>Dette forløb er udviklet i samarbejde med Mads Rovsing Jochumsen, Institut for Medicin og Sundhedsteknologi, AAU.</p>
+</div>
+<div class="callout callout-style-simple callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Forudsætninger og tidsforbrug
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Forløbet kræver kendskab til:</p>
+<ul>
+<li>Koordinatsystemer.</li>
+<li>Rette linjer.</li>
+<li>Procentregning.</li>
+</ul>
+<p><strong>Tidsforbrug:</strong> Ca. 2 x 90 minutter.</p>
+</div>
+</div>
+</div>
+<section id="formål" class="level3 purpose">
+<h3 class="anchored" data-anchor-id="formål">Formål</h3>
+<p>Mennesker, som lider af nervesygdommen ALS, mister på et tidspunkt muligheden for at kommunikere med andre mennesker, fordi deres evne til at tale og bevæge sig gradvist svækkes.</p>
+<p>Dette forløb handler om, hvordan kunstig intelligens kan bruges til at hjælpe ALS patienter med at kommunikere ved hjælp af tankens kraft!</p>
+<p>Der er oplagte samarbejdsmuligheder med biologi og/eller psykologi/filosofi, som de sidste to opgaver illustrerer.</p>
+</section>
+<section id="introduktion" class="level2">
+<h2 class="anchored" data-anchor-id="introduktion">Introduktion</h2>
+<p>Start med at se denne video, hvor Mads Rovsing Jochumsen fra Institut for Medicin og Sundhedsteknologi introducerer idéen om kommunikation ved tankens kraft:</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/VR3JgFrJ1Ts?si=SayakFZE-bXgPSWT" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+</section>
+<section id="binært-kontrolsignal" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="binært-kontrolsignal">Binært kontrolsignal</h2>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 1: Hjernestyring med binært kontrolsignal
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Find eksempler på teknologi/applikationer man kan styre med hjernen ved at have et binært<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> kontrolsignal, som for eksempel kobles sammen med en menu. Det behøver ikke at være begrænset til patienter med motorisk handicap.</li>
+</ul>
+<ul>
+<li>Estimer hvor lang tid det vil tage at stave ordet "MUSIK", hvis der benyttes en roterende menu med valgmuligheder i forhold til bogstaver, tegn, mellemrum og slet (se for eksempel figuren herunder). Brugeren har 2 sekunder til at vælge et punkt i menuen (med et binært kontrolsignal fra hjernen) før den går videre til næste punkt. Estimer tiden det vil tage, hvis:
+<ul>
+<li>der ikke bliver lavet fejl.</li>
+<li>der bliver lavet 1 fejl.</li>
+<li>der bliver lavet 2 fejl.</li>
+</ul></li>
+</ul>
+<p><img src="ALS_filer/menu.png" class="img-fluid"></p>
+</div>
+</div>
+</div>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Det betyder, at der er to valgmuligheder. For eksempel ja/nej, tænd/sluk eller 0/1.</p></div></div></section>
+<section id="træning-af-en-ai-model" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="træning-af-en-ai-model">Træning af en AI model</h2>
+<p>Vi forestiller os, at der er blevet optaget hjernesignaler fra en person, der tænker på en bevægelse med foden, når han/hun ønsker at vælge et bestemt punkt i menuen. Til alle andre tidspunkter sidder personen og slapper af, og derfor optages kun den almindelige baggrundshjerneaktivitet. Der er altså her tale om et binært kontrolsignal: enten tænker personen på at bevæge foden, eller også tænker han/hun <em>ikke</em> på at bevæge foden.</p>
+<p>Hjernesignalerne er opsamlet med en samplingsfrekvens på 500 Hz, hvilket betyder, at der er 500 målepunkter per sekund (amplitude i <span class="math inline">\(\mu\)</span>V). Hver optagelse er to sekunder lang, og dermed er der 1000 målepunkter (2 x samplingsfrekvens).</p>
+<p>Data er blevet opdelt i to faner: I den første fane er der hjernesignaler for målinger af 15 imaginære bevægelser og 15 målinger af baggrundshjerneaktivitet, som skal bruges til at træne en AI model, så den kan se forskel på de to forskellige slags hjernesignaler. Disse data kaldes for <strong>træningsdata</strong>. I den anden fane er der henholdsvis 10 gentagelser af imaginære bevægelser og af baggrundshjerneaktivitet, som skal bruges til at teste, hvor god vores AI model er. Disse data kaldes for <strong>testdata</strong>. Data ligger i <a href="ALS_filer/data-ALS.xlsx">excel-filen her</a>.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 2: Plot af træningsdata
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Hent excel-filen med data og gør følgende for de data, som ligger i fanen "Data til træning":</p>
+<ul>
+<li><p>Plot følgende gentagelser af den imaginære bevægelse: 1, 5, 10 og 15 (det vil sige 4 figurer i alt). Du kan gøre det sådan her:</p>
+<ul>
+<li>Stil dig i en tom celle nederst i excel-arket.</li>
+<li>Vælg "Indsæt" <span class="math inline">\(\rightarrow\)</span> "Diagrammer". Her vælger du et punktdiagram (på den måde får du et tomt diagram).</li>
+<li>Højreklik på det tomme diagram og tryk på "Vælg data…".</li>
+<li>Markér nu data for den første gentagelse. Det kommer til at se sådan her ud:</li>
+</ul>
+<p><img src="ALS_filer/excel_vejl1.png" class="img-fluid"></p>
+<ul>
+<li>Tryk på "OK".</li>
+<li>Ændr diagramtitlen til "Imaginær bevægelse 1" (dobbeltklik, hvor der står "Diagramtitel").</li>
+<li>Gør nu noget tilsvarende for imaginær bevægelse gentalgelse 5. Du kan med fordel kopiere det, du lige har skrevet i "Diagramdataområde" ovenfor og ændre det til <code>='Data til træning'!$F$3:$F$1002</code>, fordi data for imaginær bevægelse gentalgelse 5 står i kolonne <code>F</code>.</li>
+<li>Fortsæt på samme måde med imaginær bevægelse gentagelse 10 og 15.</li>
+</ul></li>
+<li><p>Plot på tilsvarende vis følgende gentagelser af baggrundshjerneaktivitet: 1, 5, 10 og 15 (det vil sige 4 figurer i alt).</p></li>
+<li><p>Kan du umiddelbart se, om der er noget, som adskiller de imaginære bevægelser fra baggrundshjerneaktiviteterne?</p></li>
+</ul>
+</div>
+</div>
+</div>
+<p>I stedet for at se på hver af de 15 gentagelser enkeltvist, vil vi nu prøve at se på gennemsnittet henover de 15 gentagelser:</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 3: Plot af gennemsnitsmålinger (træningsdata)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Udregn gennemsnittet af de 15 gentagelser for de imaginære bevægelser. Gør sådan her:</p>
+<ul>
+<li>Stil dig i celle <code>Q2</code> og skriv <code>Gns</code> (for gennemsnit).</li>
+<li>Stil dig i celle <code>Q3</code> og skriv <code>=MIDDEL(B3:P3)</code>.</li>
+<li>Du kan nu tage ved den lille kasse i nederste højre hjørne af celle <code>Q3</code> og trække den ned, så du får beregnet alle 1000 gennemsnitsværdier (du ender altså med en 2-sekundersoptagelse som er et gennemsnit af de 15 gentagelser).</li>
+</ul></li>
+<li><p>Plot nu gennemsnittet på tværs af de 15 imaginære bevægelser i jeres træningsdata.</p></li>
+<li><p>Udregn og plot på tilsvarende vis gennemsnittet på tværs af de 15 målinger af baggrundshjerneaktivitet i jeres træningsdata.</p></li>
+<li><p>Kan du på de to plots af gennemsnittene se, om der er noget, som adskiller de imaginære bevægelser fra baggrundshjerneaktiviteterne?</p></li>
+</ul>
+</div>
+</div>
+</div>
+<p>For at kunne lave en simpel AI model, som kan kende forskel på en imaginær bevægelse og en baggrundshjerneaktivitet, er vi nødt til på en eller anden måde at "koge" de 1000 målinger (svarende til at vi har målt hjerneaktiviteten i 2 sekunder) ned til nogle ganske få målinger, som på en eller anden måde opsummerer den information, som de 1000 målinger giver. Denne opsummering af information kalder man for en <strong>feature</strong>. Vi starter med noget simpelt:</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 4: Maksimal amplitude
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Aflæs/udregn den maksimale amplitude ved det mest negative punkt for de to grafer fra den foregående opgave (du kan med fordel bruge minimumsfunktionen <code>MIN</code>).</li>
+</ul>
+<p><em>Hvis vi skal kalde det for amplituden så forudsætter vi, at målingerne svinger omkring 0 - er det rimeligt?</em></p>
+<ul>
+<li>Vil den maksimale amplitude kunne bruges som en feature, der kan adskille de imaginære bevægelser fra baggrundshjerneaktiviteterne?</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Det kunne godt se ud som om, at amplituden på en eller anden måde kan bruges som feature.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 5: Udregning af to features
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Vi starter med at udregne følgende to features for hver af den 15 imaginære bevægelser og for hver af de 15 målinger af baggrundshjerneaktiviteterne:</p>
+<ul>
+<li><p><strong>Feature 1:</strong> Middelamplituden fra målepunkt 250 til 750. Det vil for eksempel sige, at for den første imaginære bevægelse finder du middelværdien af målepunkterne fra 250 til 750: <code>=MIDDEL(B$252:B$752)</code> (bemærk, at <code>$</code> ikke er nødvendig, men er en hjælp, hvis du vil kopiere kommandoen senere).</p></li>
+<li><p><strong>Feature 2:</strong> Differensen imellem middelamplituden udregnet fra måling 1 til 250 og middelamplituden udregnet mellem måling 251 til 500. For den første imaginære bevægelse er det:</p>
+<p><code>=MIDDEL(B$3:B$252)-MIDDEL(B$253:B$502)</code></p>
+<p>Dette skal gøres for alt data, både bevægelse og baggrundshjerneaktivitet samt trænings- og testdata! Du kan med fordel stille det op på denne måde (hvor resultatet af de to første beregninger også er vist):</p>
+<p><img src="ALS_filer/excel_vejl2.png" class="img-fluid"></p></li>
+</ul>
+<p><em>Hvorfor lige de to features? Og hvorfor skal de sidste 250 målinger ikke med overhovedet?</em></p>
+</div>
+</div>
+</div>
+<p>Vi skal nu på baggrund af disse to features se, om vi kan få adskilt målinger, som stammer fra en imaginær bevægelse, fra målinger, som stammer fra en baggrundshjerneaktivitet.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 6: Plot af features
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Det nemmeste er at arbejde videre i GeoGebra, så vi starter lige med at kopiere de data, som du beregnede i forrige opgave over i GeoGebra:</p>
+<ul>
+<li><p>Kopiere <em>hele</em> det område fra træningsdata, som er vist i figuren ovenfor, og sæt det ind i et regneark i GeoGebra (vælg "Vis" <span class="math inline">\(\rightarrow\)</span> "Regneark").</p></li>
+<li><p>Stil dig i celle <code>D3</code> og skriv: <code>(B3,C3)</code>. Træk i cellen så du får udregnet koordinatet til i alt 15 punkter (svarende til feature 1 og 2 for de 15 imaginære bevægelser). Punkterne skulle nu gerne dukke op i tegneblokken.</p></li>
+<li><p>Markér de 15 punkter i regnearket og højreklik. Tryk på "vis navn" (punkternes navne skulle gerne forsvinde i tengeblokken).</p></li>
+<li><p>Markér igen de 15 punkter i regnearket og højreklik. Vælg "Egenskaber". Ændr farven på punkterne til rød. Ændr også stilen på punkterne til et kryds: Vælg "Stil" og "Punktmarkering".</p></li>
+</ul>
+<p>Hvert rødt kryds svarer nu til en måling af en imaginær bevægelse fra træningsdatasættet repræsenteret ved de to features.</p>
+<ul>
+<li><p>Gør noget tilsvarende for de beregnede features for baggrundshjerneaktivitet (fra træningsdata), men farv punkterne blå i stedet for.</p></li>
+<li><p>Indtegn en linje i koordinatsystemet, som kan adskille de to forskellige typer af punkter fra hinanden.</p></li>
+</ul>
+</div>
+</div>
+</div>
+<p>Det skulle gerne være sådan, at du har indtegnet en linje, som kan adskille de røde krydser fra de blå. Denne linje kan nu bruges til at afgøre, om en person for eksempel har sagt ja eller nej til en kategori eller et bogstav i en menu.</p>
+<p>Lad os sige, at Magnus (fra videoen) gerne vil skrive "HEJ". Det kan foregå sådan her:</p>
+<ol type="1">
+<li>I 2 sekunder får Magnus vist den første del af menuen, som er markeret med lysblå her:</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ALS_filer/HEJ_1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:40.0%"></p>
+</figure>
+</div>
+<ol start="2" type="1">
+<li>Magnus skal ikke bruge nogle af bogstaverne i denne del af menuen, så han slapper bare af. I de 2 sekunder der går, laver vi 1000 målinger af Magnus’ hjerneaktivitet og udregner herefter de to features, som beskrevet i opgave 5. Det giver anledning til ét punkt, som vi indtegner i koordinatsystemet. Vi kan se, at punktet ligger på den side af linjen, hvor de blå punkter ligger. Det betyder, at vi fortolker det som baggrundshjerneaktivitet og går derfor frem i menuen og viser Magnus denne del:</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ALS_filer/HEJ_2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:40.0%"></p>
+</figure>
+</div>
+<ol start="3" type="1">
+<li>Magnus vil gerne skrive ét af bogstaverne på denne menu – nemlig "H". Derfor laver Magnus nu en imaginær bevægelse med sin fod i 2 sekunder<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Imens laver vi de 1000 målinger af Magnus’ hjerneaktivitet og beregner derefter de to features, som plottes ind i koordinatsystemet. Vi ser, at punkterne ligger på den side af linjen, hvor de røde punkter ligger, hvilket betyder, at vi nu ved, at Magnus gerne vil skrive enten H, I, J, K, L, M eller N. Derfor får Magnus vist disse syv bogstaver (samt muligheden "EXIT") på skift i 2 sekunder. Vi starter med "H":</li>
+</ol>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Bemærk, at Magnus <em>ikke</em> bevæger foden, for det kan han ikke. Men han <em>tænker</em> på at bevæge foden. Det er derfor, at bevægelsen kaldes for <em>imaginær</em>.</p></div></div><div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ALS_filer/HEJ_3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:30.0%"></p>
+</figure>
+</div>
+<ol start="4" type="1">
+<li><p>Magnus vil gerne skrive "H", og derfor laver han igen den imaginære bevægelse med foden, som vi registerer på samme måde som tidligere. På et eller andet tilknyttet display skrives der nu "H".</p></li>
+<li><p>Vi går tilbage til punkt 1, og da Magnus skal skrive "E" som det næste, laver han med det samme den imaginære bevægelse med foden. Sådan fortsættes indtil Magnus har fået skrevet "HEJ".</p></li>
+</ol>
+<p>Men hvor godt virker det mon? Der må jo nogle gange ske fejl, fordi alle målinger er behæftet med måleusikkerhed. Det er heller ikke sikkert, at der findes en rette linje, som <em>altid</em> kan skille de røde krydser fra de blå. Og selv hvis der er, er det ikke sikkert, at vi baseret på træningsdata har fundet den helt rigtige linje.</p>
+<p>Det er her, at testdatasættet kommer ind i billedet. Det skal nemlig hjælpe os med at vurdere, hvor god vores AI model er, når vi prøver at bruge den på ukendt data.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 7: Vurdering af modellen
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Gør som i opgave 6, men plot nu features fra <em>testdatasættet</em>. Brug de samme farver (rød for imaginær bevægelse og blå for baggrundshjerneaktivitet), men vælg en anden stil (for eksempel runde punkter), så du kan kende forskel på testdata og træningsdata.</li>
+</ul>
+<p>Alle de punkter fra testdatasættet som ligger på den side af linjen, hvor de røde krydser ligger, fortolker vi, som om de kommer fra en imaginær bevægelse. Tilsvarende med alle de punkter fra testdatasættet som ligger på den side af linjen, hvor de blå krydser ligger, vil vi fortolke, som om de stammer fra baggrundshjerneaktivitet. Denne fortolkning kan enten være rigtig eller forkert, hvilket næste delopgave illustrerer.</p>
+<ul>
+<li>Udfyld tabellen herunder – denne tabel kaldes for en <strong>confusion matrix</strong>. Når du for eksempel skal udfylde det øverste felt til venstre, så tæller du alle de røde punkter fra testdatasættet, som ligger på den side af linjen med de røde krydser.</li>
+</ul>
+<table class="table-bordered table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"></th>
+<th style="text-align: center;">Ligger på den side af linjen med de røde krydser</th>
+<th style="text-align: center;">Ligger på den side af linjen med de blå krydser</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><strong>Faktisk imaginær bevægelse</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>Faktisk baggrundshjerneaktivitet</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<p>Den andel af punkterne, som er blevet klassificeret korrekt, kaldes for <strong>klassifikationsnøjagtigheden</strong> – eller på engelsk <em>classification accuracy</em> (CA).</p>
+<ul>
+<li>Udregn på baggrund af din confusion matrix klassifikationsnøjagtigheden.</li>
+</ul>
+</div>
+</div>
+</div>
+<p>De næste opgaver kan besvares, hvis forløbet anvendes i samarbejde med biologi og/eller psykologi/filosofi.</p>
+</section>
+<section id="samarbejde-med-biologi" class="level2">
+<h2 class="anchored" data-anchor-id="samarbejde-med-biologi">Samarbejde med biologi</h2>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 8: Fysiologi og patofysiologi
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Hvilke hjerneområder er de vigtigste i forhold til at sende signal ned til musklerne om at starte en bevægelse?</p></li>
+<li><p>Hvordan startes en bevægelse efter "kontrolsignalet" om at starte en bevægelse har forladt hjernens cortex?</p></li>
+<li><p>Beskriv hvad der sker med nervesystemet, når det rammes af ALS (amyotrofisk lateral sklerose).</p></li>
+<li><p>Beskriv progressionen af sygdommen og hvilke funktioner patienten mister over tid. Findes der hjælpemidler der kan erstatte de tabte funktioner eller afhjælpe handicappet?</p></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="samarbejde-med-psykologi-eller-filosofi" class="level2">
+<h2 class="anchored" data-anchor-id="samarbejde-med-psykologi-eller-filosofi">Samarbejde med psykologi eller filosofi</h2>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 9: Etik
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Er det ansvarligt at indoperere elektroder i hjernen? Hvilke fordele og ulemper er der ved henholdsvis den non-invasive (electroencephalography) og invasive (electrocorticography) måde at måle hjerneaktivitet på?</p></li>
+<li><p>Hvor "dårlig" skal en patient være før han/hun tilbydes at få indopereret en elektrode i hjernen?</p></li>
+<li><p>Skal man stole på et ønske om aktiv dødshjælp, der er kommunikeret via hjernestyring? Er der en risiko for hacking?</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/aimat\.dk");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
