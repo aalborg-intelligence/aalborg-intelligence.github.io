@@ -1,0 +1,274 @@
+---
+title: "Del 1: Word2Vec"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+::: {.estimeret_tid}
+
+Forventet tid ca. 90 min.
+
+Aktivitet 5 kan udelades eller bruges som ekstra udfordring.
+
+:::
+
+For at en computer skal kunne forstå sprog, har vi brug for at få kvantificeret alle ord i vores ordforråd. Hvis ikke vi på en eller anden måde, kan få lavet ord om til tal, bliver det svært at regne på dem! Algoritmen **Word2Vec** er et bud på, hvordan det kan gøres. Idéen er at repræsentere hvert ord med en vektor på en sådan måde, at alle ord, hvis betydning ligner hinanden, repræsenteres med vektorer, der peger i nogenlunde samme retning og har nogenlunde samme længde.
+
+I denne del skal vi se på, hvordan det kan gøres.
+
+{{< include ../space.qmd >}}
+
+## Aktivitet 1 - Betydning og kontekst {.aimat}
+
+Læs afsnittet [\"Betydning og kontekst\" i noten Word2Vec](../../materialer/sprogmodeller/word2vec.qmd#betydning-og-kontekst). 
+
+Vi gentager en vigtig pointe:
+
+::: {.highlight .centertext}
+
+**Betydningen af et ord er bestemt af den kontekst, ordet indgår i.**
+
+:::
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 1: Betydning er kontekst
+
+Ordet \"får\" har flere betydninger.
+
+* Skriv mindst to sætninger, hvor man ud fra konteksten forstår betydningen af \"får\".
+
+* Find selv på et ord med flere betydninger og skriv mindst to sætninger, som afslører betydningen.
+
+:::
+
+{{< include ../space.qmd >}}
+
+
+## Aktivitet 2 - Træningsdata {.aimat}
+
+Læs afsnittet [\"Træningsdata\" i noten Word2Vec](../../materialer/sprogmodeller/word2vec.qmd#træningsdata). 
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 2: Træningsdata
+
+Betragt følgende tekstkorpus:
+
+::: {.llm_saetninger}
+Matematik er det sjoveste fag i verden
+:::
+
+* Udfyld med udgangspunkt i ovenstående tekstkorpus og et 3-ords vindue denne tabel (se eventuelt [tabel 1 i noten om Word2vec](../../materialer/sprogmodeller/word2vec.qmd#tbl-data)):
+
+   | Fokus | Kontekst |
+   |:---:|:---:|
+   | Matematik  |   |
+   | Matematik  |   |
+   | er  |   |
+   | er  |   |
+   | det  |   |
+   | det  |   |
+   | $\vdots$  | $\vdots$ |
+   : {.bordered}
+
+:::
+
+
+{{< include ../space.qmd >}}
+
+
+## Aktivitet 3 - Input- og kontekstvektorer {.aimat}
+
+Læs afsnittet [\"Input- og kontekstvektorer\" i noten Word2Vec](../../materialer/sprogmodeller/word2vec.qmd#input--og-kontekstvektorer). 
+
+
+Husk på denne vigtige pointe:
+
+::: {.highlight2 }
+
+Vi vil gerne have, at vores input- og kontekstvektorer skal opfylde, at
+hvis $w$ ofte har $c$ som kontekst, så er skalarproduktet
+$\vec{v}_{w}\cdot \vec{k}_{c}$ stort, mens en
+meget negativ værdi af
+$\vec{v}_{w}\cdot \vec{k}_{c}$ indikerer, at $w$
+sjældent har $c$ som kontekst.
+
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 3: Input- og kontekstvektorer
+
+Antag, at vi har lavet 4-dimensionale input- og kontekstvektorer
+således, at jo større skalarproduktet
+$\vec{v}_{w}\cdot \vec{k}_{c}$ er, desto mere
+sandsynligt er det, at ordet $w$ har $c$ som kontekst. Inputvektoren
+for \"hund\" og kontekstvektorerne for \"pels\" og \"fjer\" er
+$$
+\begin{aligned}
+\vec{v}_{\text{hund}}=\begin{pmatrix} 0.5\\2\\1\\-1\end{pmatrix} ,\quad
+\vec{k}_{\text{pels}}=\begin{pmatrix} 0\\3\\2\\-2\end{pmatrix},\quad
+\vec{k}_{\text{fjer}}=\begin{pmatrix} 1\\-2\\1.5\\0.5\end{pmatrix}
+\end{aligned}
+$$
+
+a)    Udregn skalarprodukterne
+    $\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{pels}}$ og
+    $\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{fjer}}$. 
+b)    Passer det med, hvilket af ordene \"pels\" og \"fjer\" der er mest
+    sandsynligt som kontekst til \"hund\"?
+
+Antag, at vi har lavet 3-dimensionale input- og kontekstvektorer som
+beskrevet i afsnittet ovenfor. Så skulle ord, der ofte har samme
+kontekst, gerne have inputvektorer af nogenlunde samme længde og retning, mens inputvektorerne for ord,
+der betyder noget helt forskelligt, kan have meget forskellig længde
+og retning. Antag, at inputvektorerne for \"kat\", \"hund\", \"mis\"
+og \"kælk\" er 
+$$
+\begin{aligned}
+\vec{v}_{\text{kat}}=\begin{pmatrix}0\\2\\1 \end{pmatrix},\quad
+\vec{v}_{\text{hund}}=\begin{pmatrix}0\\1.2\\1.8\end{pmatrix}, \\
+\\
+\vec{v}_{\text{mis}}=\begin{pmatrix}-0.5\\2\\0.8\end{pmatrix},\quad
+\vec{v}_{\text{kælk}}=\begin{pmatrix} 0\\-1\\-2 \end{pmatrix}
+\end{aligned}
+$$
+
+c)    Find længden af de fire vektorer. 
+d)    Find vinklen mellem $\vec{v}_{\text{kat}}$ og de tre øvrige vektorer. 
+e)    Stemmer resultatet overens med, hvilke ord der er tættest på \"kat\" i
+    betydning? 
+f)   Tegn vektorerne ind i GeoGebra. Skriv for eksempel `kat=(0,2,1)` i inputfeltet i GeoGebra og vælg derefter \"Vis\" $\rightarrow$ \"3D Grafik\".
+    
+:::  
+
+
+
+{{< include ../space.qmd >}}
+
+
+## Aktivitet 4 - Model for sandsynligheder {.aimat}
+
+Læs afsnittet [\"Model for sandsynligheder\" i noten Word2Vec](../../materialer/sprogmodeller/word2vec.qmd#model-for-sandsynligheder). 
+
+Vi starter med at minde om definitionen af Softmax:
+
+
+::: {.highlight2 }
+
+**Softmax**
+
+Hvis $\vec{y}$ er en vektor med $V$ koordinater:
+
+$$
+\vec{y} = 
+\begin{pmatrix}
+y_1 \\
+y_2 \\
+\vdots \\
+y_V
+\end{pmatrix}
+$$
+
+så er $\text{Softmax}\big(\vec{y}\big)=\vec{z}$, hvor $\vec{z}$ er en ny vektor med $V$ koordinater. Den $i$'te koordinat i $\vec{z}$ er givet ved
+
+$$
+z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}
+$$ {#eq-softmax}
+
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 4: Softmax
+
+Lad $\vec{y}$ være vektoren
+$$\vec{y}= \begin{pmatrix} 1 \\2 \\-1 \end{pmatrix}$$
+
+a) Beregn $\vec{z} = \text{Softmax}(\vec{y})$.
+
+b) Kontroller at følgende er opfyldt:
+
+   - $0<z_i<1$
+   
+   - $z_1 + z_2 + \dotsm + z_V = 1$
+   
+   - Hvis $y_i < y_j$, så er $z_i < z_j$.
+
+:::
+
+
+Husk på, at vi betegner sandsynligheden for, at $\text{ord}_i$ er et kontekstord til $w$, med 
+
+$$
+P(\text{ord}_i\mid w)
+$$
+Denne sandsynlighed beregnes ved først at bestemme skalarproduktet
+
+$$
+y_i = \vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}
+$$
+for $i \in \{1, 2, ..., V\}$, hvor $V$ er antallet af ord i vores ordforråd. 
+
+Herefter bruges Softmax:
+
+$$
+\begin{aligned}
+P(\text{ord}_i\mid w) &= z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \\ &= \frac{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}}}{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_V}}}
+\end{aligned}
+$${#eq-sshmodel}
+
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 5: Model for sandsynligheder
+
+Antag, at vores ordforråd består af de tre ord \"sommer\", \"sol\" og \"sne\". Vi har lavet en model for sandsynligheder for kontekstord som i (@eq-sshmodel), hvor 
+inputvektoren for \"sommer\" og kontekstvektorerne for \"sommer\", \"sol\" og
+\"sne\" er givet ved 
+$$
+\begin{aligned}
+\vec{v}_{\text{sommer}}=\begin{pmatrix} 1\\1\end{pmatrix},\quad
+\vec{k}_{\text{sommer}}=\begin{pmatrix} 1\\-1 \end{pmatrix} ,\\
+\\
+\vec{k}_{\text{sol}}=\begin{pmatrix} 0\\2\end{pmatrix},\quad
+\vec{k}_{\text{sne}} =\begin{pmatrix} -1\\-2\end{pmatrix}
+\end{aligned}
+$$
+a) Hvad er sandsynligheden for, at hvert af de tre ord er 
+    kontekst til \"sommer\"?     
+
+b) Passer svaret fra a. med, hvilket af de tre ord, som du umiddelbart vil tænke, oftest optræder som kontekst til sommer?
+
+:::
+
+
+{{< include ../space.qmd >}}
+
+
+## Aktivitet 5 - Estimatation af vektorrepræsentationer {.aimat}
+
+Læs afsnittet [\"Estimatation af vektorrepræsentationer\" i noten Word2Vec](../../materialer/sprogmodeller/word2vec.qmd#estimation-af-vektorrepræsentationer). 
+
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 6: Partielle afledte af Softmax-funktionen
+
+
+For at finde minimum for tabsfunktionen, får man brug for at finde partielle afledte af Softmax-funktionen. Det kan man gøre smart ved hjælp af nedenstående opgave, som viser, at man ikke behøver at kende værdien af $\vec{y}$ i det punkt, hvor man differentierer, men kun funktionsværdien $\vec{z}$.
+    
+a) Vis ved at bruge udtrykket i (@eq-softmax) følgende egenskaber ved de partielle afledte af Softmax-funktionen:
+
+$$\frac{\partial z_i}{\partial y_i} = z_i(1-z_i),\quad \frac{\partial z_i}{\partial y_j} = -z_iz_j, \quad i\neq j$$
+
+
+:::
