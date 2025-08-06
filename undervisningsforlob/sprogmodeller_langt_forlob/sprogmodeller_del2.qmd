@@ -1,5 +1,5 @@
 ---
-title: "Del 1: Word2Vec"
+title: "Del 2: Word2Vec"
 ---
 
 
@@ -9,9 +9,9 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ::: {.estimeret_tid}
 
-Forventet tid ca. 90 min.
+Forventet tid ca. 90-120 min.
 
-Aktivitet 5 kan udelades eller bruges som ekstra udfordring.
+Aktivitet 6 kan udelades eller bruges som ekstra udfordring.
 
 :::
 
@@ -21,22 +21,47 @@ I denne del skal vi se på, hvordan det kan gøres.
 
 {{< include ../space.qmd >}}
 
-## Aktivitet 1 - Betydning og kontekst {.aimat}
+
+## Aktivitet 1 - Ord som vektorer {.aimat}
+
+Læs det første afsnit i [noten Word2Vec](../../materialer/sprogmodeller/word2vec.qmd). 
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 1: Ord som vektorer
+
+I algoritmen **Word2Vec** bliver hvert ord repræsenteret som en vektor. Det gøres på en sådan måde at ord, hvis betydning minder om hinanden, svarer til vektorer med nogenlunde samme retning og længde.
+
+* Brug app'en herunder til at argumentere for, hvorfor de fire vektorer har den længde og retning, som de har.
+
+{{< include _geogebra/_geogebra.qmd >}}
+
+::: {width=100%}
+::: {#ggbApplet_vektorer}
+:::
+:::
+
+
+:::
+
+
+{{< include ../space.qmd >}}
+
+
+## Aktivitet 2 - Betydning og kontekst {.aimat}
 
 Læs afsnittet [\"Betydning og kontekst\" i noten Word2Vec](../../materialer/sprogmodeller/word2vec.qmd#betydning-og-kontekst). 
 
-Vi gentager en vigtig pointe:
+Vi gentager her en vigtig pointe:
 
 ::: {.highlight .centertext}
-
 **Betydningen af et ord er bestemt af den kontekst, ordet indgår i.**
-
 :::
 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 1: Betydning er kontekst
+### Opgave 2: Betydning er kontekst
 
 Ordet \"får\" har flere betydninger.
 
@@ -49,14 +74,14 @@ Ordet \"får\" har flere betydninger.
 {{< include ../space.qmd >}}
 
 
-## Aktivitet 2 - Træningsdata {.aimat}
+## Aktivitet 3 - Træningsdata {.aimat}
 
 Læs afsnittet [\"Træningsdata\" i noten Word2Vec](../../materialer/sprogmodeller/word2vec.qmd#træningsdata). 
 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 2: Træningsdata
+### Opgave 3: Træningsdata
 
 Betragt følgende tekstkorpus:
 
@@ -83,16 +108,16 @@ Matematik er det sjoveste fag i verden
 {{< include ../space.qmd >}}
 
 
-## Aktivitet 3 - Input- og kontekstvektorer {.aimat}
+## Aktivitet 4 - Fokus- og kontekstvektorer {.aimat}
 
-Læs afsnittet [\"Input- og kontekstvektorer\" i noten Word2Vec](../../materialer/sprogmodeller/word2vec.qmd#input--og-kontekstvektorer). 
+Læs afsnittet [\"Fokus- og kontekstvektorer\" i noten Word2Vec](../../materialer/sprogmodeller/word2vec.qmd#fokus--og-kontekstvektorer). 
 
 
 Husk på denne vigtige pointe:
 
 ::: {.highlight2 }
 
-Vi vil gerne have, at vores input- og kontekstvektorer skal opfylde, at
+Vi vil gerne have, at vores fokus- og kontekstvektorer skal opfylde, at
 hvis $w$ ofte har $c$ som kontekst, så er skalarproduktet
 $\vec{v}_{w}\cdot \vec{k}_{c}$ stort, mens en
 meget negativ værdi af
@@ -103,12 +128,12 @@ sjældent har $c$ som kontekst.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 3: Input- og kontekstvektorer
+### Opgave 4: Fokus- og kontekstvektorer
 
-Antag, at vi har lavet 4-dimensionale input- og kontekstvektorer
+Antag, at vi har lavet 4-dimensionale fokus- og kontekstvektorer
 således, at jo større skalarproduktet
 $\vec{v}_{w}\cdot \vec{k}_{c}$ er, desto mere
-sandsynligt er det, at ordet $w$ har $c$ som kontekst. Inputvektoren
+sandsynligt er det, at ordet $w$ har $c$ som kontekst. vektoren
 for \"hund\" og kontekstvektorerne for \"pels\" og \"fjer\" er
 $$
 \begin{aligned}
@@ -124,11 +149,17 @@ a)    Udregn skalarprodukterne
 b)    Passer det med, hvilket af ordene \"pels\" og \"fjer\" der er mest
     sandsynligt som kontekst til \"hund\"?
 
-Antag, at vi har lavet 3-dimensionale input- og kontekstvektorer som
-beskrevet i afsnittet ovenfor. Så skulle ord, der ofte har samme
-kontekst, gerne have inputvektorer af nogenlunde samme længde og retning, mens inputvektorerne for ord,
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 5: Fokus- og kontekstvektorer
+
+Antag, at vi har lavet 3-dimensionale fokus- og kontekstvektorer som
+beskrevet i afsnittet [\"Fokus- og kontekstvektorer\"](../../materialer/sprogmodeller/word2vec.qmd#fokus--og-kontekstvektorer). Så skulle ord, der ofte har samme
+kontekst, gerne have fokusvektorer af nogenlunde samme længde og retning, mens fokusvektorerne for ord,
 der betyder noget helt forskelligt, kan have meget forskellig længde
-og retning. Antag, at inputvektorerne for \"kat\", \"hund\", \"mis\"
+og retning. Antag, at fokusvektorerne for \"kat\", \"hund\", \"mis\"
 og \"kælk\" er 
 $$
 \begin{aligned}
@@ -140,11 +171,11 @@ $$
 \end{aligned}
 $$
 
-c)    Find længden af de fire vektorer. 
-d)    Find vinklen mellem $\vec{v}_{\text{kat}}$ og de tre øvrige vektorer. 
-e)    Stemmer resultatet overens med, hvilke ord der er tættest på \"kat\" i
+a)    Find længden af de fire vektorer. 
+b)    Find vinklen mellem $\vec{v}_{\text{kat}}$ og de tre øvrige vektorer. 
+c)    Stemmer resultatet overens med, hvilke ord der er tættest på \"kat\" i
     betydning? 
-f)   Tegn vektorerne ind i GeoGebra. Skriv for eksempel `kat=(0,2,1)` i inputfeltet i GeoGebra og vælg derefter \"Vis\" $\rightarrow$ \"3D Grafik\".
+d)   Tegn vektorerne ind i GeoGebra. Skriv for eksempel `kat=(0,2,1)` i inputfeltet i GeoGebra og vælg derefter \"Vis\" $\rightarrow$ \"3D Grafik\".
     
 :::  
 
@@ -153,7 +184,7 @@ f)   Tegn vektorerne ind i GeoGebra. Skriv for eksempel `kat=(0,2,1)` i inputfel
 {{< include ../space.qmd >}}
 
 
-## Aktivitet 4 - Model for sandsynligheder {.aimat}
+## Aktivitet 5 - Model for sandsynligheder {.aimat}
 
 Læs afsnittet [\"Model for sandsynligheder\" i noten Word2Vec](../../materialer/sprogmodeller/word2vec.qmd#model-for-sandsynligheder). 
 
@@ -186,7 +217,7 @@ $$ {#eq-softmax}
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 4: Softmax
+### Opgave 6: Softmax
 
 Lad $\vec{y}$ være vektoren
 $$\vec{y}= \begin{pmatrix} 1 \\2 \\-1 \end{pmatrix}$$
@@ -228,10 +259,10 @@ $${#eq-sshmodel}
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 5: Model for sandsynligheder
+### Opgave 7: Model for sandsynligheder
 
 Antag, at vores ordforråd består af de tre ord \"sommer\", \"sol\" og \"sne\". Vi har lavet en model for sandsynligheder for kontekstord som i (@eq-sshmodel), hvor 
-inputvektoren for \"sommer\" og kontekstvektorerne for \"sommer\", \"sol\" og
+fokusvektoren for \"sommer\" og kontekstvektorerne for \"sommer\", \"sol\" og
 \"sne\" er givet ved 
 $$
 \begin{aligned}
@@ -242,33 +273,98 @@ $$
 \vec{k}_{\text{sne}} =\begin{pmatrix} -1\\-2\end{pmatrix}
 \end{aligned}
 $$
-a) Hvad er sandsynligheden for, at hvert af de tre ord er 
-    kontekst til \"sommer\"?     
 
-b) Passer svaret fra a. med, hvilket af de tre ord, som du umiddelbart vil tænke, oftest optræder som kontekst til sommer?
+a) Indtegn repræsentanter for de fire vektorer i et koordinatsystem. 
+
+b) Hvad er sandsynligheden for, at hvert af de tre ord er kontekst til \"sommer\"?     
+
+c) Passer svaret fra b. med, hvilket af de tre ord, som du umiddelbart vil tænke, oftest optræder som kontekst til sommer?
 
 :::
-
 
 {{< include ../space.qmd >}}
 
 
-## Aktivitet 5 - Estimatation af vektorrepræsentationer {.aimat}
+## Aktivitet 6 - Vektorrepræsentationer {.aimat}
 
 Læs afsnittet [\"Estimatation af vektorrepræsentationer\" i noten Word2Vec](../../materialer/sprogmodeller/word2vec.qmd#estimation-af-vektorrepræsentationer). 
+
+
+For at finde minimum for tabsfunktionen har man brug for at bestemme såkaldte *partielle afledede*. Hvis du ikke har hørt om det før, så kan du læse mere i boksen herunder.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+
+### Partielle afledede
+
+Funktionen
+
+$$
+f(x,y) = x^2+3xy+\mathrm{e}^y
+$$
+
+afhænger ikke kun af én, men af to variable nemlig $x$ og $y$. Man kan derfor differentiere $f$ både med hensyn til $x$ (hvor man betragter $y$ som en konstant) og med hensyn til $y$ (hvor man betragter $x$ som en konstant). Disse afledede kaldes for partielle afledede og betegnes med
+
+$$
+\frac{\partial f}{\partial x} \quad \textrm{og} \quad \frac{\partial f}{\partial y}
+$$
+
+Når man for eksempel skal finde $\frac{\partial f}{\partial x}$, så differentierer man $f(x,y)$, hvor man tænker på $x$ som den variable og $y$ som en konstant. Tilsvarende med $\frac{\partial f}{\partial y}$. I dette eksempel giver det:
+
+$$
+\frac{\partial f}{\partial x} = \frac{\partial }{\partial x} (x^2) + \frac{\partial }{\partial x} (3xy) + \frac{\partial }{\partial x} (\mathrm{e}^y) = 2x + 3y + 0 = 2x + 3y
+$$
+
+og 
+
+$$
+\frac{\partial f}{\partial y} = \frac{\partial }{\partial y} (x^2) + \frac{\partial }{\partial y} (3xy) + \frac{\partial }{\partial y} (\mathrm{e}^y) = 0 + 3x + \mathrm{e}^y
+
+$$
+
+:::
+
+Da Softmax-funktionen indgår i tabsfunktionen, får man brug for at finde partielle afledte af denne funktion. Husk på, at Softmax-funktionen er defineret sådan her:
+
+$$
+z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}
+$$
+
+For at diffentiere denne funktion, får vi brug for kvotientreglen for differentiation:
+
+::: {.highlight }
+
+**Kvotientreglen for differentiation **
+
+$$
+\left ( \frac{f}{g}\right)'(x) = \frac{f'(x) \cdot g(x)-f(x) \cdot g'(x)}{(g(x))^2}, \quad g(x) \neq 0
+$$
+:::
 
 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 6: Partielle afledte af Softmax-funktionen
+### Opgave 8: Partielle afledte af Softmax-funktionen
 
-
-For at finde minimum for tabsfunktionen, får man brug for at finde partielle afledte af Softmax-funktionen. Det kan man gøre smart ved hjælp af nedenstående opgave, som viser, at man ikke behøver at kende værdien af $\vec{y}$ i det punkt, hvor man differentierer, men kun funktionsværdien $\vec{z}$.
     
-a) Vis ved at bruge udtrykket i (@eq-softmax) følgende egenskaber ved de partielle afledte af Softmax-funktionen:
+a) Vis følgende egenskaber ved de partielle afledte af Softmax-funktionen:
 
-$$\frac{\partial z_i}{\partial y_i} = z_i(1-z_i),\quad \frac{\partial z_i}{\partial y_j} = -z_iz_j, \quad i\neq j$$
+$$\frac{\partial z_i}{\partial y_i} = z_i(1-z_i) \quad \quad \textrm{og} \quad\quad \frac{\partial z_i}{\partial y_j} = -z_iz_j, \quad i\neq j$$
 
+Husk på, at
+
+$$
+\frac{\partial }{\partial y_i} (\mathrm{e}^{y_i}) = \mathrm{e}^{y_i} 
+$$
+
+mens
+
+$$
+\frac{\partial }{\partial y_j} (\mathrm{e}^{y_i}) = 0   
+$$
+
+hvis $i \neq j$.
 
 :::
+
+Bemærk, at ovenståend opgaver giver, at man ikke behøver at kende værdien af $\vec{y}$ i det punkt, hvor man differentierer, men kun funktionsværdien $\vec{z}$. Det viser sig at have meget store beregningsmæssige fordele, når man skal finde minimum for tabsfunktionen, så det er faktisk en overordentlig vigtig egenskab!

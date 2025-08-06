@@ -1,0 +1,193 @@
+---
+title: "Del 3: Tekstgenerering med neurale netværk"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+::: {.estimeret_tid}
+
+Forventet tid ca. 60 min.
+
+:::
+
+{{< include ../space.qmd >}}
+
+
+## Aktivitet 1 - Antal parametre i modellen {.aimat}
+
+Læs det første afsnit i noten [Tekstgenerering med neurale netværk](../../materialer/sprogmodeller/tekstgenerering.qmd). 
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 1: Antal parametre i det neurale netværk
+
+Vi betragter det kunstige neurale netværk med ét skjult lag, som skal bruges til tekstgenerering:
+
+![](../../materialer/sprogmodeller/images/NN_tekstgenerering.png){width=50% fig-align='center'}
+
+* Hvad angiver $m$, $d$ og $V$ i figuren?
+
+* Undersøg, hvor mange ord der cirka er i det danske sprog.
+
+Antag, at alle ord repræsenteres ved en 3-dimensional vektor og at $d=50$. 
+
+* Hvor mange vægte indgår da i det neurale net?
+
+* Hvis alle ord repræsenteres ved en 100-dimensional vektor, hvor mange vægte skal så estimeres?
+
+* Undersøg hvor mange vægte (eller parametre, som de også kaldes) de store sprogmodeller har i dag (det præcise antal er en forretningshemmelighed, så du kan ikke finde det præcise svar!).
+
+:::
+
+
+{{< include ../space.qmd >}}
+
+
+## Aktivitet 2 -  Træning af netværk {.aimat}
+
+Læs afsnittet [Træning af netværk](../../materialer/sprogmodeller/tekstgenerering.qmd#træning-af-netværket). 
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 2: Cross-entropy
+
+Vi forstiller os, at vi har ordnet ordene i vores ordforråd på denne måde:
+
+$$
+\begin{pmatrix}
+\vdots
+\\
+\textrm{solen}
+\\
+\textrm{månen}
+\\
+\textrm{himlen}
+\\
+\vdots
+\end{pmatrix}
+$$
+
+Et sted i vores tekstkorpus står der 
+
+::: {.llm_saetninger}
+\"jeg ser på månen\"
+:::
+
+og en række i træningsdata vil derfor være
+
+| Input 1 | Input 2 | Input 3 | Target |
+|:---:|:---:|:---:|:---:|
+| $\vdots$ | $\vdots$ | $\vdots$ | $\vdots$ |
+| jeg | ser | på | månen |
+| $\vdots$ | $\vdots$ | $\vdots$ | $\vdots$ |
+
+Targetvektoren $\vec t$ for denne række er da
+
+$$
+\vec t = 
+\begin{pmatrix}
+\vdots
+\\
+0
+\\
+1
+\\
+0
+\\
+\vdots
+\end{pmatrix}
+$$
+
+Vi har trænet to netværk, som for dette træningseksempel har givet følgende outputvektor (på alle andre koordinater i vektoren står der $0$)
+
+$$
+\textrm{Netværk 1:} \quad \vec z =
+\begin{pmatrix}
+\vdots
+\\
+P(\text{solen } |\text{ "jeg ser på" })
+\\
+P(\text{månen } |\text{ "jeg ser på" })
+\\
+P(\text{himlen } |\text{ "jeg ser på" })
+\\
+\vdots
+\end{pmatrix} =
+\begin{pmatrix}
+\vdots
+\\
+0.25
+\\
+0.61
+\\
+0.14
+\\
+\vdots
+\end{pmatrix}
+$$
+
+og
+
+$$
+\textrm{Netværk 2:} \quad \vec z =
+\begin{pmatrix}
+\vdots
+\\
+P(\text{solen } |\text{ "jeg ser på" })
+\\
+P(\text{månen } |\text{ "jeg ser på" })
+\\
+P(\text{himlen } |\text{ "jeg ser på" })
+\\
+\vdots
+\end{pmatrix} =
+\begin{pmatrix}
+\vdots
+\\
+0.32
+\\
+0.59
+\\
+0.29
+\\
+\vdots
+\end{pmatrix}
+$$
+
+* Vis, at alle koordinater i $\vec z$ kan fortolkes som sandsynligheder, og at summen af sandsynlighederne er 1.
+
+* Udregn bidraget til *cross-entropy* tabsfunktionen $CE(\vec z, \vec t)$ for begge netværk.
+
+* Hvilket netværk ville du på baggrund af dette ene træningseksempel vælge? Stemmer det overens med sandsynlighederne?
+
+::::
+
+{{< include ../space.qmd >}}
+
+
+## Aktivitet 3 -  Tekstgenerering {.aimat}
+
+Læs afsnittet [Tekstgenerering](../../materialer/sprogmodeller/tekstgenerering.qmd#tekstgenerering). 
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 3: Prædiktion af næste ord
+
+En opgave hvor et netværk er trænet på det lille tekstkorpus fra Simple-noten:
+
+::: {.llm_saetninger}
+\" En hund løber efter en kat. \
+Løber en hund efter en kat? \
+En kat løber ikke efter en hund. \
+Efter en kat løber en hund.\"
+:::
+
+og hvor elever så igen starter med \"En hund\" og skal danne en sætning ud fra det... Eller måske noget sjovere...!
+
+:::
