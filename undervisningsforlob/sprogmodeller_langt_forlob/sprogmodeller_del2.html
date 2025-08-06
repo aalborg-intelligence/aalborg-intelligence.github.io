@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Del 1: Word2Vec – AI MAT - matematikken bag magien</title>
+<title>Del 2: Word2Vec – AI MAT - matematikken bag magien</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -40,7 +40,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-50adae69b969a79616f6f61fc6303160.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-a92bfcb80a15d90ef98da459e5c23ce9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -181,11 +181,12 @@ window.Quarto = {
     <h2 id="toc-title">Indhold</h2>
    
   <ul>
-  <li><a href="#aktivitet-1---betydning-og-kontekst" id="toc-aktivitet-1---betydning-og-kontekst" class="nav-link active" data-scroll-target="#aktivitet-1---betydning-og-kontekst">Aktivitet 1 - Betydning og kontekst</a></li>
-  <li><a href="#aktivitet-2---træningsdata" id="toc-aktivitet-2---træningsdata" class="nav-link" data-scroll-target="#aktivitet-2---træningsdata">Aktivitet 2 - Træningsdata</a></li>
-  <li><a href="#aktivitet-3---input--og-kontekstvektorer" id="toc-aktivitet-3---input--og-kontekstvektorer" class="nav-link" data-scroll-target="#aktivitet-3---input--og-kontekstvektorer">Aktivitet 3 - Input- og kontekstvektorer</a></li>
-  <li><a href="#aktivitet-4---model-for-sandsynligheder" id="toc-aktivitet-4---model-for-sandsynligheder" class="nav-link" data-scroll-target="#aktivitet-4---model-for-sandsynligheder">Aktivitet 4 - Model for sandsynligheder</a></li>
-  <li><a href="#aktivitet-5---estimatation-af-vektorrepræsentationer" id="toc-aktivitet-5---estimatation-af-vektorrepræsentationer" class="nav-link" data-scroll-target="#aktivitet-5---estimatation-af-vektorrepræsentationer">Aktivitet 5 - Estimatation af vektorrepræsentationer</a></li>
+  <li><a href="#aktivitet-1---ord-som-vektorer" id="toc-aktivitet-1---ord-som-vektorer" class="nav-link active" data-scroll-target="#aktivitet-1---ord-som-vektorer">Aktivitet 1 - Ord som vektorer</a></li>
+  <li><a href="#aktivitet-2---betydning-og-kontekst" id="toc-aktivitet-2---betydning-og-kontekst" class="nav-link" data-scroll-target="#aktivitet-2---betydning-og-kontekst">Aktivitet 2 - Betydning og kontekst</a></li>
+  <li><a href="#aktivitet-3---træningsdata" id="toc-aktivitet-3---træningsdata" class="nav-link" data-scroll-target="#aktivitet-3---træningsdata">Aktivitet 3 - Træningsdata</a></li>
+  <li><a href="#aktivitet-4---fokus--og-kontekstvektorer" id="toc-aktivitet-4---fokus--og-kontekstvektorer" class="nav-link" data-scroll-target="#aktivitet-4---fokus--og-kontekstvektorer">Aktivitet 4 - Fokus- og kontekstvektorer</a></li>
+  <li><a href="#aktivitet-5---model-for-sandsynligheder" id="toc-aktivitet-5---model-for-sandsynligheder" class="nav-link" data-scroll-target="#aktivitet-5---model-for-sandsynligheder">Aktivitet 5 - Model for sandsynligheder</a></li>
+  <li><a href="#aktivitet-6---vektorrepræsentationer" id="toc-aktivitet-6---vektorrepræsentationer" class="nav-link" data-scroll-target="#aktivitet-6---vektorrepræsentationer">Aktivitet 6 - Vektorrepræsentationer</a></li>
   </ul>
 </nav>
 </nav>
@@ -198,7 +199,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Del 1: Word2Vec</h1>
+<h1 class="title">Del 2: Word2Vec</h1>
 </div>
 
 
@@ -216,8 +217,8 @@ window.Quarto = {
 
 
 <div class="estimeret_tid">
-<p>Forventet tid ca. 90 min.</p>
-<p>Aktivitet 5 kan udelades eller bruges som ekstra udfordring.</p>
+<p>Forventet tid ca. 90-120 min.</p>
+<p>Aktivitet 6 kan udelades eller bruges som ekstra udfordring.</p>
 </div>
 <p>For at en computer skal kunne forstå sprog, har vi brug for at få kvantificeret alle ord i vores ordforråd. Hvis ikke vi på en eller anden måde, kan få lavet ord om til tal, bliver det svært at regne på dem! Algoritmen <strong>Word2Vec</strong> er et bud på, hvordan det kan gøres. Idéen er at repræsentere hvert ord med en vektor på en sådan måde, at alle ord, hvis betydning ligner hinanden, repræsenteres med vektorer, der peger i nogenlunde samme retning og har nogenlunde samme længde.</p>
 <p>I denne del skal vi se på, hvordan det kan gøres.</p>
@@ -225,24 +226,97 @@ window.Quarto = {
 <br>
 <br>
 </p>
-<section id="aktivitet-1---betydning-og-kontekst" class="level2 aimat">
-<h2 class="aimat anchored" data-anchor-id="aktivitet-1---betydning-og-kontekst">Aktivitet 1 - Betydning og kontekst</h2>
-<p>Læs afsnittet <a href="../../materialer/sprogmodeller/word2vec.html#betydning-og-kontekst">"Betydning og kontekst" i noten Word2Vec</a>.</p>
-<p>Vi gentager en vigtig pointe:</p>
-<div class="highlight centertext">
-<p><strong>Betydningen af et ord er bestemt af den kontekst, ordet indgår i.</strong></p>
-</div>
+<section id="aktivitet-1---ord-som-vektorer" class="level2 aimat">
+<h2 class="aimat anchored" data-anchor-id="aktivitet-1---ord-som-vektorer">Aktivitet 1 - Ord som vektorer</h2>
+<p>Læs det første afsnit i <a href="../../materialer/sprogmodeller/word2vec.html">noten Word2Vec</a>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 1: Betydning er kontekst
+Opgave 1: Ord som vektorer
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>I algoritmen <strong>Word2Vec</strong> bliver hvert ord repræsenteret som en vektor. Det gøres på en sådan måde at ord, hvis betydning minder om hinanden, svarer til vektorer med nogenlunde samme retning og længde.</p>
+<ul>
+<li>Brug app’en herunder til at argumentere for, hvorfor de fire vektorer har den længde og retning, som de har.</li>
+</ul>
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<script src="https://cdn.geogebra.org/apps/deployggb.js"></script>
+
+<!-- 
+Alle geogebra filer placeres i mappen _geogebra
+Erstat XXX med nr på app og erstat YYY med navn på ggb-fil -->
+<script>
+var parameters_vektorer = {
+"id": "ggbApplet_vektorer",
+"width":500,
+"height":400,
+"prerelease":false,
+"borderColor":null,
+"showMenuBar":false,
+"showAlgebraInput":false,
+"showToolBar":false,
+"showToolBarHelp":false,
+"showResetIcon":true,
+"enableLabelDrags":false,
+"enableShiftDragZoom":true,
+"enableRightClick":false,
+"errorDialogsActive":false,
+"useBrowserForJS":false,
+"capturingThreshold":null,
+"language":"da",
+// use this instead of ggbBase64 to load a .ggb file
+ "filename":"_geogebra/fig_simple.ggb",
+};
+var applet_vektorer = new GGBApplet(parameters_vektorer, true);
+</script>
+
+
+
+<script>
+window.onload = function() {
+  applet_vektorer.inject('ggbApplet_vektorer');
+  }
+</script>
+
+<div width="100%">
+<div id="ggbApplet_vektorer">
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><br>
+<br>
+<br>
+</p>
+</section>
+<section id="aktivitet-2---betydning-og-kontekst" class="level2 aimat">
+<h2 class="aimat anchored" data-anchor-id="aktivitet-2---betydning-og-kontekst">Aktivitet 2 - Betydning og kontekst</h2>
+<p>Læs afsnittet <a href="../../materialer/sprogmodeller/word2vec.html#betydning-og-kontekst">"Betydning og kontekst" i noten Word2Vec</a>.</p>
+<p>Vi gentager her en vigtig pointe:</p>
+<div class="highlight centertext">
+<p><strong>Betydningen af et ord er bestemt af den kontekst, ordet indgår i.</strong></p>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 2: Betydning er kontekst
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Ordet "får" har flere betydninger.</p>
 <ul>
@@ -257,20 +331,20 @@ Opgave 1: Betydning er kontekst
 <br>
 </p>
 </section>
-<section id="aktivitet-2---træningsdata" class="level2 aimat">
-<h2 class="aimat anchored" data-anchor-id="aktivitet-2---træningsdata">Aktivitet 2 - Træningsdata</h2>
+<section id="aktivitet-3---træningsdata" class="level2 aimat">
+<h2 class="aimat anchored" data-anchor-id="aktivitet-3---træningsdata">Aktivitet 3 - Træningsdata</h2>
 <p>Læs afsnittet <a href="../../materialer/sprogmodeller/word2vec.html#træningsdata">"Træningsdata" i noten Word2Vec</a>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 2: Træningsdata
+Opgave 3: Træningsdata
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Betragt følgende tekstkorpus:</p>
 <div class="llm_saetninger">
@@ -325,26 +399,26 @@ Opgave 2: Træningsdata
 <br>
 </p>
 </section>
-<section id="aktivitet-3---input--og-kontekstvektorer" class="level2 aimat">
-<h2 class="aimat anchored" data-anchor-id="aktivitet-3---input--og-kontekstvektorer">Aktivitet 3 - Input- og kontekstvektorer</h2>
-<p>Læs afsnittet <a href="../../materialer/sprogmodeller/word2vec.html#input--og-kontekstvektorer">"Input- og kontekstvektorer" i noten Word2Vec</a>.</p>
+<section id="aktivitet-4---fokus--og-kontekstvektorer" class="level2 aimat">
+<h2 class="aimat anchored" data-anchor-id="aktivitet-4---fokus--og-kontekstvektorer">Aktivitet 4 - Fokus- og kontekstvektorer</h2>
+<p>Læs afsnittet <a href="../../materialer/sprogmodeller/word2vec.html#fokus--og-kontekstvektorer">"Fokus- og kontekstvektorer" i noten Word2Vec</a>.</p>
 <p>Husk på denne vigtige pointe:</p>
 <div class="highlight2">
-<p>Vi vil gerne have, at vores input- og kontekstvektorer skal opfylde, at hvis <span class="math inline">\(w\)</span> ofte har <span class="math inline">\(c\)</span> som kontekst, så er skalarproduktet <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span> stort, mens en meget negativ værdi af <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span> indikerer, at <span class="math inline">\(w\)</span> sjældent har <span class="math inline">\(c\)</span> som kontekst.</p>
+<p>Vi vil gerne have, at vores fokus- og kontekstvektorer skal opfylde, at hvis <span class="math inline">\(w\)</span> ofte har <span class="math inline">\(c\)</span> som kontekst, så er skalarproduktet <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span> stort, mens en meget negativ værdi af <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span> indikerer, at <span class="math inline">\(w\)</span> sjældent har <span class="math inline">\(c\)</span> som kontekst.</p>
 </div>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 3: Input- og kontekstvektorer
+Opgave 4: Fokus- og kontekstvektorer
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Antag, at vi har lavet 4-dimensionale input- og kontekstvektorer således, at jo større skalarproduktet <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span> er, desto mere sandsynligt er det, at ordet <span class="math inline">\(w\)</span> har <span class="math inline">\(c\)</span> som kontekst. Inputvektoren for "hund" og kontekstvektorerne for "pels" og "fjer" er <span class="math display">\[
+<p>Antag, at vi har lavet 4-dimensionale fokus- og kontekstvektorer således, at jo større skalarproduktet <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span> er, desto mere sandsynligt er det, at ordet <span class="math inline">\(w\)</span> har <span class="math inline">\(c\)</span> som kontekst. vektoren for "hund" og kontekstvektorerne for "pels" og "fjer" er <span class="math display">\[
 \begin{aligned}
 \vec{v}_{\text{hund}}=\begin{pmatrix} 0.5\\2\\1\\-1\end{pmatrix} ,\quad
 \vec{k}_{\text{pels}}=\begin{pmatrix} 0\\3\\2\\-2\end{pmatrix},\quad
@@ -355,7 +429,22 @@ Opgave 3: Input- og kontekstvektorer
 <li>Udregn skalarprodukterne <span class="math inline">\(\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{pels}}\)</span> og <span class="math inline">\(\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{fjer}}\)</span>.</li>
 <li>Passer det med, hvilket af ordene "pels" og "fjer" der er mest sandsynligt som kontekst til "hund"?</li>
 </ol>
-<p>Antag, at vi har lavet 3-dimensionale input- og kontekstvektorer som beskrevet i afsnittet ovenfor. Så skulle ord, der ofte har samme kontekst, gerne have inputvektorer af nogenlunde samme længde og retning, mens inputvektorerne for ord, der betyder noget helt forskelligt, kan have meget forskellig længde og retning. Antag, at inputvektorerne for "kat", "hund", "mis" og "kælk" er <span class="math display">\[
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 5: Fokus- og kontekstvektorer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Antag, at vi har lavet 3-dimensionale fokus- og kontekstvektorer som beskrevet i afsnittet <a href="../../materialer/sprogmodeller/word2vec.html#fokus--og-kontekstvektorer">"Fokus- og kontekstvektorer"</a>. Så skulle ord, der ofte har samme kontekst, gerne have fokusvektorer af nogenlunde samme længde og retning, mens fokusvektorerne for ord, der betyder noget helt forskelligt, kan have meget forskellig længde og retning. Antag, at fokusvektorerne for "kat", "hund", "mis" og "kælk" er <span class="math display">\[
 \begin{aligned}
 \vec{v}_{\text{kat}}=\begin{pmatrix}0\\2\\1 \end{pmatrix},\quad
 \vec{v}_{\text{hund}}=\begin{pmatrix}0\\1.2\\1.8\end{pmatrix}, \\
@@ -364,7 +453,7 @@ Opgave 3: Input- og kontekstvektorer
 \vec{v}_{\text{kælk}}=\begin{pmatrix} 0\\-1\\-2 \end{pmatrix}
 \end{aligned}
 \]</span></p>
-<ol start="3" type="a">
+<ol type="a">
 <li>Find længden af de fire vektorer.</li>
 <li>Find vinklen mellem <span class="math inline">\(\vec{v}_{\text{kat}}\)</span> og de tre øvrige vektorer.</li>
 <li>Stemmer resultatet overens med, hvilke ord der er tættest på "kat" i betydning?</li>
@@ -378,8 +467,8 @@ Opgave 3: Input- og kontekstvektorer
 <br>
 </p>
 </section>
-<section id="aktivitet-4---model-for-sandsynligheder" class="level2 aimat">
-<h2 class="aimat anchored" data-anchor-id="aktivitet-4---model-for-sandsynligheder">Aktivitet 4 - Model for sandsynligheder</h2>
+<section id="aktivitet-5---model-for-sandsynligheder" class="level2 aimat">
+<h2 class="aimat anchored" data-anchor-id="aktivitet-5---model-for-sandsynligheder">Aktivitet 5 - Model for sandsynligheder</h2>
 <p>Læs afsnittet <a href="../../materialer/sprogmodeller/word2vec.html#model-for-sandsynligheder">"Model for sandsynligheder" i noten Word2Vec</a>.</p>
 <p>Vi starter med at minde om definitionen af Softmax:</p>
 <div class="highlight2">
@@ -400,16 +489,16 @@ z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}
 \tag{1}\]</span></span></p>
 </div>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 4: Softmax
+Opgave 6: Softmax
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Lad <span class="math inline">\(\vec{y}\)</span> være vektoren <span class="math display">\[\vec{y}= \begin{pmatrix} 1 \\2 \\-1 \end{pmatrix}\]</span></p>
 <ol type="a">
@@ -438,18 +527,18 @@ P(\text{ord}_i\mid w) &amp;= z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \d
 \end{aligned}
 \tag{2}\]</span></span></p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 5: Model for sandsynligheder
+Opgave 7: Model for sandsynligheder
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Antag, at vores ordforråd består af de tre ord "sommer", "sol" og "sne". Vi har lavet en model for sandsynligheder for kontekstord som i (<a href="#eq-sshmodel" class="quarto-xref">2</a>), hvor inputvektoren for "sommer" og kontekstvektorerne for "sommer", "sol" og "sne" er givet ved <span class="math display">\[
+<p>Antag, at vores ordforråd består af de tre ord "sommer", "sol" og "sne". Vi har lavet en model for sandsynligheder for kontekstord som i (<a href="#eq-sshmodel" class="quarto-xref">2</a>), hvor fokusvektoren for "sommer" og kontekstvektorerne for "sommer", "sol" og "sne" er givet ved <span class="math display">\[
 \begin{aligned}
 \vec{v}_{\text{sommer}}=\begin{pmatrix} 1\\1\end{pmatrix},\quad
 \vec{k}_{\text{sommer}}=\begin{pmatrix} 1\\-1 \end{pmatrix} ,\\
@@ -457,9 +546,11 @@ Opgave 5: Model for sandsynligheder
 \vec{k}_{\text{sol}}=\begin{pmatrix} 0\\2\end{pmatrix},\quad
 \vec{k}_{\text{sne}} =\begin{pmatrix} -1\\-2\end{pmatrix}
 \end{aligned}
-\]</span> a) Hvad er sandsynligheden for, at hvert af de tre ord er kontekst til "sommer"?</p>
-<ol start="2" type="a">
-<li>Passer svaret fra a. med, hvilket af de tre ord, som du umiddelbart vil tænke, oftest optræder som kontekst til sommer?</li>
+\]</span></p>
+<ol type="a">
+<li><p>Indtegn repræsentanter for de fire vektorer i et koordinatsystem.</p></li>
+<li><p>Hvad er sandsynligheden for, at hvert af de tre ord er kontekst til "sommer"?</p></li>
+<li><p>Passer svaret fra b. med, hvilket af de tre ord, som du umiddelbart vil tænke, oftest optræder som kontekst til sommer?</p></li>
 </ol>
 </div>
 </div>
@@ -469,29 +560,80 @@ Opgave 5: Model for sandsynligheder
 <br>
 </p>
 </section>
-<section id="aktivitet-5---estimatation-af-vektorrepræsentationer" class="level2 aimat">
-<h2 class="aimat anchored" data-anchor-id="aktivitet-5---estimatation-af-vektorrepræsentationer">Aktivitet 5 - Estimatation af vektorrepræsentationer</h2>
+<section id="aktivitet-6---vektorrepræsentationer" class="level2 aimat">
+<h2 class="aimat anchored" data-anchor-id="aktivitet-6---vektorrepræsentationer">Aktivitet 6 - Vektorrepræsentationer</h2>
 <p>Læs afsnittet <a href="../../materialer/sprogmodeller/word2vec.html#estimation-af-vektorrepræsentationer">"Estimatation af vektorrepræsentationer" i noten Word2Vec</a>.</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
+<p>For at finde minimum for tabsfunktionen har man brug for at bestemme såkaldte <em>partielle afledede</em>. Hvis du ikke har hørt om det før, så kan du læse mere i boksen herunder.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 6: Partielle afledte af Softmax-funktionen
+Partielle afledede
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>For at finde minimum for tabsfunktionen, får man brug for at finde partielle afledte af Softmax-funktionen. Det kan man gøre smart ved hjælp af nedenstående opgave, som viser, at man ikke behøver at kende værdien af <span class="math inline">\(\vec{y}\)</span> i det punkt, hvor man differentierer, men kun funktionsværdien <span class="math inline">\(\vec{z}\)</span>.</p>
+<p>Funktionen</p>
+<p><span class="math display">\[
+f(x,y) = x^2+3xy+\mathrm{e}^y
+\]</span></p>
+<p>afhænger ikke kun af én, men af to variable nemlig <span class="math inline">\(x\)</span> og <span class="math inline">\(y\)</span>. Man kan derfor differentiere <span class="math inline">\(f\)</span> både med hensyn til <span class="math inline">\(x\)</span> (hvor man betragter <span class="math inline">\(y\)</span> som en konstant) og med hensyn til <span class="math inline">\(y\)</span> (hvor man betragter <span class="math inline">\(x\)</span> som en konstant). Disse afledede kaldes for partielle afledede og betegnes med</p>
+<p><span class="math display">\[
+\frac{\partial f}{\partial x} \quad \textrm{og} \quad \frac{\partial f}{\partial y}
+\]</span></p>
+<p>Når man for eksempel skal finde <span class="math inline">\(\frac{\partial f}{\partial x}\)</span>, så differentierer man <span class="math inline">\(f(x,y)\)</span>, hvor man tænker på <span class="math inline">\(x\)</span> som den variable og <span class="math inline">\(y\)</span> som en konstant. Tilsvarende med <span class="math inline">\(\frac{\partial f}{\partial y}\)</span>. I dette eksempel giver det:</p>
+<p><span class="math display">\[
+\frac{\partial f}{\partial x} = \frac{\partial }{\partial x} (x^2) + \frac{\partial }{\partial x} (3xy) + \frac{\partial }{\partial x} (\mathrm{e}^y) = 2x + 3y + 0 = 2x + 3y
+\]</span></p>
+<p>og</p>
+<p>$$ = (x^2) + (3xy) + (^y) = 0 + 3x + ^y</p>
+<p>$$</p>
+</div>
+</div>
+</div>
+<p>Da Softmax-funktionen indgår i tabsfunktionen, får man brug for at finde partielle afledte af denne funktion. Husk på, at Softmax-funktionen er defineret sådan her:</p>
+<p><span class="math display">\[
+z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}
+\]</span></p>
+<p>For at diffentiere denne funktion, får vi brug for kvotientreglen for differentiation:</p>
+<div class="highlight">
+<p><strong>Kvotientreglen for differentiation </strong></p>
+<p><span class="math display">\[
+\left ( \frac{f}{g}\right)'(x) = \frac{f'(x) \cdot g(x)-f(x) \cdot g'(x)}{(g(x))^2}, \quad g(x) \neq 0
+\]</span></p>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 8: Partielle afledte af Softmax-funktionen
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
 <ol type="a">
-<li>Vis ved at bruge udtrykket i (<a href="#eq-softmax" class="quarto-xref">1</a>) følgende egenskaber ved de partielle afledte af Softmax-funktionen:</li>
+<li>Vis følgende egenskaber ved de partielle afledte af Softmax-funktionen:</li>
 </ol>
-<p><span class="math display">\[\frac{\partial z_i}{\partial y_i} = z_i(1-z_i),\quad \frac{\partial z_i}{\partial y_j} = -z_iz_j, \quad i\neq j\]</span></p>
+<p><span class="math display">\[\frac{\partial z_i}{\partial y_i} = z_i(1-z_i) \quad \quad \textrm{og} \quad\quad \frac{\partial z_i}{\partial y_j} = -z_iz_j, \quad i\neq j\]</span></p>
+<p>Husk på, at</p>
+<p><span class="math display">\[
+\frac{\partial }{\partial y_i} (\mathrm{e}^{y_i}) = \mathrm{e}^{y_i}
+\]</span></p>
+<p>mens</p>
+<p><span class="math display">\[
+\frac{\partial }{\partial y_j} (\mathrm{e}^{y_i}) = 0   
+\]</span></p>
+<p>hvis <span class="math inline">\(i \neq j\)</span>.</p>
 </div>
 </div>
 </div>
+<p>Bemærk, at ovenståend opgaver giver, at man ikke behøver at kende værdien af <span class="math inline">\(\vec{y}\)</span> i det punkt, hvor man differentierer, men kun funktionsværdien <span class="math inline">\(\vec{z}\)</span>. Det viser sig at have meget store beregningsmæssige fordele, når man skal finde minimum for tabsfunktionen, så det er faktisk en overordentlig vigtig egenskab!</p>
 
 
 </section>
