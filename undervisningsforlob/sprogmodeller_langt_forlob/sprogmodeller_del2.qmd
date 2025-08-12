@@ -15,7 +15,7 @@ Aktivitet 6 kan udelades eller bruges som ekstra udfordring.
 
 :::
 
-For at en computer skal kunne forstå sprog, har vi brug for at få kvantificeret alle ord i vores ordforråd. Hvis ikke vi på en eller anden måde, kan få lavet ord om til tal, bliver det svært at regne på dem! Algoritmen **Word2Vec** er et bud på, hvordan det kan gøres. Idéen er at repræsentere hvert ord med en vektor på en sådan måde, at alle ord, hvis betydning ligner hinanden, repræsenteres med vektorer, der peger i nogenlunde samme retning og har nogenlunde samme længde.
+For at en computer skal kunne forstå sprog, har vi brug for at få kvantificeret alle ord i vores ordforråd. Hvis ikke vi på en eller anden måde kan få lavet ord om til tal, bliver det svært at regne på dem! Algoritmen **Word2Vec** er et bud på, hvordan det kan gøres. Idéen er at repræsentere hvert ord med en vektor på en sådan måde, at alle ord, hvis betydning ligner hinanden, repræsenteres med vektorer, der peger i nogenlunde samme retning og har nogenlunde samme længde.
 
 I denne del skal vi se på, hvordan det kan gøres.
 
@@ -65,7 +65,7 @@ Vi gentager her en vigtig pointe:
 
 Ordet \"får\" har flere betydninger.
 
-* Skriv mindst to sætninger, hvor man ud fra konteksten forstår betydningen af \"får\".
+* Skriv mindst to sætninger, hvor man ud fra konteksten forstår to forskellige betydninger af \"får\".
 
 * Find selv på et ord med flere betydninger og skriv mindst to sætninger, som afslører betydningen.
 
@@ -89,7 +89,7 @@ Betragt følgende tekstkorpus:
 Matematik er det sjoveste fag i verden
 :::
 
-* Udfyld med udgangspunkt i ovenstående tekstkorpus og et 3-ords vindue denne tabel (se eventuelt [tabel 1 i noten om Word2vec](../../materialer/sprogmodeller/word2vec.qmd#tbl-data)):
+* Udfyld med udgangspunkt i ovenstående tekstkorpus og et 3-ords vindue nedenstående tabel (se eventuelt [tabel 1 i noten om Word2vec](../../materialer/sprogmodeller/word2vec.qmd#tbl-data)). Bemærk, at kontekstcellen skal være blank, hvis den tilsvarende plads i vinduet er tom.
 
    | Fokus | Kontekst |
    |:---:|:---:|
@@ -290,7 +290,7 @@ c) Passer svaret fra b. med, hvilket af de tre ord, som du umiddelbart vil tænk
 Læs afsnittet [\"Estimatation af vektorrepræsentationer\" i noten Word2Vec](../../materialer/sprogmodeller/word2vec.qmd#estimation-af-vektorrepræsentationer). 
 
 
-For at finde minimum for tabsfunktionen har man brug for at bestemme såkaldte *partielle afledede*. Hvis du ikke har hørt om det før, så kan du læse mere i boksen herunder.
+Tabsfunktionen er en funktion af flere variable, nemlig alle vægtene. Vi skal finde de vægte, der minimerer tabsfunktionen. I ved, at for at finde minimum for en funktion af én variabel, skal man se på, hvornår den afledte funktion er nul. For funktioner af flere variable gælder tilsvarende, at minimum skal findes i et punkt hvor alle de *partielle afledede* er nul. Hvis du ikke har hørt om partielle afledede før, kan du læse mere i boksen herunder.
 
 ::: {.callout-tip collapse="true" appearance="minimal"}
 
@@ -318,7 +318,6 @@ og
 
 $$
 \frac{\partial f}{\partial y} = \frac{\partial }{\partial y} (x^2) + \frac{\partial }{\partial y} (3xy) + \frac{\partial }{\partial y} (\mathrm{e}^y) = 0 + 3x + \mathrm{e}^y
-
 $$
 
 :::
@@ -326,12 +325,19 @@ $$
 Da Softmax-funktionen indgår i tabsfunktionen, får man brug for at finde partielle afledte af denne funktion. Husk på, at Softmax-funktionen er defineret sådan her:
 
 $$
-z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}
+z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} =\mathrm{e}^{y_i} \cdot \frac{1}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} 
 $$
 
-For at diffentiere denne funktion, får vi brug for kvotientreglen for differentiation:
+For at diffentiere denne funktion kan man enten bruge produktreglen eller kvotientreglen, som vi lige genopfrisker her:
 
 ::: {.highlight }
+
+**Produktreglen for differentiation**
+
+$$
+\left ( f \cdot g\right)'(x) = f'(x)\cdot g(x) + f(x) \cdot g'(x)
+$$
+\
 
 **Kvotientreglen for differentiation **
 
@@ -347,27 +353,27 @@ $$
 ### Opgave 8: Partielle afledte af Softmax-funktionen
 
     
-a) Vis følgende egenskaber ved de partielle afledte af Softmax-funktionen:
+* Vis følgende egenskaber ved de partielle afledte af Softmax-funktionen:
 
-$$\frac{\partial z_i}{\partial y_i} = z_i(1-z_i) \quad \quad \textrm{og} \quad\quad \frac{\partial z_i}{\partial y_j} = -z_iz_j, \quad i\neq j$$
+   $$\frac{\partial z_i}{\partial y_i} = z_i(1-z_i) \quad \quad \textrm{og} \quad\quad \frac{\partial z_i}{\partial y_j} = -z_iz_j, \quad i\neq j$$
 
-Husk på, at
+   Husk på, at
 
-$$
-\frac{\partial }{\partial y_i} (\mathrm{e}^{y_i}) = \mathrm{e}^{y_i} 
-$$
+   $$
+   \frac{\partial }{\partial y_i} (\mathrm{e}^{y_i}) = \mathrm{e}^{y_i} 
+   $$
 
-mens
+   mens
 
-$$
-\frac{\partial }{\partial y_j} (\mathrm{e}^{y_i}) = 0   
-$$
+   $$
+   \frac{\partial }{\partial y_j} (\mathrm{e}^{y_i}) = 0   
+   $$
 
-hvis $i \neq j$.
+   hvis $i \neq j$.
 
 :::
 
-Bemærk, at ovenståend opgaver giver, at man ikke behøver at kende værdien af $\vec{y}$ i det punkt, hvor man differentierer, men kun funktionsværdien $\vec{z}$. Det viser sig at have meget store beregningsmæssige fordele, når man skal finde minimum for tabsfunktionen, så det er faktisk en overordentlig vigtig egenskab!
+Bemærk, at ovenstående opgaver giver, at man ikke behøver at kende værdien af $\vec{y}$ i det punkt, hvor man differentierer, men kun funktionsværdien $\vec{z}$. Det viser sig at have meget store beregningsmæssige fordele, når man skal finde minimum for tabsfunktionen, så det er faktisk en overordentlig vigtig egenskab!
 
 {{< include ../space.qmd >}}
 

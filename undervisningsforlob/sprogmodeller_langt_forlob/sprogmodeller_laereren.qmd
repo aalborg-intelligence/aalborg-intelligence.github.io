@@ -15,7 +15,59 @@ Her følger en kort gennemgang af de enkelte dele:
 
 I [del 1](sprogmodeller_del1.qmd) gives en introduktion til en meget simpel sprogmodel. Matematikken i denne del er på et forholdsvis lavt niveau.
 
-I [del 2](sprogmodeller_del2.qmd) arbejdes der med **Word2Vec** algoritmen, hvor målet er, at alle ord i et ordforråd bliver præsenteret ved vektorer på en sådan måde, at alle ord, hvis betydning ligner hinanden, repræsenteres med vektorer, der peger i nogenlunde samme retning og har nogenlunde samme længde. Her er skalarproduktet centralt. Desuden indføres den såkaldte Softmax-funktion, som eleverne skal[^1] bestemme de partielle afledede for ved hjælp af kvotientreglen. Det er ikke en forudsætning, at man har arbejdet med funktioner af flere variable inden, idet der gives en kort introduktion til partielle afledede. Hvis man ønsker at arbejde med funktioner af flere variable, henviser vi til vores [materiale om emnet](../../materialer/funktioner_af_flere_variable/funktioner_af_flere_variable.qmd). 
+I [del 2](sprogmodeller_del2.qmd) arbejdes der med **Word2Vec** algoritmen, hvor målet er, at alle ord i et ordforråd bliver præsenteret ved vektorer på en sådan måde, at alle ord, hvis betydning ligner hinanden, repræsenteres med vektorer, der peger i nogenlunde samme retning og har nogenlunde samme længde. Her er skalarproduktet centralt. Desuden indføres den såkaldte Softmax-funktion
+
+$$ 
+z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}
+$$
+
+som eleverne skal[^1] bestemme de partielle afledede for ved hjælp af kvotientreglen. Det er ikke en forudsætning, at man har arbejdet med funktioner af flere variable inden, idet der gives en kort introduktion til partielle afledede. Hvis man ønsker at arbejde med funktioner af flere variable, henviser vi til vores [materiale om emnet](../../materialer/funktioner_af_flere_variable/funktioner_af_flere_variable.qmd). 
+
+Bruges **produktreglen** på
+
+$$
+z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} =\mathrm{e}^{y_i} \cdot \frac{1}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} 
+$$
+
+fås:
+
+$$
+\begin{aligned}
+\frac{\partial z_i}{\partial y_i} &= \mathrm{e}^{y_i} \cdot \frac{1}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} + \mathrm{e}^{y_i} \cdot  \frac{-1}{( \mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V})^2} \cdot \mathrm{e}^{y_i} \\
+& = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} - \left ( \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \right )\cdot \left ( \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \right )\\
+&= \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \cdot \left ( 1 - \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \right ) \\
+&= z_i \cdot (1-z_i)
+\end{aligned}
+$$
+Differentierer vi i stedet med hensyn til $y_j$ hvor $i \neq j$, får vi:
+
+$$
+\begin{aligned}
+\frac{\partial z_i}{\partial y_j} &= 0 \cdot \frac{1}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} + \mathrm{e}^{y_i} \cdot  \frac{-1}{( \mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V})^2} \cdot \mathrm{e}^{y_j} \\
+&= - \left ( \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \right )\cdot \left ( \frac{\mathrm{e}^{y_j}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \right ) \\
+&= - z_i \cdot z_j
+\end{aligned}
+$$
+Anvendes i stedet **kvotientreglen**, får vi:
+
+$$
+\begin{aligned}
+\frac{\partial z_i}{\partial y_i} &= \frac{\mathrm{e}^{y_i} \cdot (\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V})-\mathrm{e}^{y_i} \cdot \mathrm{e}^{y_i} }{(\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V})^2} \\
+&= \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \cdot \frac{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} - \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \cdot \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \\
+&= \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \cdot 1  - \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \cdot \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \\
+&= \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \cdot \left (1-\frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \right) \\
+&= z_i \cdot (1-z_i)
+\end{aligned}
+$$
+
+Tilsvarende kan vi bruge kvotientreglen til at differentiere med hensyn til $y_j$ for $i \neq j$:
+$$
+\begin{aligned}
+\frac{\partial z_i}{\partial y_j} &=  \frac{0 \cdot (\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}) - \mathrm{e}^{y_i} \cdot \mathrm{e}^{y_j}}{(\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V})^2} \\
+&= -\frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \cdot \frac{\mathrm{e}^{y_j}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \\
+&= - z_i \cdot z_j
+\end{aligned}
+$$
 
 [^1]: Man kan vælge at springe denne aktivitet over, men det er til gengæld det stof, der danner udgangspunkt for det foreslåede mundtlige eksamensspørgsmål.
 
