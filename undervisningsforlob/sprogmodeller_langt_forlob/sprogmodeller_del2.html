@@ -220,7 +220,7 @@ window.Quarto = {
 <p>Forventet tid ca. 90-120 min.</p>
 <p>Aktivitet 6 kan udelades eller bruges som ekstra udfordring.</p>
 </div>
-<p>For at en computer skal kunne forstå sprog, har vi brug for at få kvantificeret alle ord i vores ordforråd. Hvis ikke vi på en eller anden måde, kan få lavet ord om til tal, bliver det svært at regne på dem! Algoritmen <strong>Word2Vec</strong> er et bud på, hvordan det kan gøres. Idéen er at repræsentere hvert ord med en vektor på en sådan måde, at alle ord, hvis betydning ligner hinanden, repræsenteres med vektorer, der peger i nogenlunde samme retning og har nogenlunde samme længde.</p>
+<p>For at en computer skal kunne forstå sprog, har vi brug for at få kvantificeret alle ord i vores ordforråd. Hvis ikke vi på en eller anden måde kan få lavet ord om til tal, bliver det svært at regne på dem! Algoritmen <strong>Word2Vec</strong> er et bud på, hvordan det kan gøres. Idéen er at repræsentere hvert ord med en vektor på en sådan måde, at alle ord, hvis betydning ligner hinanden, repræsenteres med vektorer, der peger i nogenlunde samme retning og har nogenlunde samme længde.</p>
 <p>I denne del skal vi se på, hvordan det kan gøres.</p>
 <p><br>
 <br>
@@ -318,7 +318,7 @@ Opgave 2: Betydning er kontekst
 <div class="callout-body-container callout-body">
 <p>Ordet "får" har flere betydninger.</p>
 <ul>
-<li><p>Skriv mindst to sætninger, hvor man ud fra konteksten forstår betydningen af "får".</p></li>
+<li><p>Skriv mindst to sætninger, hvor man ud fra konteksten forstår to forskellige betydninger af "får".</p></li>
 <li><p>Find selv på et ord med flere betydninger og skriv mindst to sætninger, som afslører betydningen.</p></li>
 </ul>
 </div>
@@ -348,7 +348,7 @@ Opgave 3: Træningsdata
 <p>Matematik er det sjoveste fag i verden</p>
 </div>
 <ul>
-<li><p>Udfyld med udgangspunkt i ovenstående tekstkorpus og et 3-ords vindue denne tabel (se eventuelt <a href="../../materialer/sprogmodeller/word2vec.html#tbl-data">tabel 1 i noten om Word2vec</a>):</p>
+<li><p>Udfyld med udgangspunkt i ovenstående tekstkorpus og et 3-ords vindue nedenstående tabel (se eventuelt <a href="../../materialer/sprogmodeller/word2vec.html#tbl-data">tabel 1 i noten om Word2vec</a>). Bemærk, at kontekstcellen skal være blank, hvis den tilsvarende plads i vinduet er tom.</p>
 <table class="table-bordered table">
 <thead>
 <tr class="header">
@@ -557,7 +557,7 @@ Opgave 7: Model for sandsynligheder
 <section id="aktivitet-6---vektorrepræsentationer" class="level2 aimat">
 <h2 class="aimat anchored" data-anchor-id="aktivitet-6---vektorrepræsentationer">Aktivitet 6 - Vektorrepræsentationer</h2>
 <p>Læs afsnittet <a href="../../materialer/sprogmodeller/word2vec.html#estimation-af-vektorrepræsentationer">"Estimatation af vektorrepræsentationer" i noten Word2Vec</a>.</p>
-<p>For at finde minimum for tabsfunktionen har man brug for at bestemme såkaldte <em>partielle afledede</em>. Hvis du ikke har hørt om det før, så kan du læse mere i boksen herunder.</p>
+<p>Tabsfunktionen er en funktion af flere variable, nemlig alle vægtene. Vi skal finde de vægte, der minimerer tabsfunktionen. I ved, at for at finde minimum for en funktion af én variabel, skal man se på, hvornår den afledte funktion er nul. For funktioner af flere variable gælder tilsvarende, at minimum skal findes i et punkt hvor alle de <em>partielle afledede</em> er nul. Hvis du ikke har hørt om partielle afledede før, kan du læse mere i boksen herunder.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -583,17 +583,23 @@ f(x,y) = x^2+3xy+\mathrm{e}^y
 \frac{\partial f}{\partial x} = \frac{\partial }{\partial x} (x^2) + \frac{\partial }{\partial x} (3xy) + \frac{\partial }{\partial x} (\mathrm{e}^y) = 2x + 3y + 0 = 2x + 3y
 \]</span></p>
 <p>og</p>
-<p>$$ = (x^2) + (3xy) + (^y) = 0 + 3x + ^y</p>
-<p>$$</p>
+<p><span class="math display">\[
+\frac{\partial f}{\partial y} = \frac{\partial }{\partial y} (x^2) + \frac{\partial }{\partial y} (3xy) + \frac{\partial }{\partial y} (\mathrm{e}^y) = 0 + 3x + \mathrm{e}^y
+\]</span></p>
 </div>
 </div>
 </div>
 <p>Da Softmax-funktionen indgår i tabsfunktionen, får man brug for at finde partielle afledte af denne funktion. Husk på, at Softmax-funktionen er defineret sådan her:</p>
 <p><span class="math display">\[
-z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}
+z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} =\mathrm{e}^{y_i} \cdot \frac{1}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}
 \]</span></p>
-<p>For at diffentiere denne funktion, får vi brug for kvotientreglen for differentiation:</p>
+<p>For at diffentiere denne funktion kan man enten bruge produktreglen eller kvotientreglen, som vi lige genopfrisker her:</p>
 <div class="highlight">
+<p><strong>Produktreglen for differentiation</strong></p>
+<p><span class="math display">\[
+\left ( f \cdot g\right)'(x) = f'(x)\cdot g(x) + f(x) \cdot g'(x)
+\]</span><br>
+</p>
 <p><strong>Kvotientreglen for differentiation </strong></p>
 <p><span class="math display">\[
 \left ( \frac{f}{g}\right)'(x) = \frac{f'(x) \cdot g(x)-f(x) \cdot g'(x)}{(g(x))^2}, \quad g(x) \neq 0
@@ -611,9 +617,8 @@ Opgave 8: Partielle afledte af Softmax-funktionen
 </div>
 <div id="callout-9" class="callout-9-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<ol type="a">
-<li>Vis følgende egenskaber ved de partielle afledte af Softmax-funktionen:</li>
-</ol>
+<ul>
+<li><p>Vis følgende egenskaber ved de partielle afledte af Softmax-funktionen:</p>
 <p><span class="math display">\[\frac{\partial z_i}{\partial y_i} = z_i(1-z_i) \quad \quad \textrm{og} \quad\quad \frac{\partial z_i}{\partial y_j} = -z_iz_j, \quad i\neq j\]</span></p>
 <p>Husk på, at</p>
 <p><span class="math display">\[
@@ -623,11 +628,12 @@ Opgave 8: Partielle afledte af Softmax-funktionen
 <p><span class="math display">\[
 \frac{\partial }{\partial y_j} (\mathrm{e}^{y_i}) = 0   
 \]</span></p>
-<p>hvis <span class="math inline">\(i \neq j\)</span>.</p>
+<p>hvis <span class="math inline">\(i \neq j\)</span>.</p></li>
+</ul>
 </div>
 </div>
 </div>
-<p>Bemærk, at ovenståend opgaver giver, at man ikke behøver at kende værdien af <span class="math inline">\(\vec{y}\)</span> i det punkt, hvor man differentierer, men kun funktionsværdien <span class="math inline">\(\vec{z}\)</span>. Det viser sig at have meget store beregningsmæssige fordele, når man skal finde minimum for tabsfunktionen, så det er faktisk en overordentlig vigtig egenskab!</p>
+<p>Bemærk, at ovenstående opgaver giver, at man ikke behøver at kende værdien af <span class="math inline">\(\vec{y}\)</span> i det punkt, hvor man differentierer, men kun funktionsværdien <span class="math inline">\(\vec{z}\)</span>. Det viser sig at have meget store beregningsmæssige fordele, når man skal finde minimum for tabsfunktionen, så det er faktisk en overordentlig vigtig egenskab!</p>
 <p><br>
 <br>
 </p>
