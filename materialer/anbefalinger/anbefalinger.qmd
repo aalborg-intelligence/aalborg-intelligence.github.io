@@ -1,0 +1,324 @@
+---
+title: "Associationsregler"
+description-meta: "Anbefalinger."
+from: markdown+emoji
+---
+
+Denne note handler om associationsregler. Associationsregler bruges ofte
+i forbindelse med transaktionsdata, hvor observationer består af
+information om, hvilke varer kunder har købt i en forretning. Ud fra
+disse data vil man gerne lave en algoritme til at forudsige, hvilke
+varer en kunde kunne være interesseret i at købe baseret på kundens
+tidligere indkøb. Den slags information kan dels benyttes til at
+anbefale andre varer som kunden kunne være interesseret i at købe og
+dels til at målrette reklamer for et bestemt produkt baseret på
+kundernes tidligere køb.
+
+Vi vil tage udgangspunkt i eksemplet med transaktionsdata, men
+associationsregler kan dog også benyttes i forbindelse med mange andre
+typer data. Det kunne fx være i forbindelse med Google's auto-complete
+funktion, hvor programmet prøver at gætte hvad en bruger vil skrive
+baseret på de tegn der allerede er indtastet.
+
+Nedenstående note er primært baseret på [@ESL], men se også [@top10 Kap.
+4].
+
+Transaktionsdata
+----------------
+
+Betragt et datasæt over transaktioner. Det kunne fx bestå af alle
+handler foretaget i et online supermarked. Hver observation svarer til
+en kunde, mens en variabel svarer til en vare. Vi har $p$ variable,
+$Z_1,\ldots, Z_p$ svarende til varerne $1,\ldots,p$. Hver variabel er en
+dummy-variabel af typen 
+$$
+Z_j = \begin{cases}
+1, & \text{ kunden har købt varen,}\\
+0, & \text{ ellers.}
+\end{cases}
+$$
+
+Vi vil gerne finde ud af hvilke varer, der typisk bliver købt sammen.
+Mere præcist kigger vi på en delmængde $J\subseteq \{1,\ldots,p \}$ af
+varerne. Sandsynligheden for at en kunde har købt alle varerne i $J$ er
+givet ved:
+$$
+P(J)=P\left(\bigcap_{j\in J}\{Z_j=1\}\right)= P\left(\prod_{j\in J}Z_j = 1\right).
+$$
+
+Antag at vi har et datasæt bestående af $n$ observationer $z_{i,j}$,
+$i=1,\ldots,n$, $j=1,\ldots,p$, hvor $z_{i,j}$ altså angiver $i$'te
+observation af $Z_j$. Så kan $P(J)$ estimeres ved
+$$
+T({J}) = \frac{1}{n} \sum_{i=1}^n \prod_{j\in \mathcal{J}}z_{i,j} .}
+$$
+Dette angiver andelen af de $n$ kunder, der har købt alle varerne i
+${J}$. Ofte kaldes $T({J})$ for *prævalensen* eller *supporten* af
+${J}$.
+
+Apriori algoritmen
+------------------
+
+Der er $2^p$ mulige delmængder af $\{1,\ldots,p \}$. Det er derfor i
+praksis ikke beregningsmæssigt muligt at regne på dem alle. Idéen er
+derfor, at vi begrænser os til at se på de mest hyppigt forekommende
+delmængder. Vi søger derfor de mest almindelige varekombinationer. Mere
+præcist vil vi kun kigge på de varekombinationer, der forekommer med en
+prævalens på mindst $t$, hvor $t>0$ er en fastsat tærskelværdi. Det vil
+altså sige vi nøjes med at betragte
+$$
+\mathcal{S}(t)=\{{J}\subseteq \{1,\ldots,p\} \,|\, T({J})>t \}.
+$$ 
+Hvis $t$ er stort nok, skulle antallet af delmængder vi betragter gerne være
+reduceret betydeligt.
+
+For at finde $\mathcal{S}(t)$ kunne man vælge brute force tilgangen,
+hvor man går igennem alle $2^p$ delmængder og beregner prævalensen for
+hver. Igen kan dette være beregningsmæssigt krævende. *Apriori
+algoritmen* er en hurtig algoritme til at finde $\mathcal{S}(t)$. Den
+finder $\mathcal{S}(t)$ uden at behøve at beregne $T({J})$ for alle
+$2^p$ delmængder ${J}\subseteq \{1,\ldots,p \}$.
+
+Apriori algoritmen benytter følgende observation (overvej hvorfor det
+gælder!):
+
+-   Hvis ${K}\subseteq {J}$ så er $T({K})\geq T({J})$.
+
+Altså: hvis vi fjerner varer fra en varemængde $J$, så vil prævalensen
+altid være større end eller lig $T(J)$.
+
+Lad $\mathcal{S}_k(t)$ betegne alle de ${J}\in \mathcal{S}(t)$ som
+indeholder præcis $k$ elementer. Antag at ${J}\in \mathcal{S}_k(t)$. Så
+må $T(J)>t$ pr. definition af $\mathcal{S}(t)$. Hvis $K$ fremkommer ved
+at fjerne et element fra $J$ må også $T(K)>t$ ifølge (i), og dermed må
+$K\in \mathcal{S}_{k-1}(t)$. Det betyder, at $J$ må være fremkommet ved
+at tilføje et element til et passende valgt $K\in \mathcal{S}_{k-1}(t)$
+(nemlig et $K$ med $K\subseteq J$). Det er denne egenskab Apriori
+algoritmen udnytter.
+
+Idéen i Apriori algoritmen er nu at konstruere $S_{k}(t)$ induktivt: Vi
+starter med at finde $\mathcal{S}_1(t)$, dvs. alle elementer i
+$\mathcal{S}(t)$ bestående af præcis 1 vare. Det gør vi ved for hvert
+$j=1,\ldots,p$ at tjekke om prævalensen $T(\{j\})>t$. I så fald tilføjes
+$\{j\}$ til $\mathcal{S}_1(t)$.
+
+Antag nu, at vi har fundet $\mathcal{S}_k(t)$. Vi har lige argumenteret
+for, at alle ${J}\in \mathcal{S}_{k+1}(t)$ kan findes ved at tilføje et
+element til et ${K}\in \mathcal{S}_k(t)$. For at finde
+$\mathcal{S}_{k+1}(t)$ er det derfor nok at beregne $T({J})$ for alle
+${J}$ på formen ${K}\cup \{j\}$ hvor ${K}\in  \mathcal{S}_{k}(t)$ og så
+tilføje ${J}$ til $\mathcal{S}_{k+1}(t)$ hvis $T({J})>0$. Vi slipper
+dermed for at beregne $T(J)$ for alle $J$ med $+1k$ elementer, da det er
+nok at se på $J$ på formen $K\cup \{j\}$. Algoritmen stopper når
+$\mathcal{S}_{k}(t)$ er tom.
+
+I pseudokodeform bliver algoritmen:
+
+$\{j\}\in \mathcal{S}_1(t)$ $k \gets 1$
+$K\cup\{j\}\in \mathcal{S}_{k+1}(t)$ $k \gets k+1$
+
+[\[ex1\]]{#ex1 label="ex1"} Følgende datasæt indeholder observationer af
+fire kunder, der har købt en eller flere af varerne kage, brød, sodavand
+og kaffe.
+
+   Kage   Brød   Sodavand   Kaffe     
+  ------ ------ ---------- ------- -- --
+    1      0        1         0       
+    1      1        0         0       
+    1      1        0         0       
+    0      1        0         1       
+
+Vi vil gerne finde $\mathcal{S}(0.4)$, dvs. de varekombinationer, der
+forekommer hos mere end $40\%$ af kunderne, ved hjælp af Apriori
+algoritmen. Vi finder først $\mathcal{S}_1(0.4)$. 
+$$
+\begin{aligned}
+T(\{\text{Kage}\})& = \frac{3}{4}>0.4.\\
+T(\{\text{Brød}\}) & = \frac{3}{4}>0.4.\\
+T(\{\text{Sodavand}\}) & = \frac{1}{4}\leq 0.4\\
+T(\{\text{Kaffe}\}) & = \frac{1}{4}\leq 0.4.\end{aligned}
+$$
+Dermed
+bliver $\mathcal{S}_1(0.4) = \{\{Kage\},\{Brød\}\}$. For at finde
+$\mathcal{S}_2(0.4)$ ser vi på mængder der fremkommer ved at tilføje et
+element til mængderne i $\mathcal{S}_1(0.4)$. 
+$$
+\begin{aligned}
+T(\{\text{Kage, Brød}\})& = \frac{2}{4}>0.4.\\
+T(\{\text{Kage, Sodavand}\})& = \frac{1}{4}\leq 0.4.\\
+T(\{\text{Kage, Kaffe}\})& = 0\leq 0.4.\\
+T(\{\text{Brød, Sodavand}\})& = 0 \leq 0.4.\\
+T(\{\text{Brød, Kaffe}\})& = \frac{1}{4}\leq 0.4.
+\end{aligned}
+$$
+Altså
+er $\mathcal{S}_2(0.4)= \{\text{Kage, Brød}\}$. Bemærk at det ikke havde
+været nødvendigt at tjekke $T(\{\text{Kage, Sodavand}\})$,
+$T(\{\text{Kage, Kaffe}\})$, $T(\{\text{Brød, Sodavand}\})$ og
+$T(\{\text{Brød, Kaffe}\})$ da hverken $\{\text{Kaffe}\}$ eller
+$\{\text{Sodavand}\}$ var i $\mathcal{S}_1(0.4)$. Vi finder
+$\mathcal{S}_3(0.4)$: 
+$$
+\begin{aligned}
+T(\{\text{Kage, Brød, Sodavand}\})& = 0.\\
+T(\{\text{Kage, Brød, Kaffe}\})& = 0.
+\end{aligned}
+$$ Altså er
+$\mathcal{S}_3(0.4) =\emptyset$, og algoritmen slutter. Samlet set er
+$$
+\mathcal{S}(0.4) = \{\{\text{Kage}\},\{\text{Brød}\},\{\text{Kage, Brød}\}\}.
+$$
+
+Associationsregler
+------------------
+
+Vi vil nu gerne kunne lave udsagn af typen: hvis en kunde har købt
+varerne i mængden ${A}$, så er det sandsynligt at kunden også vil købe
+varerne i mængden ${B}$. Vi vil kun betragte varekombinationer der
+forekommer hyppigt, dvs. ${A}\cup {B} \in \mathcal{S}(t)$ for et
+passende valgt $t$. Vi antager at ${A}$ og ${B}$ er disjunkte.
+*Associationsreglen* $A\Rightarrow B$ angiver at en kunde der har købt
+$A$ også køber $B$.
+
+Sandsynligheden for at købe $B$ givet at man har købt $A$ er
+$$
+\label{betinget}
+P({B}|{A}) = \frac{P({A}\cup {B})}{P({A})}.
+$$ 
+(Note: notationen er lidt
+uheldig her. Hændelsen ${A}\cup {B}$ betyder at kunden har købt både $A$
+og $B$. Det er altså snittet mellem hændelsen at kunden har købt $A$ og
+hændelsen at kunden har købt $B$.) Man kan estimere
+[\[betinget\]](#betinget){reference-type="eqref" reference="betinget"}
+ved 
+$$
+C({A}\Rightarrow {B}) = \frac{T({A} \cup {B})}{T({A})}.
+$$ 
+Her står $C$'et for *confidence*, idet $C({A}\Rightarrow {B})$ er et mål for,
+hvor meget vi tror på at kunder der køber $A$ også køber $B$.
+Konfidensen kan fx benyttes af et online supermarked, der gerne vil give
+kunder der har købt varerne $A$ et forslag til hvilke varer $B$, de også
+kunne være interesserede i.
+
+Man kan også interessere sig for 
+$$
+\label{eq:P}
+\frac{P(B|A)}{P(B)},
+$$
+som angiver, hvor sandsynligt det er, at købe $B$
+for kunder som har købt $A$ i forhold til hvor sandsynligt det er at
+købe $B$ for samtlige kunder. En værdi over 1 angiver at kunder der har
+købt $A$ er mere tilbøjelige til også at købe $B$ end kunder generelt.
+Som estimat for [\[eq:P\]](#eq:P){reference-type="eqref"
+reference="eq:P"} benyttes
+$$
+L(A\Rightarrow B) = \frac{C({A}\Rightarrow {B})}{T(B)}.
+$$
+Størrelsen
+$L(A\Rightarrow B)$ kaldes for *lift*. Lift-værdien kan fx benyttes af
+et firma, der gerne vil markedsføre $B$. Hvis $L(A\Rightarrow B)$ er
+høj, er forbrugere der har købt $A$ mere tilbøjelige til at købe $B$ end
+flertallet. Firmaet kan defor med fordel vælge at rette sine annoncer
+mod forbrugere der har købt $A$.
+
+I Eksempel [\[ex1\]](#ex1){reference-type="ref" reference="ex1"}
+betagter vi associationsreglen
+$\{\text{Kage}\}\Rightarrow \{\text{Brød}\}$. Vi finder konfidensen
+$$
+C(\{\text{Kage}\}\Rightarrow \{\text{Brød}\})= \frac{T(\{\text{Kage, Brød}\})}{T(\{\text{Kage}\})}=\frac{2/4}{3/4} = \frac{2}{3}
+$$
+Sandsynligheden for at en kunde der har købt kage også køber brød er
+altså estimeret til 2/3. Vi finder lift
+$$
+L(\{\text{Kage}\}\Rightarrow \{\text{Brød}\})= \frac{C(\{\text{Kage, Brød}\})}{T(\{\text{Brød}\})}=\frac{2/3}{3/4} = \frac{8}{9}.
+$$
+Sandsynligheden for at købe brød er altså 8/9 gange så stor når det
+vides at man også har købt kage. Da lift er mindre end 1, er folk der
+har købt kage altså mindre tilbøjelige til at købe brød end flertallet.
+
+Associationsregler i R
+----------------------
+
+Associationsregler for transaktionsdata kan beregnes med R-funktionen
+`apriori` fra pakken `arules` [@R].
+
+Vi laver først et simpelt datasæt med tre varer. Dataformatet er en
+liste, hvor hvert element i listen svarer til en kundes indkøb.
+Alternativt kan en data frame, hvor alle søjler er binære
+faktorvariable, benyttes.
+
+    indkoeb <- list(
+    c("milk"),
+    c("milk","bread","cheese"),
+    c("milk","bread","cheese"),
+    c(),
+    c("bread")
+    )
+
+Først konverteres datasættet til et transaktionsdatasæt:
+
+    library(arules)
+    indkoeb <- transactions(indkoeb)
+
+Apriori algoritmen køres:
+
+    rules <- apriori(indkoeb)
+    inspect(rules)
+
+Det giver følgende output:
+
+        lhs                rhs      support confidence coverage lift     count
+    [1] {cheese}        => {bread}  0.4     1          0.4      1.666667 2    
+    [2] {cheese}        => {milk}   0.4     1          0.4      1.666667 2    
+    [3] {bread, cheese} => {milk}   0.4     1          0.4      1.666667 2    
+    [4] {cheese, milk}  => {bread}  0.4     1          0.4      1.666667 2    
+    [5] {bread, milk}   => {cheese} 0.4     1          0.4      2.500000 2 
+
+Kun associationsregler med én vare på højresiden angives. Som default
+vises de 10 første associationsregler med en suppport på mindst 0.1 og
+confidence på mindst 0.8. Dette kan ændres med optionen `parameter`:
+
+    rules <- apriori(indkoeb,parameter=list(supp = 0.2, conf = 0.5))
+    inspect(rules[1:3])
+
+Opgaver
+-------
+
+Opgave (1) regnes i hånden, mens Opgave (2) regnes i R.
+
+-   Betragt et fiktivt datasæt i tabellen nedenfor:
+
+       Mælk   Æbler   Brød   Smør   Æg   Tandpasta
+      ------ ------- ------ ------ ---- -----------
+        1       0      1      0     0        0
+        1       1      1      0     1        0
+        1       1      0      1     0        1
+        1       1      0      0     1        0
+        0       1      1      1     1        0
+        0       0      1      0     0        0
+
+    -   Find alle varekombinationer med prævalens (support) mindst 0.4
+        ved brug af Apriori algoritmen.
+
+    -   Beregn confidence og lift for alle associationsregler med
+        support mindst 0.4 (Dvs. alle regler på formen $A\Rightarrow B$,
+        hvor $T(A\cup B)\geq 0.4$).
+
+-   I denne opgave arbejder vi med datasættet `Groceries` fra R-pakken
+    `arules`. Bemærk: datasættet har allerede format som et
+    transaktionsdatasæt.
+
+    -   Bestem alle associationsregler med support mindst 0.05 og
+        konfidens mindst 0.2.
+
+    -   Hvis du skulle foreslå en anden vare til en kunde der har købt
+        sødmælk, hvad ville du så vælge?
+
+    -   Hvis du skulle markedsføre sødmælk, hvilke kunder ville du så
+        satse på?
+
+99 [Documentation for R package
+arules](https://www.rdocumentation.org/packages/arules/versions/1.7-5/topics/apriori)
+Hastie, Tibshirani, Friedman: Elements of Statistical Learning. Wu et
+al.: Top 10 algorithms in data mining (2008).
+[Link](https://link.springer.com/article/10.1007/s10115-007-0114-2)
