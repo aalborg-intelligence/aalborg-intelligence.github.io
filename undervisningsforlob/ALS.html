@@ -246,6 +246,7 @@ Forudsætninger og tidsforbrug
 <li>Rette linjer.</li>
 <li>Procentregning.</li>
 </ul>
+<p>Der gives i opgaverne vejledning til at lave databehandling i Excel, men det er valgfrit, hvilket program man vil bruge. Vær også opmærksom på, at der kan være forskellige versioner af Excel, så vejledningen passer ikke nødvendigvis 1:1 med elevernes version.</p>
 <p><strong>Tidsforbrug:</strong> Ca. 2 x 90 minutter.</p>
 </div>
 </div>
@@ -294,6 +295,35 @@ Opgave 1: Hjernestyring med binært kontrolsignal
 <section id="træning-af-en-ai-model" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="træning-af-en-ai-model">Træning af en AI model</h2>
 <p>Vi forestiller os, at der er blevet optaget hjernesignaler fra en person, der tænker på en bevægelse med foden, når han/hun ønsker at vælge et bestemt punkt i menuen. Til alle andre tidspunkter sidder personen og slapper af, og derfor optages kun den almindelige baggrundshjerneaktivitet. Der er altså her tale om et binært kontrolsignal: enten tænker personen på at bevæge foden, eller også tænker han/hun <em>ikke</em> på at bevæge foden.</p>
+<p>Lad os sige, at Magnus (fra videoen) gerne vil skrive "HEJ". Det kan foregå sådan her:</p>
+<ol type="1">
+<li>I 2 sekunder får Magnus vist den første del af menuen, som er markeret med lysblå her:</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ALS_filer/HEJ_1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:40.0%"></p>
+</figure>
+</div>
+<ol start="2" type="1">
+<li>Magnus skal ikke bruge nogle af bogstaverne i denne del af menuen, så han slapper bare af. I de 2 sekunder der går, laver vi 1000 målinger af Magnus’ hjerneaktivitet og udregner herefter de to features, som beskrevet i opgave 5. Det giver anledning til ét punkt, som vi indtegner i koordinatsystemet. Vi kan se, at punktet ligger på den side af linjen, hvor punkterne hørende til baggrundshjerneaktivitet ligger. Det fortolker vi, som at Magnus har sagt "nej" til bogstaverne i den første kategori og går derfor frem i menuen og viser Magnus denne del:</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ALS_filer/HEJ_2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:40.0%"></p>
+</figure>
+</div>
+<ol start="3" type="1">
+<li>Magnus vil gerne skrive ét af bogstaverne på denne menu – nemlig "H". Derfor laver Magnus nu en imaginær bevægelse med sin fod i 2 sekunder<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Imens laver vi de 1000 målinger af Magnus’ hjerneaktivitet og beregner derefter de to features, som plottes ind i koordinatsystemet. Vi ser, at punkterne ligger på den side af linjen, hvor punkter hørende til den imaginære bevægelse ligger, hvilket betyder, at vi nu ved, at Magnus gerne vil skrive enten H, I, J, K, L, M eller N. Derfor får Magnus vist disse syv bogstaver (samt muligheden "EXIT") på skift i 2 sekunder. Vi starter med "H":</li>
+</ol>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Bemærk, at Magnus <em>ikke</em> bevæger foden, for det kan han ikke. Men han <em>tænker</em> på at bevæge foden. Det er derfor, at bevægelsen kaldes for <em>imaginær</em>.</p></div></div><div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ALS_filer/HEJ_3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:30.0%"></p>
+</figure>
+</div>
+<ol start="4" type="1">
+<li><p>Magnus vil gerne skrive "H", og derfor laver han igen den imaginære bevægelse med foden, som vi registerer på samme måde som tidligere. På et eller andet tilknyttet display skrives der nu "H".</p></li>
+<li><p>Vi går tilbage til punkt 1, og da Magnus skal skrive "E" som det næste, laver han med det samme den imaginære bevægelse med foden. Sådan fortsættes indtil Magnus har fået skrevet "HEJ".</p></li>
+</ol>
 <p>Hjernesignalerne er opsamlet med en samplingsfrekvens på 500 Hz, hvilket betyder, at der er 500 målepunkter per sekund (amplitude i <span class="math inline">\(\mu\)</span>V). Hver optagelse er to sekunder lang, og dermed er der 1000 målepunkter (2 x samplingsfrekvens).</p>
 <p>Data er blevet opdelt i to faner: I den første fane er der hjernesignaler for målinger af 15 imaginære bevægelser og 15 målinger af baggrundshjerneaktivitet, som skal bruges til at træne en AI model, så den kan se forskel på de to forskellige slags hjernesignaler. Disse data kaldes for <strong>træningsdata</strong>. I den anden fane er der henholdsvis 10 gentagelser af imaginære bevægelser og af baggrundshjerneaktivitet, som skal bruges til at teste, hvor god vores AI model er. Disse data kaldes for <strong>testdata</strong>. Data ligger i <a href="ALS_filer/data-ALS.xlsx">excel-filen her</a>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
@@ -310,7 +340,12 @@ Opgave 2: Plot af træningsdata
 <div class="callout-body-container callout-body">
 <p>Hent excel-filen med data og gør følgende for de data, som ligger i fanen "Data til træning":</p>
 <ul>
-<li><p>Plot følgende gentagelser af den imaginære bevægelse: 1, 5, 10 og 15 (det vil sige 4 figurer i alt). Du kan gøre det sådan her:</p>
+<li>Plot følgende gentagelser af den imaginære bevægelse: 1, 5, 10 og 15 (det vil sige 4 figurer i alt).</li>
+</ul>
+<details>
+<summary>
+Sådan gør du i Excel
+</summary>
 <ul>
 <li>Vælg "Indsæt" <span class="math inline">\(\rightarrow\)</span> "Diagrammer". Her vælger du et punktdiagram (på den måde får du et tomt diagram).</li>
 <li>Højreklik på det tomme diagram og tryk på "Vælg data…".</li>
@@ -322,7 +357,9 @@ Opgave 2: Plot af træningsdata
 <li>Ændr diagramtitlen til "Imaginær bevægelse 1" (dobbeltklik, hvor der står "Diagramtitel").</li>
 <li>Gør nu noget tilsvarende for imaginær bevægelse gentalgelse 5. Du kan med fordel kopiere det, du lige har skrevet i "Diagramdataområde" ovenfor og ændre det til <code>='Data til træning'!$F$3:$F$1002</code>, fordi data for imaginær bevægelse gentalgelse 5 står i kolonne <code>F</code>.</li>
 <li>Fortsæt på samme måde med imaginær bevægelse gentagelse 10 og 15.</li>
-</ul></li>
+</ul>
+</details>
+<ul>
 <li><p>Plot på tilsvarende vis følgende gentagelser af baggrundshjerneaktivitet: 1, 5, 10 og 15 (det vil sige 4 figurer i alt).</p></li>
 <li><p>Kan du umiddelbart se, om der er noget, som adskiller de imaginære bevægelser fra baggrundshjerneaktiviteterne?</p></li>
 </ul>
@@ -343,12 +380,19 @@ Opgave 3: Plot af gennemsnitsmålinger (træningsdata)
 <div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li><p>Udregn gennemsnittet af de 15 gentagelser for de imaginære bevægelser. Gør sådan her:</p>
+<li>Udregn gennemsnittet af de 15 gentagelser for de imaginære bevægelser.</li>
+</ul>
+<details>
+<summary>
+Sådan gør du i Excel
+</summary>
 <ul>
 <li>Stil dig i celle <code>Q2</code> og skriv <code>Gns</code> (for gennemsnit).</li>
 <li>Stil dig i celle <code>Q3</code> og skriv <code>=MIDDEL(B3:P3)</code>.</li>
 <li>Tag ved den lille kasse i nederste højre hjørne af celle <code>Q3</code> og træk den ned, så du får beregnet alle 1000 gennemsnitsværdier (du ender altså med en 2-sekundersoptagelse som er et gennemsnit af de 15 gentagelser).</li>
-</ul></li>
+</ul>
+</details>
+<ul>
 <li><p>Plot nu gennemsnittet på tværs af de 15 imaginære bevægelser i jeres træningsdata.</p></li>
 <li><p>Udregn og plot på tilsvarende vis gennemsnittet på tværs af de 15 målinger af baggrundshjerneaktivitet i jeres træningsdata.</p></li>
 <li><p>Kan du på de to plots af gennemsnittene se, om der er noget, som adskiller de imaginære bevægelser fra baggrundshjerneaktiviteterne? Beskriv mundtligt så præcist som muligt, hvad det er, der adskiller de to plots.</p></li>
@@ -427,7 +471,13 @@ Opgave 5: Udregning af to features
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Vi starter med at udregne ovenstående to features for hver af de 15 imaginære bevægelser og for hver af de 15 målinger af baggrundshjerneaktiviteterne. Gør sådan her:</p>
+<ul>
+<li>Udregn ovenstående to features for hver af de 15 imaginære bevægelser og for hver af de 15 målinger af baggrundshjerneaktiviteterne.</li>
+</ul>
+<details>
+<summary>
+Sådan gør du i Excel
+</summary>
 <ul>
 <li>Stil dig i celle <code>A1004</code> og skriv "Feature 1", mens du i celle <code>A1005</code> skriver "Feature 2".</li>
 </ul>
@@ -437,6 +487,7 @@ Opgave 5: Udregning af to features
 <li>I celle <code>B1005</code> skriver du: <code>=MIDDEL(B336:B668)-MIDDEL(B669:B1002)</code></li>
 <li>Markér de to celler og træk til højre, så du får udregnet de to features for de resterende gentagelser – både for de imaginære bevægelser og for baggrundshjerneaktiviteten.</li>
 </ul>
+</details>
 </div>
 </div>
 </div>
@@ -454,6 +505,13 @@ Opgave 6: Plot af features
 <div id="callout-7" class="callout-7-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
+<li>Lav et plot med "Feature 1" ud af <span class="math inline">\(x\)</span>-aksen og "Feature 2" op ad <span class="math inline">\(y\)</span>-aksen for målinger, som stammer fra en baggrundshjerneaktivitet.</li>
+</ul>
+<details>
+<summary>
+Sådan gør du i Excel
+</summary>
+<ul>
 <li><p>Indsæt et tomt punktplot, som du gjorde i opgave 2.</p></li>
 <li><p>Højreklik og tryk på "Vælg data…".</p></li>
 <li><p>Tryk på "Tilføj"-ikonet.</p></li>
@@ -466,6 +524,9 @@ Opgave 6: Plot af features
 <li><p>Klik på punktplottet og tryk på "+"-ikonet og sæt flueben ved "Aksetitler" og "Forklaring".</p></li>
 <li><p>Dobbeltklik på aksetitler og skriv "Feature 1" ved <span class="math inline">\(x\)</span>-aksen og "Feature 2" ved <span class="math inline">\(y\)</span>-aksen.</p></li>
 <li><p>Tryk på ét af punkterne, som hører til den imaginære bevægelse, højreklik og tryk på "Udfyldning" og vælg "Ingen udfyldning".</p></li>
+</ul>
+</details>
+<ul>
 <li><p>Gør noget tilsvarende for de punkter, som hører til baggrundsaktiviteten.</p>
 <p>Det skulle gerne ende med at se nogenlunde sådan her ud:</p>
 <p><img src="ALS_filer/excel_vejl3.png" class="img-fluid"></p></li>
@@ -473,41 +534,20 @@ Opgave 6: Plot af features
 </ul>
 <p><strong>Ekstra udfordring:</strong></p>
 <ul>
-<li>Indtegn en linje i punktplottet ved at tilføje en ny dataserie bestående af to punkter, som du efterfølgende tegner en tendenslinje igennem. Sørg for at få linjens ligning vist i plottet.</li>
+<li>Indtegn linjen i punktplottet.</li>
 </ul>
+<details>
+<summary>
+Sådan gør du i Excel
+</summary>
+<ul>
+<li>Tilføj en ny dataserie bestående af to punkter, som du efterfølgende tegner en tendenslinje igennem. Sørg for at få linjens ligning vist i plottet.</li>
+</ul>
+</details>
 </div>
 </div>
 </div>
 <p>Det skulle gerne være sådan, at du har indtegnet (eller kan forestille dig) en linje, som kan adskille de to forskellige slags punkter fra hinanden. Denne linje kan bruges til at klassificere en ny måling, hvor vi ikke kender kategorien på forhånd. Det gøres ved at lave hjernemålingen i 2 sekunder (det vil sige i alt 1000 målepunkter), udregne feature 1 og 2 og dernæst plottet det tilhørende punkt ind i punktplottet. Hvis det nye punkter ligger på den side af linjen, hvor punkterne hørende til imaginær bevægelse ligger, så vil vi klassificere den nye måling som hørende til en imaginær bevægelse og omvendt, hvis det nye punkt ligger på den anden side af linjen. Det kan derfor bruges til at afgøre, om en person for eksempel har sagt ja eller nej til en kategori eller et bogstav i en menu.</p>
-<p>Lad os sige, at Magnus (fra videoen) gerne vil skrive "HEJ". Det kan foregå sådan her:</p>
-<ol type="1">
-<li>I 2 sekunder får Magnus vist den første del af menuen, som er markeret med lysblå her:</li>
-</ol>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="ALS_filer/HEJ_1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:40.0%"></p>
-</figure>
-</div>
-<ol start="2" type="1">
-<li>Magnus skal ikke bruge nogle af bogstaverne i denne del af menuen, så han slapper bare af. I de 2 sekunder der går, laver vi 1000 målinger af Magnus’ hjerneaktivitet og udregner herefter de to features, som beskrevet i opgave 5. Det giver anledning til ét punkt, som vi indtegner i koordinatsystemet. Vi kan se, at punktet ligger på den side af linjen, hvor punkterne hørende til baggrundshjerneaktivitet ligger. Det fortolker vi, som at Magnus har sagt "nej" til bogstaverne i den første kategori og går derfor frem i menuen og viser Magnus denne del:</li>
-</ol>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="ALS_filer/HEJ_2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:40.0%"></p>
-</figure>
-</div>
-<ol start="3" type="1">
-<li>Magnus vil gerne skrive ét af bogstaverne på denne menu – nemlig "H". Derfor laver Magnus nu en imaginær bevægelse med sin fod i 2 sekunder<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Imens laver vi de 1000 målinger af Magnus’ hjerneaktivitet og beregner derefter de to features, som plottes ind i koordinatsystemet. Vi ser, at punkterne ligger på den side af linjen, hvor punkter hørende til den imaginære bevægelse ligger, hvilket betyder, at vi nu ved, at Magnus gerne vil skrive enten H, I, J, K, L, M eller N. Derfor får Magnus vist disse syv bogstaver (samt muligheden "EXIT") på skift i 2 sekunder. Vi starter med "H":</li>
-</ol>
-<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Bemærk, at Magnus <em>ikke</em> bevæger foden, for det kan han ikke. Men han <em>tænker</em> på at bevæge foden. Det er derfor, at bevægelsen kaldes for <em>imaginær</em>.</p></div></div><div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="ALS_filer/HEJ_3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:30.0%"></p>
-</figure>
-</div>
-<ol start="4" type="1">
-<li><p>Magnus vil gerne skrive "H", og derfor laver han igen den imaginære bevægelse med foden, som vi registerer på samme måde som tidligere. På et eller andet tilknyttet display skrives der nu "H".</p></li>
-<li><p>Vi går tilbage til punkt 1, og da Magnus skal skrive "E" som det næste, laver han med det samme den imaginære bevægelse med foden. Sådan fortsættes indtil Magnus har fået skrevet "HEJ".</p></li>
-</ol>
 <p>Men hvor godt virker det mon? Der må jo nogle gange ske fejl, fordi alle målinger er behæftet med måleusikkerhed. Det er heller ikke sikkert, at der findes en rette linje, som <em>altid</em> kan skille de røde krydser fra de blå. Og selv hvis der er, er det ikke sikkert, at vi baseret på træningsdata har fundet den helt rigtige linje.</p>
 <p>Det er her, at testdatasættet kommer ind i billedet. Det skal nemlig hjælpe os med at vurdere, hvor god vores AI model er, når vi prøver at bruge den på ukendt data.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
@@ -565,7 +605,7 @@ Opgave 7: Vurdering af modellen
 </section>
 <section id="klassificering-ved-beregning-kan-udelades" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="klassificering-ved-beregning-kan-udelades">Klassificering ved beregning (kan udelades)</h2>
-<p>I opgave 7 har vi klassificeret en ny hjernemåling fra testdatasættet ved at udregne de to features og se efter om det tilhørende punkt ligger over eller under vores skillelinje, som vi fandt ved hjælp af træningsdatasættet. Vi kunne også have gjort det ved at udregne den lodrette afstand fra punktet og ned til linjen<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
+<p>I opgave 7 har vi klassificeret en ny hjernemåling fra testdatasættet ved at udregne de to features og se efter om det tilhørende punkt ligger over eller under vores skillelinje, som vi fandt ved hjælp af træningsdatasættet. Vi kunne også have gjort det ved at udregne den lodrette forskel fra punktet og ned til linjen<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
 <div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Med mindre skillelinjen er lodret!</p></div></div><p>Dette er illustreret i <a href="#fig-lodret_afstand" class="quarto-xref">figur&nbsp;1</a>:</p>
 <div id="fig-lodret_afstand" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
@@ -573,14 +613,14 @@ Opgave 7: Vurdering af modellen
 <img src="ALS_filer/lodret_afstand.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-lodret_afstand-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;1: Beregning af den lodrette afstand fra et punkt til en linje.
+Figur&nbsp;1: Beregning af den lodrette forskel fra et punkt til en linje.
 </figcaption>
 </figure>
 </div>
-<p>Den lodrette afstand fra punktet <span class="math inline">\(P(x_1,y_1)\)</span> ned til linjen med ligning <span class="math inline">\(y= a \cdot x + b\)</span> må være (se <a href="#fig-lodret_afstand" class="quarto-xref">figur&nbsp;1</a>):</p>
+<p>Den lodrette forskel fra punktet <span class="math inline">\(P(x_1,y_1)\)</span> ned til linjen med ligning <span class="math inline">\(y= a \cdot x + b\)</span> må være (se <a href="#fig-lodret_afstand" class="quarto-xref">figur&nbsp;1</a>):</p>
 <p><span class="math display">\[
 y_1 - (a \cdot x_1 + b)
-\]</span> Hvis denne afstand er positiv ligger punktet over linjen om omvendt, hvis afstanden er negativ.</p>
+\]</span> Hvis denne forskel er positiv ligger punktet over linjen om omvendt, hvis forskellen er negativ.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -595,9 +635,17 @@ Opgave 8: Klassificering ved beregning (kan springes over)
 <div class="callout-body-container callout-body">
 <ul>
 <li><p>Hvis du i opgave 6 ikke har lavet ekstra udfordringen og fundet ligningen for en linje, som kan adskille punkterne, så start med at gøre det.</p></li>
-<li><p>For hvert punkt i dit punktplot skal du udregne den lodrette afstand fra punktet til din linje.</p></li>
-<li><p>Lav nu en klassificering. Det kan gøres sådan her: <code>=HVIS(B1006&lt;0;"Imaginær";"Baggrund")</code>, hvor <code>B1006</code> refererer til den celle, hvor den lodrette afstand fra punktet til linjen er beregnet.</p></li>
+<li><p>For hvert punkt i dit punktplot skal du udregne den lodrette forskel fra punktet til din linje.</p></li>
+<li><p>Lav nu en klassificering.</p></li>
 </ul>
+<details>
+<summary>
+Sådan gør du i Excel
+</summary>
+<ul>
+<li>Det kan gøres ved at skrive: <code>=HVIS(B1006&lt;0;"Imaginær";"Baggrund")</code>, hvor <code>B1006</code> refererer til den celle, hvor den lodrette forskel fra punktet til linjen er beregnet.</li>
+</ul>
+</details>
 </div>
 </div>
 </div>

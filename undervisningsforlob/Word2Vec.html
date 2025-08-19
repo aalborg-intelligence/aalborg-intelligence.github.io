@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="En øvelse i at forstå, hvad softmax gør og kan.">
+<meta name="description" content="En øvelse i at lave og forstå beregninger i Word2Vec.">
 
-<title>Softmax - hvad kan det? – AI MAT - matematikken bag magien</title>
+<title>Word2Vec – AI MAT - matematikken bag magien</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -183,8 +183,11 @@ window.Quarto = {
    
   <ul>
   <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
-  <li><a href="#sengetester-i-ikea" id="toc-sengetester-i-ikea" class="nav-link" data-scroll-target="#sengetester-i-ikea">Sengetester i IKEA</a></li>
-  <li><a href="#softmax" id="toc-softmax" class="nav-link" data-scroll-target="#softmax">Softmax</a></li>
+  <li><a href="#et-meget-lille-tekstkorpus" id="toc-et-meget-lille-tekstkorpus" class="nav-link" data-scroll-target="#et-meget-lille-tekstkorpus">Et meget lille tekstkorpus</a></li>
+  <li><a href="#fokus--og-kontekstvektorer." id="toc-fokus--og-kontekstvektorer." class="nav-link" data-scroll-target="#fokus--og-kontekstvektorer.">Fokus- og kontekstvektorer.</a></li>
+  <li><a href="#anden-opdatering-af-vægtene" id="toc-anden-opdatering-af-vægtene" class="nav-link" data-scroll-target="#anden-opdatering-af-vægtene">Anden opdatering af vægtene</a></li>
+  <li><a href="#app-til-simple-neurale-netværk" id="toc-app-til-simple-neurale-netværk" class="nav-link" data-scroll-target="#app-til-simple-neurale-netværk">App til simple neurale netværk</a></li>
+  <li><a href="#cross-entropy-som-tabsfunktion" id="toc-cross-entropy-som-tabsfunktion" class="nav-link" data-scroll-target="#cross-entropy-som-tabsfunktion">Cross-entropy som tabsfunktion</a></li>
   <li><a href="#løsninger-til-opgaver" id="toc-løsninger-til-opgaver" class="nav-link" data-scroll-target="#løsninger-til-opgaver">Løsninger til opgaver</a></li>
   </ul>
 </nav>
@@ -198,9 +201,9 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Softmax - hvad kan det?</h1>
+<h1 class="title">Word2Vec</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">C-niveau</div>
+    <div class="quarto-category">A-niveau</div>
     <div class="quarto-category">Kort</div>
   </div>
   </div>
@@ -232,130 +235,188 @@ Forudsætninger og tidsforbrug
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Eksponentialfunktioner, herunder <span class="math inline">\(\mathrm{e}^x\)</span>.</li>
-<li>Sandsynlighedsfelter.</li>
+<li>Vektorregning</li>
+<li>Eksponentialfunktionen.</li>
+<li>Word2Vec teori.</li>
 </ul>
-<p><strong>Tidsforbrug:</strong> Ca. 60 minutter.</p>
+<p>Forudsætningerne om WordVec teori bør dækkes ved hjælp af <a href="../materialer/sprogmodeller/word2vec.html" target="_blank">noten om Word2Vec</a>.</p>
+<p><strong>Tidsforbrug:</strong> Ca. 90 minutter.</p>
 </div>
 </div>
 </div>
 <section id="formål" class="level3 purpose">
 <h3 class="anchored" data-anchor-id="formål">Formål</h3>
-<p>Formålet med dette forløb er</p>
-<ul>
-<li>at se, at eksponentialfunktioner, eller mere konkret <span class="math inline">\(\mathrm{e}^x\)</span>, kan bruges til andet end funktioner med procentvækst.</li>
-<li>at bruge sandsynlighedsfelter til noget lidt mere kompliceret end terningkast.</li>
-<li>at blive introduceret til Softmax, som senere anvendes i visse neurale netværk blandt andet i forbindelse med store sprogmodeller.</li>
-</ul>
+<p>Formålet med dette forløb er dels at gennemføre beregningerne i Word2vec for et meget lille korpus af data, men også at forstå, hvad det vil sige at optimere vektorerne, så tabsfunktionen minimeres.</p>
 </section>
-<section id="sengetester-i-ikea" class="level2">
-<h2 class="anchored" data-anchor-id="sengetester-i-ikea">Sengetester i IKEA</h2>
-<p>Du er blevet ansat som sengetester af IKEA til 138 kr. i timen – dit drømmejob. Du skal sove på 4 typer af boxmadrasser og give hver af dem point fra 1 til 5.</p>
-<p>Efter at have sovet dejligt længe og tjent nogle gode penge, er resultatet følgende for 4 forskellige af IKEA’s madrasser:</p>
+<section id="et-meget-lille-tekstkorpus" class="level2">
+<h2 class="anchored" data-anchor-id="et-meget-lille-tekstkorpus">Et meget lille tekstkorpus</h2>
+<p>Vi vi anvende følgende meget simple tekstkorpus med 12 sætninger. Vi betragter kun de to ord, og anvender et 1-ords vindue, som endda kun indeholder det andet ord på samme linje. Så i den første linje er hunden i 1-ords vinduet til sover, og ingen andre ord er i sovers 1-ords vindue.</p>
 <ul>
-<li>Skotterud 3 point</li>
-<li>Snarum 2 point</li>
-<li>Stuvland 3 point</li>
-<li>Stavanger 5 point</li>
+<li>Hunden sover.</li>
+<li>Katten sover.</li>
+<li>Katten spinder.</li>
+<li>Hunden gør.</li>
+<li>Hunden sover.</li>
+<li>Hunden gør.</li>
+<li>Katten sover.</li>
+<li>Hunden gør.</li>
+<li>Katten sover.</li>
+<li>Katten spinder.</li>
+<li>Katten sover.</li>
+<li>Katten spinder.</li>
 </ul>
-<p>IKEA vil så på baggrund af din særdeles grundige videnskabelige test justere deres produktion, så de producerer de 4 typer boxmadrasser i forhold til dine resultater. De vil naturligvis producere flest Stavanger og færrest Snarum, men hvor mange procent af hver slags skal de producere?</p>
-<p>Vi skal altså have lavet et ikke-symmetrisk sandsynlighedsfelt, hvor udfaldsrummet er de 4 typer madrasser og sandsynlighederne tilsammen giver 1, som det jo skal.</p>
-<p>Det simpleste ville nok være at lægge alle pointene sammen, og så dividere pointtallet for hver madras med summen.</p>
-<p><span class="math display">\[P(\mathrm{ Skotterud }) = \frac{3}{3+2+3+5} \approx 23,1\%\]</span></p>
+<p>Overordnet er ideen så, at vi skal bestemme værdier til fokus- og kontekstvektorer, så tabfunktionen minimeres.</p>
+</section>
+<section id="fokus--og-kontekstvektorer." class="level2">
+<h2 class="anchored" data-anchor-id="fokus--og-kontekstvektorer.">Fokus- og kontekstvektorer.</h2>
+<p>Vi skal således bruge både fokusvektorer og kontekstvektorer.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 1: Udregn sandsynligherne
+Opgave 1:
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Udregn sandsynlighederne for hver af de 3 andre typer boxmadrasser.</li>
-<li>Læg sandsynlighederne sammen og se, at det giver 1.</li>
+<li>Hvor mange fokusvektorer er der brug for?</li>
+<li>Hvor mange kontekstvektorer er der brug for?</li>
 </ul>
 </div>
 </div>
 </div>
-<p>Det fungerer jo sådan set meget godt. Der er dog nogle ting, som gør, at man ofte gør det lidt mere kompliceret:</p>
-<ul>
-<li>Hvis nogle af pointene er negative, risikerer man at skulle dividere med 0.</li>
-<li>Hvis nogle af pointene er negative, kan brøken give et negativt tal.</li>
-</ul>
+<p>Nu vælger vi indledningsvis værdier til alle disse vektorer - vi venter med optimering. For at gøre det simplere, vil vi I dette forløb begrænse os til enhedsvektorer, så længden altid er 5, hvor længden i Word2vec ellers generelt er variabel.</p>
+<p>Fokusvektorerne: <span class="math display">\[
+\vec{v}_{hunden} = \begin{pmatrix} -4 \\ 3 \end{pmatrix}\\
+\vec{v}_{katten} = \begin{pmatrix} 0 \\ 5 \end{pmatrix} \\
+\vec{v}_{spinder} = \begin{pmatrix} 3 \\ 4 \end{pmatrix} \\
+\vec{v}_{sover} = \begin{pmatrix} 4 \\ 3 \end{pmatrix} \\
+\vec{v}_{gør} = \begin{pmatrix} 5 \\ 0 \end{pmatrix} \\
+\]</span> Kontekstvektorerne: <span class="math display">\[
+\vec{k}_{hunden} = \begin{pmatrix} 4 \\ -3 \end{pmatrix}\\
+\vec{k}_{katten} = \begin{pmatrix} 3 \\ -4 \end{pmatrix} \\
+\vec{k}_{spinder} = \begin{pmatrix} -5 \\ 0 \end{pmatrix} \\
+\vec{k}_{sover} = \begin{pmatrix} -4 \\ -3 \end{pmatrix} \\
+\vec{k}_{gør} = \begin{pmatrix} -3 \\ -4 \end{pmatrix} \\
+\]</span> Til disse værdier af vektorerne, skal vi nu have beregnet værdien af tabsfunktionen <span class="math inline">\(L\)</span>. For at kunne overskue beregningerne, opdeles de i mindre dele i de følgende opgaver.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 2: Hvad sker der med negative værdier?
+Opgave 2: Beregn prikprodukterne og anvend eksponentialfunktionen.
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Beregn “sandsynlighederne” med samme metode, hvis de fire værdier i stedet var -1, 0, 1 og 2.</li>
-<li>Forklar, hvorfor resultaterne ikke kan være sandsynligheder.</li>
+<li>Udregn prikproduktet mellem fokusordnet for <span class="math inline">\(hunden\)</span> og kontekstordet for <span class="math inline">\(sover\)</span>.</li>
+<li>Udregn på tilsvarende vis prikprodukterne for de 7 øvrige muligheder.</li>
+<li>Udregn desuden <span class="math inline">\(e\)</span> opløftet i hvert af de 8 prikprodukter.</li>
 </ul>
 </div>
 </div>
 </div>
-</section>
-<section id="softmax" class="level2">
-<h2 class="anchored" data-anchor-id="softmax">Softmax</h2>
-<p>Man benytter derfor nogle gange metoden Softmax, hvor man opløfter tallet <span class="math inline">\(\mathrm{e}\)</span> i hvert pointtal, og derefter regne sandsynlighederne på samme måde som før.</p>
-<p>Så bliver <span class="math display">\[P(\mathrm{ Skotterud }) = \frac{\mathrm{e}^{3}}{\mathrm{e}^{3}+\mathrm{e}^2+\mathrm{e}^3+\mathrm{e}^{5}} \approx 10,2\%\]</span></p>
+<p>Som det næste skal sandsynlighederne udregnes. F.eks. udregnes</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 3: Udregn sandsynligherne med Softmax
+Opgave 3: Udregn sandsynligheder
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li><p>Udregn sandsynlighederne for hver af de 3 andre typer boxmadrasser fra opgave 1 med Softmax metoden.</p></li>
-<li><p>Læg sandsynlighederne sammen og se, at det giver 1.</p></li>
-<li><p>Udregn på samme måde sandsynlighederne ud fra pointallene fra opgave 2 med Softmax.</p></li>
-<li><p>Læg sandsynlighederne sammen og se, at det giver 1.</p></li>
+<li>Udregn <span class="math display">\[P(\text{sover} \mid \text{hunden}) &amp;= \frac{\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{sover}} }}{\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{fjer}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ \]</span></li>
 </ul>
 </div>
 </div>
 </div>
-<p>Bemærk, at sandsynlighederne for de 4 typer madrasser er blevet mere forskellige med Softmax, end da du regnede i første omgang.</p>
-<p>Hvis pointene bliver store og forskellige, vil næsten al sandsynligheden samle sig omkring den største værdi med Softmax. Det kan naturligvis være ønskeligt i situationer, hvor "the winner takes it all", men i andre situationer kan det ses som et problem.</p>
+</section>
+<section id="anden-opdatering-af-vægtene" class="level2">
+<h2 class="anchored" data-anchor-id="anden-opdatering-af-vægtene">Anden opdatering af vægtene</h2>
+<p>Overvej, om du kan strømline dine beregninger, for eksempel i Excel eller i dit CAS værktøj, så det bliver hurtigere at opdatere vægtene en gang mere på samme måde.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 4: Udregn sandsynligherne for store forskellige værdier
+Opgave 4: Opdater vægtene anden gang
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Udregn sandsynligheder både med metoden fra opgave 1 og med Softmax, hvis de fire pointtal er 2, 9, 11 og 16.</li>
+<li>Beregn tabsfunktionen.</li>
+<li>Beregn de opdaterede vægte.</li>
 </ul>
 </div>
 </div>
 </div>
-<p>I mange anvendelser med Softmax er det derfor netop meningen, at hovedparten af sandsynligheder gives til tilfældet med flest point eller at der er mange tilfælde med næsten samme pointal. Det kan du måske komme til i 2.g eller 3.g. f.eks. i <a href="../materialer/softmax/softmax.html">Simple kunstige neurale netværk til multiple klassifikation</a> eller <a href="../materialer/sprogmodeller/word2vec.html">Word2Vec</a>.</p>
+<p>Bemærk, at værdien af tabsfunktionen er blevet lidt mindre. Formålet er jo netop at minimere den gennem gradientnedstigning, så som regel bør værdien bliver mindre, hver gang vægtene opdateres.</p>
+</section>
+<section id="app-til-simple-neurale-netværk" class="level2">
+<h2 class="anchored" data-anchor-id="app-til-simple-neurale-netværk">App til simple neurale netværk</h2>
+<p>Med <a href="../apps/perceptron_app.html" target="_blank">perceptron app’en</a> kan du lave de samme beregninger bare automatisk.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 5: Afprøv perceptron app’en
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Lav et Excelark med feature- og targetværdierne.</li>
+<li>Indlæs data fra Excelarket i perceptron app’en.</li>
+<li>Vælg de korrekte værdier i felterne på app’en. Herunder skal feature-skalering være slået fra.</li>
+<li>Se om app’en giver samme resultater for tabsfunktionen og vægtene, som du selv fik efter 1 iteration og efter 2 iterationer.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="cross-entropy-som-tabsfunktion" class="level2">
+<h2 class="anchored" data-anchor-id="cross-entropy-som-tabsfunktion">Cross-entropy som tabsfunktion</h2>
+<p>Du kan læse om <em>cross-entropy</em> i <a href="../materialer/tabsfunktioner/tabsfunktioner.html#cross-entropy" target="_blank">noten om tabsfunktioner</a>.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+(Ekstra) Opgave 6: Cross-entropy tabsfunktion
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Gentag opgave 1-5 men med <em>cross-entropy</em> som tabsfunktion i stedet for <em>squared error</em>.</li>
+</ul>
+</div>
+</div>
+</div>
 </section>
 <section id="løsninger-til-opgaver" class="level2">
 <h2 class="anchored" data-anchor-id="løsninger-til-opgaver">Løsninger til opgaver</h2>
-<p><a href="../undervisningsforlob/Softmax_facit.html" target="_blank">Facitliste</a>.</p>
+<p><a href="../undervisningsforlob/Opdatering_af_vægte_i_en_kunstig_neuron_løsninger.html" target="_blank">Facitliste</a>.</p>
 
 
 </section>
