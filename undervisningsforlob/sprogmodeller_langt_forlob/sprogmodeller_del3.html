@@ -182,7 +182,7 @@ window.Quarto = {
    
   <ul>
   <li><a href="#aktivitet-1---antal-parametre-i-modellen" id="toc-aktivitet-1---antal-parametre-i-modellen" class="nav-link active" data-scroll-target="#aktivitet-1---antal-parametre-i-modellen">Aktivitet 1 - Antal parametre i modellen</a></li>
-  <li><a href="#aktivitet-2---træning-af-netværk" id="toc-aktivitet-2---træning-af-netværk" class="nav-link" data-scroll-target="#aktivitet-2---træning-af-netværk">Aktivitet 2 - Træning af netværk</a></li>
+  <li><a href="#aktivitet-3---træning-af-netværk" id="toc-aktivitet-3---træning-af-netværk" class="nav-link" data-scroll-target="#aktivitet-3---træning-af-netværk">Aktivitet 3 - Træning af netværk</a></li>
   <li><a href="#aktivitet-3---tekstgenerering" id="toc-aktivitet-3---tekstgenerering" class="nav-link" data-scroll-target="#aktivitet-3---tekstgenerering">Aktivitet 3 - Tekstgenerering</a></li>
   </ul>
 </nav>
@@ -256,21 +256,125 @@ Opgave 1: Antal parametre i det neurale netværk
 <p><br>
 <br>
 </p>
-</section>
-<section id="aktivitet-2---træning-af-netværk" class="level2 aimat">
-<h2 class="aimat anchored" data-anchor-id="aktivitet-2---træning-af-netværk">Aktivitet 2 - Træning af netværk</h2>
-<p>Læs afsnittet <a href="../../materialer/sprogmodeller/tekstgenerering.html#træning-af-netværket">Træning af netværk</a>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 2: Cross-entropy
+Opgave 2 - Et lille neuralt netværk
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Vi forestiller os at vi har trænet et lille neuralt netværk, der kan beregne sandsynligheden for næste ord baseret på de to foregående ord. For at gøre eksemplet simpelt tillader vi kun to mulige næste ord, nemlig “spinder” og “danser”. Inputordene respræsenteres ved to-dimensionale vektorer. Netværket har følgende struktur, hvor outputtet <span class="math inline">\(z_1\)</span> er sandsynligheden for “spinder”, og <span class="math inline">\(z_2\)</span> er sandsynligheden for “danser”:</p>
+<p>FLOT FIGUR - 2X2 inputneuroner, to i det skjulte lag, og to i outputlaget.</p>
+<p>Vægtene, der indgår, i første lag er</p>
+<table class="table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(w_{1,0}\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(w_{1,1}\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(w_{1,2}\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(w_{1,3}\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(w_{1,4}\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(w_{2,0}\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(w_{2,1}\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(w_{2,2}\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(w_{2,3}\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(w_{2,4}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">-1</td>
+<td style="text-align: center;">3</td>
+</tr>
+</tbody>
+</table>
+<p>Vægtene i andet lag er</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(u_{1,0}\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(u_{1,1}\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(u_{1,2}\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(u_{2,0}\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(u_{2,1}\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(u_{2,2}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">-4</td>
+</tr>
+</tbody>
+</table>
+<p>Lad os sige, at vi som input har sætningen “En kat” og skal beregne sandsynligheden for næste ord. Ordene “en” og “kat” har vektorrepræsentationerne <span class="math display">\[\overrightarrow{v}_{\text{en}} = \begin{pmatrix} 1\\-2\end{pmatrix}, \qquad \overrightarrow{v}_{\text{kat}} = \begin{pmatrix} 3\\0 \end{pmatrix}\]</span> Vi vil bruge det neurale netværk til at beregne sandsynligheden for næste ord.</p>
+<ul>
+<li><p>Beregn den 4-dimensionale vektor <span class="math inline">\(\overrightarrow{x}\)</span>, der skal bruges som input til netværket, ved at sætte vektorerne <span class="math inline">\(\overrightarrow{v}_{\text{en}}\)</span> og <span class="math inline">\(\overrightarrow{v}_{\text{kat}}\)</span> oven på hinanden.</p></li>
+<li><p>Beregn <span class="math inline">\(h_1\)</span> og <span class="math inline">\(h_2\)</span> ved formlerne <span class="math display">\[
+\begin{aligned}
+&amp;h_1= f(w_{1,0} + w_{1,1}x_1 + w_{1,2}x_2 + w_{1,3}x_3 + w_{1,4 } x_4)\\
+&amp;h_2= f(w_{2,0} + w_{2,1}x_1 + w_{2,2}x_2 + w_{2,3}x_3 + w_{2,4} x_4)
+\end{aligned}
+\]</span> hvor <span class="math inline">\(f(x)=\frac{1}{1+e^{-x}}\)</span> er den logistiske funktion.</p></li>
+<li><p>Beregn <span class="math inline">\(y_1\)</span> og <span class="math inline">\(y_2\)</span> ved hjælp af formlerne <span class="math display">\[
+\begin{aligned}
+&amp;y_1= u_{1,0} + u_{1,1}h_1 + u_{1,2}h_2 \\
+&amp;y_2= u_{2,0} + u_{2,1}h_1 + u_{2,2}h_2
+\end{aligned}
+\]</span></p></li>
+<li><p>Anvend softmax på <span class="math inline">\(y_1\)</span> og <span class="math inline">\(y_2\)</span> for at beregne <span class="math inline">\(z_1\)</span> og <span class="math inline">\(z_2\)</span>. Det vil sige, beregn <span class="math display">\[
+z_1 = \frac{e^{y_1}}{e^{y_1} + e^{y_2}}\\
+z_2 = \frac{e^{y_2}}{e^{y_1} + e^{y_2}}
+\]</span></p></li>
+<li><p>Hvilket af ordene er det mest sandsynlige næste ord?</p></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="aktivitet-3---træning-af-netværk" class="level2 aimat">
+<h2 class="aimat anchored" data-anchor-id="aktivitet-3---træning-af-netværk">Aktivitet 3 - Træning af netværk</h2>
+<p>Læs afsnittet <a href="../../materialer/sprogmodeller/tekstgenerering.html#træning-af-netværket">Træning af netværk</a>.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 3: Cross-entropy
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Vi forstiller os, at vi har ordnet ordene i vores ordforråd på denne måde:</p>
 <p><span class="math display">\[
@@ -404,16 +508,16 @@ P(\text{himlen } |\text{ "jeg ser på" })
 <h2 class="aimat anchored" data-anchor-id="aktivitet-3---tekstgenerering">Aktivitet 3 - Tekstgenerering</h2>
 <p>Læs afsnittet <a href="../../materialer/sprogmodeller/tekstgenerering.html#tekstgenerering">Tekstgenerering</a>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 3: Prædiktion af næste ord
+Opgave 4: Prædiktion af næste ord
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>En opgave hvor et netværk er trænet på det lille tekstkorpus fra Simple-noten:</p>
 <div class="llm_saetninger">

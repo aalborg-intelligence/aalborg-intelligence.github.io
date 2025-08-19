@@ -115,7 +115,7 @@ window.Quarto = {
 
 </head>
 
-<body class="floating nav-fixed quarto-light">
+<body class="floating nav-fixed slimcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -183,9 +183,8 @@ window.Quarto = {
   <ul>
   <li><a href="#aktivitet-1---vektorregning" id="toc-aktivitet-1---vektorregning" class="nav-link active" data-scroll-target="#aktivitet-1---vektorregning">Aktivitet 1 - Vektorregning</a></li>
   <li><a href="#aktivitet-2---et-opmærksomhedslag" id="toc-aktivitet-2---et-opmærksomhedslag" class="nav-link" data-scroll-target="#aktivitet-2---et-opmærksomhedslag">Aktivitet 2 - Et opmærksomhedslag</a></li>
-  <li><a href="#aktivitet-3---en-transformerblok" id="toc-aktivitet-3---en-transformerblok" class="nav-link" data-scroll-target="#aktivitet-3---en-transformerblok">Aktivitet 3 - En transformerblok</a></li>
-  <li><a href="#aktivitet-4---transformernetværk" id="toc-aktivitet-4---transformernetværk" class="nav-link" data-scroll-target="#aktivitet-4---transformernetværk">Aktivitet 4 - Transformernetværk</a></li>
-  <li><a href="#aktivitet-5---træning-af-netværket" id="toc-aktivitet-5---træning-af-netværket" class="nav-link" data-scroll-target="#aktivitet-5---træning-af-netværket">Aktivitet 5 - Træning af netværket</a></li>
+  <li><a href="#aktivitet-3---transformernetværket" id="toc-aktivitet-3---transformernetværket" class="nav-link" data-scroll-target="#aktivitet-3---transformernetværket">Aktivitet 3 - Transformernetværket</a></li>
+  <li><a href="#aktivitet-4---træning-af-netværket" id="toc-aktivitet-4---træning-af-netværket" class="nav-link" data-scroll-target="#aktivitet-4---træning-af-netværket">Aktivitet 4 - Træning af netværket</a></li>
   </ul>
 </nav>
 </nav>
@@ -194,7 +193,7 @@ window.Quarto = {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -308,24 +307,63 @@ Opgave 2: Vektorrepræsentationer
 <br>
 </p>
 </section>
-<section id="aktivitet-3---en-transformerblok" class="level2 aimat">
-<h2 class="aimat anchored" data-anchor-id="aktivitet-3---en-transformerblok">Aktivitet 3 - En transformerblok</h2>
-<p>Læs afsnittet <a href="../../materialer/sprogmodeller/transformeren.html#en-transformerblok">En transformerblok</a>.</p>
-<p>Opgaver…???</p>
+<section id="aktivitet-3---transformernetværket" class="level2 aimat page-columns page-full">
+<h2 class="aimat anchored" data-anchor-id="aktivitet-3---transformernetværket">Aktivitet 3 - Transformernetværket</h2>
+<p>Læs afsnittene <a href="../../materialer/sprogmodeller/transformeren.html#en-transformerblok">En transformerblok</a> og <a href="../../materialer/sprogmodeller/transformeren.html#transformernetværket">Transformernetværket</a>.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 3: Vægte i en transformernetværket
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>I denne opgave giver vi et overslag over størrelsen af den transformer, der blev brugt i GPT-2<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, som er forgængeren for den GPT-4 teknologi, der bruges i ChatGPT.</p>
+<p>Vi ser først på en enkelt transformerblok.</p>
+<ol type="1">
+<li><p>GPT-2 brugte vektorer af dimension <span class="math inline">\(64\)</span> til at repræsentere ord. Hvert af de <span class="math inline">\(V\)</span> ord i sproget skal repræsenteres af <span class="math inline">\(3\)</span> forskellige vektorer. Hvor mange vægte skal der bruges til at lave vektorrepræsentationer af alle <span class="math inline">\(V\)</span> ord i sproget.</p></li>
+<li><p>I et trin, som vi ikke gennemgik, reduceres de <span class="math inline">\(V\)</span> ord i sproget til <span class="math inline">\(768\)</span>-dimensionale vektorer, som derefter oversættes til tre vektorer. Ved at sætte <span class="math inline">\(V=768\)</span> i 1., får du det reelle antal vægte, der skal bruges for at lave de tre vektorrepræsentationer.</p></li>
+<li><p>I GPT-2 var der <span class="math inline">\(K=12\)</span> parallelle opmærksomhedslag. Gang med <span class="math inline">\(12\)</span> i ovenstående beregning for at få antallet af vægte, der samlet set skal bruges til at lave vektorrepræsentationerne i alle opmærksomhedslagene.</p></li>
+<li><p>Outputtet fra hvert opmærksomhedslag er en <span class="math inline">\(64\)</span>-dimensional vektor. Outputtet fra de <span class="math inline">\(12\)</span> opmærksomhedslag sættes i forlængelse af hinanden til en vektor <span class="math inline">\(\overrightarrow{x}_i\)</span>. Hvilken dimension har <span class="math inline">\(\overrightarrow{x}_i\)</span>?</p></li>
+<li><p>Som det næste bliver <span class="math inline">\(\overrightarrow{x}_i\)</span> brugt som input i et neuralt netværk. GPT-2 bruger <span class="math inline">\(d=4\cdot 768\)</span> neuroner i det skjulte lag og outputtet er en ny vektor af dimension <span class="math inline">\(768\)</span>. Hvor mange vægte skal der i alt bruges til det neurale netværk (brug eventuelt din beregning fra Opgave 1 i del 3 LINK).</p></li>
+<li><p>Læg antallet af vægte i opmærksomhedslagene, som du fandt i 3., sammen med antallet af vægte i det neurale netværk, som du fandt i 5., for at få det samlede antal vægte i en transformerblok.</p></li>
+</ol>
+<p>Nu ser vi på det samlede transformernetværk.</p>
+<ol start="7" type="1">
+<li><p>GPT-2 brugte <span class="math inline">\(N=12\)</span> transformerblokke. Gang resultatet fra 6. med <span class="math inline">\(12\)</span> for at få det samlede antal vægte i transformerblokkene.</p></li>
+<li><p>Og så har vi endda sprunget et par trin over. Helt i starten (se 2. ovenfor) blev de <span class="math inline">\(V\)</span> ord i ordforrådet oversat til <span class="math inline">\(768\)</span>-dimensionale vektorer. I prædiktionslaget blev der brugt <span class="math inline">\(V\)</span> <span class="math inline">\(768\)</span>-dimensionale vektorer til at udregne en score for hvert ord. Ved at bruge tokens i stedet for ord (se boksen under opgaven), kan GPT-2 nøjes med <span class="math inline">\(V=50.257\)</span> ord (eller rettere orddele). Hvor mange ekstra vægte giver det anledning til?</p></li>
+<li><p>Læg resultatet fra 7. og 8. sammen og sammenlign med det antal vægte, der ofte angives for GPT-2 Small i litteraturen, nemlig <span class="math inline">\(117\)</span> millioner (nogle kilder siger dog <span class="math inline">\(124\)</span> millioner).</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;GPT-2 kommer i fire forskellige størrelser. Den vi regner på her er den mindste, som kaldes GPT-2 Small</p></div></div><div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tokens
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Mange ord er opbygget af mindre dele, som går igen i mange forskellige ord. For eksempel er “lær” et ord i sig selv, men det kan også sættes sammen med andre orddele til at danne ord som “lær-e”, “lær-er”, “lær-ing” eller “lær-e-bog”. Orddelene “e”, “er” og “ing” forekommer i rigtig mange ord. Disse dele kaldes tokens. Ord adskilles af mellemrum, som er et token i sig selv.<br>
+I stedet for at dele tekst op i ord, deler store sprogmodeller tekst op i tokens. Fordelen er, at antallet af forskellige tokens, hvis de er valgt fornuftigt, er noget mindre end det samlede antal ord i sproget. Samtidig er de store nok til at indeholde information om sprogets betydning. For eksempel forekommer tokenet “lær” ofte i ord relateret til læring, mens tokens som “er” eller “ing” ofte markerer en bestemt bøjning af et ord.</p>
+</div>
+</div>
+</div>
 <p><br>
 <br>
 </p>
 </section>
-<section id="aktivitet-4---transformernetværk" class="level2 aimat">
-<h2 class="aimat anchored" data-anchor-id="aktivitet-4---transformernetværk">Aktivitet 4 - Transformernetværk</h2>
-<p>Læs afsnittet <a href="../../materialer/sprogmodeller/transformeren.html#transformernetværket">Transformernetværk</a>.</p>
-<p>Opgaver…???</p>
-<p><br>
-<br>
-</p>
-</section>
-<section id="aktivitet-5---træning-af-netværket" class="level2 aimat">
-<h2 class="aimat anchored" data-anchor-id="aktivitet-5---træning-af-netværket">Aktivitet 5 - Træning af netværket</h2>
+<section id="aktivitet-4---træning-af-netværket" class="level2 aimat">
+<h2 class="aimat anchored" data-anchor-id="aktivitet-4---træning-af-netværket">Aktivitet 4 - Træning af netværket</h2>
 <p>Læs afsnittet <a href="../../materialer/sprogmodeller/transformeren.html#træning-af-netværket">Træning af netværket</a>.</p>
 <p>Opgaver…???</p>
 <p><br>
@@ -335,6 +373,7 @@ Opgave 2: Vektorrepræsentationer
 
 
 </section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
