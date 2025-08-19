@@ -46,15 +46,66 @@ Antag, at alle ord repræsenteres ved en 3-dimensional vektor og at $d=50$.
 
 {{< include ../space.qmd >}}
 
+::: {.callout-note collapse="false" appearance="minimal"}
 
-## Aktivitet 2 -  Træning af netværk {.aimat}
+### Opgave 2 -  Et lille neuralt netværk {.aimat}
+
+Vi forestiller os at vi har trænet et lille neuralt netværk, der kan beregne sandsynligheden for næste ord baseret på de to foregående ord. For at gøre eksemplet simpelt tillader vi kun to mulige næste ord, nemlig "spinder" og "danser". Inputordene respræsenteres ved to-dimensionale vektorer. Netværket har følgende struktur, hvor outputtet $z_1$ er sandsynligheden for "spinder", og $z_2$ er sandsynligheden for "danser":
+
+FLOT FIGUR - 2X2 inputneuroner, to i det skjulte lag, og to i outputlaget.
+
+Vægtene, der indgår, i første lag er 
+
+ |$w_{1,0}$ | $w_{1,1}$  |$w_{1,2}$ |$w_{1,3}$ |$w_{1,4}$ | $w_{2,0}$ | $w_{2,1}$  |$w_{2,2}$ |$w_{2,3}$ |$w_{2,4}$ | 
+   |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+   | 1 | 0  | 1 | 1 | 5  | 2  | 4 | 2 | -1 | 3 |
+
+Vægtene i andet lag er 
+
+ |$u_{1,0}$ | $u_{1,1}$  |$u_{1,2}$ |$u_{2,0}$ |$u_{2,1}$ | $u_{2,2}$ |  
+   |:---:|:---:|:---:|:---:|:---:|:---:|
+   | 0.5 | 1 | 2 | 0.2 | 0 | -4 | 
+
+
+Lad os sige, at vi som input har sætningen "En kat" og skal beregne sandsynligheden for næste ord. Ordene "en" og "kat" har vektorrepræsentationerne
+$$\overrightarrow{v}_{\text{en}} = \begin{pmatrix} 1\\-2\end{pmatrix}, \qquad \overrightarrow{v}_{\text{kat}} = \begin{pmatrix} 3\\0 \end{pmatrix}$$
+Vi vil bruge det neurale netværk til at beregne sandsynligheden for næste ord. 
+
+- Beregn den 4-dimensionale vektor $\overrightarrow{x}$, der skal bruges som input til netværket, ved at sætte vektorerne $\overrightarrow{v}_{\text{en}}$ og $\overrightarrow{v}_{\text{kat}}$ oven på hinanden.
+
+- Beregn $h_1$ og $h_2$ ved formlerne 
+ $$
+ \begin{aligned}
+ &h_1= f(w_{1,0} + w_{1,1}x_1 + w_{1,2}x_2 + w_{1,3}x_3 + w_{1,4 } x_4)\\
+ &h_2= f(w_{2,0} + w_{2,1}x_1 + w_{2,2}x_2 + w_{2,3}x_3 + w_{2,4} x_4)
+ \end{aligned}
+ $$
+hvor $f(x)=\frac{1}{1+e^{-x}}$ er den logistiske funktion.
+
+- Beregn $y_1$ og $y_2$ ved hjælp af formlerne
+ $$
+ \begin{aligned}
+ &y_1= u_{1,0} + u_{1,1}h_1 + u_{1,2}h_2 \\
+ &y_2= u_{2,0} + u_{2,1}h_1 + u_{2,2}h_2 
+ \end{aligned}
+ $$
+- Anvend softmax på $y_1$ og $y_2$ for at beregne $z_1$ og $z_2$. Det vil sige, beregn
+$$
+z_1 = \frac{e^{y_1}}{e^{y_1} + e^{y_2}}\\
+z_2 = \frac{e^{y_2}}{e^{y_1} + e^{y_2}}
+$$
+- Hvilket af ordene er det mest sandsynlige næste ord?
+
+:::
+
+## Aktivitet 3 -  Træning af netværk {.aimat}
 
 Læs afsnittet [Træning af netværk](../../materialer/sprogmodeller/tekstgenerering.qmd#træning-af-netværket). 
 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 2: Cross-entropy
+### Opgave 3: Cross-entropy
 
 Vi forstiller os, at vi har ordnet ordene i vores ordforråd på denne måde:
 
@@ -178,7 +229,7 @@ Læs afsnittet [Tekstgenerering](../../materialer/sprogmodeller/tekstgenerering.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 3: Prædiktion af næste ord
+### Opgave 4: Prædiktion af næste ord
 
 En opgave hvor et netværk er trænet på det lille tekstkorpus fra Simple-noten:
 
