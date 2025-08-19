@@ -25,6 +25,8 @@ Forløbet kræver kendskab til:
 + Rette linjer.
 + Procentregning.
 
+Der gives i opgaverne vejledning til at lave databehandling i Excel, men det er valgfrit, hvilket program man vil bruge. Vær også opmærksom på, at der kan være forskellige versioner af Excel, så vejledningen passer ikke nødvendigvis 1:1 med elevernes version.
+
 **Tidsforbrug:** Ca. 2 x 90 minutter.
 
 :::
@@ -76,6 +78,29 @@ hjernen) før den går videre til næste punkt. Estimer tiden det vil tage, hvis
 
 Vi forestiller os, at der er blevet optaget hjernesignaler fra en person, der tænker på en bevægelse med foden, når han/hun ønsker at vælge et bestemt punkt i menuen. Til alle andre tidspunkter sidder personen og slapper af, og derfor optages kun den almindelige baggrundshjerneaktivitet. Der er altså her tale om et binært kontrolsignal: enten tænker personen på at bevæge foden, eller også tænker han/hun *ikke* på at bevæge foden. 
 
+Lad os sige, at Magnus (fra videoen) gerne vil skrive \"HEJ\". Det kan foregå sådan her:
+
+1) I 2 sekunder får Magnus vist den første del af menuen, som er markeret med lysblå her:
+
+![](ALS_filer/HEJ_1.png){width=40% fig-align="center"}
+
+2) Magnus skal ikke bruge nogle af bogstaverne i denne del af menuen, så han slapper bare af. I de 2 sekunder der går, laver vi 1000 målinger af Magnus' hjerneaktivitet og udregner herefter de to features, som beskrevet i opgave 5. Det giver anledning til ét punkt, som vi indtegner i koordinatsystemet. Vi kan se, at punktet ligger på den side af linjen, hvor punkterne hørende til baggrundshjerneaktivitet ligger. Det fortolker vi, som at Magnus har sagt \"nej\" til bogstaverne i den første kategori og går derfor frem i menuen og viser Magnus denne del:
+
+![](ALS_filer/HEJ_2.png){width=40% fig-align="center"}
+
+
+3) Magnus vil gerne skrive ét af bogstaverne på denne menu -- nemlig \"H\". Derfor laver Magnus nu en imaginær bevægelse med sin fod i 2 sekunder[^2]. Imens laver vi de 1000 målinger af Magnus' hjerneaktivitet og beregner derefter de to features, som plottes ind i koordinatsystemet. Vi ser, at punkterne ligger på den side af linjen, hvor punkter hørende til den imaginære bevægelse ligger, hvilket betyder, at vi nu ved, at Magnus gerne vil skrive enten H, I, J, K, L, M eller N. Derfor får Magnus vist disse syv bogstaver (samt muligheden \"EXIT\") på skift i 2 sekunder. Vi starter med \"H\":
+
+[^2]: Bemærk, at Magnus *ikke* bevæger foden, for det kan han ikke. Men han *tænker* på at bevæge foden. Det er derfor, at bevægelsen kaldes for *imaginær*.
+
+
+![](ALS_filer/HEJ_3.png){width=30% fig-align="center"}
+
+4) Magnus vil gerne skrive \"H\", og derfor laver han igen den imaginære bevægelse med foden, som vi registerer på samme måde som tidligere. På et eller andet tilknyttet display skrives der nu \"H\".
+
+5) Vi går tilbage til punkt 1, og da Magnus skal skrive \"E\" som det næste, laver han med det samme den imaginære bevægelse med foden. Sådan fortsættes indtil Magnus har fået skrevet \"HEJ\".
+
+
 Hjernesignalerne er opsamlet med en samplingsfrekvens på 500 Hz, hvilket betyder, at der er 500 målepunkter per sekund (amplitude i $\mu$V). Hver optagelse er to sekunder lang, og dermed er der 1000 målepunkter (2 x samplingsfrekvens). 
 
 Data er blevet opdelt i to faner: I den første fane er der hjernesignaler for målinger af 15 imaginære bevægelser og 15 målinger af baggrundshjerneaktivitet, som skal bruges til at træne en AI model, så den kan se forskel på de to forskellige slags hjernesignaler. Disse data kaldes for **træningsdata**. I den anden fane er der henholdsvis 10 gentagelser af imaginære bevægelser og af baggrundshjerneaktivitet, som skal bruges til at teste, hvor god vores AI model er. Disse data kaldes for **testdata**. Data ligger i [excel-filen her](ALS_filer/data-ALS.xlsx).
@@ -89,7 +114,10 @@ Data er blevet opdelt i to faner: I den første fane er der hjernesignaler for m
 Hent excel-filen med data og gør følgende for de data, som ligger i fanen \"Data til træning\":
 
 * Plot følgende gentagelser af den imaginære bevægelse: 1, 5, 10 og 15 (det vil sige 4 figurer i
-alt). Du kan gøre det sådan her:
+alt). 
+
+<details>
+<summary> Sådan gør du i Excel </summary>
 
   - Vælg \"Indsæt\" $\rightarrow$ \"Diagrammer\". Her vælger du et punktdiagram (på den måde får du et tomt diagram).
   - Højreklik på det tomme diagram og tryk på \"Vælg data...\".
@@ -101,6 +129,8 @@ alt). Du kan gøre det sådan her:
   - Ændr diagramtitlen til \"Imaginær bevægelse 1\" (dobbeltklik, hvor der står \"Diagramtitel\").
   - Gør nu noget tilsvarende for imaginær bevægelse gentalgelse 5. Du kan med fordel kopiere det, du lige har skrevet i \"Diagramdataområde\" ovenfor og ændre det til `='Data til træning'!$F$3:$F$1002`, fordi data for imaginær bevægelse gentalgelse 5 står i kolonne `F`.
   - Fortsæt på samme måde med imaginær bevægelse gentagelse 10 og 15.
+  
+</details>
   
 * Plot på tilsvarende vis følgende gentagelser af baggrundshjerneaktivitet: 1, 5, 10 og 15 (det vil sige 4 figurer i alt).
   
@@ -114,10 +144,15 @@ I stedet for at se på hver af de 15 gentagelser enkeltvist, vil vi nu prøve at
 
 ### Opgave 3: Plot af gennemsnitsmålinger (træningsdata)
 
-* Udregn gennemsnittet af de 15 gentagelser for de imaginære bevægelser. Gør sådan her:
+* Udregn gennemsnittet af de 15 gentagelser for de imaginære bevægelser. 
+
+<details>
+<summary> Sådan gør du i Excel </summary>
+
   - Stil dig i celle `Q2` og skriv `Gns` (for gennemsnit).
   - Stil dig i celle `Q3` og skriv `=MIDDEL(B3:P3)`.
   - Tag ved den lille kasse i nederste højre hjørne af celle `Q3` og træk den ned, så du får beregnet alle 1000 gennemsnitsværdier (du ender altså med en 2-sekundersoptagelse som er et gennemsnit af de 15 gentagelser).
+</details>
 
 * Plot nu gennemsnittet på tværs af de 15 imaginære bevægelser i jeres træningsdata.
 
@@ -170,15 +205,19 @@ I næste opgave vil vi udregne disse to features -- men læg mærke til, at der 
 
 ### Opgave 5: Udregning af to features
 
-Vi starter med at udregne ovenstående to features for hver af de 15 imaginære bevægelser og for hver af de 15 målinger af baggrundshjerneaktiviteterne. Gør sådan her:
+* Udregn ovenstående to features for hver af de 15 imaginære bevægelser og for hver af de 15 målinger af baggrundshjerneaktiviteterne. 
 
-* Stil dig i celle `A1004` og skriv \"Feature 1\", mens du i celle `A1005` skriver \"Feature 2\".
+<details>
+<summary> Sådan gør du i Excel </summary>
 
-For gentagelse 1 står alle målinger i celle `B3` til `B1002`. Derfor udregner vi feature 1 og 2 for den første gentagelse på denne måde:
+  * Stil dig i celle `A1004` og skriv \"Feature 1\", mens du i celle `A1005` skriver \"Feature 2\".
 
-* I celle `B1004` skriver du: `=MIDDEL(B3:B335)-MIDDEL(B336:B668)`
-* I celle `B1005` skriver du: `=MIDDEL(B336:B668)-MIDDEL(B669:B1002)`
-* Markér de to celler og træk til højre, så du får udregnet de to features for de resterende gentagelser -- både for de imaginære bevægelser og for baggrundshjerneaktiviteten.
+  For gentagelse 1 står alle målinger i celle `B3` til `B1002`. Derfor udregner vi feature 1 og 2 for den første gentagelse på denne måde:
+
+  * I celle `B1004` skriver du: `=MIDDEL(B3:B335)-MIDDEL(B336:B668)`
+  * I celle `B1005` skriver du: `=MIDDEL(B336:B668)-MIDDEL(B669:B1002)`
+  * Markér de to celler og træk til højre, så du får udregnet de to features for de resterende gentagelser -- både for de imaginære bevægelser og for baggrundshjerneaktiviteten.
+</details>
 
 :::
 
@@ -189,6 +228,11 @@ Vi skal nu på baggrund af disse to features se, om vi kan få adskilt målinger
 ::: {.callout-note collapse="false" appearance="minimal"}
 
 ### Opgave 6: Plot af features
+
+* Lav et plot med \"Feature 1\" ud af $x$-aksen og \"Feature 2\" op ad $y$-aksen for målinger, som stammer fra en baggrundshjerneaktivitet.
+
+<details>
+<summary> Sådan gør du i Excel </summary>
 
 * Indsæt et tomt punktplot, som du gjorde i opgave 2.
 * Højreklik og tryk på \"Vælg data...\".
@@ -205,6 +249,9 @@ Vi skal nu på baggrund af disse to features se, om vi kan få adskilt målinger
 * Klik på punktplottet og tryk på \"+\"-ikonet og sæt flueben ved \"Aksetitler\" og \"Forklaring\".
 * Dobbeltklik på aksetitler og skriv \"Feature 1\" ved $x$-aksen og \"Feature 2\" ved $y$-aksen.
 * Tryk på ét af punkterne, som hører til den imaginære bevægelse, højreklik og tryk på \"Udfyldning\" og vælg \"Ingen udfyldning\".
+
+</details>
+
 * Gør noget tilsvarende for de punkter, som hører til baggrundsaktiviteten.
 
   Det skulle gerne ende med at se nogenlunde sådan her ud:
@@ -214,33 +261,18 @@ Vi skal nu på baggrund af disse to features se, om vi kan få adskilt målinger
 
 **Ekstra udfordring:**
 
-* Indtegn en linje i punktplottet ved at tilføje en ny dataserie bestående af to punkter, som du efterfølgende tegner en tendenslinje igennem. Sørg for at få linjens ligning vist i plottet.
+* Indtegn linjen i punktplottet.
+
+<details>
+<summary> Sådan gør du i Excel </summary>
+
+* Tilføj en ny dataserie bestående af to punkter, som du efterfølgende tegner en tendenslinje igennem. Sørg for at få linjens ligning vist i plottet.
+
+</details>
 
 :::
 
 Det skulle gerne være sådan, at du har indtegnet (eller kan forestille dig) en linje, som kan adskille de to forskellige slags punkter fra hinanden. Denne linje kan bruges til at klassificere en ny måling, hvor vi ikke kender kategorien på forhånd. Det gøres ved at lave hjernemålingen i 2 sekunder (det vil sige i alt 1000 målepunkter), udregne feature 1 og 2 og dernæst plottet det tilhørende punkt ind i punktplottet. Hvis det nye punkter ligger på den side af linjen, hvor punkterne hørende til imaginær bevægelse ligger, så vil vi klassificere den nye måling som hørende til en imaginær bevægelse og omvendt, hvis det nye punkt ligger på den anden side af linjen. Det kan derfor bruges til at afgøre, om en person for eksempel har sagt ja eller nej til en kategori eller et bogstav i en menu.
-
-Lad os sige, at Magnus (fra videoen) gerne vil skrive \"HEJ\". Det kan foregå sådan her:
-
-1) I 2 sekunder får Magnus vist den første del af menuen, som er markeret med lysblå her:
-
-![](ALS_filer/HEJ_1.png){width=40% fig-align="center"}
-
-2) Magnus skal ikke bruge nogle af bogstaverne i denne del af menuen, så han slapper bare af. I de 2 sekunder der går, laver vi 1000 målinger af Magnus' hjerneaktivitet og udregner herefter de to features, som beskrevet i opgave 5. Det giver anledning til ét punkt, som vi indtegner i koordinatsystemet. Vi kan se, at punktet ligger på den side af linjen, hvor punkterne hørende til baggrundshjerneaktivitet ligger. Det fortolker vi, som at Magnus har sagt \"nej\" til bogstaverne i den første kategori og går derfor frem i menuen og viser Magnus denne del:
-
-![](ALS_filer/HEJ_2.png){width=40% fig-align="center"}
-
-
-3) Magnus vil gerne skrive ét af bogstaverne på denne menu -- nemlig \"H\". Derfor laver Magnus nu en imaginær bevægelse med sin fod i 2 sekunder[^2]. Imens laver vi de 1000 målinger af Magnus' hjerneaktivitet og beregner derefter de to features, som plottes ind i koordinatsystemet. Vi ser, at punkterne ligger på den side af linjen, hvor punkter hørende til den imaginære bevægelse ligger, hvilket betyder, at vi nu ved, at Magnus gerne vil skrive enten H, I, J, K, L, M eller N. Derfor får Magnus vist disse syv bogstaver (samt muligheden \"EXIT\") på skift i 2 sekunder. Vi starter med \"H\":
-
-[^2]: Bemærk, at Magnus *ikke* bevæger foden, for det kan han ikke. Men han *tænker* på at bevæge foden. Det er derfor, at bevægelsen kaldes for *imaginær*.
-
-
-![](ALS_filer/HEJ_3.png){width=30% fig-align="center"}
-
-4) Magnus vil gerne skrive \"H\", og derfor laver han igen den imaginære bevægelse med foden, som vi registerer på samme måde som tidligere. På et eller andet tilknyttet display skrives der nu \"H\".
-
-5) Vi går tilbage til punkt 1, og da Magnus skal skrive \"E\" som det næste, laver han med det samme den imaginære bevægelse med foden. Sådan fortsættes indtil Magnus har fået skrevet \"HEJ\".
 
 Men hvor godt virker det mon? Der må jo nogle gange ske fejl, fordi alle målinger er behæftet med måleusikkerhed. Det er heller ikke sikkert, at der findes en rette linje, som *altid* kan skille de røde krydser fra de blå. Og selv hvis der er, er det ikke sikkert, at vi baseret på træningsdata har fundet den helt rigtige linje.
 
@@ -271,20 +303,20 @@ Den andel af punkterne, som er blevet klassificeret korrekt, kaldes for  **klass
 
 ## Klassificering ved beregning (kan udelades)
 
-I opgave 7 har vi klassificeret en ny hjernemåling fra testdatasættet ved at udregne de to features og se efter om det tilhørende punkt ligger over eller under vores skillelinje, som vi fandt ved hjælp af træningsdatasættet. Vi kunne også have gjort det ved at udregne den lodrette afstand fra punktet og ned til linjen[^3]. 
+I opgave 7 har vi klassificeret en ny hjernemåling fra testdatasættet ved at udregne de to features og se efter om det tilhørende punkt ligger over eller under vores skillelinje, som vi fandt ved hjælp af træningsdatasættet. Vi kunne også have gjort det ved at udregne den lodrette forskel fra punktet og ned til linjen[^3]. 
 
 [^3]: Med mindre skillelinjen er lodret!
 
 Dette er illustreret i @fig-lodret_afstand:
 
-![Beregning af den lodrette afstand fra et punkt til en linje.](ALS_filer/lodret_afstand.png){#fig-lodret_afstand width=75% fig-align="center"}
+![Beregning af den lodrette forskel fra et punkt til en linje.](ALS_filer/lodret_afstand.png){#fig-lodret_afstand width=75% fig-align="center"}
 
-Den lodrette afstand fra punktet $P(x_1,y_1)$ ned til linjen med ligning $y= a \cdot x + b$ må være (se @fig-lodret_afstand):
+Den lodrette forskel fra punktet $P(x_1,y_1)$ ned til linjen med ligning $y= a \cdot x + b$ må være (se @fig-lodret_afstand):
 
 $$
 y_1 - (a \cdot x_1 + b)
 $$
-Hvis denne afstand er positiv ligger punktet over linjen om omvendt, hvis afstanden er negativ.
+Hvis denne forskel er positiv ligger punktet over linjen om omvendt, hvis forskellen er negativ.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
@@ -292,10 +324,16 @@ Hvis denne afstand er positiv ligger punktet over linjen om omvendt, hvis afstan
 
 * Hvis du i opgave 6 ikke har lavet ekstra udfordringen og fundet ligningen for en linje, som kan adskille punkterne, så start med at gøre det.
 
-* For hvert punkt i dit punktplot skal du udregne den lodrette afstand fra punktet til din linje.
+* For hvert punkt i dit punktplot skal du udregne den lodrette forskel fra punktet til din linje.
 
-* Lav nu en klassificering. Det kan gøres sådan her: `=HVIS(B1006<0;"Imaginær";"Baggrund")`, hvor `B1006` refererer til den celle, hvor den lodrette afstand fra punktet til linjen er beregnet.
+* Lav nu en klassificering. 
 
+<details>
+<summary> Sådan gør du i Excel </summary>
+
+* Det kan gøres ved at skrive: `=HVIS(B1006<0;"Imaginær";"Baggrund")`, hvor `B1006` refererer til den celle, hvor den lodrette forskel fra punktet til linjen er beregnet.
+
+</details>
 
 :::
 
