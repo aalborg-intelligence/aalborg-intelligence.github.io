@@ -263,7 +263,7 @@ Tabel&nbsp;1: Et meget lille træningsdatasæt til Good Food app’en.
 </figcaption>
 </figure>
 </div>
-<p>For det første er tre træningseksempler alt for få. For det andet kan man jo bare kigge på træningsdata og lave en regel ud fra dem. Det kunne for eksempel være: Hvis kunden er 55 år eller under, så tror vi ikke, at hun vil aktivere tilbudet, og omvendt hvis kunden er over 55 år. Det behøver man jo ikke fancy AI metoder til at indse! For det tredje er det urealistisk, at alder alene kan afgøre, om en kunde aktiverer et tilbud eller ej. Man vil typisk inddrage andre inputvariable som for eksempel køn, forbrug og så videre.</p>
+<p>For det første er tre træningseksempler alt for få. For det andet kan man jo bare kigge på træningsdata og lave en regel ud fra dem. Det kunne for eksempel være: Hvis kunden er 55 år eller under, så tror vi ikke, at hun vil aktivere tilbuddet, og omvendt hvis kunden er over 55 år. Det behøver man jo ikke fancy AI metoder til at indse! For det tredje er det urealistisk, at alder alene kan afgøre, om en kunde aktiverer et tilbud eller ej. Man vil typisk inddrage andre inputvariable som for eksempel køn, forbrug og så videre.</p>
 <p>Vi vil derfor her se på et langt mere realistik eksempel, hvor træningsdatasættet er større og med flere inputvariable.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
@@ -283,7 +283,7 @@ Opgave 1: Datasæt
 </div>
 </div>
 </div>
-<p>I datasættet er der tre inputvariable: "alder" (målt i år), "forbrug" (målt i kroner) og "køn" (kon, hvor 0 svarer til kvinder og 1 svarer til mænd). Targetvariablen kaldes for "aktiveret" (hvor "ja" svarer til, at kunden har aktiveret tilbudet, og "nej" svarer til, at kunden ikke har aktiveret tilbudet). Vi har altså følgende inputvariable:</p>
+<p>I datasættet er der tre inputvariable: "alder" (målt i år), "forbrug" (målt i kroner) og "køn" (kon, hvor 0 svarer til kvinder og 1 svarer til mænd). Targetvariablen kaldes for "aktiveret" (hvor "ja" svarer til, at kunden har aktiveret tilbuddet, og "nej" svarer til, at kunden ikke har aktiveret tilbuddet). Vi har altså følgende inputvariable:</p>
 <ul>
 <li><span class="math inline">\(x_1\)</span>: kundens alder målt i år</li>
 <li><span class="math inline">\(x_2\)</span>: kundens forbrug i Good Food den seneste måned målt i kr.</li>
@@ -312,10 +312,11 @@ Opgave 2: Plots
 <ul>
 <li>Gå tilbage til regnearket og markér alle punkterne i kolonne <code>E</code>. Højreklik og vælg "vis navn" (det skulle gerne fjerne navngivningen af punkterne i koordinatsystemet).</li>
 </ul>
-<p>Vi vil nu farve de punkter, som svarer til et træningseksempel, hvor tilbudet et blevet aktiveret for blåt og tilsvarende rødt, hvis tilbudet ikke er blevet aktiveret. Husk på at denne information findes i kolonne <code>D</code>.</p>
+<p>Vi vil nu farve de punkter, som svarer til et træningseksempel, hvor tilbuddet et blevet aktiveret for blåt og tilsvarende rødt, hvis tilbuddet ikke er blevet aktiveret. Husk på at denne information findes i kolonne <code>D</code>.</p>
 <ul>
 <li><p>Markér det første punkt i celle <code>E2</code>. Højreklik og vælg "Egenskaber". Vælg her fanen "Avanceret".</p></li>
 <li><p>I det felt, hvor der står "Rød", skriver du <code>If(D2="Nej",1,0)</code>.</p></li>
+<li><p>I det felt, hvor der står "Grøn", skriver du <code>0</code>.</p></li>
 <li><p>I det felt, hvor der står "Blå", skriver du <code>If(D2="Ja",1,0)</code>.</p></li>
 </ul>
 <p>Det kommer til at se sådan her ud (hvis du har GeoGebra på dansk bliver "If" lavet om til "Hvis"):</p>
@@ -325,12 +326,12 @@ Opgave 2: Plots
 </figure>
 </div>
 <div class="description">
-<p><strong>Forklaring:</strong> I GeoGebra repræsenteres farver ved hjælp af en rød/grøn/blå (RGB) farvemodel. Mængden af rød repræsenteres her som et tal mellem 0 og 1 og tilsvarende med grøn og blå. Når vi i feltet ved "Rød" skriver <code>If(D2="Nej",1,0)</code>, så betyder det, at hvis værdien i celle <code>D2</code> er "Nej" (kunden har ikke aktiveret tilbudet), så skal mængden af rød være 1 og 0 ellers. Og tilsvarende for mængden af blå, hvis <code>D2</code> har værdien "Ja".</p>
+<p><strong>Forklaring:</strong> I GeoGebra repræsenteres farver ved hjælp af en rød/grøn/blå (RGB) farvemodel. Mængden af rød repræsenteres her som et tal mellem 0 og 1 og tilsvarende med grøn og blå. Når vi i feltet ved "Rød" skriver <code>If(D2="Nej",1,0)</code>, så betyder det, at hvis værdien i celle <code>D2</code> er "Nej" (kunden har ikke aktiveret tilbuddet), så skal mængden af rød være 1 og 0 ellers. Og tilsvarende for mængden af blå, hvis <code>D2</code> har værdien "Ja".</p>
 </div>
 <ul>
 <li><p>Marker igen celle <code>E2</code> og tag ved den lille kasse i nederste hjørne af celle <code>E2</code> og trække ned, så du igen får udfyldt kolonne <code>E</code> for hele datasættet. Punkterne skulle nu gerne være farvet som ønsket.</p></li>
 <li><p>Indsæt nogle tekstfelter i tegneblokken (tryk på ikonet "Skyder" og vælg "Tekst"): Angiv, hvad der er ud af akserne, hvad de røde og blå punkter betyder, og at plottet er for kvinder.</p></li>
-<li><p>Indlæg i dette koordinatsystem en rette linje, som (for de fleste punkter) vil kunne bruges til at adskille de blå punkter fra de røde? Notér ligningen for en sådan linje.</p></li>
+<li><p>Indlæg i dette koordinatsystem en ret linje, som (for de fleste punkter) vil kunne bruges til at adskille de blå punkter fra de røde? Notér ligningen for en sådan linje.</p></li>
 <li><p>Lav et tilsvarende plot for mændene.</p></li>
 </ul>
 </div>
@@ -369,27 +370,30 @@ Opgave 3: Træning af kunstig neuron
 <div class="callout-body-container callout-body">
 <ul>
 <li><p>Åbn <a href="https://apps01.math.aau.dk/ai/neuron" target="blank">neuron app’en</a>.</p></li>
-<li><p>Upload <a href="data/goodfood.xlsx">datasættet</a> (under "Browse…").</p></li>
-<li><p>Lav følgende indstillinger:</p>
+<li><p>Under fanen "Data" uploader du <a href="data/goodfood.xlsx">datasættet</a> (tryk på "Browse…") og tryk derefter på "Næste".</p></li>
+<li><p>Under fanen "Variable" gør du følgende:</p>
 <ul>
 <li><p>Vælg "Aktiveret" som target-variabel.</p></li>
 <li><p>Vælg "Ja" som target-værdi.</p></li>
 <li><p>Vælg "Alder", "Forbrug" og "Kon" som feature-variable (det vil sige inputvariable). Og sørg for at indtaste dem i den rækkefølge.</p></li>
-<li><p>Lad alle startvægtene stå til <span class="math inline">\(0\)</span>.</p></li>
+<li><p>Tryk på "Næste".</p></li>
+</ul></li>
+<li><p>Under fanen "Træning" gør du følgende:</p>
+<ul>
+<li><p>Sæt startvægtene til <span class="math inline">\(0\)</span>.</p></li>
 <li><p>Behold en learning rate (<span class="math inline">\(\eta\)</span>) på <span class="math inline">\(0.001\)</span>.</p></li>
 <li><p>Behold antal iterationer på <span class="math inline">\(1000\)</span>.</p></li>
-<li><p>Slideren ved "Antal fold" lader du være.</p></li>
-<li><p>Vælg "squared error" som tabsfunktion.</p></li>
-<li><p>Behold "sigmoid" som aktiveringsfunktion.</p></li>
+<li><p>Behold "Squared” som tabsfunktion.</p></li>
+<li><p>Behold "Sigmoid" som aktiveringsfunktion.</p></li>
 <li><p>Behold fluebenet ved "Brug feature-skalering".</p></li>
+<li><p>Tryk på "Kør modellen".</p></li>
 </ul></li>
-<li><p>Tryk på "Kør!".</p></li>
 </ul>
-<p>Vi starter med at undersøge, om det ser ud som om, at vi har fundet et minimum for tabsfunktionen. En graf for tabsfunktionen som funktion af antal opdateringer af vægtene ses til højre i app’en.</p>
+<p>Vi starter med at undersøge, om det ser ud som om, at vi har fundet et minimum for tabsfunktionen. En graf for tabsfunktionen som funktion af antal opdateringer af vægtene ses til højre i app’en, efter at du har trykket på "Kør modellen".</p>
 <ul>
-<li><p>Ser det ud som om, at vi ved den sidste iteration har fundet minimum for tabsfunktionen (flader grafen ud eller er den stadig "på vej nedad bakke")? Notér slutværdien af tabsfunktionen (som står lige under grafen).</p></li>
+<li><p>Ser det ud som om, at vi ved den sidste iteration har fundet minimum for tabsfunktionen (flader grafen ud eller er den stadig "på vej nedad bakke")? Notér slutværdien af tabsfunktionen (som står under grafen).</p></li>
 <li><p>Prøv at sætte antal iterationer til <span class="math inline">\(10000\)</span> (det tager lige lidt længere tid). Tænker du, at vi har fundet minimum nu?</p></li>
-<li><p>Notér værdien af vægtene <span class="math inline">\(w_0\)</span>, <span class="math inline">\(w_1\)</span>, <span class="math inline">\(w_2\)</span> og <span class="math inline">\(w_3\)</span>, som står i tabellen ovenfor grafen for tabsfunktionen i højre side.</p></li>
+<li><p>Notér værdien af vægtene <span class="math inline">\(w_0\)</span>, <span class="math inline">\(w_1\)</span>, <span class="math inline">\(w_2\)</span> og <span class="math inline">\(w_3\)</span>, som står i tabellen nedenfor grafen.</p></li>
 <li><p>Notér igen slutværdien af tabsfunktionen. Er værdien af tabsfunktionen blevet mindre sammenlignet med værdien ved <span class="math inline">\(1000\)</span> iterationer?</p></li>
 </ul>
 </div>
@@ -498,7 +502,7 @@ Opgave 6: Confusion matrix og klassifikationsnøjagtighed
 </table>
 <p>Den andel af punkterne, som er blevet klassificeret korrekt, kaldes for <strong>klassifikationsnøjagtigheden</strong> – eller på engelsk <em>classification accuracy</em> (CA).</p>
 <ul>
-<li>Udregn på baggrund af din confusion matrix klassifikationsnøjagtigheden. Tjek dit resultat med resultatet fra app’en i opgave 3 (klassifikationsnøjagtigheden står under "Model information" til højre). Hvis du ikke får det samme, har du nok talt forkert!</li>
+<li>Udregn på baggrund af din confusion matrix klassifikationsnøjagtigheden. Tjek dit resultat med resultatet fra app’en i opgave 3 (klassifikationsnøjagtigheden står over grafen til højre i fanen "Træning"). Hvis du ikke får det samme, har du nok talt forkert!</li>
 </ul>
 </div>
 </div>
@@ -524,9 +528,9 @@ Opgave 7: Slow learning
 <div id="callout-7" class="callout-7-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li><p>Åbn igen <a href="https://apps01.math.aau.dk/ai/neuron" target="blank">neuron app’en</a> og upload <a href="data/goodfood.xlsx">datasættet</a> (under "Browse…").</p></li>
-<li><p>Vælg de samme indstillinger som i opgave 3, men sæt start-vægtene til <span class="math inline">\(10\)</span> og vælg at antallet af iterationer skal være <span class="math inline">\(1000\)</span>.</p></li>
-<li><p>Tryk på "Kør!". Ser det ud som om, at vi har fundet et minimum? Notér slutværdien af tabsfunktionen.</p></li>
+<li><p>Åbn igen <a href="https://apps01.math.aau.dk/ai/neuron" target="blank">neuron app’en</a> og upload <a href="data/goodfood.xlsx">datasættet</a> (under fanen "Data").</p></li>
+<li><p>Vælg de samme indstillinger som i opgave 3, men sæt under fanen "Træning" startvægtene til <span class="math inline">\(10\)</span> og vælg, at antallet af iterationer skal være <span class="math inline">\(1000\)</span>.</p></li>
+<li><p>Tryk på "Kør modellen". Ser det ud som om, at vi har fundet et minimum? Notér slutværdien af tabsfunktionen.</p></li>
 <li><p>Sæt antal iterationer op til <span class="math inline">\(10000\)</span>. Er det bedre?</p></li>
 <li><p>Prøv med <span class="math inline">\(35000\)</span> (og hav lidt tålmodighed – det tager lidt tid). Ser det ud som om, at vi har fundet minimum nu? Notér både slutværdien for tabsfunktionen og klassifikationsnøjagtigheden (CA) i dette tilfælde.</p></li>
 <li><p>Sæt antal iterationer op til <span class="math inline">\(100000\)</span>. Er det bedre? Notér slutværdien for tabsfunktionen og CA.</p></li>
@@ -556,11 +560,11 @@ Opgave 8: Et andet minimum
 <p>I hvert plot har du nu to forskellige linjer, som kan bruges til at adskille de blå punkter fra de røde.</p>
 <ul>
 <li><p>Er den ene linje bedre end den anden?</p></li>
-<li><p>Sammenlign slutværdien af tabsfunktionen, som du fandt i opgave 3 (hvor start-vægtene var sat til <span class="math inline">\(0\)</span> og antallet af iterationer var <span class="math inline">\(10000\)</span>) med slutværdien af tabsfunktionen, som du fandt i opgave 7 (hvor start-vægtene var sat til <span class="math inline">\(10\)</span> og antallet af iterationer var <span class="math inline">\(200000\)</span>). Hvilken værdi er mindst?</p></li>
+<li><p>Sammenlign slutværdien af tabsfunktionen, som du fandt i opgave 3 (hvor startvægtene var sat til <span class="math inline">\(0\)</span> og antallet af iterationer var <span class="math inline">\(10000\)</span>) med slutværdien af tabsfunktionen, som du fandt i opgave 7 (hvor startvægtene var sat til <span class="math inline">\(10\)</span> og antallet af iterationer var <span class="math inline">\(200000\)</span>). Hvilken værdi er mindst?</p></li>
 </ul>
 <p>Der er her sket det, at vi har fundet to forskellige lokale minima for tabsfunktionen. Spørgsmål er, om der i praksis er den store forskel på de to:</p>
 <ul>
-<li>Sammenlign slutværdien af CA, som du fandt i opgave 6 (hvor start-vægtene var sat til <span class="math inline">\(0\)</span> og antallet af iterationer var <span class="math inline">\(10000\)</span>) med CA, som du fandt i opgave 7 (hvor start-vægtene var sat til <span class="math inline">\(10\)</span> og antallet af iterationer var <span class="math inline">\(200000\)</span>). Er der reelt nogen forskel på hvor god de to forskellige modeller er til at prædiktere på træningsdatasættet?</li>
+<li>Sammenlign slutværdien af CA, som du fandt i opgave 3 (hvor startvægtene var sat til <span class="math inline">\(0\)</span> og antallet af iterationer var <span class="math inline">\(10000\)</span>) med CA, som du fandt i opgave 7 (hvor startvægtene var sat til <span class="math inline">\(10\)</span> og antallet af iterationer var <span class="math inline">\(200000\)</span>). Er der reelt nogen forskel på hvor god de to forskellige modeller er til at prædiktere på træningsdatasættet?</li>
 </ul>
 </div>
 </div>

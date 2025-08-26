@@ -233,7 +233,7 @@ w_1^{(\textrm{ny})} \leftarrow &amp; w_1 + \eta \cdot \sum_{m=1}^{M} \left (t^{(
 <p>Vi skal i denne del se på, at det skyldes valget af <em>squared error</em> tabsfunktionen. I det simple tilfælde med kun én inputvariabel, så vi i <a href="../../undervisningsforlob/neurale_net_langt_forlob/neurale_net_del3.html">del 3</a>, at <em>squared error</em> tabsfunktionen var defineret ved:</p>
 <p><span class="math display">\[
 E = \frac{1}{2} \sum_{m=1}^M (t^{(m)}-\sigma(w_0 + w_1 \cdot x^{(m)}))^2
-\]</span> hvor det <span class="math inline">\(m\)</span>’te træningseksempel består af inputværdien <span class="math inline">\(x^{(m)}\)</span> (den <span class="math inline">\(m\)</span>’te kundes alder) med tilhørende targetværdi <span class="math inline">\(t^{(m)}\)</span> (som er <span class="math inline">\(1\)</span>, hvis den <span class="math inline">\(m\)</span>’te kunde aktiverer tilbudet og <span class="math inline">\(0\)</span> ellers).</p>
+\]</span> hvor det <span class="math inline">\(m\)</span>’te træningseksempel består af inputværdien <span class="math inline">\(x^{(m)}\)</span> (den <span class="math inline">\(m\)</span>’te kundes alder) med tilhørende targetværdi <span class="math inline">\(t^{(m)}\)</span> (som er <span class="math inline">\(1\)</span>, hvis den <span class="math inline">\(m\)</span>’te kunde aktiverer tilbuddet og <span class="math inline">\(0\)</span> ellers).</p>
 <p>Holder vi det helt simpelt og betragter ét træningseksempel ad gangen, så er <em>squared error</em> tabsfunktionen på formen</p>
 <p><span id="eq-squared_error"><span class="math display">\[
 E = \frac{1}{2} (t-o)^2= \frac{1}{2} (t-\sigma(w_0 + w_1 \cdot x))^2
@@ -436,27 +436,30 @@ Opgave 4: Træning af kunstig neuron med forskellige tabsfunktioner
 <div class="callout-body-container callout-body">
 <ul>
 <li><p>Åbn <a href="https://apps01.math.aau.dk/ai/neuron" target="blank">neuron app’en</a>.</p></li>
-<li><p>Upload <a href="data/goodfood.xlsx">datasættet</a> (under "Browse…").</p></li>
-<li><p>Lav følgende indstillinger:</p>
+<li><p>Under fanen "Data" uploader du <a href="data/goodfood.xlsx">datasættet</a> (tryk på "Browse…") og tryk derefter på "Næste".</p></li>
+<li><p>Under fanen "Variable" gør du følgende:</p>
 <ul>
 <li><p>Vælg "Aktiveret" som target-variabel.</p></li>
 <li><p>Vælg "Ja" som target-værdi.</p></li>
 <li><p>Vælg "Alder", "Forbrug" og "Kon" som feature-variable (det vil sige inputvariable). Og sørg for at indtaste dem i den rækkefølge.</p></li>
-<li><p>Lad alle startvægtene stå til <span class="math inline">\(0\)</span>.</p></li>
+<li><p>Tryk på "Næste".</p></li>
+</ul></li>
+<li><p>Under fanen "Træning" gør du følgende:</p>
+<ul>
+<li><p>Sæt startvægtene til <span class="math inline">\(0\)</span>.</p></li>
 <li><p>Behold en learning rate (<span class="math inline">\(\eta\)</span>) på <span class="math inline">\(0.001\)</span>.</p></li>
 <li><p>Behold antal iterationer på <span class="math inline">\(1000\)</span>.</p></li>
-<li><p>Slideren ved "Antal fold" lader du være.</p></li>
-<li><p>Vælg "squared error" som tabsfunktion.</p></li>
-<li><p>Behold "sigmoid" som aktiveringsfunktion.</p></li>
+<li><p>Behold "Squared” som tabsfunktion.</p></li>
+<li><p>Behold "Sigmoid" som aktiveringsfunktion.</p></li>
 <li><p>Behold fluebenet ved "Brug feature-skalering".</p></li>
+<li><p>Tryk på "Kør modellen".</p></li>
 </ul></li>
-<li><p>Tryk på "Kør!".</p></li>
 <li><p>Ser det ud som om, at vi har fundet et minimum for tabsfunktionen (se på grafen for tabsfunktionen til højre)?</p></li>
 <li><p>Notér klassifikationsnøjagtigheden (CA).</p></li>
 </ul>
 <p>Vi vil nu undersøge, om der er nogen forskel, hvis vi bruger <em>cross entropy</em> som tabsfunktion.</p>
 <ul>
-<li>Gentag ovenstående men vælg i stedet "cross entropy" som tabsfunktion. Er der nogen forskel?</li>
+<li>Gentag ovenstående men vælg i stedet "Cross-entropy" som tabsfunktion. Er der nogen forskel?</li>
 </ul>
 <p><em>Obs! Slutværdien af de to forskellige tabsfunktioner er <u>ikke</u> sammenlignelige.</em></p>
 </div>
@@ -479,14 +482,14 @@ Opgave 5: Træning af kunstig neuron med forskellige tabsfunktioner
 <ul>
 <li><p>Alle startvægte til <span class="math inline">\(10\)</span>.</p></li>
 <li><p>"Antal iterationer" til henholdsvis <span class="math inline">\(1000\)</span>, <span class="math inline">\(10000\)</span> og <span class="math inline">\(100000\)</span> (den sidste tager lidt tid).</p></li>
-<li><p>"Tabsfunktion" til "squared error".</p></li>
+<li><p>"Tabsfunktion" til "Squared".</p></li>
 <li><p>Tryk på "Kør!".</p></li>
 <li><p>Notér i alle tre tilfælde klassifikationsnøjagtigheden og slutværdien af tabsfunktionen.</p></li>
 </ul>
 <p>Du skulle gerne genfinde problemet med <em>slow learning</em> her. Lad os undersøge, om <em>cross-entropy</em> som tabsfunktion løser problemet med <em>slow learning</em>.</p>
 <ul>
-<li><p>Gentag ovenstående, men vælg "cross-entropy" som tabsfunktion.</p></li>
-<li><p>Hvor mange iterationer er nødvendige for at få en klassifikationsnøjagtighed på omkring <span class="math inline">\(0.85\)</span>, hvis du bruger <em>cross-entropy</em> som tabsfunktion?</p></li>
+<li><p>Gentag ovenstående, men vælg "Cross-entropy" som tabsfunktion.</p></li>
+<li><p>Hvor mange iterationer er nødvendige for at få en klassifikationsnøjagtighed på omkring <span class="math inline">\(0.85\)</span>, hvis du bruger henholdsvis <em>sqaured error</em> og <em>cross-entropy</em> som tabsfunktion?</p></li>
 </ul>
 </div>
 </div>
