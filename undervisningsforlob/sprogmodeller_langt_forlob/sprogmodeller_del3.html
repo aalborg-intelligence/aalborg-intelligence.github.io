@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Del 3: Tekstgenerering med neurale netværk – AI MAT - matematikken bag magien</title>
+<title>Word2vec – et eksempel – AI MAT - matematikken bag magien</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -115,7 +115,7 @@ window.Quarto = {
 
 </head>
 
-<body class="floating nav-fixed quarto-light">
+<body class="floating nav-fixed slimcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -181,9 +181,10 @@ window.Quarto = {
     <h2 id="toc-title">Indhold</h2>
    
   <ul>
-  <li><a href="#aktivitet-1---antal-parametre-i-modellen" id="toc-aktivitet-1---antal-parametre-i-modellen" class="nav-link active" data-scroll-target="#aktivitet-1---antal-parametre-i-modellen">Aktivitet 1 - Antal parametre i modellen</a></li>
-  <li><a href="#aktivitet-3---træning-af-netværk" id="toc-aktivitet-3---træning-af-netværk" class="nav-link" data-scroll-target="#aktivitet-3---træning-af-netværk">Aktivitet 3 - Træning af netværk</a></li>
-  <li><a href="#aktivitet-3---tekstgenerering" id="toc-aktivitet-3---tekstgenerering" class="nav-link" data-scroll-target="#aktivitet-3---tekstgenerering">Aktivitet 3 - Tekstgenerering</a></li>
+  <li><a href="#et-meget-lille-tekstkorpus" id="toc-et-meget-lille-tekstkorpus" class="nav-link active" data-scroll-target="#et-meget-lille-tekstkorpus">Et meget lille tekstkorpus</a></li>
+  <li><a href="#aktivitet-1---fokus--og-kontekstvektorer" id="toc-aktivitet-1---fokus--og-kontekstvektorer" class="nav-link" data-scroll-target="#aktivitet-1---fokus--og-kontekstvektorer">Aktivitet 1 - Fokus- og kontekstvektorer</a></li>
+  <li><a href="#aktivitet-2---sandsynligheder" id="toc-aktivitet-2---sandsynligheder" class="nav-link" data-scroll-target="#aktivitet-2---sandsynligheder">Aktivitet 2 - Sandsynligheder</a></li>
+  <li><a href="#aktivitet-3---tabsfunktion" id="toc-aktivitet-3---tabsfunktion" class="nav-link" data-scroll-target="#aktivitet-3---tabsfunktion">Aktivitet 3 - Tabsfunktion</a></li>
   </ul>
 </nav>
 </nav>
@@ -192,11 +193,11 @@ window.Quarto = {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Del 3: Tekstgenerering med neurale netværk</h1>
+<h1 class="title">Word2vec – et eksempel</h1>
 </div>
 
 
@@ -214,300 +215,187 @@ window.Quarto = {
 
 
 <div class="estimeret_tid">
-<p>Forventet tid ca. 60 min.</p>
+<p>Forventet tid ca. 90 min.</p>
 </div>
+<p>Formålet med denne del er dels at gennemføre beregningerne i Word2vec for et meget lille korpus af data, men også at forstå, hvad det vil sige at optimere vektorerne, så tabsfunktionen minimeres.</p>
+<section id="et-meget-lille-tekstkorpus" class="level2">
+<h2 class="anchored" data-anchor-id="et-meget-lille-tekstkorpus">Et meget lille tekstkorpus</h2>
+<p>Vi vi anvende følgende meget simple tekstkorpus med 12 sætninger, som kun anvender 5 forskellige ord:</p>
+<ul>
+<li>Hunden sover.</li>
+<li>Katten sover.</li>
+<li>Katten spinder.</li>
+<li>Hunden gør.</li>
+<li>Hunden sover.</li>
+<li>Hunden gør.</li>
+<li>Katten sover.</li>
+<li>Hunden gør.</li>
+<li>Katten sover.</li>
+<li>Katten spinder.</li>
+<li>Katten sover.</li>
+<li>Katten spinder.</li>
+</ul>
+<p>For at forsimple tingene vil vi for hver sætning her nøjes med at se på to vinduer:</p>
+<div class="llm_saetninger">
+<p><span class="boxed_inline"><strong>Hunden</strong> sover</span></p>
+</div>
+<p>og</p>
+<div class="llm_saetninger">
+<p><span class="boxed_inline">Hunden <strong>sover</strong></span></p>
+</div>
+<p>I det første vindue er "Hunden" fokusord, mens "sover" er kontekstord. I det andet vindue er "Hunden" kontekstord, mens "sover" er fokusord. Bemærk, at det er forsimplet i forhold det, hvordan det gøres i Word2vec.</p>
+<p>Den overordnede er idéen så, at vi skal bestemme værdier til fokus- og kontekstvektorer for alle fem ord, så værdien af tabfunktionen minimeres.</p>
 <p><br>
 <br>
 </p>
-<section id="aktivitet-1---antal-parametre-i-modellen" class="level2 aimat">
-<h2 class="aimat anchored" data-anchor-id="aktivitet-1---antal-parametre-i-modellen">Aktivitet 1 - Antal parametre i modellen</h2>
-<p>Læs det første afsnit i noten <a href="../../materialer/sprogmodeller/tekstgenerering.html">Tekstgenerering med neurale netværk</a>.</p>
+</section>
+<section id="aktivitet-1---fokus--og-kontekstvektorer" class="level2 aimat page-columns page-full">
+<h2 class="aimat anchored" data-anchor-id="aktivitet-1---fokus--og-kontekstvektorer">Aktivitet 1 - Fokus- og kontekstvektorer</h2>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 1: Antal parametre i det neurale netværk
+Opgave 1:
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Vi betragter det kunstige neurale netværk med ét skjult lag, som skal bruges til tekstgenerering:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../../materialer/sprogmodeller/images/NN_tekstgenerering.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+<ul>
+<li>Hvor mange fokusvektorer er der brug for?</li>
+<li>Hvor mange kontekstvektorer er der brug for?</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Nu vælger vi indledningsvist tilfældige værdier til alle disse vektorer – vi venter med optimering. For at gøre det simplere, vil vi dog begrænse os til enhedsvektorer, hvor længden i Word2vec ellers generelt er variabel.</p>
+<p>Vi vælger for fokusvektorerne: <span class="math display">\[
+\color{#F288B9}
+\begin{aligned}
+\vec{v}_{hunden} &amp;= \begin{pmatrix} -0.8 \\ 0.6 \end{pmatrix}, \quad
+\vec{v}_{katten} = \begin{pmatrix} 0 \\ 1 \end{pmatrix},\\
+\vec{v}_{spinder} &amp;= \begin{pmatrix} 0.6 \\ 0.8 \end{pmatrix}, \quad
+\vec{v}_{sover} = \begin{pmatrix} 0.8 \\ 0.6 \end{pmatrix}, \\
+\vec{v}_{gør} &amp;= \begin{pmatrix} 1 \\ 0 \end{pmatrix} \\
+\end{aligned}
+\]</span> Og for kontekstvektorerne: <span class="math display">\[
+\color{#8086F2}
+\begin{aligned}
+\vec{k}_{hunden} &amp;= \begin{pmatrix} 0.8 \\ -0.6 \end{pmatrix}, \quad
+\vec{k}_{katten} = \begin{pmatrix} 0.6 \\ -0.8 \end{pmatrix},  \\
+\vec{k}_{spinder} &amp;= \begin{pmatrix} -1 \\ 0 \end{pmatrix}, \quad
+\vec{k}_{sover} = \begin{pmatrix} -0.8 \\ -0.6 \end{pmatrix}, \\
+\vec{k}_{gør} &amp;= \begin{pmatrix} -0.6 \\ -0.8 \end{pmatrix} \\
+\end{aligned}
+\]</span> Til disse værdier af vektorerne skal vi nu have beregnet værdien af tabsfunktionen <span class="math inline">\(L\)</span>. Men lad os først visualisere vektorerne i en app, der både viser vektorerne og beregner værdien af tabsfunktionen:</p>
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<script src="https://cdn.geogebra.org/apps/deployggb.js"></script>
+
+<!-- 
+Alle geogebra filer placeres i mappen _geogebra
+Erstat XXX med nr på app og erstat YYY med navn på ggb-fil -->
+<script>
+var parameters_vektorer = {
+"id": "ggbApplet_vektorer",
+"scaleContainerClass": "ggbContainer",
+"prerelease":false,
+"borderColor":null,
+"showMenuBar":false,
+"showAlgebraInput":false,
+"showToolBar":false,
+"showToolBarHelp":false,
+"showResetIcon":true,
+"enableLabelDrags":false,
+"enableShiftDragZoom":true,
+"enableRightClick":false,
+"errorDialogsActive":false,
+"useBrowserForJS":false,
+"capturingThreshold":null,
+"language":"da",
+// use this instead of ggbBase64 to load a .ggb file
+ "filename":"_geogebra/Word2Vec.ggb",
+};
+var applet_vektorer = new GGBApplet(parameters_vektorer, true);
+</script>
+
+
+
+<script>
+window.onload = function() {
+  applet_vektorer.inject('ggbApplet_vektorer');
+  }
+</script>
+
+<div id="fig-opg2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-opg2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="ggbContainer" style="width:100%; margin: auto">
+<div id="ggbApplet_vektorer">
+
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-opg2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;1: App til opgave 2.
+</figcaption>
 </figure>
 </div>
-<ul>
-<li><p>Hvad angiver <span class="math inline">\(m\)</span>, <span class="math inline">\(d\)</span> og <span class="math inline">\(V\)</span> i figuren?</p></li>
-<li><p>Undersøg, hvor mange ord der cirka er i det danske sprog.</p></li>
-</ul>
-<p>Antag, at alle ord repræsenteres ved en 3-dimensional vektor og at <span class="math inline">\(d=50\)</span>.</p>
-<ul>
-<li><p>Hvor mange vægte indgår da i det neurale net?</p></li>
-<li><p>Hvis alle ord repræsenteres ved en 100-dimensional vektor, hvor mange vægte skal så estimeres?</p></li>
-<li><p>Undersøg hvor mange vægte (eller parametre, som de også kaldes) de store sprogmodeller har i dag (det præcise antal er en forretningshemmelighed, så du kan ikke finde det præcise svar!).</p></li>
-</ul>
-</div>
-</div>
-</div>
-<p><br>
-<br>
-</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 2 - Et lille neuralt netværk
+Opgave 2: Leg med app’en
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Vi forestiller os, at vi har trænet et lille neuralt netværk, der kan beregne sandsynligheden for næste ord baseret på de to foregående ord. For at gøre eksemplet simpelt tillader vi kun to mulige næste ord, nemlig “spinder” og “danser”. Inputordene respræsenteres ved to-dimensionale vektorer. Netværket har følgende struktur, hvor outputtet <span class="math inline">\(z_1\)</span> er sandsynligheden for “spinder”, og <span class="math inline">\(z_2\)</span> er sandsynligheden for “danser”:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/opgave_nn1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
-</figure>
-</div>
-<p>Vægtene, der indgår, i første lag er</p>
-<table class="table-bordered table">
-<colgroup>
-<col style="width: 10%">
-<col style="width: 10%">
-<col style="width: 10%">
-<col style="width: 10%">
-<col style="width: 10%">
-<col style="width: 10%">
-<col style="width: 10%">
-<col style="width: 10%">
-<col style="width: 10%">
-<col style="width: 10%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: center;"><span class="math inline">\(w_{1,0}\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(w_{1,1}\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(w_{1,2}\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(w_{1,3}\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(w_{1,4}\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(w_{2,0}\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(w_{2,1}\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(w_{2,2}\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(w_{2,3}\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(w_{2,4}\)</span></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">-1</td>
-<td style="text-align: center;">3</td>
-</tr>
-</tbody>
-</table>
-<p>Vægtene i andet lag er</p>
-<table class="table-bordered table">
-<thead>
-<tr class="header">
-<th style="text-align: center;"><span class="math inline">\(u_{1,0}\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(u_{1,1}\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(u_{1,2}\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(u_{2,0}\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(u_{2,1}\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(u_{2,2}\)</span></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">0.5</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">-4</td>
-</tr>
-</tbody>
-</table>
-<p>Vægtene er delvist illustreret i figuren her:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/opgave_nn2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
-</figure>
-</div>
-<p>Lad os sige, at vi som input har sætningen “En kat” og skal beregne sandsynligheden for næste ord. Ordene “en” og “kat” har vektorrepræsentationerne <span class="math display">\[\vec{v}_{\text{en}} = \begin{pmatrix} 1\\-2\end{pmatrix}, \qquad \vec{v}_{\text{kat}} = \begin{pmatrix} 3\\0 \end{pmatrix}\]</span> Vi vil bruge det neurale netværk til at beregne sandsynligheden for næste ord.</p>
 <ul>
-<li><p>Beregn den 4-dimensionale vektor <span class="math inline">\(\vec{x}\)</span>, der skal bruges som input til netværket, ved at sætte vektorerne <span class="math inline">\(\vec{v}_{\text{en}}\)</span> og <span class="math inline">\(\vec{v}_{\text{kat}}\)</span> oven på hinanden.</p></li>
-<li><p>Beregn <span class="math inline">\(h_1\)</span> og <span class="math inline">\(h_2\)</span> ved formlerne <span class="math display">\[
-\begin{aligned}
-&amp;h_1= f(w_{1,0} + w_{1,1}x_1 + w_{1,2}x_2 + w_{1,3}x_3 + w_{1,4 } x_4)\\
-&amp;h_2= f(w_{2,0} + w_{2,1}x_1 + w_{2,2}x_2 + w_{2,3}x_3 + w_{2,4} x_4)
-\end{aligned}
-\]</span> hvor <span class="math inline">\(f(x)=\frac{1}{1+e^{-x}}\)</span> er den logistiske funktion.</p></li>
-<li><p>Beregn <span class="math inline">\(y_1\)</span> og <span class="math inline">\(y_2\)</span> ved hjælp af formlerne <span class="math display">\[
-\begin{aligned}
-&amp;y_1= u_{1,0} + u_{1,1}h_1 + u_{1,2}h_2 \\
-&amp;y_2= u_{2,0} + u_{2,1}h_1 + u_{2,2}h_2
-\end{aligned}
-\]</span></p></li>
-<li><p>Anvend softmax på <span class="math inline">\(y_1\)</span> og <span class="math inline">\(y_2\)</span> for at beregne <span class="math inline">\(z_1\)</span> og <span class="math inline">\(z_2\)</span>. Det vil sige, beregn <span class="math display">\[
-\begin{aligned}
-z_1 &amp;= \frac{e^{y_1}}{e^{y_1} + e^{y_2}}\\
-z_2 &amp;= \frac{e^{y_2}}{e^{y_1} + e^{y_2}}
-\end{aligned}
-\]</span></p></li>
-<li><p>Hvilket af ordene er det mest sandsynlige næste ord?</p></li>
+<li>Kontroller, at vektorerne i <a href="#fig-opg2" class="quarto-xref">figur&nbsp;1</a> passer til de værdier, vi valgte ovenfor.</li>
+<li>Skriv ned, hvad værdien af tabsfunktionen er i udgangspunktet.</li>
+<li>Ændr vektorerne, og bemærk af værdien af tabsfunktionen <span class="math inline">\(L\)</span> ændrer sig.</li>
+<li><u>Overvej</u>, hvordan du kan ændre vektorerne, så tabsfunktionen bliver mindst mulig. Vi vender tilbage til dette senere.</li>
 </ul>
 </div>
 </div>
 </div>
+<p>Som det næste skal sandsynlighederne for at et eller andet ord er kontekstord til et andet udregnes. For eksempel udregnes sandsynligheden for at "sover" er kontekst til "hunden" ud på denne måde:</p>
+<p><span id="eq-ssh"><span class="math display">\[
+\begin{multline}
+P(\text{sover} \mid \text{hunden}) = \\
+\frac{\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{sover}} }}
+{\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{sover}} } +\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{gør}} } + \mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{spinder}} }+\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{katten}}
+}+\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{hunden}}
+}} \\
+\end{multline}
+\tag{1}\]</span></span></p>
+<p><br>
+<br>
+</p>
 </section>
-<section id="aktivitet-3---træning-af-netværk" class="level2 aimat">
-<h2 class="aimat anchored" data-anchor-id="aktivitet-3---træning-af-netværk">Aktivitet 3 - Træning af netværk</h2>
-<p>Læs afsnittet <a href="../../materialer/sprogmodeller/tekstgenerering.html#træning-af-netværket">Træning af netværk</a>.</p>
+<section id="aktivitet-2---sandsynligheder" class="level2 aimat">
+<h2 class="aimat anchored" data-anchor-id="aktivitet-2---sandsynligheder">Aktivitet 2 - Sandsynligheder</h2>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 3: Cross-entropy
+Opgave 3: Udregn sandsynligheder
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Vi forstiller os, at vi har ordnet ordene i vores ordforråd på denne måde:</p>
-<p><span class="math display">\[
-\begin{pmatrix}
-\vdots
-\\
-\textrm{solen}
-\\
-\textrm{månen}
-\\
-\textrm{himlen}
-\\
-\vdots
-\end{pmatrix}
-\]</span></p>
-<p>Et sted i vores tekstkorpus står der</p>
-<div class="llm_saetninger">
-<p>"jeg ser på månen"</p>
-</div>
-<p>og en række i træningsdata vil derfor være</p>
-<table class="table">
-<thead>
-<tr class="header">
-<th style="text-align: center;">Input 1</th>
-<th style="text-align: center;">Input 2</th>
-<th style="text-align: center;">Input 3</th>
-<th style="text-align: center;">Target</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">jeg</td>
-<td style="text-align: center;">ser</td>
-<td style="text-align: center;">på</td>
-<td style="text-align: center;">månen</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
-</tr>
-</tbody>
-</table>
-<p>Targetvektoren <span class="math inline">\(\vec t\)</span> for denne række er da</p>
-<p><span class="math display">\[
-\vec t =
-\begin{pmatrix}
-\vdots
-\\
-0
-\\
-1
-\\
-0
-\\
-\vdots
-\end{pmatrix}
-\]</span> hvor der står <span class="math inline">\(0\)</span> på alle de øvrige pladser.</p>
-<p>Vi har trænet to netværk, som for dette træningseksempel har givet følgende outputvektor (på alle andre koordinater i vektoren står der <span class="math inline">\(0\)</span>)</p>
-<p><span class="math display">\[
-\textrm{Netværk 1:} \quad \vec z =
-\begin{pmatrix}
-\vdots
-\\
-P(\text{solen } |\text{ "jeg ser på" })
-\\
-P(\text{månen } |\text{ "jeg ser på" })
-\\
-P(\text{himlen } |\text{ "jeg ser på" })
-\\
-\vdots
-\end{pmatrix} =
-\begin{pmatrix}
-\vdots
-\\
-0.25
-\\
-0.61
-\\
-0.14
-\\
-\vdots
-\end{pmatrix}
-\]</span></p>
-<p>og</p>
-<p><span class="math display">\[
-\textrm{Netværk 2:} \quad \vec z =
-\begin{pmatrix}
-\vdots
-\\
-P(\text{solen } |\text{ "jeg ser på" })
-\\
-P(\text{månen } |\text{ "jeg ser på" })
-\\
-P(\text{himlen } |\text{ "jeg ser på" })
-\\
-\vdots
-\end{pmatrix} =
-\begin{pmatrix}
-\vdots
-\\
-0.32
-\\
-0.59
-\\
-0.29
-\\
-\vdots
-\end{pmatrix}
-\]</span></p>
 <ul>
-<li><p>Vis, at alle koordinater i <span class="math inline">\(\vec z\)</span> kan fortolkes som sandsynligheder, og at summen af sandsynlighederne er 1.</p></li>
-<li><p>Udregn bidraget til <em>cross-entropy</em> tabsfunktionen <span class="math inline">\(CE(\vec z, \vec t)\)</span> for begge netværk.</p></li>
-<li><p>Hvilket netværk ville du på baggrund af dette ene træningseksempel vælge? Stemmer det overens med sandsynlighederne?</p></li>
+<li>Kig grundigt på de 12 linjer i vores tekstkorpus, og overvej, hvilke sandsynligheder, der er relevante at udregne, fordi de optræder i teksten. Det er betydeligt færre end alle 25 kombinationer af de 5 ord, fordi mange af kombinationer slet ikke optræder – for eksempel indeholder tekstkorpus ikke kombinationen "Hunden spinder".</li>
+<li>Udregn de sandsynligheder, som er relevante.</li>
 </ul>
 </div>
 </div>
@@ -516,39 +404,88 @@ P(\text{himlen } |\text{ "jeg ser på" })
 <br>
 </p>
 </section>
-<section id="aktivitet-3---tekstgenerering" class="level2 aimat">
-<h2 class="aimat anchored" data-anchor-id="aktivitet-3---tekstgenerering">Aktivitet 3 - Tekstgenerering</h2>
-<p>Læs afsnittet <a href="../../materialer/sprogmodeller/tekstgenerering.html#tekstgenerering">Tekstgenerering</a>.</p>
+<section id="aktivitet-3---tabsfunktion" class="level2 aimat page-columns page-full">
+<h2 class="aimat anchored" data-anchor-id="aktivitet-3---tabsfunktion">Aktivitet 3 - Tabsfunktion</h2>
+<p>Endeligt skal værdien af tabsfunktionen beregnes. Her skal vi bruge den naturlige logaritme på de beregnede sandsynligheder. Da "Hunden sover" optræder to gange, kan værdien for <span class="math inline">\(\ln(P(\text{sover} \mid \text{hunden}))\)</span> og for <span class="math inline">\(\ln(P(\text{hunden} \mid \text{sover}))\)</span> ganges med 2, "Hunden gør" optræder 3 gange, så her gælder noget tilsvarende. Vi får:</p>
+<p><span id="eq-tabsfkt"><span class="math display">\[
+\begin{multline}
+L= -2 \cdot \ln(P(\text{sover} \mid \text{hunden})) \\
+-2 \cdot \ln(P(\text{hunden} \mid \text{sover})) -3 \cdot \ln(P(\text{gør} \mid \text{hunden})) - \cdots
+\end{multline}
+\tag{2}\]</span></span></p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 4: Prædiktion af næste ord
+Opgave 4: Udregn værdien af tabsfunktionen
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>En opgave hvor et netværk er trænet på det lille tekstkorpus fra Simple-noten:</p>
-<div class="llm_saetninger">
-<p>" En hund løber efter en kat.<br>
-Løber en hund efter en kat?<br>
-En kat løber ikke efter en hund.<br>
-Efter en kat løber en hund."</p>
-</div>
-<p>og hvor elever så igen starter med "En hund" og skal danne en sætning ud fra det… Eller måske noget sjovere…!</p>
+<ul>
+<li>Beregn værdien af tabsfunktionen <span class="math inline">\(L\)</span>.</li>
+<li>Kontroller, at det stemmer med værdien fra app’en i <a href="#fig-opg2" class="quarto-xref">figur&nbsp;1</a>, inden du ændrede vektorerne.</li>
+</ul>
 </div>
 </div>
 </div>
-<p><br>
-<br>
-</p>
-<p><a href="../../undervisningsforlob/sprogmodeller_langt_forlob/sprogmodeller_del2.html" class="prev"><span class="math inline">\(\leftarrow\)</span> Forrige</a> <a href="../../undervisningsforlob/sprogmodeller_langt_forlob/sprogmodeller_del4.html" class="next">Næste <span class="math inline">\(\rightarrow\)</span></a></p>
+<p>Lad os vende tilbage til optimering ved minimering af værdien af tabsfunktionen.</p>
+<p>Målet er, at hvis for eksempel "sover" er kontekst til fokusordet "hunden", så skal</p>
+<p><span class="math display">\[
+P(\text{sover} \mid \text{hunden})
+\]</span> være stor. Ser vi på (<a href="#eq-ssh" class="quarto-xref">1</a>) så sker det, hvis tælleren</p>
+<p><span class="math display">\[
+\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{sover}} }
+\]</span></p>
+<p>er stor. Det opnår vi, hvis skalarproduktet</p>
+<p><span class="math display">\[
+\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{sover}}
+\]</span> er et stort positivt tal. I vores simple tilfælde, hvor vi kun arbejder med enhedsvektorer har vi:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{sover}} &amp;= |\vec{v}_{\text{hunden}}|  \cdot |\vec{k}_{\text{sover}}| \cdot \cos(v) \\
+&amp;= 1 \cdot 1 \cdot \cos(v) = \cos(v),
+\end{aligned}
+\]</span></p>
+<p>hvor <span class="math inline">\(v\)</span> er vinklen mellem de to vektorer. Nu er</p>
+<p><span class="math display">\[
+\cos(v)=1 \quad \text{hvis} \quad v=0^\circ \\
+\]</span> og</p>
+<p><span class="math display">\[
+\cos(v)=-1 \quad \text{hvis} \quad v=180^\circ \\
+\]</span></p>
+<p>Altså bliver skalarproduktet stort, hvis vinklen mellem de to vektorer er tæt på <span class="math inline">\(0^\circ.\)</span> Det vil sige, at hvis "sover" er kontekst til fokusordet "hunden", så skal kontekstvektoren for "sover" pege i nogenlunde samme retning som fokusvektoren for "hunden". Det er selvfølgelig nemt nok isoleret set, men det skal gælde for alle kombinationer af kontekst- og fokusvektorer, som optræder i tekstkorpus!</p>
+<p>Derimod vil det være sådan, at hvis vi ser på "Hunden" som fokusord, så skal "hunden", "katten" og "spinder" som kontekstord slet ikke anvendes, så deres kontekstvektorer skal være mest muligt modsatrettet fokusvektoren for "Hunden". Derimod skal både "sover" og "gør" som kontekstvektorer være tæt på fokusvektoren for "Hunden".</p>
+<p>Foretag lignende overvejelser for hvert fokusord, og forsøg så at placere både fokus- og kontekstvektorerne i app’en i <a href="#fig-opg2" class="quarto-xref">figur&nbsp;1</a> ud fra disse overvejelser. For eksempel skal "sover" som kontekstvektor nok tættere på "Katten" end på "Hunden" som fokusvektorer, da "Katten sover" optræder oftere<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> end "Hunden sover" i teksten.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Antallet af gange en kombination optræder i tekstkorpus har betydning for værdien af tabsfunktionen – se (<a href="#eq-tabsfkt" class="quarto-xref">2</a>).</p></div></div><p>Med lidt held og yderligere justeringer i app’en, bør du kunne få værdien af tabsfunktionen så lav som mulig.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 5: Optimering
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Minimer værdien af tabsfunktionen ved at ændre vektorerne i app’en i <a href="#fig-opg2" class="quarto-xref">figur&nbsp;1</a>.</li>
+<li>Beregn selv værdien af tabsfunktionen for de ændrede vektorer.</li>
+<li>Kontroller, at det stemmer med værdien i app’en.</li>
+<li>Hvis I er flere, kan I jo se, hvem der kan få værdien mindst mulig!</li>
+</ul>
+</div>
+</div>
+</div>
 
 
 </section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

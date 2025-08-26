@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="En øvelse i at lave og forstå beregninger i Word2Vec.">
 
-<title>Word2Vec – AI MAT - matematikken bag magien</title>
+<title>Del 4: Transformeren – AI MAT - matematikken bag magien</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -24,24 +23,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<link href="../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-1e0da696844436e9ae95f09da2421ece.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-1e0da696844436e9ae95f09da2421ece.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -116,15 +115,15 @@ window.Quarto = {
 
 </head>
 
-<body class="floating nav-fixed quarto-light">
+<body class="floating nav-fixed slimcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo">
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -134,38 +133,38 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../undervisningsforlob/index.html"> 
+    <a class="nav-link" href="../../undervisningsforlob/index.html"> 
 <span class="menu-text">Undervisningsforløb</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../materialer/index.html"> 
+    <a class="nav-link" href="../../materialer/index.html"> 
 <span class="menu-text">Materialer</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../sro/index.html"> 
+    <a class="nav-link" href="../../sro/index.html"> 
 <span class="menu-text">SRO</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../srp/index.html"> 
+    <a class="nav-link" href="../../srp/index.html"> 
 <span class="menu-text">SRP</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../apps/index.html"> 
+    <a class="nav-link" href="../../apps/index.html"> 
 <span class="menu-text">Apps</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../referencer/index.html"> 
+    <a class="nav-link" href="../../referencer/index.html"> 
 <span class="menu-text">Referencer</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">Om os</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="https://www.youtube.com/@ai-mat"> 
-<span class="menu-text"><img src="../logo/YouTube/youtube-color-darkblue-icon.svg" style="height:2em"></span></a>
+<span class="menu-text"><img src="../../logo/YouTube/youtube-color-darkblue-icon.svg" style="height:2em"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -182,13 +181,10 @@ window.Quarto = {
     <h2 id="toc-title">Indhold</h2>
    
   <ul>
-  <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
-  <li><a href="#et-meget-lille-tekstkorpus" id="toc-et-meget-lille-tekstkorpus" class="nav-link" data-scroll-target="#et-meget-lille-tekstkorpus">Et meget lille tekstkorpus</a></li>
-  <li><a href="#fokus--og-kontekstvektorer." id="toc-fokus--og-kontekstvektorer." class="nav-link" data-scroll-target="#fokus--og-kontekstvektorer.">Fokus- og kontekstvektorer.</a></li>
-  <li><a href="#anden-opdatering-af-vægtene" id="toc-anden-opdatering-af-vægtene" class="nav-link" data-scroll-target="#anden-opdatering-af-vægtene">Anden opdatering af vægtene</a></li>
-  <li><a href="#app-til-simple-neurale-netværk" id="toc-app-til-simple-neurale-netværk" class="nav-link" data-scroll-target="#app-til-simple-neurale-netværk">App til simple neurale netværk</a></li>
-  <li><a href="#cross-entropy-som-tabsfunktion" id="toc-cross-entropy-som-tabsfunktion" class="nav-link" data-scroll-target="#cross-entropy-som-tabsfunktion">Cross-entropy som tabsfunktion</a></li>
-  <li><a href="#løsninger-til-opgaver" id="toc-løsninger-til-opgaver" class="nav-link" data-scroll-target="#løsninger-til-opgaver">Løsninger til opgaver</a></li>
+  <li><a href="#aktivitet-1---vektorregning" id="toc-aktivitet-1---vektorregning" class="nav-link active" data-scroll-target="#aktivitet-1---vektorregning">Aktivitet 1 - Vektorregning</a></li>
+  <li><a href="#aktivitet-2---et-opmærksomhedslag" id="toc-aktivitet-2---et-opmærksomhedslag" class="nav-link" data-scroll-target="#aktivitet-2---et-opmærksomhedslag">Aktivitet 2 - Et opmærksomhedslag</a></li>
+  <li><a href="#aktivitet-3---transformernetværket" id="toc-aktivitet-3---transformernetværket" class="nav-link" data-scroll-target="#aktivitet-3---transformernetværket">Aktivitet 3 - Transformernetværket</a></li>
+  <li><a href="#aktivitet-4---træning-af-netværket" id="toc-aktivitet-4---træning-af-netværket" class="nav-link" data-scroll-target="#aktivitet-4---træning-af-netværket">Aktivitet 4 - Træning af netværket</a></li>
   </ul>
 </nav>
 </nav>
@@ -197,16 +193,12 @@ window.Quarto = {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Word2Vec</h1>
-  <div class="quarto-categories">
-    <div class="quarto-category">A-niveau</div>
-    <div class="quarto-category">Kort</div>
-  </div>
-  </div>
+<h1 class="title">Del 4: Transformeren</h1>
+</div>
 
 
 
@@ -222,204 +214,166 @@ window.Quarto = {
 </header>
 
 
-<div class="callout callout-style-simple callout-caution no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="estimeret_tid">
+<p>Forventet tid ca. 90-120 min.</p>
+</div>
+<p><br>
+<br>
+</p>
+<section id="aktivitet-1---vektorregning" class="level2 aimat">
+<h2 class="aimat anchored" data-anchor-id="aktivitet-1---vektorregning">Aktivitet 1 - Vektorregning</h2>
+<p>Læs afsnittene <a href="../../materialer/sprogmodeller/transformeren.html#opmærksomhed">Opmærksomhed</a> og <a href="../../materialer/sprogmodeller/transformeren.html#vektorregning">Vektorregning</a>.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Forudsætninger og tidsforbrug
+Opgave 1: Vektorregning
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
+<p>Lad <span class="math inline">\(\vec{v}_1 = \begin{pmatrix} 1\\ 3\end{pmatrix}\)</span> og <span class="math inline">\(\vec{v}_2 = \begin{pmatrix} 3\\1\end{pmatrix}\)</span>.</p>
 <ul>
-<li>Vektorregning</li>
-<li>Eksponentialfunktionen.</li>
-<li>Word2Vec teori.</li>
+<li><p>Beregn vektorerne <span class="math display">\[
+\begin{aligned}
+\vec{w}_1 = \frac{1}{3} \vec{v}_1 + \frac{2}{3} \vec{v}_2 \\ \\
+\vec{w}_2 = \frac{1}{2} \vec{v}_1 + \frac{1}{2} \vec{v}_2 \\ \\
+\vec{w}_3 = \frac{2}{3} \vec{v}_1 + \frac{1}{3} \vec{v}_2 \\
+\end{aligned}
+\]</span></p></li>
+<li><p>Indtegn <span class="math inline">\(\vec{w}_1\)</span>, <span class="math inline">\(\vec{w}_2\)</span> og <span class="math inline">\(\vec{w}_3\)</span> i et koordinatsystem sammen med <span class="math inline">\(\vec{v}_1\)</span> og <span class="math inline">\(\vec{v}_2\)</span>.</p></li>
+<li><p>Passer resultatet med, at vektoren <span class="math display">\[
+c_1\vec{v}_1 + c_2\vec{v}_2
+\]</span> med <span class="math inline">\(c_1,c_2\geq 0\)</span> og <span class="math inline">\(c_1+c_2=1\)</span> ligger tættere på <span class="math inline">\(\vec{v}_1\)</span> jo større <span class="math inline">\(c_1\)</span> er?</p></li>
 </ul>
-<p>Forudsætningerne om WordVec teori bør dækkes ved hjælp af <a href="../materialer/sprogmodeller/word2vec.html" target="_blank">noten om Word2Vec</a>.</p>
-<p><strong>Tidsforbrug:</strong> Ca. 90 minutter.</p>
-</div>
-</div>
-</div>
-<section id="formål" class="level3 purpose">
-<h3 class="anchored" data-anchor-id="formål">Formål</h3>
-<p>Formålet med dette forløb er dels at gennemføre beregningerne i Word2vec for et meget lille korpus af data, men også at forstå, hvad det vil sige at optimere vektorerne, så tabsfunktionen minimeres.</p>
-</section>
-<section id="et-meget-lille-tekstkorpus" class="level2">
-<h2 class="anchored" data-anchor-id="et-meget-lille-tekstkorpus">Et meget lille tekstkorpus</h2>
-<p>Vi vi anvende følgende meget simple tekstkorpus med 12 sætninger. Vi betragter kun de to ord, og anvender et 1-ords vindue, som endda kun indeholder det andet ord på samme linje. Så i den første linje er hunden i 1-ords vinduet til sover, og ingen andre ord er i sovers 1-ords vindue.</p>
+<p>Lad <span class="math inline">\(\vec{v}_1 = \begin{pmatrix} 1\\ 2\\ 0\\ -3\end{pmatrix}\)</span> og <span class="math inline">\(\vec{v}_2 = \begin{pmatrix} 1\\-1\\2\\ 4\end{pmatrix}\)</span>.</p>
 <ul>
-<li>Hunden sover.</li>
-<li>Katten sover.</li>
-<li>Katten spinder.</li>
-<li>Hunden gør.</li>
-<li>Hunden sover.</li>
-<li>Hunden gør.</li>
-<li>Katten sover.</li>
-<li>Hunden gør.</li>
-<li>Katten sover.</li>
-<li>Katten spinder.</li>
-<li>Katten sover.</li>
-<li>Katten spinder.</li>
+<li>Beregn <span class="math display">\[
+2\vec{v}_1+\vec{v}_2
+\]</span></li>
 </ul>
-<p>Overordnet er ideen så, at vi skal bestemme værdier til fokus- og kontekstvektorer, så tabfunktionen minimeres.</p>
+</div>
+</div>
+</div>
+<p><br>
+<br>
+</p>
 </section>
-<section id="fokus--og-kontekstvektorer." class="level2">
-<h2 class="anchored" data-anchor-id="fokus--og-kontekstvektorer.">Fokus- og kontekstvektorer.</h2>
-<p>Vi skal således bruge både fokusvektorer og kontekstvektorer.</p>
+<section id="aktivitet-2---et-opmærksomhedslag" class="level2 aimat">
+<h2 class="aimat anchored" data-anchor-id="aktivitet-2---et-opmærksomhedslag">Aktivitet 2 - Et opmærksomhedslag</h2>
+<p>Læs afsnittet <a href="../../materialer/sprogmodeller/transformeren.html#et-opmærksomhedslag">Et opmærksomhedslag</a>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 1:
+Opgave 2: Vektorrepræsentationer
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
+<p>Betragt sætningen "Der svømmer marsvinet". Her har "svømmer" stor betydning for vores opfattelse af ordet "marsvinet", mens "der" ikke giver os ret meget ny information. Lad os sige, at de tre ord har vektorrepræsentationerne</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\text{der}&amp;&amp;
+\vec{q}_1 = \begin{pmatrix}0\\-5\end{pmatrix},&amp;&amp; \vec{k}_1=\begin{pmatrix}4\\-1\end{pmatrix},&amp;&amp;\vec{v}_1= \begin{pmatrix} -1\\ -1\end{pmatrix}\\
+&amp;\text{svømmer}&amp;&amp;
+\vec{q}_2 = \begin{pmatrix}3\\-7\end{pmatrix},&amp;&amp; \vec{k}_2=\begin{pmatrix}1\\2\end{pmatrix},&amp;&amp;\vec{v}_2= \begin{pmatrix} -2\\ 2\end{pmatrix}\\
+&amp;\text{marsvinet}&amp;&amp;
+\vec{q}_3 = \begin{pmatrix}0\\1\end{pmatrix}, &amp;&amp;\vec{k}_3=\begin{pmatrix}-1\\2\end{pmatrix},&amp;&amp;\vec{v}_3= \begin{pmatrix} 1\\ 2\end{pmatrix}\\
+\end{aligned}
+\]</span></p>
+<p>Vi vil nu se, at den opdaterede vektor <span class="math inline">\(\vec{w}_3\)</span> for "marsvinet" bliver trukket meget i retning af "svømmer", men i mindre grad i retning af "der".</p>
 <ul>
-<li>Hvor mange fokusvektorer er der brug for?</li>
-<li>Hvor mange kontekstvektorer er der brug for?</li>
+<li><p>Beregn <span class="math inline">\(\vec{w}_3\)</span> ved at følge nedenstående skridt:</p>
+<ul>
+<li><p>Beregn skalarprodukterne <span class="math inline">\(\vec{k}_1\cdot \vec{q}_3\)</span>, <span class="math inline">\(\vec{k}_2\cdot \vec{q}_3\)</span> og <span class="math inline">\(\vec{k}_3\cdot \vec{q}_3\)</span>.</p></li>
+<li><p>Brug softmax til at beregne konstanterne <span class="math inline">\(c_{1,3}\)</span>, <span class="math inline">\(c_{2,3}\)</span> og <span class="math inline">\(c_{3,3}\)</span>.</p></li>
+<li><p>Passer det med at store værdier af <span class="math inline">\(c_{1,3}\)</span>, <span class="math inline">\(c_{2,3}\)</span> og <span class="math inline">\(c_{3,3}\)</span> svarer til ord, der har meget at sige om betydningen af "marsvinet"?</p></li>
+<li><p>Beregn <span class="math display">\[\vec{w}_3 = c_{1,3}\vec{v}_1 + c_{2,3}\vec{v}_2 + c_{3,3}\vec{v}_3\]</span></p></li>
+</ul></li>
+<li><p>Tegn vektorerne <span class="math inline">\(\vec{v}_1\)</span>, <span class="math inline">\(\vec{v}_2\)</span>, <span class="math inline">\(\vec{v}_3\)</span> og <span class="math inline">\(\vec{w}_3\)</span> ind i et koordinatsystem og overvej, hvordan <span class="math inline">\(\vec{w}_3\)</span> ligger i forhold til <span class="math inline">\(\vec{v}_1\)</span>, <span class="math inline">\(\vec{v}_2\)</span> og <span class="math inline">\(\vec{v}_3\)</span>.</p></li>
+<li><p>Tegn vektorerne <span class="math inline">\(\vec{k}_1\)</span>, <span class="math inline">\(\vec{k}_2\)</span>, <span class="math inline">\(\vec{k}_3\)</span> og <span class="math inline">\(\vec{q}_3\)</span> ind i et koordinatsystem. Passer det med, at kontekstvektoren for de ord, der har mest at sige om betydningen af ordet "marsvinet", peger mest i retning af <span class="math inline">\(\vec{q}_3\)</span>?</p></li>
 </ul>
 </div>
 </div>
 </div>
-<p>Nu vælger vi indledningsvis værdier til alle disse vektorer - vi venter med optimering. For at gøre det simplere, vil vi I dette forløb begrænse os til enhedsvektorer, så længden altid er 5, hvor længden i Word2vec ellers generelt er variabel.</p>
-<p>Fokusvektorerne: <span class="math display">\[
-\vec{v}_{hunden} = \begin{pmatrix} -4 \\ 3 \end{pmatrix}\\
-\vec{v}_{katten} = \begin{pmatrix} 0 \\ 5 \end{pmatrix} \\
-\vec{v}_{spinder} = \begin{pmatrix} 3 \\ 4 \end{pmatrix} \\
-\vec{v}_{sover} = \begin{pmatrix} 4 \\ 3 \end{pmatrix} \\
-\vec{v}_{gør} = \begin{pmatrix} 5 \\ 0 \end{pmatrix} \\
-\]</span> Kontekstvektorerne: <span class="math display">\[
-\vec{k}_{hunden} = \begin{pmatrix} 4 \\ -3 \end{pmatrix}\\
-\vec{k}_{katten} = \begin{pmatrix} 3 \\ -4 \end{pmatrix} \\
-\vec{k}_{spinder} = \begin{pmatrix} -5 \\ 0 \end{pmatrix} \\
-\vec{k}_{sover} = \begin{pmatrix} -4 \\ -3 \end{pmatrix} \\
-\vec{k}_{gør} = \begin{pmatrix} -3 \\ -4 \end{pmatrix} \\
-\]</span> Til disse værdier af vektorerne, skal vi nu have beregnet værdien af tabsfunktionen <span class="math inline">\(L\)</span>. For at kunne overskue beregningerne, opdeles de i mindre dele i de følgende opgaver.</p>
+<p><br>
+<br>
+</p>
+</section>
+<section id="aktivitet-3---transformernetværket" class="level2 aimat page-columns page-full">
+<h2 class="aimat anchored" data-anchor-id="aktivitet-3---transformernetværket">Aktivitet 3 - Transformernetværket</h2>
+<p>Læs afsnittene <a href="../../materialer/sprogmodeller/transformeren.html#en-transformerblok">En transformerblok</a> og <a href="../../materialer/sprogmodeller/transformeren.html#transformernetværket">Transformernetværket</a>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 2: Beregn prikprodukterne og anvend eksponentialfunktionen.
+Opgave 3: Vægte i en transformernetværket
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<ul>
-<li>Udregn prikproduktet mellem fokusordnet for <span class="math inline">\(hunden\)</span> og kontekstordet for <span class="math inline">\(sover\)</span>.</li>
-<li>Udregn på tilsvarende vis prikprodukterne for de 7 øvrige muligheder.</li>
-<li>Udregn desuden <span class="math inline">\(e\)</span> opløftet i hvert af de 8 prikprodukter.</li>
-</ul>
+<p>I denne opgave giver vi et overslag over størrelsen af den transformer, der blev brugt i GPT-2<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, som er forgængeren for den GPT-4 teknologi, der bruges i ChatGPT.</p>
+<p>Vi ser først på en enkelt transformerblok:</p>
+<ol type="1">
+<li><p>GPT-2 brugte vektorer af dimension <span class="math inline">\(64\)</span> til at repræsentere ord. Hvert af de <span class="math inline">\(V\)</span> ord i sproget skal repræsenteres af <span class="math inline">\(3\)</span> forskellige vektorer. Hvor mange vægte skal der bruges til at lave vektorrepræsentationer af alle <span class="math inline">\(V\)</span> ord i sproget?</p></li>
+<li><p>I et trin, som vi ikke gennemgik, reduceres de <span class="math inline">\(V\)</span> ord i sproget til <span class="math inline">\(768\)</span>-dimensionale vektorer, som derefter oversættes til tre vektorer. Ved at sætte <span class="math inline">\(V=768\)</span> i 1., får du det reelle antal vægte, der skal bruges for at lave de tre vektorrepræsentationer.</p></li>
+<li><p>I GPT-2 var der <span class="math inline">\(K=12\)</span> parallelle opmærksomhedslag. Gang med <span class="math inline">\(12\)</span> i ovenstående beregning for at få antallet af vægte, der samlet set skal bruges til at lave vektorrepræsentationerne i alle opmærksomhedslagene.</p></li>
+<li><p>Outputtet fra hvert opmærksomhedslag er en <span class="math inline">\(64\)</span>-dimensional vektor. Outputtet fra de <span class="math inline">\(12\)</span> opmærksomhedslag sættes i forlængelse af hinanden til en vektor <span class="math inline">\(\vec{x}_i\)</span>. Hvilken dimension har <span class="math inline">\(\vec{x}_i\)</span>?</p></li>
+<li><p>Som det næste bliver <span class="math inline">\(\vec{x}_i\)</span> brugt som input i et neuralt netværk. GPT-2 bruger <span class="math inline">\(d=4\cdot 768\)</span> neuroner i det skjulte lag og outputtet er en ny vektor af dimension <span class="math inline">\(768\)</span>. Hvor mange vægte skal der i alt bruges til det neurale netværk (brug eventuelt din beregning fra opgave 1 i <a href="../../undervisningsforlob/sprogmodeller_langt_forlob/sprogmodeller_del3.html#aktivitet-1---antal-parametre-i-modellen">del 3</a>).</p></li>
+<li><p>Læg antallet af vægte i opmærksomhedslagene, som du fandt i 3., sammen med antallet af vægte i det neurale netværk, som du fandt i 5., for at få det samlede antal vægte i en transformerblok.</p></li>
+</ol>
+<p>Nu ser vi på det samlede transformernetværk.</p>
+<ol start="7" type="1">
+<li><p>GPT-2 brugte <span class="math inline">\(N=12\)</span> transformerblokke. Gang resultatet fra 6. med <span class="math inline">\(12\)</span> for at få det samlede antal vægte i transformerblokkene.</p></li>
+<li><p>Og så har vi endda sprunget et par trin over. Helt i starten (se 2. ovenfor) blev de <span class="math inline">\(V\)</span> ord i ordforrådet oversat til <span class="math inline">\(768\)</span>-dimensionale vektorer. I prædiktionslaget blev der brugt <span class="math inline">\(V\)</span> <span class="math inline">\(768\)</span>-dimensionale vektorer til at udregne en score for hvert ord. Ved at bruge tokens i stedet for ord (se boksen under opgaven), kan GPT-2 nøjes med <span class="math inline">\(V=50.257\)</span> ord (eller rettere orddele). Hvor mange ekstra vægte giver det anledning til?</p></li>
+<li><p>Læg resultatet fra 7. og 8. sammen og sammenlign med det antal vægte, der ofte angives for GPT-2 Small i litteraturen, nemlig <span class="math inline">\(117\)</span> millioner (nogle kilder siger dog <span class="math inline">\(124\)</span> millioner).</p></li>
+</ol>
 </div>
 </div>
 </div>
-<p>Som det næste skal sandsynlighederne udregnes. F.eks. udregnes</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;GPT-2 kommer i fire forskellige størrelser. Den vi regner på her er den mindste, som kaldes GPT-2 Small.</p></div></div><div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 3: Udregn sandsynligheder
+Tokens
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<ul>
-<li>Udregn <span class="math display">\[P(\text{sover} \mid \text{hunden}) &amp;= \frac{\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{sover}} }}{\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{fjer}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ \]</span></li>
-</ul>
+<p>Mange ord er opbygget af mindre dele, som går igen i mange forskellige ord. For eksempel er “lær” et ord i sig selv, men det kan også sættes sammen med andre orddele til at danne ord som “lær-e”, “lær-er”, “lær-ing” eller “lær-e-bog”. Orddelene “e”, “er” og “ing” forekommer i rigtig mange ord. Disse dele kaldes tokens. Ord adskilles af mellemrum, som er et token i sig selv.<br>
+I stedet for at dele tekst op i ord, deler store sprogmodeller tekst op i tokens. Fordelen er, at antallet af forskellige tokens, hvis de er valgt fornuftigt, er noget mindre end det samlede antal ord i sproget. Samtidig er de store nok til at indeholde information om sprogets betydning. For eksempel forekommer tokenet “lær” ofte i ord relateret til læring, mens tokens som “er” eller “ing” ofte markerer en bestemt bøjning af et ord.</p>
 </div>
 </div>
 </div>
+<p><br>
+<br>
+</p>
 </section>
-<section id="anden-opdatering-af-vægtene" class="level2">
-<h2 class="anchored" data-anchor-id="anden-opdatering-af-vægtene">Anden opdatering af vægtene</h2>
-<p>Overvej, om du kan strømline dine beregninger, for eksempel i Excel eller i dit CAS værktøj, så det bliver hurtigere at opdatere vægtene en gang mere på samme måde.</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Opgave 4: Opdater vægtene anden gang
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<ul>
-<li>Beregn tabsfunktionen.</li>
-<li>Beregn de opdaterede vægte.</li>
-</ul>
-</div>
-</div>
-</div>
-<p>Bemærk, at værdien af tabsfunktionen er blevet lidt mindre. Formålet er jo netop at minimere den gennem gradientnedstigning, så som regel bør værdien bliver mindre, hver gang vægtene opdateres.</p>
-</section>
-<section id="app-til-simple-neurale-netværk" class="level2">
-<h2 class="anchored" data-anchor-id="app-til-simple-neurale-netværk">App til simple neurale netværk</h2>
-<p>Med <a href="../apps/perceptron_app.html" target="_blank">perceptron app’en</a> kan du lave de samme beregninger bare automatisk.</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Opgave 5: Afprøv perceptron app’en
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<ul>
-<li>Lav et Excelark med feature- og targetværdierne.</li>
-<li>Indlæs data fra Excelarket i perceptron app’en.</li>
-<li>Vælg de korrekte værdier i felterne på app’en. Herunder skal feature-skalering være slået fra.</li>
-<li>Se om app’en giver samme resultater for tabsfunktionen og vægtene, som du selv fik efter 1 iteration og efter 2 iterationer.</li>
-</ul>
-</div>
-</div>
-</div>
-</section>
-<section id="cross-entropy-som-tabsfunktion" class="level2">
-<h2 class="anchored" data-anchor-id="cross-entropy-som-tabsfunktion">Cross-entropy som tabsfunktion</h2>
-<p>Du kan læse om <em>cross-entropy</em> i <a href="../materialer/tabsfunktioner/tabsfunktioner.html#cross-entropy" target="_blank">noten om tabsfunktioner</a>.</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-(Ekstra) Opgave 6: Cross-entropy tabsfunktion
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<ul>
-<li>Gentag opgave 1-5 men med <em>cross-entropy</em> som tabsfunktion i stedet for <em>squared error</em>.</li>
-</ul>
-</div>
-</div>
-</div>
-</section>
-<section id="løsninger-til-opgaver" class="level2">
-<h2 class="anchored" data-anchor-id="løsninger-til-opgaver">Løsninger til opgaver</h2>
-<p><a href="../undervisningsforlob/Opdatering_af_vægte_i_en_kunstig_neuron_løsninger.html" target="_blank">Facitliste</a>.</p>
+<section id="aktivitet-4---træning-af-netværket" class="level2 aimat">
+<h2 class="aimat anchored" data-anchor-id="aktivitet-4---træning-af-netværket">Aktivitet 4 - Træning af netværket</h2>
+<p>Læs afsnittet <a href="../../materialer/sprogmodeller/transformeren.html#træning-af-netværket">Træning af netværket</a>.</p>
+<p>Opgaver…???</p>
+<p><br>
+<br>
+</p>
+<p><a href="../../undervisningsforlob/sprogmodeller_langt_forlob/sprogmodeller_del3.html" class="prev"><span class="math inline">\(\leftarrow\)</span> Forrige</a> <a href="../../undervisningsforlob/sprogmodeller_langt_forlob/sprogmodeller_eksamen.html" class="next">Næste <span class="math inline">\(\rightarrow\)</span></a></p>
 
 
 </section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
