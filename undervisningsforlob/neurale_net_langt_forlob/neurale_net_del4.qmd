@@ -30,7 +30,7 @@ De træningsdata i @tbl-goodfood, som vi har brugt i de foregående aktiviteter,
 Et meget lille træningsdatasæt til Good Food app'en.
 ::: 
 
-For det første er tre træningseksempler alt for få. For det andet kan man jo bare kigge på træningsdata og lave en regel ud fra dem. Det kunne for eksempel være: Hvis kunden er 55 år eller under, så tror vi ikke, at hun vil aktivere tilbudet, og omvendt hvis kunden er over 55 år. Det behøver man jo ikke fancy AI metoder til at indse! For det tredje er det urealistisk, at alder alene kan afgøre, om en kunde aktiverer et tilbud eller ej. Man vil typisk inddrage andre inputvariable som for eksempel køn, forbrug og så videre. 
+For det første er tre træningseksempler alt for få. For det andet kan man jo bare kigge på træningsdata og lave en regel ud fra dem. Det kunne for eksempel være: Hvis kunden er 55 år eller under, så tror vi ikke, at hun vil aktivere tilbuddet, og omvendt hvis kunden er over 55 år. Det behøver man jo ikke fancy AI metoder til at indse! For det tredje er det urealistisk, at alder alene kan afgøre, om en kunde aktiverer et tilbud eller ej. Man vil typisk inddrage andre inputvariable som for eksempel køn, forbrug og så videre. 
 
 Vi vil derfor her se på et langt mere realistik eksempel, hvor træningsdatasættet er større og med flere inputvariable. 
 
@@ -77,7 +77,7 @@ for(i in 1:nrow(dat)){
 
 :::
 
-I datasættet er der tre inputvariable: \"alder\" (målt i år), \"forbrug\" (målt i kroner) og \"køn\" (kon, hvor 0 svarer til kvinder og 1 svarer til mænd). Targetvariablen kaldes for \"aktiveret\" (hvor \"ja\" svarer til, at kunden har aktiveret tilbudet, og \"nej\" svarer til, at kunden ikke har aktiveret tilbudet). Vi har altså følgende inputvariable:
+I datasættet er der tre inputvariable: \"alder\" (målt i år), \"forbrug\" (målt i kroner) og \"køn\" (kon, hvor 0 svarer til kvinder og 1 svarer til mænd). Targetvariablen kaldes for \"aktiveret\" (hvor \"ja\" svarer til, at kunden har aktiveret tilbuddet, og \"nej\" svarer til, at kunden ikke har aktiveret tilbuddet). Vi har altså følgende inputvariable:
 
 * $x_1$: kundens alder målt i år
 * $x_2$: kundens forbrug i Good Food den seneste måned målt i kr.
@@ -103,11 +103,13 @@ Vi laver først et plot for kvinderne.
 
 - Gå tilbage til regnearket og markér alle punkterne i kolonne `E`. Højreklik og vælg \"vis navn\" (det skulle gerne fjerne navngivningen af punkterne i koordinatsystemet).
 
-Vi vil nu farve de punkter, som svarer til et træningseksempel, hvor tilbudet et blevet aktiveret for blåt og tilsvarende rødt, hvis tilbudet ikke er blevet aktiveret. Husk på at denne information findes i kolonne `D`.
+Vi vil nu farve de punkter, som svarer til et træningseksempel, hvor tilbuddet et blevet aktiveret for blåt og tilsvarende rødt, hvis tilbuddet ikke er blevet aktiveret. Husk på at denne information findes i kolonne `D`.
 
 - Markér det første punkt i celle `E2`. Højreklik og vælg \"Egenskaber\". Vælg her fanen \"Avanceret\". 
 
 - I det felt, hvor der står \"Rød\", skriver du `If(D2="Nej",1,0)`. 
+
+- I det felt, hvor der står \"Grøn\", skriver du `0`. 
 
 - I det felt, hvor der står \"Blå\", skriver du `If(D2="Ja",1,0)`. 
 
@@ -116,7 +118,7 @@ Det kommer til at se sådan her ud (hvis du har GeoGebra på dansk bliver \"If\"
 ![](images/egenskaber_avanceret.png){width=60% fig-align="center"}
 
 ::: {.description}
-**Forklaring:** I GeoGebra repræsenteres farver ved hjælp af en rød/grøn/blå (RGB) farvemodel. Mængden af rød repræsenteres her som et tal mellem 0 og 1 og tilsvarende med grøn og blå. Når vi i feltet ved \"Rød\" skriver `If(D2="Nej",1,0)`, så betyder det, at hvis værdien i celle `D2` er \"Nej\" (kunden har ikke aktiveret tilbudet), så skal mængden af rød være 1 og 0 ellers. Og tilsvarende for mængden af blå, hvis `D2` har værdien \"Ja\".
+**Forklaring:** I GeoGebra repræsenteres farver ved hjælp af en rød/grøn/blå (RGB) farvemodel. Mængden af rød repræsenteres her som et tal mellem 0 og 1 og tilsvarende med grøn og blå. Når vi i feltet ved \"Rød\" skriver `If(D2="Nej",1,0)`, så betyder det, at hvis værdien i celle `D2` er \"Nej\" (kunden har ikke aktiveret tilbuddet), så skal mængden af rød være 1 og 0 ellers. Og tilsvarende for mængden af blå, hvis `D2` har værdien \"Ja\".
 
 :::
 
@@ -124,7 +126,7 @@ Det kommer til at se sådan her ud (hvis du har GeoGebra på dansk bliver \"If\"
 
 - Indsæt nogle tekstfelter i tegneblokken (tryk på ikonet \"Skyder\" og vælg \"Tekst\"): Angiv, hvad der er ud af akserne, hvad de røde og blå punkter betyder, og at plottet er for kvinder.
 
-- Indlæg i dette koordinatsystem en rette linje, som (for de fleste punkter) vil kunne bruges til at adskille de blå punkter fra de røde? Notér ligningen for en sådan linje.
+- Indlæg i dette koordinatsystem en ret linje, som (for de fleste punkter) vil kunne bruges til at adskille de blå punkter fra de røde? Notér ligningen for en sådan linje.
 
 - Lav et tilsvarende plot for mændene.
 
@@ -159,9 +161,9 @@ Vægtene bestemmer vi ved at træne en kunstig neuron (det vil sige, at vi minim
 
 - Åbn [neuron app'en](https://apps01.math.aau.dk/ai/neuron){target="blank"}.
 
-- Upload [datasættet](data/goodfood.xlsx) (under \"Browse...\").
+- Under fanen \"Data\" uploader du [datasættet](data/goodfood.xlsx) (tryk på \"Browse...\") og tryk derefter på \"Næste\".
 
-- Lav følgende indstillinger:
+- Under fanen \"Variable\" gør du følgende:
   
   + Vælg \"Aktiveret\" som target-variabel.
   
@@ -169,29 +171,31 @@ Vægtene bestemmer vi ved at træne en kunstig neuron (det vil sige, at vi minim
   
   + Vælg \"Alder\", \"Forbrug\" og \"Kon\" som feature-variable (det vil sige inputvariable). Og sørg for at indtaste dem i den rækkefølge.
   
-  + Lad alle startvægtene stå til $0$.
+  + Tryk på \"Næste\".
+  
+- Under fanen \"Træning\" gør du følgende:
+
+  + Sæt startvægtene til $0$.
   
   + Behold en learning rate ($\eta$) på $0.001$.
   
   + Behold antal iterationer på $1000$.
   
-  + Slideren ved \"Antal fold\" lader du være.
+  + Behold \"Squared" som tabsfunktion.
   
-  + Vælg \"squared error\" som tabsfunktion.
-  
-  + Behold \"sigmoid\" som aktiveringsfunktion.
+  + Behold \"Sigmoid\" som aktiveringsfunktion.
   
   + Behold fluebenet ved \"Brug feature-skalering\".
 
-- Tryk på \"Kør!\".
+  + Tryk på \"Kør modellen\".
 
-Vi starter med at undersøge, om det ser ud som om, at vi har fundet et minimum for tabsfunktionen. En graf for tabsfunktionen som funktion af antal opdateringer af vægtene ses til højre i app'en.
+Vi starter med at undersøge, om det ser ud som om, at vi har fundet et minimum for tabsfunktionen. En graf for tabsfunktionen som funktion af antal opdateringer af vægtene ses til højre i app'en, efter at du har trykket på \"Kør modellen\".
 
-- Ser det ud som om, at vi ved den sidste iteration har fundet minimum for tabsfunktionen (flader grafen ud eller er den stadig \"på vej nedad bakke\")? Notér slutværdien af tabsfunktionen (som står lige under grafen).
+- Ser det ud som om, at vi ved den sidste iteration har fundet minimum for tabsfunktionen (flader grafen ud eller er den stadig \"på vej nedad bakke\")? Notér slutværdien af tabsfunktionen (som står under grafen).
 
 - Prøv at sætte antal iterationer til $10000$ (det tager lige lidt længere tid). Tænker du, at vi har fundet minimum nu?
 
-- Notér værdien af vægtene $w_0$, $w_1$, $w_2$ og $w_3$, som står i tabellen ovenfor grafen for tabsfunktionen i højre side.
+- Notér værdien af vægtene $w_0$, $w_1$, $w_2$ og $w_3$, som står i tabellen nedenfor grafen.
 
 - Notér igen slutværdien af tabsfunktionen. Er værdien af tabsfunktionen blevet mindre sammenlignet med værdien ved $1000$ iterationer?
 
@@ -265,7 +269,7 @@ Brug de to plots med de to skillelinjer, som du indtegnede i opgave 5. I vores e
 
 Den andel af punkterne, som er blevet klassificeret korrekt, kaldes for  **klassifikationsnøjagtigheden** -- eller på engelsk *classification accuracy* (CA).
 
-- Udregn på baggrund af din confusion matrix klassifikationsnøjagtigheden. Tjek dit resultat med resultatet fra app'en i opgave 3 (klassifikationsnøjagtigheden står under \"Model information\" til højre). Hvis du ikke får det samme, har du nok talt forkert!
+- Udregn på baggrund af din confusion matrix klassifikationsnøjagtigheden. Tjek dit resultat med resultatet fra app'en i opgave 3 (klassifikationsnøjagtigheden står over grafen til højre i fanen \"Træning\"). Hvis du ikke får det samme, har du nok talt forkert!
 
 :::
 
@@ -282,11 +286,11 @@ Det skal vi se et konkret eksempel på nu.
 
 ### Opgave 7: Slow learning
 
-- Åbn igen [neuron app'en](https://apps01.math.aau.dk/ai/neuron){target="blank"} og upload [datasættet](data/goodfood.xlsx) (under \"Browse...\").
+- Åbn igen [neuron app'en](https://apps01.math.aau.dk/ai/neuron){target="blank"} og upload [datasættet](data/goodfood.xlsx) (under fanen \"Data\").
 
-- Vælg de samme indstillinger som i opgave 3, men sæt start-vægtene til $10$ og vælg at antallet af iterationer skal være $1000$. 
+- Vælg de samme indstillinger som i opgave 3, men sæt under fanen \"Træning\" startvægtene til $10$ og vælg, at antallet af iterationer skal være $1000$. 
 
-- Tryk på \"Kør!\". Ser det ud som om, at vi har fundet et minimum? Notér slutværdien af tabsfunktionen.
+- Tryk på \"Kør modellen\". Ser det ud som om, at vi har fundet et minimum? Notér slutværdien af tabsfunktionen.
 
 - Sæt antal iterationer op til $10000$. Er det bedre?
 
@@ -315,11 +319,11 @@ I hvert plot har du nu to forskellige linjer, som kan bruges til at adskille de 
 
 - Er den ene linje bedre end den anden?
 
-- Sammenlign slutværdien af tabsfunktionen, som du fandt i opgave 3 (hvor start-vægtene var sat til $0$ og antallet af iterationer var $10000$) med slutværdien af tabsfunktionen, som du fandt i opgave 7 (hvor start-vægtene var sat til $10$ og antallet af iterationer var $200000$). Hvilken værdi er mindst?
+- Sammenlign slutværdien af tabsfunktionen, som du fandt i opgave 3 (hvor startvægtene var sat til $0$ og antallet af iterationer var $10000$) med slutværdien af tabsfunktionen, som du fandt i opgave 7 (hvor startvægtene var sat til $10$ og antallet af iterationer var $200000$). Hvilken værdi er mindst?
 
 Der er her sket det, at vi har fundet to forskellige lokale minima for tabsfunktionen. Spørgsmål er, om der i praksis er den store forskel på de to:
 
-- Sammenlign slutværdien af CA, som du fandt i opgave 6 (hvor start-vægtene var sat til $0$ og antallet af iterationer var $10000$) med CA, som du fandt i opgave 7 (hvor start-vægtene var sat til $10$ og antallet af iterationer var $200000$). Er der reelt nogen forskel på hvor god de to forskellige modeller er til at prædiktere på træningsdatasættet?
+- Sammenlign slutværdien af CA, som du fandt i opgave 3 (hvor startvægtene var sat til $0$ og antallet af iterationer var $10000$) med CA, som du fandt i opgave 7 (hvor startvægtene var sat til $10$ og antallet af iterationer var $200000$). Er der reelt nogen forskel på hvor god de to forskellige modeller er til at prædiktere på træningsdatasættet?
 
 :::
 

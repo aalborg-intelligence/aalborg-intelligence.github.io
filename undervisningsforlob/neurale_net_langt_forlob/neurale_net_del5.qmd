@@ -35,18 +35,20 @@ Start med at se denne video som handler om **krydsvalidering** (eksemplet i vide
 
 :::
 
-Hvis du vil vide mere, kan du læse i noten om [overfitting, modeludvælgelse og kyrdsvalidering](../../krydsvalidering/krydsvalidering.qmd).
+Hvis du vil vide mere, kan du læse i noten om [overfitting, modeludvælgelse og kyrdsvalidering](../../materialer/krydsvalidering/krydsvalidering.qmd).
 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
 ### Opgave 2: Klassifikationsnøjagtighed
 
-- Åbn igen [neuron app'en](https://apps01.math.aau.dk/ai/neuron){target="blank"} og upload [datasættet](data/goodfood.xlsx) (under \"Browse...\").
+- Åbn igen [neuron app'en](https://apps01.math.aau.dk/ai/neuron){target="blank"} og upload [datasættet](data/goodfood.xlsx) (under fanen \"Data\") og tryk på \"Næste\".
 
-- Træn en kunstig neuron med start-vægte på $0$ og antal iterationer på $10000$, som du gjorde det i opgave 3 i [del 4](neurale_net_del4.qmd), men slå nu \"Krydsvalidering\" til og sæt antal fold til $5$.
+- Træn en kunstig neuron med de samme indstillinger, som du havde i opgave 3 i [del 4](neurale_net_del4.qmd), men sæt startvægtene til $0$ og sæt antal iterationer til $10000$. Tryk på \"Kør modellen\" og tryk derefter på \"Næste.\"
 
-- Sammenlign klassifikationsnøjagtigheden (CA) øverst (som er baseret på træningsdatasættet) med CA under grafen for tabsfunktionen, som er baseret på $5$-folds krydsvalidering. Hvilket tal er mindst og giver det god mening?
+- Under fanen \"Krydsvalidering\" beholder du antal fold på $5$ og trykker på \"Kør!\" (det tager lige lidt tid).
+
+- Sammenlign klassifikationsnøjagtigheden (CA) under fanen \"Træning\" (som er baseret på træningsdatasættet) med CA under fanen \"Krydsvalidering\", som er baseret på $5$-folds krydsvalidering. Hvilket tal er mindst og er det, hvad vi vil forvente?
 
 - Når man laver $5$-folds krydsvalidering, laves inddelingen i foldene tilfældigt. Prøv derfor at trykke \"Kør!\" flere gange, og du vil formentlig se, at CA ændrer sig.
 
@@ -78,11 +80,11 @@ I eksemplet med Good Food app'en er der også en risiko for, at vi har overfitte
 
 Vi vil undersøge, hvad der sker, hvis vi på skift fjerner én af de tre inputvariable. 
 
-- Brug [neuron app'en](https://apps01.math.aau.dk/ai/neuron){target="blank"} med samme indstillinger, som i opgave 2. 
+- Brug [neuron app'en](https://apps01.math.aau.dk/ai/neuron){target="blank"} med samme indstillinger som i opgave 2. Du fjerner variable under fanen \"Variable\", kører modellen igen under fanen \"Træning\" og laver $5$-folds krydsvalidering under fanen \"Krydsvalidering\".
 
 - Udfyld nedenstående tabel. 
 
-   *Forklaring: Med __CA (på træningsdata)__ menes den værdi for klassifikationsnøjagtigheden, som man får, når man bruger samme datasæt til både at træne og teste på (denne værdi kan ses øverst til højre i app'en). Med __CA1-CA5__ menes de værdier af klassifikationsnøjagtigheden (baseret på krydsvalidering), som man får, når man kører app'en fem forskellige gange uden at ændre på indstillingerne.* 
+   *Forklaring: Med __CA (på træningsdata)__ menes den værdi for klassifikationsnøjagtigheden, som man får, når man bruger samme datasæt til både at træne og teste på (denne værdi kan ses under fanen \"Træning\"). Med __CA1-CA5__ menes de værdier af klassifikationsnøjagtigheden (baseret på krydsvalidering), som man får, når man kører krydsvalidering fem forskellige gange uden at ændre på indstillingerne (under fanen \"Krydsvalidering\").* 
 
 | Inputvariable | CA (på træningsdata)  | CA1 | CA2 | CA3 | CA4 | CA5 |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -104,7 +106,7 @@ Vi vil undersøge, hvad der sker, hvis vi på skift fjerner én af de tre inputv
 
 Du har nu fundet en model, som du mener, kan bruges til at prædiktere, om en fremtidig kunde vil aktivere et tilbud eller ej. I den næste opgave vil vi afprøve den.
 
-Husk først på hvordan vi beregner outputværdien $o$ ved hjælp af sigmoid-funktionen:
+Husk først på, hvordan vi beregner outputværdien $o$ ved hjælp af sigmoid-funktionen:
 
 $$
 o = \sigma(x_1, x_2, x_3) = \frac{1}{1+\mathrm{e}^{-(w_0 +w_1 \cdot x_1 + w_2 \cdot x_2 + w_3 \cdot x_3)}}
@@ -147,7 +149,7 @@ Og byd så velkommen til otte nye \"Good Food\" kunder!
 
 - Udregn for hver af de otte nye kunder sandsynligheden for, at de hver især aktiverer \"Good Food\"s tilbud.
 
-- Hvilke af kunderne vil du vælge at præsentere tilbudet for, og hvilke kunder skal ikke se tilbudet?
+- Hvilke af kunderne vil du vælge at præsentere tilbuddet for, og hvilke kunder skal ikke se tilbuddet?
 
 :::
 
@@ -161,9 +163,9 @@ I opgave 8 i [del 4](neurale_net_del4.qmd) bestemte vi vægtene for to forskelli
 
 ### Opgave 6: To minima - er der forskel?
 
-- Brug [neuron app'en](https://apps01.math.aau.dk/ai/neuron){target="blank"}, hvor start-vægtene er sat til $0$ og antal iterationer til $10000$. Tryk på \"Kør!\" fem gange og nedskrive de fem værdier for klassifikationsnøjagtigheden baseret på $5$-folds krydsvalidering.
+- Brug [neuron app'en](https://apps01.math.aau.dk/ai/neuron){target="blank"}, hvor startvægtene er sat til $0$ og antal iterationer til $10000$. Under fanen \"Krydsvalidering\" trykker du på \"Kør!\" fem gange og nedskriver de fem værdier for klassifikationsnøjagtigheden baseret på $5$-folds krydsvalidering.
 
-- Gentag ovenstående men med start-vægte på $10$ og antal iterationer på $200000$. Udfyld nedenstående tabel:
+- Gentag ovenstående men med startvægte på $10$ og antal iterationer på $200000$ (det kræver lidt tålmodighed!). Udfyld nedenstående tabel:
 
 | Start-vægte | Antal iterationer  | CA1 | CA2 | CA3 | CA4 | CA5 |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
