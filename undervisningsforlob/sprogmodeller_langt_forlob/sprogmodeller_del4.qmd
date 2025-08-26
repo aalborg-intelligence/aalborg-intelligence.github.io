@@ -1,5 +1,5 @@
 ---
-title: "Del 4: Transformeren"
+title: "Del 3: Tekstgenerering med neurale netværk"
 ---
 
 
@@ -9,158 +9,252 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ::: {.estimeret_tid}
 
-Forventet tid ca. 90-120 min.
-
+Forventet tid ca. 60 min.
 
 :::
 
 {{< include ../space.qmd >}}
 
-## Aktivitet 1 - Vektorregning {.aimat}
 
-Læs afsnittene [Opmærksomhed](../../materialer/sprogmodeller/transformeren.qmd#opmærksomhed) og [Vektorregning](../../materialer/sprogmodeller/transformeren.qmd#vektorregning). 
+## Aktivitet 1 - Antal parametre i modellen {.aimat}
+
+Læs det første afsnit i noten [Tekstgenerering med neurale netværk](../../materialer/sprogmodeller/tekstgenerering.qmd). 
+
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 1: Vektorregning
+### Opgave 1: Antal parametre i det neurale netværk
 
-Lad $\vec{v}_1 = \begin{pmatrix} 1\\ 3\end{pmatrix}$ og $\vec{v}_2 = \begin{pmatrix} 3\\1\end{pmatrix}$.
+Vi betragter det kunstige neurale netværk med ét skjult lag, som skal bruges til tekstgenerering:
 
-* Beregn vektorerne 
-  $$
-  \begin{aligned}
-  \vec{w}_1 = \frac{1}{3} \vec{v}_1 + \frac{2}{3} \vec{v}_2 \\ \\
-  \vec{w}_2 = \frac{1}{2} \vec{v}_1 + \frac{1}{2} \vec{v}_2 \\ \\
-  \vec{w}_3 = \frac{2}{3} \vec{v}_1 + \frac{1}{3} \vec{v}_2 \\
-  \end{aligned}
-  $$
+![](../../materialer/sprogmodeller/images/NN_tekstgenerering.png){width=50% fig-align='center'}
 
-* Indtegn $\vec{w}_1$, $\vec{w}_2$ og $\vec{w}_3$ i et koordinatsystem sammen med $\vec{v}_1$ og $\vec{v}_2$.
+* Hvad angiver $m$, $d$ og $V$ i figuren?
 
-* Passer resultatet med, at vektoren
-  $$
-  c_1\vec{v}_1 + c_2\vec{v}_2
-  $$ 
-  med
-  $c_1,c_2\geq 0$ og $c_1+c_2=1$ ligger tættere på $\vec{v}_1$ jo større $c_1$ er?
+* Undersøg, hvor mange ord der cirka er i det danske sprog.
 
-Lad $\vec{v}_1 = \begin{pmatrix} 1\\ 2\\ 0\\ -3\end{pmatrix}$ og $\vec{v}_2 = \begin{pmatrix} 1\\-1\\2\\ 4\end{pmatrix}$.
-    
-* Beregn
-  $$
-  2\vec{v}_1+\vec{v}_2 
-  $$
+Antag, at alle ord repræsenteres ved en 3-dimensional vektor og at $d=50$. 
+
+* Hvor mange vægte indgår da i det neurale net?
+
+* Hvis alle ord repræsenteres ved en 100-dimensional vektor, hvor mange vægte skal så estimeres?
+
+* Undersøg hvor mange vægte (eller parametre, som de også kaldes) de store sprogmodeller har i dag (det præcise antal er en forretningshemmelighed, så du kan ikke finde det præcise svar!).
 
 :::
 
 
-
 {{< include ../space.qmd >}}
-
-## Aktivitet 2 - Et opmærksomhedslag  {.aimat}
-
-Læs afsnittet [Et opmærksomhedslag](../../materialer/sprogmodeller/transformeren.qmd#et-opmærksomhedslag). 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 2: Vektorrepræsentationer
+### Opgave 2 -  Et lille neuralt netværk {.aimat}
 
-Betragt sætningen \"Der svømmer marsvinet\". Her har \"svømmer\" stor betydning for vores opfattelse af ordet \"marsvinet\", mens \"der\" ikke giver os ret meget ny information. Lad os sige, at de tre ord har vektorrepræsentationerne 
+Vi forestiller os, at vi har trænet et lille neuralt netværk, der kan beregne sandsynligheden for næste ord baseret på de to foregående ord. For at gøre eksemplet simpelt tillader vi kun to mulige næste ord, nemlig "spinder" og "danser". Inputordene respræsenteres ved to-dimensionale vektorer. Netværket har følgende struktur, hvor outputtet $z_1$ er sandsynligheden for "spinder", og $z_2$ er sandsynligheden for "danser":
 
+![](images/opgave_nn1.png){width=75% fig-align='center'}
+
+Vægtene, der indgår, i første lag er 
+
+ |$w_{1,0}$ | $w_{1,1}$  |$w_{1,2}$ |$w_{1,3}$ |$w_{1,4}$ | $w_{2,0}$ | $w_{2,1}$  |$w_{2,2}$ |$w_{2,3}$ |$w_{2,4}$ | 
+   |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+   | 1 | 0  | 1 | 1 | 5  | 2  | 4 | 2 | -1 | 3 |
+: {.bordered}
+
+Vægtene i andet lag er 
+
+ |$u_{1,0}$ | $u_{1,1}$  |$u_{1,2}$ |$u_{2,0}$ |$u_{2,1}$ | $u_{2,2}$ |  
+   |:---:|:---:|:---:|:---:|:---:|:---:|
+   | 0.5 | 1 | 2 | 0.2 | 0 | -4 | 
+: {.bordered}
+
+
+Vægtene er delvist illustreret i figuren her:
+
+![](images/opgave_nn2.png){width=75% fig-align='center'}
+
+
+Lad os sige, at vi som input har sætningen "En kat" og skal beregne sandsynligheden for næste ord. Ordene "en" og "kat" har vektorrepræsentationerne
+$$\vec{v}_{\text{en}} = \begin{pmatrix} 1\\-2\end{pmatrix}, \qquad \vec{v}_{\text{kat}} = \begin{pmatrix} 3\\0 \end{pmatrix}$$
+Vi vil bruge det neurale netværk til at beregne sandsynligheden for næste ord. 
+
+- Beregn den 4-dimensionale vektor $\vec{x}$, der skal bruges som input til netværket, ved at sætte vektorerne $\vec{v}_{\text{en}}$ og $\vec{v}_{\text{kat}}$ oven på hinanden.
+
+- Beregn $h_1$ og $h_2$ ved formlerne 
+ $$
+ \begin{aligned}
+ &h_1= f(w_{1,0} + w_{1,1}x_1 + w_{1,2}x_2 + w_{1,3}x_3 + w_{1,4 } x_4)\\
+ &h_2= f(w_{2,0} + w_{2,1}x_1 + w_{2,2}x_2 + w_{2,3}x_3 + w_{2,4} x_4)
+ \end{aligned}
+ $$
+hvor $f(x)=\frac{1}{1+e^{-x}}$ er den logistiske funktion.
+
+- Beregn $y_1$ og $y_2$ ved hjælp af formlerne
+ $$
+ \begin{aligned}
+ &y_1= u_{1,0} + u_{1,1}h_1 + u_{1,2}h_2 \\
+ &y_2= u_{2,0} + u_{2,1}h_1 + u_{2,2}h_2 
+ \end{aligned}
+ $$
+- Anvend softmax på $y_1$ og $y_2$ for at beregne $z_1$ og $z_2$. Det vil sige, beregn
 $$
 \begin{aligned}
-&\text{der}&&
-\vec{q}_1 = \begin{pmatrix}0\\-5\end{pmatrix},&& \vec{k}_1=\begin{pmatrix}4\\-1\end{pmatrix},&&\vec{v}_1= \begin{pmatrix} -1\\ -1\end{pmatrix}\\
-&\text{svømmer}&&
-\vec{q}_2 = \begin{pmatrix}3\\-7\end{pmatrix},&& \vec{k}_2=\begin{pmatrix}1\\2\end{pmatrix},&&\vec{v}_2= \begin{pmatrix} -2\\ 2\end{pmatrix}\\
-&\text{marsvinet}&&
-\vec{q}_3 = \begin{pmatrix}0\\1\end{pmatrix}, &&\vec{k}_3=\begin{pmatrix}-1\\2\end{pmatrix},&&\vec{v}_3= \begin{pmatrix} 1\\ 2\end{pmatrix}\\
+z_1 &= \frac{e^{y_1}}{e^{y_1} + e^{y_2}}\\
+z_2 &= \frac{e^{y_2}}{e^{y_1} + e^{y_2}}
 \end{aligned}
 $$
+- Hvilket af ordene er det mest sandsynlige næste ord?
 
-Vi vil nu se, at den opdaterede vektor $\vec{w}_3$ for \"marsvinet\" bliver trukket meget i retning af \"svømmer\", men i mindre grad i retning af \"der\".
+:::
 
--   Beregn $\vec{w}_3$ ved at følge nedenstående skridt:
+## Aktivitet 3 -  Træning af netværk {.aimat}
 
-    -   Beregn skalarprodukterne
-        $\vec{k}_1\cdot \vec{q}_3$,
-        $\vec{k}_2\cdot \vec{q}_3$ og
-        $\vec{k}_3\cdot \vec{q}_3$.
+Læs afsnittet [Træning af netværk](../../materialer/sprogmodeller/tekstgenerering.qmd#træning-af-netværket). 
 
-    -   Brug softmax til at beregne konstanterne $c_{1,3}$, $c_{2,3}$ og
-        $c_{3,3}$.
-        
-    -   Passer det med at store værdier af $c_{1,3}$, $c_{2,3}$ og
-        $c_{3,3}$ svarer til ord, der har meget at sige om betydningen af \"marsvinet\"?
-
-    -   Beregn
-        $$\vec{w}_3 = c_{1,3}\vec{v}_1 + c_{2,3}\vec{v}_2 + c_{3,3}\vec{v}_3$$
-
--   Tegn vektorerne $\vec{v}_1$, $\vec{v}_2$,     $\vec{v}_3$ og $\vec{w}_3$ ind i et koordinatsystem og overvej, hvordan $\vec{w}_3$ ligger i forhold til $\vec{v}_1$, $\vec{v}_2$ og $\vec{v}_3$.
-
--   Tegn vektorerne $\vec{k}_1$, $\vec{k}_2$, $\vec{k}_3$ og $\vec{q}_3$ ind i et koordinatsystem. Passer det med, at kontekstvektoren for de ord, der har mest at sige om betydningen af ordet \"marsvinet\", peger mest i retning af $\vec{q}_3$?
-
-::: 
-
-{{< include ../space.qmd >}}
-
-## Aktivitet 3 - Transformernetværket  {.aimat}
-
-Læs afsnittene [En transformerblok](../../materialer/sprogmodeller/transformeren.qmd#en-transformerblok) og [Transformernetværket](../../materialer/sprogmodeller/transformeren.qmd#transformernetværket). 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 3: Vægte i en transformernetværket
+### Opgave 3: Cross-entropy
 
-I denne opgave giver vi et overslag over størrelsen af den transformer, der blev brugt i GPT-2[^1], som er forgængeren for den GPT-4 teknologi, der bruges i ChatGPT.
+Vi forstiller os, at vi har ordnet ordene i vores ordforråd på denne måde:
 
-[^1]: GPT-2 kommer i fire forskellige størrelser. Den vi regner på her er den mindste, som kaldes GPT-2 Small. 
+$$
+\begin{pmatrix}
+\vdots
+\\
+\textrm{solen}
+\\
+\textrm{månen}
+\\
+\textrm{himlen}
+\\
+\vdots
+\end{pmatrix}
+$$
 
-Vi ser først på en enkelt transformerblok:
+Et sted i vores tekstkorpus står der 
 
-1. GPT-2 brugte vektorer af dimension $64$ til at repræsentere ord.  Hvert af de $V$ ord i sproget skal repræsenteres af $3$ forskellige vektorer. Hvor mange vægte skal der bruges til at lave vektorrepræsentationer af alle $V$ ord i sproget?
-
-2. I et trin, som vi ikke gennemgik, reduceres de $V$ ord i sproget til $768$-dimensionale vektorer, som derefter oversættes til tre vektorer. Ved at sætte $V=768$ i 1., får du det reelle antal vægte, der skal bruges for at lave de tre vektorrepræsentationer. 
-
-3. I GPT-2 var der $K=12$ parallelle opmærksomhedslag. Gang med $12$ i ovenstående beregning for at få antallet af vægte, der samlet set skal bruges til at lave vektorrepræsentationerne i alle opmærksomhedslagene.
-
-4. Outputtet fra hvert opmærksomhedslag er en $64$-dimensional vektor.  Outputtet fra de $12$ opmærksomhedslag sættes i forlængelse af hinanden til en vektor $\vec{x}_i$. Hvilken dimension har $\vec{x}_i$? 
-
-5. Som det næste bliver $\vec{x}_i$ brugt som input i et neuralt netværk. GPT-2 bruger $d=4\cdot 768$ neuroner i det skjulte lag og outputtet er en ny vektor af dimension $768$. Hvor mange vægte skal der i alt bruges til det neurale netværk (brug eventuelt din beregning fra opgave 1 i [del 3](sprogmodeller_del3.qmd#aktivitet-1---antal-parametre-i-modellen)).
-
-6. Læg  antallet af vægte i opmærksomhedslagene, som du fandt i 3., sammen med antallet af vægte i det neurale netværk, som du fandt i 5., for at få det samlede antal vægte i en transformerblok.
-
-Nu ser vi på det samlede transformernetværk.
-
-7. GPT-2 brugte $N=12$ transformerblokke. Gang resultatet fra 6. med $12$ for at få det samlede antal vægte i transformerblokkene. 
-
-8. Og så har vi endda  sprunget et par trin over. Helt i starten (se 2. ovenfor) blev de $V$ ord i ordforrådet oversat til $768$-dimensionale vektorer. I prædiktionslaget blev der brugt $V$ $768$-dimensionale vektorer til at udregne en score for hvert ord. Ved at bruge tokens i stedet for ord (se boksen under opgaven), kan GPT-2 nøjes med $V=50.257$ ord (eller rettere orddele). Hvor mange ekstra vægte giver det anledning til? 
-
-9. Læg resultatet fra 7. og 8. sammen og sammenlign med det antal vægte, der ofte angives for GPT-2 Small i litteraturen, nemlig $117$ millioner (nogle kilder siger dog $124$ millioner).
-
+::: {.llm_saetninger}
+\"jeg ser på månen\"
 :::
 
-::: {.callout-tip collapse="true" appearance="minimal"}
+og en række i træningsdata vil derfor være
 
-### Tokens
+| Input 1 | Input 2 | Input 3 | Target |
+|:---:|:---:|:---:|:---:|
+| $\vdots$ | $\vdots$ | $\vdots$ | $\vdots$ |
+| jeg | ser | på | månen |
+| $\vdots$ | $\vdots$ | $\vdots$ | $\vdots$ |
 
-Mange ord er opbygget af mindre dele, som går igen i mange forskellige ord. For eksempel er "lær" et ord i sig selv, men det kan også sættes sammen med andre orddele til at danne ord som "lær-e", "lær-er", "lær-ing" eller "lær-e-bog". Orddelene "e", "er" og "ing" forekommer i rigtig mange ord. Disse dele kaldes tokens. Ord adskilles af mellemrum, som er et token i sig selv.     
-I stedet for at dele tekst op i ord, deler store sprogmodeller  tekst op i tokens. Fordelen er, at antallet af forskellige tokens, hvis de er valgt fornuftigt, er noget mindre end det samlede antal ord i sproget. Samtidig er de store nok til at indeholde  information om sprogets betydning. For eksempel forekommer tokenet "lær" ofte i ord relateret til læring, mens tokens som "er" eller "ing" ofte markerer en bestemt bøjning af et ord.
+Targetvektoren $\vec t$ for denne række er da
 
-:::
+$$
+\vec t = 
+\begin{pmatrix}
+\vdots
+\\
+0
+\\
+1
+\\
+0
+\\
+\vdots
+\end{pmatrix}
+$$
+hvor der står $0$ på alle de øvrige pladser.
 
+Vi har trænet to netværk, som for dette træningseksempel har givet følgende outputvektor (på alle andre koordinater i vektoren står der $0$)
+
+$$
+\textrm{Netværk 1:} \quad \vec z =
+\begin{pmatrix}
+\vdots
+\\
+P(\text{solen } |\text{ "jeg ser på" })
+\\
+P(\text{månen } |\text{ "jeg ser på" })
+\\
+P(\text{himlen } |\text{ "jeg ser på" })
+\\
+\vdots
+\end{pmatrix} =
+\begin{pmatrix}
+\vdots
+\\
+0.25
+\\
+0.61
+\\
+0.14
+\\
+\vdots
+\end{pmatrix}
+$$
+
+og
+
+$$
+\textrm{Netværk 2:} \quad \vec z =
+\begin{pmatrix}
+\vdots
+\\
+P(\text{solen } |\text{ "jeg ser på" })
+\\
+P(\text{månen } |\text{ "jeg ser på" })
+\\
+P(\text{himlen } |\text{ "jeg ser på" })
+\\
+\vdots
+\end{pmatrix} =
+\begin{pmatrix}
+\vdots
+\\
+0.32
+\\
+0.59
+\\
+0.29
+\\
+\vdots
+\end{pmatrix}
+$$
+
+* Vis, at alle koordinater i $\vec z$ kan fortolkes som sandsynligheder, og at summen af sandsynlighederne er 1.
+
+* Udregn bidraget til *cross-entropy* tabsfunktionen $CE(\vec z, \vec t)$ for begge netværk.
+
+* Hvilket netværk ville du på baggrund af dette ene træningseksempel vælge? Stemmer det overens med sandsynlighederne?
+
+::::
 
 {{< include ../space.qmd >}}
 
 
+## Aktivitet 3 -  Tekstgenerering {.aimat}
 
-## Aktivitet 4 - Træning af netværket  {.aimat}
+Læs afsnittet [Tekstgenerering](../../materialer/sprogmodeller/tekstgenerering.qmd#tekstgenerering). 
 
-Læs afsnittet [Træning af netværket](../../materialer/sprogmodeller/transformeren.qmd#træning-af-netværket). 
 
-Opgaver...???
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 4: Prædiktion af næste ord
+
+En opgave hvor et netværk er trænet på det lille tekstkorpus fra Simple-noten:
+
+::: {.llm_saetninger}
+\" En hund løber efter en kat. \
+Løber en hund efter en kat? \
+En kat løber ikke efter en hund. \
+Efter en kat løber en hund.\"
+:::
+
+og hvor elever så igen starter med \"En hund\" og skal danne en sætning ud fra det... Eller måske noget sjovere...!
+
+:::
 
 {{< include ../space.qmd >}}
 
-[$\leftarrow$ Forrige](sprogmodeller_del3.qmd){.prev}
-[Næste $\rightarrow$](sprogmodeller_eksamen.qmd){.next}
+[$\leftarrow$ Forrige](sprogmodeller_del2.qmd){.prev}
+[Næste $\rightarrow$](sprogmodeller_del4.qmd){.next}
+
