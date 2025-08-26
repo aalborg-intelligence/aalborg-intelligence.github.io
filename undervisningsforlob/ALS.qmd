@@ -24,6 +24,8 @@ Forløbet kræver kendskab til:
 + Koordinatsystemer.
 + Rette linjer.
 + Procentregning.
++ Punktplot
++ Middelværdi
 
 Der gives i opgaverne vejledning til at lave databehandling i Excel, men det er valgfrit, hvilket program man vil bruge. Vær også opmærksom på, at der kan være forskellige versioner af Excel, så vejledningen passer ikke nødvendigvis 1:1 med elevernes version.
 
@@ -52,58 +54,54 @@ Start med at se denne video, hvor Mads Rovsing Jochumsen fra Institut for Medici
 
 ## Binært kontrolsignal
 
-::: {.callout-note collapse="false" appearance="minimal"}
-
-### Opgave 1: Hjernestyring med binært kontrolsignal
-
-* Find eksempler på teknologi/applikationer man kan styre med hjernen ved at have et binært[^1]
-kontrolsignal, som for eksempel kobles sammen med en menu. Det behøver ikke
-at være begrænset til patienter med motorisk handicap.
+Vi forestiller os, at der optages hjernesignaler fra en person, der tænker på en bevægelse med foden, når han/hun ønsker at vælge et bestemt punkt i en menu. Til alle andre tidspunkter sidder personen og slapper af, og derfor optages kun den almindelige baggrundshjerneaktivitet. Der er altså her tale om et binært kontrolsignal[^1]: enten tænker personen på at bevæge foden, eller også tænker han/hun *ikke* på at bevæge foden. 
 
 [^1]: Det betyder, at der er to valgmuligheder. For eksempel ja/nej, tænd/sluk eller 0/1.
 
-* Estimer hvor lang tid det vil tage at stave ordet \"MUSIK\", hvis der benyttes en roterende menu
-med valgmuligheder i forhold til bogstaver, tegn, mellemrum og slet (se for eksempel figuren herunder). Brugeren har 2 sekunder til at vælge et punkt i menuen (med et binært kontrolsignal fra
-hjernen) før den går videre til næste punkt. Estimer tiden det vil tage, hvis:
-  - der ikke bliver lavet fejl.
-  - der bliver lavet 1 fejl.
-  - der bliver lavet 2 fejl.
-
-![](ALS_filer/menu.png)
-
-:::
-
-
-## Træning af en AI model
-
-Vi forestiller os, at der er blevet optaget hjernesignaler fra en person, der tænker på en bevægelse med foden, når han/hun ønsker at vælge et bestemt punkt i menuen. Til alle andre tidspunkter sidder personen og slapper af, og derfor optages kun den almindelige baggrundshjerneaktivitet. Der er altså her tale om et binært kontrolsignal: enten tænker personen på at bevæge foden, eller også tænker han/hun *ikke* på at bevæge foden. 
-
 Lad os sige, at Magnus (fra videoen) gerne vil skrive \"HEJ\". Det kan foregå sådan her:
 
-1) I 2 sekunder får Magnus vist den første del af menuen, som er markeret med lysblå her:
+1) I 2 sekunder får Magnus vist den første del af menuen, som er markeret med lyseblå her:
 
 ![](ALS_filer/HEJ_1.png){width=40% fig-align="center"}
 
-2) Magnus skal ikke bruge nogle af bogstaverne i denne del af menuen, så han slapper bare af. I de 2 sekunder der går, laver vi 1000 målinger af Magnus' hjerneaktivitet og udregner herefter de to features, som beskrevet i opgave 5. Det giver anledning til ét punkt, som vi indtegner i koordinatsystemet. Vi kan se, at punktet ligger på den side af linjen, hvor punkterne hørende til baggrundshjerneaktivitet ligger. Det fortolker vi, som at Magnus har sagt \"nej\" til bogstaverne i den første kategori og går derfor frem i menuen og viser Magnus denne del:
+2) Magnus skal ikke bruge nogle af bogstaverne i denne del af menuen, så han slapper bare af i de 2 sekunder. Det fortolker vi, som at Magnus har sagt \"nej\" til bogstaverne i den første kategori og går derfor frem i menuen og viser Magnus denne del:
 
 ![](ALS_filer/HEJ_2.png){width=40% fig-align="center"}
 
 
-3) Magnus vil gerne skrive ét af bogstaverne på denne menu -- nemlig \"H\". Derfor laver Magnus nu en imaginær bevægelse med sin fod i 2 sekunder[^2]. Imens laver vi de 1000 målinger af Magnus' hjerneaktivitet og beregner derefter de to features, som plottes ind i koordinatsystemet. Vi ser, at punkterne ligger på den side af linjen, hvor punkter hørende til den imaginære bevægelse ligger, hvilket betyder, at vi nu ved, at Magnus gerne vil skrive enten H, I, J, K, L, M eller N. Derfor får Magnus vist disse syv bogstaver (samt muligheden \"EXIT\") på skift i 2 sekunder. Vi starter med \"H\":
+3) Magnus vil gerne skrive ét af bogstaverne på denne menu -- nemlig \"H\". Derfor laver Magnus nu en imaginær bevægelse med sin fod i 2 sekunder[^2]. Derfor får Magnus vist disse syv bogstaver (samt muligheden \"EXIT\") på skift i 2 sekunder. Vi starter med \"H\":
 
 [^2]: Bemærk, at Magnus *ikke* bevæger foden, for det kan han ikke. Men han *tænker* på at bevæge foden. Det er derfor, at bevægelsen kaldes for *imaginær*.
 
 
 ![](ALS_filer/HEJ_3.png){width=30% fig-align="center"}
 
-4) Magnus vil gerne skrive \"H\", og derfor laver han igen den imaginære bevægelse med foden, som vi registerer på samme måde som tidligere. På et eller andet tilknyttet display skrives der nu \"H\".
+4) Magnus vil gerne skrive \"H\", og derfor laver han igen den imaginære bevægelse med foden. På et tilknyttet display skrives der nu \"H\".
 
 5) Vi går tilbage til punkt 1, og da Magnus skal skrive \"E\" som det næste, laver han med det samme den imaginære bevægelse med foden. Sådan fortsættes indtil Magnus har fået skrevet \"HEJ\".
 
 
-Hjernesignalerne er opsamlet med en samplingsfrekvens på 500 Hz, hvilket betyder, at der er 500 målepunkter per sekund (amplitude i $\mu$V). Hver optagelse er to sekunder lang, og dermed er der 1000 målepunkter (2 x samplingsfrekvens). 
 
-Data er blevet opdelt i to faner: I den første fane er der hjernesignaler for målinger af 15 imaginære bevægelser og 15 målinger af baggrundshjerneaktivitet, som skal bruges til at træne en AI model, så den kan se forskel på de to forskellige slags hjernesignaler. Disse data kaldes for **træningsdata**. I den anden fane er der henholdsvis 10 gentagelser af imaginære bevægelser og af baggrundshjerneaktivitet, som skal bruges til at teste, hvor god vores AI model er. Disse data kaldes for **testdata**. Data ligger i [excel-filen her](ALS_filer/data-ALS.xlsx).
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 1: Hjernestyring med binært kontrolsignal
+
+* Estimer hvor lang tid det vil tage at stave ordet \"MUSIK\" med det beskrevne system, hvis
+  - der ikke bliver lavet fejl.
+  - der bliver lavet 1 fejl.
+  - der bliver lavet 2 fejl.
+
+* Find på andre eksempler på teknologi/applikationer man kan styre med hjernen ved at have et binært kontrolsignal, som for eksempel kobles sammen med en menu. Det behøver ikke
+at være begrænset til patienter med motorisk handicap.
+
+:::
+
+
+## Træning af en AI model
+
+Mens Magnus enten bare slapper af eller tænker på at bevæge foden, optages hjernesignalerne med en samplingsfrekvens på 500 Hz, hvilket betyder, at der er 500 målepunkter per sekund. Hver optagelse er to sekunder lang, og dermed er der 1000 målepunkter. Udfordringen er nu, at vi vha. disse målinger skal kunne se forskel på, om Magnus bare slapper af, eller om han tænker på at bevæge foden.
+
+Data er i Excel blevet opdelt i to faner: I den første fane er der hjernesignaler for målinger af 15 gange med imaginær bevægelse og målinger for 15 gange med baggrundshjerneaktivitet, som skal bruges til at træne en AI model, så den kan se forskel på de to forskellige slags hjernesignaler. Disse data kaldes for **træningsdata**. I den anden fane er der henholdsvis 10 gentagelser af imaginære bevægelser og af baggrundshjerneaktivitet, som skal bruges til at teste, hvor god vores AI model er. Disse data kaldes for **testdata**. Data ligger i [Excel-filen her](ALS_filer/data-ALS.xlsx). 
 
 
 
@@ -111,14 +109,16 @@ Data er blevet opdelt i to faner: I den første fane er der hjernesignaler for m
 
 ### Opgave 2: Plot af træningsdata
 
-Hent excel-filen med data og gør følgende for de data, som ligger i fanen \"Data til træning\":
+Hent Excel-filen med data, gem den på egen computer og gør følgende for de data, som ligger i fanen \"Data til træning\":
 
-* Plot følgende gentagelser af den imaginære bevægelse: 1, 5, 10 og 15 (det vil sige 4 figurer i
-alt). 
+* Lav punktplot af data for følgende imaginære bevægelser: 1, 5, 10 og 15 (det vil sige 4 figurer i alt). 
 
 <details>
 <summary> Sådan gør du i Excel </summary>
 
+Hvis du vil løse opgaven i Excel, bør du åbne filen i selve Excel, ikke i en browser.
+
+  - Placer dig i et felt på linje 1006 (det vigtige er, at der er under alle data).
   - Vælg \"Indsæt\" $\rightarrow$ \"Diagrammer\". Her vælger du et punktdiagram (på den måde får du et tomt diagram).
   - Højreklik på det tomme diagram og tryk på \"Vælg data...\".
   - Markér nu data for den første gentagelse. Det kommer til at se sådan her ud:
@@ -132,9 +132,9 @@ alt).
   
 </details>
   
-* Plot på tilsvarende vis følgende gentagelser af baggrundshjerneaktivitet: 1, 5, 10 og 15 (det vil sige 4 figurer i alt).
+* Lav på tilsvarende vis punktplot for følgende gentagelser af baggrundshjerneaktivitet: 1, 5, 10 og 15 (det vil sige 4 figurer i alt).
   
-* Kan du umiddelbart se, om der er noget, som adskiller de imaginære bevægelser fra baggrundshjerneaktiviteterne?
+* Kan du umiddelbart ud fra de 8 punktplot se, om der er noget, som adskiller de imaginære bevægelser fra baggrundshjerneaktiviteterne?
 
 :::
 
@@ -144,7 +144,7 @@ I stedet for at se på hver af de 15 gentagelser enkeltvist, vil vi nu prøve at
 
 ### Opgave 3: Plot af gennemsnitsmålinger (træningsdata)
 
-* Udregn gennemsnittet af de 15 gentagelser for de imaginære bevægelser. 
+* Udregn gennemsnittet af de 15 gentagelser for de imaginære bevægelser for hvert måletidspunkt. Så i stedet for 15 gange 1000 målinger, får du 1000 værdier. 
 
 <details>
 <summary> Sådan gør du i Excel </summary>
@@ -154,15 +154,15 @@ I stedet for at se på hver af de 15 gentagelser enkeltvist, vil vi nu prøve at
   - Tag ved den lille kasse i nederste højre hjørne af celle `Q3` og træk den ned, så du får beregnet alle 1000 gennemsnitsværdier (du ender altså med en 2-sekundersoptagelse som er et gennemsnit af de 15 gentagelser).
 </details>
 
-* Plot nu gennemsnittet på tværs af de 15 imaginære bevægelser i jeres træningsdata.
+* Lav et punktplot for de beregnede gennemsnit fra de imaginære bevægelser i træningsdata.
 
-* Udregn og plot på tilsvarende vis gennemsnittet på tværs af de 15 målinger af baggrundshjerneaktivitet i jeres træningsdata.
+* Udregn og lav punktplot på tilsvarende vis for gennemsnittet på tværs af de 15 måleserier af baggrundshjerneaktivitet i træningsdata.
 
-* Kan du på de to plots af gennemsnittene se, om der er noget, som adskiller de imaginære bevægelser fra baggrundshjerneaktiviteterne? Beskriv mundtligt så præcist som muligt, hvad det er, der adskiller de to plots.
+* Kan du på de to punktplot af gennemsnittene se, om der er noget, som adskiller de imaginære bevægelser fra baggrundshjerneaktiviteterne? Beskriv mundtligt så præcist som muligt, hvad det er, der adskiller de to punktplot.
 
 ::: 
 
-For at kunne lave en simpel AI model, som kan kende forskel på en imaginær bevægelse og en baggrundshjerneaktivitet, er vi nødt til på en eller anden måde at \"koge\" de 1000 målinger (svarende til at vi har målt hjerneaktiviteten i 2 sekunder) ned til nogle ganske få målinger, som på en eller anden måde opsummerer den information, som de 1000 målinger giver og som samtidig kan bruges til at adskille en imaginær bevægelse fra en baggrundshjerneaktivitet. Denne opsummering af information kalder man for en **feature**. 
+For at kunne lave en simpel AI model, som kan kende forskel på en imaginær bevægelse og en baggrundshjerneaktivitet, er vi nødt til på en eller anden måde at \"koge\" de 1000 målinger ned til nogle ganske få værdier, som på en eller anden måde opsummerer den information, som de 1000 målinger giver og som samtidig kan bruges til at adskille en imaginær bevægelse fra en baggrundshjerneaktivitet. Denne opsummering af information kalder man for en **feature**. 
 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
@@ -177,9 +177,9 @@ At udvælge gode features kaldes for **feature engineering**. Det skal vi prøve
 
 Se på de to plots af gennemsnitsmålinger, som du lavede i opgave 3. Hvis du ser på gennemsnitsplottet for den imaginære bevægelse, ser det ud som, at kurven danner et \"V\": Først falder den og dernæst stiger den igen. Kurven for baggrundshjerneaktiviteten ser ud til bare at falde en smule (læg mærke til hvor forskellig de to skalaer på $y$-aksen er).
 
-En idé til to features som kan beskrive disse to opførelser er følgende:
+En idé til to features, som kan beskrive disse to opførelser, er følgende:
 
-Inddel data i tre lige store dele og udregn et gennemsnit af målingerne i hver del:
+Inddel data i tre (næsten) lige store dele og udregn et gennemsnit af målingerne i hver del:
 
 $$
 \textrm{gns}_{1:333}, \quad \textrm{gns}_{334:666}, \quad \textrm{gns}_{667:1000} 
@@ -198,7 +198,7 @@ Derfor vælger vi:
 * Feature 1: $\textrm{gns}_{1:333}-\textrm{gns}_{334:666}$
 * Feature 2: $\textrm{gns}_{334:666}-\textrm{gns}_{667:1000}$
 
-I næste opgave vil vi udregne disse to features -- men læg mærke til, at der ikke er noget facit i forhold til valget af features. Vi kunne have valgt alle mulige andre features, som kunne have været lige så gode eller bedre! 
+I næste opgave vil vi udregne disse to features -- men læg mærke til, at der ikke er noget facit i forhold til valget af features. Vi kunne have valgt alle mulige andre features, som måske kunne have været lige så gode eller bedre! 
 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
@@ -229,7 +229,7 @@ Vi skal nu på baggrund af disse to features se, om vi kan få adskilt målinger
 
 ### Opgave 6: Plot af features
 
-* Lav et plot med \"Feature 1\" ud af $x$-aksen og \"Feature 2\" op ad $y$-aksen for målinger, som stammer fra en baggrundshjerneaktivitet.
+* Lav et punktplot med \"Feature 1\" ud af $x$-aksen og \"Feature 2\" op ad $y$-aksen for de 15 måleserier, som stammer fra baggrundshjerneaktiviteter.
 
 <details>
 <summary> Sådan gør du i Excel </summary>
@@ -272,7 +272,9 @@ Vi skal nu på baggrund af disse to features se, om vi kan få adskilt målinger
 
 :::
 
-Det skulle gerne være sådan, at du har indtegnet (eller kan forestille dig) en linje, som kan adskille de to forskellige slags punkter fra hinanden. Denne linje kan bruges til at klassificere en ny måling, hvor vi ikke kender kategorien på forhånd. Det gøres ved at lave hjernemålingen i 2 sekunder (det vil sige i alt 1000 målepunkter), udregne feature 1 og 2 og dernæst plottet det tilhørende punkt ind i punktplottet. Hvis det nye punkter ligger på den side af linjen, hvor punkterne hørende til imaginær bevægelse ligger, så vil vi klassificere den nye måling som hørende til en imaginær bevægelse og omvendt, hvis det nye punkt ligger på den anden side af linjen. Det kan derfor bruges til at afgøre, om en person for eksempel har sagt ja eller nej til en kategori eller et bogstav i en menu.
+Det skulle gerne være sådan, at du har indtegnet (eller kan forestille dig) en linje, som kan adskille de to forskellige slags punkter fra hinanden. Denne linje kan bruges til at klassificere en ny måling, hvor vi ikke kender kategorien på forhånd. Det gøres ved at lave hjernemålingen i 2 sekunder (det vil sige i alt 1000 målepunkter), udregne feature 1 og 2 og dernæst tegne det tilhørende punkt ind i punktplottet. 
+
+Hvis det nye punkt ligger på den side af linjen, hvor punkterne for de imaginære bevægelser ligger, så vil vi klassificere den nye måleserie som en imaginær bevægelse og omvendt, hvis det nye punkt ligger på den anden side af linjen. Det kan derfor bruges til at afgøre, om en person for eksempel har sagt ja eller nej til en kategori eller et bogstav i en menu.
 
 Men hvor godt virker det mon? Der må jo nogle gange ske fejl, fordi alle målinger er behæftet med måleusikkerhed. Det er heller ikke sikkert, at der findes en rette linje, som *altid* kan skille de røde krydser fra de blå. Og selv hvis der er, er det ikke sikkert, at vi baseret på træningsdata har fundet den helt rigtige linje.
 
@@ -282,9 +284,11 @@ Det er her, at testdatasættet kommer ind i billedet. Det skal nemlig hjælpe os
 
 ### Opgave 7: Vurdering af modellen
 
-* Gør som i opgave 6, men plot nu features fra *testdatasættet*. Brug de samme farver som før, men lad punkterne være udfyldte, så du kan kende forskel på testdata og træningsdata.
+* Gør som i opgave 6, men lav nu punktplot med features fra *testdatasættet*. Brug de samme farver som før, men lad punkterne være udfyldte, så du kan kende forskel på testdata og træningsdata.
 
-Alle de punkter fra testdatasættet som ligger på den side af linjen, hvor punkter fra den imaginære bevægelse (fra træningsdatasættet) ligger, fortolker vi, som om de kommer fra en imaginær bevægelse. Tilsvarende med alle de punkter fra testdatasættet som ligger på den side af linjen, hvor punkterne fra baggrundshjerneaktivitet (fra træningsdatasættet) ligger, vil vi fortolke, som om de stammer fra baggrundshjerneaktivitet. Denne fortolkning kan enten være rigtig eller forkert, hvilket næste delopgave illustrerer.
+Nu ville det jo være bedst, hvis alle punkterne for imaginære bevægelser fra testdata lå på den side af linjen, hvor vi har punkterne fra imaginære bevægelser fra træningsdata, og tilsvarende for punkter for baggrundsaktivitet.
+
+Tæl nu, hvor mange punkter af hver type, der ligger på den rigtige side af linjen, og hvor mange, der ligger på den forkerte side. Vi bruger dermed linjen til at *klassificere* punktet som enten imaginær besvægelse eller baggrundsaktivitet, og sammenligner med den faktiske type af punktet.
 
 * Udfyld tabellen herunder -- denne tabel kaldes for en **confusion matrix**.
 
@@ -295,9 +299,11 @@ Alle de punkter fra testdatasættet som ligger på den side af linjen, hvor punk
 : {.bordered}
 
 
-Den andel af punkterne, som er blevet klassificeret korrekt, kaldes for  **klassifikationsnøjagtigheden** -- eller på engelsk *classification accuracy* (CA).
+Den andel (i procent) af punkterne, som er blevet klassificeret korrekt, kaldes for  **klassifikationsnøjagtigheden** -- eller på engelsk *classification accuracy* (CA).
 
 - Udregn på baggrund af din confusion matrix klassifikationsnøjagtigheden. 
+
+Hvis I er flere (grupper) i klassen, og måske har valgt lidt forskellige linjer, kan I få forskellig klassifikationsnøjagtighed, da den jo afhænger af valg af linje.
 
 :::
 
@@ -316,7 +322,7 @@ Den lodrette forskel fra punktet $P(x_1,y_1)$ ned til linjen med ligning $y= a \
 $$
 y_1 - (a \cdot x_1 + b)
 $$
-Hvis denne forskel er positiv ligger punktet over linjen om omvendt, hvis forskellen er negativ.
+Hvis denne forskel er positiv ligger punktet over linjen og omvendt, hvis forskellen er negativ.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
@@ -326,7 +332,7 @@ Hvis denne forskel er positiv ligger punktet over linjen om omvendt, hvis forske
 
 * For hvert punkt i dit punktplot skal du udregne den lodrette forskel fra punktet til din linje.
 
-* Lav nu en klassificering. 
+* Lav nu en klassificering vha. fortegnet på den beregnede forskel. 
 
 <details>
 <summary> Sådan gør du i Excel </summary>
