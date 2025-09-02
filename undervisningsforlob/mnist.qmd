@@ -1,0 +1,90 @@
+---
+title: "Kan vi genkende håndskrevne tal?"
+description-meta: "Hvordan får man en computer til at genkende håndskrevne tal? I dette forløb skal vi se på, hvordan man ud fra et billede af et håndskrevet tal kan lave en algortime, som kan genkende tallet."
+image: "mnist_filer/.png"
+categories:
+  - C-niveau
+  - Kort
+  - Informatik
+---
+
+::: {.callout-caution collapse="true" appearance="minimal"}
+### Forudsætninger og tidsforbrug
+Forløbet kræver kendskab til:
+
++ Koordinatsystemer.
+
+**Tidsforbrug:** Ca. 90 minutter.
+
+:::
+
+
+::: {.purpose}
+
+### Formål
+
+Nogle gange har man brug for, at håndskreven tekst kan digitaliseres. Det kan for eksempel være i en eksamenssituation, hvor din lærer og censor skriver din karakter på en liste, som efterfølgende skal tastes ind på en computer. Det ville være smart, hvis man kunne scanne listen eller tage et billede af den, hvorefter alle tal korrekt vil blive genkendt (så du ikke får en forkert karakter!). Dette forløb handler om, hvordan det kan gøres. 
+
+:::
+
+## RGB-farvemodellen
+
+Vi skal først se lidt på, hvordan billeder bliver repræsenteret i en computer. Prøv at finde et billede på din computer og zoom ind så meget som muligt. Du vil opdage, at billedet i virkeligheden består en masse små kvadrater, som hver især har én farve. Sådan et kvadrat kaldes for en **pixel**.
+
+Hver pixel består af tre **subpixels**. Den første subpixel kan lyse **R**ød, den anden **G**røn og den trejde **B**lå:
+
+![Subpixel.](mnist_filer/subpixel.png){#fig-subpixel width=10% fig-align="center"}
+
+Fordi alle farver bliver repræsenteret ved disse tre farver, taler man om en **RGB**-farvemodel.
+
+Vi kan skrue på lysstyrken i hver af de tre subpixels. Hvis der er skruet fuldt op for farven, er værdien 255, mens helt slukket svarer til værdien[^1] 0.
+
+[^1]: Tallene fra 0 til 255 kan i det binære talsystem repræsenteres ved 8 bits svarende til 1 byte.
+
+Vores øje opfatter ikke farven på de tre subpixels individuelt, men vil i stedet se en blandingsfarve. Hvis der for eksempel er skruet fuldt op på alle tre farver, så vil vores øje opfatte det som hvid. Det vil sige, at den pixel, som er vist i @fig-subpixel lyser hvid for os!
+
+Skruer vi helt op for rød og blå, men slukker for grøn fås en pink farve (som kaldes for magenta):
+
+![Farven magenta - repræsenteret ved rgb(255,0,255).](mnist_filer/magenta.png){#fig-magenta width=10% fig-align="center"}
+
+
+Farven skrives:
+
+::: {.centertext}
+rgb(255,0,255)
+:::
+
+Hvis der er skruet lige meget op for den røde, grønne og blå subpixel, fås forskellige nuancer af grå. Det er der vist eksempler på her:
+
+![Forskellige toner af grå.](mnist_filer/grays.png){#fig-grays width=30% fig-align="center"}
+
+
+Det betyder, at hvis man udelukkende er interesseret i gråskalaværdier, så kan vi nøjes med én værdi, som er den fælles værdi for rød, grøn og blå:
+
+
+![Forskellige toner af grå repræsenteret ved én værdi.](mnist_filer/grays2.png){#fig-grays width=30% fig-align="center"}
+
+## MNIST datasættet
+
+Der findes et stort datasæt -- det såkaldte [MNIST datasæt](https://www.kaggle.com/datasets/oddrationale/mnist-in-csv?resource=download), hvor man har samlet 60000 håndskrevne cifre. Datasættet består af 60000 rækker, som hver repræsenterer et håndskrevet ciffer mellem $0$ og $9$. Der er i alt 785 kolonner. Den første kolonne kaldet \"label\" angiver hvilket ciffer, der er tale om. Det er den værdi, som vi i sidste ende gerne vil kunne forudsige. En sådan værdi kaldes også for en **targetværdi**. De resterende 784 kolonner angiver gråskalaværdierne fra et $28 \times 28$ pixel billede af et håndskrevet ciffer.
+
+HER BILLEDE AF ET HÅNDSKREVET CIFFER.
+
+Vi skal nu prøve, om vi ud fra de 784 gråskalaværdier kan \"udvinde\" nogle få men sigende værdier, som kan bruges til at forudsige, hvilket ciffer der er på billedet.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 1: Hvor mange pixels og hvilke cifre?
+
+Brug APP'EN til at...
+
+:::
+
+
+
+
+
+
+Features:
+- tælle gns antal skift vertikalt og horisontalt
+- 
