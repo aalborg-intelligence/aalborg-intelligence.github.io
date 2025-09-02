@@ -259,7 +259,7 @@ window.Quarto = {
 <p>Vi vil her beskrive <strong>kunstige neuroner</strong>, som er en udvidelse af den klassiske perceptron, men med den tilføjelse at vi her indfører en såkaldt aktiveringsfunktion. De kunstige neuroner er de byggesten, som et kunstigt neuralt netværk består af, og kan dermed ses som en trædesten på vej mod at forstå generelle kunstige neurale netværk.</p>
 <section id="medlemsapp-til-good-food" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="medlemsapp-til-good-food">Medlemsapp til Good Food</h2>
-<p>Lad os tage udgangspunkt i et fiktivt eksempel. Vi forestiller os, at dagligvarekæden Good Food er ved at udvikle en ny medlemsapp, som kunderne kan hente og bruge til at aktivere forskellige tilbud, når de handler i Good Food. Når kunderne opretter en profil i app’en, oplyser de deres navn, fødselsdato og køn. Samtidig registrer app’en løbende, hvilke køb kunden foretager, hvilken ugedag de handler med videre. For at undgå at app’en bliver for uoverskuelig for kunderne, skal app’en kun vise et begrænset udvalg af tilbud, som kunden kan aktivere. For eksempel skal en midaldrende mand, som i den seneste måned har købt for 10000 kr. i app’en, have vist nogle andre tilbud end en teenagepige, som kun sjældent handler i Good Food.</p>
+<p>Lad os tage udgangspunkt i et fiktivt eksempel. Vi forestiller os, at dagligvarekæden Good Food er ved at udvikle en ny medlemsapp, som kunderne kan hente og bruge til at aktivere forskellige tilbud, når de handler i Good Food. Når kunderne opretter en profil i app’en, oplyser de deres navn, fødselsdato og køn. Samtidig registrer app’en løbende, hvilke køb kunden foretager, hvilken ugedag de handler med videre. For at undgå at app’en bliver for uoverskuelig for kunderne, skal app’en kun vise et begrænset udvalg af tilbud, som kunden skal aktivere for at få rabat. For eksempel skal en midaldrende mand, som i den seneste måned har købt for 10000 kr. i app’en, have vist nogle andre tilbud end en teenagepige, som kun sjældent handler i Good Food.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/dagligvarer.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
@@ -314,8 +314,8 @@ Figur&nbsp;2: Grafen for sigmoid-funktionen med forskrift <span class="math inli
 \sigma: \mathbb{R} \rightarrow (0,1).
 \]</span></p>
 <p>Da værdimængden er <span class="math inline">\((0,1)\)</span>, kan sigmoid-funktionen netop bruges til at modellere sandsynligheden for om tilbuddet aktiveres. Spørgsmålet er nu, hvordan man gør det.</p>
-<p>For det første skal sigmoid-funktionen selvfølgelig på en eller anden måde afhænge af vores inputværdier <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span>. Det kan man gøre på mange måder, men en ofte anvendt metode er, at "sende" en linearkombination<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> af inputværdierne ind i sigmoid-funktionen, så outputværdien <span class="math inline">\(o\)</span> beregnes sådan her:</p>
-<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;En linearkombination af <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> betyder bare <span class="math inline">\(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2\)</span>, hvor <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span> er konstanter.</p></div></div><p><span id="eq-output"><span class="math display">\[
+<p>Vi vil gerne have, at sigmoid-funktionen på en eller anden måde afhænger af vores inputværdier <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span>. Det kan man gøre på mange måder, men en ofte anvendt metode er, at "sende" en linearkombination<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> af inputværdierne ind i sigmoid-funktionen, så outputværdien <span class="math inline">\(o\)</span> beregnes sådan her:</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;En linearkombination af <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> betyder bare en vægtet sum: <span class="math inline">\(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2\)</span>, hvor <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span> er konstanter.</p></div></div><p><span id="eq-output"><span class="math display">\[
 o = \sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2).
 \tag{2}\]</span></span></p>
 <p>Her kaldes <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span> for vægte.</p>
@@ -338,17 +338,17 @@ t-o = t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2)
 \]</span> ønskes tæt på <span class="math inline">\(0\)</span>. Nu kan differensen både være positiv og negativ, og for at slippe for fortegn vælger vi i stedet at se på den kvadrerede differens: <span class="math display">\[
 \left ( t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2) \right )^2
 \]</span></p>
-<p>Der er ikke bare ét, men rigtig mange træningsdata og derfor vælger man, at summere (det vil sige, "at lægge sammen") alle disse kvadrerede differenser:</p>
+<p>Der er ikke bare data fra én, men fra rigtig mange kunder og derfor vælger man, at summere (det vil sige, "at lægge sammen") alle disse kvadrerede differenser:</p>
 <p><span class="math display">\[
 E = \frac{1}{2} \sum \left ( t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2) \right )^2,
 \]</span></p>
 <p>hvor der altså her summeres over alle træningsdata. Vi har lige ganget med <span class="math inline">\(\frac{1}{2}\)</span> foran. Det kan virke lidt mærkeligt, men du ser fidusen senere.</p>
-<p>Hvis vægtene <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span> er valgt, så sigmoid-funktionen er god til at prædiktere, om tilbuddet aktiveres eller ej, så vil ovenstående udtryk være tæt på <span class="math inline">\(0\)</span>. Det vil sige, at hvis <span class="math inline">\(E\)</span> er tæt på <span class="math inline">\(0\)</span>, så har vi valgte gode værdier af vægtene, mens hvis <span class="math inline">\(E\)</span> er langt væk fra <span class="math inline">\(0\)</span>, så har vi valgt mindre gode værdier af vægtene (i forhold til det overordnede ønske om at være i stand til at prædiktere om tilbuddet aktiveres eller ej). Denne funktion <span class="math inline">\(E\)</span>, som jo afhænger af vægtene <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span>, kaldes for en <strong>tabsfunktion</strong> (eller på engelsk <strong>error function</strong>).</p>
+<p>Hvis vægtene <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span> er valgt, så sigmoid-funktionen er god til at prædiktere, om tilbuddet aktiveres eller ej, så vil ovenstående udtryk være tæt på <span class="math inline">\(0\)</span>. Det vil sige, at hvis <span class="math inline">\(E\)</span> er tæt på <span class="math inline">\(0\)</span>, så har vi valgte gode værdier af vægtene, mens hvis <span class="math inline">\(E\)</span> er langt væk fra <span class="math inline">\(0\)</span>, så har vi valgt mindre gode værdier af vægtene (i forhold til det overordnede ønske om at være i stand til at prædiktere om tilbuddet aktiveres eller ej). Denne funktion <span class="math inline">\(E\)</span>, som jo afhænger af vægtene <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span>, kaldes for en <strong>tabsfunktion</strong> (eller på engelsk <strong>loss function</strong>).</p>
 <p>Nu er vægtene jo ikke givet på forhånd, men det er lige præcis tabsfunktionen, man bruger til at bestemme "gode" værdier af vægtene. Det gøres ved at bestemme de værdier af vægtene, som minimerer tabsfunktionen. Det er altså et optimeringsproblem, vi står overfor. Hvordan det løses, kan du læse om i næste afsnit.</p>
 </section>
 <section id="hvordan-bestemmes-vægtene" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="hvordan-bestemmes-vægtene">Hvordan bestemmes vægtene?</h2>
-<p>Inden vi går i gang med at finde ud af, hvordan vægtene bestemmes, så værdien af tabsfunktionen bliver så lille som mulig, vil vi lige gør det lidt mere generelt. For det første har man i virkelighedens verden sjældent kun to inputværdier <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span>. Vi siger derfor helt generelt, at vi har <span class="math inline">\(n\)</span> inputværdier <span class="math inline">\(x_1, x_2, \cdots, x_n\)</span>. Det betyder, at outputværdien <span class="math inline">\(o\)</span> nu beregnes sådan her:</p>
+<p>Inden vi går i gang med at finde ud af, hvordan vægtene bestemmes, så værdien af tabsfunktionen bliver så lille som mulig, vil vi gøre ovenstående lidt mere generelt. For det første har man i virkelighedens verden sjældent kun to inputværdier <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span>. Vi siger derfor helt generelt, at vi har <span class="math inline">\(n\)</span> inputværdier <span class="math inline">\(x_1, x_2, \cdots, x_n\)</span>. Det betyder, at outputværdien <span class="math inline">\(o\)</span> nu beregnes sådan her:</p>
 <p><span class="math display">\[
 o = \sigma (w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n).
 \]</span></p>
@@ -373,14 +373,14 @@ Figur&nbsp;4: Grafisk illustration af en generel kunstig neuron med <span class=
 &amp;\text{Træningseksempel M:} \quad (x_1^{(M)}, x_2^{(M)}, \dots, x_n^{(M)}, t^{(M)}) \\
 \end{aligned}
 \]</span></p>
-<p>og tabsfunktionen bliver da</p>
+<p>Tabsfunktionen bliver da</p>
 <p><span class="math display">\[
 \begin{aligned}
 E(w_0, w_1, &amp;\dots, w_n) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
 \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2.
 \end{aligned}
 \]</span></p>
-<p>Det er en <a href="../../materialer/funktioner_af_flere_variable/funktioner_af_flere_variable.html">funktion af flere variable</a>. I princippet kan man bestemme minimum ved at sætte alle de partielle afledede lig med <span class="math inline">\(0\)</span> og dernæst overbevise sig selv om, at man har fundet et minimum. Det vil give et ligningssystem med <span class="math inline">\(n+1\)</span> ligninger, som alle er koblet med hinanden. Det viser sig, at være en beregningsmæssig tung opgave at løse dette ligningssystem analytisk. Derfor bruger man i stedet for den metode, som kaldes for <a href="../../materialer/gradientnedstigning/gradientnedstigning.html">gradientnedstigning</a>. Gradientnedstigning går ud på først at vælge tilfældige værdier af vægtene <span class="math inline">\(w_0, w_1, \cdots, w_n\)</span>. Det viser sig så, at den negative gradient vil pege i den retning, hvor funktionsværdien falder mest. Derfor er idéen at bevæge sig et lille stykke i den negative gradients retning – fordi vi så kommer lidt tættere på minimum. Når vi har gjort det, beregner vi gradienten igen, og bevæger os igen et lille stykke i den negative gradients retning. Det forsætter vi med indtil værdien af tabsfunktionen ikke ændrer sig særlig meget, hvilket svarer til, at vi har fundet minimum.</p>
+<p>Tabsfunktionen er en <a href="../../materialer/funktioner_af_flere_variable/funktioner_af_flere_variable.html">funktion af flere variable</a>. I princippet kan man bestemme minimum ved at sætte alle de partielle afledede lig med <span class="math inline">\(0\)</span>, løse ligningerne og dernæst overbevise sig selv om, at man har fundet et minimum. Det vil give et ligningssystem med <span class="math inline">\(n+1\)</span> ligninger, som alle er koblet med hinanden. Det viser sig, at være en beregningsmæssig tung opgave at løse dette ligningssystem analytisk. Derfor bruger man i stedet for den metode, som kaldes for <a href="../../materialer/gradientnedstigning/gradientnedstigning.html">gradientnedstigning</a>. Gradientnedstigning går ud på først at vælge tilfældige værdier af vægtene <span class="math inline">\(w_0, w_1, \cdots, w_n\)</span>. Det viser sig så, at den negative gradient vil pege i den retning, hvor funktionsværdien falder mest. Derfor er idéen at bevæge sig et lille stykke i den negative gradients retning – fordi vi så kommer lidt tættere på minimum. Når vi har gjort det, beregner vi gradienten igen, og bevæger os igen et lille stykke i den negative gradients retning. Det forsætter vi med indtil værdien af tabsfunktionen ikke ændrer sig særlig meget, hvilket svarer til, at vi har fundet minimum.</p>
 <p>Når vi for alle vægtene bevæger os et lille stykke i den negative gradients retning, kan opdateringen af vægtene skrives sådan her:</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -586,7 +586,7 @@ Figur&nbsp;6: Datasættet fra <a href="#fig-alder_vs_forbrug2" class="quarto-xre
 </section>
 <section id="smartere-end-adaline" class="level2">
 <h2 class="anchored" data-anchor-id="smartere-end-adaline">Smartere end ADALINE?</h2>
-<p>Hvis du har læst noten om <a href="../../materialer/perceptron/perceptron.html">perceptroner</a> er du blevet præsenteteret for den klassiske perceptron. Her forklarede vi to forskellige måder at opdatere vægtene på: <strong>perceptron learning algoritmen</strong> og <strong>ADALINE</strong>. Perceptron learning algoritmen dur kun, hvis data er lineært separable. Det problem klarede ADALINE. Men faktisk er den kunstige neuron, som vi har præsenteret her, smartere end ADALINE. Hvis du vil blive klogere på hvorfor, kan du <a href="../../materialer/kunstige_neuroner/smartere_end_adaline.html">læse mere her</a>.</p>
+<p>Hvis du har læst noten om <a href="../../materialer/perceptron/perceptron.html">perceptroner</a> er du blevet præsenteteret for den klassiske perceptron. Her forklarede vi to forskellige måder at opdatere vægtene på: <strong>perceptron learning algoritmen</strong> og <strong>ADALINE</strong>. Perceptron learning algoritmen dur kun, hvis data er lineært separable. Det problem klarede ADALINE. Men faktisk er den kunstige neuron, som vi har præsenteret her, smartere end ADALINE. Hvis du vil blive klogere på hvorfor, kan du læse mere i noten <a href="../../materialer/kunstige_neuroner/smartere_end_adaline.html">Hvorfor er kunstige neuroner smartere end ADALINE?</a>.</p>
 </section>
 <section id="overblik" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="overblik">Overblik</h2>
@@ -711,7 +711,7 @@ o^{(m)} = \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}).
 <p>Ser vi på tabsfunktionen for ADALINE i (<a href="#eq-tab_ADALINE" class="quarto-xref">6</a>) og sammenligner den med tabsfunktionen for kunstig neuroner i (<a href="#eq-tabsfunktion_sigmoid" class="quarto-xref">7</a>), kan vi se, at i ADALINE bruges sigmoid-funktionen ikke som aktiveringsfunktion. I stedet bruges den funktion <span class="math inline">\(f\)</span>, som man kalder for <strong>identiteten</strong>. Den har forskrift <span class="math display">\[
 f(x)=x.
 \]</span></p>
-<p>Forskellen på ADALINE og kunstige neuroner er altså, at aktivieringsfunktionen i ADALINE er identiteten, mens den for kunstige neuroner er sigmoid-funktionen. Den helt store fordel ved det, kan du <a href="../../materialer/kunstige_neuroner/smartere_end_adaline.html">læse mere om her</a>.</p>
+<p>Forskellen på ADALINE og kunstige neuroner er altså, at aktivieringsfunktionen i ADALINE er identiteten, mens den for kunstige neuroner er sigmoid-funktionen. Den helt store fordel ved det, kan du læse mere om i noten <a href="../../materialer/kunstige_neuroner/smartere_end_adaline.html">Hvorfor er kunstige neuroner smartere end ADALINE?</a>.</p>
 </section>
 <section id="generelle-neurale-netværk" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="generelle-neurale-netværk">Generelle neurale netværk</h3>
@@ -808,7 +808,7 @@ Kort beskrivelse
 </thead>
 <tbody class="list">
 
-<tr data-index="0" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1756802447945" data-listing-reading-time-sort="2" data-listing-word-count-sort="301" data-listing-title-sort="Aktiveringsfunktioner" data-listing-filename-sort="aktiveringsfunktioner.qmd">
+<tr data-index="0" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1756804131003" data-listing-reading-time-sort="2" data-listing-word-count-sort="301" data-listing-title-sort="Aktiveringsfunktioner" data-listing-filename-sort="aktiveringsfunktioner.qmd">
 <td>
 <a href="../../undervisningsforlob/aktiveringsfunktioner.html" class="title listing-title">Aktiveringsfunktioner</a>
 </td>
@@ -818,7 +818,7 @@ Kort beskrivelse
 
 </tr>
 
-<tr data-index="1" data-categories="QS1uaXZlYXUlMkNCaW90ZWtub2xvZ2klMkNLb3J0" data-listing-file-modified-sort="1756802448742" data-listing-reading-time-sort="1" data-listing-word-count-sort="149" data-listing-title-sort="Screeningsprogrammer" data-listing-filename-sort="screeningsprogrammer.qmd">
+<tr data-index="1" data-categories="QS1uaXZlYXUlMkNCaW90ZWtub2xvZ2klMkNLb3J0" data-listing-file-modified-sort="1756804131794" data-listing-reading-time-sort="1" data-listing-word-count-sort="149" data-listing-title-sort="Screeningsprogrammer" data-listing-filename-sort="screeningsprogrammer.qmd">
 <td>
 <a href="../../undervisningsforlob/screeningsprogrammer.html" class="title listing-title">Screeningsprogrammer</a>
 </td>
@@ -828,7 +828,7 @@ Kort beskrivelse
 
 </tr>
 
-<tr data-index="2" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1756802448338" data-listing-reading-time-sort="3" data-listing-word-count-sort="576" data-listing-title-sort="Opklar et mord!" data-listing-filename-sort="opklar_et_mord.qmd">
+<tr data-index="2" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1756804131397" data-listing-reading-time-sort="3" data-listing-word-count-sort="576" data-listing-title-sort="Opklar et mord!" data-listing-filename-sort="opklar_et_mord.qmd">
 <td>
 <a href="../../undervisningsforlob/opklar_et_mord.html" class="title listing-title">Opklar et mord!</a>
 </td>
