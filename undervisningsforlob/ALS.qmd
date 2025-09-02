@@ -24,8 +24,8 @@ Forløbet kræver kendskab til:
 + Koordinatsystemer.
 + Rette linjer.
 + Procentregning.
-+ Punktplot
-+ Middelværdi
++ Punktplot.
++ Middelværdi.
 
 Der gives i opgaverne vejledning til at lave databehandling i Excel, men det er valgfrit, hvilket program man vil bruge. Vær også opmærksom på, at der kan være forskellige versioner af Excel, så vejledningen passer ikke nødvendigvis 1:1 med elevernes version.
 
@@ -54,7 +54,9 @@ Start med at se denne video, hvor Mads Rovsing Jochumsen fra Institut for Medici
 
 ## Binært kontrolsignal
 
-Vi forestiller os, at der optages hjernesignaler fra en person, der tænker på en bevægelse med foden, når han/hun ønsker at vælge et bestemt punkt i en menu. Til alle andre tidspunkter sidder personen og slapper af, og derfor optages kun den almindelige baggrundshjerneaktivitet. Der er altså her tale om et binært kontrolsignal[^1]: enten tænker personen på at bevæge foden, eller også tænker han/hun *ikke* på at bevæge foden. 
+Vi vil starte med at se på, hvordan man med en forholdsvis simpel menu kan hjælpe en ALS ramt person med at skrive et ord.
+
+Vi forestiller os, at der optages hjernesignaler fra en person, der tænker på en bevægelse med foden, når han/hun ønsker at vælge et bestemt punkt i en menu. Til alle andre tidspunkter sidder personen og slapper af, og derfor optages kun den almindelige baggrundshjerneaktivitet. Der er her tale om et såkaldt binært kontrolsignal[^1]: enten tænker personen på at bevæge foden, eller også tænker han/hun *ikke* på at bevæge foden. 
 
 [^1]: Det betyder, at der er to valgmuligheder. For eksempel ja/nej, tænd/sluk eller 0/1.
 
@@ -91,7 +93,7 @@ Lad os sige, at Magnus (fra videoen) gerne vil skrive \"HEJ\". Det kan foregå s
   - der bliver lavet 1 fejl.
   - der bliver lavet 2 fejl.
 
-* Find på andre eksempler på teknologi/applikationer man kan styre med hjernen ved at have et binært kontrolsignal, som for eksempel kobles sammen med en menu. Det behøver ikke
+* Find på andre eksempler på teknologier/applikationer man kan styre med hjernen ved at have et binært kontrolsignal, som for eksempel kobles sammen med en menu. Det behøver ikke
 at være begrænset til patienter med motorisk handicap.
 
 :::
@@ -99,9 +101,9 @@ at være begrænset til patienter med motorisk handicap.
 
 ## Træning af en AI model
 
-Mens Magnus enten bare slapper af eller tænker på at bevæge foden, optages hjernesignalerne med en samplingsfrekvens på 500 Hz, hvilket betyder, at der er 500 målepunkter per sekund. Hver optagelse er to sekunder lang, og dermed er der 1000 målepunkter. Udfordringen er nu, at vi vha. disse målinger skal kunne se forskel på, om Magnus bare slapper af, eller om han tænker på at bevæge foden.
+Mens Magnus enten bare slapper af eller tænker på at bevæge foden, optages hjernesignalerne med en samplingsfrekvens på 500 Hz, hvilket betyder, at der er 500 målepunkter per sekund. Hver optagelse er to sekunder lang, og dermed er der 1000 målepunkter. Udfordringen er nu, at vi ved hjælp af disse målinger skal kunne se forskel på, om Magnus bare slapper af, eller om han tænker på at bevæge foden.
 
-Data er i Excel blevet opdelt i to faner: I den første fane er der hjernesignaler for målinger af 15 gange med imaginær bevægelse og målinger for 15 gange med baggrundshjerneaktivitet, som skal bruges til at træne en AI model, så den kan se forskel på de to forskellige slags hjernesignaler. Disse data kaldes for **træningsdata**. I den anden fane er der henholdsvis 10 gentagelser af imaginære bevægelser og af baggrundshjerneaktivitet, som skal bruges til at teste, hvor god vores AI model er. Disse data kaldes for **testdata**. Data ligger i [Excel-filen her](ALS_filer/data-ALS.xlsx). 
+Vi har samlet data for sådanne målinger i en excel-fil, hvor data er blevet opdelt i to faner: I den første fane er der hjernesignaler for målinger af 15 gange med imaginær bevægelse og målinger for 15 gange med baggrundshjerneaktivitet, som skal bruges til at træne en AI model, så den kan se forskel på de to forskellige slags hjernesignaler. Disse data kaldes for **træningsdata**. I den anden fane er der henholdsvis 10 gentagelser af imaginære bevægelser og af baggrundshjerneaktivitet, som skal bruges til at teste, hvor god vores AI model er. Disse data kaldes for **testdata**. Data ligger i [Excel-filen her](ALS_filer/data-ALS.xlsx). 
 
 
 
@@ -109,7 +111,7 @@ Data er i Excel blevet opdelt i to faner: I den første fane er der hjernesignal
 
 ### Opgave 2: Plot af træningsdata
 
-Hent Excel-filen med data, gem den på egen computer og gør følgende for de data, som ligger i fanen \"Data til træning\":
+Hent Excel-filen med data, gem den på din egen computer og gør følgende for de data, som ligger i fanen \"Data til træning\":
 
 * Lav punktplot af data for følgende imaginære bevægelser: 1, 5, 10 og 15 (det vil sige 4 figurer i alt). 
 
@@ -274,9 +276,9 @@ Vi skal nu på baggrund af disse to features se, om vi kan få adskilt målinger
 
 Det skulle gerne være sådan, at du har indtegnet (eller kan forestille dig) en linje, som kan adskille de to forskellige slags punkter fra hinanden. Denne linje kan bruges til at klassificere en ny måling, hvor vi ikke kender kategorien på forhånd. Det gøres ved at lave hjernemålingen i 2 sekunder (det vil sige i alt 1000 målepunkter), udregne feature 1 og 2 og dernæst tegne det tilhørende punkt ind i punktplottet. 
 
-Hvis det nye punkt ligger på den side af linjen, hvor punkterne for de imaginære bevægelser ligger, så vil vi klassificere den nye måleserie som en imaginær bevægelse og omvendt, hvis det nye punkt ligger på den anden side af linjen. Det kan derfor bruges til at afgøre, om en person for eksempel har sagt ja eller nej til en kategori eller et bogstav i en menu.
+Hvis det nye punkt ligger på den side af linjen, hvor punkterne for de imaginære bevægelser ligger, så vil vi klassificere den nye måleserie som en imaginær bevægelse og omvendt, hvis det nye punkt ligger på den anden side af linjen. Det kan derfor bruges til at afgøre, om en person for eksempel har sagt ja eller nej til en kategori eller et bogstav i en menu, som vi så det i eksemplet med Magnus tidligere.
 
-Men hvor godt virker det mon? Der må jo nogle gange ske fejl, fordi alle målinger er behæftet med måleusikkerhed. Det er heller ikke sikkert, at der findes en rette linje, som *altid* kan skille de røde krydser fra de blå. Og selv hvis der er, er det ikke sikkert, at vi baseret på træningsdata har fundet den helt rigtige linje.
+Men hvor godt virker det mon? Der må jo nogle gange ske fejl, fordi alle målinger er behæftet med måleusikkerhed. Det er heller ikke sikkert, at der findes en rette linje, som *altid* kan skille de røde punkter fra de blå. Og selv hvis der er, er det ikke sikkert, at vi baseret på træningsdata har fundet den helt rigtige linje.
 
 Det er her, at testdatasættet kommer ind i billedet. Det skal nemlig hjælpe os med at vurdere, hvor god vores AI model er, når vi prøver at bruge den på ukendt data.
 
@@ -284,11 +286,11 @@ Det er her, at testdatasættet kommer ind i billedet. Det skal nemlig hjælpe os
 
 ### Opgave 7: Vurdering af modellen
 
-* Gør som i opgave 6, men lav nu punktplot med features fra *testdatasættet*. Brug de samme farver som før, men lad punkterne være udfyldte, så du kan kende forskel på testdata og træningsdata.
+* Gør som i opgave 6, men lav nu punktplot med features baseret på *testdatasættet* i fanen \"Data til test\". Brug de samme farver som før, men lad punkterne være udfyldte, så du kan kende forskel på testdata og træningsdata.
 
 Nu ville det jo være bedst, hvis alle punkterne for imaginære bevægelser fra testdata lå på den side af linjen, hvor vi har punkterne fra imaginære bevægelser fra træningsdata, og tilsvarende for punkter for baggrundsaktivitet.
 
-Tæl nu, hvor mange punkter af hver type, der ligger på den rigtige side af linjen, og hvor mange, der ligger på den forkerte side. Vi bruger dermed linjen til at *klassificere* punktet som enten imaginær besvægelse eller baggrundsaktivitet, og sammenligner med den faktiske type af punktet.
+Tæl, hvor mange punkter af hver type, der ligger på den rigtige side af linjen, og hvor mange, der ligger på den forkerte side. Vi bruger dermed linjen til at *klassificere* punktet som enten imaginær bevægelse eller baggrundsaktivitet, og sammenligner med den faktiske type af punktet.
 
 * Udfyld tabellen herunder -- denne tabel kaldes for en **confusion matrix**.
 
