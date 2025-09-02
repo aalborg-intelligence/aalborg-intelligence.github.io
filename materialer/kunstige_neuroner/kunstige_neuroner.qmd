@@ -25,7 +25,7 @@ Vi vil her beskrive **kunstige neuroner**, som er en udvidelse af den klassiske 
 
 ## Medlemsapp til Good Food
 
-Lad os tage udgangspunkt i et fiktivt eksempel. Vi forestiller os, at dagligvarekæden Good Food er ved at udvikle en ny medlemsapp, som kunderne kan hente og bruge til at aktivere forskellige tilbud, når de handler i Good Food. Når kunderne opretter en profil i app'en, oplyser de deres navn, fødselsdato og køn. Samtidig registrer app'en løbende, hvilke køb kunden foretager, hvilken ugedag de handler med videre. For at undgå at app'en bliver for uoverskuelig for kunderne, skal app'en kun vise et begrænset udvalg af tilbud, som kunden kan aktivere. For eksempel skal en midaldrende mand, som i den seneste måned har købt for 10000 kr. i app'en, have vist nogle andre tilbud end en teenagepige, som kun sjældent handler i Good Food.
+Lad os tage udgangspunkt i et fiktivt eksempel. Vi forestiller os, at dagligvarekæden Good Food er ved at udvikle en ny medlemsapp, som kunderne kan hente og bruge til at aktivere forskellige tilbud, når de handler i Good Food. Når kunderne opretter en profil i app'en, oplyser de deres navn, fødselsdato og køn. Samtidig registrer app'en løbende, hvilke køb kunden foretager, hvilken ugedag de handler med videre. For at undgå at app'en bliver for uoverskuelig for kunderne, skal app'en kun vise et begrænset udvalg af tilbud, som kunden skal aktivere for at få rabat. For eksempel skal en midaldrende mand, som i den seneste måned har købt for 10000 kr. i app'en, have vist nogle andre tilbud end en teenagepige, som kun sjældent handler i Good Food.
 
 ![](images/dagligvarer.jpg){width=75% fig-align='center'}
 
@@ -94,7 +94,9 @@ $$
 
 Da værdimængden er $(0,1)$, kan sigmoid-funktionen netop bruges til at modellere sandsynligheden for om tilbuddet aktiveres. Spørgsmålet er nu, hvordan man gør det.
 
-For det første skal sigmoid-funktionen selvfølgelig på en eller anden måde afhænge af vores inputværdier $x_1$ og $x_2$. Det kan man gøre på mange måder, men en ofte anvendt metode er, at \"sende\" en linearkombination[^4] af inputværdierne ind i sigmoid-funktionen, så outputværdien $o$ beregnes sådan her:
+Vi vil gerne have, at sigmoid-funktionen på en eller anden måde afhænger af vores inputværdier $x_1$ og $x_2$. Det kan man gøre på mange måder, men en ofte anvendt metode er, at \"sende\" en linearkombination[^4] af inputværdierne ind i sigmoid-funktionen, så outputværdien $o$ beregnes sådan her:
+
+[^4]: En linearkombination af $x_1$ og $x_2$ betyder bare en vægtet sum: $w_0 + w_1 \cdot x_1 + w_2 \cdot x_2$, hvor $w_0, w_1$ og $w_2$ er konstanter.
 
 $$
 o = \sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2).
@@ -121,7 +123,7 @@ $$
 $$
 
 
-Der er ikke bare ét, men rigtig mange træningsdata og derfor vælger man, at summere (det vil sige, \"at lægge sammen\") alle disse kvadrerede differenser:
+Der er ikke bare data fra én, men fra rigtig mange kunder og derfor vælger man, at summere (det vil sige, \"at lægge sammen\") alle disse kvadrerede differenser:
 
 $$
 E = \frac{1}{2} \sum \left ( t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2) \right )^2,
@@ -129,14 +131,14 @@ $$
 
 hvor der altså her summeres over alle træningsdata. Vi har lige ganget med $\frac{1}{2}$ foran. Det kan virke lidt mærkeligt, men du ser fidusen senere. 
 
-Hvis vægtene $w_0, w_1$ og $w_2$ er valgt, så sigmoid-funktionen er god til at prædiktere, om tilbuddet aktiveres eller ej, så vil ovenstående udtryk være tæt på $0$. Det vil sige, at hvis $E$ er tæt på $0$, så har vi valgte gode værdier af vægtene, mens hvis $E$ er langt væk fra $0$, så har vi valgt mindre gode værdier af vægtene (i forhold til det overordnede ønske om at være i stand til at prædiktere om tilbuddet aktiveres eller ej). Denne funktion $E$, som jo afhænger af vægtene $w_0, w_1$ og $w_2$, kaldes for en **tabsfunktion** (eller på engelsk **error function**). 
+Hvis vægtene $w_0, w_1$ og $w_2$ er valgt, så sigmoid-funktionen er god til at prædiktere, om tilbuddet aktiveres eller ej, så vil ovenstående udtryk være tæt på $0$. Det vil sige, at hvis $E$ er tæt på $0$, så har vi valgte gode værdier af vægtene, mens hvis $E$ er langt væk fra $0$, så har vi valgt mindre gode værdier af vægtene (i forhold til det overordnede ønske om at være i stand til at prædiktere om tilbuddet aktiveres eller ej). Denne funktion $E$, som jo afhænger af vægtene $w_0, w_1$ og $w_2$, kaldes for en **tabsfunktion** (eller på engelsk **loss function**). 
 
 Nu er vægtene jo ikke givet på forhånd, men det er lige præcis tabsfunktionen, man bruger til at bestemme \"gode\" værdier af vægtene. Det gøres ved at bestemme de værdier af vægtene, som minimerer tabsfunktionen. Det er altså et optimeringsproblem, vi står overfor. Hvordan det løses, kan du læse om i næste afsnit.
 
 
 ## Hvordan bestemmes vægtene?
 
-Inden vi går i gang med at finde ud af, hvordan vægtene bestemmes, så værdien af tabsfunktionen bliver så lille som mulig, vil vi lige gør det lidt mere generelt. For det første har man i virkelighedens verden sjældent kun to inputværdier $x_1$ og $x_2$. Vi siger derfor helt generelt, at vi har $n$ inputværdier $x_1, x_2, \cdots, x_n$. Det betyder, at outputværdien $o$ nu beregnes sådan her:
+Inden vi går i gang med at finde ud af, hvordan vægtene bestemmes, så værdien af tabsfunktionen bliver så lille som mulig, vil vi gøre ovenstående lidt mere generelt. For det første har man i virkelighedens verden sjældent kun to inputværdier $x_1$ og $x_2$. Vi siger derfor helt generelt, at vi har $n$ inputværdier $x_1, x_2, \cdots, x_n$. Det betyder, at outputværdien $o$ nu beregnes sådan her:
 
 $$
 o = \sigma (w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n).
@@ -158,7 +160,7 @@ $$
 \end{aligned}
 $$
 
-og tabsfunktionen bliver da
+Tabsfunktionen bliver da
 
 $$
 \begin{aligned}
@@ -167,7 +169,7 @@ E(w_0, w_1, &\dots, w_n) \\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
 \end{aligned}
 $$
 
-Det er en [funktion af flere variable](../funktioner_af_flere_variable/funktioner_af_flere_variable.qmd). I princippet kan man bestemme minimum ved at sætte alle de partielle afledede lig med $0$ og dernæst overbevise sig selv om, at man har fundet et minimum. Det vil give et ligningssystem med $n+1$ ligninger, som alle er koblet med hinanden. Det viser sig, at være en beregningsmæssig tung opgave at løse dette ligningssystem analytisk. Derfor bruger man i stedet for den metode, som kaldes for [gradientnedstigning](../gradientnedstigning/gradientnedstigning.qmd). Gradientnedstigning går ud på først at vælge tilfældige værdier af vægtene $w_0, w_1, \cdots, w_n$. Det viser sig så, at den negative gradient vil pege i den retning, hvor funktionsværdien falder mest. Derfor er idéen at bevæge sig et lille stykke i den negative gradients retning -- fordi vi så kommer lidt tættere på minimum. Når vi har gjort det, beregner vi gradienten igen, og bevæger os igen et lille stykke i den negative gradients retning. Det forsætter vi med indtil værdien af tabsfunktionen ikke ændrer sig særlig meget, hvilket svarer til, at vi har fundet minimum.  
+Tabsfunktionen er en [funktion af flere variable](../funktioner_af_flere_variable/funktioner_af_flere_variable.qmd). I princippet kan man bestemme minimum ved at sætte alle de partielle afledede lig med $0$, løse ligningerne og dernæst overbevise sig selv om, at man har fundet et minimum. Det vil give et ligningssystem med $n+1$ ligninger, som alle er koblet med hinanden. Det viser sig, at være en beregningsmæssig tung opgave at løse dette ligningssystem analytisk. Derfor bruger man i stedet for den metode, som kaldes for [gradientnedstigning](../gradientnedstigning/gradientnedstigning.qmd). Gradientnedstigning går ud på først at vælge tilfældige værdier af vægtene $w_0, w_1, \cdots, w_n$. Det viser sig så, at den negative gradient vil pege i den retning, hvor funktionsværdien falder mest. Derfor er idéen at bevæge sig et lille stykke i den negative gradients retning -- fordi vi så kommer lidt tættere på minimum. Når vi har gjort det, beregner vi gradienten igen, og bevæger os igen et lille stykke i den negative gradients retning. Det forsætter vi med indtil værdien af tabsfunktionen ikke ændrer sig særlig meget, hvilket svarer til, at vi har fundet minimum.  
 
 Når vi for alle vægtene bevæger os et lille stykke i den negative gradients retning, kan opdateringen af vægtene skrives sådan her:
 
@@ -450,7 +452,7 @@ Sigmoid-funktionen, som er anvendt her, kaldes for en **aktiveringsfunktion**. H
 
 ## Smartere end ADALINE?
 
-Hvis du har læst noten om [perceptroner](../perceptron/perceptron.qmd) er du blevet præsenteteret for den klassiske perceptron. Her forklarede vi to forskellige måder at opdatere vægtene på: **perceptron learning algoritmen** og **ADALINE**. Perceptron learning algoritmen dur kun, hvis data er lineært separable. Det problem klarede ADALINE. Men faktisk er den kunstige neuron, som vi har præsenteret her, smartere end ADALINE. Hvis du vil blive klogere på hvorfor, kan du [læse mere her](smartere_end_adaline.qmd).
+Hvis du har læst noten om [perceptroner](../perceptron/perceptron.qmd) er du blevet præsenteteret for den klassiske perceptron. Her forklarede vi to forskellige måder at opdatere vægtene på: **perceptron learning algoritmen** og **ADALINE**. Perceptron learning algoritmen dur kun, hvis data er lineært separable. Det problem klarede ADALINE. Men faktisk er den kunstige neuron, som vi har præsenteret her, smartere end ADALINE. Hvis du vil blive klogere på hvorfor, kan du læse mere i noten [Hvorfor er kunstige neuroner smartere end ADALINE?](smartere_end_adaline.qmd).
 
 ## Overblik
 
@@ -575,7 +577,7 @@ $$
 f(x)=x.
 $$
 
-Forskellen på ADALINE og kunstige neuroner er altså, at aktivieringsfunktionen i ADALINE er identiteten, mens den for kunstige neuroner er sigmoid-funktionen. Den helt store fordel ved det, kan du [læse mere om her](smartere_end_adaline.qmd).
+Forskellen på ADALINE og kunstige neuroner er altså, at aktivieringsfunktionen i ADALINE er identiteten, mens den for kunstige neuroner er sigmoid-funktionen. Den helt store fordel ved det, kan du læse mere om i noten [Hvorfor er kunstige neuroner smartere end ADALINE?](smartere_end_adaline.qmd).
 
 
 
@@ -622,6 +624,6 @@ I tabellen herunder finder du et samlet overblik over perceptron learning algori
 
 [^3]: Der er faktisk ingen, som siger, at vi skal skære ved $0.5$. Hvis man er i gang med at screene for en meget alvorlig sygdom, som det er vigtigt at opdage hurtigt, kunne der være god grund til at vælge en lavere værdi end $0.5$. 
 
-[^4]: En linearkombination af $x_1$ og $x_2$ betyder bare $w_0 + w_1 \cdot x_1 + w_2 \cdot x_2$, hvor $w_0, w_1$ og $w_2$ er konstanter.
+
 
 [^5]: Læg mærke til at det er en sandsynlighed, som vi forsøger at beregne. Man kan sagtens forestille sig to kunder på præcis samme alder og med præcis samme forbrug, hvor den ene vil aktivere tilbuddet, mens den anden ikke vil. Vi kan altså ikke forudsige nøjagtigt, hvad en given kunde vil gøre -- men vi kan måske være heldig at komme med et godt bud på sandsynligheden for, at en bestemt kunden vil aktivere tilbuddet. 
