@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="En øvelse i at opdatere vægtene i en kunstig neuron.">
+<meta name="description" content="I dette forløb arbejdes der med at opdatere vægtene i et neuralt netværk med ét skjult lag med brug af sigmoid aktiveringsfunktionen og gradientnedstigning med <em>cross-entropy</em> som tabsfunktion.">
 
-<title>Opdatering af vægte i en kunstig neuron – AI MAT - matematikken bag magien</title>
+<title>Opdatering af vægte i et simpelt neuralt netværk med ét skjult lag (med cross-entropy som tabsfunktion) – AI MAT - matematikken bag magien</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -24,24 +24,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<link href="../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-117cf6564b43f3aeecf187829027ef13.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-117cf6564b43f3aeecf187829027ef13.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -116,15 +116,15 @@ window.Quarto = {
 
 </head>
 
-<body class="floating nav-fixed quarto-light">
+<body class="floating nav-fixed slimcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo">
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -134,38 +134,38 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../undervisningsforlob/index.html"> 
+    <a class="nav-link" href="../../undervisningsforlob/index.html"> 
 <span class="menu-text">Undervisningsforløb</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../materialer/index.html"> 
+    <a class="nav-link" href="../../materialer/index.html"> 
 <span class="menu-text">Materialer</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../sro/index.html"> 
+    <a class="nav-link" href="../../sro/index.html"> 
 <span class="menu-text">SRO</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../srp/index.html"> 
+    <a class="nav-link" href="../../srp/index.html"> 
 <span class="menu-text">SRP</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../apps/index.html"> 
+    <a class="nav-link" href="../../apps/index.html"> 
 <span class="menu-text">Apps</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../referencer/index.html"> 
+    <a class="nav-link" href="../../referencer/index.html"> 
 <span class="menu-text">Referencer</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">Om os</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="https://www.youtube.com/@ai-mat"> 
-<span class="menu-text"><img src="../logo/YouTube/youtube-color-darkblue-icon.svg" style="height:2em"></span></a>
+<span class="menu-text"><img src="../../logo/YouTube/youtube-color-darkblue-icon.svg" style="height:2em"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -184,10 +184,9 @@ window.Quarto = {
   <ul>
   <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
   <li><a href="#et-meget-lille-datasæt" id="toc-et-meget-lille-datasæt" class="nav-link" data-scroll-target="#et-meget-lille-datasæt">Et meget lille datasæt</a></li>
-  <li><a href="#første-opdatering-af-vægtene" id="toc-første-opdatering-af-vægtene" class="nav-link" data-scroll-target="#første-opdatering-af-vægtene">Første opdatering af vægtene</a></li>
+  <li><a href="#plan" id="toc-plan" class="nav-link" data-scroll-target="#plan">Plan</a></li>
+  <li><a href="#opgaver" id="toc-opgaver" class="nav-link" data-scroll-target="#opgaver">Opgaver</a></li>
   <li><a href="#anden-opdatering-af-vægtene" id="toc-anden-opdatering-af-vægtene" class="nav-link" data-scroll-target="#anden-opdatering-af-vægtene">Anden opdatering af vægtene</a></li>
-  <li><a href="#app-til-simple-neurale-netværk" id="toc-app-til-simple-neurale-netværk" class="nav-link" data-scroll-target="#app-til-simple-neurale-netværk">App til simple neurale netværk</a></li>
-  <li><a href="#cross-entropy-som-tabsfunktion" id="toc-cross-entropy-som-tabsfunktion" class="nav-link" data-scroll-target="#cross-entropy-som-tabsfunktion">Cross-entropy som tabsfunktion</a></li>
   <li><a href="#løsninger-til-opgaver" id="toc-løsninger-til-opgaver" class="nav-link" data-scroll-target="#løsninger-til-opgaver">Løsninger til opgaver</a></li>
   </ul>
 </nav>
@@ -197,11 +196,11 @@ window.Quarto = {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Opdatering af vægte i en kunstig neuron</h1>
+<h1 class="title">Opdatering af vægte i et simpelt neuralt netværk med ét skjult lag (med <em>cross-entropy</em> som tabsfunktion)</h1>
   <div class="quarto-categories">
     <div class="quarto-category">A-niveau</div>
     <div class="quarto-category">Kort</div>
@@ -238,28 +237,35 @@ Forudsætninger og tidsforbrug
 <li>Simple neurale netværk.</li>
 <li>Sigmoid aktiveringsfunktion.</li>
 <li>Gradientnedstigning.</li>
+<li><em>Cross-entropy</em> tabsfunktion.</li>
 </ul>
-<p>Forudsætningerne kan for eksempel dækkes ved hjælp af <a href="../materialer/kunstige_neuroner/kunstige_neuroner.html" target="_blank">noten om kunstige neuroner</a>.</p>
+<p>Forudsætningerne kan med fordel dækkes ved hjælp af <a href="../../materialer/simple_neurale_net/simple_neurale_net.html" target="_blank">noten om simple neurale netværk</a>, da notationen derfra vil blive anvendt i dette forløb, samt <a href="../../materialer/tabsfunktioner/tabsfunktioner.html" target="_blank">noten om tabsfunktioner</a>.</p>
+<p>Dette forløb ligner <a href="../../undervisningsforlob/opdatering_af_vaegte/opdatering_af_vaegte_i_NN_med_2_skjulte_lag.html" target="_blank">forløbet om opdatering af vægte i neuralt netværk med to skjulte lag</a>, men er lidt sværere, da man desuden skal modificere nogle elementer i forhold til noten om simple neurale netværk.</p>
 <p><strong>Tidsforbrug:</strong> Ca. 90 minutter.</p>
 </div>
 </div>
 </div>
 <section id="formål" class="level3 purpose">
 <h3 class="anchored" data-anchor-id="formål">Formål</h3>
-<p>Formålet med dette forløb er gennem detaljerede beregninger at forstå, hvordan vægtene i et simpelt neuralt netværk opdateres med brug af sigmoid aktiveringsfunktionen og gradientnedstigning.</p>
+<p>Formålet med dette forløb er gennem detaljerede beregninger at forstå, hvordan vægtene i et neuralt netværk til klassifikation med ét skjult lag opdateres med brug af sigmoid aktiveringsfunktionen og gradientnedstigning med <em>cross-entropy</em> som tabsfunktion.</p>
 <p>Dette kan ses som et skridt på vejen til at forstå, hvordan vægtene opdateres i et generelt neuralt netværk.</p>
 </section>
-<section id="et-meget-lille-datasæt" class="level2">
+<section id="et-meget-lille-datasæt" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="et-meget-lille-datasæt">Et meget lille datasæt</h2>
 <p>I neurale netværk er der ofte rigtige mange inputvariable (features), rigtigt mange vægte og rigtig mange træningsdata.</p>
-<p>Vi vil se på følgende netværk:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../materialer/kunstige_neuroner/images/simplet_netvaerk1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
+<p>For bedre at forstå, hvor vægtene opdateres i et neuralt netværk, vil vi her se på et meget lille eksempel, så det manuelt er muligt at lave opdateringen af vægtene.</p>
+<p>Vi vil lave et netværk med 2 inputvariable (<span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span>), 1 neuron i det skjulte lag (<span class="math inline">\(y\)</span>) og 1 neuron i outputlaget (<span class="math inline">\(o\)</span>). Netværket er illustreret i <a href="#fig-simple_NN2" class="quarto-xref">figur&nbsp;1</a>.</p>
+<div id="fig-simple_NN2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-simple_NN2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/simple_NN2.png" class="img-fluid figure-img" style="width:75.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-simple_NN2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;1: Grafisk illustration af et neuralt netværk med 2 inputvariable og ét skjulte lag, som består af én neuron.
+</figcaption>
 </figure>
 </div>
-<p>For bedre at forstå, hvordan vægtene opdateres i et simpelt neuralt netværk, vil vi her se på et meget lille eksempel, så det manuelt er muligt at lave opdateringen af vægtene.</p>
-<p>Konkret vil vi se på to features <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> og en targetværdi <span class="math inline">\(t\)</span> ud fra følgende tre træningseksempler:</p>
+<p>Konkret vil vi se på to features <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> og en targetværdi <span class="math inline">\(t\)</span> ud fra følgende træningsdatasæt:</p>
 <table class="table-bordered table">
 <thead>
 <tr class="header">
@@ -270,57 +276,70 @@ Forudsætninger og tidsforbrug
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;">-1</td>
+<td style="text-align: center;">1</td>
 <td style="text-align: center;">2</td>
-<td style="text-align: center;">ja = 1</td>
+<td style="text-align: center;">0</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">nej = 0</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">1</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">1</td>
+<td style="text-align: center;">3</td>
 <td style="text-align: center;">7</td>
-<td style="text-align: center;">ja = 1</td>
+<td style="text-align: center;">0</td>
 </tr>
 </tbody>
 </table>
 <p>Vi vælger en learning rate på</p>
+<p><span class="math display">\[\eta = 0.1,\]</span></p>
+<p><em>sigmoid-funktionen</em> som aktiveringsfunktion</p>
+<p><span class="math display">\[\sigma(x)=\frac{1}{1+\mathrm{e}^{-x}}\]</span></p>
+<p>og <em>cross-entropy</em> som tabsfunktion <span class="math display">\[
+E =  - \sum_{m=1}^{M} \left( (t^{(m)} \cdot \ln(o^{(m)}) + (1-t^{(m)}) \cdot \ln(1-o^{(m)}) \right)
+\]</span> Endeligt vælger vi startvægtene fra inputlaget til det skjulte lag som</p>
 <p><span class="math display">\[
-\eta = 0.1,
+r_0=0.5 \textrm{ (bias)},\qquad r_1=0.5,\qquad r_2=0.5
 \]</span></p>
-<p><em>sigmoid-funktionen</em> som aktiveringsfunktion <span class="math display">\[\sigma(x)=\frac{1}{1+\mathrm{e}^{-x}}\]</span> og <em>squared error</em> som tabsfunktion <span class="math display">\[E(w_0, w_1, w_2) = \frac{1}{2} \sum_{m=1}^{3} \left (t^{(m)}-\sigma(w_0 + w_1 \cdot x_1^{(m)} + w_2 \cdot x_2^{(m)}) \right)^2\]</span> Endeligt vælger vi startvægtene</p>
-<p><span class="math display">\[w_0=0.1, \qquad w_1=0.1, \qquad w_2=0.1
+<p>og fra det skjulte lag til outputlaget som</p>
+<p><span class="math display">\[
+w_0=0.5 \textrm{ (bias)}, \qquad  w_1=0.5
 \]</span></p>
 </section>
-<section id="første-opdatering-af-vægtene" class="level2">
-<h2 class="anchored" data-anchor-id="første-opdatering-af-vægtene">Første opdatering af vægtene</h2>
-<p>Du skal nu gå gennem de enkelte beregninger, som skal til for at opdatere vægtene. Der er efterfølgende facit til hver del.</p>
+<section id="plan" class="level2">
+<h2 class="anchored" data-anchor-id="plan">Plan</h2>
+<p>Planen er nu følgende:</p>
+<ul>
+<li><p>Lav feedforward fra <span class="math inline">\(x\)</span> laget til <span class="math inline">\(y\)</span> laget.</p></li>
+<li><p>Lav feedforward fra <span class="math inline">\(y\)</span> laget til <span class="math inline">\(o\)</span> laget.</p></li>
+<li><p>Opskriv opdateringsregler for <span class="math inline">\(w\)</span>-vægtene.</p></li>
+<li><p>Opdatér <span class="math inline">\(w\)</span>-vægtene.</p></li>
+<li><p>Opskriv opdateringsregler for <span class="math inline">\(r\)</span>-vægtene.</p></li>
+<li><p>Opdatér <span class="math inline">\(r\)</span>-vægtene.</p></li>
+</ul>
+</section>
+<section id="opgaver" class="level2">
+<h2 class="anchored" data-anchor-id="opgaver">Opgaver</h2>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 1: Beregn værdien af tabsfunktionen
+Opgave 1: Feedforward fra <span class="math inline">\(x\)</span> til <span class="math inline">\(y\)</span> lag
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li><p>Udregn først</p>
-<p><span class="math display">\[s^{(1)} = w_0 + w_1 \cdot x_1^{(1)} + w_2 \cdot x_2^{(1)}\]</span></p>
-<p>for det første træningseksempel.</p></li>
-<li><p>Udregn så</p>
-<p><span class="math display">\[o^{(1)} = \sigma (s^{(1)})\]</span></p></li>
-<li><p>Udregn derefter</p>
-<p><span class="math display">\[\mathrm{e}^{(1)} = (t^{(1)} - o^{(1)})^2,\]</span></p>
-<p>hvilket giver det første træningseksempels bidrag til tabsfunktionen.</p></li>
-<li><p>Gentag for hver af de to øvrige træningseksempler.</p></li>
-<li><p>Læg de 3 beregnede værdier sammen og divider med 2, så</p>
-<p><span class="math display">\[E=\frac{1}{2} \cdot (\mathrm{e}^{(1)}+\mathrm{e}^{(2)}+\mathrm{e}^{(3)}).\]</span></p></li>
+<li><p>Udregn</p>
+<p><span class="math display">\[r_0 + r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)}\]</span></p>
+<p>for hver af de 3 træningseksempler.</p></li>
+<li><p>Udregn</p>
+<p><span class="math display">\[y^{(m)}=\sigma(r_0 + r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)})\]</span></p>
+<p>for hver af de 3 træningseksempler.</p></li>
 </ul>
 </div>
 </div>
@@ -331,16 +350,14 @@ Opgave 1: Beregn værdien af tabsfunktionen
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 2: Beregn de partielle afledede
+Opgave 2: Feedforward fra <span class="math inline">\(y\)</span> til <span class="math inline">\(o\)</span> lag
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Beregn <span class="math display">\[\frac{\partial E}{\partial w_0} = - \sum_{m=1}^{3} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot 1\]</span></li>
-<li>Beregn <span class="math display">\[\frac{\partial E}{\partial w_1} = - \sum_{m=1}^{3} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x_1^{(m)}\]</span></li>
-<li>Beregn <span class="math display">\[\frac{\partial E}{\partial w_2} = - \sum_{m=1}^{3} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x_2^{(m)}\]</span></li>
+<li>Udregn på tilsvarende vis <span class="math inline">\(o^{(m)}\)</span> for hver af de 3 træningseksempler.</li>
 </ul>
 </div>
 </div>
@@ -351,99 +368,137 @@ Opgave 2: Beregn de partielle afledede
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 3: Opdatér vægtene
+Opgave 3: Opskriv opdateringsregler for <span class="math inline">\(w\)</span>-vægtene
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Beregn de opdaterede vægte <span class="math display">\[
-\begin{aligned}
-w_0^{(\textrm{ny})} \leftarrow &amp; w_0 - \eta \cdot \frac{\partial E}{\partial w_0}   \\
-\\
-w_1^{(\textrm{ny})} \leftarrow &amp; w_1 - \eta \cdot \frac{\partial E}{\partial w_1}  \\
-\\
-w_2^{(\textrm{ny})} \leftarrow &amp; w_2 - \eta \cdot \frac{\partial E}{\partial w_2}
-\end{aligned}
-\]</span></p>
+<ul>
+<li><p>Opskriv opdateringsreglen for <span class="math inline">\(w_0\)</span> og <span class="math inline">\(w_1\)</span>. Husk, at</p>
+<ul>
+<li>sigmoid-funktionen har følgende egenskab: <span class="math inline">\(\sigma'(x)=\sigma(x) \cdot (1-\sigma(x))\)</span></li>
+<li>tabsfunktionen er <em>cross-entropy</em>.</li>
+</ul></li>
+</ul>
 </div>
 </div>
 </div>
-</section>
-<section id="anden-opdatering-af-vægtene" class="level2">
-<h2 class="anchored" data-anchor-id="anden-opdatering-af-vægtene">Anden opdatering af vægtene</h2>
-<p>Overvej, om du kan strømline dine beregninger, for eksempel i Excel eller i dit CAS værktøj, så det bliver hurtigere at opdatere vægtene en gang mere på samme måde.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 4: Opdater vægtene anden gang
+Opgave 4: Opdatér <span class="math inline">\(w\)</span>-vægtene
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Beregn tabsfunktionen.</li>
-<li>Beregn de opdaterede vægte.</li>
+<li><p>Udregn</p>
+<p><span class="math display">\[\delta_w^{(m)} = t^{(m)}-o^{(m)}\]</span></p></li>
+<li><p>Udregn</p>
+<p><span class="math display">\[\sum_{m=1}^{3} \delta_w^{(m)}\]</span></p></li>
+<li><p>Opdatér <span class="math inline">\(w_0\)</span>-vægten</p>
+<p><span class="math display">\[w_0^{ny} \leftarrow w_0 + \eta \cdot \sum_{m=1}^{3} \delta_w^{(m)}\]</span></p></li>
+<li><p>Udregn</p>
+<p><span class="math display">\[\sum_{m=1}^{3} \delta_w^{(m)} \cdot y^{(m)}\]</span></p></li>
+<li><p>Opdatér <span class="math inline">\(w_1\)</span>-vægten</p>
+<p><span class="math display">\[w_1^{ny} \leftarrow w_1 + \eta \cdot \sum_{m=1}^3 \delta_w^{(m)} \cdot y^{(m)}\]</span></p></li>
 </ul>
 </div>
 </div>
 </div>
-<p>Bemærk, at værdien af tabsfunktionen er blevet lidt mindre. Formålet er jo netop at minimere den gennem gradientnedstigning, så som regel bør værdien bliver mindre, hver gang vægtene opdateres.</p>
-</section>
-<section id="app-til-simple-neurale-netværk" class="level2">
-<h2 class="anchored" data-anchor-id="app-til-simple-neurale-netværk">App til simple neurale netværk</h2>
-<p>Med <a href="../apps/perceptron_app.html" target="_blank">perceptron app’en</a> kan du lave de samme beregninger bare automatisk.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 5: Afprøv perceptron app’en
+Opgave 5: Opskriv opdateringsregler for <span class="math inline">\(r\)</span>-vægtene
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Lav et Excelark med feature- og targetværdierne.</li>
-<li>Indlæs data fra Excelarket i perceptron app’en.</li>
-<li>Vælg de korrekte værdier i felterne på app’en. Herunder skal feature-skalering være slået fra.</li>
-<li>Se om app’en giver samme resultater for tabsfunktionen og vægtene, som du selv fik efter 1 iteration og efter 2 iterationer.</li>
+<li>Opskriv opdateringsreglen for <span class="math inline">\(r_0, r_1\)</span> og <span class="math inline">\(r_2\)</span>.</li>
 </ul>
 </div>
 </div>
 </div>
-</section>
-<section id="cross-entropy-som-tabsfunktion" class="level2">
-<h2 class="anchored" data-anchor-id="cross-entropy-som-tabsfunktion">Cross-entropy som tabsfunktion</h2>
-<p>Du kan læse om <em>cross-entropy</em> i <a href="../materialer/tabsfunktioner/tabsfunktioner.html#cross-entropy" target="_blank">noten om tabsfunktioner</a>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-(Ekstra) Opgave 6: Cross-entropy tabsfunktion
+Opgave 6: Opdatér <span class="math inline">\(r\)</span>-vægtene
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-7" class="callout-7-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Gentag opgave 1-5 men med <em>cross-entropy</em> som tabsfunktion i stedet for <em>squared error</em>.</li>
+<li>Lav udregninger tilsvarende dem i opgave 4 og opdatér af <span class="math inline">\(r\)</span>-vægtene.</li>
 </ul>
 </div>
 </div>
 </div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 7: Udregn værdien af tabsfunktionen
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Udregn værdien af tabsfunktionen inden opdateringen.</p></li>
+<li><p>Udregn værdien af tabsfunktionen efter opdateringen.</p></li>
+</ul>
+<p>Værdien skulle meget gerne være blevet mindre med opdateringen.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="anden-opdatering-af-vægtene" class="level2">
+<h2 class="anchored" data-anchor-id="anden-opdatering-af-vægtene">Anden opdatering af vægtene</h2>
+<p>Overvej, om du kan strømline dine beregninger, eventuelt i Excel eller i dit CAS værktøj, så det bliver hurtigere at opdatere vægtene en gang mere på samme måde.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 8: Opdater vægtene anden gang
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Beregn de opdaterede vægte.</p></li>
+<li><p>Beregn tabsfunktionen på de opdaterede vægte.</p></li>
+</ul>
+</div>
+</div>
+</div>
+<p>Bemærk, at værdien af tabsfunktionen er blevet lidt mindre. Formålet er jo netop at minimere den gennem gradientnedstigning, så som regel bør værdien bliver mindre, hver gang vægtene opdateres.</p>
+<!--## App til simple neurale netværk
+** mangler **
+Her mangler noget med at bruge appen (der ikke er klar endnu) til at optimere vægtene, og efterfølgende lave prediktion.
+-->
 </section>
 <section id="løsninger-til-opgaver" class="level2">
 <h2 class="anchored" data-anchor-id="løsninger-til-opgaver">Løsninger til opgaver</h2>
-<p><a href="../undervisningsforlob/Opdatering_af_vægte_i_en_kunstig_neuron_løsninger.html" target="_blank">Facitliste</a>.</p>
+<p><a href="../../undervisningsforlob/opdatering_af_vaegte/opdatering_af_vaegte_i_NN1_facit.html" target="_blank">Facitliste</a>.</p>
 
 
 </section>

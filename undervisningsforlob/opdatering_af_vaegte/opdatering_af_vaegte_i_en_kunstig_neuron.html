@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Lidt om afstande mellem punkter, ord, DNA-strenge og feature-skalering.">
+<meta name="description" content="I dette forløb arbejdes der med at opdatere vægtene i en kunstig neuron med brug af sigmoid aktiveringsfunktionen og gradientnedstigning.">
 
-<title>Afstande og feature-skalering – AI MAT - matematikken bag magien</title>
+<title>Opdatering af vægte i en kunstig neuron – AI MAT - matematikken bag magien</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,8 +32,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
 <link href="../../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -71,35 +69,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-main-listing-content .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-main-listing-content'] = new List('listing-main-listing-content', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-Y219BCPS45"></script>
 
 <script type="text/javascript">
@@ -209,7 +178,19 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indhold</h2>
+   
+  <ul>
+  <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
+  <li><a href="#et-meget-lille-datasæt" id="toc-et-meget-lille-datasæt" class="nav-link" data-scroll-target="#et-meget-lille-datasæt">Et meget lille datasæt</a></li>
+  <li><a href="#første-opdatering-af-vægtene" id="toc-første-opdatering-af-vægtene" class="nav-link" data-scroll-target="#første-opdatering-af-vægtene">Første opdatering af vægtene</a></li>
+  <li><a href="#anden-opdatering-af-vægtene" id="toc-anden-opdatering-af-vægtene" class="nav-link" data-scroll-target="#anden-opdatering-af-vægtene">Anden opdatering af vægtene</a></li>
+  <li><a href="#app-til-simple-neurale-netværk" id="toc-app-til-simple-neurale-netværk" class="nav-link" data-scroll-target="#app-til-simple-neurale-netværk">App til simple neurale netværk</a></li>
+  <li><a href="#cross-entropy-som-tabsfunktion" id="toc-cross-entropy-som-tabsfunktion" class="nav-link" data-scroll-target="#cross-entropy-som-tabsfunktion">Cross-entropy som tabsfunktion</a></li>
+  <li><a href="#løsninger-til-opgaver" id="toc-løsninger-til-opgaver" class="nav-link" data-scroll-target="#løsninger-til-opgaver">Løsninger til opgaver</a></li>
+  </ul>
+</nav>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
@@ -220,8 +201,12 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Afstande og feature-skalering</h1>
-</div>
+<h1 class="title">Opdatering af vægte i en kunstig neuron</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">A-niveau</div>
+    <div class="quarto-category">Kort</div>
+  </div>
+  </div>
 
 
 
@@ -237,121 +222,232 @@ window.Quarto = {
 </header>
 
 
-<p>Det er ikke altid helt klart, hvordan man skal bestemme afstanden mellem to datapunkter, hvis koordinaterne i hvert datapunkter beskriver vidt forskellige ting. Det er faktisk ikke en gang entydigt, hvad man overhovedet skal forstå ved en afstand – eller det som man i matematik vil kalde for en <em>metrik</em>. Her på siden behandler vi nogle af disse problemstillinger. Vi vil se nærmere på, hvilke problemer, der kan opstå, hvis man ikke tænker sig om – og hvad man kan gøre for at løse dem.</p>
-<p>Læs mere i noterne herunder.</p>
-<div id="listing-main-listing-content" class="quarto-listing quarto-listing-container-grid">
-<div class="list grid quarto-listing-cols-2">
-<div class="g-col-1" data-index="0" data-categories="QS1uaXZlYXU=" data-listing-file-modified-sort="1756800085338" data-listing-reading-time-sort="9" data-listing-word-count-sort="1773">
-<a href="../../materialer/afstande/feature_scaling.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../materialer/afstande/images/fig_min_max_skalering.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Feature-skalering
-</h5>
-<div class="card-text listing-description delink">
-Hvis de data, man arbejder med, måler vidt forskellige ting – måske endda på vidt forskellige skalaer – så vil man som oftest have brug for at "justere" data, så de er på…
+<div class="callout callout-style-simple callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
 </div>
-<div class="card-attribution card-text-small start">
-<div class="listing-author">
+<div class="callout-title-container flex-fill">
+Forudsætninger og tidsforbrug
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Kunstige neuroner.</li>
+<li>Sigmoid aktiveringsfunktion.</li>
+<li>Gradientnedstigning.</li>
+</ul>
+<p>Forudsætningerne kan for eksempel dækkes ved hjælp af <a href="../../materialer/kunstige_neuroner/kunstige_neuroner.html" target="_blank">noten om kunstige neuroner</a>.</p>
+<p><strong>Tidsforbrug:</strong> Ca. 90 minutter.</p>
+</div>
+</div>
+</div>
+<section id="formål" class="level3 purpose">
+<h3 class="anchored" data-anchor-id="formål">Formål</h3>
+<p>Formålet med dette forløb er gennem detaljerede beregninger at forstå, hvordan vægtene i en kunstig neuron opdateres med brug af sigmoid aktiveringsfunktionen og gradientnedstigning.</p>
+<p>Dette kan ses som et skridt på vejen til at forstå, hvordan vægtene opdateres i et generelt neuralt netværk.</p>
+</section>
+<section id="et-meget-lille-datasæt" class="level2">
+<h2 class="anchored" data-anchor-id="et-meget-lille-datasæt">Et meget lille datasæt</h2>
+<p>I neurale netværk er der ofte rigtige mange inputvariable (features), rigtigt mange vægte og rigtig mange træningsdata.</p>
+<p>Vi vil se på følgende netværk:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../materialer/kunstige_neuroner/images/simplet_netvaerk1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
+</figure>
+</div>
+<p>For bedre at forstå, hvordan vægtene opdateres i et simpelt neuralt netværk, vil vi her se på et meget lille eksempel, så det manuelt er muligt at lave opdateringen af vægtene.</p>
+<p>Konkret vil vi se på to features <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> og en targetværdi <span class="math inline">\(t\)</span> ud fra følgende tre træningseksempler:</p>
+<table class="table-bordered table">
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(x_1\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(x_2\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(t\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">-1</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">ja = 1</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">nej = 0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">ja = 1</td>
+</tr>
+</tbody>
+</table>
+<p>Vi vælger en learning rate på</p>
+<p><span class="math display">\[
+\eta = 0.1,
+\]</span></p>
+<p><em>sigmoid-funktionen</em> som aktiveringsfunktion <span class="math display">\[\sigma(x)=\frac{1}{1+\mathrm{e}^{-x}}\]</span> og <em>squared error</em> som tabsfunktion <span class="math display">\[E(w_0, w_1, w_2) = \frac{1}{2} \sum_{m=1}^{3} \left (t^{(m)}-\sigma(w_0 + w_1 \cdot x_1^{(m)} + w_2 \cdot x_2^{(m)}) \right)^2\]</span> Endeligt vælger vi startvægtene</p>
+<p><span class="math display">\[w_0=0.1, \qquad w_1=0.1, \qquad w_2=0.1
+\]</span></p>
+</section>
+<section id="første-opdatering-af-vægtene" class="level2">
+<h2 class="anchored" data-anchor-id="første-opdatering-af-vægtene">Første opdatering af vægtene</h2>
+<p>Du skal nu gå gennem de enkelte beregninger, som skal til for at opdatere vægtene. Der er efterfølgende facit til hver del.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 1: Beregn værdien af tabsfunktionen
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Udregn først</p>
+<p><span class="math display">\[s^{(1)} = w_0 + w_1 \cdot x_1^{(1)} + w_2 \cdot x_2^{(1)}\]</span></p>
+<p>for det første træningseksempel.</p></li>
+<li><p>Udregn så</p>
+<p><span class="math display">\[o^{(1)} = \sigma (s^{(1)})\]</span></p></li>
+<li><p>Udregn derefter</p>
+<p><span class="math display">\[\mathrm{e}^{(1)} = (t^{(1)} - o^{(1)})^2,\]</span></p>
+<p>hvilket giver det første træningseksempels bidrag til tabsfunktionen.</p></li>
+<li><p>Gentag for hver af de to øvrige træningseksempler.</p></li>
+<li><p>Læg de 3 beregnede værdier sammen og divider med 2, så</p>
+<p><span class="math display">\[E=\frac{1}{2} \cdot (\mathrm{e}^{(1)}+\mathrm{e}^{(2)}+\mathrm{e}^{(3)}).\]</span></p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 2: Beregn de partielle afledede
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Beregn <span class="math display">\[\frac{\partial E}{\partial w_0} = - \sum_{m=1}^{3} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot 1\]</span></li>
+<li>Beregn <span class="math display">\[\frac{\partial E}{\partial w_1} = - \sum_{m=1}^{3} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x_1^{(m)}\]</span></li>
+<li>Beregn <span class="math display">\[\frac{\partial E}{\partial w_2} = - \sum_{m=1}^{3} \left (t^{(m)}-o^{(m)} \right) \cdot o^{(m)}\cdot (1-o^{(m)}) \cdot x_2^{(m)}\]</span></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 3: Opdatér vægtene
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Beregn de opdaterede vægte <span class="math display">\[
+\begin{aligned}
+w_0^{(\textrm{ny})} \leftarrow &amp; w_0 - \eta \cdot \frac{\partial E}{\partial w_0}   \\
+\\
+w_1^{(\textrm{ny})} \leftarrow &amp; w_1 - \eta \cdot \frac{\partial E}{\partial w_1}  \\
+\\
+w_2^{(\textrm{ny})} \leftarrow &amp; w_2 - \eta \cdot \frac{\partial E}{\partial w_2}
+\end{aligned}
+\]</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="anden-opdatering-af-vægtene" class="level2">
+<h2 class="anchored" data-anchor-id="anden-opdatering-af-vægtene">Anden opdatering af vægtene</h2>
+<p>Overvej, om du kan strømline dine beregninger, for eksempel i Excel eller i dit CAS værktøj, så det bliver hurtigere at opdatere vægtene en gang mere på samme måde.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 4: Opdater vægtene anden gang
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Beregn tabsfunktionen.</li>
+<li>Beregn de opdaterede vægte.</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Bemærk, at værdien af tabsfunktionen er blevet lidt mindre. Formålet er jo netop at minimere den gennem gradientnedstigning, så som regel bør værdien bliver mindre, hver gang vægtene opdateres.</p>
+</section>
+<section id="app-til-simple-neurale-netværk" class="level2">
+<h2 class="anchored" data-anchor-id="app-til-simple-neurale-netværk">App til simple neurale netværk</h2>
+<p>Med <a href="https://apps01.math.aau.dk/ai/neuron/" target="_blank">kunstig neuron app’en</a> kan du lave de samme beregninger bare automatisk.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opgave 5: Afprøv kunstig neuron app’en
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Lav et Excelark med feature- og targetværdierne.</li>
+<li>Indlæs data fra Excelarket i app’en under fanen "Data".</li>
+<li>Vælg de korrekte værdier under fanen "Variable" og "Træning".</li>
+<li>Under fanen "Træning" skal fluebenet ved "Brug feature-skalering" <em>fjernes</em>. Herefter trykkes der på "Kør modellen".</li>
+<li>Se om app’en giver samme resultater for tabsfunktionen og vægtene, som du selv fik efter 1 iteration og efter 2 iterationer.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="cross-entropy-som-tabsfunktion" class="level2">
+<h2 class="anchored" data-anchor-id="cross-entropy-som-tabsfunktion">Cross-entropy som tabsfunktion</h2>
+<p>Du kan læse om <em>cross-entropy</em> i <a href="../../materialer/tabsfunktioner/tabsfunktioner.html#cross-entropy" target="_blank">noten om tabsfunktioner</a>.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+(Ekstra) Opgave 6: Cross-entropy tabsfunktion
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Gentag opgave 1-5 men med <em>cross-entropy</em> som tabsfunktion i stedet for <em>squared error</em>.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="løsninger-til-opgaver" class="level2">
+<h2 class="anchored" data-anchor-id="løsninger-til-opgaver">Løsninger til opgaver</h2>
+<p><a href="../../undervisningsforlob/opdatering_af_vaegte/opdatering_af_vaegte_i_en_kunstig_neuron_loesninger.html" target="_blank">Facitliste</a>.</p>
 
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="1" data-categories="Qy1uaXZlYXU=" data-listing-file-modified-sort="1756800085337" data-listing-reading-time-sort="3" data-listing-word-count-sort="546">
-<a href="../../materialer/afstande/AfstandeMellemPunkteriPlanen.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../materialer/afstande/images/manhattan_afstand.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Afstande mellem punkter i planen
-</h5>
-<div class="card-text listing-description delink">
-Du har ikke nødvendigvis tænkt over det før, men hvordan måler man egentlig afstanden mellem to punkter i planen? “Ja, man finder afstanden mellem dem”, vil du måske sige…
-</div>
-<div class="card-attribution card-text-small start">
-<div class="listing-author">
 
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="2" data-categories="QS1uaXZlYXU=" data-listing-file-modified-sort="1756800085337" data-listing-reading-time-sort="4" data-listing-word-count-sort="656">
-<a href="../../materialer/afstande/AfstandeMellemStrenge.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../materialer/afstande/images/hammingafstand.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Afstande mellem ord
-</h5>
-<div class="card-text listing-description delink">
-Et ord er en følge eller en <em>streng</em> af bogstaver eller tal. Det kunne for eksempel være <em>12DvbdN34fdg</em> eller <em>hnaikgoh</em> (nej, det behøver ikke give mening). Det kunne også være en …<sup></sup><em></em>
-</div>
-<div class="card-attribution card-text-small start">
-<div class="listing-author">
-
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="3" data-categories="QS1uaXZlYXU=" data-listing-file-modified-sort="1756800085337" data-listing-reading-time-sort="5" data-listing-word-count-sort="827">
-<a href="../../materialer/afstande/AfstandeMellemDNA.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../materialer/afstande/images/afstand_DNA.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Afstand mellem DNA- og RNA-strenge
-</h5>
-<div class="card-text listing-description delink">
-RNA er strenge med bogstaverne U (uracil), G (guanin), C (cytosin), A, (adenin). DNA har ikke U, men i stedet T (thymin) og DNA er dobbelt. Bogstaverne U, G, C, A og T…
-</div>
-<div class="card-attribution card-text-small start">
-<div class="listing-author">
-
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="4" data-categories="QS1uaXZlYXU=" data-listing-file-modified-sort="1756800085337" data-listing-reading-time-sort="6" data-listing-word-count-sort="1084">
-<a href="../../materialer/afstande/MetrikDetAbstrakteAfstandsBegreb.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../materialer/afstande/images/metrik.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Definition af en metrik – det abstrakte afstandsbegreb
-</h5>
-<div class="card-text listing-description delink">
-Man har ikke frit valg til at bestemme, hvad man vil bruge som afstandsmål. Hvis det skal give mening, skal man have en <em>metrik</em> – det betyder, at afstanden skal opfylde nogle…
-</div>
-<div class="card-attribution card-text-small start">
-<div class="listing-author">
-
-</div>
-</div>
-</div>
-</div></a>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div>
-
-
-
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
