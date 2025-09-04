@@ -24,7 +24,7 @@ Forløbet kræver kendskab til:
 
 ### Formål
 
-Vi skal i dette forløb snuse til, hvad kunstig intelligens er for noget. Vi tager udgangspunkt i lineære funktioner af både én og to variable. Dernæst skal vi se på, hvordan man finder toppunktet for en parabel med en såkaldt *iterativ* metode. Herefter skal vi se, hvordan denne metode kan bruges til at finde bedste rette linje. Endelig slutter vi af med at træne et simpelt kunstigt neuralt netværk i et eksempel, som handler om, at kunne forudsige om en person lever bæredygtigt eller ej baseret på svarene på en række spørgsmål.
+Vi skal i dette forløb snuse til, hvad kunstig intelligens er for noget. Vi tager udgangspunkt i lineære funktioner af både én og to variable. Dernæst skal vi se på, hvordan man finder toppunktet for en parabel med en såkaldt *iterativ* metode. Herefter skal vi se, hvordan denne metode kan bruges til at finde bedste rette linje. Endelig slutter vi af med at træne et simpelt kunstigt neuralt netværk i et eksempel, som handler om at kunne forudsige, om en person lever bæredygtigt eller ej baseret på svarene på en række spørgsmål.
 
 
 :::
@@ -88,13 +88,13 @@ Et kunstigt neuralt net forsøger at efterligne hjernen med et antal hjernecelle
 
 ![Illustration af et simpelt neuralt netværk.](lever_du_baeredygtigt/images/NN_simple.png){width=75% #fig-NN_simple}
 
-Idéen er, at man sender nogle inputvariable ind i nettet (vist som de mørkeblå cirkler til venstre i @fig-NN_simple), hvor der sker nogle beregninger (de grøne cirkler i midten). Herefter returnerer netværket én eller flere outputværdier (vist som de lyserøde cirkler til højre).
+Idéen er, at man sender nogle inputvariable ind i nettet (vist som de mørkeblå cirkler til venstre i @fig-NN_simple), hvor der sker nogle beregninger (de grønne cirkler i midten). Herefter returnerer netværket én eller flere outputværdier (vist som de lyserøde cirkler til højre).
 
 Det kan være meget mere kompliceret, end det vi har vist i @fig-NN_simple -- med mange flere knudepunkter i mange lag og med mange forbindelser.
 
 Uanset om input er tal, tekster, billeder, film eller andet, så bliver det altid oversat til et antal tal, så der kan sendes et tal til hvert knudepunkt i inputlaget.
 
-Alle forbindelserne har tilknyttet en parameter (også kaldet en vægt), som bliver ganget på tallet, inden det bliver sendt videre. Det samlede input til et knudepunkt er i det meste simple tilfælde summen af de sendte bidrag fra knudepunkterne i laget før[^1].
+Alle forbindelserne har tilknyttet en parameter (også kaldet en vægt), som bliver ganget på tallet, inden det bliver sendt videre. Det samlede input til et knudepunkt er i det mest simple tilfælde summen af de sendte bidrag fra knudepunkterne i laget før[^1].
 
 [^1]: Ofte anvender man også en såkaldt aktiveringsfunktion. Det kan du læse mere om [her](aktiveringsfunktioner.qmd).
 
@@ -102,11 +102,11 @@ Til sidst ender man med et tal i hvert knudepunkt i outputlaget, som så kan ove
 
 Bemærk, at alle vægtene knyttet til forbindelserne mellem knudepunkterne fastlægger den funktion, som beskriver hvordan output afhænger af input. 
 
-For at få et velfungerende neuralt net skal man altså forsøge at vælge disse vægte, så man får det ønskede output. Det gøres i en iterativ proces, hvor man gradvist træner det neurale net ved hjælp af store mængder træningsdata.
-
 Vi kan illustrere funktionen fra \"Taxa2\" med samme billede, hvor en konkret taxatur bliver oversat til to tal: afstand og tid. Det er vist i @fig-NN_taxa2.
 
 ![Et lille neuralt netværk som illustrerer den funktion, som kan udregne prisen for en taxatur med \"Taxa2\".](lever_du_baeredygtigt/images/NN_taxa2.png){width=75% #fig-NN_taxa2}
+
+For at få et velfungerende neuralt net skal man altså forsøge at vælge disse vægte, så man får det ønskede output. Det gøres i en iterativ proces, hvor man gradvist træner det neurale net ved hjælp af store mængder træningsdata.
 
 De næste to eksempler [Toppunkt for en parabel](lever_du_baeredygtigt.qmd#toppunkt-for-en-parabel) og [Bedste rette linje](lever_du_baeredygtigt.qmd#bedste-rette-linje) skal illustrere metoderne bag den iterative proces, der bruges til at træne neurale net. 
 
@@ -151,7 +151,7 @@ Vi starter med at gætte på en $x$-værdi på $4$:
 $$
 x_{start} = 4
 $$
-og skruer lidt op for $x$-værdien:
+Vi skruer lidt op for $x$-værdien:
 
 $$
 x_{ny} = 4.2
@@ -177,7 +177,7 @@ x_{ny} &= 4.4
 \end{aligned}
 $$
 
-og udregnet funktionsværdier
+og udregner funktionsværdier
 
 $$
 \begin{aligned}
@@ -242,20 +242,20 @@ $$
 r_1 = y_1 - (ax_1+b)
 $$
 
-Og på tilsvarende vis beregnes de andre afstande.
+På tilsvarende vis beregnes de andre afstande.
 
-I princippet vil vi gerne finde den rette linje, hvor alle disse afstande til sammen er så lille som mulig. Nu vil det bare være sådan, at hvis punktet ligger over linjen, så vil afstanden være positiv, mens hvis punkterne ligger under linjen, så vil afstanden være negativ. Man kan derfor ikke bare lægge alle afstandene sammen, fordi man kan ende på en sum, som er tæt på $0$ uden, at linje måske er speciel god. For at slippe af med de negative afstande sætter man alle afstande i anden og ser derfor på den kvadrerede sum:
+I princippet vil vi gerne finde den rette linje, hvor alle disse afstande til sammen er så lille som mulig. Nu vil det bare være sådan, at hvis punktet ligger over linjen, så vil afstanden være positiv, mens hvis punkterne ligger under linjen, så vil afstanden være negativ. Man kan derfor ikke bare lægge alle afstandene sammen, fordi man kan ende på en sum, som er tæt på $0$ uden, at linjen måske er specielt god. For at slippe af med de negative afstande sætter man alle afstande i anden og ser derfor på den kvadrerede sum:
 
 $$
 r_1^2 + r_2^2 + r_3^2 + r_4^2 + r_5^2 
 $$
 
-På @fig-bedste_rette_linje2 er denne kvadrat sum illustreret. Hvis man ellers har de samme enheder på akserne, vil hver af de fem kvadrerede afstande svare til arealet af de kvadrater, som er indtegnet på figuren. Den bedste rette linje er så den linje, som minimerer det samlede areal af kvadraterne. 
+På @fig-bedste_rette_linje2 er denne kvadratsum illustreret. Hvis man ellers har de samme enheder på akserne, vil hver af de fem kvadrerede afstande svare til arealet af de kvadrater, som er indtegnet på figuren. Den bedste rette linje er så den linje, som minimerer det samlede areal af kvadraterne. 
 
-![Fem punkter og en ret linje, hvor den kvadrerede afstand fra hvert punkt ned til linjen er illustreret, som arealet af et kvadrat.](lever_du_baeredygtigt/images/bedste_rette_linje_illustration2.png){width=75% #fig-bedste_rette_linje2}
+![Fem punkter og en ret linje, hvor den kvadrerede afstand fra hvert punkt ned til linjen er illustreret som arealet af et kvadrat.](lever_du_baeredygtigt/images/bedste_rette_linje_illustration2.png){width=75% #fig-bedste_rette_linje2}
 
 
-I app'en herunder kan du selv prøve at ændre på værdien af $a$ og $b$ og se, om du kan få kvadrat summen mindre.
+I app'en herunder kan du selv prøve at ændre på værdien af $a$ og $b$ og se, om du kan få kvadratsummen mindre.
 
 {{< include lever_du_baeredygtigt/_geogebra/_geogebra.qmd >}}
 
@@ -298,7 +298,7 @@ $$
 
 hvor vi har indsat $x$- og $y$-værdierne for måleserien.
 
-Og opskriver vi fejlen helt generelt fås
+Opskriver vi fejlen helt generelt, fås
 $$
 \begin{aligned}
 \textrm{fejl}(a,b) = &(y_1-(a \cdot x_1 +b))^2 + \\ 
@@ -320,8 +320,8 @@ Så kan fejlen hørende til linjen $y=2x+1$ udtrykkes som funktionsværdien
 $$
 \textrm{fejl}(2,1) = 25.
 $$
-Den bedste rette linje kan nu findes med en iterativ procedure som ved toppunktet. 
-Vi skal finde minimumspunktet for funktionen $\textrm{fejl}(a,b)$. Det vil sige, de to tal $a$ og $b$, som gør fejlen mindst mulig. Den bedste rette linje er så $y=ax+b$.
+ 
+Vi skal finde minimumspunktet for funktionen $\textrm{fejl}(a,b)$. Det vil sige, de to tal $a$ og $b$, som gør fejlen mindst mulig. Den bedste rette linje er så $y=ax+b$. Vi finder $a $ og $b$ med en iterativ procedure som i afsnittet [Toppunkt for en parabel](lever_du_baeredygtigt.qmd#toppunkt-for-en-parabel).
 
 Vi kan starte således:
 
@@ -366,7 +366,7 @@ På den måde kan man fortsætte.
 
 :::
 
-Det er vigtigt, at man skiftevist justerer $a$ og $b$. Man kan ikke gøre den ene færdig først. Man vil ofte se, at den ene måske falder i starten, men når den anden så er justeret nogle gange, så begynder den måske at stige igen.
+Det er vigtigt, at man skiftevis justerer $a$ og $b$. Man kan ikke gøre den ene færdig først. Man vil ofte se, at den ene måske falder i starten, men når den anden så er justeret nogle gange, så begynder den måske at stige igen.
 
 
 
@@ -399,15 +399,15 @@ Vi vil se, om metoden ovenfor også giver det.
 
 ## Træning af neurale net
 
-De to eksempler [Toppunkt for en parabel](lever_du_baeredygtigt.qmd#toppunkt-for-en-parabel) og [Bedste rette linje](lever_du_baeredygtigt.qmd#bedste-rette-linje) illustrerer, hvordan man med en iterativ proces kan finde minimumspunktet for en funktion. Overordnet set er det den samme metode, der bruges til at træne neurale net, blot har man mange flere variable, så det kræver meget regnekraft. 
+De to eksempler [Toppunkt for en parabel](lever_du_baeredygtigt.qmd#toppunkt-for-en-parabel) og [Bedste rette linje](lever_du_baeredygtigt.qmd#bedste-rette-linje) illustrerer, hvordan man med en iterativ proces kan bestemme parametrene $a$ og $b$ for den bedste rette linje. Overordnet set er det den samme metode, der bruges til at træne neurale net, blot har man mange flere parametre, så det kræver meget regnekraft. 
 
 I afsnittet [Neurale net](lever_du_baeredygtigt.qmd#neurale-net) så vi, at alle parametrene knyttet til forbindelserne mellem knudepunkterne i et neuralt net fastlægger den funktion, som beskriver hvordan output afhænger af input. For at få et velfungerende neuralt net skal man forsøge at vælge disse parametre, så man får det ønskede output. Det gøres på følgende måde:
 
-Man skal have adgang til store mængder træningsdata, hvor man kender både input og det ønskede output. Man definerer så en fejlfunktion, som kan beskrive afvigelsen mellem de faktiske output fra det neurale net og de kendte ønskede output. Parametrene skal så vælges så denne fejl bliver mindst mulig.
+Man skal have adgang til store mængder træningsdata, hvor man kender både input og det ønskede output. Man definerer så en fejlfunktion, som kan beskrive afvigelsen mellem de faktiske output fra det neurale net og de kendte ønskede output. Parametrene vælges, så denne fejl bliver mindst mulig.
 
-Vælg en startværdi for alle parametrene i det neurale net. Herefter justerer man gradvist på alle parametrene ved at forsøge at gøre fejlen lidt mindre ved hver justering. Det fortsætter man med indtil fejlen forhåbentlig stabiliserer sig.
+Vælg en startværdi for alle parametrene i det neurale net. Herefter justerer man gradvist på alle parametrene ved at forsøge at gøre fejlen lidt mindre ved hver justering. Det fortsætter man med, indtil fejlen forhåbentlig stabiliserer sig.
 
-Man har så også brug for noget testdata, som ikke er brugt til træningen af det neurale net, men hvor man også kender både input og det ønskede output. Det bruges til at afprøve, om det neurale net nu fungerer efter hensigten. 
+Til sidst har man brug for noget testdata, som ikke er brugt til træningen af det neurale net, men hvor man også kender både input og det ønskede output. Det bruges til at afprøve, om det neurale net fungerer efter hensigten ved at teste, om det neurale net kan forudsige output i testedata. 
 
 
 ## Anvendelse: Lever du bæredygtigt?
@@ -415,7 +415,7 @@ Man har så også brug for noget testdata, som ikke er brugt til træningen af d
 Vi vil lave en primitiv test baseret på kunstig intelligens og et neuralt netværk, men først skal vi have indsamlet noget træningsdata og testdata.
 
 ![](lever_du_baeredygtigt/images/baeredygtighed.jpg){style='float:right; margin-left: 5px;' width=40%}
-Udgangspunktet er et spørgeskema med nogle spørgsmål omhandlende aspekter af bæredygtighed hver med et antal svarmuligheder. Vi tildeler hver svarmulighed et pointtal, for eksempel mulighederne -2, -1, 0, 1 og 2.
+Udgangspunktet er et spørgeskema med fire spørgsmål omhandlende aspekter af bæredygtighed, hver med fem svarmuligheder. Vi tildeler hver svarmulighed et pointtal, for eksempel -2, -1, 0, 1 og 2.
 
 Et eksempel på et spørgsmål kunne være: 
 
@@ -471,14 +471,14 @@ viser hvordan værdien af fejl-funktionen[^2] har ændret sig efter hver justeri
 
 [^2]: Fejl-funktionen kaldes også ofte for en \"tabsfunktion\", \"error function\" eller \"loss function\". 
 
-Med disse parametre kan vi nu lave en funktion, der ud fra svarene på spørgsmålene giver outputtet af det neurale net i form af enten tallet $1$, hvis man lever bæredygtigt eller tallet $0$, hvis man ikke gør. 
+Med disse parametre kan vi nu lave en funktion, der ud fra svarene på spørgsmålene giver outputtet af det neurale net i form af enten tallet $1$, hvis man lever bæredygtigt, eller tallet $0$, hvis man ikke gør. 
 
 Funktionen kan illustreres således:
 
 
 ![En kunstig neuron.](../materialer/kunstige_neuroner/images/simplet_netvaerk2.png){width=75% #fig-neuron}
 
-Her lader vi $x_1$ være talværdien fra svaret på spørgsmål 1,  $x_2$ være talværdien fra svaret på spørgsmål 2 og så videre. Dem ganger man med vægtene fra det trænede neurale net og lægger sammen (og lægger vægten $w_0$ til):
+Her lader vi $x_1$ være talværdien fra svaret på spørgsmål 1,  $x_2$ være talværdien fra svaret på spørgsmål 2 og så videre. Dem ganger man med vægtene $W_1,\ldots,w_4$ fra det trænede neurale net og lægger sammen (og lægger vægten $w_0$ til):
 
 $$
 w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + w_3 \cdot x_3 + w_4 \cdot x_4 
@@ -489,7 +489,7 @@ Til sidst konverterer man dette tal ved at bruge sigmoid-funktionen
 $$
 \sigma(x) = \frac{1}{1 + \mathrm{e}^{-x}}
 $$
-som ender med at give et tal mellem $0$ og $1$. Dette tal kan man tænke på som sandsynligheden for, om man er bæredygtig eller ej. Derfor vil man se på, om resultatet er større end $0.5$ -- hvis det er det, vil man sige at output er $1$ (svarende til at være bæredygtig), mens man vil sætte output til $0$, hvis resultatet er mindre end $0.5$.
+som ender med at give et tal mellem $0$ og $1$. Dette tal kan man tænke på som sandsynligheden for, om man er bæredygtig eller ej. Derfor vil man se på, om resultatet er større end $0.5$. Hvis det er det, vil man sige at output er $1$ (svarende til at være bæredygtig), mens man vil sætte output til $0$, hvis resultatet er mindre end $0.5$.
 
 I eksemplet ovenfor er outputtet dermed givet ved en funktion af fire variable - fordi der var fire spørgsmål:
 
@@ -500,7 +500,7 @@ f(x_1, x_2, x_3, x_4) = \sigma (w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + w_3 \cdot 
 \end{aligned}
 $$
 
-For at afprøve om det trænede neurale net og dermed formlen virker, skal vi indsamle noget testdata på samme måde som træningsdata.
+For at afprøve om det trænede neurale net, og dermed formlen, virker, skal vi indsamle noget testdata på samme måde som træningsdata.
 
 Som testdata lader vi altså et antal personer som vi på forhånd ved enten prøver at leve bæredygtigt eller er ligeglade besvare spørgeskemaet. Hvis man prøver at leve bæredygtigt, tildeles man resultatet $1$, og ellers tildeles man resultatet $0$. 
 
@@ -545,7 +545,7 @@ Træn et neuralt net til at afgøre, om man lever bæredygtigt eller ej ud fra t
 
 ### Opgave 10: Testdata
 
-Brug output-funktionen til at undersøge om det neurale net giver de korrekte svar på testdata. 
+Brug output-funktionen til at undersøge, om det neurale net giver de korrekte svar på testdata. 
 
 :::
 
@@ -561,4 +561,4 @@ Få andre personer til at besvare spørgeskemaet og brug output-funktionen til a
 
 Ulempen ved at bruge kunstig intelligens er, at fortolkningen af, hvad der foregår ved træningen af et neuralt net, og dermed også fortolkningen af svarene, er mere uklar i forhold til en simpel beregning.
 
-Fordelen er, at man eventuelt kan løse problemer, der ikke kan løses på anden vis, og det gælder særligt, når man har adgang til store mængder træningsdata af en god kvalitet.
+Fordelen er, at man eventuelt kan løse problemer, der ikke kan løses på anden vis, blandt andet fordi man kan modellere mere komplicerede funktioner end de lineære. Det kræver dog, når man har adgang til store mængder træningsdata af en god kvalitet.
