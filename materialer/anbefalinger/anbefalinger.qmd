@@ -53,7 +53,7 @@ Vi kan estimere $P(F_J)$ ved *frekvensen* $\hat{P}(F_{J})$, som er andelen af br
 $$
 \begin{aligned}
 \hat{P}(F_J) &= \frac{\text{Antal brugere der så alle film i } J}{\text{Samlet antal film}}\\
-&= \frac{\text{Antal brugere der så alle film i } J}{p} 
+&= \frac{\text{Antal brugere der så alle film i } J}{n} 
 \end{aligned}
 $${#eq-TA}
 Populære filmkombinationer vil have høj frekvens.
@@ -340,9 +340,9 @@ Endelig er der problemet med valg af features. Der er i princippet mange forskel
 
 # Samarbejdsbaserede modeller for ratings
 
-Da vi lavede den multiple lineære regressionsmodel, kiggede vi udelukkende på data for en enkelt bruger. Det viser sig dog, at man kan få meget mere information ud af også at lære af, hvordan andre brugere har ratet filmene.   Derfor tager vi nu en samarbejdsbaseret tilgang, hvor vi tager udgangspunkt i et datasæt over alle brugeres ratings. Det kunne  se ud som vist i @tbl-ratings.  NA står for "not available" og betyder, at brugeren ikke har set filmen.
+Da vi lavede den multiple lineære regressionsmodel, kiggede vi udelukkende på data for en enkelt bruger. Det viser sig dog, at man kan få meget mere information ud af også at lære af, hvordan andre brugere har ratet filmene.   Derfor tager vi nu en samarbejdsbaseret tilgang, hvor vi tager udgangspunkt i et datasæt over alle brugeres ratings. Det kunne  se ud som vist i @tbl-rates.  NA står for "not available" og betyder, at brugeren ikke har set filmen.
  
-::: {#tbl-ratings}
+::: {#tbl-rates}
 |   | Film 1 | Film 2 | Film 3 |    
 |:---:|:---:|:---:|:---:|
 | Bruger 1 | 1 | NA | 4 | 
@@ -362,8 +362,8 @@ Eksempel på datasæt over brugeres ratings på en skala fra 1 til 5. NA angiver
 
 I den multiple lineære regressionsmodel valgte vi selv nogle features ved filmene. Det er dog ikke oplagt, hvilke features der er mest relevante.  Man kan selvfølgelig prøve sig frem, men der kan hurtigt blive mange muligheder. Det kan også være svært at  definere relevante features manuelt. Hvordan måler man fx hvor sjov/alvorlig en film er? Det vi vil gøre her, er, at lade algoritmen selv vælge de $M$ features. Vi betragter altså $x_1,\ldots,x_M$ som ukendte underliggende variable, også kaldet *latente variable*, som har indflydelse på, hvordan man vurderer filmen. Man kune forestille sig, at de måler diffust definerede egenskaber ved filmen, så som  "hvor sjov filmen er" eller "hvor gode skuespillerne er". Men vi det ikke, og vi behøver heller ikke at vide det, bare der kommer gode anbefalinger ud af det!
 
-Vi kalder $i$te brugers rating af $j$te film for $r_{ij}$. Vi vil nu gerne lave en algoritme, der kan prædiktere $i$te brugers rating af $j$te film. Det er altså den værdi, der står i $i$te række og $j$te søjle i @tbl-ratings. Hver film har sine egne værdier af de $M$ features. For $j$te film betegner vi dem  $x_{1j},\ldots,x_{Mj}$. Disse værdier kalder vi *featurevægtene*.  Den $i$te brugers præferencer for de $M$ features beskrives ved *præferencevægtene* $p_{i1},\ldots,p_{iM}$.   Vi modellerer så $i$te brugers rating af $j$te film  ved
-$$\hat{r}_{ij} = p_{i1}x_{1j} + p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj}$$
+Vi kalder $i$te brugers rating af $j$te film for $r_{ij}$. Vi vil nu gerne lave en algoritme, der kan prædiktere $i$te brugers rating af $j$te film. Det er altså den værdi, der står i $i$te række og $j$te søjle i @tbl-rates. Hver film har sine egne værdier af de $M$ features. For $j$te film betegner vi dem  $x_{1j},\ldots,x_{Mj}$. Disse værdier kalder vi *featurevægtene*.  Den $i$te brugers præferencer for de $M$ features beskrives ved *præferencevægtene* $p_{i1},\ldots,p_{iM}$.   Vi modellerer så $i$te brugers rating af $j$te film  ved
+$$\hat{r}_{ij} = p_{i1}x_{1j} + p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj}$${#eq-modelij}
 Det minder om den multiple lineære regressionsmodel (@eq-multipel). Forskellen er, at featurevægtene ikke er givet på forhånd, men er nogle, vi skal estimere ud fra data. Hvis datasættet indeholder $p$ film, og hver af dem har $M$ featurevægte, så vil der være $M\cdot p$ featurevægte i alt. Hvis der er $n$ brugere, og hver af dem har $M$ præferencevægte, vil der samlet være $n\cdot M$ præferencevægte. Det giver i alt $M\cdot p + n\cdot M$ vægte, som skal bestemmes. I et typisk datasæt vil både $n$ og $p$ være store, så der vil være et stort samlet antal vægte. Hvis $M$ vælges relativt lille, vil det samlede antal vægte dog være lille i forhold til det samlede antal kombinationer af film og bruger, som vil være $n\cdot p$. I stedet for at skulle estimere samtlige værdier $n\cdot p$ af $r_{ij}$, skal vi kun estimere $M\cdot p + n\cdot M$ vægte.
 
 
@@ -371,9 +371,9 @@ Det minder om den multiple lineære regressionsmodel (@eq-multipel). Forskellen 
 
 ### Matrixfaktorisering
 
-Algoritmen hedder matrixfaktorisering, fordi modellen (@eq-model) kan beskrives ved hjælp af matrixprodukter. Herunder forklarer vi, hvad det betyder. Det er ikke nødvendigt at forstå matricer og matrixprodukter for at forstå denne note, men mange algoritmer inden for kunstig intelligens kan beskrives nemmere ved hjælp af matricer. 
+Algoritmen hedder matrixfaktorisering, fordi modellen (@eq-modelij) kan beskrives ved hjælp af matrixprodukter. Herunder forklarer vi, hvad det betyder. Det er ikke nødvendigt at forstå matricer og matrixprodukter for at forstå denne note, men mange algoritmer inden for kunstig intelligens kan beskrives nemmere ved hjælp af matricer. 
 
-Hvis der er $n$ brugere og $p$ film, kan man sætte vores datasæt fra @tbl-ratings op i en $(n\times p)$-matrix, som egentlig bare er et skema med $n$ rækker og $p$ søjler af tal. Kalder vi denne matrix for $R$, skriver vi
+Hvis der er $n$ brugere og $p$ film, kan man sætte vores datasæt fra @tbl-rates op i en $(n\times p)$-matrix, som egentlig bare er et skema med $n$ rækker og $p$ søjler af tal. Kalder vi denne matrix for $R$, skriver vi
 $$R=\begin{bmatrix} r_{11} & r_{12} & \cdots & r_{1p}\\
  r_{21} & r_{22} & \cdots & r_{2p}\\
   \vdots & \vdots &  & \vdots\\
@@ -423,7 +423,7 @@ Her angiver $b$ den gennemsnitlige rating for alle film, når alle featurevægte
 
 ## Estimation af vægte
 
-For at kunne bruge modellen (@eq-model) skal vi have estimeret alle featurevægtene $x_{1j},x_{2j},\ldots,x_{Mj}$ og alle præferencevægtene $p_{i1},p_{i2},\ldots, p_{iM}$. Til det formål tager vi udgangspunkt i et datasæt på formen i @tbl-ratings, som streamingtjenesten har indsamlet.  
+For at kunne bruge modellen (@eq-model) skal vi have estimeret alle featurevægtene $x_{1j},x_{2j},\ldots,x_{Mj}$ og alle præferencevægtene $p_{i1},p_{i2},\ldots, p_{iM}$. Til det formål tager vi udgangspunkt i et datasæt på formen i @tbl-rates, som streamingtjenesten har indsamlet.  
 Vi ønsker at prædiktere $i$te brugers rating af $j$te film ved
 $$\hat{r}_{ij} = p_{i1}x_{1j} + p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj}$$
 Som i den multiple lineære regressionsmodel, sammenligner vi prædiktionen $\hat{r}_{ij}$ med de faktiske ratings $r_{ij}$. Hvis modellen er god, vil vi gerne have, at prædiktionsfejlen $r_{ij}-\hat{r}_{ij}$ er tæt på 0 svarende til, at den kvadrerede prædiktionsfejl $(r_{ij}-\hat{r}_{ij})^2$ er lille. Vi definerer en tabsfunktion 
