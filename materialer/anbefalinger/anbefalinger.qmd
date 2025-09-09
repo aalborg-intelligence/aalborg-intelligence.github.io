@@ -1,36 +1,40 @@
 ---
 title: "Anbefalet til dig"
+image: "images/film.jpg"
 description-meta: "Anbefalingssystemer"
 from: markdown+emoji
 ---
 
-Du kender det sikkert. Du har lige siddet og set en film på Netflix. Bagefter  får du vist et forslag til en ny film, du kan se. Du har da egentlig også altid gerne villet se Mission: Impossible, så du klikker på filmen. Efter den kommer der nye forslag. Før du får set dig om, har du siddet oppe hele natten og set film. Ikke så godt for dig, hvis du skal op og i skole næste dag, men godt for Netflix. 
+![](images/film.jpg){width=60% fig-align="center"}
+
+
+Du kender det sikkert. Du har lige siddet og set en film på Netflix. Bagefter  får du vist et forslag til en ny film, du kan se. Du har da egentlig også altid gerne villet se \"Mission: Impossible\", så du klikker på filmen. Efter den kommer der nye forslag. Før du får set dig om, har du siddet oppe hele natten og set film. Ikke så godt for dig, hvis du skal op og i skole næste dag, men godt for Netflix. 
 Men hvordan ved Netflix egentlig, hvilke film der kan friste dig til at se videre? Jo, de har indsamlet data om, hvilke film du og andre brugere har set. Ved hjælp af en algoritme, et såkaldt *anbefalingssystem*, prøver den at forudsige, hvilken film du vil kunne lide. 
 
 Du kender anbefalingssystemer fra mange andre onlinetjenester, for eksempel YouTubes videoforslag og Spotifys personlige playlister. Sociale medier som Facebook bruger blandt andet algoritmerne til at foreslå venner og grupper. Og så kender du dem nok også fra onlinehandel. Når du har købt en vare på nettet, foreslår forretningen dig som regel en liste med andre varer, du kunne være interesseret i. Anbefalingerne er en service, der gør det nemmere at finde relevant indhold, men samtidig har de til formål at maksimere den tid, du bruger på en onlinetjeneste, eller de penge, du bruger hos en onlinebutik. Fælles for alle de bagvedliggende virksomheder er, at anbefalingssystemerne er afgørende for deres succes. 
 
 I denne note skal vi se på, hvordan anbefalingssystemer er lavet. Der er to overordnede typer af anbefalingssystemer:
 
-1. *Indholdsbaseret*[^11] Her  laver man en brugerprofil for hver bruger, der beskriver, hvilken type indhold, brugeren godt kan lide. Algoritmen kan så foreslå mere indhold af samme type. Hvis du har set mange actionfilm på Netflix, vil din brugerprofil fortælle, at du er glad for actionfilm, og algoritmen vil så foreslå actionfilmen Mission: Impossible.
+1. *Indholdsbaseret:*[^11] Her  laver man en brugerprofil for hver bruger, der beskriver, hvilken type indhold, brugeren godt kan lide. Algoritmen kan så foreslå mere indhold af samme type. Hvis du har set mange actionfilm på Netflix, vil din brugerprofil fortælle, at du er glad for actionfilm, og algoritmen vil så foreslå actionfilmen \"Mission: Impossible\".
 
-[^11]: Engelsk: Content based filtering
+[^11]: Engelsk: Content based filtering.
 
-2. *Samarbejdsbaseret*[^12] Her sammenligner man brugerens adfærd med andre brugere. Algoritmen vil så anbefale noget, som  brugere med samme adfærd som dig kan lide. I Netflix-eksemplet kunne algoritmen for eksempel kigge på de brugere, der har set de samme film som dig.  Hvis mange af dem også har set Mission: Impossible, tyder det på, at brugere, der ligner dig, kan lide den, og du vil derfor  blive anbefalet at se den.  
+2. *Samarbejdsbaseret:*[^12] Her sammenligner man brugerens adfærd med andre brugere. Algoritmen vil så anbefale noget, som  brugere med samme adfærd som dig kan lide. I Netflix-eksemplet kunne algoritmen for eksempel kigge på de brugere, der har set de samme film som dig.  Hvis mange af dem også har set \"Mission: Impossible\", tyder det på, at brugere, der ligner dig, kan lide den, og du vil derfor  blive anbefalet at se den.  
 
-[^12]: Engelsk: Collaborative filtering
+[^12]: Engelsk: Collaborative filtering.
 
 Vi skal se simple eksempler på begge typer algoritmer. Der vil undervejs være links til mere avancerede algoritmer, der kan bruges til at forbedre dem.  Fordi anbefalingssystemerne er så vigtige for onlinevirksomhederne,  bruger de mange ressourcer på at forfine og videreudvikle algoritmerne, og de præcise algoritmer, der bruges i dag, er typisk en forretningshemmelighed!
 
 
 # En samarbejdsbaseret algoritme
 
-Vi ser først et eksempel på, hvordan man kan lave samarbejdsbaserede anbefalinger. Vi forestiller os derfor en  filmstreamingtjeneste, der gerne vil lave anbefalinger af typen "Andre har også set...". De vil altså gerne foreslå dig film, som brugere, der ligner dig, godt kan lide.
+Vi ser først et eksempel på, hvordan man kan lave samarbejdsbaserede anbefalinger. Vi forestiller os derfor en  filmstreamingtjeneste, der gerne vil lave anbefalinger af typen \"Andre har også set...\". De vil altså gerne foreslå dig film, som brugere, der ligner dig, godt kan lide.
 
 Lad os sige, at tjenesten har et katalog bestående af $p$ film. For hver bruger registrerer hjemmesiden, hvilke film brugeren har set. 
 Hvis tjenesten har $n$ kunder, så indsamler den et datasæt som illustreret i @tbl-data. Hver række svarer til en bruger, og hver søjle svarer til en film. Et 1-tal betyder, at brugeren har set filmen, og et 0 angiver, at brugeren ikke har set filmen.
 
 ::: {#tbl-data}
-|   Brugernummer | Blinkende lygter | Olsen-banden | Hævnen    
+|   Brugernummer | \"Blinkende lygter\" | \"Olsen-banden\" | \"Hævnen\"    
 |:---:|:---:|:---:|:---:|
 | 1 | 1 | 0 | 0 | 
 | 2 | 1 | 0| 1 |  
@@ -44,7 +48,7 @@ Eksempel på et datasæt med $p=3$ film og $n=4$ brugere. Hver række svarer til
 ## Hyppige filmkombinationer 
 
 Som det første vil vi gerne finde ud af, hvilke film  der typisk bliver set af den samme bruger. Lad os kalde filmene i tjenestens katalog for $f_1,\ldots,f_p$. Vi kigger så på en delmængde $J\subseteq \{f_1,\ldots,f_p \}$ af
-filmene. Lad $F_J$ angive hændelsen at en bruger har set alle filmene i $J$. Sandsynligheden for, at brugeren har set alle film i $J$, er givet ved:
+filmene. Lad $F_J$ angive hændelsen, at en bruger har set alle filmene i $J$. Sandsynligheden for, at brugeren har set alle film i $J$, er givet ved:
 $$
 P(F_J)= P(\text{ En bruger har set alle film i } J)
 $$
@@ -59,9 +63,9 @@ $${#eq-TA}
 Populære filmkombinationer vil have høj frekvens.
 
 
-### Eksempel 1
+:::{#exm-eks1}
 
-En streamingtjeneste viser filmene Titanic og Mission: Impossible. Hvis tjenesten har 1000 brugere, hvoraf 411 har set Titanic, 358 har set Mission: Impossible og 198 har set både Titanic og Mission: Impossible, så er
+En streamingtjeneste viser filmene \"Titanic\" og \"Mission: Impossible\". Hvis tjenesten har 1000 brugere, hvoraf 411 har set \"Titanic\", 358 har set \"Mission: Impossible\" og 198 har set både \"Titanic\" og \"Mission: Impossible\", så er
 $$
 \begin{aligned}
 &\hat{P}(F_{\{\text{Titanic}\}}) = \frac{411}{1000}=0.411\\
@@ -70,6 +74,8 @@ $$
 \end{aligned} 
 $$
 Titanic var altså den mest populære af de to film, idet  $41.1\%$ af brugerne havde set den, mens kun $35.5\%$ havde set Mission:Impossible.
+
+:::
 
 ## Andre har også set...
 
@@ -141,16 +147,19 @@ Terningeksemplet viser et eksempel, hvor $P(A)\neq P(A\mid B)$, altså hvor sand
 
 
 
-### Eksempel 2
-Vi ser igen på filmtjenesten fra Eksempel 1. En bruger har lige set Titanic, og filmtjenesten vil nu gerne anbefale en ny film. Vi ser derfor på sandsynligheden for, at en bruger, der har set Titanic, også har set  Mission: Impossible. Vi finder
+:::{#exm-eks2}
+
+Vi ser igen på filmtjenesten fra @exm-eks1. En bruger har lige set \"Titanic\", og filmtjenesten vil nu gerne anbefale en ny film. Vi ser derfor på sandsynligheden for, at en bruger, der har set \"Titanic\", også har set  \"Mission: Impossible\". Vi finder
 $$\hat{P}(F_{\text{Mission: Impossible}} \mid F_{\text{ Titanic }} ) = \frac{198}{411} \approx 0.482$$
-Det er altså cirka 48,2\% af de brugere, der har set Titanic, der også har set Mission: Impossible. Hvis der er 145 brugere, der både har set Titanic og Jurassic Park, så er
+Det er altså cirka 48,2\% af de brugere, der har set \"Titanic\", der også har set \"Mission: Impossible\". Hvis der er 145 brugere, der både har set \"Titanic\" og \"Jurassic Park\", så er
 $$\hat{P}(F_{\text{ Jurassic Park}} \mid F_{\text{ Titanic }}) = \frac{145}{411} \approx 0.353 $$
-Folk, der har set Titanic, er således mere tilbøjelige til at se  Mission: Impossible end Jurassic Park.  Mission: Impossible  vil derfor være den bedste anbefaling.
+Folk, der har set \"Titanic\", er således mere tilbøjelige til at se  \"Mission: Impossible\" end \"Jurassic Park\".  \"Mission: Impossible\"  vil derfor være den bedste anbefaling.
+
+:::
 
 ## Begrænsninger ved algoritmen
 
-Vi har beskrevet en simpel og klassisk måde at lave anbefalinger på, og er særligt relevant for onlineforretninger, der vil lave forslag af typen "Andre har også købt". Selv for en lille virksomhed er det nemt at indsamle det relevante data og bruge algoritmen til at lave nye forslag.
+Vi har beskrevet en simpel og klassisk måde at lave anbefalinger på, og er særligt relevant for onlineforretninger, der vil lave forslag af typen \"Andre har også købt\". Selv for en lille virksomhed er det nemt at indsamle det relevante data og bruge algoritmen til at lave nye forslag.
 
 Der er dog også forskellige begrænsninger ved tilgangen ovenfor. Måske er der ingen brugere, der har set præcis de samme film som dig. I så fald har vi ikke nogen at sammenligne med. At man har set en film betyder jo  heller ikke nødvendigvis, at man kunne lide den.
 
@@ -158,25 +167,36 @@ Moderne internetvirksomheder har mulighed for at indsamle meget mere data, som k
 
 - Filmene: For eksempel genre, sprog, instruktør, skuespillere, antal Oscars.
 
-- Brugeren: Ofte angiver man enkelte peronoplysninger, så som emailadresse og sprog, når man opretter en profil, men mange har ikke lyst til direkte at afgive for mange oplysninger om sig selv. I stedet prøver tjenesten at opnå disse oplysninger inddirekte, ved at indsamle data om brugerens adfærd på deres hjemmeside.
+- Brugeren: Ofte angiver man enkelte peronoplysninger, så som emailadresse og sprog, når man opretter en profil, men mange har ikke lyst til direkte at afgive for mange oplysninger om sig selv. I stedet prøver tjenesten at opnå disse oplysninger indirekte, ved at indsamle data om brugerens adfærd på deres hjemmeside.
 
 - Brugerens adfærd: Hvilke film har brugeren set, blev filmen set til ende, hvilken rating fik den efterfølgende, på hvilken tid af dagen blev filmen set og fra hvilket device, og hvilke film har brugeren ellers søgt på.
 
 For at tage alle disse oplysninger i betragtning, får man brug for meget mere komplicerede algoritmer.
 
-### Opgaver
+::: {.callout-note collapse="false" appearance="minimal"}
 
-1. En online elektronikbutik har 1.000.000 kunder. Heraf har 235.476 købt en computer,  423.517 har købt en mus og 114.237 købt et tastatur, 23.127 har hørt både computer og mus, mens 51.633 har hørt både computer og tastatur. 
+### Opgave 1: Online elektronikbutik
+
+En online elektronikbutik har 1.000.000 kunder. Heraf har 235.476 købt en computer,  423.517 har købt en mus og 114.237 købt et tastatur, 23.127 har kørt både computer og mus, mens 51.633 har kørt både computer og tastatur. 
 
 - Beregn frekvensen af $F_{\{\text{computer}\}}$, $F_{\{\text{mus}\}}$, $F_{\{\text{tastatur}\}}$, $F_{\{\text{computer,mus}\}}$ og $F_{\{\text{computer, tastatur}\}}$. Hvilken vare var mest populær? 
 
 - Beregn $\hat{P}( F_{\text{mus}} \mid F_{\text{computer}})$ og $\hat{P}(F_{\text{tastatur}} \mid F_{\text{computer}} )$. Hvilken vare ville du anbefale til en bruger, der lige har købt en computer? 
 
-2. Se på datasættet i @tbl-data. 
+:::
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 2: Film
+
+Se på datasættet i @tbl-data. 
 
 - Beregn frekvenserne af $F_{\{\text{Blinkende Lygter}\}}$, $F_{\{\text{Olsen-banden}\}}$ og $F_{\{\text{Blinkende Lygter, Olsen-banden}\}}$.
 
-- Beregn $\hat{P}(F_{\text{Olsen-banden}}\mid F_{\text{Blinkende lygter}} )$ og $\hat{P}( F_{\text{Hævnen}}\mid F_{\text{Blinkende lygter}})$. Hvilken film ville du foreslå en bruger, der lige har set Blinkende lygter? 
+- Beregn $\hat{P}(F_{\text{Olsen-banden}}\mid F_{\text{Blinkende lygter}} )$ og $\hat{P}( F_{\text{Hævnen}}\mid F_{\text{Blinkende lygter}})$. Hvilken film ville du foreslå en bruger, der lige har set \"Blinkende lygter\"? 
+
+:::
 
 # En indholdsbaseret algoritme
 
@@ -203,7 +223,7 @@ Vi ser, at når $x_1$ vokser med 1 enhed, så vokser ratingen med $p_1$ (hvis al
 
 Fortegnet for $p_2$ afslører, om brugeren vurderer action positivt eller negativt. Hvis $p_2$ er positiv, stiger ratingen, jo mere action der er i filmen. Jo større $p_2$ er, desto mere begejsret er brugeren for action. Hvis $p_2$ er negativ, falder ratingen, jo mere action der er i filmen. Tilsvarende fortæller $p_1$ noget om, hvor glad brugeren er for kærlighedsfilm. Vi kan derfor fortolke $p_1$ og $p_2$ som mål for brugerens præferencer.
 
-Modellen (@eq-multipel2) har mange ligheder med den lineære regressionsmodel, blot er der to variable $x_1$ og $x_2$ i stedet for en enkelt $x$-variabel.  Den kaldes derfor for den *multiple lineære regressionsmodel*. Der indgår tre konstanter, nemlig $b$, $p_1$ og $p_2$, som vi kalder for *vægte*.[^22] Disse vægte er specifikke for den enkelte bruger. Der skal altså laves en multipel lineær regressionsmodel for hver enkelt bruger.
+Modellen i (@eq-multipel2) har mange ligheder med den lineære regressionsmodel, blot er der to variable $x_1$ og $x_2$ i stedet for en enkelt $x$-variabel.  Den kaldes derfor for den *multiple lineære regressionsmodel*. Der indgår tre konstanter, nemlig $b$, $p_1$ og $p_2$, som vi kalder for *vægte*.[^22] Disse vægte er specifikke for den enkelte bruger. Der skal altså laves en multipel lineær regressionsmodel for hver enkelt bruger.
 
 [^22]: Nogle gange kaldes de også for *parametre*.
 
@@ -211,7 +231,7 @@ Når vi har lavet en multipel lineær regressionsmodel for en bruger, kan vi bru
 
 SKAL DER EVT LAVES NOGET VISUALISERING?
 
-### Eksempel 3
+:::{#exm-eks3}
 
 En bruger, der foretrækker actionfilm vil måske have $b=2$, $p_1=-0.02$ og $p_2=0.05$. Så er brugerens ratings givet ved
 $$r= 2 - 0.02x_1 + 0.05x_2$$
@@ -219,6 +239,7 @@ En romantisk film har måske $x_1=50$ og $x_2=0$. Brugeren ville så give filmen
 $$r=2-0.02\cdot 50+0.05\cdot 0=1$$
 En actionfilm ville måske have $x_1=5$ og $x_2=40$. Det ville give ratingen
 $$r=2-0.02\cdot 5 + 0.05\cdot 40 = 3.9 $$
+:::
 
 ### Flere variable
 
@@ -226,16 +247,19 @@ Mere generelt kunne man vælge at betragte $M$ features. Vi ville så have $M$ v
 $${r} = b+ p_{1}x_{1} + p_{2}x_{2} + \dotsm + p_{M}x_{M}$${#eq-multipel}
 Dette kaldes en multipel lineær regressionsmodel med $M$ variable.
 
-### Opgaver
 
-1. Vi betragter 3 features, nemlig varighed, produktionsår (regnet i forhold til år 2000), og vurdering på IMDb. Tre film har følgende features:
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 3: Ratings af film
+
+Vi betragter 3 features, nemlig varighed, produktionsår (regnet i forhold til år 2000), og vurdering på IMDb. Tre film har følgende features:
 
 ::: {#tbl-ratingopgave}
-|   | Titanic | Olsen-banden ser rødt | Jagten |    
+|   | \"Titanic\" | \"Olsen-banden ser rødt\" | \"Jagten\" |    
 |:---:|:---:|:---:|:---:|
-| Varighed | 194 | 105  | 115 | 
-|  år - 2000 | -3 | -24 |  12|  
-|IMdb score| 7.9|7.7 |8.3|
+| $x_1$: Varighed | 194 | 105  | 115 | 
+| $x_2$: år - 2000 | -3 | -24 |  12|  
+| $x_3$: IMdb score| 7.9|7.7 |8.3|
 
 :::
 
@@ -243,7 +267,15 @@ Dette kaldes en multipel lineær regressionsmodel med $M$ variable.
 
 - En anden bruger foretrækker film af god kvalitet, men går ikke op i varighed og alder. Vedkommende har derfor præferencerne $b=-1$, $p_1=0$, $p_2=0$, $p_3=0.6$. Prædiktér brugerens ratings og anbefal en film.
 
-2. Gør rede for, at en multipel regressionsmodel med én variabel, er det samme som en almindelig regressionsmodel, som I kender det fra gymnasieundervisningen.
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 4: Multipel regressionsmodel med én variabel
+
+- Gør rede for, at en multipel regressionsmodel med én variabel, er det samme som en almindelig regressionsmodel, som I kender det fra gymnasieundervisningen.
+
+:::
 
 ## Estimation af vægte
 
@@ -267,8 +299,12 @@ Eksempel på datasæt over en brugers  rating af fire film og filmenes features.
 [^4]: Det er derfor man taler om *maskinlæring*, eller på engelsk *machine learning*.
 
 Vi betegner ratingen af $j$te film med $r_j$ og dens to features med $x_{1j}$ og $x_{2j}$.
-Vores model prædikterer så brugerens rating af $j$te film ved
-$$\hat{r}_{j} = p_{1}x_{1j} + p_{2}x_{2j}$${#eq-model}
+Vores model prædikterer så brugerens rating af den $j$te film ved
+
+$$
+\hat{r}_{j} = p_{1}x_{1j} + p_{2}x_{2j}
+$$ {#eq-model}
+
 Hvis modellen er god, skulle den prædikterede rating $\hat{r}_j$ gerne ligge tæt på den faktiske rating $r_j$.
 Vi vil derfor gerne have, at prædiktionsfejlen $r_{j}-\hat{r}_{j}$ er tæt på 0. Da både positive og negative værdier langt fra $0$ er problematiske, vælger vi at kvadrere, så vi slipper af med fortegnene. Vi vil så gerne have, at den kvadrerede prædiktionsfejl $(r_{j}-\hat{r}_{j})^2$ er så lav som muligt. Det skal gælde for hver eneste film i vores datasæt. Vi kræver derfor, at summen af alle de kvadrerede prædiktionsfejl for alle filmene skal være lav. Denne sum er givet ved
 $$E= (r_{1}-\hat{r}_{1})^2 + (r_{2}-\hat{r}_{2})^2 + \dotsm + (r_N-\hat{r}_N)^2  $$
@@ -278,19 +314,19 @@ Størrelsen $E$ kaldes en *tabsfunktion*. Hvis modellen er god, skal tabsfunktio
 
 [^13]: Hvis du har hørt om mindste kvadraters metode i forbindelse med lineær regression, så er det samme princip, der bruges her.
 
-Hvordan finder man minimum for en funktion, der afhænger af flere variable? Hvis der kun er én variabel, ved du, at man kan differentiere funktionen og lede efter minimum i de punkter, hvor den afledte er nul. Noget tilsvarende gør sig gældende, når man der er flere variable. Her er det bare de partielle afledte[^14], der alle er nul i et minimumspunkt. KUNNE MAN SKRIVE NOGET OM DET I NOTEN OM PARTIELLE AFLEDTE? I vores tilfælde søger vi altså værdier af $b$, $p_1$ og $p_2$, så
+Hvordan finder man minimum for en funktion, der afhænger af flere variable? Hvis der kun er én variabel, ved du, at man kan differentiere funktionen og lede efter minimum i de punkter, hvor den afledte er nul. Noget tilsvarende gør sig gældende, når der er flere variable. Her er det bare de partielle afledte[^14], der alle er nul i et minimumspunkt. KUNNE MAN SKRIVE NOGET OM DET I NOTEN OM PARTIELLE AFLEDTE? I vores tilfælde søger vi altså værdier af $b$, $p_1$ og $p_2$, så
 $$
 \begin{aligned}
-\frac{\partial E}{\partial p_1} = 0\\
-\frac{\partial E}{\partial p_2} = 0\\
+\frac{\partial E}{\partial p_1} = 0\\ \\
+\frac{\partial E}{\partial p_2} = 0\\ \\
 \frac{\partial E}{\partial b} = 0
 \end{aligned}
 $$
 I opgaven nedenfor bliver du bedt om at beregne de partielle afledte af $E$. Det fører til
 $$
 \begin{aligned}
-&\frac{\partial E}{\partial p_1} = -x_{11}(r_1-\hat{r}_1)- \dotsm -x_{1N}(r_N-\hat{r}_N)\\
-&\frac{\partial E}{\partial p_2} = -x_{21}(r_1-\hat{r}_1) - \dotsm -x_{2N}(r_N-\hat{r}_N) \\
+&\frac{\partial E}{\partial p_1} = -x_{11}(r_1-\hat{r}_1)- \dotsm -x_{1N}(r_N-\hat{r}_N)\\ \\
+&\frac{\partial E}{\partial p_2} = -x_{21}(r_1-\hat{r}_1) - \dotsm -x_{2N}(r_N-\hat{r}_N) \\ \\
 &\frac{\partial E}{\partial b} = - (r_1-\hat{r}_1) - \dotsm  - (r_N-\hat{r}_N)
 \end{aligned}
 $${#eq-partiel}
@@ -304,11 +340,13 @@ $$
 $$
 Det viser sig, at disse ligninger kan løses eksplicit og give en formel for estimaterne for $b$, $p_1$ og $p_2$. Det vil vi dog ikke gøre her.
 
-[^14]: Hvis du ikke kender til partielle afledte, eller du har brug for en genopfriskning, kan du læse om det her LINK.
+[^14]: Hvis du ikke kender til partielle afledte, eller du har brug for en genopfriskning, kan du læse om det i noten om [Funktioner af flere variable](../funktioner_af_flere_variable/funktioner_af_flere_variable.qmd).
 
-### Opgaver
+::: {.callout-note collapse="false" appearance="minimal"}
 
-- Vis at de partielle afledte er som givet i (@eq-partiel). Bemærk, at da $E$ er en sum, kan den differentieres ledvist. Det er altså nok at vise at 
+### Opgave 5: Partielle afledede
+
+- Vis, at de partielle afledte er som givet i (@eq-partiel). Bemærk, at da $E$ er en sum, kan den differentieres ledvist. Det er altså nok at vise, at 
 $$
 \begin{aligned}
 &\frac{\partial (r_j-\hat{r}_j)^2}{\partial p_1} = -x_{1j}(r_j-\hat{r}_j)\\
@@ -319,23 +357,26 @@ $$
 
 - Her burde de sagtens selv kunne lave noget i Excel...
 
+:::
+
 ## Mere fleksible  modeller
 
 Multiple lineære regressionsmodeller er meget populære. En af grundene er, at de er simple og nemme at fortolke. Det kan være godt for Netflix med en model, der er nem at fortolke, hvis de for eksempel gerne vil lave markedsanalyser for at finde ud af, hvilke film, der hitter blandt brugerne. Men for at lave anbefalinger af film, har vi egentlig ikke brug for at forstå, hvor anbefalingen kommer fra, bare den virker. Der er altså ikke noget i vejen for at bruge en mere kompliceret model. 
 
-I mange sammenhænge tilpasser multiple lineære regressionsmodeller  virkeligheden godt, men nogle gange er virkeligheden ikke lineær. For eksempel er der sikkert mange, der vil mene, at lidt action gør filmen mere spændende, men at der også skal være anden handling, for at filmen er interessant. De vil således give bedst ratings til film med et moderat indhold af action. En funktion med en $\cap$-formet graf ville give en bedre model. 
+I mange sammenhænge tilpasser multiple lineære regressionsmodeller  virkeligheden godt, men nogle gange er virkeligheden ikke lineær. For eksempel er der sikkert mange, der vil mene, at lidt action gør filmen mere spændende, men at der også skal være anden handling, for at filmen er interessant. De vil således give bedst ratings til film med et moderat indhold af action. En funktion med en $\cap$-formet graf ville give en bedre model. Dette er illustreret i @fig-ikke-lineare. 
 
-ILLUSTRATION
+![En ikke lineær sammenhæng mellem rating og graden af action.](images/ikke_lineare.png){width=75% #fig-ikke-lineare}
 
-En mulighed kunne være at bruge et andengradspolynomium. Du kan læse mere om polynomiel regression her LINK.
+En mulighed kunne være at bruge et andengradspolynomium. Du kan læse mere om polynomiel regression i noten om [Krydsvalidering](../krydsvalidering/krydsvalidering.qmd#polynomiel-regression).
 
-Et andet problem opstår, hvis en film har meget ekstreme features. Så ryger dens prædikterede ratings nemt uden for intervallet 1 til 5. En funktion, hvis graf flader ud for meget store eller små featureværdier, ville være mere passende i dette tilfælde.
+Et andet problem opstår, hvis en film har meget ekstreme features. Så ryger dens prædikterede ratings nemt uden for intervallet 1 til 5. En funktion, hvis graf flader ud for meget store eller små featureværdier, ville være mere passende i dette tilfælde. Dette er illustreret i @fig-flader_ud.
 
-ILLUSTRATION
+![En graf som flader ud for både små og store værdier af en feature.](images/flader_ud.png){width=75% #fig-flader_ud}
 
-En af de vigtigste algoritmer inden for kunstig intelligens er de såkaldte *neurale netværk*. Neurale netværk giver mulighed for at prædiktere ratings som en ikke-lineær funktion af filmens features. De kan modellere en stor klasse af forskellige funktioner. Prisen for det er dog, at vi ikke får et pænt funktionsudtryk, som er nemt at fortolke. Men som nævnt er det heller ikke nødvendigt for at lave gode anbefalinger. En større udfordring ved neurale netværk er, at de kræver store mængder data. Det vil sige, at brugeren er nødt til at rate mange film, for at de kan benyttes. Du kan læse meget mere om neurale netværk her LINK. 
 
-Endelig er der problemet med valg af features. Der er i princippet mange forskellige features, der kunne have betydning for brugernes ratings. Hvordan vælger man, hvilke der er mest relevante? Man kan selvfølgelig prøve sig frem, men så ryger man hurtigt ud i problemer med *overfitting* LINK. I næste afsnit skal vi se et eksempel på, hvordan man kan lade algoritmen selv vælge features.
+En af de vigtigste algoritmer inden for kunstig intelligens er de såkaldte *neurale netværk*. Neurale netværk giver mulighed for at prædiktere ratings som en ikke-lineær funktion af filmens features. De kan modellere en stor klasse af forskellige funktioner. Prisen for det er dog, at vi ikke får et pænt funktionsudtryk, som er nemt at fortolke. Men som nævnt er det heller ikke nødvendigt for at lave gode anbefalinger. En større udfordring ved neurale netværk er, at de kræver store mængder data. Det vil sige, at brugeren er nødt til at rate mange film, for at de kan benyttes. Du kan læse meget mere i vores forskellige [noter om neurale netværk[](../neurale_net.qmd). 
+
+Endelig er der problemet med valg af features. Der er i princippet mange forskellige features, der kunne have betydning for brugernes ratings. Hvordan vælger man, hvilke der er mest relevante? Man kan selvfølgelig prøve sig frem, men så ryger man hurtigt ud i problemer med *overfitting*. Det kan du læse mere om i noten om [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd). I næste afsnit skal vi se et eksempel på, hvordan man kan lade algoritmen vælge features selv.
 
 
 # Samarbejdsbaserede modeller for ratings
@@ -356,11 +397,11 @@ Eksempel på datasæt over brugeres ratings på en skala fra 1 til 5. NA angiver
 
 ## Matrixfaktorisering
 
- Den algoritme, vi vil se på,  kaldes *matrixfaktorisering*[^1]. Algoritmen blev forslået i 2006 i forbindelse med konkurrencen The Netflix Prize, hvor Netflix udlovede en præmie til den, der kunne forbedre firmaets egen algoritme til prædiktion af ratings med 10%. Matrixfaktorisering blev hurtigt et populært værktøj i konkurrencen og er stadig et vigtigt element i mange anbefalingssystemer.
+ Den algoritme, vi vil se på,  kaldes *matrixfaktorisering*[^1]. Algoritmen blev forslået i 2006 i forbindelse med konkurrencen \"The Netflix Prize\", hvor Netflix udlovede en præmie til den, der kunne forbedre firmaets egen algoritme til prædiktion af ratings med 10%. Matrixfaktorisering blev hurtigt et populært værktøj i konkurrencen og er stadig et vigtigt element i mange anbefalingssystemer.
 
 [^1]:  Hvorfor den hedder det, bliver forklaret i en boks længere nede på siden, men det er ikke nødvendigt at kende til matricer, for at forstå hvordan algoritmen virker.
 
-I den multiple lineære regressionsmodel valgte vi selv nogle features ved filmene. Det er dog ikke oplagt, hvilke features der er mest relevante.  Man kan selvfølgelig prøve sig frem, men der kan hurtigt blive mange muligheder. Det kan også være svært at  definere relevante features manuelt. Hvordan måler man fx hvor sjov/alvorlig en film er? Det vi vil gøre her, er, at lade algoritmen selv vælge de $M$ features. Vi betragter altså $x_1,\ldots,x_M$ som ukendte underliggende variable, også kaldet *latente variable*, som har indflydelse på, hvordan man vurderer filmen. Man kune forestille sig, at de måler diffust definerede egenskaber ved filmen, så som  "hvor sjov filmen er" eller "hvor gode skuespillerne er". Men vi det ikke, og vi behøver heller ikke at vide det, bare der kommer gode anbefalinger ud af det!
+I den multiple lineære regressionsmodel valgte vi selv nogle features ved filmene. Det er dog ikke oplagt, hvilke features der er mest relevante.  Man kan selvfølgelig prøve sig frem, men der kan hurtigt blive mange muligheder. Det kan også være svært at  definere relevante features manuelt. Hvordan måler man for eksempel hvor sjov/alvorlig en film er? Det vi vil gøre her, er, at lade algoritmen selv vælge de $M$ features. Vi betragter altså $x_1,\ldots,x_M$ som ukendte underliggende variable, også kaldet *latente variable*, som har indflydelse på, hvordan man vurderer filmen. Man kune forestille sig, at de måler diffust definerede egenskaber ved filmen, så som  \"hvor sjov filmen er\" eller \"hvor gode skuespillerne er\". Men vi det ikke, og vi behøver heller ikke at vide det, bare der kommer gode anbefalinger ud af det!
 
 Vi kalder $i$te brugers rating af $j$te film for $r_{ij}$. Vi vil nu gerne lave en algoritme, der kan prædiktere $i$te brugers rating af $j$te film. Det er altså den værdi, der står i $i$te række og $j$te søjle i @tbl-rates. Hver film har sine egne værdier af de $M$ features. For $j$te film betegner vi dem  $x_{1j},\ldots,x_{Mj}$. Disse værdier kalder vi *featurevægtene*.  Den $i$te brugers præferencer for de $M$ features beskrives ved *præferencevægtene* $p_{i1},\ldots,p_{iM}$.   Vi modellerer så $i$te brugers rating af $j$te film  ved
 $$\hat{r}_{ij} = p_{i1}x_{1j} + p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj}$${#eq-modelij}
@@ -396,7 +437,7 @@ $$X=\begin{bmatrix} x_{11} & x_{12} & \cdots & x_{1p}\\
 \end{bmatrix}$$
 Hver række svarer til en feature, og hver søjle svarer til en film.
 
-To matricer kan ganges sammen, hvis den første har lige så mange søjler, som den anden har rækker. Fx er der $M$ søjler i $P$ og $M$ rækker i $X$ (begge dele svarende til de $M$ features). De kan altså ganges sammen til *matrixproduktet* $P\cdot X$. Resultatet bliver en ny $(n\times p)$-matrix, som vi vil kalde $\hat{R}$. Det tal, der skal stå i $i$te række og $j$te søjle af $\hat{R}$, kalder vi $\hat{r}_{ij}$. For at udregne $\hat{r}_{ij}$ skal vi bruge værdierne i $i$te række af $P$ og $j$te søjle af $Q$. Vi udregner så
+To matricer kan ganges sammen, hvis den første har lige så mange søjler, som den anden har rækker. For eksempel er der $M$ søjler i $P$ og $M$ rækker i $X$ (begge dele svarende til de $M$ features). De kan altså ganges sammen til *matrixproduktet* $P\cdot X$. Resultatet bliver en ny $(n\times p)$-matrix, som vi vil kalde $\hat{R}$. Det tal, der skal stå i $i$te række og $j$te søjle af $\hat{R}$, kalder vi $\hat{r}_{ij}$. For at udregne $\hat{r}_{ij}$ skal vi bruge værdierne i $i$te række af $P$ og $j$te søjle af $Q$. Vi udregner så
 $$\hat{r}_{ij} =  p_{i1}x_{1j} +p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj} $$
 Dette stemmer netop overens med modellen (@eq-model). Vi kan derfor skrive vores model kort som
 $$\hat{R} = P\cdot X$$
@@ -409,10 +450,11 @@ Da vi lavede multipel lineær regression, var der også en skæring  i modellen,
 $$\hat{r}_{ij} =  b + c_i + d_j+ p_{i1}x_{1j} +p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj} $$
 Her angiver $b$ den gennemsnitlige rating for alle film, når alle featurevægte er nul. Hver bruger har desuden et personligt led $c_i$, der tager højde for, at nogle brugere  er mere tilbøjelige til at give høje ratings end andre. Hvis $c_i$ er positiv, giver brugeren højere ratings end gennemsnittet, mens hvis $c_i$ er negativ, giver brugeren lavere ratings end gennemsnittet. På samme måde har hver film har et led $d_j$, der korrigerer for, at nogle film generelt får højere ratings end andre. Hvis $d_j$ er positiv, får filmen højere ratings end gennemsnittet, mens hvis $d_j$ er negativ, får filmen dårligere ratings end gennemsnittet.  For nemheds skyld arbejder vi videre med modellen (@eq-model) i det følgende.
 
+::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgaver
+### Opgave 6: Antal vægte som skal estimeres
 
-1. Antag at en streamingtjeneste har $n=1.000.000$ brugere og et katalog på $10.000$ film. 
+Antag, at en streamingtjeneste har $n=1.000.000$ brugere og et katalog på $10.000$ film. 
 
 - Hvis vi skulle estimere alle ratings $r_{ij}$ for alle kombinationer af film og bruger, hvor mange ratings skulle vi så estimere i alt?  
 
@@ -420,17 +462,19 @@ Her angiver $b$ den gennemsnitlige rating for alle film, når alle featurevægte
 
 - Hvis vi skulle lave en multipel regressionsmodel for hver eneste bruger  med $M=5$ features, hvor mange vægte skulle vi så bruge i alt?
 
+:::
 
 ## Estimation af vægte
 
-For at kunne bruge modellen (@eq-model) skal vi have estimeret alle featurevægtene $x_{1j},x_{2j},\ldots,x_{Mj}$ og alle præferencevægtene $p_{i1},p_{i2},\ldots, p_{iM}$. Til det formål tager vi udgangspunkt i et datasæt på formen i @tbl-rates, som streamingtjenesten har indsamlet.  
+For at kunne bruge modellen i (@eq-model) skal vi have estimeret alle featurevægtene $x_{1j},x_{2j},\ldots,x_{Mj}$ og alle præferencevægtene $p_{i1},p_{i2},\ldots, p_{iM}$. Til det formål tager vi udgangspunkt i et datasæt på formen i @tbl-rates, som streamingtjenesten har indsamlet.  
+
 Vi ønsker at prædiktere $i$te brugers rating af $j$te film ved
 $$\hat{r}_{ij} = p_{i1}x_{1j} + p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj}$$
 Som i den multiple lineære regressionsmodel, sammenligner vi prædiktionen $\hat{r}_{ij}$ med de faktiske ratings $r_{ij}$. Hvis modellen er god, vil vi gerne have, at prædiktionsfejlen $r_{ij}-\hat{r}_{ij}$ er tæt på 0 svarende til, at den kvadrerede prædiktionsfejl $(r_{ij}-\hat{r}_{ij})^2$ er lille. Vi definerer en tabsfunktion 
 $$E=\sum_{r_{ij} \neq NA} (r_{ij}-\hat{r}_{ij})^2 $$
 Her betyder $r_{ij}\neq NA$ under sumtegnet, at vi kun skal tage summen af de led, hvor vi kender den faktiske rating ($r_{ij}=NA$ betød jo, at brugeren ikke havde ratet filmen, så i det tilfælde kan vi ikke udregne en prædiktionsfejl). 
 
-Igen ønsker vi at finde de vægte, der minimerer tabsfunktionen. I modsætning til multipel lineær regression, kan de ligninger, man får ud af at udregne de partielle afledte og sætte dem lig nul, ikke løses eksplicit. I stedet kan man finde minimum ved hjælp af en populær algoritme inden for kunstig intelligens, der hedder *gradientnedstigning*. Den kan du læse mere om her LINK. For at kunne bruge den, skal man kende de partielle afledte af $E$ med hensyn til vægtene. For at finde dem, kan vi først bemærke, at $E$ er en sum, og en sum differentieres som bekendt ledvist. I en opgave nedenfor viser I, at de patielt afledte af et enkelt led i $E$ er givet ved
+Igen ønsker vi at finde de vægte, der minimerer tabsfunktionen. I modsætning til multipel lineær regression, kan de ligninger, man får ud af at udregne de partielle afledte og sætte dem lig nul, ikke løses eksplicit. I stedet kan man finde minimum ved hjælp af en populær algoritme inden for kunstig intelligens, der hedder [gradientnedstigning](../gradientnedstigning/gradientnedstigning.qmd). For at kunne bruge den, skal man kende de partielle afledte af $E$ med hensyn til vægtene. For at finde dem, kan vi først bemærke, at $E$ er en sum, og en sum differentieres som bekendt ledvist. I en opgave nedenfor viser I, at de patielt afledte af et enkelt led i $E$ er givet ved
 $$
 \begin{aligned}
 \frac{\partial }{\partial p_{im}} (r_{ij}-\hat{r}_{ij})^2 = -2 (r_{ij}-\hat{r}_{ij})x_{mj}\\
@@ -447,53 +491,64 @@ $$
 $${#eq-partiel3}
 Disse formler gør, at en computer nemt kan lave gradientnedstigning.
 
-### Opgaver
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 7: Ratings
 
 1. Tre brugere har ratet tre film som følger:
 
-::: {#tbl-rij}
-|   | Titanic | Ringenes Herre | Jurassic park |    
+::: {#tbl-rij .bordered}
+|   | \"Titanic\" | \"Ringenes Herre\" | \"Jurassic park\" |    
 |:---:|:---:|:---:|:---:|
 | Bruger 1 | 1 | NA | 4 | 
 | Bruger 2 | 3 | NA | 5 |  
 | Bruger 3 | NA | 3 | 2 |
 
-Tabel over ratings
+Tabel over ratings.
 :::
 
 Vi betragter en model på formen (@eq-model) med $M=2$ features. De tre film har featurevægtene:
 
-::: {#tbl-features}
-|   | Titanic | Ringenes Herre | Jurassic park |    
+::: {#tbl-features .bordered}
+|   | \"Titanic\" | \"Ringenes Herre\" | \"Jurassic park\" |    
 |:---:|:---:|:---:|:---:|
 | $x_1$ | 0 | 0 | 3 | 
 | $x_2$ | 2 | 1| 1 |  
 
-Tabel over featurevægte
+Tabel over featurevægte.
 :::
 
 De tre brugere har præferencevægtene:
 
-::: {#tbl-preferences}
+::: {#tbl-preferences .bordered}
 |   | $p_1$ | $p_2$ |     
 |:---:|:---:|:---:|
 | Bruger 1 | 1 | 1 |  
 | Bruger 2 | 2 | 1|   
 | Bruger 3 | 0 | 3| 
 
-Tabel over præferencevægte
+Tabel over præferencevægte.
 :::
 
 - Lav en tabel over alle de prædikterede ratings $\hat{r}_{ij}$.
 - Beregn prædiktionsfejlen $r_{ij}-\hat{r}_{ij}$ for alle de film, der faktisk er blevet ratet af brugerne (det vil sige, hvor $r_{ij}\neq NA$ i  @tbl-rij).
 - Beregn tabsfunktionen $E$.
 
-2. Vis, at de partielle afledte af $(r_{ij}-\hat{r}_{ij})^2$ med hensyn til vægtene er givet ved formlerne (@eq-partiel1), (@eq-partiel2) og (@eq-partiel3). 
+:::
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 8: Partielle afledede
+
+Vis, at de partielle afledte af $(r_{ij}-\hat{r}_{ij})^2$ med hensyn til vægtene er givet ved formlerne (@eq-partiel1), (@eq-partiel2) og (@eq-partiel3). 
+
+:::
 
 # Moderne anbefalingssystemer
 
-Vi har skelnet mellem indholdsbaserede og samarbejdsbaserede anbefalingssystemer. De algoritmer der bruges i praksis indeholder dog elementer fra begge dele. Du vil også se at tjenesterne laver forskellige slags anbefalinger, for eksempel af typen "specielt til dig", "andre har også set" eller "fordi du så". 
+Vi har skelnet mellem indholdsbaserede og samarbejdsbaserede anbefalingssystemer. De algoritmer der bruges i praksis indeholder dog elementer fra begge dele. Du vil også se, at tjenesterne laver forskellige slags anbefalinger, for eksempel af typen \"specielt til dig\", \"andre har også set\" eller \"fordi du så\". 
 
-Nogle af de datatyper, tjenesterne indsamler, er særligt komplicerede. Det kunne for eksempel være rækkefølgen du ser filmene i.  De senest sete film er typisk mest relevante for dit næste valg. Hvis du lige har set fem kattevideoer på YouTube, er det sandsynligt, at du er i humør til endnu en kattevideo.  Her benyttes faktisk nogle af de samme algoritmer, som bruges af de store sprogmodeller, der indgår i blandt andet ChatGPT og Google Translate LINK. Ligesom filmenes rækkefølge er vigtig,  er det nemlig også vigtigt for sprogmodellerne at kunne tage højde for ordenes rækkefølge i en tekst. Modellerne har derfor meget tilfælles. 
+Nogle af de datatyper, tjenesterne indsamler, er særligt komplicerede. Det kunne for eksempel være rækkefølgen, du ser filmene i.  De senest sete film er typisk mest relevante for dit næste valg. Hvis du lige har set fem kattevideoer på YouTube, er det sandsynligt, at du er i humør til endnu en kattevideo.  Her benyttes faktisk nogle af de samme algoritmer, som bruges af de store sprogmodeller, der indgår i blandt andet ChatGPT og Google Translate (du kan læse mere i vores [noter om sprogmodeller](../sprogmodeller.qmd)). Ligesom filmenes rækkefølge er vigtig,  er det nemlig også vigtigt for sprogmodellerne at kunne tage højde for ordenes rækkefølge i en tekst. Modellerne har derfor meget tilfælles. 
 
 Som nævnt er det afgørende i konkurrencen mellem streamingtjenester, at de er i stand til at levere gode anbefalinger til brugerne. Derfor arbejdes der også til stadighed på at gøre algoritmerne bedre. 
