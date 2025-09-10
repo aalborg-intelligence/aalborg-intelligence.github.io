@@ -232,36 +232,30 @@ window.Quarto = {
 <p><img src="images/film.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
 </figure>
 </div>
-<p>Du kender det sikkert. Du har lige siddet og set en film på Netflix. Bagefter får du vist et forslag til en ny film, du kan se. Du har da egentlig også altid gerne villet se "Mission: Impossible", så du klikker på filmen. Efter den kommer der nye forslag. Før du får set dig om, har du siddet oppe hele natten og set film. Ikke så godt for dig, hvis du skal op og i skole næste dag, men godt for Netflix. Men hvordan ved Netflix egentlig, hvilke film der kan friste dig til at se videre? Jo, de har indsamlet data om, hvilke film du og andre brugere har set. Ved hjælp af en algoritme, et såkaldt <em>anbefalingssystem</em>, prøver den at forudsige, hvilken film du vil kunne lide.</p>
+<p>Du kender det sikkert. Du har lige siddet og set en film på Netflix. Bagefter får du vist et forslag til en ny film, du kan se. Du har da egentlig også altid gerne villet se “Mission: Impossible”, så du klikker på filmen. Efter den kommer der nye forslag. Før du får set dig om, har du siddet oppe hele natten og set film. Ikke så godt for dig, hvis du skal op og i skole næste dag, men godt for Netflix. Men hvordan ved Netflix egentlig, hvilke film der kan friste dig til at se videre? Jo, de har indsamlet data om, hvilke film du og andre brugere har set. Ved hjælp af en algoritme, et såkaldt <em>anbefalingssystem</em>, prøver den at forudsige, hvilken film du vil kunne lide.</p>
 <p>Du kender anbefalingssystemer fra mange andre onlinetjenester, for eksempel YouTubes videoforslag og Spotifys personlige playlister. Sociale medier som Facebook bruger blandt andet algoritmerne til at foreslå venner og grupper. Og så kender du dem nok også fra onlinehandel. Når du har købt en vare på nettet, foreslår forretningen dig som regel en liste med andre varer, du kunne være interesseret i. Anbefalingerne er en service, der gør det nemmere at finde relevant indhold, men samtidig har de til formål at maksimere den tid, du bruger på en onlinetjeneste, eller de penge, du bruger hos en onlinebutik. Fælles for alle de bagvedliggende virksomheder er, at anbefalingssystemerne er afgørende for deres succes.</p>
 <p>I denne note skal vi se på, hvordan anbefalingssystemer er lavet. Der er to overordnede typer af anbefalingssystemer:</p>
 <ol type="1">
-<li><em>Indholdsbaseret:</em><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Her laver man en brugerprofil for hver bruger, der beskriver, hvilken type indhold, brugeren godt kan lide. Algoritmen kan så foreslå mere indhold af samme type. Hvis du har set mange actionfilm på Netflix, vil din brugerprofil fortælle, at du er glad for actionfilm, og algoritmen vil så foreslå actionfilmen "Mission: Impossible".</li>
+<li><em>Samarbejdsbaseret:</em><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Her sammenligner man brugerens adfærd med andre brugere. Algoritmen vil så anbefale noget, som brugere med samme adfærd som dig kan lide. I Netflix-eksemplet kunne algoritmen for eksempel kigge på de brugere, der har set de samme film som dig. Hvis mange af dem også har set “Mission: Impossible”, tyder det på, at brugere, der ligner dig, kan lide den, og du vil derfor blive anbefalet at se den.</li>
 </ol>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Engelsk: Content based filtering.</p></div></div><ol start="2" type="1">
-<li><em>Samarbejdsbaseret:</em><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Her sammenligner man brugerens adfærd med andre brugere. Algoritmen vil så anbefale noget, som brugere med samme adfærd som dig kan lide. I Netflix-eksemplet kunne algoritmen for eksempel kigge på de brugere, der har set de samme film som dig. Hvis mange af dem også har set "Mission: Impossible", tyder det på, at brugere, der ligner dig, kan lide den, og du vil derfor blive anbefalet at se den.</li>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Engelsk: Collaborative filtering.</p></div></div><ol start="2" type="1">
+<li><em>Indholdsbaseret:</em><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Her laver man en brugerprofil for hver bruger, der beskriver, hvilken type indhold, brugeren godt kan lide. Algoritmen kan så foreslå mere indhold af samme type. Hvis du har set mange actionfilm på Netflix, vil din brugerprofil fortælle, at du er glad for actionfilm, og algoritmen vil så foreslå actionfilmen “Mission: Impossible”.</li>
 </ol>
-<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Engelsk: Collaborative filtering.</p></div></div><p>Vi skal se simple eksempler på begge typer algoritmer. Der vil undervejs være links til mere avancerede algoritmer, der kan bruges til at forbedre dem. Fordi anbefalingssystemerne er så vigtige for onlinevirksomhederne, bruger de mange ressourcer på at forfine og videreudvikle algoritmerne, og de præcise algoritmer, der bruges i dag, er typisk en forretningshemmelighed!</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Engelsk: Content based filtering.</p></div></div><p>Vi skal se simple eksempler på begge typer algoritmer. Der vil undervejs være links til mere avancerede algoritmer, der kan bruges til at forbedre dem. Fordi anbefalingssystemerne er så vigtige for onlinevirksomhederne, bruger de mange ressourcer på at forfine og videreudvikle algoritmerne, og de præcise algoritmer, der bruges i dag, er typisk en forretningshemmelighed!</p>
 <section id="en-samarbejdsbaseret-algoritme" class="level1 page-columns page-full">
 <h1>En samarbejdsbaseret algoritme</h1>
-<p>Vi ser først et eksempel på, hvordan man kan lave samarbejdsbaserede anbefalinger. Vi forestiller os derfor en filmstreamingtjeneste, der gerne vil lave anbefalinger af typen "Andre har også set…". De vil altså gerne foreslå dig film, som brugere, der ligner dig, godt kan lide.</p>
+<p>Vi ser først et eksempel på, hvordan man kan lave samarbejdsbaserede anbefalinger. Vi forestiller os derfor en filmstreamingtjeneste, der gerne vil lave anbefalinger af typen “Andre har også set…”. De vil altså gerne foreslå dig film, som brugere, der ligner dig, godt kan lide.</p>
 <p>Lad os sige, at tjenesten har et katalog bestående af <span class="math inline">\(p\)</span> film. For hver bruger registrerer hjemmesiden, hvilke film brugeren har set. Hvis tjenesten har <span class="math inline">\(n\)</span> kunder, så indsamler den et datasæt som illustreret i <a href="#tbl-data" class="quarto-xref">tabel&nbsp;1</a>. Hver række svarer til en bruger, og hver søjle svarer til en film. Et 1-tal betyder, at brugeren har set filmen, og et 0 angiver, at brugeren ikke har set filmen.</p>
 <div id="tbl-data" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-tbl figure page-columns page-full">
 <div aria-describedby="tbl-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
 <thead>
 <tr class="header">
 <th style="text-align: center;">Brugernummer</th>
-<th style="text-align: center;">"Blinkende lygter"</th>
-<th style="text-align: center;">"Olsen-banden"</th>
-<th style="text-align: center;">"Hævnen"</th>
+<th style="text-align: center;">“Blinkende lygter”</th>
+<th style="text-align: center;">“Olsen-banden”</th>
+<th style="text-align: center;">“Hævnen”</th>
 </tr>
 </thead>
 <tbody>
@@ -309,7 +303,7 @@ P(F_J)= P(\text{ En bruger har set alle film i } J)
 \end{aligned}
 \tag{1}\]</span></span> Populære filmkombinationer vil have høj frekvens.</p>
 <div id="exm-eks1" class="theorem example">
-<p><span class="theorem-title"><strong>Eksempel 1</strong></span> En streamingtjeneste viser filmene "Titanic" og "Mission: Impossible". Hvis tjenesten har 1000 brugere, hvoraf 411 har set "Titanic", 358 har set "Mission: Impossible" og 198 har set både "Titanic" og "Mission: Impossible", så er <span class="math display">\[
+<p><span class="theorem-title"><strong>Eksempel 1</strong></span> En streamingtjeneste viser filmene “Titanic” og “Mission: Impossible”. Hvis tjenesten har 1000 brugere, hvoraf 411 har set “Titanic”, 358 har set “Mission: Impossible” og 198 har set både “Titanic” og “Mission: Impossible”, så er <span class="math display">\[
 \begin{aligned}
 &amp;\hat{P}(F_{\{\text{Titanic}\}}) = \frac{411}{1000}=0.411\\
 &amp;\hat{P}(F_{\{\text{Mission: Impossible}\}}) = \frac{358}{1000}=0.358\\
@@ -320,7 +314,7 @@ P(F_J)= P(\text{ En bruger har set alle film i } J)
 </section>
 <section id="andre-har-også-set" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="andre-har-også-set">Andre har også set…</h2>
-<p>Streamingtjenesten har registreret, at du har set alle filmene i mængden <span class="math inline">\(I\)</span>. De vil nu gerne kunne udtale sig om, hvor sandsynligt det er, at du også vil se filmene i mængden <span class="math inline">\(J\)</span>. Vi antager, at mængderne <span class="math inline">\({I}\)</span> og <span class="math inline">\({J}\)</span> er disjunkte, altså at de ikke har nogen elementer tilfælles. Sandsynligheden for at se alle filmene i <span class="math inline">\(J\)</span>, givet at man har set alle filmene i <span class="math inline">\(I\)</span>, kan beskrives ved en <em>betinget sandsynlighed</em>.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> <span class="math display">\[
+<p>Streamingtjenesten har registreret, at du har set alle filmene i mængden <span class="math inline">\(I\)</span>. De vil nu gerne kunne udtale sig om, hvor sandsynligt det er, at du også vil se filmene i mængden <span class="math inline">\(J\)</span>. Vi antager, at mængderne <span class="math inline">\({I}\)</span> og <span class="math inline">\({J}\)</span> er disjunkte, altså at de ikke har nogen film tilfælles. Sandsynligheden for at se alle filmene i <span class="math inline">\(J\)</span>, givet at man har set alle filmene i <span class="math inline">\(I\)</span>, kan beskrives ved en <em>betinget sandsynlighed</em>.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> <span class="math display">\[
 P(F_{J}\mid F_{I}) = \frac{P(F_{I}\cap F_{J})}{P(F_{I})}
 \]</span> Fælleshændelsen <span class="math inline">\(F_I \cap F_J\)</span> er hændelsen, at man har set alle filmene i <span class="math inline">\(I\)</span> og alle filmene <span class="math inline">\(J\)</span>. Det vil sige, at man har set alle filmene i <span class="math inline">\(I\cup J\)</span>. Derfor er <span class="math inline">\(F_{I}\cap F_{J} = F_{I\cup J}\)</span> og dermed <span id="eq-betinget"><span class="math display">\[
 \frac{P(F_{J}\cap F_{I})}{P(F_{I})}=\frac{P(F_{I\cup J} )}{P(F_{I})}
@@ -348,7 +342,7 @@ Betinget sandsynlighed
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Lad <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> være to hændelser, således at <span class="math inline">\(B\)</span> har positiv sandsynlighed <span class="math inline">\(P(B)&gt;0\)</span>. <em>Den betingede sandsynlighed for <span class="math inline">\(A\)</span> givet <span class="math inline">\(B\)</span></em> betegnes <span class="math inline">\(P(A|B)\)</span> og er defineret som</p>
+<p>Lad <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> være to hændelser, således at <span class="math inline">\(B\)</span> har positiv sandsynlighed <span class="math inline">\(P(B)&gt;0\)</span>. <em>Den betingede sandsynlighed for</em> <span class="math inline">\(A\)</span> givet <span class="math inline">\(B\)</span> betegnes <span class="math inline">\(P(A|B)\)</span> og er defineret som</p>
 <p><span class="math display">\[
 P(A\mid B) = \frac{P(A\cap B)}{P(B)}.
 \]</span></p>
@@ -369,12 +363,12 @@ P(\textrm{to 6'ere} \mid \textrm{første terning viser 6}) = \frac{1}{6} \neq \f
 </div>
 </div>
 <div id="exm-eks2" class="theorem example">
-<p><span class="theorem-title"><strong>Eksempel 2</strong></span> Vi ser igen på filmtjenesten fra <a href="#exm-eks1" class="quarto-xref">eksempel&nbsp;1</a>. En bruger har lige set "Titanic", og filmtjenesten vil nu gerne anbefale en ny film. Vi ser derfor på sandsynligheden for, at en bruger, der har set "Titanic", også har set "Mission: Impossible". Vi finder <span class="math display">\[\hat{P}(F_{\text{Mission: Impossible}} \mid F_{\text{ Titanic }} ) = \frac{198}{411} \approx 0.482\]</span> Det er altså cirka 48,2% af de brugere, der har set "Titanic", der også har set "Mission: Impossible". Hvis der er 145 brugere, der både har set "Titanic" og "Jurassic Park", så er <span class="math display">\[\hat{P}(F_{\text{ Jurassic Park}} \mid F_{\text{ Titanic }}) = \frac{145}{411} \approx 0.353 \]</span> Folk, der har set "Titanic", er således mere tilbøjelige til at se "Mission: Impossible" end "Jurassic Park". "Mission: Impossible" vil derfor være den bedste anbefaling.</p>
+<p><span class="theorem-title"><strong>Eksempel 2</strong></span> Vi ser igen på filmtjenesten fra <a href="#exm-eks1" class="quarto-xref">eksempel&nbsp;1</a>. En bruger har lige set “Titanic”, og filmtjenesten vil nu gerne anbefale en ny film. Vi ser derfor på sandsynligheden for, at en bruger, der har set “Titanic”, også har set “Mission: Impossible”. Vi finder <span class="math display">\[\hat{P}(F_{\text{Mission: Impossible}} \mid F_{\text{ Titanic }} ) = \frac{198}{411} \approx 0.482\]</span> Det er altså cirka 48,2% af de brugere, der har set “Titanic”, der også har set “Mission: Impossible”. Hvis der er 145 brugere, der både har set “Titanic” og “Jurassic Park”, så er <span class="math display">\[\hat{P}(F_{\text{ Jurassic Park}} \mid F_{\text{ Titanic }}) = \frac{145}{411} \approx 0.353 \]</span> Folk, der har set “Titanic”, er således mere tilbøjelige til at se “Mission: Impossible” end “Jurassic Park”. “Mission: Impossible” vil derfor være den bedste anbefaling.</p>
 </div>
 </section>
 <section id="begrænsninger-ved-algoritmen" class="level2">
 <h2 class="anchored" data-anchor-id="begrænsninger-ved-algoritmen">Begrænsninger ved algoritmen</h2>
-<p>Vi har beskrevet en simpel og klassisk måde at lave anbefalinger på, og er særligt relevant for onlineforretninger, der vil lave forslag af typen "Andre har også købt". Selv for en lille virksomhed er det nemt at indsamle det relevante data og bruge algoritmen til at lave nye forslag.</p>
+<p>Vi har beskrevet en simpel og klassisk måde at lave anbefalinger på, og er særligt relevant for onlineforretninger, der vil lave forslag af typen “Andre har også købt”. Selv for en lille virksomhed er det nemt at indsamle det relevante data og bruge algoritmen til at lave nye forslag.</p>
 <p>Der er dog også forskellige begrænsninger ved tilgangen ovenfor. Måske er der ingen brugere, der har set præcis de samme film som dig. I så fald har vi ikke nogen at sammenligne med. At man har set en film betyder jo heller ikke nødvendigvis, at man kunne lide den.</p>
 <p>Moderne internetvirksomheder har mulighed for at indsamle meget mere data, som kan bruges til at forbedre anbefalingerne. Netflix indsamler for eksempel data om:</p>
 <ul>
@@ -418,7 +412,7 @@ Opgave 2: Film
 <p>Se på datasættet i <a href="#tbl-data" class="quarto-xref">tabel&nbsp;1</a>.</p>
 <ul>
 <li><p>Beregn frekvenserne af <span class="math inline">\(F_{\{\text{Blinkende Lygter}\}}\)</span>, <span class="math inline">\(F_{\{\text{Olsen-banden}\}}\)</span> og <span class="math inline">\(F_{\{\text{Blinkende Lygter, Olsen-banden}\}}\)</span>.</p></li>
-<li><p>Beregn <span class="math inline">\(\hat{P}(F_{\text{Olsen-banden}}\mid F_{\text{Blinkende lygter}} )\)</span> og <span class="math inline">\(\hat{P}( F_{\text{Hævnen}}\mid F_{\text{Blinkende lygter}})\)</span>. Hvilken film ville du foreslå en bruger, der lige har set "Blinkende lygter"?</p></li>
+<li><p>Beregn <span class="math inline">\(\hat{P}(F_{\text{Olsen-banden}}\mid F_{\text{Blinkende lygter}} )\)</span> og <span class="math inline">\(\hat{P}( F_{\text{Hævnen}}\mid F_{\text{Blinkende lygter}})\)</span>. Hvilken film ville du foreslå en bruger, der lige har set “Blinkende lygter”?</p></li>
 </ul>
 </div>
 </div>
@@ -461,29 +455,40 @@ Opgave 3: Ratings af film
 <figure class="quarto-float quarto-float-tbl figure" aria-labelledby="tbl-ratingopgave-caption">
 <div aria-describedby="tbl-ratingopgave-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 27%">
+<col style="width: 15%">
+<col style="width: 36%">
+<col style="width: 14%">
+</colgroup>
 <thead>
 <tr class="header">
 <th style="text-align: center;"></th>
-<th style="text-align: center;">"Titanic"</th>
-<th style="text-align: center;">"Olsen-banden ser rødt"</th>
-<th style="text-align: center;">"Jagten"</th>
+<th style="text-align: center;"></th>
+<th style="text-align: center;">“Titanic”</th>
+<th style="text-align: center;">“Olsen-banden ser rødt”</th>
+<th style="text-align: center;">“Jagten”</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(x_1\)</span>: Varighed</td>
+<td style="text-align: center;"><span class="math inline">\(x_1\)</span></td>
+<td style="text-align: center;">Varighed</td>
 <td style="text-align: center;">194</td>
 <td style="text-align: center;">105</td>
-<td style="text-align: center;">115</td>
+<td style="text-align: center;">1</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;"><span class="math inline">\(x_2\)</span>: år - 2000</td>
+<td style="text-align: center;"><span class="math inline">\(x_2\)</span></td>
+<td style="text-align: center;">År - 2000</td>
 <td style="text-align: center;">-3</td>
 <td style="text-align: center;">-24</td>
 <td style="text-align: center;">12</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(x_3\)</span>: IMdb score</td>
+<td style="text-align: center;"><span class="math inline">\(x_3\)</span></td>
+<td style="text-align: center;">IMdb rating</td>
 <td style="text-align: center;">7.9</td>
 <td style="text-align: center;">7.7</td>
 <td style="text-align: center;">8.3</td>
@@ -526,7 +531,7 @@ Opgave 4: Multipel regressionsmodel med én variabel
 <section id="estimation-af-vægte" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="estimation-af-vægte">Estimation af vægte</h2>
 <p>Vi vil altså gerne have lavet en multipel lineær regressionsmodel for en bruger. I det følgende ser vi bare på en model med to features som i (<a href="#eq-multipel2" class="quarto-xref">4</a>). Men hvor får vi brugerens præferencevægte <span class="math inline">\(b,p_{1},p_{2}\)</span> fra? Svaret er, at det vil vi få en computer til at <em>lære</em> ud fra data, som streamingtjenesten har indsamlet om brugerens tildligere ratings af film.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> Et eksempel på sådan et datasæt kan ses i <a href="#tbl-ratings" class="quarto-xref">tabel&nbsp;3</a>. Bemærk, at datasættet kun indeholder de film, som brugeren faktisk har set og tildelt en rating.</p>
-<div class="no-row-height column-margin column-container"><div id="fn5"><p><sup>5</sup>&nbsp;Det er derfor man taler om <em>maskinlæring</em>, eller på engelsk <em>machine learning</em>.</p></div></div><div id="tbl-ratings" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<div class="no-row-height column-margin column-container"><div id="fn5"><p><sup>5</sup>&nbsp;At lære en computer at lave prædiktioner ud fra et datasæt kaldes <em>maskinlæring</em>, eller på engelsk <em>machine learning</em>, og er et centralt element i de fleste former for kunstig intelligens.</p></div></div><div id="tbl-ratings" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-tbl figure page-columns page-full">
 <div aria-describedby="tbl-ratings-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
@@ -585,15 +590,15 @@ Tabel&nbsp;3: Eksempel på datasæt over en brugers rating af fire film og filme
 \end{aligned}
 \]</span> I opgaven nedenfor bliver du bedt om at beregne de partielle afledte af <span class="math inline">\(E\)</span>. Det fører til <span id="eq-partiel"><span class="math display">\[
 \begin{aligned}
-&amp;\frac{\partial E}{\partial p_1} = -x_{11}(r_1-\hat{r}_1)- \dotsm -x_{1N}(r_N-\hat{r}_N)\\ \\
-&amp;\frac{\partial E}{\partial p_2} = -x_{21}(r_1-\hat{r}_1) - \dotsm -x_{2N}(r_N-\hat{r}_N) \\ \\
-&amp;\frac{\partial E}{\partial b} = - (r_1-\hat{r}_1) - \dotsm  - (r_N-\hat{r}_N)
+&amp;\frac{\partial E}{\partial p_1} = -2x_{11}(r_1-\hat{r}_1)- \dotsm -2x_{1N}(r_N-\hat{r}_N)\\ \\
+&amp;\frac{\partial E}{\partial p_2} = -2x_{21}(r_1-\hat{r}_1) - \dotsm -2x_{2N}(r_N-\hat{r}_N) \\ \\
+&amp;\frac{\partial E}{\partial b} = - 2(r_1-\hat{r}_1) - \dotsm  - 2(r_N-\hat{r}_N)
 \end{aligned}
 \tag{7}\]</span></span> For at finde minimumspunktet, skal vi altså løse ligningerne <span class="math display">\[
 \begin{aligned}
-&amp;\frac{\partial E}{\partial p_1} = -x_{11}(r_1-\hat{r}_1)- \dotsm -x_{1N}(r_N-\hat{r}_N)=0\\
-&amp;\frac{\partial E}{\partial p_2} = -x_{21}(r_1-\hat{r}_1) - \dotsm -x_{2N}(r_N-\hat{r}_N)=0 \\
-&amp;\frac{\partial E}{\partial b} = - (r_1-\hat{r}_1) - \dotsm  - (r_N-\hat{r}_N)=0
+&amp;\frac{\partial E}{\partial p_1} = -2x_{11}(r_1-\hat{r}_1)- \dotsm -2x_{1N}(r_N-\hat{r}_N)=0\\
+&amp;\frac{\partial E}{\partial p_2} = -2x_{21}(r_1-\hat{r}_1) - \dotsm -2x_{2N}(r_N-\hat{r}_N)=0 \\
+&amp;\frac{\partial E}{\partial b} = - 2(r_1-\hat{r}_1) - \dotsm  - 2(r_N-\hat{r}_N)=0
 \end{aligned}
 \]</span> Det viser sig, at disse ligninger kan løses eksplicit og give en formel for estimaterne for <span class="math inline">\(b\)</span>, <span class="math inline">\(p_1\)</span> og <span class="math inline">\(p_2\)</span>. Det vil vi dog ikke gøre her.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
@@ -611,9 +616,9 @@ Opgave 5: Partielle afledede
 <ul>
 <li><p>Vis, at de partielle afledte er som givet i (<a href="#eq-partiel" class="quarto-xref">7</a>). Bemærk, at da <span class="math inline">\(E\)</span> er en sum, kan den differentieres ledvist. Det er altså nok at vise, at <span class="math display">\[
 \begin{aligned}
-&amp;\frac{\partial (r_j-\hat{r}_j)^2}{\partial p_1} = -x_{1j}(r_j-\hat{r}_j)\\
-&amp;\frac{\partial (r_j-\hat{r}_j)^2}{\partial p_2} = -x_{2j}(r_j-\hat{r}_j)  \\
-&amp;\frac{\partial (r_j-\hat{r}_j)^2}{\partial b} = - (r_j-\hat{r}_j)
+&amp;\frac{\partial (r_j-\hat{r}_j)^2}{\partial p_1} = -2x_{1j}(r_j-\hat{r}_j)\\
+&amp;\frac{\partial (r_j-\hat{r}_j)^2}{\partial p_2} = -2x_{2j}(r_j-\hat{r}_j)  \\
+&amp;\frac{\partial (r_j-\hat{r}_j)^2}{\partial b} = - 2(r_j-\hat{r}_j)
 \end{aligned}
 \]</span></p></li>
 <li><p>Her burde de sagtens selv kunne lave noget i Excel…</p></li>
@@ -702,8 +707,8 @@ Tabel&nbsp;4: Eksempel på datasæt over brugeres ratings på en skala fra 1 til
 </div>
 <section id="matrixfaktorisering" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="matrixfaktorisering">Matrixfaktorisering</h2>
-<p>Den algoritme, vi vil se på, kaldes <em>matrixfaktorisering</em><a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>. Algoritmen blev forslået i 2006 i forbindelse med konkurrencen "The Netflix Prize", hvor Netflix udlovede en præmie til den, der kunne forbedre firmaets egen algoritme til prædiktion af ratings med 10%. Matrixfaktorisering blev hurtigt et populært værktøj i konkurrencen og er stadig et vigtigt element i mange anbefalingssystemer.</p>
-<div class="no-row-height column-margin column-container"><div id="fn8"><p><sup>8</sup>&nbsp;Hvorfor den hedder det, bliver forklaret i en boks længere nede på siden, men det er ikke nødvendigt at kende til matricer, for at forstå hvordan algoritmen virker.</p></div></div><p>I den multiple lineære regressionsmodel valgte vi selv nogle features ved filmene. Det er dog ikke oplagt, hvilke features der er mest relevante. Man kan selvfølgelig prøve sig frem, men der kan hurtigt blive mange muligheder. Det kan også være svært at definere relevante features manuelt. Hvordan måler man for eksempel hvor sjov/alvorlig en film er? Det vi vil gøre her, er, at lade algoritmen selv vælge de <span class="math inline">\(M\)</span> features. Vi betragter altså <span class="math inline">\(x_1,\ldots,x_M\)</span> som ukendte underliggende variable, også kaldet <em>latente variable</em>, som har indflydelse på, hvordan man vurderer filmen. Man kune forestille sig, at de måler diffust definerede egenskaber ved filmen, så som "hvor sjov filmen er" eller "hvor gode skuespillerne er". Men vi det ikke, og vi behøver heller ikke at vide det, bare der kommer gode anbefalinger ud af det!</p>
+<p>Den algoritme, vi vil se på, kaldes <em>matrixfaktorisering</em><a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>. Algoritmen blev forslået i 2006 i forbindelse med konkurrencen “The Netflix Prize”, hvor Netflix udlovede en præmie til den, der kunne forbedre firmaets egen algoritme til prædiktion af ratings med 10%. Matrixfaktorisering blev hurtigt et populært værktøj i konkurrencen og er stadig et vigtigt element i mange anbefalingssystemer.</p>
+<div class="no-row-height column-margin column-container"><div id="fn8"><p><sup>8</sup>&nbsp;Hvorfor den hedder det, bliver forklaret i en boks længere nede på siden, men det er ikke nødvendigt at kende til matricer, for at forstå hvordan algoritmen virker.</p></div></div><p>I den multiple lineære regressionsmodel valgte vi selv nogle features ved filmene. Det er dog ikke oplagt, hvilke features der er mest relevante. Man kan selvfølgelig prøve sig frem, men der kan hurtigt blive mange muligheder. Det kan også være svært at definere relevante features manuelt. Hvordan måler man for eksempel hvor sjov/alvorlig en film er? Det vi vil gøre her, er, at lade algoritmen selv vælge de <span class="math inline">\(M\)</span> features. Vi betragter altså <span class="math inline">\(x_1,\ldots,x_M\)</span> som ukendte underliggende variable, også kaldet <em>latente variable</em>, som har indflydelse på, hvordan man vurderer filmen. Man kune forestille sig, at de måler diffust definerede egenskaber ved filmen, så som “hvor sjov filmen er” eller “hvor gode skuespillerne er”. Men vi det ikke, og vi behøver heller ikke at vide det, bare der kommer gode anbefalinger ud af det!</p>
 <p>Vi kalder <span class="math inline">\(i\)</span>te brugers rating af <span class="math inline">\(j\)</span>te film for <span class="math inline">\(r_{ij}\)</span>. Vi vil nu gerne lave en algoritme, der kan prædiktere <span class="math inline">\(i\)</span>te brugers rating af <span class="math inline">\(j\)</span>te film. Det er altså den værdi, der står i <span class="math inline">\(i\)</span>te række og <span class="math inline">\(j\)</span>te søjle i <a href="#tbl-rates" class="quarto-xref">tabel&nbsp;4</a>. Hver film har sine egne værdier af de <span class="math inline">\(M\)</span> features. For <span class="math inline">\(j\)</span>te film betegner vi dem <span class="math inline">\(x_{1j},\ldots,x_{Mj}\)</span>. Disse værdier kalder vi <em>featurevægtene</em>. Den <span class="math inline">\(i\)</span>te brugers præferencer for de <span class="math inline">\(M\)</span> features beskrives ved <em>præferencevægtene</em> <span class="math inline">\(p_{i1},\ldots,p_{iM}\)</span>. Vi modellerer så <span class="math inline">\(i\)</span>te brugers rating af <span class="math inline">\(j\)</span>te film ved <span id="eq-modelij"><span class="math display">\[\hat{r}_{ij} = p_{i1}x_{1j} + p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj} \tag{8}\]</span></span> Det minder om den multiple lineære regressionsmodel (<a href="#eq-multipel" class="quarto-xref">5</a>). Forskellen er, at featurevægtene ikke er givet på forhånd, men er nogle, vi skal estimere ud fra data. Hvis datasættet indeholder <span class="math inline">\(p\)</span> film, og hver af dem har <span class="math inline">\(M\)</span> featurevægte, så vil der være <span class="math inline">\(M\cdot p\)</span> featurevægte i alt. Hvis der er <span class="math inline">\(n\)</span> brugere, og hver af dem har <span class="math inline">\(M\)</span> præferencevægte, vil der samlet være <span class="math inline">\(n\cdot M\)</span> præferencevægte. Det giver i alt <span class="math inline">\(M\cdot p + n\cdot M\)</span> vægte, som skal bestemmes. I et typisk datasæt vil både <span class="math inline">\(n\)</span> og <span class="math inline">\(p\)</span> være store, så der vil være et stort samlet antal vægte. Hvis <span class="math inline">\(M\)</span> vælges relativt lille, vil det samlede antal vægte dog være lille i forhold til det samlede antal kombinationer af film og bruger, som vil være <span class="math inline">\(n\cdot p\)</span>. I stedet for at skulle estimere samtlige værdier <span class="math inline">\(n\cdot p\)</span> af <span class="math inline">\(r_{ij}\)</span>, skal vi kun estimere <span class="math inline">\(M\cdot p + n\cdot M\)</span> vægte.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
@@ -741,7 +746,7 @@ x_{21} &amp; x_{22} &amp; \cdots &amp; x_{2p}\\
 <section id="korrektion-af-modellen" class="level3">
 <h3 class="anchored" data-anchor-id="korrektion-af-modellen">Korrektion af modellen</h3>
 <p>Da vi lavede multipel lineær regression, var der også en skæring i modellen, som svarede til ratingen, når alle features var nul. Tilsvarende er det oplagt at tilføje en skæring i<br>
-(<a href="#eq-model" class="quarto-xref">6</a>). Det gøres ofte med modellen <span class="math display">\[\hat{r}_{ij} =  b + c_i + d_j+ p_{i1}x_{1j} +p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj} \]</span> Her angiver <span class="math inline">\(b\)</span> den gennemsnitlige rating for alle film, når alle featurevægte er nul. Hver bruger har desuden et personligt led <span class="math inline">\(c_i\)</span>, der tager højde for, at nogle brugere er mere tilbøjelige til at give høje ratings end andre. Hvis <span class="math inline">\(c_i\)</span> er positiv, giver brugeren højere ratings end gennemsnittet, mens hvis <span class="math inline">\(c_i\)</span> er negativ, giver brugeren lavere ratings end gennemsnittet. På samme måde har hver film har et led <span class="math inline">\(d_j\)</span>, der korrigerer for, at nogle film generelt får højere ratings end andre. Hvis <span class="math inline">\(d_j\)</span> er positiv, får filmen højere ratings end gennemsnittet, mens hvis <span class="math inline">\(d_j\)</span> er negativ, får filmen dårligere ratings end gennemsnittet. For nemheds skyld arbejder vi videre med modellen (<a href="#eq-model" class="quarto-xref">6</a>) i det følgende.</p>
+(<a href="#eq-model" class="quarto-xref">6</a>). Det gøres ofte med modellen <span class="math display">\[\hat{r}_{ij} =  b + c_i + d_j+ p_{i1}x_{1j} +p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj} \]</span> Her angiver <span class="math inline">\(b\)</span> den gennemsnitlige rating for alle film, når alle featurevægte er nul. Hver bruger har desuden et personligt led <span class="math inline">\(c_i\)</span>, der tager højde for, at nogle brugere er mere tilbøjelige til at give høje ratings end andre. Hvis <span class="math inline">\(c_i\)</span> er positiv, giver brugeren højere ratings end gennemsnittet, mens hvis <span class="math inline">\(c_i\)</span> er negativ, giver brugeren lavere ratings end gennemsnittet. På samme måde har hver film har et led <span class="math inline">\(d_j\)</span>, der korrigerer for, at nogle film generelt får højere ratings end andre. Hvis <span class="math inline">\(d_j\)</span> er positiv, får filmen højere ratings end gennemsnittet, mens hvis <span class="math inline">\(d_j\)</span> er negativ, får filmen dårligere ratings end gennemsnittet. For nemheds skyld arbejder vi videre med modellen (<a href="#eq-matrixfak" class="quarto-xref">9</a>) i det følgende.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -757,7 +762,7 @@ Opgave 6: Antal vægte som skal estimeres
 <p>Antag, at en streamingtjeneste har <span class="math inline">\(n=1.000.000\)</span> brugere og et katalog på <span class="math inline">\(10.000\)</span> film.</p>
 <ul>
 <li><p>Hvis vi skulle estimere alle ratings <span class="math inline">\(r_{ij}\)</span> for alle kombinationer af film og bruger, hvor mange ratings skulle vi så estimere i alt?</p></li>
-<li><p>Hvis vi bruger modellen (<a href="#eq-model" class="quarto-xref">6</a>) med <span class="math inline">\(M=5\)</span>, hvor mange vægte skal vi så estimere i alt?</p></li>
+<li><p>Hvis vi bruger modellen (<a href="#eq-matrixfak" class="quarto-xref">9</a>) med <span class="math inline">\(M=5\)</span>, hvor mange vægte skal vi så estimere i alt?</p></li>
 <li><p>Hvis vi skulle lave en multipel regressionsmodel for hver eneste bruger med <span class="math inline">\(M=5\)</span> features, hvor mange vægte skulle vi så bruge i alt?</p></li>
 </ul>
 </div>
@@ -767,18 +772,18 @@ Opgave 6: Antal vægte som skal estimeres
 </section>
 <section id="estimation-af-vægte-1" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="estimation-af-vægte-1">Estimation af vægte</h2>
-<p>For at kunne bruge modellen i (<a href="#eq-model" class="quarto-xref">6</a>) skal vi have estimeret alle featurevægtene <span class="math inline">\(x_{1j},x_{2j},\ldots,x_{Mj}\)</span> og alle præferencevægtene <span class="math inline">\(p_{i1},p_{i2},\ldots, p_{iM}\)</span>. Til det formål tager vi udgangspunkt i et datasæt på formen i <a href="#tbl-rates" class="quarto-xref">tabel&nbsp;4</a>, som streamingtjenesten har indsamlet.</p>
-<p>Vi ønsker at prædiktere <span class="math inline">\(i\)</span>te brugers rating af <span class="math inline">\(j\)</span>te film ved <span class="math display">\[\hat{r}_{ij} = p_{i1}x_{1j} + p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj}\]</span> Som i den multiple lineære regressionsmodel, sammenligner vi prædiktionen <span class="math inline">\(\hat{r}_{ij}\)</span> med de faktiske ratings <span class="math inline">\(r_{ij}\)</span>. Hvis modellen er god, vil vi gerne have, at prædiktionsfejlen <span class="math inline">\(r_{ij}-\hat{r}_{ij}\)</span> er tæt på 0 svarende til, at den kvadrerede prædiktionsfejl <span class="math inline">\((r_{ij}-\hat{r}_{ij})^2\)</span> er lille. Vi definerer en tabsfunktion <span class="math display">\[E=\sum_{r_{ij} \neq NA} (r_{ij}-\hat{r}_{ij})^2 \]</span> Her betyder <span class="math inline">\(r_{ij}\neq NA\)</span> under sumtegnet, at vi kun skal tage summen af de led, hvor vi kender den faktiske rating (<span class="math inline">\(r_{ij}=NA\)</span> betød jo, at brugeren ikke havde ratet filmen, så i det tilfælde kan vi ikke udregne en prædiktionsfejl).</p>
+<p>For at kunne bruge modellen i (<a href="#eq-matrixfak" class="quarto-xref">9</a>) skal vi have estimeret alle featurevægtene <span class="math inline">\(x_{1j},x_{2j},\ldots,x_{Mj}\)</span> og alle præferencevægtene <span class="math inline">\(p_{i1},p_{i2},\ldots, p_{iM}\)</span>. Til det formål tager vi udgangspunkt i et datasæt på formen i <a href="#tbl-rates" class="quarto-xref">tabel&nbsp;4</a>, som streamingtjenesten har indsamlet.</p>
+<p>Vi ønsker at prædiktere <span class="math inline">\(i\)</span>te brugers rating af <span class="math inline">\(j\)</span>te film ved <span id="eq-matrixfak"><span class="math display">\[\hat{r}_{ij} = p_{i1}x_{1j} + p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj} \tag{9}\]</span></span> Som i den multiple lineære regressionsmodel, sammenligner vi prædiktionen <span class="math inline">\(\hat{r}_{ij}\)</span> med de faktiske ratings <span class="math inline">\(r_{ij}\)</span>. Hvis modellen er god, vil vi gerne have, at prædiktionsfejlen <span class="math inline">\(r_{ij}-\hat{r}_{ij}\)</span> er tæt på 0 svarende til, at den kvadrerede prædiktionsfejl <span class="math inline">\((r_{ij}-\hat{r}_{ij})^2\)</span> er lille. Vi definerer en tabsfunktion <span class="math display">\[E=\sum_{r_{ij} \neq NA} (r_{ij}-\hat{r}_{ij})^2 \]</span> Her betyder <span class="math inline">\(r_{ij}\neq NA\)</span> under sumtegnet, at vi kun skal tage summen af de led, hvor vi kender den faktiske rating (<span class="math inline">\(r_{ij}=NA\)</span> betød jo, at brugeren ikke havde ratet filmen, så i det tilfælde kan vi ikke udregne en prædiktionsfejl).</p>
 <p>Igen ønsker vi at finde de vægte, der minimerer tabsfunktionen. I modsætning til multipel lineær regression, kan de ligninger, man får ud af at udregne de partielle afledte og sætte dem lig nul, ikke løses eksplicit. I stedet kan man finde minimum ved hjælp af en populær algoritme inden for kunstig intelligens, der hedder <a href="../../materialer/gradientnedstigning/gradientnedstigning.html">gradientnedstigning</a>. For at kunne bruge den, skal man kende de partielle afledte af <span class="math inline">\(E\)</span> med hensyn til vægtene. For at finde dem, kan vi først bemærke, at <span class="math inline">\(E\)</span> er en sum, og en sum differentieres som bekendt ledvist. I en opgave nedenfor viser I, at de patielt afledte af et enkelt led i <span class="math inline">\(E\)</span> er givet ved <span id="eq-partiel1"><span class="math display">\[
 \begin{aligned}
 \frac{\partial }{\partial p_{im}} (r_{ij}-\hat{r}_{ij})^2 = -2 (r_{ij}-\hat{r}_{ij})x_{mj}\\
 \frac{\partial }{\partial x_{mj}} (r_{ij}-\hat{r}_{ij})^2 = -2 (r_{ij}-\hat{r}_{ij})p_{im}
 \end{aligned}
-\tag{9}\]</span></span> Desuden gælder der for <span class="math inline">\(l\neq i\)</span>, at <span id="eq-partiel2"><span class="math display">\[
+\tag{10}\]</span></span> Desuden gælder der for <span class="math inline">\(l\neq i\)</span>, at <span id="eq-partiel2"><span class="math display">\[
 \frac{\partial }{\partial p_{lm}} (r_{ij}-\hat{r}_{ij})^2 = 0
-\tag{10}\]</span></span> og for <span class="math inline">\(k \neq j\)</span> <span id="eq-partiel3"><span class="math display">\[
+\tag{11}\]</span></span> og for <span class="math inline">\(k \neq j\)</span> <span id="eq-partiel3"><span class="math display">\[
 \frac{\partial }{\partial x_{mk}} (r_{ij}-\hat{r}_{ij})^2 = 0
-\tag{11}\]</span></span> Disse formler gør, at en computer nemt kan lave gradientnedstigning.</p>
+\tag{12}\]</span></span> Disse formler gør, at en computer nemt kan lave gradientnedstigning.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -801,9 +806,9 @@ Opgave 7: Ratings
 <thead>
 <tr class="header">
 <th style="text-align: center;"></th>
-<th style="text-align: center;">"Titanic"</th>
-<th style="text-align: center;">"Ringenes Herre"</th>
-<th style="text-align: center;">"Jurassic park"</th>
+<th style="text-align: center;">“Titanic”</th>
+<th style="text-align: center;">“Ringenes Herre”</th>
+<th style="text-align: center;">“Jurassic park”</th>
 </tr>
 </thead>
 <tbody>
@@ -831,7 +836,7 @@ Opgave 7: Ratings
 
 </figure>
 </div>
-<p>Vi betragter en model på formen (<a href="#eq-model" class="quarto-xref">6</a>) med <span class="math inline">\(M=2\)</span> features. De tre film har featurevægtene:</p>
+<p>Vi betragter en model på formen (<a href="#eq-matrixfak" class="quarto-xref">9</a>) med <span class="math inline">\(M=2\)</span> features. De tre film har featurevægtene:</p>
 <div id="tbl-features" class="bordered quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure" aria-labelledby="tbl-features-caption">
 <div aria-describedby="tbl-features-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -839,9 +844,9 @@ Opgave 7: Ratings
 <thead>
 <tr class="header">
 <th style="text-align: center;"></th>
-<th style="text-align: center;">"Titanic"</th>
-<th style="text-align: center;">"Ringenes Herre"</th>
-<th style="text-align: center;">"Jurassic park"</th>
+<th style="text-align: center;">“Titanic”</th>
+<th style="text-align: center;">“Ringenes Herre”</th>
+<th style="text-align: center;">“Jurassic park”</th>
 </tr>
 </thead>
 <tbody>
@@ -923,7 +928,7 @@ Opgave 8: Partielle afledede
 </div>
 <div id="callout-10" class="callout-10-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Vis, at de partielle afledte af <span class="math inline">\((r_{ij}-\hat{r}_{ij})^2\)</span> med hensyn til vægtene er givet ved formlerne (<a href="#eq-partiel1" class="quarto-xref">9</a>), (<a href="#eq-partiel2" class="quarto-xref">10</a>) og (<a href="#eq-partiel3" class="quarto-xref">11</a>).</p>
+<p>Vis, at de partielle afledte af <span class="math inline">\((r_{ij}-\hat{r}_{ij})^2\)</span> med hensyn til vægtene er givet ved formlerne (<a href="#eq-partiel1" class="quarto-xref">10</a>), (<a href="#eq-partiel2" class="quarto-xref">11</a>) og (<a href="#eq-partiel3" class="quarto-xref">12</a>).</p>
 </div>
 </div>
 </div>
@@ -931,7 +936,7 @@ Opgave 8: Partielle afledede
 </section>
 <section id="moderne-anbefalingssystemer" class="level1">
 <h1>Moderne anbefalingssystemer</h1>
-<p>Vi har skelnet mellem indholdsbaserede og samarbejdsbaserede anbefalingssystemer. De algoritmer der bruges i praksis indeholder dog elementer fra begge dele. Du vil også se, at tjenesterne laver forskellige slags anbefalinger, for eksempel af typen "specielt til dig", "andre har også set" eller "fordi du så".</p>
+<p>Vi har skelnet mellem indholdsbaserede og samarbejdsbaserede anbefalingssystemer. De algoritmer der bruges i praksis indeholder dog elementer fra begge dele. Du vil også se, at tjenesterne laver forskellige slags anbefalinger, for eksempel af typen “specielt til dig”, “andre har også set” eller “fordi du så”.</p>
 <p>Nogle af de datatyper, tjenesterne indsamler, er særligt komplicerede. Det kunne for eksempel være rækkefølgen, du ser filmene i. De senest sete film er typisk mest relevante for dit næste valg. Hvis du lige har set fem kattevideoer på YouTube, er det sandsynligt, at du er i humør til endnu en kattevideo. Her benyttes faktisk nogle af de samme algoritmer, som bruges af de store sprogmodeller, der indgår i blandt andet ChatGPT og Google Translate (du kan læse mere i vores <a href="../../materialer/sprogmodeller.html">noter om sprogmodeller</a>). Ligesom filmenes rækkefølge er vigtig, er det nemlig også vigtigt for sprogmodellerne at kunne tage højde for ordenes rækkefølge i en tekst. Modellerne har derfor meget tilfælles.</p>
 <p>Som nævnt er det afgørende i konkurrencen mellem streamingtjenester, at de er i stand til at levere gode anbefalinger til brugerne. Derfor arbejdes der også til stadighed på at gøre algoritmerne bedre.</p>
 
