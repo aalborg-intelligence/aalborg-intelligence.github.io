@@ -112,17 +112,30 @@ Læs afsnittene [En transformerblok](../../materialer/sprogmodeller/transformere
 
 ### Opgave 3: Vægte i en transformernetværket
 
-I denne opgave giver vi et overslag over størrelsen af den transformer, der blev brugt i GPT-2[^1], som er forgængeren for den GPT-4 teknologi, der bruges i ChatGPT.
+I denne opgave giver vi et overslag over størrelsen på den transformer, der blev brugt i GPT-2[^7], som er forgængeren for den GPT-4 teknologi, der bruges i ChatGPT. I praksis inddeler GPT-2 ikke tekst i ord, men i *tokens*, som er mindre orddele (se boksen under opgaven). Derfor arbejder GPT-2 med et ordforråd på $V=50.257$ tokens. Brug denne værdi af $V$ i opgaven nedenunder.
 
-[^1]: GPT-2 kommer i fire forskellige størrelser. Den vi regner på her er den mindste, som kaldes GPT-2 Small. 
+[^7]: GPT-2 kommer i fire forskellige størrelser. Den vi regner på her er den mindste, som kaldes GPT-2 Small. 
 
-Vi ser først på en enkelt transformerblok:
+Vi ser på de enkelte trin i transformeren:
 
-1. GPT-2 brugte vektorer af dimension $64$ til at repræsentere ord.  Hvert af de $V$ ord i sproget skal repræsenteres af $3$ forskellige vektorer. Hvor mange vægte skal der bruges til at lave vektorrepræsentationer af alle $V$ ord i sproget?
+1. Helt i starten  bliver hvert af de $V$ ord oversat til $768$-dimensionale vektorer (dette trin blev ikke gennemgået i noten). Hvor mange vægte skal der bruges? 
 
-2. I et trin, som vi ikke gennemgik, reduceres de $V$ ord i sproget til $768$-dimensionale vektorer, som derefter oversættes til tre vektorer. Ved at sætte $V=768$ i 1., får du det reelle antal vægte, der skal bruges for at lave de tre vektorrepræsentationer. 
+Nu ser vi på en enkelt transformerblok:
 
-3. I GPT-2 var der $K=12$ parallelle opmærksomhedslag. Gang med $12$ i ovenstående beregning for at få antallet af vægte, der samlet set skal bruges til at lave vektorrepræsentationerne i alle opmærksomhedslagene.
+2. Det første der sker i transformerblokken, er, at vores ord  oversættes til 3 vektorer. I GPT-2 havde hver af de 3 vektorer  dimension $64$. Husk på, at hvert ord allerede er blevet oversat til en $768$-dimensional vektor i Punkt 1. For at oversætte  $768$-dimensionale vektorer
+$$\overrightarrow{a}= \begin{bmatrix} a_1\\ \vdots\\ a_{768} \end{bmatrix}$$
+videre til $64$-dimensionale vektorer
+$$\overrightarrow{b}= \begin{bmatrix} b_1\\ \vdots\\ b_{64} \end{bmatrix}$$
+skal der bruges $64\cdot 768$ vægte på formen $c_{ij}$, hvor $i=1,\ldots, 64$ og $j=1,\ldots, 768$.[^33]
+Den $i$te koordinat i $\overrightarrow{b}$ beregnes ved
+$$b_i=c_{i1}a_1 + c_{i2}a_2 + \dotsm + c_{i768}a_{768}.$$
+Det skal så gøres tre gange for at lave de tre vektorer. Gang antal vægte med tre for at få det samlede antal vægte, der skal bruges i en transformerblok.
+
+[^33]: Bemærk at det er de samme vægte $c_{ij}$, der benyttes for alle ord.
+
+Transformerblokkene sættes sammen til et opmærksomhedslag:
+
+3. I GPT-2 var der $K=12$ parallelle opmærksomhedslag. Gang resultatet fra 2. med $12$ for at få antallet af vægte, der samlet set skal bruges til at lave vektorrepræsentationerne i alle opmærksomhedslagene.
 
 4. Outputtet fra hvert opmærksomhedslag er en $64$-dimensional vektor.  Outputtet fra de $12$ opmærksomhedslag sættes i forlængelse af hinanden til en vektor $\vec{x}_i$. Hvilken dimension har $\vec{x}_i$? 
 
@@ -134,9 +147,9 @@ Nu ser vi på det samlede transformernetværk.
 
 7. GPT-2 brugte $N=12$ transformerblokke. Gang resultatet fra 6. med $12$ for at få det samlede antal vægte i transformerblokkene. 
 
-8. Og så har vi endda  sprunget et par trin over. Helt i starten (se 2. ovenfor) blev de $V$ ord i ordforrådet oversat til $768$-dimensionale vektorer. I prædiktionslaget blev der brugt $V$ $768$-dimensionale vektorer til at udregne en score for hvert ord. Ved at bruge tokens i stedet for ord (se boksen under opgaven), kan GPT-2 nøjes med $V=50.257$ ord (eller rettere orddele). Hvor mange ekstra vægte giver det anledning til? 
+8. Til sidst blev der i prædiktionslaget brugt $V$ $768$-dimensionale vektorer til at udregne en score for hvert ord.  Hvor mange ekstra vægte giver det anledning til? 
 
-9. Læg resultatet fra 7. og 8. sammen og sammenlign med det antal vægte, der ofte angives for GPT-2 Small i litteraturen, nemlig $117$ millioner (nogle kilder siger dog $124$ millioner).
+9. Læg resultatet fra 1., 7. og 8. sammen for at få det samlede antal vægte. Sammenlign med det antal vægte, der ofte angives for GPT-2 Small i litteraturen, nemlig $117$ millioner (nogle kilder siger dog $124$ millioner).
 
 :::
 
