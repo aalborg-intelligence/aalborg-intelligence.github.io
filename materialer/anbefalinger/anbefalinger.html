@@ -227,19 +227,19 @@ window.Quarto = {
 </header>
 
 
-<p><img src="images/film.jpg" class="img-fluid" style="float:right;;width:40.0%"> Du kender det sikkert. Du har lige siddet og set en film på Netflix. Bagefter får du vist et forslag til en ny film, du kan se. Du har da egentlig også altid gerne villet se “Mission: Impossible”, så du klikker på filmen. Efter den kommer der nye forslag. Før du får set dig om, har du siddet oppe hele natten og set film. Ikke så godt for dig, hvis du skal op og i skole næste dag, men godt for Netflix. Men hvordan ved Netflix egentlig, hvilke film der kan friste dig til at se videre? Jo, de har indsamlet data om, hvilke film du og andre brugere har set. Ved hjælp af en algoritme, et såkaldt <em>anbefalingssystem</em>, prøver den at forudsige, hvilken film du vil kunne lide.</p>
+<p><img src="images/film.jpg" class="img-fluid" style="float:right;;width:40.0%"> Du kender det sikkert. Du har lige siddet og set en film på Netflix. Bagefter får du vist et forslag til en ny film, du kan se. Du har da egentlig også altid gerne villet se "Mission: Impossible", så du klikker på filmen. Efter den kommer der nye forslag. Før du får set dig om, har du siddet oppe hele natten og set film. Ikke så godt for dig, hvis du skal op og i skole næste dag, men godt for Netflix. Men hvordan ved Netflix egentlig, hvilke film der kan friste dig til at se videre? Jo, de har indsamlet data om, hvilke film du og andre brugere har set. Ved hjælp af en algoritme, et såkaldt <em>anbefalingssystem</em>, prøver den at forudsige, hvilken film du vil kunne lide.</p>
 <p>Du kender anbefalingssystemer fra mange andre onlinetjenester, for eksempel YouTubes videoforslag og Spotifys personlige playlister. Sociale medier som Facebook bruger blandt andet algoritmerne til at foreslå venner og grupper. Og så kender du dem nok også fra onlinehandel. Når du har købt en vare på nettet, foreslår forretningen dig som regel en liste med andre varer, du kunne være interesseret i. Anbefalingerne er en service, der gør det nemmere at finde relevant indhold, men samtidig har de til formål at maksimere den tid, du bruger på en onlinetjeneste, eller de penge, du bruger hos en onlinebutik. Fælles for alle de bagvedliggende virksomheder er, at anbefalingssystemerne er afgørende for deres succes.</p>
 <p>I denne note skal vi se på, hvordan anbefalingssystemer er lavet. Der er to overordnede typer af anbefalingssystemer:</p>
 <ol type="1">
-<li><em>Samarbejdsbaseret:</em><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Her sammenligner man brugerens adfærd med andre brugere. Algoritmen vil så anbefale noget, som brugere med samme adfærd som dig kan lide. I Netflix-eksemplet kunne algoritmen for eksempel kigge på de brugere, der har set de samme film som dig. Hvis mange af dem også har set “Mission: Impossible”, tyder det på, at brugere, der ligner dig, kan lide den, og du vil derfor blive anbefalet at se den.</li>
+<li><em>Samarbejdsbaseret:</em><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Her sammenligner man brugerens adfærd med andre brugere. Algoritmen vil så anbefale noget, som brugere med samme adfærd som dig kan lide. I Netflix-eksemplet kunne algoritmen for eksempel kigge på de brugere, der har set de samme film som dig. Hvis mange af dem også har set "Mission: Impossible", tyder det på, at brugere, der ligner dig, kan lide den, og du vil derfor blive anbefalet at se den.</li>
 </ol>
 <div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Engelsk: Collaborative filtering.</p></div></div><ol start="2" type="1">
-<li><em>Indholdsbaseret:</em><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Her laver man en brugerprofil for hver bruger, der beskriver, hvilken type indhold, brugeren godt kan lide. Algoritmen kan så foreslå mere indhold af samme type. Hvis du har set mange actionfilm på Netflix, vil din brugerprofil fortælle, at du er glad for actionfilm, og algoritmen vil så foreslå actionfilmen “Mission: Impossible”.</li>
+<li><em>Indholdsbaseret:</em><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Her laver man en brugerprofil for hver bruger, der beskriver, hvilken type indhold, brugeren godt kan lide. Algoritmen kan så foreslå mere indhold af samme type. Hvis du har set mange actionfilm på Netflix, vil din brugerprofil fortælle, at du er glad for actionfilm, og algoritmen vil så foreslå actionfilmen "Mission: Impossible".</li>
 </ol>
 <div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Engelsk: Content based filtering.</p></div></div><p>Vi skal se simple eksempler på begge typer algoritmer. Der vil undervejs være links til mere avancerede algoritmer, der kan bruges til at forbedre dem. Fordi anbefalingssystemerne er så vigtige for onlinevirksomhederne, bruger de mange ressourcer på at forfine og videreudvikle algoritmerne, og de præcise algoritmer, der bruges i dag, er typisk en forretningshemmelighed!</p>
 <section id="en-samarbejdsbaseret-algoritme" class="level1 page-columns page-full">
 <h1>En samarbejdsbaseret algoritme</h1>
-<p>Vi ser først et eksempel på, hvordan man kan lave samarbejdsbaserede anbefalinger. Vi forestiller os derfor en filmstreamingtjeneste, der gerne vil lave anbefalinger af typen “Andre har også set…”. De vil altså gerne foreslå dig film, som brugere, der ligner dig, godt kan lide.</p>
+<p>Vi ser først et eksempel på, hvordan man kan lave samarbejdsbaserede anbefalinger. Vi forestiller os derfor en filmstreamingtjeneste, der gerne vil lave anbefalinger af typen "Andre har også set…". De vil altså gerne foreslå dig film, som brugere, der ligner dig, godt kan lide.</p>
 <p>Lad os sige, at tjenesten har et katalog bestående af <span class="math inline">\(p\)</span> film. For hver bruger registrerer hjemmesiden, hvilke film brugeren har set. Hvis tjenesten har <span class="math inline">\(n\)</span> kunder, så indsamler den et datasæt som illustreret i <a href="#tbl-data" class="quarto-xref">tabel&nbsp;1</a>. Hver række svarer til en bruger, og hver søjle svarer til en film. Et 1-tal betyder, at brugeren har set filmen, og et 0 angiver, at brugeren ikke har set filmen.</p>
 <div id="tbl-data" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-tbl figure page-columns page-full">
@@ -298,13 +298,13 @@ P(F_J)= P(\text{ En bruger har set alle film i } J)
 \end{aligned}
 \tag{1}\]</span></span> Populære filmkombinationer vil have høj frekvens.</p>
 <div id="exm-eks1" class="theorem example">
-<p><span class="theorem-title"><strong>Eksempel 1</strong></span> En streamingtjeneste viser filmene “Titanic” og “Mission: Impossible”. Hvis tjenesten har 1000 brugere, hvoraf 411 har set “Titanic”, 358 har set “Mission: Impossible” og 198 har set både “Titanic” og “Mission: Impossible”, så er <span class="math display">\[
+<p><span class="theorem-title"><strong>Eksempel 1</strong></span> En streamingtjeneste viser filmene "Titanic" og "Mission: Impossible". Hvis tjenesten har 1000 brugere, hvoraf 411 har set "Titanic", 358 har set "Mission: Impossible" og 198 har set både "Titanic" og "Mission: Impossible", så er <span class="math display">\[
 \begin{aligned}
 &amp;\hat{P}(F_{\{\text{Titanic}\}}) = \frac{411}{1000}=0.411\\
 &amp;\hat{P}(F_{\{\text{Mission: Impossible}\}}) = \frac{358}{1000}=0.358\\
 &amp;\hat{P}(F_{\{\text{Titanic, Mission: Impossible}\}}) = \frac{198}{1000}=0.198
 \end{aligned}
-\]</span> Titanic var altså den mest populære af de to film, idet <span class="math inline">\(41.1\%\)</span> af brugerne havde set den, mens kun <span class="math inline">\(35.5\%\)</span> havde set Mission:Impossible.</p>
+\]</span> "Titanic" var altså den mest populære af de to film, idet <span class="math inline">\(41.1\%\)</span> af brugerne havde set den, mens kun <span class="math inline">\(35.5\%\)</span> havde set "Mission: Impossible".</p>
 </div>
 </section>
 <section id="andre-har-også-set" class="level2 page-columns page-full">
@@ -358,12 +358,12 @@ P(\textrm{to 6'ere} \mid \textrm{første terning viser 6}) = \frac{1}{6} \neq \f
 </div>
 </div>
 <div id="exm-eks2" class="theorem example">
-<p><span class="theorem-title"><strong>Eksempel 2</strong></span> Vi ser igen på filmtjenesten fra <a href="#exm-eks1" class="quarto-xref">eksempel&nbsp;1</a>. En bruger har lige set “Titanic”, og filmtjenesten vil nu gerne anbefale en ny film. Vi ser derfor på sandsynligheden for, at en bruger, der har set “Titanic”, også har set “Mission: Impossible”. Vi finder <span class="math display">\[\hat{P}(F_{\text{Mission: Impossible}} \mid F_{\text{ Titanic }} ) = \frac{198}{411} \approx 0.482\]</span> Det er altså cirka 48,2% af de brugere, der har set “Titanic”, der også har set “Mission: Impossible”. Hvis der er 145 brugere, der både har set “Titanic” og “Jurassic Park”, så er <span class="math display">\[\hat{P}(F_{\text{ Jurassic Park}} \mid F_{\text{ Titanic }}) = \frac{145}{411} \approx 0.353 \]</span> Folk, der har set “Titanic”, er således mere tilbøjelige til at se “Mission: Impossible” end “Jurassic Park”. “Mission: Impossible” vil derfor være den bedste anbefaling.</p>
+<p><span class="theorem-title"><strong>Eksempel 2</strong></span> Vi ser igen på filmtjenesten fra <a href="#exm-eks1" class="quarto-xref">eksempel&nbsp;1</a>. En bruger har lige set "Titanic", og filmtjenesten vil nu gerne anbefale en ny film. Vi ser derfor på sandsynligheden for, at en bruger, der har set "Titanic", også har set "Mission: Impossible". Vi finder <span class="math display">\[\hat{P}(F_{\text{Mission: Impossible}} \mid F_{\text{ Titanic }} ) = \frac{198}{411} \approx 0.482\]</span> Det er altså cirka 48,2% af de brugere, der har set "Titanic", der også har set "Mission: Impossible". Hvis der er 145 brugere, der både har set "Titanic" og "Jurassic Park", så er <span class="math display">\[\hat{P}(F_{\text{ Jurassic Park}} \mid F_{\text{ Titanic }}) = \frac{145}{411} \approx 0.353 \]</span> Folk, der har set "Titanic", er således mere tilbøjelige til at se "Mission: Impossible" end "Jurassic Park". "Mission: Impossible" vil derfor være den bedste anbefaling.</p>
 </div>
 </section>
 <section id="begrænsninger-ved-algoritmen" class="level2">
 <h2 class="anchored" data-anchor-id="begrænsninger-ved-algoritmen">Begrænsninger ved algoritmen</h2>
-<p>Vi har beskrevet en simpel og klassisk måde at lave anbefalinger på, og er særligt relevant for onlineforretninger, der vil lave forslag af typen “Andre har også købt”. Selv for en lille virksomhed er det nemt at indsamle det relevante data og bruge algoritmen til at lave nye forslag.</p>
+<p>Vi har beskrevet en simpel og klassisk måde at lave anbefalinger på, og er særligt relevant for onlineforretninger, der vil lave forslag af typen "Andre har også købt". Selv for en lille virksomhed er det nemt at indsamle det relevante data og bruge algoritmen til at lave nye forslag.</p>
 <p>Der er dog også forskellige begrænsninger ved tilgangen ovenfor. Måske er der ingen brugere, der har set præcis de samme film som dig. I så fald har vi ikke nogen at sammenligne med. At man har set en film betyder jo heller ikke nødvendigvis, at man kunne lide den.</p>
 <p>Moderne internetvirksomheder har mulighed for at indsamle meget mere data, som kan bruges til at forbedre anbefalingerne. Netflix indsamler for eksempel data om:</p>
 <ul>
@@ -461,9 +461,9 @@ Opgave 3: Ratings af film
 <tr class="header">
 <th style="text-align: center;"></th>
 <th style="text-align: center;"></th>
-<th style="text-align: center;">“Titanic”</th>
-<th style="text-align: center;">“Olsen-banden ser rødt”</th>
-<th style="text-align: center;">“Jagten”</th>
+<th style="text-align: center;">"Titanic"</th>
+<th style="text-align: center;">"Olsen-banden ser rødt"</th>
+<th style="text-align: center;">"Jagten"</th>
 </tr>
 </thead>
 <tbody>
@@ -801,9 +801,9 @@ Opgave 7: Ratings
 <thead>
 <tr class="header">
 <th style="text-align: center;"></th>
-<th style="text-align: center;">“Titanic”</th>
-<th style="text-align: center;">“Ringenes Herre”</th>
-<th style="text-align: center;">“Jurassic park”</th>
+<th style="text-align: center;">"Titanic"</th>
+<th style="text-align: center;">"Ringenes Herre"</th>
+<th style="text-align: center;">"Jurassic park"</th>
 </tr>
 </thead>
 <tbody>
@@ -839,9 +839,9 @@ Opgave 7: Ratings
 <thead>
 <tr class="header">
 <th style="text-align: center;"></th>
-<th style="text-align: center;">“Titanic”</th>
-<th style="text-align: center;">“Ringenes Herre”</th>
-<th style="text-align: center;">“Jurassic park”</th>
+<th style="text-align: center;">"Titanic"</th>
+<th style="text-align: center;">"Ringenes Herre"</th>
+<th style="text-align: center;">"Jurassic park"</th>
 </tr>
 </thead>
 <tbody>
@@ -931,7 +931,7 @@ Opgave 8: Partielle afledede
 </section>
 <section id="moderne-anbefalingssystemer" class="level1">
 <h1>Moderne anbefalingssystemer</h1>
-<p>Vi har skelnet mellem indholdsbaserede og samarbejdsbaserede anbefalingssystemer. De algoritmer der bruges i praksis indeholder dog elementer fra begge dele. Du vil også se, at tjenesterne laver forskellige slags anbefalinger, for eksempel af typen “specielt til dig”, “andre har også set” eller “fordi du så”.</p>
+<p>Vi har skelnet mellem indholdsbaserede og samarbejdsbaserede anbefalingssystemer. De algoritmer der bruges i praksis indeholder dog elementer fra begge dele. Du vil også se, at tjenesterne laver forskellige slags anbefalinger, for eksempel af typen "specielt til dig", "andre har også set" eller "fordi du så".</p>
 <p>Nogle af de datatyper, tjenesterne indsamler, er særligt komplicerede. Det kunne for eksempel være rækkefølgen, du ser filmene i. De senest sete film er typisk mest relevante for dit næste valg. Hvis du lige har set fem kattevideoer på YouTube, er det sandsynligt, at du er i humør til endnu en kattevideo. Her benyttes faktisk nogle af de samme algoritmer, som bruges af de store sprogmodeller, der indgår i blandt andet ChatGPT og Google Translate (du kan læse mere i vores <a href="../../materialer/sprogmodeller.html">noter om sprogmodeller</a>). Ligesom filmenes rækkefølge er vigtig, er det nemlig også vigtigt for sprogmodellerne at kunne tage højde for ordenes rækkefølge i en tekst. Modellerne har derfor meget tilfælles.</p>
 <p>Som nævnt er det afgørende i konkurrencen mellem streamingtjenester, at de er i stand til at levere gode anbefalinger til brugerne. Derfor arbejdes der også til stadighed på at gøre algoritmerne bedre.</p>
 
