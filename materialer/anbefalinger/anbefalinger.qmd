@@ -312,24 +312,44 @@ Som eksempel kan vi kigge på to features. Den første er, hvor mange
 procent af filmen, der udgøres af kærlighedsscener. Den kalder vi $x_1$.
 Den anden er, hvor mange procent af filmen, der udgøres af actionscener.
 Den kalder vi $x_2$. Begge features måles på en skala fra 0 til 100
-procent.
+procent. 
+Vi prædikterer så en given brugers ratings ved modellen
+$$ \hat{r}=b + p_1x_1 + p_2x_2, $$ {#eq-multipel2}
+Her er $\hat{r}$ den prædikterede rating.[^111]
+Der indgår tre konstanter $b$, $p_1$ og $p_2$ kaldet  *vægte*[^4], som afhænger af den specifikke bruger.
 
-Vi forstiller os så, at en given brugers ratings er på formen
-$$ r=b + p_1x_1 + p_2x_2 $$ {#eq-multipel2} Hvis der hverken er
+[^111]: Hatten over $r$'et angiver, at det er en prædikteret værdi, mens et $r$ uden hat betegner brugerens faktiske rating.
+
+::: {#exm-eks3}
+En bruger har vægtene $b=2$, $p_1=-0.02$
+og $p_2=0.05$. Brugerens ratings prædikteres derfor ved
+$$\hat{r}= 2 - 0.02x_1 + 0.05x_2$$ En romantisk film har måske $x_1=50$ og
+$x_2=0$. Vi forventer så, at brugeren ville give filmen ratingen
+$$\hat{r}=2-0.02\cdot 50+0.05\cdot 0=1$$ En actionfilm ville måske have
+$x_1=5$ og $x_2=40$. Det ville give ratingen
+$$\hat{r}=2-0.02\cdot 5 + 0.05\cdot 40 = 3.9 $$
+Vi ser, at de prædikterede ratings ikke nødvendigvis giver et af tallene fra 1 til 5. Vi kan sågar risikere at ryge helt uden for intervallet fra 1 til 5, hvis filmen har meget ekstreme features. En film med $100\%$ action og $0\%$ romantik ville få ratingen
+$$\hat{r}=2-0.02\cdot 0 + 0.05\cdot 100 = 7 $$
+Det gør dog ikke noget. Vi vil aldrig kunne forudsige brugerens ratings præcist, men vi vil gerne have, at modellen kommer tæt på.
+:::
+
+Vi ser nu på fortolkningen af vægtene i modellen (@eq-multipel2). Hvis der hverken er
 kærlighed eller action i filmen, det vil sige hvis $x_1=x_2=0$, så er
-$$r= b + p_1\cdot 0 + p_2\cdot 0 = b$$ Vi kan altså fortolke $b$ som
-brugerens rating af en film, der hverken indeholder kærlighed eller
+$$\hat{r}= b + p_1\cdot 0 + p_2\cdot 0 = b$$ 
+Vi kan altså fortolke $b$ som
+brugerens forventede rating af en film, der hverken indeholder kærlighed eller
 action. Dette minder om skæringen i en lineær regressionsmodel, og vi
 vil derfor omtale $b$ som *skæringen*.
 
 Vi ser også, at hvis andelen af kærlighedsscener $x_1$ stiger med 1
-procentpoint til $x_1+1$, og $x_2$ fastholdes, så stiger ratingen fra
-$$r= b+p_1x_1 + p_2x_2$$ til
-$$r=b+p_1(x_1+1) + p_2x_2 = b+p_1x_1 + p_2x_2 +p_1$$ Vi ser, at når
+procentpoint til $x_1+1$, og $x_2$ fastholdes, så stiger den prædikterede rating fra
+$$\hat{r}= b+p_1x_1 + p_2x_2$$ til
+$$\hat{r}=b+p_1(x_1+1) + p_2x_2 = b+p_1x_1 + p_2x_2 +p_1$$ Vi ser, at når
 $x_1$ vokser med 1 enhed, så vokser ratingen med $p_1$ (hvis altså $x_2$
 samtidig fastholdes). Dette minder om fortolkningen af
 hældningskoefficienten i en lineær regressionsmodel. Man kan derfor
-tænke på $p_1$ som hældningen for $x_1$. På samme vis kan man
+tænke på $p_1$ som hældningen for $x_1$. 
+På samme vis kan man
 argumentere for, at hvis $x_1$ fastholdes, mens $x_2$ vokser med 1
 enhed, så stiger ratingen med $p_2$. Vi kan altså opfatte $p_2$ som en
 hældningskoefficient for $x_2$.
@@ -339,15 +359,15 @@ negativt. Hvis $p_2$ er positiv, stiger ratingen, jo mere action der er
 i filmen. Jo større $p_2$ er, desto mere begejsret er brugeren for
 action. Hvis $p_2$ er negativ, falder ratingen, jo mere action der er i
 filmen. Tilsvarende fortæller $p_1$ noget om, hvor glad brugeren er for
-kærlighedsfilm. Vi kan derfor fortolke $p_1$ og $p_2$ som mål for
-brugerens præferencer.
+kærlighedsfilm.  Vi kan derfor fortolke $p_1$ og $p_2$ som mål for
+brugerens præferencer. I @exm-eks3 var $p_1$ negativ, mens $p_2$ var positiv, svarende til at brugeren godt kan lide action, men ikke kan lide romantik. Vi så da også, at actionfilmen fik højere rating end den romantiske film.
 
 Modellen i (@eq-multipel2) har mange ligheder med den lineære
 regressionsmodel, blot er der to variable $x_1$ og $x_2$ i stedet for en
 enkelt $x$-variabel. Den kaldes derfor for den *multiple lineære
-regressionsmodel*. Der indgår tre konstanter, nemlig $b$, $p_1$ og
-$p_2$, som vi kalder for *vægte*.[^4] Disse vægte er specifikke for den
-enkelte bruger. Der skal altså laves en multipel lineær regressionsmodel
+regressionsmodel*. Der indgår tre vægte, nemlig $b$, $p_1$ og
+$p_2$. Disse vægte afhænger af brugerens præferencer og er derfor specifikke for den
+enkelte bruger. Der skal således laves en multipel lineær regressionsmodel
 for hver enkelt bruger.
 
 [^4]: Nogle gange kaldes de også for *parametre*.
@@ -358,29 +378,44 @@ dens features i modellen og beregne brugerens forventede rating af
 filmen. Algoritmen kan så anbefale den film, som brugeren forventes at
 rate bedst.
 
-SKAL DER EVT LAVES NOGET VISUALISERING?
 
-::: {#exm-eks3}
-En bruger, der foretrækker actionfilm vil måske have $b=2$, $p_1=-0.02$
-og $p_2=0.05$. Så er brugerens ratings givet ved
-$$r= 2 - 0.02x_1 + 0.05x_2$$ En romantisk film har måske $x_1=50$ og
-$x_2=0$. Brugeren ville så give filmen ratingen
-$$r=2-0.02\cdot 50+0.05\cdot 0=1$$ En actionfilm ville måske have
-$x_1=5$ og $x_2=40$. Det ville give ratingen
-$$r=2-0.02\cdot 5 + 0.05\cdot 40 = 3.9 $$
-:::
+
+
 
 ### Flere variable
 
 Mere generelt kunne man vælge at betragte $M$ features. Vi ville så have
 $M$ variable $x_1,\ldots, x_M$. For hver bruger ville vi have så have
 $M$ vægte $p_1,\ldots,p_M$, der beskriver brugerens præferencer, og en
-skæring $b$. Vi modellerer brugerens rating af en film som
-$${r} = b+ p_{1}x_{1} + p_{2}x_{2} + \dotsm + p_{M}x_{M}$$ {#eq-multipel}
-Dette kaldes en multipel lineær regressionsmodel med $M$ variable.
+skæring $b$. Vi prædiktere brugerens rating af en film som
+$$\hat{r} = b+ p_{1}x_{1} + p_{2}x_{2} + \dotsm + p_{M}x_{M}$$ {#eq-multipel}
+Dette kaldes en *multipel lineær regressionsmodel med $M$ variable*.
 
 :::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 3: Ratings af film
+### Opgave 3: Den multiple regressionsmodel
+Betragt den multiple regressionsmodel for brugeren i @exm-eks3, altså
+$$\hat{r}= 2 - 0.02x_1 + 0.05x_2$${#eq-modeleks}
+
+- Lad os se på film med $x_2=0$, det vil sige film uden action.    
+  - Redegør for, at hvis vi sætter $x_2=0$ i (@eq-modeleks), så får vi, at $\hat{r}$ er en lineær funktion af $x_1$. 
+  - Hvad er hældning og skæring i modellen? 
+  - Tegn den rette linje ind i et koordinatsystem.
+  - Hvad sker der med ratings, når indholdet af romantik stiger?
+
+- Prøv i stedet at sætte $x_2=50$ i modellen. 
+  - Hvad er hældning og skæring nu? 
+  - Tegn den tilhørende rette linje ind i samme koordinatsystem som linjen for $x_2=0$.
+  - Hvad er forskellen på de to linjer?
+  
+- Vi gør nu det samme for fastholdt $x_1$.
+  - Sæt $x_1=10$, og tegn den tilhørende linje ind i et koordinatsystem med $x_2$ på $x$-aksen.
+  - Gør det samme for $x_1=60$.
+  - Hvad sker der med ratings, når andelen af action stiger?
+::::
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 4: Ratings af film
 
 Vi betragter 3 features, nemlig varighed, produktionsår (regnet i
 forhold til år 2000), og vurdering på IMDb. Tre film har følgende
@@ -391,7 +426,7 @@ features:
 |:--:|:-----------------:|:---------:|:-----------------------:|:--------:|
 | $x_1$ |   Varighed  |    194    |           105           |   1  |
 | $x_2$ | År - 2000  |    -3     |           -24           |    12|
-| $x_3$ |IMdb rating |    7.9    |           7.7           |   8.3|
+| $x_3$ |IMDb rating |    7.9    |           7.7           |   8.3|
 :::
 
 -   En bruger, som foretrækker gamle film, men hader lange film, har
@@ -406,9 +441,9 @@ features:
 ::::
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 4: Multipel regressionsmodel med én variabel
+### Opgave 5: Multipel regressionsmodel med én variabel
 
--   Gør rede for, at en multipel regressionsmodel med én variabel, er
+-   Gør rede for, at en multipel regressionsmodel som i (@eq-multipel) med én variabel, er
     det samme som en almindelig regressionsmodel, som I kender det fra
     gymnasieundervisningen.
 :::
@@ -505,7 +540,7 @@ her.
     variable](../funktioner_af_flere_variable/funktioner_af_flere_variable.qmd).
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 5: Partielle afledede
+### Opgave 6: Partielle afledede
 
 -   Vis, at de partielle afledte er som givet i (@eq-partiel). Bemærk,
     at da $E$ er en sum, kan den differentieres ledvist. Det er altså
@@ -698,12 +733,12 @@ vores rating-matrix $\hat{R}$ er faktoriseret som et produkt af to
 matricer. Deraf navnet matrixfaktorisering.
 :::
 
-### Korrektion af modellen
+### Skæring i modellen
 
 Da vi lavede multipel lineær regression, var der også en skæring i
 modellen, som svarede til ratingen, når alle features var nul.
 Tilsvarende er det oplagt at tilføje en skæring i\
-(@eq-model). Det gøres ofte med modellen
+(@eq-matrixfak). Det gøres ofte med modellen
 $$\hat{r}_{ij} =  b + c_i + d_j+ p_{i1}x_{1j} +p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj} $$
 Her angiver $b$ den gennemsnitlige rating for alle film, når alle
 featurevægte er nul. Hver bruger har desuden et personligt led $c_i$,
@@ -718,7 +753,7 @@ end gennemsnittet. For nemheds skyld arbejder vi videre med modellen
 (@eq-matrixfak) i det følgende.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 6: Antal vægte som skal estimeres
+### Opgave 7: Antal vægte som skal estimeres
 
 Antag, at en streamingtjeneste har $n=1.000.000$ brugere og et katalog
 på $10.000$ film.
@@ -776,7 +811,7 @@ $$ {#eq-partiel3} Disse formler gør, at en computer nemt kan lave
 gradientnedstigning.
 
 :::::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 7: Ratings
+### Opgave 8: Ratings
 
 1.  Tre brugere har ratet tre film som følger:
 
@@ -822,7 +857,7 @@ Tabel over præferencevægte.
 ::::::
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 8: Partielle afledede
+### Opgave 9: Partielle afledede
 
 Vis, at de partielle afledte af $(r_{ij}-\hat{r}_{ij})^2$ med hensyn til
 vægtene er givet ved formlerne (@eq-partiel1), (@eq-partiel2) og
