@@ -118,38 +118,40 @@ I denne opgave giver vi et overslag over størrelsen på den transformer, der bl
 
 Vi ser på de enkelte trin i transformeren:
 
-1. Helt i starten  bliver hvert af de $V$ ord oversat til $768$-dimensionale vektorer (dette trin blev ikke gennemgået i noten). Hvor mange vægte skal der bruges? 
+1. Helt i starten  bliver hver af de $V$ tokens oversat til $768$-dimensionale vektorer (dette trin blev ikke gennemgået i noten). Hvor mange vægte skal der bruges? 
 
-Nu ser vi på en enkelt transformerblok:
+Nu ser først på en enkelt transformerblok:
 
-2. Det første der sker i transformerblokken, er, at vores ord  oversættes til 3 vektorer. I GPT-2 havde hver af de 3 vektorer  dimension $64$. Husk på, at hvert ord allerede er blevet oversat til en $768$-dimensional vektor i Punkt 1. For at oversætte  $768$-dimensionale vektorer
+2. Det første der sker i transformerblokken, er, at vores tokens  oversættes til de 3 vektorer $\overrightarrow{q}$, $\overrightarrow{k}$ og $\overrightarrow{v}$.  Husk på, at hver token allerede er blevet oversat til en $768$-dimensional vektor i 1., så i virkeligheden er det disse vektorer, der skal oversættes videre til de tre vektorer.  I GPT-2 havde hver af de 3 vektorer dimension $64$. 
+For at lave $\overrightarrow{q}$-vektorerne, oversættes hver $768$-dimensional vektor
 $$\overrightarrow{a}= \begin{bmatrix} a_1\\ \vdots\\ a_{768} \end{bmatrix}$$
-videre til $64$-dimensionale vektorer
-$$\overrightarrow{b}= \begin{bmatrix} b_1\\ \vdots\\ b_{64} \end{bmatrix}$$
-skal der bruges $64\cdot 768$ vægte på formen $c_{ij}$, hvor $i=1,\ldots, 64$ og $j=1,\ldots, 768$.[^33]
-Den $i$te koordinat i $\overrightarrow{b}$ beregnes ved
-$$b_i=c_{i1}a_1 + c_{i2}a_2 + \dotsm + c_{i768}a_{768}.$$
-Det skal så gøres tre gange for at lave de tre vektorer. Gang antal vægte med tre for at få det samlede antal vægte, der skal bruges i en transformerblok.
-
-[^33]: Bemærk at det er de samme vægte $c_{ij}$, der benyttes for alle ord.
+til en $64$-dimensional vektor
+$$\overrightarrow{q}= \begin{bmatrix} q_1\\ \vdots\\ q_{64} \end{bmatrix}$$
+ved hjælp af $64\cdot 768$ vægte på formen $c_{ij}^q$, hvor $i=1,\ldots, 64$ og $j=1,\ldots, 768$.
+Den $i$te koordinat i $\overrightarrow{q}$ beregnes ved
+$$q_i=c_{i1}^qa_1 + c_{i2}^qa_2 + \dotsm + c_{i768}^qa_{768}.$$
+Tilsvarende skal der bruges $64\cdot 768$ vægte $c_{ij}^k$ for at lave $\overrightarrow{k}$-vektorerne og $64\cdot 768$ vægte $c_{ij}^v$ for at lave $\overrightarrow{v}$-vektorerne.
+Hvor mange vægte blev der brugt i alt (bemærk, at det er de samme vægte $c_{ij}^q$, $c_{ij}^k$ og $c_{ij}^v$, der benyttes for alle tokens).
 
 Transformerblokkene sættes sammen til et opmærksomhedslag:
 
 3. I GPT-2 var der $K=12$ parallelle opmærksomhedslag. Gang resultatet fra 2. med $12$ for at få antallet af vægte, der samlet set skal bruges til at lave vektorrepræsentationerne i alle opmærksomhedslagene.
 
-4. Outputtet fra hvert opmærksomhedslag er en $64$-dimensional vektor.  Outputtet fra de $12$ opmærksomhedslag sættes i forlængelse af hinanden til en vektor $\vec{x}_i$. Hvilken dimension har $\vec{x}_i$? 
+4. Outputtet fra hvert opmærksomhedslag er en $64$-dimensional vektor.  Outputtet fra de $12$ opmærksomhedslag sættes i forlængelse af hinanden til en vektor $\vec{x}$. Hvilken dimension har $\vec{x}$? 
 
-5. Som det næste bliver $\vec{x}_i$ brugt som input i et neuralt netværk. GPT-2 bruger $d=4\cdot 768$ neuroner i det skjulte lag og outputtet er en ny vektor af dimension $768$. Hvor mange vægte skal der i alt bruges til det neurale netværk (brug eventuelt din beregning fra opgave 1 i [del 4](sprogmodeller_del4.qmd#aktivitet-1---antal-parametre-i-modellen)).
+5. Som det næste bliver $\vec{x}$ brugt som input i et neuralt netværk. GPT-2 bruger $d=4\cdot 768$ neuroner i det skjulte lag, og outputtet er en ny vektor af dimension $768$. Hvor mange vægte skal der i alt bruges til det neurale netværk (brug eventuelt din beregning fra opgave 1 i [del 4](sprogmodeller_del4.qmd#aktivitet-1---antal-parametre-i-modellen)).
 
 6. Læg  antallet af vægte i opmærksomhedslagene, som du fandt i 3., sammen med antallet af vægte i det neurale netværk, som du fandt i 5., for at få det samlede antal vægte i en transformerblok.
 
-Nu ser vi på det samlede transformernetværk.
+Nu ser vi på det samlede transformernetværk:
 
 7. GPT-2 brugte $N=12$ transformerblokke. Gang resultatet fra 6. med $12$ for at få det samlede antal vægte i transformerblokkene. 
 
-8. Til sidst blev der i prædiktionslaget brugt $V$ $768$-dimensionale vektorer til at udregne en score for hvert ord.  Hvor mange ekstra vægte giver det anledning til? 
+8. Til sidst var der et prædiktionslag. Her blev brugt en $768$-dimensional vektor for hver af de $V$ tokens for at udregne en score. Det er de samme vektorer, som blev brugt i 1., så der skal ikke bruges nye vægte til dette trin. 
 
-9. Læg resultatet fra 1., 7. og 8. sammen for at få det samlede antal vægte. Sammenlign med det antal vægte, der ofte angives for GPT-2 Small i litteraturen, nemlig $117$ millioner (nogle kilder siger dog $124$ millioner).
+9. Læg resultatet fra 1. og 7. sammen for at få det samlede antal vægte. Sammenlign med det antal vægte, der ofte angives for GPT-2 Small i litteraturen, nemlig $117$ millioner (nogle kilder siger dog $124$ millioner).
+
+De resterende vægte skyldes mindre trin, som vi ikke har gennemgået.
 
 :::
 
@@ -157,7 +159,7 @@ Nu ser vi på det samlede transformernetværk.
 
 ### Tokens
 
-Mange ord er opbygget af mindre dele, som går igen i mange forskellige ord. For eksempel er "lær" et ord i sig selv, men det kan også sættes sammen med andre orddele til at danne ord som "lær-e", "lær-er", "lær-ing" eller "lær-e-bog". Orddelene "e", "er" og "ing" forekommer i rigtig mange ord. Disse dele kaldes tokens. Ord adskilles af mellemrum, som er et token i sig selv.     
+Mange ord er opbygget af mindre dele, som går igen i  forskellige ord. For eksempel er "lær" et ord i sig selv, men det kan også sættes sammen med andre orddele til at danne ord som "lær-e", "lær-er", "lær-ing" eller "lær-e-bog". Orddelene "e", "er" og "ing" forekommer i rigtig mange ord. Disse dele kaldes tokens. Ord adskilles af mellemrum, som er et token i sig selv.     
 I stedet for at dele tekst op i ord, deler store sprogmodeller  tekst op i tokens. Fordelen er, at antallet af forskellige tokens, hvis de er valgt fornuftigt, er noget mindre end det samlede antal ord i sproget. Samtidig er de store nok til at indeholde  information om sprogets betydning. For eksempel forekommer tokenet "lær" ofte i ord relateret til læring, mens tokens som "er" eller "ing" ofte markerer en bestemt bøjning af et ord.
 
 :::
