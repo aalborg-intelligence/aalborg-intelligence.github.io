@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -34,14 +34,15 @@ ul.task-list li input[type="checkbox"] {
 <link href="../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-117cf6564b43f3aeecf187829027ef13.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-a56cede0eac73c8a8bcab8be466c7faa.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -98,7 +99,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -124,7 +125,8 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo">
+    <img src="../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo light-content">
+    <img src="../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo dark-content">
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -215,13 +217,16 @@ window.Quarto = {
 </header>
 
 
+<div class="fremhaev2">
+<p>Bemærk, at dette forløb indgår som del 1 i et <a href="../undervisningsforlob/neurale_net_langt_forlob/neurale_net_forside.html">længere forløb om kunstige neuroner</a>.</p>
+</div>
 <div class="callout callout-style-simple callout-caution no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Forudsætninger og tidsforbrug
+<span class="screen-reader-only">Caution</span>Forudsætninger og tidsforbrug
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -244,7 +249,7 @@ Forudsætninger og tidsforbrug
 <h2 class="anchored" data-anchor-id="introduktion">Introduktion</h2>
 <p>Når man træner en AI model, sker det som regel ved, at man forsøger at minimere de fejl, som modellen laver, når den anvendes på data, hvor man allerede kender svaret.</p>
 <p>For at blive lidt mere konkret så minimerer man en såkaldt <strong>tabsfunktion</strong> <span class="math inline">\(E\)</span> (<span class="math inline">\(E\)</span> for <em>error function</em>), som har til formål at "måle", hvor god en AI model<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> er. En tabsfunktion <span class="math inline">\(E\)</span> har altid den egenskab, at <span class="math inline">\(E \geq 0\)</span>, og at en lille værdi af <span class="math inline">\(E\)</span> svarer til en god model (der er et lille tab), mens en stor værdi af <span class="math inline">\(E\)</span> svarer til en mindre god model. Derfor vælger man den model, som giver den mindste værdi af tabsfunktionen.</p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Med AI model tænker vi her på en perceptron, et simplet neuralt netværk, et generelt neuralt netværk eller en anden form for funktion, som kan bruges til at prædiktere et eller andet.</p></div></div><p>AI modellen trænes altså ved at finde minimum for tabsfunktionen. Det gøres ofte ved hjælp af <a href="https://aimat.dk/materialer/gradientnedstigning/gradientnedstigning.html">gradientnedstigning</a> – men den konkrete metode er ikke så vigtig lige nu. Det vigtige er her at forstå, at hvis man skal finde minimum for en funktion, så har man brug for at kunne differentiere.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Med AI model tænker vi her på en perceptron, et simplet neuralt netværk, et generelt neuralt netværk eller en anden form for funktion, som kan bruges til at prædiktere et eller andet.</p></div></div><p>AI modellen trænes altså ved at finde minimum for tabsfunktionen. Det gøres ofte ved hjælp af <a href="../materialer/gradientnedstigning/gradientnedstigning.html">gradientnedstigning</a> – men den konkrete metode er ikke så vigtig lige nu. Det vigtige er her at forstå, at hvis man skal finde minimum for en funktion, så har man brug for at kunne differentiere.</p>
 <p>Tabsfunktionen er en sammensat funktion. Den er sammensat af lineære funktioner, som vi kender rigtig godt fra tidligere, andengradspolynomier, og en særlig klasse af funktioner, som kaldes for <strong>aktiveringsfunktioner</strong>. Og det giver nok mening, at hvis man skal differentiere selve tabsfunktionen, så må man også kunne differentiere den anvendte aktiveringsfunktion <span class="math inline">\(f\)</span>.</p>
 <p>Desuden viser det sig vigtigt, at det ikke må være alt for beregningsmæssigt tungt at beregne funktionsværdierne <span class="math inline">\(f(x)\)</span> og <span class="math inline">\(f'(x)\)</span>. Det skal simpelthen gøres så mange gange – derfor dur det ikke, at det tager for lang tid. Det er derfor ønskværdigt, hvis en aktiveringsfunktions afledede funktion <span class="math inline">\(f'(x)\)</span> kan beregnes forholdvis simpelt ved hjælp af <span class="math inline">\(f(x)\)</span>. Det betyder nemlig, at hvis vi allerede har udregnet <span class="math inline">\(f(x)\)</span>, så kræver det ikke ret meget også at udregne <span class="math inline">\(f'(x)\)</span>. Det kan illustreres med et eksempel:</p>
 <div id="exm-aktiveringsfunktioner1" class="theorem example">
@@ -310,12 +315,12 @@ Vm(f)=(0,1).
 \]</span></p>
 <p>Hvis du vil have et lidt bedre argument for det, kan du læse i boksen herunder.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Argument for værdimængden for <span class="math inline">\(f\)</span>
+<span class="screen-reader-only">Tip</span>Argument for værdimængden for <span class="math inline">\(f\)</span>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -373,7 +378,7 @@ f'(x)= f(x)\cdot (1-f(x)).
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 1: Differentiation af sigmoid-funktionen
+<span class="screen-reader-only">Note</span>Opgave 1: Differentiation af sigmoid-funktionen
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -386,12 +391,12 @@ f'(x)= \frac{\mathrm{e}^{-x}}{(1+\mathrm{e}^{-x})^2}.
 </div>
 </div>
 <div class="callout callout-style-simple callout-caution no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Hints til opgave 1
+<span class="screen-reader-only">Caution</span>Hints til opgave 1
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -416,7 +421,7 @@ f'(x)= \frac{\mathrm{e}^{-x}}{(1+\mathrm{e}^{-x})^2}.
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 2: Omskrivning af <span class="math inline">\(f'(x)\)</span> for sigmoid-funktionen
+<span class="screen-reader-only">Note</span>Opgave 2: Omskrivning af <span class="math inline">\(f'(x)\)</span> for sigmoid-funktionen
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -431,12 +436,12 @@ f(x)=\frac{1}{1+\mathrm{e}^{-x}}.
 </div>
 </div>
 <div class="callout callout-style-simple callout-caution no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Hints til opgave 2
+<span class="screen-reader-only">Caution</span>Hints til opgave 2
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -515,12 +520,12 @@ Vm(f) = (-1,1).
 \]</span></p>
 <p>Det vil sige, at hvis vi skal bruge softsign-funktionen som aktiveringsfunktion, så skal targetværdierne være <span class="math inline">\(\pm 1\)</span>.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Argument for kontinuitet i <span class="math inline">\(0\)</span> og værdimængde for <span class="math inline">\(f\)</span>
+<span class="screen-reader-only">Tip</span>Argument for kontinuitet i <span class="math inline">\(0\)</span> og værdimængde for <span class="math inline">\(f\)</span>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -579,7 +584,7 @@ f'(x)=(1-|f(x)|)^2.
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 3: Differentiation af softsign-funktionen
+<span class="screen-reader-only">Note</span>Opgave 3: Differentiation af softsign-funktionen
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -601,12 +606,12 @@ x \cdot \frac{1}{1-x} &amp; \textrm{hvis } x &lt; 0 \\
 </div>
 </div>
 <div class="callout callout-style-simple callout-caution no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Hints til opgave 3
+<span class="screen-reader-only">Caution</span>Hints til opgave 3
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -630,7 +635,7 @@ f'(x)=\frac{1}{(1-x)^2} = \frac{1}{(1+|x|)^2}.
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 4: Omskrivning af <span class="math inline">\(f'(x)\)</span> for softsign-funktionen
+<span class="screen-reader-only">Note</span>Opgave 4: Omskrivning af <span class="math inline">\(f'(x)\)</span> for softsign-funktionen
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -643,12 +648,12 @@ f'(x)=(1-|f(x)|)^2.
 </div>
 </div>
 <div class="callout callout-style-simple callout-caution no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Hints til opgave 4
+<span class="screen-reader-only">Caution</span>Hints til opgave 4
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -684,12 +689,12 @@ Figur&nbsp;5: Grafen for hyperbolsk tangens.
 </div>
 <p>Ifølge figuren ser det ud til, at <span class="math inline">\(Vm(f)=(-1,1)\)</span>. Det argumenterer vi nærmere for i boksen herunder.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Argument for værdimængden for <span class="math inline">\(\tanh\)</span>
+<span class="screen-reader-only">Tip</span>Argument for værdimængden for <span class="math inline">\(\tanh\)</span>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -746,7 +751,7 @@ Vm(\tanh)=(-1,1).
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Opgave 5: Differentiation af tanh-funktionen og omskrivning
+<span class="screen-reader-only">Note</span>Opgave 5: Differentiation af tanh-funktionen og omskrivning
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -761,12 +766,12 @@ Opgave 5: Differentiation af tanh-funktionen og omskrivning
 </div>
 </div>
 <div class="callout callout-style-simple callout-caution no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Hints til opgave 5
+<span class="screen-reader-only">Caution</span>Hints til opgave 5
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -943,13 +948,14 @@ x &amp; \textrm{hvis } x &gt; 0 \\
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
