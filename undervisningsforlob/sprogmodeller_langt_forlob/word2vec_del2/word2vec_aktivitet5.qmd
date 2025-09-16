@@ -1,0 +1,95 @@
+Læs afsnittet [\"Model for sandsynligheder\" i noten Word2Vec](/materialer/sprogmodeller/word2vec.qmd#model-for-sandsynligheder). 
+
+Vi starter med at minde om definitionen af Softmax:
+
+
+::: {.highlight2 }
+
+**Softmax**
+
+Hvis $\vec{y}$ er en vektor med $V$ koordinater:
+
+$$
+\vec{y} = 
+\begin{pmatrix}
+y_1 \\
+y_2 \\
+\vdots \\
+y_V
+\end{pmatrix}
+$$
+
+så er $\text{Softmax}\big(\vec{y}\big)=\vec{z}$, hvor $\vec{z}$ er en ny vektor med $V$ koordinater. Den $i$'te koordinat i $\vec{z}$ er givet ved
+
+$$
+z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}
+$$ {#eq-softmax}
+
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 7: Softmax
+
+Lad $\vec{y}$ være vektoren
+$$\vec{y}= \begin{pmatrix} 1 \\2 \\-1 \end{pmatrix}$$
+
+a) Beregn $\vec{z} = \text{Softmax}(\vec{y})$.
+
+b) Kontroller at følgende er opfyldt:
+
+   - $0<z_i<1$
+   
+   - $z_1 + z_2 + \dotsm + z_V = 1$
+   
+   - Hvis $y_i < y_j$, så er $z_i < z_j$.
+
+:::
+
+
+Husk på, at vi betegner sandsynligheden for, at $\text{ord}_i$ er et kontekstord til $w$, med 
+
+$$
+P(\text{ord}_i\mid w)
+$$
+Denne sandsynlighed beregnes ved først at bestemme skalarproduktet
+
+$$
+y_i = \vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}
+$$
+for $i \in \{1, 2, ..., V\}$, hvor $V$ er antallet af ord i vores ordforråd. 
+
+Herefter bruges Softmax:
+
+$$
+\begin{aligned}
+P(\text{ord}_i\mid w) &= z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \\ &= \frac{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}}}{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_V}}}
+\end{aligned}
+$${#eq-sshmodel}
+
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 8: Model for sandsynligheder
+
+Antag, at vores ordforråd består af de tre ord \"sommer\", \"sol\" og \"sne\". Vi har lavet en model for sandsynligheder for kontekstord som i (@eq-sshmodel), hvor 
+fokusvektoren for \"sommer\" og kontekstvektorerne for \"sommer\", \"sol\" og
+\"sne\" er givet ved 
+$$
+\begin{aligned}
+\vec{v}_{\text{sommer}}=\begin{pmatrix} 1\\1\end{pmatrix},\quad
+\vec{k}_{\text{sommer}}=\begin{pmatrix} 1\\-1 \end{pmatrix} ,\\
+\\
+\vec{k}_{\text{sol}}=\begin{pmatrix} 0\\2\end{pmatrix},\quad
+\vec{k}_{\text{sne}} =\begin{pmatrix} -1\\-2\end{pmatrix}
+\end{aligned}
+$$
+
+a) Indtegn repræsentanter for de fire vektorer i et koordinatsystem. 
+
+b) Hvad er sandsynligheden for, at hvert af de tre ord er kontekst til \"sommer\"?     
+
+c) Passer svaret fra b. med, hvilket af de tre ord, som du umiddelbart vil tænke, oftest optræder som kontekst til sommer?
+
+:::

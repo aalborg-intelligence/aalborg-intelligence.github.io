@@ -24,384 +24,43 @@ I denne del skal vi se på, hvordan det kan gøres.
 
 ## Aktivitet 1 - Ord som vektorer {.aimat}
 
-Læs det første afsnit i [noten Word2Vec](../../materialer/sprogmodeller/word2vec.qmd). 
 
-::: {.callout-note collapse="false" appearance="minimal"}
-
-### Opgave 1: Ord som vektorer
-
-I algoritmen **Word2Vec** bliver hvert ord repræsenteret som en vektor. Det gøres på en sådan måde at ord, hvis betydning minder om hinanden, svarer til vektorer med nogenlunde samme retning og længde.
-
-* Brug app'en herunder til at argumentere for, hvorfor de fire vektorer har den længde og retning, som de har.
-
-:::
-
-{{< include _geogebra/_geogebra.qmd >}}
-
-::: {#fig-opg1}
-:::: {.ggbContainer style='width:100%; margin: auto'}
-::: {#ggbApplet_vektorer}
-:::
-:::
-App til opgave 1.
-:::
+{{< include word2vec_del2/word2vec_aktivitet1.qmd >}}
 
 {{< include ../space.qmd >}}
 
 
 ## Aktivitet 2 - Betydning og kontekst {.aimat}
 
-Læs afsnittet [\"Betydning og kontekst\" i noten Word2Vec](../../materialer/sprogmodeller/word2vec.qmd#betydning-og-kontekst). 
-
-Vi gentager her en vigtig pointe:
-
-::: {.highlight .centertext}
-**Betydningen af et ord er bestemt af den kontekst, ordet indgår i.**
-:::
-
-
-::: {.callout-note collapse="false" appearance="minimal"}
-
-### Opgave 2: Betydning er kontekst
-
-Ordet \"får\" har flere betydninger.
-
-* Skriv mindst to sætninger, hvor man ud fra konteksten forstår to forskellige betydninger af \"får\".
-
-* Find selv på et ord med flere betydninger og skriv mindst to sætninger, som afslører betydningen.
-
-:::
+{{< include word2vec_del2/word2vec_aktivitet2.qmd >}}
 
 {{< include ../space.qmd >}}
 
 
 ## Aktivitet 3 - Træningsdata {.aimat}
 
-Læs afsnittet [\"Træningsdata\" i noten Word2Vec](../../materialer/sprogmodeller/word2vec.qmd#træningsdata). 
-
-
-::: {.callout-note collapse="false" appearance="minimal"}
-
-### Opgave 3: Træningsdata
-
-Betragt følgende tekstkorpus:
-
-::: {.llm_saetninger}
-Matematik er det sjoveste fag i verden
-:::
-
-* Udfyld med udgangspunkt i ovenstående tekstkorpus og et 3-ords vindue nedenstående tabel (se eventuelt [tabel 1 i noten om Word2vec](../../materialer/sprogmodeller/word2vec.qmd#tbl-data)). Bemærk, at kontekstcellen skal være blank, hvis den tilsvarende plads i vinduet er tom.
-
-   | Fokus | Kontekst |
-   |:---:|:---:|
-   | Matematik  |   |
-   | Matematik  |   |
-   | er  |   |
-   | er  |   |
-   | det  |   |
-   | det  |   |
-   | $\vdots$  | $\vdots$ |
-   : {.bordered}
-
-:::
-
+{{< include word2vec_del2/word2vec_aktivitet3.qmd >}}
 
 {{< include ../space.qmd >}}
 
 
 ## Aktivitet 4 - Fokus- og kontekstvektorer {.aimat}
 
-Læs afsnittet [\"Fokus- og kontekstvektorer\" i noten Word2Vec](../../materialer/sprogmodeller/word2vec.qmd#fokus--og-kontekstvektorer). 
-
-
-Husk på denne vigtige pointe:
-
-::: {.highlight2 }
-
-Vi vil gerne have, at vores fokus- og kontekstvektorer skal opfylde, at
-hvis $w$ ofte har $c$ som kontekst, så er skalarproduktet
-$\vec{v}_{w}\cdot \vec{k}_{c}$ stort, mens en
-meget negativ værdi af
-$\vec{v}_{w}\cdot \vec{k}_{c}$ indikerer, at $w$
-sjældent har $c$ som kontekst.
-
-:::
-
-::: {.callout-note collapse="false" appearance="minimal"}
-
-### Opgave 4: Fokus- og kontekstvektorer
-
-Lad os sige, at vi har lavet 2-dimensionale fokus- og kontekstvektorer, som
-beskrevet i afsnittet [\"Fokus- og kontekstvektorer\"](../../materialer/sprogmodeller/word2vec.qmd#fokus--og-kontekstvektorer).
-De  Det gav vektorerne
-$$
-\begin{aligned}
-&\vec{v}_{\text{bil}} =  \begin{pmatrix} -2\\ 1\end{pmatrix}, \quad
-\vec{v}_{\text{cykel}} =  \begin{pmatrix} -1\\ 2\end{pmatrix} \\
-&\vec{k}_{\text{hjul}}  =  \begin{pmatrix} -1.5\\1.5\end{pmatrix}, \quad
-\vec{k}_{\text{motor}} =  \begin{pmatrix} -2\\ 0  \end{pmatrix}, \quad
-\vec{k}_{\text{jordbær}} =  \begin{pmatrix} 3\\-1 \end{pmatrix}
-\end{aligned}
-$$
-
-- Udregn skalarprodukterne $\vec{v}_{\text{cykel}}\cdot \vec{k}_{\text{hjul}}$ og $\vec{v}_{\text{cykel}}\cdot \vec{k}_{\text{jordbær}}$. Passer det med, hvilket ord, der oftest er kontekst til \"cykel\"?
-
-- Udregn skalarprodukterne $\vec{v}_{\text{cykel}}\cdot \vec{k}_{\text{motor}}$ og $\vec{v}_{\text{bil}}\cdot \vec{k}_{\text{motor}}$. Passer det med, hvilket fokusord, der oftest har \"motor\" som kontekst?
-
-- Udregn skalarprodukterne $\vec{v}_{\text{cykel}}\cdot \vec{k}_{\text{hjul}}$ og $\vec{v}_{\text{bil}}\cdot \vec{k}_{\text{hjul}}$. Sammenlign med resultatet for kontekstordet \"motor\" i opgaven før og kommentér på resultatet.
-
-- Tegn alle vektorerne ind i et koordinatsystem. Passer det med, hvordan vi gerne vil have vektorerne til at ligge?
-
-:::
-
-::: {.callout-note collapse="false" appearance="minimal"}
-
-### Opgave 5: Fokus- og kontekstvektorer
-
-Antag, at vi har lavet 3-dimensionale fokus- og kontekstvektorer som
-beskrevet i afsnittet [\"Fokus- og kontekstvektorer\"](../../materialer/sprogmodeller/word2vec.qmd#fokus--og-kontekstvektorer). Så skulle ord, der ofte har samme
-kontekst, gerne have fokusvektorer af nogenlunde samme længde og retning, mens fokusvektorerne for ord,
-der betyder noget helt forskelligt, kan have meget forskellig længde
-og retning. Antag, at fokusvektorerne for \"kat\", \"hund\", \"mis\"
-og \"kælk\" er 
-$$
-\begin{aligned}
-\vec{v}_{\text{kat}}=\begin{pmatrix}0\\2\\1 \end{pmatrix},\quad
-\vec{v}_{\text{hund}}=\begin{pmatrix}0\\1.2\\1.8\end{pmatrix}, \\
-\\
-\vec{v}_{\text{mis}}=\begin{pmatrix}-0.5\\2\\0.8\end{pmatrix},\quad
-\vec{v}_{\text{kælk}}=\begin{pmatrix} 0\\-1\\-2 \end{pmatrix}
-\end{aligned}
-$$
-
-a)    Find længden af de fire vektorer. 
-b)    Find vinklen mellem $\vec{v}_{\text{kat}}$ og de tre øvrige vektorer. 
-c)    Stemmer resultatet overens med, hvilke ord der er tættest på \"kat\" i
-    betydning? 
-d)   Tegn vektorerne ind i GeoGebra. Skriv for eksempel `kat=(0,2,1)` i inputfeltet i GeoGebra og vælg derefter \"Vis\" $\rightarrow$ \"3D Grafik\".
-    
-:::  
-
-
-::: {.callout-note collapse="false" appearance="minimal"}
-
-### Opgave 6: Fokus- og kontekstvektorer
-
-Antag, at vi har lavet 4-dimensionale fokus- og kontekstvektorer
-således, at jo større skalarproduktet
-$\vec{v}_{w}\cdot \vec{k}_{c}$ er, desto mere
-sandsynligt er det, at ordet $w$ har $c$ som kontekst. vektoren
-for \"hund\" og kontekstvektorerne for \"pels\" og \"fjer\" er
-$$
-\begin{aligned}
-\vec{v}_{\text{hund}}=\begin{pmatrix} 0.5\\2\\1\\-1\end{pmatrix} ,\quad
-\vec{k}_{\text{pels}}=\begin{pmatrix} 0\\3\\2\\-2\end{pmatrix},\quad
-\vec{k}_{\text{fjer}}=\begin{pmatrix} 1\\-2\\1.5\\0.5\end{pmatrix}
-\end{aligned}
-$$
-
-a)    Udregn skalarprodukterne
-    $\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{pels}}$ og
-    $\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{fjer}}$. 
-b)    Passer det med, hvilket af ordene \"pels\" og \"fjer\" der er mest
-    sandsynligt som kontekst til \"hund\"?
-
-:::
-
+{{< include word2vec_del2/word2vec_aktivitet4.qmd >}}
 
 {{< include ../space.qmd >}}
 
 
 ## Aktivitet 5 - Model for sandsynligheder {.aimat}
 
-Læs afsnittet [\"Model for sandsynligheder\" i noten Word2Vec](../../materialer/sprogmodeller/word2vec.qmd#model-for-sandsynligheder). 
-
-Vi starter med at minde om definitionen af Softmax:
-
-
-::: {.highlight2 }
-
-**Softmax**
-
-Hvis $\vec{y}$ er en vektor med $V$ koordinater:
-
-$$
-\vec{y} = 
-\begin{pmatrix}
-y_1 \\
-y_2 \\
-\vdots \\
-y_V
-\end{pmatrix}
-$$
-
-så er $\text{Softmax}\big(\vec{y}\big)=\vec{z}$, hvor $\vec{z}$ er en ny vektor med $V$ koordinater. Den $i$'te koordinat i $\vec{z}$ er givet ved
-
-$$
-z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}
-$$ {#eq-softmax}
-
-:::
-
-::: {.callout-note collapse="false" appearance="minimal"}
-
-### Opgave 7: Softmax
-
-Lad $\vec{y}$ være vektoren
-$$\vec{y}= \begin{pmatrix} 1 \\2 \\-1 \end{pmatrix}$$
-
-a) Beregn $\vec{z} = \text{Softmax}(\vec{y})$.
-
-b) Kontroller at følgende er opfyldt:
-
-   - $0<z_i<1$
-   
-   - $z_1 + z_2 + \dotsm + z_V = 1$
-   
-   - Hvis $y_i < y_j$, så er $z_i < z_j$.
-
-:::
-
-
-Husk på, at vi betegner sandsynligheden for, at $\text{ord}_i$ er et kontekstord til $w$, med 
-
-$$
-P(\text{ord}_i\mid w)
-$$
-Denne sandsynlighed beregnes ved først at bestemme skalarproduktet
-
-$$
-y_i = \vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}
-$$
-for $i \in \{1, 2, ..., V\}$, hvor $V$ er antallet af ord i vores ordforråd. 
-
-Herefter bruges Softmax:
-
-$$
-\begin{aligned}
-P(\text{ord}_i\mid w) &= z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \\ &= \frac{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}}}{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_V}}}
-\end{aligned}
-$${#eq-sshmodel}
-
-
-
-::: {.callout-note collapse="false" appearance="minimal"}
-
-### Opgave 8: Model for sandsynligheder
-
-Antag, at vores ordforråd består af de tre ord \"sommer\", \"sol\" og \"sne\". Vi har lavet en model for sandsynligheder for kontekstord som i (@eq-sshmodel), hvor 
-fokusvektoren for \"sommer\" og kontekstvektorerne for \"sommer\", \"sol\" og
-\"sne\" er givet ved 
-$$
-\begin{aligned}
-\vec{v}_{\text{sommer}}=\begin{pmatrix} 1\\1\end{pmatrix},\quad
-\vec{k}_{\text{sommer}}=\begin{pmatrix} 1\\-1 \end{pmatrix} ,\\
-\\
-\vec{k}_{\text{sol}}=\begin{pmatrix} 0\\2\end{pmatrix},\quad
-\vec{k}_{\text{sne}} =\begin{pmatrix} -1\\-2\end{pmatrix}
-\end{aligned}
-$$
-
-a) Indtegn repræsentanter for de fire vektorer i et koordinatsystem. 
-
-b) Hvad er sandsynligheden for, at hvert af de tre ord er kontekst til \"sommer\"?     
-
-c) Passer svaret fra b. med, hvilket af de tre ord, som du umiddelbart vil tænke, oftest optræder som kontekst til sommer?
-
-:::
+{{< include word2vec_del2/word2vec_aktivitet5.qmd >}}
 
 {{< include ../space.qmd >}}
 
 
 ## Aktivitet 6 - Vektorrepræsentationer {.aimat}
 
-Læs afsnittet [\"Estimatation af vektorrepræsentationer\" i noten Word2Vec](../../materialer/sprogmodeller/word2vec.qmd#estimation-af-vektorrepræsentationer). 
-
-
-Tabsfunktionen er en funktion af flere variable, nemlig alle vægtene. Vi skal finde de vægte, der minimerer tabsfunktionen. I ved, at for at finde minimum for en funktion af én variabel, skal man se på, hvornår den afledte funktion er nul. For funktioner af flere variable gælder tilsvarende, at minimum skal findes i et punkt hvor alle de *partielle afledede* er nul. Hvis du ikke har hørt om partielle afledede før, kan du læse mere i boksen herunder.
-
-::: {.callout-tip collapse="true" appearance="minimal"}
-
-### Partielle afledede
-
-Funktionen
-
-$$
-f(x,y) = x^2+3xy+\mathrm{e}^y
-$$
-
-afhænger ikke kun af én, men af to variable nemlig $x$ og $y$. Man kan derfor differentiere $f$ både med hensyn til $x$ (hvor man betragter $y$ som en konstant) og med hensyn til $y$ (hvor man betragter $x$ som en konstant). Disse afledede kaldes for partielle afledede og betegnes med
-
-$$
-\frac{\partial f}{\partial x} \quad \textrm{og} \quad \frac{\partial f}{\partial y}
-$$
-
-Når man for eksempel skal finde $\frac{\partial f}{\partial x}$, så differentierer man $f(x,y)$, hvor man tænker på $x$ som den variable og $y$ som en konstant. Tilsvarende med $\frac{\partial f}{\partial y}$. I dette eksempel giver det:
-
-$$
-\frac{\partial f}{\partial x} = \frac{\partial }{\partial x} (x^2) + \frac{\partial }{\partial x} (3xy) + \frac{\partial }{\partial x} (\mathrm{e}^y) = 2x + 3y + 0 = 2x + 3y
-$$
-
-og 
-
-$$
-\frac{\partial f}{\partial y} = \frac{\partial }{\partial y} (x^2) + \frac{\partial }{\partial y} (3xy) + \frac{\partial }{\partial y} (\mathrm{e}^y) = 0 + 3x + \mathrm{e}^y
-$$
-
-:::
-
-Da Softmax-funktionen indgår i tabsfunktionen, får man brug for at finde partielle afledte af denne funktion. Husk på, at Softmax-funktionen er defineret sådan her:
-
-$$
-z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} =\mathrm{e}^{y_i} \cdot \frac{1}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} 
-$$
-
-For at diffentiere denne funktion kan man enten bruge produktreglen eller kvotientreglen, som vi lige genopfrisker her:
-
-::: {.highlight }
-
-**Produktreglen for differentiation**
-
-$$
-\left ( f \cdot g\right)'(x) = f'(x)\cdot g(x) + f(x) \cdot g'(x)
-$$
-\
-
-**Kvotientreglen for differentiation **
-
-$$
-\left ( \frac{f}{g}\right)'(x) = \frac{f'(x) \cdot g(x)-f(x) \cdot g'(x)}{(g(x))^2}, \quad g(x) \neq 0
-$$
-:::
-
-
-
-::: {.callout-note collapse="false" appearance="minimal"}
-
-### Opgave 9: Partielle afledte af Softmax-funktionen
-
-    
-* Vis følgende egenskaber ved de partielle afledte af Softmax-funktionen:
-
-   $$\frac{\partial z_i}{\partial y_i} = z_i(1-z_i) \quad \quad \textrm{og} \quad\quad \frac{\partial z_i}{\partial y_j} = -z_iz_j, \quad i\neq j$$
-
-   Husk på, at
-
-   $$
-   \frac{\partial }{\partial y_i} (\mathrm{e}^{y_i}) = \mathrm{e}^{y_i} 
-   $$
-
-   mens
-
-   $$
-   \frac{\partial }{\partial y_j} (\mathrm{e}^{y_i}) = 0   
-   $$
-
-   hvis $i \neq j$.
-
-:::
-
-Bemærk, at ovenstående opgaver giver, at man ikke behøver at kende værdien af $\vec{y}$ i det punkt, hvor man differentierer, men kun funktionsværdien $\vec{z}$. Det viser sig at have meget store beregningsmæssige fordele, når man skal finde minimum for tabsfunktionen, så det er faktisk en overordentlig vigtig egenskab!
+{{< include word2vec_del2/word2vec_aktivitet6.qmd >}}
 
 {{< include ../space.qmd >}}
 
