@@ -235,21 +235,66 @@ $$
 
 Læs afsnittet [Tekstgenerering](../../materialer/sprogmodeller/tekstgenerering.qmd#tekstgenerering). 
 
+Lad os se på at prædiktere det næste ord i sætninger, der ligner disse:
+
+::: {.llm_saetninger}
+En hund løber efter en kat. \
+Løber en hund efter en kat? \
+En kat løber ikke efter en hund. \
+Efter en kat løber en hund.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
 ### Opgave 4: Prædiktion af næste ord
 
-En opgave hvor et netværk er trænet på det lille tekstkorpus fra Simple-noten:
 
-::: {.llm_saetninger}
-\" En hund løber efter en kat. \
-Løber en hund efter en kat? \
-En kat løber ikke efter en hund. \
-Efter en kat løber en hund.\"
+Vi vil prædiktere ud fra de foregående to ord.
+
+- Hvis der allerede står \" En hund \", hvor mange forskellige muliger er der så for det næste ord?
+
+Antag at
+$$
+\begin{align}
+P(\text{hund } |\text{ "en hund" }) &= 0.01 \\
+P(\text{kat } |\text{ "en hund" }) &= 0.03 \\
+P(\text{en } |\text{ "en hund" }) &= 0.17 \\
+P(\text{efter } |\text{ "en hund" }) &= 0.27
+\end{align}
+$$
+
+- Hvilken værdi har $P(\text{løber } |\text{ "en hund" })$ så?
+
 :::
 
-og hvor elever så igen starter med \"En hund\" og skal danne en sætning ud fra det... Eller måske noget sjovere...!
+Antag, at en transformer er trænet, så sandsynlighederne i modellen er optimeret til et træningsdatasæt. Vi har lige set de 5 sandsynligheder.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 5: Antal kombinationer
+
+
+- Hvor mange sandsynligheder skal der være i alt?
+
+:::
+
+Brug nu denne [Excel-fil](transformer_trænede_sandsynligheder.xlsx) med sandsynligheder.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 6: Mest og mindst sandsynlige næste ord
+
+
+Givet "En hund" som de to første ord
+
+- Hvad er den mest sandsynlige sætning på 5 ord?
+
+- Hvor sandsynlig er den sætning?
+
+- Hvad er den mindst sandsynlige sætning på 5 ord?
+
+- Hvad er sandsynligheden for den sætning?
+
+- Hvor mange forskellige sætninger på 5 ord kan der dannes, når "En hund" skal være de to første ord?
 
 :::
 
