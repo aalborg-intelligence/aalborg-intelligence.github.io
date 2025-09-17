@@ -64,22 +64,22 @@ Vi vælger for fokusvektorerne:
 $$
 \color{#F288B9}
 \begin{aligned}
-\vec{v}_{hunden} &= \begin{pmatrix} -0.8 \\ 0.6 \end{pmatrix}, \quad 
-\vec{v}_{katten} = \begin{pmatrix} 0 \\ 1 \end{pmatrix},\\
-\vec{v}_{spinder} &= \begin{pmatrix} 0.6 \\ 0.8 \end{pmatrix}, \quad
-\vec{v}_{sover} = \begin{pmatrix} 0.8 \\ 0.6 \end{pmatrix}, \\
-\vec{v}_{gør} &= \begin{pmatrix} 1 \\ 0 \end{pmatrix} \\
+\vec{v}_{{hunden}} &= \begin{pmatrix} -0.8 \\ 0.6 \end{pmatrix}, \quad 
+\vec{v}_{\text{katten}} = \begin{pmatrix} 0 \\ 1 \end{pmatrix},\\
+\vec{v}_{\text{spinder}} &= \begin{pmatrix} 0.6 \\ 0.8 \end{pmatrix}, \quad
+\vec{v}_{\text{sover}} = \begin{pmatrix} 0.8 \\ 0.6 \end{pmatrix}, \\
+\vec{v}_{\text{gør}} &= \begin{pmatrix} 1 \\ 0 \end{pmatrix} \\
 \end{aligned}
 $$
 Og for kontekstvektorerne:
 $$
 \color{#8086F2}
 \begin{aligned}
-\vec{k}_{hunden} &= \begin{pmatrix} 0.8 \\ -0.6 \end{pmatrix}, \quad
-\vec{k}_{katten} = \begin{pmatrix} 0.6 \\ -0.8 \end{pmatrix},  \\
-\vec{k}_{spinder} &= \begin{pmatrix} -1 \\ 0 \end{pmatrix}, \quad
-\vec{k}_{sover} = \begin{pmatrix} -0.8 \\ -0.6 \end{pmatrix}, \\
-\vec{k}_{gør} &= \begin{pmatrix} -0.6 \\ -0.8 \end{pmatrix} \\
+\vec{k}_{\text{hunden}} &= \begin{pmatrix} 0.8 \\ -0.6 \end{pmatrix}, \quad
+\vec{k}_{\text{katten}} = \begin{pmatrix} 0.6 \\ -0.8 \end{pmatrix},  \\
+\vec{k}_{\text{spinder}} &= \begin{pmatrix} -1 \\ 0 \end{pmatrix}, \quad
+\vec{k}_{\text{sover}} = \begin{pmatrix} -0.8 \\ -0.6 \end{pmatrix}, \\
+\vec{k}_{\text{gør}} &= \begin{pmatrix} -0.6 \\ -0.8 \end{pmatrix} \\
 \end{aligned}
 $$
 Til disse værdier af vektorerne skal vi nu have beregnet værdien af tabsfunktionen $L$. 
@@ -103,11 +103,11 @@ App til opgave 2.
  - [Overvej]{.underline}, hvordan du kan ændre vektorerne, så tabsfunktionen bliver mindst mulig. Vi vender tilbage til dette senere.
 :::
 
-Som det næste skal sandsynlighederne for at et eller andet ord er kontekstord til et andet udregnes. For eksempel udregnes sandsynligheden for at \"sover\" er kontekst til \"hunden\" ud på denne måde:
+Som det næste skal sandsynlighederne for, at et eller andet ord er kontekstord til et andet, udregnes. For eksempel udregnes sandsynligheden for at \"sover\" er kontekst til \"hunden\" på denne måde:
 
 $$
 \begin{multline}
-P(\text{sover} \mid \text{hunden}) = \\ 
+P(\text{kontekst = sover} \mid \text{fokus = hunden}) = \\ 
 \frac{\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{sover}} }}
 {\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{sover}} } +\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{gør}} } + \mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{spinder}} }+\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{katten}}
 }+\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{hunden}}
@@ -131,13 +131,15 @@ $$ {#eq-ssh}
 
 ## Aktivitet 3 - Tabsfunktion {.aimat}
 
-Endeligt skal værdien af tabsfunktionen beregnes. Her skal vi bruge den naturlige logaritme på de beregnede sandsynligheder. Da \"Hunden sover\" optræder to gange, kan værdien for $\ln(P(\text{sover} \mid \text{hunden}))$ og for $\ln(P(\text{hunden} \mid \text{sover}))$ ganges med 2, \"Hunden gør\" optræder 3 gange, så her gælder noget tilsvarende. Vi får:
+Endeligt skal værdien af tabsfunktionen beregnes. Her skal vi bruge den naturlige logaritme på de beregnede sandsynligheder. Da \"Hunden sover\" optræder to gange, kan værdien for $\ln(P(\text{kontekst = sover} \mid \text{fokus = hunden}))$ og for $\ln(P(\text{kontekst = hunden} \mid \text{fokus = sover}))$ ganges med 2, \"Hunden gør\" optræder 3 gange, så her gælder noget tilsvarende. Vi får:
 
 $$
-\begin{multline}
-L= -2 \cdot \ln(P(\text{sover} \mid \text{hunden})) \\ 
--2 \cdot \ln(P(\text{hunden} \mid \text{sover})) -3 \cdot \ln(P(\text{gør} \mid \text{hunden})) - \cdots 
-\end{multline}
+\begin{aligned}
+L=& -2 \cdot \ln(P(\text{kontekst = sover} \mid \text{fokus = hunden})) \\ 
+&-2 \cdot \ln(P(\text{kontekst = hunden} \mid \text{fokus = sover})) \\
+&-3 \cdot \ln(P(\text{kontekst = gør} \mid \text{fokus = hunden})) \\
+&- \cdots 
+\end{aligned}
 $$ {#eq-tabsfkt}
 
 ::: {.callout-note collapse="false" appearance="minimal"}
@@ -153,9 +155,9 @@ Lad os vende tilbage til optimering ved minimering af værdien af tabsfunktionen
 Målet er, at hvis for eksempel \"sover\" er kontekst til fokusordet \"hunden\", så skal 
 
 $$
-P(\text{sover} \mid \text{hunden})
+P(\text{kontekst = sover} \mid \text{fokus = hunden})
 $$
-være stor. Ser vi på (@eq-ssh) så sker det, hvis tælleren
+være stor. Ser vi på (@eq-ssh), så sker det, hvis tælleren
 
 $$
 \mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{sover}} }
@@ -166,7 +168,7 @@ er stor. Det opnår vi, hvis skalarproduktet
 $$
 \vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{sover}} 
 $$
-er et stort positivt tal. I vores simple tilfælde, hvor vi kun arbejder med enhedsvektorer har vi:
+er et stort positivt tal. I vores simple tilfælde, hvor vi kun arbejder med enhedsvektorer, har vi:
 
 $$
 \begin{aligned}
@@ -192,7 +194,7 @@ Derimod vil det være sådan, at hvis vi ser på \"Hunden\" som fokusord, så sk
 
 Foretag lignende overvejelser for hvert fokusord, og forsøg så at placere både fokus- og kontekstvektorerne i app'en i @fig-opg2 ud fra disse overvejelser. For eksempel skal \"sover\" som kontekstvektor nok tættere på \"Katten\" end på \"Hunden\" som fokusvektorer, da \"Katten sover\" optræder oftere[^1] end \"Hunden sover\" i teksten. 
 
-[^1]: Antallet af gange en kombination optræder i tekstkorpus har betydning for værdien af tabsfunktionen -- se (@eq-tabsfkt).
+[^1]: Antallet af gange, en kombination optræder i tekstkorpus, har betydning for værdien af tabsfunktionen -- se (@eq-tabsfkt).
 
 Med lidt held og yderligere justeringer i app'en, bør du kunne få værdien af tabsfunktionen så lav som mulig. 
 
