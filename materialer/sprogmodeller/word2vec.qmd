@@ -424,16 +424,19 @@ og dermed samme sandsynlighed, uanset hvilket ord der var i fokus.
 
 Som nævnt vil vi gerne have, at jo større skalarproduktet
 $\vec{v}_{w}\cdot \vec{k}_{c}$ er, desto mere
-sandsynligt er det, at ordet $w$ har ordet $c$ som kontekst. Hvis der er $V$ antal ord i sproget, kan vi nummerere de mulige kontekstord som $\text{ord}_1,\text{ord}_2,\ldots,\text{ord}_V$. For hvert af dem får vi et skalarprodukt $\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}$ for $i=1,\ldots,V$. Hvis vi betegner sandsynligheden for, at $\text{ord}_i$ er et kontekstord til $w$, med $P(\text{ord}_i\mid w)$, så vil vi gerne have, at følgende er opfyldt:
+sandsynligt er det, at ordet $w$ har ordet $c$ som kontekst. Hvis der er $V$ antal ord i sproget, kan vi nummerere de mulige kontekstord som $\text{ord}_1,\text{ord}_2,\ldots,\text{ord}_V$. For hvert af dem får vi et skalarprodukt $\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}$ for $i=1,\ldots,V$. Hvis vi betegner sandsynligheden for, at $\text{ord}_i$ er et kontekstord til $w$, med $P(\text{kontekst = ord}_i\mid \text{fokus = }w)$, så vil vi gerne have, at følgende er opfyldt:
 
 1. For hvert $\text{ord}_i$ er 
-   $$0\leq P(\text{ord}_i \mid w)\leq 1$$ 
+   $$0\leq P(\text{kontekst = ord}_i \mid \text{fokus = } w)\leq 1$$ 
    da sandsynligheder skal ligge mellem 0 og 1.
 
 2. Den samlede sandsynlighed for at få et af de mulige kontekstord skal være 1, det vil sige, 
-   $$P(\text{ord}_1\mid w) + P(\text{ord}_2\mid w) + \dotsm + P(\text{ord}_V\mid w ) = 1.$$
+   $$\begin{aligned}
+   1= &P(\text{kontekst = ord}_1\mid \text{fokus = } w) + P(\text{kontekst = ord}_2\mid \text{fokus = }w)+ \dotsm \\
+   & + P(\text{kontekst = ord}_V\mid \text{fokus = }w ) = 1.
+   \end{aligned}$$
 
-3. Jo større skalarproduktet $\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}$ er, desto større er sandsynligheden $P(\text{ord}_i\mid w)$ for at få $\text{ord}_i$ som kontekstord.
+3. Jo større skalarproduktet $\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}$ er, desto større er sandsynligheden $P(\text{kontekst = ord}_i\mid \text{fokus = } w)$ for, at $\text{ord}_i$ er kontekstord til $w$.
 
 Skalarprodukter kan imidlertid antage alle reelle værdier, så de egner
 sig ikke til at repræsentere sandsynligheder, der jo skal være tal
@@ -465,7 +468,7 @@ og bruger Softmax på $\vec{y}$, så får vi en vektor  $\vec{z}=\text{Softmax}\
 
 $$
 \begin{aligned}
-P(\text{ord}_i\mid w) &= z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \\ &= \frac{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}}}{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_V}}}
+P(\text{kontekst = ord}_i\mid \text{fokus = }w) &= z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \\ &= \frac{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}}}{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_V}}}
 \end{aligned}
 $${#eq-sshmodel}
 
@@ -501,9 +504,9 @@ $$
 Derefter anvender vi Softmax for at finde sandsynlighederne
 $$
 \begin{aligned}
-P(\text{fjer} \mid \text{hund}) &= \frac{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }}{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &= \frac{\mathrm{e}^{-1.5}}{\mathrm{e}^{-1.5}+\mathrm{e}^{2 }+\mathrm{e}^{0 }} \approx 0.026\\ \\
-P(\text{pels} \mid \text{hund}) &= \frac{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }}{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &= \frac{\mathrm{e}^{2}}{\mathrm{e}^{-1.5}+\mathrm{e}^{2 }+\mathrm{e}^{0 }} \approx 0.858\\ \\
-P(\text{hund} \mid \text{hund}) &= \frac{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }}{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &= \frac{\mathrm{e}^{0}}{\mathrm{e}^{-1.5}+\mathrm{e}^{2 }+\mathrm{e}^{0 }} \approx 0.116 
+P(\text{kontekst = fjer} \mid \text{fokus = hund}) &= \frac{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }}{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &= \frac{\mathrm{e}^{-1.5}}{\mathrm{e}^{-1.5}+\mathrm{e}^{2 }+\mathrm{e}^{0 }}\\ &\approx 0.026\\ \\
+P(\text{kontekst = pels} \mid \text{fokus = hund}) &= \frac{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }}{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &= \frac{\mathrm{e}^{2}}{\mathrm{e}^{-1.5}+\mathrm{e}^{2 }+\mathrm{e}^{0 }}\\ &\approx 0.858\\ \\
+P(\text{kontekst = hund} \mid \text{fokus = hund}) &= \frac{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }}{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &= \frac{\mathrm{e}^{0}}{\mathrm{e}^{-1.5}+\mathrm{e}^{2 }+\mathrm{e}^{0 }}\\ &\approx 0.116 
 \end{aligned}
 $$
 "Pels" er altså det mest sandsynlige kontekstord til \"hund\", mens \"fjer\" sjældent er kontekst til \"hund\".
@@ -589,9 +592,13 @@ Eksempel på datatabel med træningsdata.
 Bemærk, at hvert fokusord godt kan optræde flere gange i ovenstående tabel, som vi også så det i @tbl-data.
 
 
-Vi ser nu på $j$te række. Sandsynligheden for, at $w^{(j)}$ har netop $c^{(j)}$ som kontekst, er $P(c^{(j)}\mid w^{(j)})$. Vi vil nu finde den samlede sandsynlighed for, at fokusordene $w^{(1)},\ldots,w^{(M)}$ i vores datasæt har henholdsvis $c^{(1)},\ldots,c^{(M)}$ som kontekstord. Den kalder vi $P(\text{data})$. Lad os antage, at alle vores par af fokus- og kontekstord er uafhængige af hinanden[^2]. Så får vi den samlede sandsynlighed ved at gange de enkelte sandsynligheder sammen:
+Vi ser nu på $j$te række. Sandsynligheden for, at $w^{(j)}$ har netop $c^{(j)}$ som kontekst, er $P(\text{kontekst = }c^{(j)}\mid \text{fokus = }w^{(j)})$. Vi vil nu finde den samlede sandsynlighed for, at fokusordene $w^{(1)},\ldots,w^{(M)}$ i vores datasæt har henholdsvis $c^{(1)},\ldots,c^{(M)}$ som kontekstord. Den kalder vi $P(\text{data})$. Lad os antage, at alle vores par af fokus- og kontekstord er uafhængige af hinanden[^2]. Så får vi den samlede sandsynlighed ved at gange de enkelte sandsynligheder sammen:
 
-$$P(\text{data})  = P(c^{(1)}\mid w^{(1)}) \cdot P(c^{(2)}\mid w^{(2)}) \dotsm P(c^{(M)}\mid w^{(M)})$${#eq-Pdata}
+$$\begin{aligned}
+P(\text{data})  = &P(\text{kontekst = }c^{(1)}\mid \text{fokus = }w^{(1)}) \cdot P(\text{kontekst = }c^{(2)}\mid \text{fokus = }w^{(2)}) \dotsm \\
+&\cdot P(\text{kontekst = }c^{(M)}\mid \text{fokus = }w^{(M)})
+\end{aligned}
+$${#eq-Pdata}
 
 Hvis vores model fra (@eq-sshmodel) passer godt til datasættet, skulle denne sandsynlighed gerne være høj. 
 
@@ -600,8 +607,10 @@ Hvis vores model fra (@eq-sshmodel) passer godt til datasættet, skulle denne sa
 Da summer er nemmere at regne på end produkter[^5], vælger vi at tage den naturlige logaritme på begge sider af (@eq-Pdata). Ved at bruge logaritmeregnereglen $\ln(a \cdot b) = \ln(a) + \ln(b)$ får vi, at
 $$
 \begin{aligned}
-\ln (P(\text{data})) &= \ln\big(P(c^{(1)}\mid w^{(1)}) \cdot P(c^{(2)}\mid w^{(2)}) \dotsm P(c^{(M)}\mid w^{(M)}) \big)\\
-&= \ln(P(c^{(1)}\mid w^{(1)})) + \ln(P(c^{(2)}\mid w^{(2)})) + \dotsm + \ln(P(c^{(M)}\mid w^{(M)}))
+\ln (P(\text{data})) &= \ln(P(\text{kontekst = }c^{(1)}\mid \text{fokus = }w^{(1)})) \\
+& + \ln(P(\text{kontekst = }c^{(2)}\mid \text{fokus = }w^{(2)}))\\
+& + \dotsm \\
+&+ \ln(P(\text{kontekst = }c^{(M)}\mid \text{fokus = }w^{(M)}))
 \end{aligned}
 $$
 
@@ -615,20 +624,25 @@ Da den naturlige logaritme er en voksende funktion, svarer store værdier af $P(
 Hvis vores model er god, skal 
 $$
 \begin{aligned}
-L&= - \ln(P(\text{data}) \\ &= -\ln(P(c^{(1)}\mid w^{(1)})) - \ln(P(c^{(2)}\mid w^{(2)})) - \dotsm - \ln(P(c^{(M)}\mid w^{(M)})) 
+L=& - \ln(P(\text{data}) \\
+=& -\ln(P(\text{kontekst = }c^{(1)}\mid \text{fokus = }w^{(1)})) \\
+&- \ln(P(\text{kontekst = }c^{(2)}\mid \text{fokus = }w^{(2)})) \\
+&- \dotsm \\
+&- \ln(P(\text{kontekst = }c^{(M)}\mid \text{fokus = }w^{(M)})) 
 \end{aligned}
 $${#eq-Ldef}
 
 altså gerne være lav[^3]. Vi kalder $L$ for vores *tabsfunktion*. Denne tabsfunktion kaldes også nogle gange for *cross-entropy*.
 
-[^3]: Bemærk, at da $P(c^{(j)}\mid w^{(j)})$ er en sandsynlighed, der ligger mellem 0 og 1, er $\ln (P(c^{(j)}\mid w^{(j)}))$ negativ. Derfor er $-\ln (P(c^{(j)}\mid w^{(j)}))$ positiv og $L$ er dermed også positiv. Når $L$ gerne skal være lav, betyder det altså, at den skal være så tæt på 0 som muligt. 
+[^3]: Bemærk, at da $P(\text{kontekst = }c^{(j)}\mid \text{fokus = }w^{(j)})$ er en sandsynlighed, der ligger mellem 0 og 1, er $\ln (P(\text{kontekst = }c^{(j)}\mid \text{fokus = }w^{(j)}))$ negativ. Derfor er $-\ln (P(\text{kontekst = }c^{(j)}\mid \text{fokus = }w^{(j)}))$ positiv og $L$ er dermed også positiv. Når $L$ gerne skal være lav, betyder det altså, at den skal være så tæt på 0 som muligt. 
 
 Vi kan indsætte vores udtryk for sandsynlighederne fra (@eq-sshmodel) i (@eq-Ldef) og få
 $$
 \begin{aligned}
 L = &-\ln\left(\frac{\mathrm{e}^{\vec{v}_{w^{(1)}}\cdot \vec{k}_{c^{(1)}}}}{\mathrm{e}^{\vec{v}_{w^{(1)}}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w^{(1)}}\cdot \vec{k}_{\text{ord}_V}}}\right)
-\\ &- \ln\left(\frac{\mathrm{e}^{\vec{v}_{w^{(2)}}\cdot \vec{k}_{c^{(2)}}}}{\mathrm{e}^{\vec{v}_{w^{(2)}}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w^{(2)}}\cdot \vec{k}_{\text{ord}_V}}}\right)
-- \dotsm \\ &- \ln\left(\frac{\mathrm{e}^{\vec{v}_{w^{(M)}}\cdot \vec{k}_{c^{(M)}}}}{\mathrm{e}^{\vec{v}_{w^{(M)}}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w^{(M)}}\cdot \vec{k}_{\text{ord}_V}}}\right) 
+\\ &- \ln\left(\frac{\mathrm{e}^{\vec{v}_{w^{(2)}}\cdot \vec{k}_{c^{(2)}}}}{\mathrm{e}^{\vec{v}_{w^{(2)}}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w^{(2)}}\cdot \vec{k}_{\text{ord}_V}}}\right)\\
+&- \dotsm \\ 
+&- \ln\left(\frac{\mathrm{e}^{\vec{v}_{w^{(M)}}\cdot \vec{k}_{c^{(M)}}}}{\mathrm{e}^{\vec{v}_{w^{(M)}}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w^{(M)}}\cdot \vec{k}_{\text{ord}_V}}}\right) 
 \end{aligned}
 $${#eq-Lfunktion}
 Bemærk her, at $w^{(j)}$ og $c^{(j)}$ refererer til henholdsvis fokus- og kontekstordet i den $j$'te række i datasættet, mens $\text{ord}_i$ refererer til det $i$'te ord i ordforrådet.
