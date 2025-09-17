@@ -267,20 +267,20 @@ window.Quarto = {
 <p>Vi vælger for fokusvektorerne: <span class="math display">\[
 \color{#F288B9}
 \begin{aligned}
-\vec{v}_{hunden} &amp;= \begin{pmatrix} -0.8 \\ 0.6 \end{pmatrix}, \quad
-\vec{v}_{katten} = \begin{pmatrix} 0 \\ 1 \end{pmatrix},\\
-\vec{v}_{spinder} &amp;= \begin{pmatrix} 0.6 \\ 0.8 \end{pmatrix}, \quad
-\vec{v}_{sover} = \begin{pmatrix} 0.8 \\ 0.6 \end{pmatrix}, \\
-\vec{v}_{gør} &amp;= \begin{pmatrix} 1 \\ 0 \end{pmatrix} \\
+\vec{v}_{{hunden}} &amp;= \begin{pmatrix} -0.8 \\ 0.6 \end{pmatrix}, \quad
+\vec{v}_{\text{katten}} = \begin{pmatrix} 0 \\ 1 \end{pmatrix},\\
+\vec{v}_{\text{spinder}} &amp;= \begin{pmatrix} 0.6 \\ 0.8 \end{pmatrix}, \quad
+\vec{v}_{\text{sover}} = \begin{pmatrix} 0.8 \\ 0.6 \end{pmatrix}, \\
+\vec{v}_{\text{gør}} &amp;= \begin{pmatrix} 1 \\ 0 \end{pmatrix} \\
 \end{aligned}
 \]</span> Og for kontekstvektorerne: <span class="math display">\[
 \color{#8086F2}
 \begin{aligned}
-\vec{k}_{hunden} &amp;= \begin{pmatrix} 0.8 \\ -0.6 \end{pmatrix}, \quad
-\vec{k}_{katten} = \begin{pmatrix} 0.6 \\ -0.8 \end{pmatrix},  \\
-\vec{k}_{spinder} &amp;= \begin{pmatrix} -1 \\ 0 \end{pmatrix}, \quad
-\vec{k}_{sover} = \begin{pmatrix} -0.8 \\ -0.6 \end{pmatrix}, \\
-\vec{k}_{gør} &amp;= \begin{pmatrix} -0.6 \\ -0.8 \end{pmatrix} \\
+\vec{k}_{\text{hunden}} &amp;= \begin{pmatrix} 0.8 \\ -0.6 \end{pmatrix}, \quad
+\vec{k}_{\text{katten}} = \begin{pmatrix} 0.6 \\ -0.8 \end{pmatrix},  \\
+\vec{k}_{\text{spinder}} &amp;= \begin{pmatrix} -1 \\ 0 \end{pmatrix}, \quad
+\vec{k}_{\text{sover}} = \begin{pmatrix} -0.8 \\ -0.6 \end{pmatrix}, \\
+\vec{k}_{\text{gør}} &amp;= \begin{pmatrix} -0.6 \\ -0.8 \end{pmatrix} \\
 \end{aligned}
 \]</span> Til disse værdier af vektorerne skal vi nu have beregnet værdien af tabsfunktionen <span class="math inline">\(L\)</span>. Men lad os først visualisere vektorerne i en app, der både viser vektorerne og beregner værdien af tabsfunktionen:</p>
 
@@ -358,10 +358,10 @@ Figur&nbsp;1: App til opgave 2.
 </div>
 </div>
 </div>
-<p>Som det næste skal sandsynlighederne for at et eller andet ord er kontekstord til et andet udregnes. For eksempel udregnes sandsynligheden for at "sover" er kontekst til "hunden" ud på denne måde:</p>
+<p>Som det næste skal sandsynlighederne for, at et eller andet ord er kontekstord til et andet, udregnes. For eksempel udregnes sandsynligheden for at "sover" er kontekst til "hunden" på denne måde:</p>
 <p><span id="eq-ssh"><span class="math display">\[
 \begin{multline}
-P(\text{sover} \mid \text{hunden}) = \\
+P(\text{kontekst = sover} \mid \text{fokus = hunden}) = \\
 \frac{\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{sover}} }}
 {\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{sover}} } +\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{gør}} } + \mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{spinder}} }+\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{katten}}
 }+\mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{hunden}}
@@ -399,12 +399,14 @@ P(\text{sover} \mid \text{hunden}) = \\
 </section>
 <section id="aktivitet-3---tabsfunktion" class="level2 aimat page-columns page-full">
 <h2 class="aimat anchored" data-anchor-id="aktivitet-3---tabsfunktion">Aktivitet 3 - Tabsfunktion</h2>
-<p>Endeligt skal værdien af tabsfunktionen beregnes. Her skal vi bruge den naturlige logaritme på de beregnede sandsynligheder. Da "Hunden sover" optræder to gange, kan værdien for <span class="math inline">\(\ln(P(\text{sover} \mid \text{hunden}))\)</span> og for <span class="math inline">\(\ln(P(\text{hunden} \mid \text{sover}))\)</span> ganges med 2, "Hunden gør" optræder 3 gange, så her gælder noget tilsvarende. Vi får:</p>
+<p>Endeligt skal værdien af tabsfunktionen beregnes. Her skal vi bruge den naturlige logaritme på de beregnede sandsynligheder. Da "Hunden sover" optræder to gange, kan værdien for <span class="math inline">\(\ln(P(\text{kontekst = sover} \mid \text{fokus = hunden}))\)</span> og for <span class="math inline">\(\ln(P(\text{kontekst = hunden} \mid \text{fokus = sover}))\)</span> ganges med 2, "Hunden gør" optræder 3 gange, så her gælder noget tilsvarende. Vi får:</p>
 <p><span id="eq-tabsfkt"><span class="math display">\[
-\begin{multline}
-L= -2 \cdot \ln(P(\text{sover} \mid \text{hunden})) \\
--2 \cdot \ln(P(\text{hunden} \mid \text{sover})) -3 \cdot \ln(P(\text{gør} \mid \text{hunden})) - \cdots
-\end{multline}
+\begin{aligned}
+L=&amp; -2 \cdot \ln(P(\text{kontekst = sover} \mid \text{fokus = hunden})) \\
+&amp;-2 \cdot \ln(P(\text{kontekst = hunden} \mid \text{fokus = sover})) \\
+&amp;-3 \cdot \ln(P(\text{kontekst = gør} \mid \text{fokus = hunden})) \\
+&amp;- \cdots
+\end{aligned}
 \tag{2}\]</span></span></p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
@@ -428,15 +430,15 @@ L= -2 \cdot \ln(P(\text{sover} \mid \text{hunden})) \\
 <p>Lad os vende tilbage til optimering ved minimering af værdien af tabsfunktionen.</p>
 <p>Målet er, at hvis for eksempel "sover" er kontekst til fokusordet "hunden", så skal</p>
 <p><span class="math display">\[
-P(\text{sover} \mid \text{hunden})
-\]</span> være stor. Ser vi på (<a href="#eq-ssh" class="quarto-xref">1</a>) så sker det, hvis tælleren</p>
+P(\text{kontekst = sover} \mid \text{fokus = hunden})
+\]</span> være stor. Ser vi på (<a href="#eq-ssh" class="quarto-xref">1</a>), så sker det, hvis tælleren</p>
 <p><span class="math display">\[
 \mathrm{e}^{\vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{sover}} }
 \]</span></p>
 <p>er stor. Det opnår vi, hvis skalarproduktet</p>
 <p><span class="math display">\[
 \vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{sover}}
-\]</span> er et stort positivt tal. I vores simple tilfælde, hvor vi kun arbejder med enhedsvektorer har vi:</p>
+\]</span> er et stort positivt tal. I vores simple tilfælde, hvor vi kun arbejder med enhedsvektorer, har vi:</p>
 <p><span class="math display">\[
 \begin{aligned}
 \vec{v}_{\text{hunden}} \cdot \vec{k}_{\text{sover}} &amp;= |\vec{v}_{\text{hunden}}|  \cdot |\vec{k}_{\text{sover}}| \cdot \cos(v) \\
@@ -453,7 +455,7 @@ P(\text{sover} \mid \text{hunden})
 <p>Altså bliver skalarproduktet stort, hvis vinklen mellem de to vektorer er tæt på <span class="math inline">\(0^\circ.\)</span> Det vil sige, at hvis "sover" er kontekst til fokusordet "hunden", så skal kontekstvektoren for "sover" pege i nogenlunde samme retning som fokusvektoren for "hunden". Det er selvfølgelig nemt nok isoleret set, men det skal gælde for alle kombinationer af kontekst- og fokusvektorer, som optræder i tekstkorpus!</p>
 <p>Derimod vil det være sådan, at hvis vi ser på "Hunden" som fokusord, så skal "hunden", "katten" og "spinder" som kontekstord slet ikke anvendes, så deres kontekstvektorer skal være mest muligt modsatrettet fokusvektoren for "Hunden". Derimod skal både "sover" og "gør" som kontekstvektorer være tæt på fokusvektoren for "Hunden".</p>
 <p>Foretag lignende overvejelser for hvert fokusord, og forsøg så at placere både fokus- og kontekstvektorerne i app’en i <a href="#fig-opg2" class="quarto-xref">figur&nbsp;1</a> ud fra disse overvejelser. For eksempel skal "sover" som kontekstvektor nok tættere på "Katten" end på "Hunden" som fokusvektorer, da "Katten sover" optræder oftere<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> end "Hunden sover" i teksten.</p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Antallet af gange en kombination optræder i tekstkorpus har betydning for værdien af tabsfunktionen – se (<a href="#eq-tabsfkt" class="quarto-xref">2</a>).</p></div></div><p>Med lidt held og yderligere justeringer i app’en, bør du kunne få værdien af tabsfunktionen så lav som mulig.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Antallet af gange, en kombination optræder i tekstkorpus, har betydning for værdien af tabsfunktionen – se (<a href="#eq-tabsfkt" class="quarto-xref">2</a>).</p></div></div><p>Med lidt held og yderligere justeringer i app’en, bør du kunne få værdien af tabsfunktionen så lav som mulig.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
