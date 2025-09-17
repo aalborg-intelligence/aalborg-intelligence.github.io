@@ -223,38 +223,7 @@ Folk, der har set \"Titanic\", er således mere tilbøjelige til at se
 derfor være den bedste anbefaling.
 :::
 
-## Begrænsninger ved algoritmen
 
-Vi har beskrevet en simpel og klassisk måde at lave anbefalinger på, og
-er særligt relevant for onlineforretninger, der vil lave forslag af
-typen \"Andre har også købt\". Selv for en lille virksomhed er det nemt at
-indsamle det relevante data og bruge algoritmen til at lave nye forslag.
-
-Der er dog også forskellige begrænsninger ved tilgangen ovenfor. Måske
-er der ingen brugere, der har set præcis de samme film som dig. I så
-fald har vi ikke nogen at sammenligne med. At man har set en film
-betyder jo heller ikke nødvendigvis, at man kunne lide den.
-
-Moderne internetvirksomheder har mulighed for at indsamle meget mere
-data, som kan bruges til at forbedre anbefalingerne. Netflix indsamler
-for eksempel data om:
-
--   Filmene: For eksempel genre, sprog, instruktør, skuespillere, antal
-    Oscars.
-
--   Brugeren: Ofte angiver man enkelte peronoplysninger, så som
-    emailadresse og sprog, når man opretter en profil, men mange har
-    ikke lyst til direkte at afgive for mange oplysninger om sig selv. I
-    stedet prøver tjenesten at opnå disse oplysninger indirekte, ved at
-    indsamle data om brugerens adfærd på deres hjemmeside.
-
--   Brugerens adfærd: Hvilke film har brugeren set, blev filmen set til
-    ende, hvilken rating fik den efterfølgende, på hvilken tid af dagen
-    blev filmen set og fra hvilket device, og hvilke film har brugeren
-    ellers søgt på.
-
-For at tage alle disse oplysninger i betragtning, får man brug for meget
-mere komplicerede algoritmer.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 1: Online elektronikbutik
@@ -289,6 +258,39 @@ Se på datasættet i @tbl-data.
     Hvilken film ville du foreslå en bruger, der lige har set \"Blinkende
     lygter\"?
 :::
+
+## Begrænsninger ved algoritmen
+
+Vi har beskrevet en simpel og klassisk måde at lave anbefalinger på, og
+er særligt relevant for onlineforretninger, som vil lave forslag af
+typen \"Andre har også købt\". Selv for en lille virksomhed er det nemt at
+indsamle det relevante data og bruge algoritmen til at lave nye forslag.
+
+Der er dog også forskellige begrænsninger ved tilgangen ovenfor. Måske
+er der ingen brugere, der har set præcis de samme film som dig. I så
+fald har vi ikke nogen at sammenligne med. At man har set en film
+betyder jo heller ikke nødvendigvis, at man kunne lide den.
+
+Moderne internetvirksomheder har mulighed for at indsamle meget mere
+data, som kan bruges til at forbedre anbefalingerne. Netflix indsamler
+for eksempel data om:
+
+-   Filmene: For eksempel genre, sprog, instruktør, skuespillere, antal
+    Oscars.
+
+-   Brugeren: Ofte angiver man enkelte peronoplysninger, så som
+    emailadresse og sprog, når man opretter en profil, men mange har
+    ikke lyst til direkte at afgive for mange oplysninger om sig selv. I
+    stedet prøver tjenesten at opnå disse oplysninger indirekte, ved at
+    indsamle data om brugerens adfærd på deres hjemmeside.
+
+-   Brugerens adfærd: Hvilke film har brugeren set, blev filmen set til
+    ende, hvilken rating fik den efterfølgende, på hvilken tid af dagen
+    blev filmen set og fra hvilket device, og hvilke film har brugeren
+    ellers søgt på.
+
+For at tage alle disse oplysninger i betragtning, får man brug for meget
+mere komplicerede algoritmer.
 
 # En indholdsbaseret algoritme
 
@@ -478,7 +480,7 @@ $x_{1j}$ og $x_{2j}$. Vores model prædikterer så brugerens rating af den
 $j$te film ved
 
 $$
-\hat{r}_{j} = p_{1}x_{1j} + p_{2}x_{2j}
+\hat{r}_{j} = b+p_{1}x_{1j} + p_{2}x_{2j}
 $$ {#eq-model}
 
 Hvis modellen er god, skulle den prædikterede rating $\hat{r}_j$ gerne
@@ -505,9 +507,9 @@ kommer så tæt på de faktiske ratings som muligt.[^6]
 
 Hvordan finder man minimum for en funktion, der afhænger af flere
 variable? Hvis der kun er én variabel, ved du, at man kan differentiere
-funktionen og lede efter minimum i de punkter, hvor den afledte er nul.
+funktionen og lede efter minimum i de punkter, hvor den afledede funktion er nul.
 Noget tilsvarende gør sig gældende, når der er flere variable. Her er
-det bare de partielle afledte[^7], der alle er nul i et minimumspunkt.
+det bare de partielle afledede[^7], der alle skal være nul i et minimumspunkt.
 <!-- KUNNE MAN SKRIVE NOGET OM DET I NOTEN OM PARTIELLE AFLEDTE?  -->
 I vores tilfælde søger vi altså værdier af $b$, $p_1$ og $p_2$, så $$
 \begin{aligned}
@@ -515,7 +517,7 @@ I vores tilfælde søger vi altså værdier af $b$, $p_1$ og $p_2$, så $$
 \frac{\partial E}{\partial p_2} = 0\\ \\
 \frac{\partial E}{\partial b} = 0
 \end{aligned}
-$$ I opgaven nedenfor bliver du bedt om at beregne de partielle afledte
+$$ I opgaven nedenfor bliver du bedt om at beregne de partielle afledede
 af $E$. Det fører til $$
 \begin{aligned}
 &\frac{\partial E}{\partial p_1} = -2x_{11}(r_1-\hat{r}_1)- \dotsm -2x_{1N}(r_N-\hat{r}_N)\\ \\
@@ -533,7 +535,7 @@ $$ Det viser sig, at disse ligninger kan løses eksplicit og give en
 formel for estimaterne for $b$, $p_1$ og $p_2$. Det vil vi dog ikke gøre
 her.
 
-[^7]: Hvis du ikke kender til partielle afledte, eller du har brug for
+[^7]: Hvis du ikke kender til partielle afledede, eller du har brug for
     en genopfriskning, kan du læse om det i noten om [Funktioner af
     flere
     variable](../funktioner_af_flere_variable/funktioner_af_flere_variable.qmd).
@@ -541,7 +543,7 @@ her.
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 6: Partielle afledede
 
--   Vis, at de partielle afledte er som givet i (@eq-partiel). Bemærk,
+-   Vis, at de partielle afledede er som givet i (@eq-partiel). Bemærk,
     at da $E$ er en sum, kan den differentieres ledvist. Det er altså
     nok at vise, at $$
     \begin{aligned}
@@ -665,7 +667,7 @@ For $j$te film betegner vi dem $x_{1j},\ldots,x_{Mj}$. Disse værdier
 kalder vi *featurevægtene*. Den $i$te brugers præferencer for de $M$
 features beskrives ved *præferencevægtene* $p_{i1},\ldots,p_{iM}$. Vi
 modellerer så $i$te brugers rating af $j$te film ved
-$$\hat{r}_{ij} = p_{i1}x_{1j} + p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj}$$ {#eq-modelij}
+$$\hat{r}_{ij} = p_{i1}x_{1j} + p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj}$${#eq-modelij}
 Det minder om den multiple lineære regressionsmodel (@eq-multipel).
 Forskellen er, at featurevægtene ikke er givet på forhånd, men er nogle,
 vi skal estimere ud fra data. Hvis datasættet indeholder $p$ film, og
@@ -737,7 +739,7 @@ matricer. Deraf navnet matrixfaktorisering.
 Da vi lavede multipel lineær regression, var der også en skæring i
 modellen, som svarede til ratingen, når alle features var nul.
 Tilsvarende er det oplagt at tilføje en skæring i\
-(@eq-matrixfak). Det gøres ofte med modellen
+(@eq-modelij). Det gøres ofte med modellen
 $$\hat{r}_{ij} =  b + c_i + d_j+ p_{i1}x_{1j} +p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj} $$
 Her angiver $b$ den gennemsnitlige rating for alle film, når alle
 featurevægte er nul. Hver bruger har desuden et personligt led $c_i$,
@@ -749,7 +751,7 @@ $d_j$, der korrigerer for, at nogle film generelt får højere ratings end
 andre. Hvis $d_j$ er positiv, får filmen højere ratings end
 gennemsnittet, mens hvis $d_j$ er negativ, får filmen dårligere ratings
 end gennemsnittet. For nemheds skyld arbejder vi videre med modellen
-(@eq-matrixfak) i det følgende.
+(@eq-modelij) i det følgende.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 7: Antal vægte som skal estimeres
@@ -760,7 +762,7 @@ på $10.000$ film.
 -   Hvis vi skulle estimere alle ratings $r_{ij}$ for alle kombinationer
     af film og bruger, hvor mange ratings skulle vi så estimere i alt?
 
--   Hvis vi bruger modellen (@eq-matrixfak) med $M=5$, hvor mange vægte skal
+-   Hvis vi bruger modellen (@eq-modelij) med $M=5$, hvor mange vægte skal
     vi så estimere i alt?
 
 -   Hvis vi skulle lave en multipel regressionsmodel for hver eneste
@@ -792,14 +794,14 @@ en prædiktionsfejl).
 
 Igen ønsker vi at finde de vægte, der minimerer tabsfunktionen. I
 modsætning til multipel lineær regression, kan de ligninger, man får ud
-af at udregne de partielle afledte og sætte dem lig nul, ikke løses
+af at udregne de partielle afledede og sætte dem lig nul, ikke løses
 eksplicit. I stedet kan man finde minimum ved hjælp af en populær
 algoritme inden for kunstig intelligens, der hedder
 [gradientnedstigning](../gradientnedstigning/gradientnedstigning.qmd).
-For at kunne bruge den, skal man kende de partielle afledte af $E$ med
+For at kunne bruge den, skal man kende de partielle afledede af $E$ med
 hensyn til vægtene. For at finde dem, kan vi først bemærke, at $E$ er en
 sum, og en sum differentieres som bekendt ledvist. I en opgave nedenfor
-viser I, at de partielt afledte af et enkelt led i $E$ er givet ved 
+viser I, at de partielle afledede af et enkelt led i $E$ er givet ved 
 
 $$
 \begin{aligned}
@@ -863,7 +865,7 @@ De tre brugere har præferencevægtene:
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 9: Partielle afledede
 
-Vis, at de partielle afledte af $(r_{ij}-\hat{r}_{ij})^2$ med hensyn til
+Vis, at de partielle afledede af $(r_{ij}-\hat{r}_{ij})^2$ med hensyn til
 vægtene er givet ved formlerne (@eq-partiel1), (@eq-partiel2) og
 (@eq-partiel3).
 :::
