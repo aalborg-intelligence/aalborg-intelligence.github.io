@@ -167,6 +167,13 @@ library(shiny)
 library(bslib)
 library(writexl)
 
+# Workaround for Chromium Issue 468227
+downloadButton &lt;- function(...) {
+  tag &lt;- shiny::downloadButton(...)
+  tag$attribs$download &lt;- NULL
+  tag
+}
+
 ui &lt;- page_fluid(
   layout_columns(
   card(card_header("Gen 1"),
