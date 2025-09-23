@@ -51,7 +51,7 @@ Antag, at alle ord repræsenteres ved en 3-dimensional vektor og at $d=50$.
 
 ### Opgave 2 -  Et lille neuralt netværk {.aimat}
 
-Vi forestiller os, at vi har trænet et lille neuralt netværk, der kan beregne sandsynligheden for næste ord baseret på de to foregående ord. For at gøre eksemplet simpelt tillader vi kun to mulige næste ord, nemlig "spinder" og "danser". Inputordene respræsenteres ved to-dimensionale vektorer. Netværket har følgende struktur, hvor outputtet $z_1$ er sandsynligheden for "spinder", og $z_2$ er sandsynligheden for "danser":
+Vi forestiller os, at vi har trænet et lille neuralt netværk, der kan beregne sandsynligheden for næste ord baseret på de to foregående ord. For at gøre eksemplet simpelt tillader vi kun to mulige næste ord, nemlig \"spinder\" og \"danser\". Inputordene respræsenteres ved to-dimensionale vektorer. Netværket har følgende struktur, hvor outputtet $z_1$ er sandsynligheden for \"spinder\", og $z_2$ er sandsynligheden for \"danser\":
 
 ![](images/opgave_nn1.png){width=75% fig-align='center'}
 
@@ -75,7 +75,7 @@ Vægtene er delvist illustreret i figuren her:
 ![](images/opgave_nn2.png){width=75% fig-align='center'}
 
 
-Lad os sige, at vi som input har sætningen "En kat" og skal beregne sandsynligheden for næste ord. Ordene "en" og "kat" har vektorrepræsentationerne
+Lad os sige, at vi som input har sætningen \"En kat\" og skal beregne sandsynligheden for næste ord. Ordene \"en\" og \"kat\" har vektorrepræsentationerne
 $$\vec{v}_{\text{en}} = \begin{pmatrix} 1\\-2\end{pmatrix}, \qquad \vec{v}_{\text{kat}} = \begin{pmatrix} 3\\0 \end{pmatrix}$$
 Vi vil bruge det neurale netværk til at beregne sandsynligheden for næste ord. 
 
@@ -221,7 +221,7 @@ P(\text{himlen } |\text{ "jeg ser på" })
 \end{pmatrix}
 $$
 
-* Vis, at alle koordinater i $\vec z$ kan fortolkes som sandsynligheder, og at summen af sandsynlighederne er 1.
+* Vis, at alle koordinaterne i $\vec z$ kan fortolkes som sandsynligheder, og at summen af sandsynlighederne er 1.
 
 * Udregn bidraget til *cross-entropy* tabsfunktionen $CE(\vec z, \vec t)$ for begge netværk.
 
@@ -236,13 +236,17 @@ $$
 
 Læs afsnittet [Tekstgenerering](../../materialer/sprogmodeller/tekstgenerering.qmd#tekstgenerering). 
 
-Lad os se på at prædiktere det næste ord i sætninger, der ligner disse:
+
+Lad os se på at prædiktere det næste ord i sætninger, der ligner disse (men hvor vi ser bort fra punktum og spørgsmålstegn):
 
 ::: {.llm_saetninger}
 En hund løber efter en kat. \
 Løber en hund efter en kat? \
 En kat løber ikke efter en hund. \
 Efter en kat løber en hund.
+
+:::
+
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
@@ -251,15 +255,15 @@ Efter en kat løber en hund.
 
 Vi vil prædiktere ud fra de foregående to ord.
 
-- Hvis der allerede står \" En hund \", hvor mange forskellige muligheder er der så for det næste ord?
+- Hvis der allerede står \" En hund \", hvor mange forskellige muligheder er der så for det næste ord (tæl bare hvor mange forskellige ord, der er i tekstkorpus)?
 
-Antag at
+Antag, at vi har trænet et netværk, der giver
 $$
 \begin{align}
-P(\text{hund } |\text{ "en hund" }) &= 0.01 \\
-P(\text{kat } |\text{ "en hund" }) &= 0.03 \\
-P(\text{en } |\text{ "en hund" }) &= 0.17 \\
-P(\text{efter } |\text{ "en hund" }) &= 0.27
+&P(\text{hund } |\text{ "en hund" }) = 0.01 \\
+&P(\text{kat } |\text{ "en hund" }) = 0.03 \\
+&P(\text{en } |\text{ "en hund" }) = 0.17 \\
+&P(\text{efter } |\text{ "en hund" }) = 0.27
 \end{align}
 $$
 
@@ -267,35 +271,44 @@ $$
 
 :::
 
-Antag, at en transformer er trænet, så sandsynlighederne i modellen er optimeret til et træningsdatasæt. Vi har lige set de 5 sandsynligheder.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
+
 ### Opgave 5: Antal kombinationer
 
+Antag, at et netværk er trænet på et lille tekstkorpus, som det vi har set ovenfor, og at vi har fået de fem sandsynligheder, som står i opgave 4.
 
 - Hvor mange sandsynligheder skal der være i alt?
 
 :::
 
-Brug nu denne [Excel-fil](transformer_trænede_sandsynligheder.xlsx) med sandsynligheder.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
 ### Opgave 6: Mest og mindst sandsynlige næste ord
 
+Vi vil bruge denne [Excel-fil](transformer_trænede_sandsynligheder.xlsx) med sandsynligheder til at prædiktere nye ord i en sætning.
 
-Givet "En hund" som de to første ord
+Vi starter med \"En hund\" som de to første ord.
 
-- Hvad er den mest sandsynlige sætning på 5 ord?
+- Hvad er det mest sandsynlige tredje ord? Vælg det ord.
 
-- Hvor sandsynlig er den sætning?
+- Hvad er nu det mest sandsynlige fjerde ord? Vælg det ord.
 
-- Hvad er den mindst sandsynlige sætning på 5 ord?
+- Hvad er nu det mest sandsynlige femte ord? Vælg det ord.
 
-- Hvad er sandsynligheden for den sætning?
+Du har formentlig fået en sætning, som giver nogenlunde mening. Lad os se på, hvad der sker, hvis vi hele tiden vælger det mindst sandsynlige næste ord! Start igen med \"En hund\" som de to første ord.
 
-- Hvor mange forskellige sætninger på 5 ord kan der dannes, når "En hund" skal være de to første ord?
+- Hvad er det mindst sandsynlige tredje ord? Vælg det ord.
+
+- Hvad er nu det mindst sandsynlige fjerde ord? Vælg det ord.
+
+- Hvad er nu det mindst sandsynlige femte ord? Vælg det ord.
+
+Du har nok fået en sætning nu, som giver meget lidt mening!
+
+- Hvor mange forskellige sætninger på 5 ord kan der dannes, når \"En hund\" skal være de to første ord?
 
 :::
 
