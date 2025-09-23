@@ -262,7 +262,7 @@ window.Quarto = {
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Vi forestiller os, at vi har trænet et lille neuralt netværk, der kan beregne sandsynligheden for næste ord baseret på de to foregående ord. For at gøre eksemplet simpelt tillader vi kun to mulige næste ord, nemlig “spinder” og “danser”. Inputordene respræsenteres ved to-dimensionale vektorer. Netværket har følgende struktur, hvor outputtet <span class="math inline">\(z_1\)</span> er sandsynligheden for “spinder”, og <span class="math inline">\(z_2\)</span> er sandsynligheden for “danser”:</p>
+<p>Vi forestiller os, at vi har trænet et lille neuralt netværk, der kan beregne sandsynligheden for næste ord baseret på de to foregående ord. For at gøre eksemplet simpelt tillader vi kun to mulige næste ord, nemlig "spinder" og "danser". Inputordene respræsenteres ved to-dimensionale vektorer. Netværket har følgende struktur, hvor outputtet <span class="math inline">\(z_1\)</span> er sandsynligheden for "spinder", og <span class="math inline">\(z_2\)</span> er sandsynligheden for "danser":</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/opgave_nn1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
@@ -340,7 +340,7 @@ window.Quarto = {
 <p><img src="images/opgave_nn2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
 </figure>
 </div>
-<p>Lad os sige, at vi som input har sætningen “En kat” og skal beregne sandsynligheden for næste ord. Ordene “en” og “kat” har vektorrepræsentationerne <span class="math display">\[\vec{v}_{\text{en}} = \begin{pmatrix} 1\\-2\end{pmatrix}, \qquad \vec{v}_{\text{kat}} = \begin{pmatrix} 3\\0 \end{pmatrix}\]</span> Vi vil bruge det neurale netværk til at beregne sandsynligheden for næste ord.</p>
+<p>Lad os sige, at vi som input har sætningen "En kat" og skal beregne sandsynligheden for næste ord. Ordene "en" og "kat" har vektorrepræsentationerne <span class="math display">\[\vec{v}_{\text{en}} = \begin{pmatrix} 1\\-2\end{pmatrix}, \qquad \vec{v}_{\text{kat}} = \begin{pmatrix} 3\\0 \end{pmatrix}\]</span> Vi vil bruge det neurale netværk til at beregne sandsynligheden for næste ord.</p>
 <ul>
 <li><p>Opstil den 4-dimensionale vektor <span class="math inline">\(\vec{x}\)</span>, der skal bruges som input til netværket, ved at sætte vektorerne <span class="math inline">\(\vec{v}_{\text{en}}\)</span> og <span class="math inline">\(\vec{v}_{\text{kat}}\)</span> oven på hinanden.</p></li>
 <li><p>Beregn <span class="math inline">\(h_1\)</span> og <span class="math inline">\(h_2\)</span> ved formlerne <span class="math display">\[
@@ -499,7 +499,7 @@ P(\text{himlen } |\text{ "jeg ser på" })
 \end{pmatrix}
 \]</span></p>
 <ul>
-<li><p>Vis, at alle koordinater i <span class="math inline">\(\vec z\)</span> kan fortolkes som sandsynligheder, og at summen af sandsynlighederne er 1.</p></li>
+<li><p>Vis, at alle koordinaterne i <span class="math inline">\(\vec z\)</span> kan fortolkes som sandsynligheder, og at summen af sandsynlighederne er 1.</p></li>
 <li><p>Udregn bidraget til <em>cross-entropy</em> tabsfunktionen <span class="math inline">\(CE(\vec z, \vec t)\)</span> for begge netværk.</p></li>
 <li><p>Hvilket netværk ville du vælge på baggrund af bidraget til tabsfunktionen fra dette ene træningseksempel? Stemmer det overens med sandsynlighederne?</p></li>
 </ul>
@@ -513,12 +513,13 @@ P(\text{himlen } |\text{ "jeg ser på" })
 <section id="aktivitet-4---tekstgenerering" class="level2 aimat">
 <h2 class="aimat anchored" data-anchor-id="aktivitet-4---tekstgenerering">Aktivitet 4 - Tekstgenerering</h2>
 <p>Læs afsnittet <a href="../../materialer/sprogmodeller/tekstgenerering.html#tekstgenerering">Tekstgenerering</a>.</p>
-<p>Lad os se på at prædiktere det næste ord i sætninger, der ligner disse:</p>
+<p>Lad os se på at prædiktere det næste ord i sætninger, der ligner disse (men hvor vi ser bort fra punktum og spørgsmålstegn):</p>
 <div class="llm_saetninger">
 <p>En hund løber efter en kat.<br>
 Løber en hund efter en kat?<br>
 En kat løber ikke efter en hund.<br>
 Efter en kat løber en hund.</p>
+</div>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -533,14 +534,14 @@ Efter en kat løber en hund.</p>
 <div class="callout-body-container callout-body">
 <p>Vi vil prædiktere ud fra de foregående to ord.</p>
 <ul>
-<li>Hvis der allerede står " En hund ", hvor mange forskellige muligheder er der så for det næste ord?</li>
+<li>Hvis der allerede står " En hund ", hvor mange forskellige muligheder er der så for det næste ord (tæl bare hvor mange forskellige ord, der er i tekstkorpus)?</li>
 </ul>
-<p>Antag at <span class="math display">\[
+<p>Antag, at vi har trænet et netværk, der giver <span class="math display">\[
 \begin{align}
-P(\text{hund } |\text{ "en hund" }) &amp;= 0.01 \\
-P(\text{kat } |\text{ "en hund" }) &amp;= 0.03 \\
-P(\text{en } |\text{ "en hund" }) &amp;= 0.17 \\
-P(\text{efter } |\text{ "en hund" }) &amp;= 0.27
+&amp;P(\text{hund } |\text{ "en hund" }) = 0.01 \\
+&amp;P(\text{kat } |\text{ "en hund" }) = 0.03 \\
+&amp;P(\text{en } |\text{ "en hund" }) = 0.17 \\
+&amp;P(\text{efter } |\text{ "en hund" }) = 0.27
 \end{align}
 \]</span></p>
 <ul>
@@ -549,7 +550,6 @@ P(\text{efter } |\text{ "en hund" }) &amp;= 0.27
 </div>
 </div>
 </div>
-<p>Antag, at en transformer er trænet, så sandsynlighederne i modellen er optimeret til et træningsdatasæt. Vi har lige set de 5 sandsynligheder.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -562,13 +562,13 @@ P(\text{efter } |\text{ "en hund" }) &amp;= 0.27
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
+<p>Antag, at et netværk er trænet på et lille tekstkorpus, som det vi har set ovenfor, og at vi har fået de fem sandsynligheder, som står i opgave 4.</p>
 <ul>
 <li>Hvor mange sandsynligheder skal der være i alt?</li>
 </ul>
 </div>
 </div>
 </div>
-<p>Brug nu denne <a href="transformer_trænede_sandsynligheder.xlsx">Excel-fil</a> med sandsynligheder.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -581,13 +581,22 @@ P(\text{efter } |\text{ "en hund" }) &amp;= 0.27
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Givet “En hund” som de to første ord</p>
+<p>Vi vil bruge denne <a href="transformer_trænede_sandsynligheder.xlsx">Excel-fil</a> med sandsynligheder til at prædiktere nye ord i en sætning.</p>
+<p>Vi starter med "En hund" som de to første ord.</p>
 <ul>
-<li><p>Hvad er den mest sandsynlige sætning på 5 ord?</p></li>
-<li><p>Hvor sandsynlig er den sætning?</p></li>
-<li><p>Hvad er den mindst sandsynlige sætning på 5 ord?</p></li>
-<li><p>Hvad er sandsynligheden for den sætning?</p></li>
-<li><p>Hvor mange forskellige sætninger på 5 ord kan der dannes, når “En hund” skal være de to første ord?</p></li>
+<li><p>Hvad er det mest sandsynlige tredje ord? Vælg det ord.</p></li>
+<li><p>Hvad er nu det mest sandsynlige fjerde ord? Vælg det ord.</p></li>
+<li><p>Hvad er nu det mest sandsynlige femte ord? Vælg det ord.</p></li>
+</ul>
+<p>Du har formentlig fået en sætning, som giver nogenlunde mening. Lad os se på, hvad der sker, hvis vi hele tiden vælger det mindst sandsynlige næste ord! Start igen med "En hund" som de to første ord.</p>
+<ul>
+<li><p>Hvad er det mindst sandsynlige tredje ord? Vælg det ord.</p></li>
+<li><p>Hvad er nu det mindst sandsynlige fjerde ord? Vælg det ord.</p></li>
+<li><p>Hvad er nu det mindst sandsynlige femte ord? Vælg det ord.</p></li>
+</ul>
+<p>Du har nok fået en sætning nu, som giver meget lidt mening!</p>
+<ul>
+<li>Hvor mange forskellige sætninger på 5 ord kan der dannes, når "En hund" skal være de to første ord?</li>
 </ul>
 </div>
 </div>
@@ -598,7 +607,6 @@ P(\text{efter } |\text{ "en hund" }) &amp;= 0.27
 <p><a href="../../undervisningsforlob/sprogmodeller_langt_forlob/sprogmodeller_del3.html" class="prev"><span class="math inline">\(\leftarrow\)</span> Forrige</a> <a href="../../undervisningsforlob/sprogmodeller_langt_forlob/sprogmodeller_del5.html" class="next">Næste <span class="math inline">\(\rightarrow\)</span></a></p>
 
 
-</div>
 </section>
 
 </main> <!-- /main -->
