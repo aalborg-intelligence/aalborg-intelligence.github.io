@@ -110,7 +110,7 @@ Læs afsnittene [En transformerblok](../../materialer/sprogmodeller/transformere
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 3: Vægte i en transformernetværket
+### Opgave 3: Vægte i et transformernetværk
 
 I denne opgave giver vi et overslag over størrelsen på den transformer, der blev brugt i GPT-2[^7], som er forgængeren for den GPT-4 teknologi, der bruges i ChatGPT. I praksis inddeler GPT-2 ikke tekst i ord, men i *tokens*, som er mindre orddele (se boksen under opgaven). Derfor arbejder GPT-2 med et ordforråd på $V=50.257$ tokens. Brug denne værdi af $V$ i opgaven nedenunder.
 
@@ -122,15 +122,15 @@ Vi ser på de enkelte trin i transformeren:
 
 Vi ser først på en enkelt transformerblok:
 
-2. Det første der sker i transformerblokken, er, at vores tokens  oversættes til de 3 vektorer $\overrightarrow{q}$, $\overrightarrow{k}$ og $\overrightarrow{v}$.  Husk på, at hver token allerede er blevet oversat til en $768$-dimensional vektor i 1., så i virkeligheden er det disse vektorer, der skal oversættes videre til de tre vektorer.  I GPT-2 havde hver af de 3 vektorer dimension $64$. 
-For at lave $\overrightarrow{q}$-vektorerne, oversættes hver $768$-dimensional vektor
-$$\overrightarrow{a}= \begin{bmatrix} a_1\\ \vdots\\ a_{768} \end{bmatrix}$$
+2. Det første der sker i transformerblokken, er, at vores tokens  oversættes til de 3 vektorer $\vec{q}$, $\vec{k}$ og $\vec{v}$.  Husk på, at hver token allerede er blevet oversat til en $768$-dimensional vektor i 1., så i virkeligheden er det disse vektorer, der skal oversættes videre til de tre vektorer.  I GPT-2 havde hver af de 3 vektorer dimension $64$. 
+For at lave $\vec{q}$-vektorerne, oversættes hver $768$-dimensional vektor
+$$\vec{a}= \begin{bmatrix} a_1\\ \vdots\\ a_{768} \end{bmatrix}$$
 til en $64$-dimensional vektor
-$$\overrightarrow{q}= \begin{bmatrix} q_1\\ \vdots\\ q_{64} \end{bmatrix}$$
+$$\vec{q}= \begin{bmatrix} q_1\\ \vdots\\ q_{64} \end{bmatrix}$$
 ved hjælp af $64\cdot 768$ vægte på formen $c_{ij}^q$, hvor $i=1,\ldots, 64$ og $j=1,\ldots, 768$.
-Den $i$te koordinat i $\overrightarrow{q}$ beregnes ved
+Den $i$te koordinat i $\vec{q}$ beregnes ved
 $$q_i=c_{i1}^qa_1 + c_{i2}^qa_2 + \dotsm + c_{i768}^qa_{768}.$$
-Tilsvarende skal der bruges $64\cdot 768$ vægte $c_{ij}^k$ for at lave $\overrightarrow{k}$-vektorerne og $64\cdot 768$ vægte $c_{ij}^v$ for at lave $\overrightarrow{v}$-vektorerne.
+Tilsvarende skal der bruges $64\cdot 768$ vægte $c_{ij}^k$ for at lave $\vec{k}$-vektorerne og $64\cdot 768$ vægte $c_{ij}^v$ for at lave $\vec{v}$-vektorerne.
 Hvor mange vægte blev der brugt i alt (bemærk, at det er de samme vægte $c_{ij}^q$, $c_{ij}^k$ og $c_{ij}^v$, der benyttes for alle tokens).
 
 Transformerblokkene sættes sammen til et opmærksomhedslag:
