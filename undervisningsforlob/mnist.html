@@ -178,6 +178,8 @@ window.Quarto = {
   <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
   <li><a href="#rgb-farvemodellen" id="toc-rgb-farvemodellen" class="nav-link" data-scroll-target="#rgb-farvemodellen">RGB-farvemodellen</a></li>
   <li><a href="#mnist-datasættet" id="toc-mnist-datasættet" class="nav-link" data-scroll-target="#mnist-datasættet">MNIST datasættet</a></li>
+  <li><a href="#kan-vi-kende-forskel-på-0-og-1" id="toc-kan-vi-kende-forskel-på-0-og-1" class="nav-link" data-scroll-target="#kan-vi-kende-forskel-på-0-og-1">Kan vi kende forskel på 0 og 1?</a></li>
+  <li><a href="#kan-vi-kende-forskel-på-0-og-3" id="toc-kan-vi-kende-forskel-på-0-og-3" class="nav-link" data-scroll-target="#kan-vi-kende-forskel-på-0-og-3">Kan vi kende forskel på 0 og 3?</a></li>
   </ul>
 </nav>
 </nav>
@@ -254,7 +256,7 @@ Figur&nbsp;1: Subpixel.
 </div>
 <p>Fordi alle farver bliver repræsenteret ved disse tre farver, taler man om en <strong>RGB</strong>-farvemodel.</p>
 <p>Vi kan skrue på lysstyrken i hver af de tre subpixels. Hvis der er skruet fuldt op for farven, er værdien 255, mens helt slukket svarer til værdien<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> 0.</p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Tallene fra 0 til 255 kan i det binære talsystem repræsenteres ved 8 bits svarende til 1 byte.</p></div></div><p>Vores øje opfatter ikke farven på de tre subpixels individuelt, men vil i stedet se en blandingsfarve. Hvis der for eksempel er skruet fuldt op på alle tre farver, så vil vores øje opfatte det som hvid. Det vil sige, at den pixel, som er vist i <a href="#fig-subpixel" class="quarto-xref">figur&nbsp;1</a> lyser hvid for os!</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Tallene fra 0 til 255 kan i det binære talsystem repræsenteres ved 8 bits svarende til 1 byte.</p></div></div><p>Vores øje opfatter ikke farven på de tre subpixels individuelt, men vi vil i stedet se en blandingsfarve. Hvis der for eksempel er skruet fuldt op på alle tre farver, så vil vores øje opfatte det som hvid. Det vil sige, at den pixel, som er vist i <a href="#fig-subpixel" class="quarto-xref">figur&nbsp;1</a> lyser hvid for os!</p>
 <p>Skruer vi helt op for rød og blå, men slukker for grøn fås en pink farve (som kaldes for magenta):</p>
 <div id="fig-magenta" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
@@ -323,7 +325,7 @@ Figur&nbsp;6: Et håndskrevet "0" fra MNIST datasættet, men hvor farveskalaen e
 </figure>
 </div>
 <p>Vi skal nu prøve, om vi ud fra de 784 gråskalaværdier kan "udvinde" nogle få, men sigende værdier, som kan bruges til at forudsige, hvilket ciffer der er på billedet. I første omgang vil vi prøve, om vi kan kende forskel på 0- og 1-taller.</p>
-<p>Det første vi vil gøre er, at lave billederne i en lavere opløsning svarende til, at billederne bliver mere pixeleret. Vi vil for eksempel lave et <span class="math inline">\(7 \times 7\)</span> pixel billede ved at inddele det oprindelige <span class="math inline">\(28 \times 28\)</span> pixel billede i <span class="math inline">\(2 \times 2\)</span> pixels, hvor vi så tager gennemsnittet af de pixelværdien. Et eksempel på det ses i <a href="#fig-pixeleret0" class="quarto-xref">figur&nbsp;7</a>:</p>
+<p>Det første, vi vil gøre, er at lave billederne i en lavere opløsning svarende til, at billederne bliver mere pixeleret. Vi vil for eksempel lave et <span class="math inline">\(7 \times 7\)</span> pixel billede ved at inddele det oprindelige <span class="math inline">\(28 \times 28\)</span> pixel billede i <span class="math inline">\(2 \times 2\)</span> pixels, hvor vi så tager gennemsnittet af de pixelværdien. Et eksempel på det ses i <a href="#fig-pixeleret0" class="quarto-xref">figur&nbsp;7</a>:</p>
 <div id="fig-pixeleret0" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-pixeleret0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -345,7 +347,10 @@ Figur&nbsp;8: Et billede af 1 med en oprindelige opløsning på <span class="mat
 </figcaption>
 </figure>
 </div>
-<p>Idéen er, som nævnt tidligere, at vi ud fra <span class="math inline">\(7 \times 7\)</span> billederne vil udvinde nogle nye og få værdier, som kan bruges til at kende forskel på <span class="math inline">\(0\)</span>- og <span class="math inline">\(1\)</span>-tallerne. Vi vil altså gerne koge de ialt 49 pixelværdier ned til 1-3 værdier, som er nok til at adskille 0 fra 1. Sådanne værdier kaldes for <strong>features</strong>.</p>
+</section>
+<section id="kan-vi-kende-forskel-på-0-og-1" class="level2">
+<h2 class="anchored" data-anchor-id="kan-vi-kende-forskel-på-0-og-1">Kan vi kende forskel på 0 og 1?</h2>
+<p>Idéen er, som nævnt tidligere, at vi ud fra <span class="math inline">\(7 \times 7\)</span> billederne vil udvinde nogle nye og få værdier, som kan bruges til at kende forskel på <span class="math inline">\(0\)</span>- og <span class="math inline">\(1\)</span>-tallerne. Vi vil altså gerne koge de ialt 49 pixelværdier ned til en til tre værdier, som er nok til at adskille 0 fra 1. Sådanne værdier kaldes for <strong>features</strong>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -371,6 +376,7 @@ Figur&nbsp;8: Et billede af 1 med en oprindelige opløsning på <span class="mat
 <ul>
 <li><p>Tæl antallet at hele hvide pixels på ovenstående to billeder.</p></li>
 <li><p>Vi har nu beregnet to forskellige features for de to billeder. Er værdierne som forventet?</p></li>
+<li><p>Det er klart, at den gennemsnitlige pixelværdi og antallet af helt hvide pixels hænger sammen. Forklar med ord hvilken sammenhæng, man vil forvente.</p></li>
 </ul>
 </div>
 </div>
@@ -388,12 +394,12 @@ Figur&nbsp;8: Et billede af 1 med en oprindelige opløsning på <span class="mat
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p><a href="https://apps01.math.aau.dk/ai/cifre/" target="blank">Åbn denne app</a>.</p>
-<p>Øverst kan du vælge hvilket ciffer, du vil se. Dernæst kan du vælge pixelopløsning (<span class="math inline">\(7 \times 7\)</span>, <span class="math inline">\(14 \times 14\)</span> eller det oprindelige <span class="math inline">\(28 \times 28\)</span>). Herefter kan du vælge, om du vil have vist pixelværdierne på det pixelerede billede eller ej. Endelig kan du trykke på "Forrige billede" eller "Næste billede" for at bladre i de forskellige billeder fra MNIST datasættet.</p>
+<p><a href="https://apps01.math.aau.dk/ai/cifre/" target="_blank">Åbn denne app</a>.</p>
+<p>Øverst kan du vælge hvilket ciffer fra MNIST datasættet, du vil se. Dernæst kan du vælge pixelopløsning (<span class="math inline">\(7 \times 7\)</span>, <span class="math inline">\(14 \times 14\)</span> eller det oprindelige <span class="math inline">\(28 \times 28\)</span>). Herefter kan du vælge, om du vil have vist pixelværdierne på det pixelerede billede eller ej. Endelig kan du trykke på "Forrige billede" eller "Næste billede" for at bladre i de forskellige billeder fra MNIST datasættet.</p>
 <ul>
 <li>Start med at bladre lidt rundt blandt de forskellige cifre, så du får et indtryk af datasættet.</li>
 </ul>
-<p>I tabellen under det oprindelige billede, kan du se nogle forskellige features. Vi kommer tilbage til de første features senere, men "pixel_gns" og "antal_tomme" svarer til de to features, som du udregnede i opgave 1.</p>
+<p>I tabellen under det oprindelige billede, kan du se de to features "pixel_gns" og "antal_tomme", som er de to features, du udregnede i opgave 1.</p>
 <ul>
 <li>Det første 0 (med et id på 0) og det første 1-tal (med id på 100) svarer til de to billeder, som du regnede på i opgave 1. Kontrollér, om du har regnet rigtigt!</li>
 </ul>
@@ -459,25 +465,251 @@ Figur&nbsp;8: Et billede af 1 med en oprindelige opløsning på <span class="mat
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 5: To features
+<span class="screen-reader-only">Note</span>Opgave 5: Plot af to features
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
+<ul>
+<li>Lav et punktplot med "pixel_gns" ud af <span class="math inline">\(x\)</span>-aksen og "antal_tomme" op af <span class="math inline">\(y\)</span>-aksen. Sørg for at alle punkter, som svarer til billeder af 0’er er farvet røde og alle punkter, som svarer til billeder af 1-taller er farvet blå.</li>
+</ul>
+<details>
+<summary>
+Sådan gør du i GeoGebra
+</summary>
 <p>Åbn datasættet i Excel og kopiere det hele over i et "Regneark" i GeoGebra (tryk på "Vis" <span class="math inline">\(\rightarrow\)</span> "Regneark").</p>
-<p>Vi vil lave et punktplot, hvor vi har "pixel_gns" ud af <span class="math inline">\(x\)</span>-aksen og "antal_tomme" op af <span class="math inline">\(y\)</span>-aksen. Samtidig vil vi farve alle punkter, som svarer til billeder af 0’er røde og alle punkter, som svarer til billeder af 1-taller blå. Gør følgende:</p>
 <ul>
 <li>Stil dig i celle <code>E2</code> (det skulle gerne være den første tomme celle i anden række).</li>
 <li>Skriv <code>(C2,D2)</code> (det skulle give dig værdien for "pixel_gns" og "antal_tomme" for det første billede).</li>
 <li>Markér cellen. Tag ved den lille firkant nederst til højre og træk ned, så du får punkter for alle 200 billeder.</li>
-<li>Justér på akserne på tegneblokken, så du kan se alle punkterne. <em>Hvis</em> der er vist et navn ved punkterne i tegneblokken, skal du markerer alle punkterne, højreklikke og trykke på "Vis navn".</li>
+<li>Justér på akserne på tegneblokken, så du kan se alle punkterne. Markér alle punkterne, højreklikke og trykke på "Basis". Sæt flueben ved "Fast objekt" (det sikrer, at du ikke ved en fejl kan flytte på punkterne). <em>Hvis</em> der er vist et navn ved punkterne i tegneblokken, fjerner du også fluebenet ved "Vis navn".</li>
 <li>Markér alle de punkter i regnearket, som har en "label" værdi på 0. Højreklik og vælg "Egenskaber". Under fanen "Farve" vælger du rød.</li>
 <li>Farv på tilsvarende måde alle punkterne med en "label" værdi på 1 blå.</li>
+<li>Højreklik på tegneblokken og vælg "Tegneblok". Gå ind under fanen "xAkse". Under "Navn" skriver du "pixel gns" og tilsvarende navngiver du <span class="math inline">\(y\)</span>-aksen "antal tomme".</li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 6: Klassifikation baseret på en eller to features
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Vi vil starte med at undersøge, om vi kan kende forskel på 0 og 1 alene baseret på én af de to features.</p>
+<p><strong>Gennemsnitlig pixelværdi</strong></p>
+<ul>
+<li><p>Indtegn en lodret linje ved for eksempel at skrive <span class="math inline">\(x=20\)</span>. Hvilken lodret linje er bedst til at adskille de blå punkter fra de røde?</p></li>
+<li><p>Hvor mange punkter kommer som minimum til at ligge på den forkerte side af linjen?</p></li>
+<li><p>Find id’et på de punkter, som ligger på den forkerte side af linjen. Man siger, at disse punkter er blevet klassificeret forkert. Brug app’en til at få vist et billede af disse tal. Kan du forklare, hvorfor disse billeder bliver klassificeret forkert, når vi ser på pixel gennemsnittet alene?</p></li>
+</ul>
+<p>Klassifikationsnøjagtigheden (<strong>CA</strong> for <em>classification accuracy</em> på engelsk) angiver hvor stor en procentdel af data, som er blevet klassificeret korrekt.</p>
+<ul>
+<li>Udregn klassifikationsnøjagtigheden.</li>
+</ul>
+<p><strong>Antal hvide pixels</strong></p>
+<p>Vi vil nu undersøge, hvor mange billeder vi kan klassificere korrekt, ved kun at se på antallet af hvide pixels i billedet.</p>
+<ul>
+<li><p>Indtegn en vandret linje ved for eksempel at skrive <span class="math inline">\(y=20\)</span>.</p></li>
+<li><p>Svar på de samme spørgsmål som ovenfor, men nu baseret på den vandrette linje.</p></li>
+</ul>
+<p><strong>Begge features</strong></p>
+<p>Til sidst vil vi prøve at undersøge, om vi kan gøre det bedre ved at bruge begge features.</p>
+<ul>
+<li><p>Indtegn en ret linje i koordinatsystemet.</p></li>
+<li><p>Svar på de samme spørgsmål som ovenfor, men nu baseret på den generelle rette linje.</p></li>
 </ul>
 </div>
 </div>
 </div>
+<p>I opgave 6 ovenfor kom du formentlig frem til, at hvis vi alene skal adskille 0’er fra 1-taller, så er det faktisk nok at tælle antallet af hvide pixels i billedet! Gør vi det, kan vi med vores træningsdata få en klassifikationsnøjagtighed på <span class="math inline">\(98.5\%\)</span>.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 7: Hjælper det med højere opløsning? (valgfri)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Undersøg, om du kan få en højere klassifikationsnøjagtighed ved at bruge en pixelopløsning på <span class="math inline">\(14 \times 14\)</span> eller <span class="math inline">\(28 \times 28\)</span> pixels.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="kan-vi-kende-forskel-på-0-og-3" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="kan-vi-kende-forskel-på-0-og-3">Kan vi kende forskel på 0 og 3?</h2>
+<p>Det går jo strygende! Tæl antallet af hvide pixels i billedet, og du kan kende forskel på 0 og 1. Men hvad nu, hvis vi vil kende forskel på 0 og 3. Går det mon lige så nemt? Et eksempel på et håndskrevet 0 og 3-tal er vist i <a href="#fig-pixel03" class="quarto-xref">figur&nbsp;9</a>.</p>
+<div id="fig-pixel03" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-pixel03-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="mnist_filer/pixel03.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-pixel03-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;9: Et billede af et håndskrevet 0 og 3-tal med en opløsning på <span class="math inline">\(28 \times 28\)</span> pixels.
+</figcaption>
+</figure>
+</div>
+<p>Lad os prøve igen med de to features: gennemsnitlig pixelværdi og antal hvide pixels.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 8: Download af nyt datasæt
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Brug igen <a href="https://apps01.math.aau.dk/ai/cifre/" target="_blank">app’en</a>, som viser MNIST datasættet.</p>
+<ul>
+<li><p>Start med at bladre lidt rundt blandt 3-tallerne, så du får en fornemmelse for, hvordan de er skrevet.</p></li>
+<li><p>Download et datasæt bestående af 0 og 3-taller i en pixelopløsning på <span class="math inline">\(7 \times 7\)</span> pixels.</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 9: Punktplot
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Lav et punktplot af de to features (gennemsnitlig pixelværdi og antal hvide pixels), som du gjorde det i opgave 5. Farv alle de punkter, som svarer til billeder af 0 røde, og farv alle de punkter, som svarer til billeder af 3-taller grønne.</p></li>
+<li><p>Kan du på nogen måde indlægge en linje i dette plot, som på fornuftig vis kan bruges til at adskille de røde punkter fra de grønne?</p></li>
+</ul>
+</div>
+</div>
+</div>
+<p>Det er ret tydeligt, at den gennemsnitlige pixelværdi og antallet af hvide pixels i billedet på ingen måde kan bruges til at kende forskel på 0 og 3. Det skyldes, at man åbenbart bruger cirka lige meget "blyantsfarve" på at skrive 0, som man gør på at skrive 3. Det viser med al tydelighed, at de features, man vælger, er fuldstændig afhængig af det klassifikationsproblem, som man står med. To features kan være formidable til ét klassifikationsproblem (at kende forskel på 0 og 1), mens de er elendige til at andet klassifikationsproblem (at kende forskel på 0 og 3). Det betyder, at vi må på jagt efter nye features!</p>
+<p>På <a href="#fig-pixel03_7x7" class="quarto-xref">figur&nbsp;10</a> ses et billede af et håndskrevet 0 og 3-tal i en opløsning på <span class="math inline">\(7 \times 7\)</span> pixels, og vi skal prøve at komme med med nogle karakteristika ved de to billeder, som kan bruges til at adskille dem.</p>
+<div id="fig-pixel03_7x7" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-pixel03_7x7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="mnist_filer/pixel03_7x7.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-pixel03_7x7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;10: Et billede af et håndskrevet 0 og 3-tal med en opløsning på <span class="math inline">\(7 \times 7\)</span> pixels.
+</figcaption>
+</figure>
+</div>
+<p>På <a href="#fig-pixel03_7x7_vandret" class="quarto-xref">figur&nbsp;11</a> har vi lagt et vandret vindue ind over en række af pixels på de to billeder. Vi vil her tælle, hvor mange gange pixelværdierne "topper". En sådan "top" kalder vi for et lokalt maksimum. På billedet af 0, kan vi se, at der er to lokale maksima, mens der på billedet af 3-tallet kun er ét lokalt maksimum. Hvis vi ser på de vandrette pixelværdier på et billede af et 0, vil Vi umiddelbart tænke, at der ofte vil være to lokale maksima. Ser vi derimod på vandrette pixelværdier på et billede af et 3-tal, vil der nok nogle gange være to lokale maksima, mens der andre gange kun vil være et..</p>
+<div id="fig-pixel03_7x7_vandret" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-pixel03_7x7_vandret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="mnist_filer/pixel03_7x7_vandret.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-pixel03_7x7_vandret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;11: Et billede af et håndskrevet 0 og 2-tal med et vandret vindue indlagt.
+</figcaption>
+</figure>
+</div>
+<p>Lægger vi derimod et lodret vindue ind, vil vi igen tænke, at der typisk vil være to lokale maksima på et billede af et 0, men der vil formentlig være to eller tre lokale maksima på et billede af et 3-tal. Dette er illustreret i <a href="#fig-pixel03_7x7_lodret" class="quarto-xref">figur&nbsp;12</a>.</p>
+<div id="fig-pixel03_7x7_lodret" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-pixel03_7x7_lodret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="mnist_filer/pixel03_7x7_lodret.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-pixel03_7x7_lodret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;12: Et billede af et håndskrevet 0 og 2-tal med et lodret vindue indlagt.
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 10: Vandrette og lodrette lokale maksima
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="mnist_filer/pixel03_7x7.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p>Med udgangspunkt i ovenstående billede af et 0 og et 3-tal skal du:</p>
+<ul>
+<li><p>Bestem antallet af lokale maksima i alle vandrette rækker.</p></li>
+<li><p>Udregn det gennemsnitlige antal vandrette lokale maksima.</p></li>
+<li><p>Bestem det største antal lokale maksima i alle vandrette rækker.</p></li>
+<li><p>Bestem antallet af lokale maksima i alle lodrette rækker.</p></li>
+<li><p>Udregn det gennemsnitlige antal lodrette lokale maksima.</p></li>
+<li><p>Bestem det største antal lokale maksima i alle lodrette rækker.</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 11: Vandrette og lodrette lokale maksima
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Brug igen <a href="https://apps01.math.aau.dk/ai/cifre/" target="_blank">app’en</a>. Sæt under "Features" flueben ved "Vis lodrette lokale maksima" og "Vis vandrette lokale maksima".</p>
+<p>Billederne fra opgave 10 har id 0 og 300.</p>
+<ul>
+<li>Kontroller ved hjælp af app’en dit resultat fra opgave 10.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 12: Download af data
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>I det følgende vælger vi, at arbejde med en opløsning på <span class="math inline">\(14 \times 14\)</span> pixels, så vi får et lidt mere finkornet billede at arbejde videre med.</p>
+<p>Under fanen "Download data" vælger du derfor:</p>
+<ul>
+<li>En pixel-opløsning på 14.</li>
+<li>Under "Tal" sætter du flueben ved 0 og 3.</li>
+<li>I det følgende sætter du flueben ved alle seks features.</li>
+<li>Tryk på "Download data".</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Husk at vælge stil (boller og krydser)</p>
 
 
 </section>
