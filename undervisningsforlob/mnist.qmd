@@ -130,9 +130,7 @@ Det bliver selvfølgelig lidt møjsommeligt at udregne disse to features for man
 
 ### Opgave 2: MNIST datasættet
 
-[Åbn denne app](https://apps01.math.aau.dk/ai/cifre/){target="_blank"}. 
-
-Øverst kan du vælge hvilket ciffer fra MNIST datasættet, du vil se. Dernæst kan du vælge pixelopløsning ($7 \times 7$, $14 \times 14$ eller det oprindelige $28 \times 28$). Herefter kan du vælge, om du vil have vist pixelværdierne på det pixelerede billede eller ej. Endelig kan du trykke på \"Forrige billede\" eller \"Næste billede\" for at bladre i de forskellige billeder fra MNIST datasættet. 
+[Åbn denne app](https://apps01.math.aau.dk/ai/cifre/){target="_blank"}. Øverst kan du vælge hvilket ciffer fra MNIST datasættet, du vil se. Dernæst kan du vælge pixelopløsning ($7 \times 7$, $14 \times 14$ eller det oprindelige $28 \times 28$). Herefter kan du vælge, om du vil have vist pixelværdierne på det pixelerede billede eller ej. Endelig kan du trykke på \"Forrige billede\" eller \"Næste billede\" for at bladre i de forskellige billeder fra MNIST datasættet. 
 
 * Start med at bladre lidt rundt blandt de forskellige cifre, så du får et indtryk af datasættet.
 
@@ -211,7 +209,7 @@ Vi vil starte med at undersøge de to features hver for sig.
 
 Vi vil starte med at undersøge, om vi kan kende forskel på 0 og 1 alene baseret på én af de to features.
 
-**Gennemsnitlig pixelværdi**
+[Gennemsnitlig pixelværdi]{.fremhaev}
 
 + Indtegn en lodret linje ved for eksempel at skrive $x=20$. Hvilken lodret linje er bedst til at adskille de blå punkter fra de røde?
 
@@ -223,7 +221,7 @@ Klassifikationsnøjagtigheden (**CA** for *classification accuracy* på engelsk)
 
 + Udregn klassifikationsnøjagtigheden.
 
-**Antal hvide pixels**
+[Antal hvide pixels]{.fremhaev}
 
 Vi vil nu undersøge, hvor mange billeder vi kan klassificere korrekt, ved kun at se på antallet af hvide pixels i billedet.
 
@@ -231,7 +229,7 @@ Vi vil nu undersøge, hvor mange billeder vi kan klassificere korrekt, ved kun a
 
 + Svar på de samme spørgsmål som ovenfor, men nu baseret på den vandrette linje.
 
-**Begge features**
+[Begge features]{.fremhaev}
 
 Til sidst vil vi prøve at undersøge, om vi kan gøre det bedre ved at bruge begge features.
 
@@ -284,15 +282,36 @@ Brug igen [app'en](https://apps01.math.aau.dk/ai/cifre/){target="_blank"}, som v
 
 Det er ret tydeligt, at den gennemsnitlige pixelværdi og antallet af hvide pixels i billedet på ingen måde kan bruges til at kende forskel på 0 og 3. Det skyldes, at man åbenbart bruger cirka lige meget \"blyantsfarve\" på at skrive 0, som man gør på at skrive 3. Det viser med al tydelighed, at de features, man vælger, er fuldstændig afhængig af det klassifikationsproblem, som man står med. To features kan være formidable til ét klassifikationsproblem (at kende forskel på 0 og 1), mens de er elendige til at andet klassifikationsproblem (at kende forskel på 0 og 3). Det betyder, at vi må på jagt efter nye features!
 
-På @fig-pixel03_7x7 ses et billede af et håndskrevet 0 og 3-tal i en opløsning på $7 \times 7$ pixels, og vi skal prøve at komme med med nogle karakteristika ved de to billeder, som kan bruges til at adskille dem. 
+### Vandrette lokale maksima
+
+På @fig-pixel03_7x7 ses et billede af et håndskrevet 0 og 3-tal i en opløsning på $7 \times 7$ pixels, og vi skal prøve at finde nogle karakteristika ved de to billeder, som kan bruges til at adskille dem. 
 
 ![Et billede af et håndskrevet 0 og 3-tal med en opløsning på $7 \times 7$ pixels.](mnist_filer/pixel03_7x7.png){#fig-pixel03_7x7 width=80% fig-align="center"}
 
-På @fig-pixel03_7x7_vandret har vi lagt et vandret vindue ind over en række af pixels på de to billeder. Vi vil her tælle, hvor mange gange pixelværdierne \"topper\". En sådan \"top\" kalder vi for et lokalt maksimum. På billedet af 0, kan vi se, at der er to lokale maksima, mens der på billedet af 3-tallet kun er ét lokalt maksimum. Hvis vi ser på de vandrette pixelværdier på et billede af et 0, vil Vi umiddelbart tænke, at der ofte vil være to lokale maksima. Ser vi derimod på vandrette pixelværdier på et billede af et 3-tal, vil der nok nogle gange være to lokale maksima, mens der andre gange kun vil være et..
+På @fig-pixel03_7x7_vandret har vi lagt et vandret vindue ind over en række af pixels på de to billeder. Vi vil her tælle, hvor mange gange pixelværdierne \"topper\". En sådan \"top\" kalder vi for et lokalt maksimum. På billedet af 0, kan vi se, at der er to lokale maksima, mens der på billedet af 3-tallet kun er ét lokalt maksimum. Hvis vi ser på de vandrette pixelværdier på et billede af et 0, vil vi i \"toppen\" og \"bunden\" af 0'et forvente ét lokalt maksimum, men vi i mange af de vandrette vinduer i midten af 0'et vil tænke, at der ofte vil være to lokale maksima. Dette er illustreret på @fig-lok-max0_vandret.
 
-![Et billede af et håndskrevet 0 og 2-tal med et vandret vindue indlagt.](mnist_filer/pixel03_7x7_vandret.png){#fig-pixel03_7x7_vandret width=80% fig-align="center"}
+![Antallet af vandrette lokale maksima på et billede af et håndskrevet 0.](mnist_filer/lok-max0_vandret.png){#fig-lok-max0_vandret width=80% fig-align="center"}
 
-Lægger vi derimod et lodret vindue ind, vil vi igen tænke, at der typisk vil være to lokale maksima på et billede af et 0, men der vil formentlig være to eller tre lokale maksima på et billede af et 3-tal. Dette er illustreret i @fig-pixel03_7x7_lodret.
+
+Ser vi derimod på vandrette pixelværdier på et billede af et 3-tal, vil der både være ét og to lokale maksima, som illustreret på @fig-lok-max3_vandret.
+
+![Antallet af vandrette lokale maksima på et billede af et håndskrevet 3-tal.](mnist_filer/lok-max3_vandret.png){#fig-lok-max3_vandret width=80% fig-align="center"}
+
+Idéen med at tælle antallet af vandrette lokale maksimaer baseret på pixelværdi er illustreret i @fig-pixel03_7x7_vandret. For de to vandrette vinduer, som er lagt ind på billedet, kan vi se, at 0'et har to vandrette maksima, mens 3-tallet har ét. 
+
+![Et billede af et håndskrevet 0 og 3-tal med et vandret vindue indlagt.](mnist_filer/pixel03_7x7_vandret.png){#fig-pixel03_7x7_vandret width=80% fig-align="center"}
+
+### Lodrette lokale maksima
+
+Lægger vi derimod et lodret vindue ind, vil der på et 0 typisk være ét eller to lokale maksima (se @fig-lok-max0_lodret).
+
+![Antallet af lodrette lokale maksima på et billede af et håndskrevet 0.](mnist_filer/lok-max0_lodret.png){#fig-lok-max0_lodret width=80% fig-align="center"}
+
+På et 3-tal kan være derimod være mellem en og tre lokal maksima (se @fig-lok-max3_lodret).
+
+![Antallet af lodrette lokale maksima på et billede af et håndskrevet 3.](mnist_filer/lok-max3_lodret.png){#fig-lok-max3_lodret width=80% fig-align="center"}
+
+Princippet baseret på pixelværdier er illustreret i @fig-pixel03_7x7_lodret.
 
 ![Et billede af et håndskrevet 0 og 2-tal med et lodret vindue indlagt.](mnist_filer/pixel03_7x7_lodret.png){#fig-pixel03_7x7_lodret width=80% fig-align="center"}
 
@@ -327,21 +346,144 @@ Billederne fra opgave 10 har id 0 og 300.
 
 + Kontroller ved hjælp af app'en dit resultat fra opgave 10.
 
+Vælg nu en opløsning på $28 \times 28$ pixels og sæt under \"Features\" flueben ved \"Vis lodrette lokale maksima\" og \"Vis vandrette lokale maksima\."
+
++ Se på de første ti billeder af håndskrevne 0'er. Er antallet af vandrette og lodrette lokale maksima som forventet? Hvis ikke -- kan du forklare hvorfor?
+
++ Gentag ovenstående men se nu på de første ti billeder af håndskrevne 3-taller.
+
 :::
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
 ### Opgave 12: Download af data
 
-I det følgende vælger vi, at arbejde med en opløsning på $14 \times 14$ pixels, så vi får et lidt mere finkornet billede at arbejde videre med.
+I det følgende vælger vi, at arbejde med en opløsning på $28 \times 28$ pixels, så vi får et lidt mere finkornet billede at arbejde videre med.
 
 Under fanen \"Download data\" vælger du derfor:
 
-+ En pixel-opløsning på 14.
++ En pixel-opløsning på 28.
 + Under \"Tal\" sætter du flueben ved 0 og 3.
 + I det følgende sætter du flueben ved alle seks features.
 + Tryk på \"Download data\".
 
 :::
 
-Husk at vælge stil (boller og krydser)
+I opgave 11 så vi, at de håndskrevne tal ikke altid helt opfører sig, som vi kunne forvente i forhold til antallet af lodrette og vandrette lokale maksima. De er simpelthen nogle gange skrevet lidt skørt, så der enten er flere eller færre lokale maksima end forventet. Men det kunne jo godt være, at der vil være information at hente, hvis vi ser på de gennemsnitlige værdier af de lodrette og vandrette lokale maksima. Det prøver vi i næste opgave.
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 13: Plot af gennemsnitsværdier
+
++ Lav et punktplot med \"lodret_gns\" ud af $x$-aksen og \"vandret_gns\" op af $y$-aksen. Sørg for at alle punkter, som svarer til billeder af 0'er repræsenteres ved røde krydser og alle punkter, som svarer til billeder af 3-taller repræsenteres ved grønne cirkler (det er for bedre at kunne se, at nogle af punkterne ligger oveni hinanden).
+
+<details>
+<summary> Sådan gør du i GeoGebra </summary>
+
+Åbn datasættet i Excel og kopiere det hele over i et \"Regneark\" i GeoGebra (tryk på \"Vis\" $\rightarrow$ \"Regneark\").
+
+
++ Stil dig i celle `I2` (det skulle gerne være den første tomme celle i anden række).
++ Skriv `(C2,E2)` (det skulle give dig værdien for \"lodret_gns\" og \"vandret_gns\" for det første billede).
++ Markér cellen. Tag ved den lille firkant nederst til højre og træk ned, så du får punkter for alle 200 billeder.
++ Justér på akserne på tegneblokken, så du kan se alle punkterne. Markér alle punkterne, højreklikke og trykke på \"Basis\". Sæt flueben ved \"Fast objekt\" (det sikrer, at du ikke ved en fejl kan flytte på punkterne). *Hvis* der er vist et navn ved punkterne i tegneblokken,  fjerner du også fluebenet ved \"Vis navn\".
++ Markér alle de punkter i regnearket, som har en \"label\" værdi på 0. Højreklik og vælg \"Egenskaber\". Under fanen \"Farve\" vælger du rød. Under fanen \"Stil\" vælger du under \"Punktmarkering\" et kryds.
++ Farv på tilsvarende måde alle punkterne med en \"label\" værdi på 3 grønne og vælg en cirkel som punktmarkering.
++ Højreklik på tegneblokken og vælg \"Tegneblok\". Gå ind under fanen \"xAkse\". Under \"Navn\" skriver du \"lodret gns\" og tilsvarende navngiver du $y$-aksen \"vandret gns\".
+
+</details>
+
++ Sammenlign med det punktplot, som du lavede i opgave 9. Egner de to nye features sig bedre til at kende forskel på 0'er og 3-taller?
+
++ Indtegn i dit (nye) punktplot en ret linje, som så godt som muligt kan adskille de røde krydser fra de grønne cirkler. Nedskriv ligningen for denne linje.
+
++ Udvælg et 0 og et 3-tal, som ligger \"på den forkerte\" side af din linje og som vi altså har svært ved at kende forskel på. Find id'et på cifret og slå det op i app'en. Kan du ud fra billedet forklare, hvorfor det er svært at kende forskel?
+
++ Tæl (så godt som muligt -- der kan være punkter, som ligger oveni hinanden) hvor mange cifre, som bliver klassificeret forkert, og udregne på den baggrund en klassifikationsnøjagtighed.
+
+:::
+
+### Klassificering ved beregning (kan udelades)
+
+Det er desværre ikke muligt præcist at tælle, hvor mange cifre der er klassificeret forkert, fordi nogle af punkterne ligger oveni hinanden. Men vi kan heldigvis *beregne* om et punkt ligger over eller under linjen. Det gøres ved at betragte den lodrette forskel fra et punkt og ned til linjen[^3]. 
+
+[^3]: Med mindre skillelinjen er lodret!
+
+Dette er illustreret i @fig-lodret_afstand:
+
+![Beregning af den lodrette forskel fra et punkt til en linje.](ALS_filer/lodret_afstand.png){#fig-lodret_afstand width=75% fig-align="center"}
+
+Den lodrette forskel fra punktet $P(x_1,y_1)$ ned til linjen med ligning $y= a \cdot x + b$ må være (se @fig-lodret_afstand):
+
+$$
+y_1 - (a \cdot x_1 + b)
+$$
+Hvis denne forskel er positiv ligger punktet over linjen og omvendt, hvis forskellen er negativ.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 14: Klassificering ved beregning (kan springes over)
+
+* Brug ligningen for den ligning du fandt i opgave 13. Hvis din ligning er på formen $ax+by+c=0$, så start med at isolere $y$.
+
+* For hvert punkt i dit punktplot skal du udregne den lodrette forskel fra punktet til din linje.
+
+* Lav nu en klassificering ved hjælp af fortegnet på den beregnede forskel. 
+
+<details>
+<summary> Sådan gør du i GeoGebra </summary>
+
+Hvis du i kolonne `J` har udregnet den lodrette forskel, så vil vi i kolonne `K` skrive et 1-tal, hvis det tilhørende punkt er klassificeret korrekt og 0 ellers. Det gør sådan her: 
+
+[De røde punkter]{.fremhaev}
+
+* Skriv i celle `K2` følgende: `=Hvis(J2 ≥ 0, 1, 0)`. Det betyder, at der skrives 1 i celle `K2`, hvis forskellen i `J2` er positiv (eller 0) og ellers skrives der 0.
+
+For alle de grønne punkter er det lige omvendt:
+
+[De grønne punkter]{.fremhaev}
+
+* Skriv i celle `K102` (som nok er den første celle for de grønne pnkter) følgende: `=Hvis(J102 < 0, 1, 0)`. Det betyder, at der skrives 1 i celle `K102`, hvis forskellen i `J102` er negativ og ellers skrives der 0.
+
+[Alle punkter]{.fremhaev}
+
+* Tæl nu først det samlede antal korrekt klassificeret cifre. Du kan med fordel blot bruge `SUM(K2:K201)`. Tæl dernæst antal forkert klassificeret cifre.
+
+</details>
+
+:::
+
+
+## Tre features
+
+Du har formentlig opdaget, at de to nye features ikke er helt tossede i forhold til at kende forskel på 0'ere og 3-taller, men at der også er nogle cifre, som vi ikke kan kende forskel på baseret på disse to features. Vi vil derfor prøve at tilføje en tredje feature og se, om vi kan få en højere klassifikationsnøjagtighed.
+
+Ser vi på @fig-lok-max0_vandret og @fig-lok-max1_vandret kan vi se, at både 0'er og 3-taller typisk har mellem en og to vandrette lokale maksima. Derimod illustrerer @fig-lok-max0_lodret og @fig-lok-max1_lodret, at 0'er også typisk har mellem en og to lodrette lokale maksima, mens 3-taller typisk kan have op til tre lodrette lokale maksima. Vi vil derfor som en tredje feature bruge det **maksimale** antal lodrette lokale maksima. Her vil 0'ere typisk være karakteriseret ved at det maksimale antal lodrette lokale maksima vil være to, mens det tilsvarende tal for 3-taller vil være tre.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 15: Plot af tre features
+
++ Lav et punktplot med \"lodret_gns\" ud af $x$-aksen, \"vandret_gns\" op af $y$-aksen og \"lodret_max\" op af $z$-aksen. Sørg for at alle punkter, som svarer til billeder af 0'er farves røde og alle punkter, som svarer til billeder af 3-taller farves grønne.
+
+<details>
+<summary> Sådan gør du i GeoGebra </summary>
+
+Åbn datasættet i Excel og kopiere det hele over i et \"Regneark\" i GeoGebra (tryk på \"Vis\" $\rightarrow$ \"Regneark\").
+
++ Gør som i opgave 13, men skriv i stedet i celle `I2` følgende: `(C2,E2,D2)` (det skulle give dig værdien for \"lodret_gns\", \"vandret_gns\" og \"lodret max\" for det første billede).
++ Udfyld for alle 200 cifre og farv igen punkterne (vær opmærksom på at man i 3D-plot ikke kan vælge punktmarkering).
++ Vælg \"Vis\" $\rightarrow$ \"3D Grafik\"
+
+</details>
+
++ Sammenlign med det punktplot, som du lavede i opgave 9. Egner de to nye features sig bedre til at kende forskel på 0'er og 3-taller?
+
++ Indtegn i dit (nye) punktplot en ret linje, som så godt som muligt kan adskille de røde krydser fra de grønne cirkler. Nedskriv ligningen for denne linje.
+
++ Udvælg et 0 og et 3-tal, som ligger \"på den forkerte\" side af din linje og som vi altså har svært ved at kende forskel på. Find id'et på cifret og slå det op i app'en. Kan du ud fra billedet forklare, hvorfor det er svært at kende forskel?
+
++ Tæl (så godt som muligt -- der kan være punkter, som ligger oveni hinanden) hvor mange cifre, som bliver klassificeret forkert, og udregne på den baggrund en klassifikationsnøjagtighed.
+
+:::
