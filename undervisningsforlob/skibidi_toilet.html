@@ -176,12 +176,12 @@ window.Quarto = {
    
   <ul>
   <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
-  <li><a href="#træn-neuralt-netværk-til-klassifikation-på-datasæt" id="toc-træn-neuralt-netværk-til-klassifikation-på-datasæt" class="nav-link" data-scroll-target="#træn-neuralt-netværk-til-klassifikation-på-datasæt">Træn neuralt netværk til klassifikation på datasæt</a></li>
+  <li><a href="#træn-neuralt-netværk" id="toc-træn-neuralt-netværk" class="nav-link" data-scroll-target="#træn-neuralt-netværk">Træn neuralt netværk</a></li>
   <li><a href="#lille-eksempel" id="toc-lille-eksempel" class="nav-link" data-scroll-target="#lille-eksempel">Lille eksempel</a></li>
   <li><a href="#generalisering" id="toc-generalisering" class="nav-link" data-scroll-target="#generalisering">Generalisering</a></li>
-  <li><a href="#tilbage-til-datasættet-med-de-200-punkter" id="toc-tilbage-til-datasættet-med-de-200-punkter" class="nav-link" data-scroll-target="#tilbage-til-datasættet-med-de-200-punkter">Tilbage til datasættet med de 200 punkter</a></li>
+  <li><a href="#det-store-datasæt-igen" id="toc-det-store-datasæt-igen" class="nav-link" data-scroll-target="#det-store-datasæt-igen">Det store datasæt igen</a></li>
   <li><a href="#klassifikationsnøjagtigheden" id="toc-klassifikationsnøjagtigheden" class="nav-link" data-scroll-target="#klassifikationsnøjagtigheden">Klassifikationsnøjagtigheden</a></li>
-  <li><a href="#løsninger-til-opgaver" id="toc-løsninger-til-opgaver" class="nav-link" data-scroll-target="#løsninger-til-opgaver">Løsninger til opgaver</a></li>
+  <li><a href="#løsninger-til-udvalgte-opgaver" id="toc-løsninger-til-udvalgte-opgaver" class="nav-link" data-scroll-target="#løsninger-til-udvalgte-opgaver">Løsninger til udvalgte opgaver</a></li>
   </ul>
 </nav>
 </nav>
@@ -240,10 +240,10 @@ window.Quarto = {
 <p>Formålet med dette forløb er at se på, hvordan man kan vurdere værdien af tabsfunktionen og værdien af klassifikationsnøjagtigheden, når man har trænet en kunstig neuron på et datasæt.</p>
 <p>Hvis værdierne vurderes utilfredsstillende, må man forsøge, om andre startvægte, en anden learning rate eller flere iterationer giver et bedre resultat.</p>
 </section>
-<section id="træn-neuralt-netværk-til-klassifikation-på-datasæt" class="level2">
-<h2 class="anchored" data-anchor-id="træn-neuralt-netværk-til-klassifikation-på-datasæt">Træn neuralt netværk til klassifikation på datasæt</h2>
+<section id="træn-neuralt-netværk" class="level2">
+<h2 class="anchored" data-anchor-id="træn-neuralt-netværk">Træn neuralt netværk</h2>
 <p>Vi vil se på data fra 200 fiktive personer, der efter et besøg på et museum om internetfænomener bliver spurgt, om de ved, hvad “skibidi toilet” betyder.</p>
-<p>Der er to forklarende variable, <span class="math inline">\(x_1\)</span> er personens alder, og <span class="math inline">\(x_2\)</span> er besøgets længde i minutter, samt en afhængige variabel <span class="math inline">\(t\)</span>, som angiver, om personen kan huske, hvad “skibidi toilet” betyder (1 betyder Ja, 0 betyder Nej).</p>
+<p>Der er to feature-variable, <span class="math inline">\(x_1\)</span> er personens alder, og <span class="math inline">\(x_2\)</span> er besøgets længde i minutter, samt en target-variabel <span class="math inline">\(t\)</span>, som angiver, om personen kan huske, hvad “skibidi toilet” betyder (1 betyder Ja, 0 betyder Nej).</p>
 <p>Data ligger i <a href="skibidi_filer/datasæt_alder_tid.xlsx">Excel-filen her</a>. Vi vil bruge <a href="https://apps01.math.aau.dk/ai/neuron/" target="_blank">kunstig neuron app’en</a> til at træne en model på disse data.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
@@ -251,14 +251,14 @@ window.Quarto = {
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 1: Udregn værdi af tabsfunktionen i eksemplet
+<span class="screen-reader-only">Note</span>Opgave 1: Udregn værdi af tabsfunktionen
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Åbn appen og indlæs datasættet</li>
+<li>Åbn appen og indlæs datasættet.</li>
 <li>Vælg <span class="math inline">\(t\)</span> som target-varibel og <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> som feature-variable.</li>
 <li>Sæt startvægtene til -23, og sæt antal iterationer til 50000.</li>
 <li>Behold learning-rate som 0,001 og behold squared-error, sigmoid og feature-skalering.</li>
@@ -274,7 +274,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="lille-eksempel">Lille eksempel</h2>
 <p>Lad os sige, at vi har spurgt 10 personer, om de ved, hvad “skibidi toilet” betyder. De 7 svarede Ja, og de 3 svarede Nej. Vi sætter targetværdien <span class="math inline">\(t=1\)</span> for Ja og <span class="math inline">\(t=0\)</span> for Nej.</p>
 <p>Vi skal så ud fra en eller flere feature-variable for hver person træne en neural neuron til at kunne klassificere, om en ny person ved, hvad “skibidi toilet” betyder.</p>
-<p>Vi vil dog ikke fokusere på netværket, men på mulige værdier af tabsfunktionen, idet vi bruger *squared-error”: <span id="eq-tabsfunktion"><span class="math display">\[
+<p>Vi vil dog ikke fokusere på netværket, men på mulige værdier af tabsfunktionen, idet vi bruger <em>squared-error</em> som tabsfunktion: <span id="eq-tabsfunktion"><span class="math display">\[
 E = \frac{1}{2} \sum \left (t-o \right)^2
 \tag{1}\]</span></span></p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
@@ -299,7 +299,7 @@ E = \frac{1}{2} \sum \left (t-o \right)^2
 </div>
 </div>
 </div>
-<p>Så <span class="math inline">\(o=0.5\)</span> giver os et udgangspunkt, men mon ikke det kan blive bedre end det?</p>
+<p>Så <span class="math inline">\(o=0.5\)</span> giver os et udgangspunkt, som værdien af tabsfunktionen i hvert fald bør komme under, men mon ikke det kan blive bedre end det?</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -321,7 +321,7 @@ E = \frac{1}{2} \sum \left (t-o \right)^2
 </div>
 </div>
 </div>
-<p>Som opgave 3 viser, så afhænger tabsfunktionen <span class="math inline">\(E\)</span> af værdien af <span class="math inline">\(p\)</span>, så vi kan se på funktionen <span class="math inline">\(E(p)\)</span>.</p>
+<p>Som opgave 3 viser, så afhænger tabsfunktionen <span class="math inline">\(E\)</span> af værdien af <span class="math inline">\(p\)</span>, så vi kan se på funktionen <span class="math inline">\(E(p)\)</span>, når vi alene kigger på, at <span class="math inline">\(o=p\)</span> for alle.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -346,7 +346,7 @@ E = \frac{1}{2} \sum \left (t-o \right)^2
 <section id="generalisering" class="level2">
 <h2 class="anchored" data-anchor-id="generalisering">Generalisering</h2>
 <p>I matematik vil vi rigtigt gerne generalisere, så vi ikke bare ser på et lille eksempel med <span class="math inline">\(10\)</span> personer, hvor andelen <span class="math inline">\(q=\frac{7}{10}\)</span> svarer ja, men på noget mere generelt.</p>
-<p>Lad os derfor sige, at vores datasæt er med <span class="math inline">\(n\)</span> personer, og at andelen af personer, som svarer ja, betegnes med <span class="math inline">\(q\)</span>. Der vil derfor være <span class="math inline">\(q \cdot n\)</span> personer, som svarer Ja og <span class="math inline">\((1-q) \cdot n\)</span> personer, som svarer Nej.</p>
+<p>Lad os derfor sige, at vores datasæt er med <span class="math inline">\(n\)</span> personer, og at andelen af personer, som svarer ja, betegnes med <span class="math inline">\(q\)</span>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -360,6 +360,7 @@ E = \frac{1}{2} \sum \left (t-o \right)^2
 <div id="callout-6" class="callout-6-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
+<li>Indse, at der er <span class="math inline">\(q \cdot n\)</span> personer, som svarer Ja og <span class="math inline">\((1-q) \cdot n\)</span> personer, som svarer Nej.</li>
 <li>Opskriv forskriften for <span class="math inline">\(E(p)\)</span> med brug af <span class="math inline">\(n\)</span> og <span class="math inline">\(q\)</span> istedet for tal.</li>
 <li>Vis vha. differentialregning, at <span class="math inline">\(p=q\)</span> minimerer <span class="math inline">\(E(p)\)</span>.</li>
 <li>Opskriv et udtryk for den mindste værdi af <span class="math inline">\(E(p)\)</span> udtrykt vha. <span class="math inline">\(n\)</span> og <span class="math inline">\(q\)</span>.</li>
@@ -368,8 +369,8 @@ E = \frac{1}{2} \sum \left (t-o \right)^2
 </div>
 </div>
 </section>
-<section id="tilbage-til-datasættet-med-de-200-punkter" class="level2">
-<h2 class="anchored" data-anchor-id="tilbage-til-datasættet-med-de-200-punkter">Tilbage til datasættet med de 200 punkter</h2>
+<section id="det-store-datasæt-igen" class="level2">
+<h2 class="anchored" data-anchor-id="det-store-datasæt-igen">Det store datasæt igen</h2>
 <p>Med disse overvejelser skal vi tilbage til datasættet med de 200 person om “skibidi toilet”. Vi skal se, om den model, vi trænede med appen, ser ud til måske at være trænet godt nok.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
@@ -395,7 +396,7 @@ E = \frac{1}{2} \sum \left (t-o \right)^2
 </section>
 <section id="klassifikationsnøjagtigheden" class="level2">
 <h2 class="anchored" data-anchor-id="klassifikationsnøjagtigheden">Klassifikationsnøjagtigheden</h2>
-<p>Måske du i opgave 1 så på klassifikationsnøjagtigheden (CA). Hvis ikke, så lav opgave 1.</p>
+<p>Måske du i opgave 1 så på klassifikationsnøjagtigheden (CA). Hvis ikke, så lav opgave 1 igen.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -410,15 +411,15 @@ E = \frac{1}{2} \sum \left (t-o \right)^2
 <div class="callout-body-container callout-body">
 <ul>
 <li>Hvad blev CA i den trænede model i opgave 1?</li>
-<li>Hvis modellen i stedet blindt giver 0 for alle input, hvad bliver CA så?</li>
-<li>Hvis modellen i stedet blindt giver 1 for alle input, hvad bliver CA så?</li>
-<li>Hvor høj vil du ud fra dette sige, at CA mindst skal være, før modellen kan være nogenlunde trænet?</li>
+<li>Hvis modellen i stedet blindt giver <span class="math inline">\(o=0\)</span> for alle input, hvad bliver CA så?</li>
+<li>Hvis modellen i stedet blindt giver <span class="math inline">\(o=1\)</span> for alle input, hvad bliver CA så?</li>
+<li>Hvor stor vil du ud fra dette sige, at CA mindst skal være, før modellen kan være nogenlunde trænet?</li>
 <li>Hvor høj en værdi af CA fik du til sidst i opgave 6?</li>
 </ul>
 </div>
 </div>
 </div>
-<p>Måske du har undret dig over, at vi både taler om værdien af tabsfunktionen og om CA, som jo begge siger noget om, hvor god modellen er.</p>
+<p>Måske du har undret dig over, at vi både taler om værdien af tabsfunktionen og om CA, som jo begge siger noget om, hvor god modellen er. Lad os kigge på, om de altid følges ad.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -433,19 +434,19 @@ E = \frac{1}{2} \sum \left (t-o \right)^2
 <div class="callout-body-container callout-body">
 <ul>
 <li>Overvej, om en mindre værdi af tabsfunktionen E altid giver samme eller højere værdi af klassifikationsnøjagtigheden CA.</li>
-<li>overvej, om en større værdi af CA altid betyder, at E er lavere.</li>
+<li>Overvej, om en større værdi af CA altid betyder, at E er lavere.</li>
 <li>Beregn E og CA for datasættet med de 200 personer, hvis den trænede model bare altid giver <span class="math inline">\(o=1\)</span> (Ja) som svar for alle personer.</li>
 <li>Regn E og CA for datasættet for de 200 personer, hvis den trænede model giver <span class="math inline">\(o=0.55\)</span> for alle personer med <span class="math inline">\(t=1\)</span> og <span class="math inline">\(o=0.45\)</span> for alle personer med <span class="math inline">\(t=0\)</span>.</li>
+<li>Hvad kan du konkludere mht. sammenhængen mellem CA og E?</li>
 </ul>
 </div>
 </div>
 </div>
 <p>Vi håber naturligvis, at vi ved at minimere værdien af tabsfunktionen får predikteret flere tilfælde korrekt, men som opgave 8 viser, så er der ikke 100% en sammenhæng mellem lavere værdi af tabsfunktionen og bedre klassefikationsnøjagtighed.</p>
 </section>
-<section id="løsninger-til-opgaver" class="level2">
-<h2 class="anchored" data-anchor-id="løsninger-til-opgaver">Løsninger til opgaver</h2>
-<p>ikke lavet endnu.</p>
-<p><a href="../undervisningsforlob/sengetester/softmax_facit.html" target="_blank">Facitliste</a>.</p>
+<section id="løsninger-til-udvalgte-opgaver" class="level2">
+<h2 class="anchored" data-anchor-id="løsninger-til-udvalgte-opgaver">Løsninger til udvalgte opgaver</h2>
+<p><a href="skibidi/skibidi_facit.qmd" target="_blank">Facitliste</a>.</p>
 
 
 </section>
