@@ -18,7 +18,7 @@ cross_entropy_loss <- function(o, t) {
 
 # Input og output data
 X1 <- c(1,2,3)
-X2 <- c(2,3,5)
+X2 <- c(2,3,7)
 t  <- c(0, 1, 0)
 
 # Vægte og bias
@@ -32,7 +32,7 @@ eta <- 0.1
 
 # Forløb fremad
   s <- r1 * X1 + r2 * X2 + r0
-  y <- sigmoid(r1 * X1 + r2 * X2 + r0)
+  y <- sigmoid(s)
   o <- sigmoid(w1 * y + w0)
   
   tab0 <- cross_entropy_loss(o, t) 
@@ -51,11 +51,11 @@ eta <- 0.1
 
   
 # Forløb fremad
-  s <- r1 * X1 + r2 * X2 + r0
-  y <- sigmoid(r1 * X1 + r2 * X2 + r0)
-  o <- sigmoid(w1 * y + w0)
+  s2 <- r1 * X1 + r2 * X2 + r0
+  y2 <- sigmoid(s2)
+  o2 <- sigmoid(w1 * y2 + w0)
   
-  tab1 <- cross_entropy_loss(o, t) 
+  tab1 <- cross_entropy_loss(o2, t) 
 ```  
 
 ::: {.callout-note collapse="true" appearance="minimal"}  
@@ -181,12 +181,12 @@ $$
 
 
 # Baglæns forløb (backpropagation)
-  dw <- (t - o)
-  dr <- dw * w1 * y * (1 - y)
+  dw <- (t - o2)
+  dr <- dw * w1 * y2 * (1 - y2)
   
   # Opdater vægtene og bias
   w0 <- w0 + eta * sum(dw)
-  w1 <- w1 + eta * sum(dw * y)
+  w1 <- w1 + eta * sum(dw * y2)
 
   r0 <- r0 + eta * sum(dr)
   r1 <- r1 + eta * sum(dr * X1)
@@ -194,11 +194,11 @@ $$
 
   
 # Forløb fremad
-  s <- r1 * X1 + r2 * X2 + r0
-  y <- sigmoid(r1 * X1 + r2 * X2 + r0)
-  o <- sigmoid(w1 * y + w0)
+  s3 <- r1 * X1 + r2 * X2 + r0
+  y3 <- sigmoid(s3)
+  o3 <- sigmoid(w1 * y3 + w0)
   
-  tab2 <- cross_entropy_loss(o, t) 
+  tab2 <- cross_entropy_loss(o3, t) 
 ```  
 
 ::: {.callout-note collapse="true" appearance="minimal"}  
