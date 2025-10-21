@@ -74,7 +74,7 @@ ul.task-list li input[type="checkbox"] {
 <script>
 
   window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-main-listing-content .list');
+    const listingTargetEl = window.document.querySelector('#listing-main-listing-content1 .list');
     if (!listingTargetEl) {
       // No listing discovered, do not attach.
       return; 
@@ -87,7 +87,35 @@ ul.task-list li input[type="checkbox"] {
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-main-listing-content'] = new List('listing-main-listing-content', options);
+    window['quarto-listings']['listing-main-listing-content1'] = new List('listing-main-listing-content1', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-main-listing-content2 .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-image','listing-title','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-title","listing-image","listing-description"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-main-listing-content2'] = new List('listing-main-listing-content2', options);
 
     if (window['quarto-listing-loaded']) {
       window['quarto-listing-loaded']();
@@ -202,7 +230,14 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indhold</h2>
+   
+  <ul>
+  <li><a href="#generelle-apps-til-træning-af-kunstig-intelligens" id="toc-generelle-apps-til-træning-af-kunstig-intelligens" class="nav-link active" data-scroll-target="#generelle-apps-til-træning-af-kunstig-intelligens">Generelle apps til træning af kunstig intelligens</a></li>
+  <li><a href="#særlige-apps-som-bruges-i-konkrete-forløb" id="toc-særlige-apps-som-bruges-i-konkrete-forløb" class="nav-link" data-scroll-target="#særlige-apps-som-bruges-i-konkrete-forløb">Særlige apps som bruges i konkrete forløb</a></li>
+  </ul>
+</nav>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
@@ -230,8 +265,10 @@ window.Quarto = {
 </header>
 
 
-<p>Diverse apps til træning af kunstig intelligens.</p>
-<div id="listing-main-listing-content" class="quarto-listing quarto-listing-container-grid">
+<p>Her på siden finder du apps til beregninger og illustrationer i forbindelse med AI.</p>
+<section id="generelle-apps-til-træning-af-kunstig-intelligens" class="level2">
+<h2 class="anchored" data-anchor-id="generelle-apps-til-træning-af-kunstig-intelligens">Generelle apps til træning af kunstig intelligens</h2>
+<div id="listing-main-listing-content1" class="quarto-listing quarto-listing-container-grid">
 <div class="list grid quarto-listing-cols-2">
 <div class="g-col-1" data-index="0">
 <a href="https://apps01.math.aau.dk/ai/neuron/" class="quarto-grid-link">
@@ -268,9 +305,50 @@ Logistisk regression app
 </div>
 <div class="listing-no-matching d-none">No matching items</div>
 </div>
+</section>
+<section id="særlige-apps-som-bruges-i-konkrete-forløb" class="level2">
+<h2 class="anchored" data-anchor-id="særlige-apps-som-bruges-i-konkrete-forløb">Særlige apps som bruges i konkrete forløb</h2>
+<div id="listing-main-listing-content2" class="quarto-listing quarto-listing-container-grid">
+<div class="list grid quarto-listing-cols-2">
+<div class="g-col-1" data-index="0">
+<a href="https://apps01.math.aau.dk/ai/cifre/" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="../undervisningsforlob/mnist_filer/pixeleret0.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+MNIST app
+</h5>
+<div class="card-text listing-description delink">
+<p>App som viser MNIST datasættet (håndskrevne cifre). Bruges i forløbet "Kan vi genkende håndskrevne tal?".</p>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="1">
+<a href="https://apps01.math.aau.dk/ai/gendata/" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="../undervisningsforlob/screeningsprogrammer/images/taethedsfunktioner.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Gendata app
+</h5>
+<div class="card-text listing-description delink">
+<p>Denne app kan bruges til at generere normalfordelte data med en given middelværdi og spredning. Bruges i forløbet "Screeningsprogrammer".</p>
+</div>
+</div>
+</div></a>
+</div>
+</div>
+<div class="listing-no-matching d-none">No matching items</div>
+</div>
 
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
