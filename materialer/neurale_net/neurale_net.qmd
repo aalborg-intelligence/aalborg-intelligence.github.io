@@ -1162,24 +1162,24 @@ ht<-set_background_color(ht,1:10, 8:10, grey(0.94))
 set_all_borders(ht)
 ```
 
-Et feature map, som kan bruges til at finde henholdsvis lodrette og
+Et filter, som kan bruges til at finde henholdsvis lodrette og
 vandrette linjer i et billede er vist i @fig-feature1_maps og @fig-feature2_maps.
 ```{r}
 #| label: fig-feature1_maps
-#| fig-cap: Et feature map $f_1$, som kan finde vandrette linjer i billeder.
+#| fig-cap: Et filter $f_1$, som kan finde vandrette linjer i billeder.
 feature1<-matrix(c(1,0,-1,1,0,-1,1,0,-1),nrow=3)
 f1<-hux(feature1)
 set_all_borders(f1)
 ```
 ```{r}
 #| label: fig-feature2_maps
-#| fig-cap: Et feature map $f_2$, som kan finde lodrette linjer i billeder.
+#| fig-cap: Et filter $f_2$, som kan finde lodrette linjer i billeder.
 feature2<-matrix(c(1,1,1,0,0,0,-1,-1,-1),nrow=3)
 f2<-hux(feature2)
 set_all_borders(f2)
 ```
 
-Det ses hurtigt, at hvis vi anvender feature map $f_1$ til at vægte
+Det ses hurtigt, at hvis vi anvender filtret $f_1$ til at vægte
 værdierne i et vilkårligt $9 \times 9$ vindue i det originale billede, så får man $0$ (såfremt vi sætter biasværdien $v_0=0$). Anvender vi for eksempel $f_1$ på det tredje
 vindue fås
 \begin{align}
@@ -1188,7 +1188,7 @@ vindue fås
 \end{align}
 Da $\sigma(0)=0.5$ ender vi altså med et skjult lag, hvor alle $64$
 skjulte neuroner sender $0.5$ frem i netværket. Det svarer til, at dette
-feature map ikke har fundet nogle vandrette linjer i billedet.
+filter ikke har fundet nogle vandrette linjer i billedet.
 
 Bruger vi nu derimod $f_2$ på det samme vindue, så får vi
 \begin{align*}
@@ -1252,7 +1252,7 @@ Læg mærke til hvordan man på dette kondenserede billede tydeligt kan se
 den lodrette stribe, som var i det oprindelige billede.
 
 Så dette er den overordnede idé, men der er flere ting at bemærke. For
-det første bruges et feature map til at finde egenskaber på et billede
+det første bruges et filter til at finde egenskaber på et billede
 som vist ovenfor, men man vil typisk ikke kun lede efter én egenskab men
 flere. Det vil sige, at der ikke kun er ét convolutional lag, men måske
 $5$ eller $20$ lag. For hvert af disse lag fås et tilhørende pooling
@@ -1267,10 +1267,10 @@ convolutional og pooling lag i netværket. Ligesom der også kan indlægges
 flere \"almindelige\" neuroner (som vi tidligere har set det) efter
 pooling lagene.
 
-For det andet vil man ikke anvende feature maps som på forhånd er
+For det andet vil man ikke anvende filtre som på forhånd er
 defineret (som vi gjorde det i eksemplet ovenfor). For hvert
 convolutional layer trænes i stedet for de fælles vægte, som skal
-benyttes i det pågældende feature map. Selve træningen af netværket
+benyttes i det pågældende filter. Selve træningen af netværket
 foregår igen ved hjælp af backpropagation, men nu justeret til de
 begrænsninger der er lagt ind i netværket.
 
