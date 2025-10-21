@@ -997,7 +997,7 @@ y_{8,8}&amp; =\sigma(v_0 + v_1 \cdot x_{8,8} + v_2 \cdot x_{8,9} + v_3 \cdot x_{
 </tbody></table>
 </div>
 </div>
-<p>Et feature map, som kan bruges til at finde henholdsvis lodrette og vandrette linjer i et billede er vist i <a href="#fig-feature1_maps" class="quarto-xref">figur&nbsp;9</a> og <a href="#fig-feature2_maps" class="quarto-xref">figur&nbsp;10</a>.</p>
+<p>Et filter, som kan bruges til at finde henholdsvis lodrette og vandrette linjer i et billede er vist i <a href="#fig-feature1_maps" class="quarto-xref">figur&nbsp;9</a> og <a href="#fig-feature2_maps" class="quarto-xref">figur&nbsp;10</a>.</p>
 <div class="cell page-columns page-full">
 <div id="fig-feature1_maps" class="cell-output-display quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
@@ -1012,7 +1012,7 @@ y_{8,8}&amp; =\sigma(v_0 + v_1 \cdot x_{8,8} + v_2 \cdot x_{8,9} + v_3 \cdot x_{
 </tbody></table>
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-feature1_maps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;9: Et feature map <span class="math inline">\(f_1\)</span>, som kan finde vandrette linjer i billeder.
+Figur&nbsp;9: Et filter <span class="math inline">\(f_1\)</span>, som kan finde vandrette linjer i billeder.
 </figcaption>
 </figure>
 </div>
@@ -1031,15 +1031,15 @@ Figur&nbsp;9: Et feature map <span class="math inline">\(f_1\)</span>, som kan f
 </tbody></table>
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-feature2_maps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;10: Et feature map <span class="math inline">\(f_2\)</span>, som kan finde lodrette linjer i billeder.
+Figur&nbsp;10: Et filter <span class="math inline">\(f_2\)</span>, som kan finde lodrette linjer i billeder.
 </figcaption>
 </figure>
 </div>
 </div>
-<p>Det ses hurtigt, at hvis vi anvender feature map <span class="math inline">\(f_1\)</span> til at vægte værdierne i et vilkårligt <span class="math inline">\(9 \times 9\)</span> vindue i det originale billede, så får man <span class="math inline">\(0\)</span> (såfremt vi sætter biasværdien <span class="math inline">\(v_0=0\)</span>). Anvender vi for eksempel <span class="math inline">\(f_1\)</span> på det tredje vindue fås <span class="math display">\[\begin{align}
+<p>Det ses hurtigt, at hvis vi anvender filtret <span class="math inline">\(f_1\)</span> til at vægte værdierne i et vilkårligt <span class="math inline">\(9 \times 9\)</span> vindue i det originale billede, så får man <span class="math inline">\(0\)</span> (såfremt vi sætter biasværdien <span class="math inline">\(v_0=0\)</span>). Anvender vi for eksempel <span class="math inline">\(f_1\)</span> på det tredje vindue fås <span class="math display">\[\begin{align}
 &amp;0+ 1 \cdot 0.94 + 1 \cdot 0.59  + 1 \cdot 0.39 + 0 \cdot 0.94 \\
 &amp; \quad \quad \quad \quad + 0 \cdot 0.59 + 0 \cdot 0.39 -1 \cdot 0.94 - 1 \cdot 0.59 - 1 \cdot 0.39 =0
-\end{align}\]</span> Da <span class="math inline">\(\sigma(0)=0.5\)</span> ender vi altså med et skjult lag, hvor alle <span class="math inline">\(64\)</span> skjulte neuroner sender <span class="math inline">\(0.5\)</span> frem i netværket. Det svarer til, at dette feature map ikke har fundet nogle vandrette linjer i billedet.</p>
+\end{align}\]</span> Da <span class="math inline">\(\sigma(0)=0.5\)</span> ender vi altså med et skjult lag, hvor alle <span class="math inline">\(64\)</span> skjulte neuroner sender <span class="math inline">\(0.5\)</span> frem i netværket. Det svarer til, at dette filter ikke har fundet nogle vandrette linjer i billedet.</p>
 <p>Bruger vi nu derimod <span class="math inline">\(f_2\)</span> på det samme vindue, så får vi <span class="math display">\[\begin{align*}
 &amp;0+ 1 \cdot 0.94 + 0 \cdot 0.59  - 1 \cdot 0.39 + 1 \cdot 0.94
 \\ &amp; \quad \quad \quad \quad + 0 \cdot 0.59 -1 \cdot 0.39 +1 \cdot 0.94 +0 \cdot 0.59 - 1 \cdot 0.39 = 1.65
@@ -1083,7 +1083,7 @@ Figur&nbsp;10: Et feature map <span class="math inline">\(f_2\)</span>, som kan 
 </div>
 </div>
 <p>Læg mærke til hvordan man på dette kondenserede billede tydeligt kan se den lodrette stribe, som var i det oprindelige billede.</p>
-<p>Så dette er den overordnede idé, men der er flere ting at bemærke. For det første bruges et feature map til at finde egenskaber på et billede som vist ovenfor, men man vil typisk ikke kun lede efter én egenskab men flere. Det vil sige, at der ikke kun er ét convolutional lag, men måske <span class="math inline">\(5\)</span> eller <span class="math inline">\(20\)</span> lag. For hvert af disse lag fås et tilhørende pooling lag. Dette er illustreret på <a href="#fig-CNN" class="quarto-xref">figur&nbsp;11</a>.</p>
+<p>Så dette er den overordnede idé, men der er flere ting at bemærke. For det første bruges et filter til at finde egenskaber på et billede som vist ovenfor, men man vil typisk ikke kun lede efter én egenskab men flere. Det vil sige, at der ikke kun er ét convolutional lag, men måske <span class="math inline">\(5\)</span> eller <span class="math inline">\(20\)</span> lag. For hvert af disse lag fås et tilhørende pooling lag. Dette er illustreret på <a href="#fig-CNN" class="quarto-xref">figur&nbsp;11</a>.</p>
 <div id="fig-CNN" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-CNN-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1095,7 +1095,7 @@ Figur&nbsp;11: Convolutional neural network.
 </figure>
 </div>
 <p><em>Alle</em> neuroner i pooling lagene forbindes nu til outputneuronen. Igen udregnes sigmoid-funktionen taget på en vægtet sum af alle neuronerne fra pooling lagene. Der er også mulighed for at indlægge flere convolutional og pooling lag i netværket. Ligesom der også kan indlægges flere "almindelige" neuroner (som vi tidligere har set det) efter pooling lagene.</p>
-<p>For det andet vil man ikke anvende feature maps som på forhånd er defineret (som vi gjorde det i eksemplet ovenfor). For hvert convolutional layer trænes i stedet for de fælles vægte, som skal benyttes i det pågældende feature map. Selve træningen af netværket foregår igen ved hjælp af backpropagation, men nu justeret til de begrænsninger der er lagt ind i netværket.</p>
+<p>For det andet vil man ikke anvende filtre som på forhånd er defineret (som vi gjorde det i eksemplet ovenfor). For hvert convolutional layer trænes i stedet for de fælles vægte, som skal benyttes i det pågældende filter. Selve træningen af netværket foregår igen ved hjælp af backpropagation, men nu justeret til de begrænsninger der er lagt ind i netværket.</p>
 <p>For det tredje bliver antallet af vægte, som skal fittes, drastiske reduceret i et convolutional neuralt netværk sammenlignet med et almindelig neuralt netværk. Lad os som eksempel se på klassifikation af et <span class="math inline">\(10 \times 10\)</span> pixels billede. Antag, at vi anvender et local receptive field (vindue) på <span class="math inline">\(3 \times 3\)</span> pixels. Det vil sige, at hvert convolutional lag vil bestå af <span class="math inline">\(8 \times 8\)</span> neuroner. Da vægtene er delte, vil vi for hvert convolutional lag få bruge for <span class="math inline">\(3 \cdot 3 + 1=10\)</span> vægte. Antag, at vi har <span class="math inline">\(5\)</span> convolutional lag (bestående af <span class="math inline">\(5 \cdot 8 \cdot 8=320\)</span> neuroner), så får vi i alt brug for <span class="math inline">\(5 \cdot 10=50\)</span> vægte. For at komme til pooling laget anvendes ingen vægte. Men pooling laget vil bestå af <span class="math inline">\(5\)</span> pooling lag med i alt <span class="math inline">\(4 \times 4\)</span> neuroner. Det giver <span class="math inline">\(80\)</span> neuroner i alt. Forbindes disse til én outputneuron skal vi bruge <span class="math inline">\(81\)</span> vægte (én for hver neuron plus en bias). Alt i alt ender vi med <span class="math inline">\(131\)</span> vægte.</p>
 <p>Havde vi i stedet lavet et fuldt forbundet kunstigt neuralt netværk med <span class="math inline">\(100\)</span> input neuroner, ét skjult lag med <span class="math inline">\(64\)</span> neuroner samt én outputneuron, så skulle vi først have bruge <span class="math inline">\(101 \cdot
 64=6464\)</span> vægte for at forbinde input neuronerne med samtlige neuroner i det første skjulte lag. Herefter har vi brug for <span class="math inline">\(65\)</span> vægte for at forbinde det skjulte lag med outputneuronen. Alt i alt giver det <span class="math inline">\(6529\)</span> vægte! Der er altså en voldsom forskel i antallet af vægte, som skal læres. For at undgå overfitting må vi have mange flere træningsdata, end vi har vægte. Det betyder, at vi typisk vil kunne nøjes med færre træningseksempler i et convolutional neural netværk sammenlignet med et klassisk fuldt forbundet kunstigt neuralt netværk. Ydermere viser det sig, at convolutional neurale netværk kan trænes til at klassificere billeder langt bedre end et almindeligt kunstigt neuralt netværk. Netop fordi at de forskellige pixels placeringer i forhold til hinanden tages i betragtning, når et convolutional neuralt netværk konstrueres.</p>
@@ -1119,7 +1119,7 @@ Kort beskrivelse
 </thead>
 <tbody class="list">
 
-<tr data-index="0" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1761036056841" data-listing-reading-time-sort="2" data-listing-word-count-sort="318" data-listing-title-sort="Aktiveringsfunktioner" data-listing-filename-sort="aktiveringsfunktioner.qmd">
+<tr data-index="0" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1761037284001" data-listing-reading-time-sort="2" data-listing-word-count-sort="318" data-listing-title-sort="Aktiveringsfunktioner" data-listing-filename-sort="aktiveringsfunktioner.qmd">
 <td>
 <a href="../../undervisningsforlob/aktiveringsfunktioner.html" class="title listing-title">Aktiveringsfunktioner</a>
 </td>
@@ -1129,7 +1129,7 @@ Kort beskrivelse
 
 </tr>
 
-<tr data-index="1" data-categories="QS1uaXZlYXUlMkNCaW90ZWtub2xvZ2klMkNLb3J0" data-listing-file-modified-sort="1761036057634" data-listing-reading-time-sort="1" data-listing-word-count-sort="149" data-listing-title-sort="Screeningsprogrammer" data-listing-filename-sort="screeningsprogrammer.qmd">
+<tr data-index="1" data-categories="QS1uaXZlYXUlMkNCaW90ZWtub2xvZ2klMkNLb3J0" data-listing-file-modified-sort="1761037284802" data-listing-reading-time-sort="1" data-listing-word-count-sort="149" data-listing-title-sort="Screeningsprogrammer" data-listing-filename-sort="screeningsprogrammer.qmd">
 <td>
 <a href="../../undervisningsforlob/screeningsprogrammer.html" class="title listing-title">Screeningsprogrammer</a>
 </td>
@@ -1139,7 +1139,7 @@ Kort beskrivelse
 
 </tr>
 
-<tr data-index="2" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1761036057237" data-listing-reading-time-sort="3" data-listing-word-count-sort="576" data-listing-title-sort="Opklar et mord!" data-listing-filename-sort="opklar_et_mord.qmd">
+<tr data-index="2" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1761037284401" data-listing-reading-time-sort="3" data-listing-word-count-sort="576" data-listing-title-sort="Opklar et mord!" data-listing-filename-sort="opklar_et_mord.qmd">
 <td>
 <a href="../../undervisningsforlob/opklar_et_mord.html" class="title listing-title">Opklar et mord!</a>
 </td>
