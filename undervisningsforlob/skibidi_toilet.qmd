@@ -10,8 +10,8 @@ categories:
 ::: {.callout-caution collapse="true" appearance="minimal"}
 ### Forudsætninger og tidsforbrug
 
-+ Differentialregning
-+ Tabsfunktioner (squared-error)
++ Differentialregning.
++ [Tabsfunktioner (squared error)](../materialer/tabsfunktioner/tabsfunktioner.qmd).
 
 **Tidsforbrug:** Ca. 60 minutter. 
 
@@ -28,42 +28,45 @@ Hvis værdierne vurderes utilfredsstillende, må man forsøge, om andre startvæ
 :::
 
 ## Træn neuralt netværk
-Vi vil se på data fra 200 fiktive personer, der efter et besøg på et museum om internetfænomener bliver spurgt, om de ved, hvad "skibidi toilet" betyder.
+Vi vil se på data fra 200 fiktive personer, der efter et besøg på et museum om internetfænomener bliver spurgt, om de ved, hvad \"skibidi toilet\" betyder.
 
-Der er to feature-variable, $x_1$ er personens alder, og $x_2$ er besøgets længde i minutter, samt en target-variabel $t$, som angiver, om personen kan huske, hvad "skibidi toilet" betyder (1 betyder Ja, 0 betyder Nej).
+Der er to feature variable, $x_1$ er personens alder, og $x_2$ er besøgets længde i minutter, samt en target variabel $t$, som angiver, om personen har lært, hvad \"skibidi toilet\" betyder (1 betyder \"Ja\", 0 betyder \"Nej\").
 
 Data ligger i [Excel-filen her](skibidi_filer/datasæt_alder_tid.xlsx). Vi vil bruge [kunstig neuron app'en](https://apps01.math.aau.dk/ai/neuron/){target="_blank"} til at træne en model på disse data.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 1: Udregn værdi af tabsfunktionen
 * Åbn appen og indlæs datasættet.
-* Vælg $t$ som target-varibel og $x_1$ og $x_2$ som feature-variable.
+* Vælg $t$ som target-variabel og $x_1$ og $x_2$ som feature-variable.
 * Sæt startvægtene til -23, og sæt antal iterationer til 50000.
 * Behold learning-rate som 0,001 og behold squared-error, sigmoid og feature-skalering.
 * Kør modellen. 
-* Overvej, om det ser ud til, at den kunstige neuron er trænet rimeligt - se f.eks. på, om grafen flader ud til højre.
+* Overvej, om det ser ud til, at den kunstige neuron er trænet rimeligt -- se for eksempel på, om grafen til højre flader ud.
+* Notér slutværdien af tabsfunktionen.
 :::
 
 Det er ikke åbenlyst, om modellen er trænet godt nok, men i det følgende vil vi se på, hvad man i hvert fald kan bruge til at se, at det nok ikke er særligt godt endnu.
 
 
 ## Lille eksempel
-Lad os sige, at vi har spurgt 10 personer, om de ved, hvad "skibidi toilet" betyder.
-De 7 svarede Ja, og de 3 svarede Nej. Vi sætter targetværdien $t=1$ for Ja og $t=0$ for Nej.
+Lad os sige, at vi har spurgt 10 personer, om de ved, hvad \"skibidi toilet\" betyder.
+De 7 svarede \"Ja\", og de 3 svarede \"Nej\". Vi sætter targetværdien $t=1$ for \"Ja\" og $t=0$ for \"Nej\".
 
-Vi skal så ud fra en eller flere feature-variable for hver person træne en neural neuron til at kunne klassificere, om en ny person ved, hvad "skibidi toilet" betyder.
+Vi skal så ud fra en eller flere feature variable for hver person træne en kunstig neuron til at kunne klassificere, om en ny person ved, hvad \"skibidi toilet\" betyder.
 
-Vi vil dog ikke fokusere på netværket, men på mulige værdier af tabsfunktionen, idet vi bruger *squared-error* som tabsfunktion:
+Vi vil dog ikke fokusere på netværket, men på mulige værdier af tabsfunktionen, idet vi bruger *squared error* som tabsfunktion:
 $$
 E = \frac{1}{2} \sum \left (t-o \right)^2
 $$ {#eq-tabsfunktion}
+hvor der summeres over alle træningsdata.
+
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 2: Udregn værdi af tabsfunktionen i eksemplet
-* Hvad en den absolut mindste værdi, som tabsfunktionen kan få?
+* Hvad er den absolut mindste værdi, som tabsfunktionen kan få?
 * Hvad skal outputværdien $o$ sættes til for hver af de $10$ personer for at få minimum?
 
-* Hvad en den absolut største værdi, som tabsfunktionen kan få?
+* Hvad er den absolut største værdi, som tabsfunktionen kan få?
 * Hvad skal outputværdien $o$ sættes til for hver af de $10$ personer for at få maksimum?
 
 * Hvilken værdi giver tabsfunktionen, hvis outputværdien sættes til $o=0.5$ for alle input?
@@ -73,7 +76,7 @@ $$ {#eq-tabsfunktion}
 Så $o=0.5$ giver os et udgangspunkt, som værdien af tabsfunktionen i hvert fald bør komme under, men mon ikke det kan blive bedre end det?
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 3: Udregn E for andre værdien end $0.5$
+### Opgave 3: Udregn E for andre værdien end $o=0.5$
 * Overvej, om $o=0$ eller $o=1$ for alle input vil give den laveste værdi af tabsfunktionen.
 * Udregn værdien af $E$ for begge tilfælde.
 
@@ -87,7 +90,7 @@ Som opgave 3 viser, så afhænger tabsfunktionen $E$ af værdien af $p$, så vi 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 4: Tabsfunktionen som funktion af p
 * Opskriv forskriften for $E(p)$.
-* Bestem minimum for $E$ vha. differentialregning.
+* Bestem minimum for $E$ ved hjælp af differentialregning.
 * Stemmer svaret her med det, du fandt ud af i opgave 3?
 
 :::
