@@ -228,8 +228,8 @@ window.Quarto = {
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Differentialregning</li>
-<li>Tabsfunktioner (squared-error)</li>
+<li>Differentialregning.</li>
+<li><a href="../materialer/tabsfunktioner/tabsfunktioner.html">Tabsfunktioner (squared error)</a>.</li>
 </ul>
 <p><strong>Tidsforbrug:</strong> Ca. 60 minutter.</p>
 </div>
@@ -242,8 +242,8 @@ window.Quarto = {
 </section>
 <section id="træn-neuralt-netværk" class="level2">
 <h2 class="anchored" data-anchor-id="træn-neuralt-netværk">Træn neuralt netværk</h2>
-<p>Vi vil se på data fra 200 fiktive personer, der efter et besøg på et museum om internetfænomener bliver spurgt, om de ved, hvad “skibidi toilet” betyder.</p>
-<p>Der er to feature-variable, <span class="math inline">\(x_1\)</span> er personens alder, og <span class="math inline">\(x_2\)</span> er besøgets længde i minutter, samt en target-variabel <span class="math inline">\(t\)</span>, som angiver, om personen kan huske, hvad “skibidi toilet” betyder (1 betyder Ja, 0 betyder Nej).</p>
+<p>Vi vil se på data fra 200 fiktive personer, der efter et besøg på et museum om internetfænomener bliver spurgt, om de ved, hvad "skibidi toilet" betyder.</p>
+<p>Der er to feature variable, <span class="math inline">\(x_1\)</span> er personens alder, og <span class="math inline">\(x_2\)</span> er besøgets længde i minutter, samt en target variabel <span class="math inline">\(t\)</span>, som angiver, om personen har lært, hvad "skibidi toilet" betyder (1 betyder "Ja", 0 betyder "Nej").</p>
 <p>Data ligger i <a href="skibidi_filer/datasæt_alder_tid.xlsx">Excel-filen her</a>. Vi vil bruge <a href="https://apps01.math.aau.dk/ai/neuron/" target="_blank">kunstig neuron app’en</a> til at træne en model på disse data.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
@@ -259,11 +259,12 @@ window.Quarto = {
 <div class="callout-body-container callout-body">
 <ul>
 <li>Åbn appen og indlæs datasættet.</li>
-<li>Vælg <span class="math inline">\(t\)</span> som target-varibel og <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> som feature-variable.</li>
+<li>Vælg <span class="math inline">\(t\)</span> som target-variabel og <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> som feature-variable.</li>
 <li>Sæt startvægtene til -23, og sæt antal iterationer til 50000.</li>
 <li>Behold learning-rate som 0,001 og behold squared-error, sigmoid og feature-skalering.</li>
 <li>Kør modellen.</li>
-<li>Overvej, om det ser ud til, at den kunstige neuron er trænet rimeligt - se f.eks. på, om grafen flader ud til højre.</li>
+<li>Overvej, om det ser ud til, at den kunstige neuron er trænet rimeligt – se for eksempel på, om grafen til højre flader ud.</li>
+<li>Notér slutværdien af tabsfunktionen.</li>
 </ul>
 </div>
 </div>
@@ -272,11 +273,11 @@ window.Quarto = {
 </section>
 <section id="lille-eksempel" class="level2">
 <h2 class="anchored" data-anchor-id="lille-eksempel">Lille eksempel</h2>
-<p>Lad os sige, at vi har spurgt 10 personer, om de ved, hvad “skibidi toilet” betyder. De 7 svarede Ja, og de 3 svarede Nej. Vi sætter targetværdien <span class="math inline">\(t=1\)</span> for Ja og <span class="math inline">\(t=0\)</span> for Nej.</p>
-<p>Vi skal så ud fra en eller flere feature-variable for hver person træne en neural neuron til at kunne klassificere, om en ny person ved, hvad “skibidi toilet” betyder.</p>
-<p>Vi vil dog ikke fokusere på netværket, men på mulige værdier af tabsfunktionen, idet vi bruger <em>squared-error</em> som tabsfunktion: <span id="eq-tabsfunktion"><span class="math display">\[
+<p>Lad os sige, at vi har spurgt 10 personer, om de ved, hvad "skibidi toilet" betyder. De 7 svarede "Ja", og de 3 svarede "Nej". Vi sætter targetværdien <span class="math inline">\(t=1\)</span> for "Ja" og <span class="math inline">\(t=0\)</span> for "Nej".</p>
+<p>Vi skal så ud fra en eller flere feature variable for hver person træne en kunstig neuron til at kunne klassificere, om en ny person ved, hvad "skibidi toilet" betyder.</p>
+<p>Vi vil dog ikke fokusere på netværket, men på mulige værdier af tabsfunktionen, idet vi bruger <em>squared error</em> som tabsfunktion: <span id="eq-tabsfunktion"><span class="math display">\[
 E = \frac{1}{2} \sum \left (t-o \right)^2
-\tag{1}\]</span></span></p>
+\tag{1}\]</span></span> hvor der summeres over alle træningsdata.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -290,9 +291,9 @@ E = \frac{1}{2} \sum \left (t-o \right)^2
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li><p>Hvad en den absolut mindste værdi, som tabsfunktionen kan få?</p></li>
+<li><p>Hvad er den absolut mindste værdi, som tabsfunktionen kan få?</p></li>
 <li><p>Hvad skal outputværdien <span class="math inline">\(o\)</span> sættes til for hver af de <span class="math inline">\(10\)</span> personer for at få minimum?</p></li>
-<li><p>Hvad en den absolut største værdi, som tabsfunktionen kan få?</p></li>
+<li><p>Hvad er den absolut største værdi, som tabsfunktionen kan få?</p></li>
 <li><p>Hvad skal outputværdien <span class="math inline">\(o\)</span> sættes til for hver af de <span class="math inline">\(10\)</span> personer for at få maksimum?</p></li>
 <li><p>Hvilken værdi giver tabsfunktionen, hvis outputværdien sættes til <span class="math inline">\(o=0.5\)</span> for alle input?</p></li>
 </ul>
@@ -306,7 +307,7 @@ E = \frac{1}{2} \sum \left (t-o \right)^2
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 3: Udregn E for andre værdien end <span class="math inline">\(0.5\)</span>
+<span class="screen-reader-only">Note</span>Opgave 3: Udregn E for andre værdien end <span class="math inline">\(o=0.5\)</span>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -336,7 +337,7 @@ E = \frac{1}{2} \sum \left (t-o \right)^2
 <div class="callout-body-container callout-body">
 <ul>
 <li>Opskriv forskriften for <span class="math inline">\(E(p)\)</span>.</li>
-<li>Bestem minimum for <span class="math inline">\(E\)</span> vha. differentialregning.</li>
+<li>Bestem minimum for <span class="math inline">\(E\)</span> ved hjælp af differentialregning.</li>
 <li>Stemmer svaret her med det, du fandt ud af i opgave 3?</li>
 </ul>
 </div>
