@@ -30,6 +30,8 @@ Hvis værdierne vurderes utilfredsstillende, må man forsøge, om andre startvæ
 ## Træn neuralt netværk
 Vi vil se på data fra 200 fiktive personer, der efter et besøg på et museum om internetfænomener bliver spurgt, om de ved, hvad \"skibidi toilet\" betyder.
 
+![](skibidi_filer/skibidi.jpg){style='float:right;'  width=40%}
+
 Der er to feature variable, $x_1$ er personens alder, og $x_2$ er besøgets længde i minutter, samt en target variabel $t$, som angiver, om personen har lært, hvad \"skibidi toilet\" betyder (1 betyder \"Ja\", 0 betyder \"Nej\").
 
 Data ligger i [Excel-filen her](skibidi_filer/datasæt_alder_tid.xlsx). Vi vil bruge [kunstig neuron app'en](https://apps01.math.aau.dk/ai/neuron/){target="_blank"} til at træne en model på disse data.
@@ -37,9 +39,11 @@ Data ligger i [Excel-filen her](skibidi_filer/datasæt_alder_tid.xlsx). Vi vil b
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 1: Udregn værdi af tabsfunktionen
 * Åbn appen og indlæs datasættet.
-* Vælg $t$ som target-variabel og $x_1$ og $x_2$ som feature-variable.
-* Sæt startvægtene til -23, og sæt antal iterationer til 50000.
-* Behold learning-rate som 0,001 og behold squared-error, sigmoid og feature-skalering.
+* Vælg $t$ som target-variabel (target-værdien sættes til 1) og $x_1$ og $x_2$ som feature-variable.
+* Sæt startvægtene til -23. 
+* Behold learning-raten på 0,001.
+* Sæt antal iterationer til 50000.
+* Behold *Squared* som tabsfunktion, *Sigmoid* som aktiveringsfunktion og behold fluebenet ved feature-skalering.
 * Kør modellen. 
 * Overvej, om det ser ud til, at den kunstige neuron er trænet rimeligt -- se for eksempel på, om grafen til højre flader ud.
 * Notér slutværdien af tabsfunktionen.
@@ -78,47 +82,49 @@ Så $o=0.5$ giver os et udgangspunkt, som værdien af tabsfunktionen i hvert fal
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 3: Udregn E for andre værdien end $o=0.5$
 * Overvej, om $o=0$ eller $o=1$ for alle input vil give den laveste værdi af tabsfunktionen.
-* Udregn værdien af $E$ for begge tilfælde.
-
+* Udregn værdien af $E$ i begge tilfælde.
 * Overvej, hvilken fast værdi $o=p$, der vil give den mindste værdi af tabsfunktionen.
 * Beregn værdien af $E$ for forskellige værdier af $p$.
 
 :::
 
-Som opgave 3 viser, så afhænger tabsfunktionen $E$ af værdien af $p$, så vi kan se på funktionen $E(p)$, når vi alene kigger på, at $o=p$ for alle.
+Normalt vil outputværdien $o$ afhænge af vores feature variable. Men som vi gjorde det i opgave 3, vil vi nu prøve at undersøge nærmere, hvad der sker, hvis vi fastholder outputværdien på en fast værdi $o=p$ for alle input. Det vil sige, at vi vil se på tabsfunktionen som en funktion af $p$ alene: $E(p)$.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 4: Tabsfunktionen som funktion af p
-* Opskriv forskriften for $E(p)$.
+* Opskriv forskriften for $E(p)$ (i eksemplet hvor 7 personer har en targetværdi på 1, og 3 har en targetværdi på 0).
 * Bestem minimum for $E$ ved hjælp af differentialregning.
 * Stemmer svaret her med det, du fandt ud af i opgave 3?
 
 :::
 
 ## Generalisering
-I matematik vil vi rigtigt gerne generalisere, så vi ikke bare ser på et lille eksempel med $10$ personer, hvor andelen $q=\frac{7}{10}$ svarer ja, men på noget mere generelt. 
+I matematik vil vi rigtigt gerne generalisere, så vi ikke bare ser på et lille eksempel med $10$ personer, hvor andelen $q=\frac{7}{10}$ svarer \"Ja\", men på noget mere generelt. 
 
-Lad os derfor sige, at vores datasæt er med $n$ personer, og at andelen af personer, som svarer ja, betegnes med $q$. 
+Lad os derfor sige, at vores datasæt er med $n$ personer, og at andelen af personer, som svarer \"Ja\", betegnes med $q$. 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 5: Optimering af tabsfunktionen
-* Indse, at der er $q \cdot n$ personer, som svarer Ja og $(1-q) \cdot n$ personer, som svarer Nej.
+* Indse, at der er $q \cdot n$ personer, som svarer \"Ja\" og $(1-q) \cdot n$ personer, som svarer \"Nej\".
 * Opskriv forskriften for $E(p)$ med brug af $n$ og $q$ istedet for tal.
-* Vis vha. differentialregning, at $p=q$ minimerer $E(p)$.
-* Opskriv et udtryk for den mindste værdi af $E(p)$ udtrykt vha. $n$ og $q$.
+* Vis ved hjælp af differentialregning, at $p=q$ minimerer $E(p)$.
+* Opskriv et udtryk for den mindste værdi af $E(p)$ udtrykt ved $n$ og $q$.
 
 :::
 
 ## Det store datasæt igen
-Med disse overvejelser skal vi tilbage til datasættet med de 200 person om "skibidi toilet". Vi skal se, om den model, vi trænede med appen, ser ud til måske at være trænet godt nok.
+Med disse overvejelser skal vi tilbage til datasættet med de 200 person om \"skibidi toilet\". Vi skal se, om den model, vi trænede med appen, ser ud til måske at være trænet godt nok.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 6: Vurder på den trænede model
-* Se i datasættet, hvilken værdi $q$ har ved at tælle andelen af Ja svar. 
+* Se i datasættet, hvilken værdi $q$ har ved at tælle andelen, som har svaret \"Ja\". 
 * Udregn værdien af $E$ ud fra $n$ og $q$.
-* Sammenlign med den værdi, som træningen i opgave 1 gav for tabsfunktionen. Hvad fortæller det om den trænede model?
-* Brug appen med andre værdier på start-vægtene, learning-rate og/eller antal iterationer for at få værdien af tabsfunktionen, så lav som mulig.
+* Sammenlign med den værdi af tabsfunktionen, som træningen i opgave 1 gav. Hvad fortæller det om den trænede model?
+* Brug app'en med andre værdier på start-vægtene, learning-rate og/eller antal iterationer for at få værdien af tabsfunktionen så lav som mulig.
 :::
+
+I opgave 6 har du nok set, at du ved hjælp af app'en kan træne en model, hvor værdien af tabsfunktionen er væsentligt mindre end den mindste værdi af tabsfunktionen, som du kan få, hvis $p$ er sat til den fast værdi for alle input. Det skyldes selvfølgelig, at den nye model også tager højde for de to feature variable alder ($x_1$) og tid ($x_2$), så $p$ nu ikke længere er et fast tal, men afhænger af alder og tid.
+
 
 ## Klassifikationsnøjagtigheden
 
@@ -126,7 +132,7 @@ Måske du i opgave 1 så på klassifikationsnøjagtigheden (CA). Hvis ikke, så 
 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 7: Vurder på CA for trænede model
+### Opgave 7: Vurder på CA for den trænede model
 * Hvad blev CA i den trænede model i opgave 1?
 * Hvis modellen i stedet blindt giver $o=0$ for alle input, hvad bliver CA så?
 * Hvis modellen i stedet blindt giver $o=1$ for alle input, hvad bliver CA så?
@@ -137,18 +143,17 @@ Måske du i opgave 1 så på klassifikationsnøjagtigheden (CA). Hvis ikke, så 
 Måske du har undret dig over, at vi både taler om værdien af tabsfunktionen og om CA, som jo begge siger noget om, hvor god modellen er. Lad os kigge på, om de altid følges ad.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 8: Sammenhæng mellem CA og E
-* Overvej, om en mindre værdi af tabsfunktionen E altid giver samme eller højere værdi af klassifikationsnøjagtigheden CA.
-* Overvej, om en større værdi af CA altid betyder, at E er lavere.
-* Beregn E og CA for datasættet med de 200 personer, hvis den trænede model bare altid giver $o=1$ (Ja) som svar for alle personer.
-* Regn E og CA for datasættet for de 200 personer, hvis den trænede model giver $o=0.55$ for alle personer med $t=1$ og $o=0.45$ for alle personer med $t=0$.
-* Hvad kan du konkludere mht. sammenhængen mellem CA og E?
+### Opgave 8: Sammenhæng mellem CA og $E$
+
+* Beregn $E$ og CA for datasættet med de 200 personer, hvis den trænede model bare altid giver $o=1$ (\"Ja\") som svar for alle personer.
+* Beregn $E$ og CA for datasættet for de 200 personer, hvis den trænede model giver $o=0.55$ for alle personer med $t=1$ og $o=0.45$ for alle personer med $t=0$.
+* Hvad kan du konkludere med hensyn til sammenhængen mellem CA og $E$?
 :::
 
-Vi håber naturligvis, at vi ved at minimere værdien af tabsfunktionen får predikteret flere tilfælde korrekt, men som opgave 8 viser, så er der ikke 100% en sammenhæng mellem lavere værdi af tabsfunktionen og bedre klassefikationsnøjagtighed.
+Vi håber naturligvis, at vi ved at minimere værdien af tabsfunktionen får prædikteret flere tilfælde korrekt, men som opgave 8 viser, så er der ikke altid en 100% sammenhæng mellem lavere værdi af tabsfunktionen og bedre klassifikationsnøjagtighed.
 
 
-## Løsninger til udvalgte opgaver
+## Delvis facitliste
 
 [Facitliste](skibidi_filer/skibidi_facit.qmd){target="_blank"}.
 
