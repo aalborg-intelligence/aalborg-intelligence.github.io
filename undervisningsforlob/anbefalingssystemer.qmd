@@ -1,0 +1,302 @@
+---
+title: "Hvad skal du se på Netflix?"
+description-meta: 'Du kender det sikkert godt. Du har lige set en serie på Netflix, og så anbefaler Netflix dig en ny serie, som viser sig at være spot-on! Men hvordan kan det lade sig gøre? Det kan du lære meget mere om her.'
+image: "../materialer/anbefalinger/images/film.jpg"
+categories:
+  - A-niveau
+  - Kort
+---
+
+::: {.callout-caution collapse="true" appearance="minimal"}
+### Forudsætninger og tidsforbrug
+
++ Lineære funktioner.
++ Lineær regression.
++ Sandsynlighedsregning.
++ Differentialregning.
+
+**Tidsforbrug:** Ca. 2 x 90 minutter. 
+
+:::
+
+::: {.purpose}
+
+### Formål
+
+Formålet med dette forløb er at få en forståelse for, hvordan streamingtjenester og sociale medier kan lave individualiserede anbefalinger til sine brugere. Herunder hvordan samarbejds- og indholdsbaserede algoritmer virker.
+
+:::
+
+## Anbefalet til dig
+
+![](../materialer/anbefalinger/images/film.jpg){fig-align='center' width=50%}
+
+Læs indledningen i [noten Anbefalet til dig](../materialer/anbefalinger/anbefalinger.qmd) *indtil* afsnittet \"En samarbejdsbaseret algoritme\".
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 1: Samarbejds- og indholdsbaserede algoritmer
+
+* Beskriv med dine egne ord, hvad forskellen er på samarbejds- og indholdsbaserede algoritmer.
+
+:::
+
+## En samarbejdsbaseret algoritme
+
+Læs hele afsnittet [En samarbejdsbaseret algoritme](../materialer/anbefalinger/anbefalinger.qmd#en-samarbejdsbaseret-algoritme).
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 2: Online elektronikbutik
+
+En online elektronikbutik har 1.000.000 kunder. Heraf har 235.476 købt
+en computer, 423.517 har købt en mus og 114.237 købt et tastatur, 23.127
+har købt både computer og mus, mens 51.633 har købt både computer og
+tastatur.
+
+-   Beregn frekvensen af $F_{\{\text{computer}\}}$,
+    $F_{\{\text{mus}\}}$, $F_{\{\text{tastatur}\}}$,
+    $F_{\{\text{computer,mus}\}}$ og
+    $F_{\{\text{computer, tastatur}\}}$. Hvilken vare var mest populær?
+
+-   Beregn $\hat{P}( F_{\text{mus}} \mid F_{\text{computer}})$ og
+    $\hat{P}(F_{\text{tastatur}} \mid F_{\text{computer}} )$. Hvilken
+    vare ville du anbefale til en bruger, der lige har købt en computer?
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 3: Film
+
+Se på datasættet i @tbl-data herunder.
+
+-   Beregn frekvenserne af $F_{\{\text{Blinkende Lygter}\}}$,
+    $F_{\{\text{Olsen-banden}\}}$ og
+    $F_{\{\text{Blinkende Lygter, Olsen-banden}\}}$.
+
+-   Beregn
+    $\hat{P}(F_{\text{Olsen-banden}}\mid F_{\text{Blinkende lygter}} )$
+    og $\hat{P}( F_{\text{Hævnen}}\mid F_{\text{Blinkende lygter}})$.
+    Hvilken film ville du foreslå en bruger, der lige har set \"Blinkende
+    lygter\"?
+:::
+
+::: {#tbl-data}
+| Brugernummer | \"Blinkende lygter\" | \"Olsen-banden\" | \"Hævnen\" |
+|:------------:|:------------------:|:--------------:|:--------:|
+|      1       |         1          |       0        |    0     |
+|      2       |         1          |       0        |    1     |
+|      3       |         1          |       1        |    1     |
+|      4       |         0          |       0        |    1     |
+
+Eksempel på et datasæt med $p=3$ film og $n=4$ brugere. Hver række
+svarer til en bruger, hvor 1 angiver at brugeren har set filmen, mens 0
+angiver at brugeren ikke har set filmen.
+:::
+
+
+
+## En indholdsbaseret algoritme
+
+I afsnittet [En indholdsbaseret algoritme](../materialer/anbefalinger/anbefalinger.qmd#en-indholdsbaseret-algoritme) skal du starte med at læse underafsnittet [Multipel lineær regression](../materialer/anbefalinger/anbefalinger.qmd#multipel-lineær-regression) og [Flere variable](../materialer/anbefalinger/anbefalinger.qmd#flere-variable).
+
+:::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 4: Den multiple regressionsmodel
+
+Betragt den multiple regressionsmodel for brugeren i eksempel 3 i afsnittet, som du lige har læst. Altså
+
+$$\hat{r}= 2 - 0.02x_1 + 0.05x_2$${#eq-modeleks}
+
+- Lad os se på film med $x_2=0$, det vil sige film uden action.    
+  - Redegør for, at hvis vi sætter $x_2=0$ i (@eq-modeleks), så får vi, at $\hat{r}$ er en lineær funktion af $x_1$. 
+  - Hvad er hældning og skæring i modellen? 
+  - Tegn den rette linje ind i et koordinatsystem.
+  - Hvad sker der med ratings, når indholdet af romantik stiger?
+
+- Prøv i stedet at sætte $x_2=50$ i modellen. 
+  - Hvad er hældning og skæring nu? 
+  - Tegn den tilhørende rette linje ind i samme koordinatsystem som linjen for $x_2=0$.
+  - Hvad er forskellen på de to linjer?
+  
+- Vi gør nu det samme for fastholdt $x_1$.
+  - Sæt $x_1=10$, og tegn den tilhørende linje ind i et koordinatsystem med $x_2$ på $x$-aksen.
+  - Gør det samme for $x_1=60$.
+  - Hvad sker der med ratings, når andelen af action stiger?
+::::
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 5: Ratings af film
+
+Vi betragter 3 features, nemlig varighed, produktionsår (regnet i
+forhold til år 2000), og vurdering på [IMDb](https://www.imdb.com/). Tre film har følgende
+features:
+
+::: {#tbl-ratingopgave}
+| |                   | \"Titanic\" | \"Olsen-banden ser rødt\" | \"Jagten\" |
+|:--:|:-----------------:|:---------:|:-----------------------:|:--------:|
+| $x_1$ |   Varighed (min)  |    194    |           105           |   115  |
+| $x_2$ | År - 2000  |    -3     |           -24           |    12|
+| $x_3$ |IMDb rating |    7.9    |           7.7           |   8.3|
+:::
+
+-   En bruger, som foretrækker gamle film, men hader lange film, har
+    vægtene $p_1=-0.01$, $p_2=-0.1$ og $p_3= 0.1$ samt $b=2.8$.
+    Prædiktér brugerens ratings af de tre film. Hvilken film ville du
+    anbefale brugeren?
+
+-   En anden bruger foretrækker film af god kvalitet, men går ikke op i
+    varighed og alder. Vedkommende har derfor præferencerne $b=-1$,
+    $p_1=0$, $p_2=0$, $p_3=0.6$. Prædiktér brugerens ratings og anbefal
+    en film.
+::::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 6: Multipel regressionsmodel med én variabel
+
+-   Gør rede for, at en multipel regressionsmodel som i
+    $$ \hat{r}=b + p_1x_1 + p_2x_2, $$ 
+    med én variabel, er det samme som en almindelig regressionsmodel, som I kender det fra
+    gymnasieundervisningen.
+:::
+
+Læs afsnittet [Estimation af vægte](../materialer/anbefalinger/anbefalinger.qmd#estimation-af-vægte). Her påstås det blandt andet, at
+
+
+$$
+\begin{aligned}
+&\frac{\partial E}{\partial p_1} = -2x_{11}(r_1-\hat{r}_1)- \dotsm -2x_{1N}(r_N-\hat{r}_N)\\ \\
+&\frac{\partial E}{\partial p_2} = -2x_{21}(r_1-\hat{r}_1) - \dotsm -2x_{2N}(r_N-\hat{r}_N) \\ \\
+&\frac{\partial E}{\partial b} = - 2(r_1-\hat{r}_1) - \dotsm  - 2(r_N-\hat{r}_N)
+\end{aligned}
+$$ {#eq-partiel} 
+
+Det skal I nu vise.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 7: Partielle afledede
+
+-   Vis, at de partielle afledede er som givet i (@eq-partiel). Bemærk,
+    at da $E$ er en sum, kan den differentieres ledvist. Det er altså
+    nok at vise, at $$
+    \begin{aligned}
+    &\frac{\partial (r_j-\hat{r}_j)^2}{\partial p_1} = -2x_{1j}(r_j-\hat{r}_j)\\
+    &\frac{\partial (r_j-\hat{r}_j)^2}{\partial p_2} = -2x_{2j}(r_j-\hat{r}_j)  \\
+    &\frac{\partial (r_j-\hat{r}_j)^2}{\partial b} = - 2(r_j-\hat{r}_j) 
+    \end{aligned}
+    $$
+
+<!-- -   Her burde de sagtens selv kunne lave noget i Excel... -->
+:::
+
+Læs afsnittet [Mere fleksible modeller](../materialer/anbefalinger/anbefalinger.qmd#mere-fleksible-modeller).
+
+## Samarbejdsbaserede modeller for ratings
+
+I afsnittet [Samarbejdsbaserede modeller for ratings](../materialer/anbefalinger/anbefalinger.qmd#samarbejdsbaserede-modeller-for-ratings) skal du læse introduktionen og afsnittet [Matrixfaktorisering](../materialer/anbefalinger/anbefalinger.qmd#matrixfaktorisering) og [Skæring i modellen](../materialer/anbefalinger/anbefalinger.qmd#skæring-i-modellen).
+
+Vi minder om, at den $i$te brugers rating af $j$te film modelleres ved
+
+$$
+\hat{r}_{ij} = p_{i1}x_{1j} + p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj}
+$${#eq-modelij}
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 8: Antal vægte som skal estimeres
+
+Antag, at en streamingtjeneste har $n=1.000.000$ brugere og et katalog
+på $10.000$ film.
+
+-   Hvis vi skulle estimere alle ratings $r_{ij}$ for alle kombinationer
+    af film og bruger, hvor mange ratings skulle vi så estimere i alt?
+
+-   Hvis vi bruger modellen (@eq-modelij) med $M=5$, hvor mange vægte skal
+    vi så estimere i alt?
+
+-   Hvis vi skulle lave en multipel regressionsmodel for hver eneste
+    bruger med $M=5$ features, hvor mange vægte skulle vi så bruge i
+    alt?
+    
+-   Hvilken af de tre modeller har det mindste antal vægte?
+:::
+
+Læs afsnittet [Estimation af vægte](../materialer/anbefalinger/anbefalinger.qmd#estimation-af-vægte-1).
+
+:::::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 9: Ratings
+
+1.  Tre brugere har ratet tre film, som følger:
+
+::: {#tbl-rij .bordered}
+|          | \"Titanic\" | \"Ringenes Herre\" | \"Jurassic park\" |
+|:--------:|:---------:|:----------------:|:---------------:|
+| Bruger 1 |     1     |        NA        |        4        |
+| Bruger 2 |     3     |        NA        |        5        |
+| Bruger 3 |    NA     |        3         |        2        |
+
+<!-- Tabel over ratings. -->
+:::
+
+Vi betragter en model på formen (hvor $\hat{r}_{ij}$ er den $i$te brugers prædikterede rating af $j$te film):
+
+$$
+\hat{r}_{ij} = p_{i1}x_{1j} + p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj}
+$${#eq-matrixfak}
+
+med $M=2$ features. 
+
+De tre film har featurevægtene:
+
+::: {#tbl-features .bordered}
+|       | \"Titanic\" | \"Ringenes Herre\" | \"Jurassic park\" |
+|:-----:|:---------:|:----------------:|:---------------:|
+| $x_1$ |     0     |        0         |        3        |
+| $x_2$ |     2     |        1         |        1        |
+
+<!-- Tabel over featurevægte. -->
+:::
+
+De tre brugere har præferencevægtene:
+
+::: {#tbl-preferences .bordered}
+|          | $p_1$ | $p_2$ |
+|:--------:|:-----:|:-----:|
+| Bruger 1 |   1   |   1   |
+| Bruger 2 |   2   |   1   |
+| Bruger 3 |   0   |   3   |
+
+<!-- Tabel over præferencevægte. -->
+:::
+
+-   Lav en tabel over alle de prædikterede ratings $\hat{r}_{ij}$.
+-   Beregn prædiktionsfejlen $r_{ij}-\hat{r}_{ij}$ for alle de film, der
+    faktisk er blevet ratet af brugerne (det vil sige, hvor
+    $r_{ij}\neq NA$ i tabellen over ratings i punkt 1).
+-   Beregn tabsfunktionen $E$.
+::::::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 10: Partielle afledede
+
+Vis, at de partielle afledede af $(r_{ij}-\hat{r}_{ij})^2$ med hensyn til
+vægtene er givet ved formlerne (@eq-partiel1), (@eq-partiel2) og
+(@eq-partiel3) her under.
+
+:::
+
+$$
+\begin{aligned}
+\frac{\partial }{\partial p_{im}} (r_{ij}-\hat{r}_{ij})^2 = -2 (r_{ij}-\hat{r}_{ij})x_{mj}\\
+\frac{\partial }{\partial x_{mj}} (r_{ij}-\hat{r}_{ij})^2 = -2 (r_{ij}-\hat{r}_{ij})p_{im}
+\end{aligned}
+$$ {#eq-partiel1} 
+
+Desuden gælder der for $l\neq i$, at 
+
+$$
+\frac{\partial }{\partial p_{lm}} (r_{ij}-\hat{r}_{ij})^2 = 0
+$$ {#eq-partiel2} 
+
+og for $k \neq j$ 
+
+$$
+\frac{\partial }{\partial x_{mk}} (r_{ij}-\hat{r}_{ij})^2 = 0.
+$$ {#eq-partiel3} 
+
