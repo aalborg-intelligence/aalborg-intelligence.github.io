@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Vi vil undersøge, hvordan AI kan genkende personer ud fra ganske få sekunders lydklip">
+
+<title>Det lyder som dig! – AI MAT - matematikken bag magien</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-c9773902334eb0d2669f10110b305e83.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-Y219BCPS45"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+ 
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'analytics_storage': 'denied'
+  });
+gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="floating nav-fixed slimcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo light-content">
+    <img src="../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../undervisningsforlob/index.html"> 
+<span class="menu-text">Undervisningsforløb</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../materialer/index.html"> 
+<span class="menu-text">Materialer</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../srp/index.html"> 
+<span class="menu-text">SRP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../apps/index.html"> 
+<span class="menu-text">Apps</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">Om os</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.youtube.com/@ai-mat"> 
+<span class="menu-text"><img src="../logo/YouTube/youtube-color-darkblue-icon.svg" style="height:2em"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indhold</h2>
+   
+  <ul>
+  <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
+  <li><a href="#den-grimme-ælling---oplæst-af-4-forskellige-personer" id="toc-den-grimme-ælling---oplæst-af-4-forskellige-personer" class="nav-link" data-scroll-target="#den-grimme-ælling---oplæst-af-4-forskellige-personer">Den grimme ælling - oplæst af 4 forskellige personer</a>
+  <ul class="collapse">
+  <li><a href="#neurale-netværk" id="toc-neurale-netværk" class="nav-link" data-scroll-target="#neurale-netværk">Neurale netværk</a></li>
+  <li><a href="#sammenligning-med-lineær-regression" id="toc-sammenligning-med-lineær-regression" class="nav-link" data-scroll-target="#sammenligning-med-lineær-regression">Sammenligning med lineær regression</a></li>
+  <li><a href="#det-neurale-netværk-i-orange" id="toc-det-neurale-netværk-i-orange" class="nav-link" data-scroll-target="#det-neurale-netværk-i-orange">Det neurale netværk i Orange</a></li>
+  </ul></li>
+  <li><a href="#jeres-egne-data" id="toc-jeres-egne-data" class="nav-link" data-scroll-target="#jeres-egne-data">Jeres egne data</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Det lyder som dig!</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">C-niveau</div>
+    <div class="quarto-category">Kort</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Forudsætninger og tidsforbrug
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Lineær regression</li>
+</ul>
+<p><strong>Tidsforbrug:</strong> 90-120 minutter.</p>
+</div>
+</div>
+</div>
+<section id="formål" class="level3 purpose">
+<h3 class="anchored" data-anchor-id="formål">Formål</h3>
+<p>Vi vil sammen undersøge, hvor godt og hvordan AI kan genkende personer ud fra ganske få sekunders lydklip. Konkret med brug af lydklip med dig og dine klassekammerater.</p>
+<p>Undervejs vil du blive introduceret til mange af de centrale begreber om træning af de såkaldte neurale netværk, som AI gør brug af. Dette sker bl.a. med programmet Orange.</p>
+</section>
+<section id="den-grimme-ælling---oplæst-af-4-forskellige-personer" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="den-grimme-ælling---oplæst-af-4-forskellige-personer">Den grimme ælling - oplæst af 4 forskellige personer</h2>
+<p>Inden vi kommer til jeres egne data, vil jeg gerne vise jer hele processen med brug af vores data. Til det formål har tre af mine kolleger og jeg alle læst den samme tekst op. Du kan høre lydfilerne fra vores oplæsning her: <a href="Det_lyder_som_dig_filer/Malene.M4A">Malene</a>, <a href="Det_lyder_som_dig_filer/Lisbeth.M4A">Lisbeth</a>, <a href="Det_lyder_som_dig_filer/Ege.M4A">Ege</a> og <a href="Det_lyder_som_dig_filer/Jan.M4A">Jan</a>.</p>
+<p>Da lydfilerne er 2-2,5 minutter lange, men vi vil arbejde med meget korte lydfiler, opdeles hver lydfil i sekvenser af 3 sekunder. Du kan høre disse små sekvenser her: <a href="Det_lyder_som_dig_filer/sekvenser.zip">korte sekvenser</a>.</p>
+<section id="neurale-netværk" class="level3">
+<h3 class="anchored" data-anchor-id="neurale-netværk">Neurale netværk</h3>
+<p><strong>Neurale netværk</strong> arbejder ikke direkte på lyd, som mennesker gør - men på såkaldte <strong>features</strong>. I denne sammenhæng skal vi bruge oplæserens navn, et ID og en række tal, som beskriver frekvenser m.m. i lydfilen på en smart måde. Da det er fysik og ganske svært, vil vi ikke her for alvor gå i dybden, men måske du har haft eller får noget i fysik om analyse af lyd og svingninger. Du får dog lige en kort introduktion til, hvad det er.</p>
+<p>Det vi skal bruge hedder <strong>Mel-Frequency Cepstral Coefficients (MFCC)</strong>, som er en metode, der bruges til at analysere og repræsentere lydsignaler, især tale og musik, ved at fange de vigtigste egenskaber ved lydsignalet, som det opfattes af det menneskelige øre. Mennesker opfatter lyd ikke-lineært med frekvens – vi er mere følsomme over for forskelle i lave frekvenser (f.eks. mellem 200 og 400 Hz) end i høje (f.eks. mellem 5000 og 5200 Hz). MFCC tager højde for dette ved at bruge en Mel-skala, som efterligner, hvordan øret opfatter frekvenser. Detaljerne er på SRP niveau, men hvis du har lyst til at vide mere, så kan du læse her: <a href="https://www.geeksforgeeks.org/nlp/mel-frequency-cepstral-coefficients-mfcc-for-speech-recognition/?utm_source=chatgpt.com">MFCC</a></p>
+<p>Jeg har i forvejen lavet disse MFCC data for hver af de små lydsekvenser. Jeg har desuden delt op i <strong>træningsdata</strong>, som vi vil bruge til at træne et neuralt netværk, og <strong>testdata</strong>, som efterfølgende skal teste, hvor god modellen i det neurale netværk er blevet. Du kan se disse data her: <a href="Det_lyder_som_dig_filer/MFCC_data.zip">MFCC data</a></p>
+<p>Til træningsdata har jeg brugt 75% af lydsekvenserne for hver af de 4 oplæsere, mens de resterende 25% er anvendt til testdata.</p>
+</section>
+<section id="sammenligning-med-lineær-regression" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="sammenligning-med-lineær-regression">Sammenligning med lineær regression</h3>
+<p>Det at træne et neuralt netværk minder om at lave lineær regression, som du kender.</p>
+<p>I lineær regression har man en række punkter - det er træningsdata.</p>
+<p>Hvert punkt består af et x-koordinat og et y-koordinat - x-koordinaten er en <strong>feature</strong>, og der er kun den ene feature, og y-koordinaten er <strong>target</strong>.</p>
+<p>I lineær sammenhæng er modellen <span class="math inline">\(y=a\cdot x+b\)</span> <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, og det gælder om at bestemme <span class="math inline">\(a\)</span> og <span class="math inline">\(b\)</span>, så modellen for featureværdierne (<span class="math inline">\(x\)</span>-koordinaterne) samlet set bedst muligt rammer targetværdierne (<span class="math inline">\(y\)</span>-koordinaterne). I forhold til et neuralt netværk vil <span class="math inline">\(a\)</span> og <span class="math inline">\(b\)</span> kaldes for <strong>vægte</strong>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Hvis det skal være helt korrekt er der også et normalfordelt støjled <span class="math inline">\(N(\mu, \sigma)\)</span>, men det undlader man som regel at tage med på gymnasieniveau</p></div></div><p>I et neuralt netværk er modellen betydeligt mere kompliceret og der er mange flere vægte end de 2 i lineær regression (i store netværk kan der være milliarder af vægte), men ideen er den samme. Man skal også i neurale netværk bestemme vægtene i modellen, så den for featureværdierne samlet set bedst muligt rammer targetværdierne.</p>
+<p>I lineær regression skal modellen komme så tæt på targetværdien <span class="math inline">\(y\)</span> for hver featureværdi <span class="math inline">\(x\)</span>. I vores tilfælde er det anderledes, da vi ikke skal tæt på en talværdi, men i stedet skal vælge mellem de 4 personer - dette kaldes for <strong>klassifikation</strong>. I lineær regression handler det således om, at linjen (modellen) kommer tæt på punkterne, mens det i klassifikation handler om, at modellen skal forudsige den rigtige oplæser for så mange som muligt af de små lydklip. Man taler derfor om <strong>klassifikationsnøjagtigheden (CA)</strong>, som er andelen af korrekte forudsigelser. Så hvis CA=0.85, har modellen korrekt forudsagt 85% af targetværdierne og dermed 15% forkert.</p>
+</section>
+<section id="det-neurale-netværk-i-orange" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="det-neurale-netværk-i-orange">Det neurale netværk i Orange</h3>
+<p>Nok snak om teori - vi skal have det afprøvet i praksis.</p>
+<p>Vi vil anvende programmet <a href="https://orangedatamining.com/">Orange Data Mining</a> til at træne og teste et neuralt netværk på MFCC data for lydfilerne.</p>
+<p>Lav opgave 1 - hvis noget driller, kan du måske få hjælp ved at se denne video (video mangler).</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 1: Installér og afprøv Orange
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Installér Orange</p></li>
+<li><p>Åbn denne fil <a href="Det_lyder_som_dig_filer/Det_lyder_som_dig_Orange.zip">Model i Orange</a>. Den indeholder stukturen til at lave modellen, men du skal indlæse data.</p></li>
+<li><p>Hvis du ikke allerede har hentet <a href="Det_lyder_som_dig_filer/MFCC_data.zip">MFCC data</a> , så hent dem og pak zip-filen ud, så du har adgang til filerne med træningsdata og testdata.</p></li>
+<li><p>Klik på træningsdata i Orange og importer filen med træningsdata.</p></li>
+<li><p>Sæt ID er sat til meta (modellen skal ignorere denne værdi), sæt category (Marlene, Lisbeth, Ege eller Jan) til target, og sæt de 13 MFCC data til feature (det står de nok allerede som).</p></li>
+<li><p>Gør det samme for testdata i Orange.</p></li>
+</ul>
+</div>
+</div>
+</div>
+<p>Dermed er data klar i Orange, og modellen i det neurale netværk er faktisk også trænet. Men hvor god er modellen blevet?</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 2: Undersøg modellen
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Klik på <strong>Test and Score</strong> i Orange. Hvad er klassifikationsgraden (CA)?</p></li>
+<li><p>Under Test and score kan man ude til venstre vælge forskellige måder at teste på. Sørg for, at den indtil videre står på “test on train data”.</p></li>
+<li><p>Klik på <strong>Confusion matrix</strong> for at se, hvilke input, der er klassificeret korrekt, og hvilke der er klassificeret forkert.</p></li>
+<li><p>Sørg så for, at både Predictions og Probabilities er valgt ude til venstre og klik så på Select Misclassified i bunden.</p></li>
+<li><p>Klik derefter på <strong>Predictions - misclassified</strong> ude til højre i Orange. Her kan du for hver af de misklassificerede lydfiler se filens ID, hvem der har lavet lydfilen, hvem modellen fejagtigt mener, det skal være, og procenter for, hvor meget modellen tror, at filen er fra hver af de 4 muligheder. Der er lige nu kun ét misklassificeret klip.</p></li>
+<li><p>Hvis du ikke allerede har hente de små 3 sekunders lydklip, så gør det nu. <a href="Det_lyder_som_dig_filer/sekvenser.zip">korte sekvenser</a>.</p></li>
+<li><p>Find det misklassificerede klip og lyt til det.</p></li>
+</ul>
+</div>
+</div>
+</div>
+<p>Når vi før valgte at teste på træningsdata, er det på en måde lidt snyd. Det betyder, at vi først lader modellen træne på træningsdata, og derved tilpasse de mange vægte i modellen <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, så den passer bedst muligt til disse data - og så derefter at se, hvor godt modellen passer til præcis samme data.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Der er 124 vægte i det neurale netværk. Du kan senere lære, hvordan man regner det ud</p></div></div><p>Vi bør i stedet træne modellen på træningsdata, for derefter at teste på nogle helt seperate data, som derfor kaldes for testdata. Derved “snyder” vi ikke længere, da modellen faktisk skal forudsige targetværdier ud fra featureværdier, den ikke brugte til at træne på.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 3: Test på testdata
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Vælg i stedet at teste på testdata. Hvad bliver klassifikationsgraden (CA) nu? Det vil som regel blive ringere end ved test på træningsdata.</p></li>
+<li><p>Se igen på Confusion Matrix og på Predictions Misclassified, hvor der nu er flere fejl.</p></li>
+<li><p>Hør lydklip for de misklassificerede.</p></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="jeres-egne-data" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="jeres-egne-data">Jeres egne data</h2>
+<p>Det bliver naturligvis først rigtigt interessant - og sværere for modellen - hvis der er flere end 4 oplæsere.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 4: Alle læser samme tekst op.
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Jeres lærer vælger en tekst, som I alle skal læse op. Mindst 2 minutter, og gerne længere.</p></li>
+<li><p>Optag en lydfil på din telefon eller din computer (vigtigt, ikke en video, kun lyd) <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p></li>
+<li><p>Giv filen med din egen oplæsning dit navn.</p></li>
+<li><p>Saml alle lydfilerne på samme computer.</p></li>
+<li><p>Filerne skal være i wav, flac eller m4a format. <a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Filerne vil typisk være på 2-4 MB hver, men kan godt med nogle optagere være lavet i højere kvalitet, så filen er ca. 10 MB. Hvis filen er tæt på 100 MB, har man nok i stedet fået lavet en video, hvilket ikke var meningen.Små filer gør det næste skridt hurtigere.</p></div></div><div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Opgaven kan evt. være lavet hjemme i forvejen som en lektie, da det kan være upraktisk, hvis en hel klasse skal læse op samtidig!</p></div><div id="fn5"><p><sup>5</sup>&nbsp;Python er et meget anvendt programmeringssprog.</p></div><div id="fn6"><p><sup>6</sup>&nbsp;Colabs er en gratis side online, som kan bruges til Python scripts, så man ikke selv skal igennem en lidt besværlig installation af Python.</p></div></div><p>Som det næste skal I have opdelt lydfilerne i små sekvenser på 3 sekunder, og derefter lavet MFCC data til hver sekvens. Det bliver lidt teknisk, da I skal bruge et Python-script <a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> i Googles Colab <a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>, men I kan heldigvis gøre det sammen. Hvis der blandt jer er en Python ekspert, kan I også bruge koden på en computer lokalt, hvilket er noget hurtigere.</p>
+<p>(endnu en lille video, som ikke er lavet endnu)</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 5: Generer MFCC data
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Alle behøver ikke at lave denne del, som er temmelig teknisk - det er nok, at én person gør det, og derefter deler fierne med alle.</p>
+<ul>
+<li><p>Hent denne fil med et <a href="Det_lyder_som_dig_filer/Det_lyder_som_dig_Python.zip">Python-script</a></p></li>
+<li><p>Åbn siden <a href="https://colab.research.google.com/">Google Colab</a> og log ind med en gmail.</p></li>
+<li><p>Importér Python-scriptet i Colab.</p></li>
+<li><p>Vælg <strong>Kør alle</strong> på siden.</p></li>
+<li><p>Undervejs skal du vælge lydfilerne med jeres oplæsninger. Når det er gjort, tager det noget tid med at uploade filerne.</p></li>
+<li><p>Når filerne er hentet, skal du vælge, om du vil gemme de små 3 sekunders lydklip, så du kan høre dem hver for sig. Sig ja til det.</p></li>
+<li><p>Afhængigt af, hvordan din Colab er sat op, kan det være lidt forskelligt, hvordan du får gemt de 3 filer - testdata, trainingdata og en zip fil med de små lydklip. Måske du bliver bedt om at tillade, at Colab gemmer flere filer direkte på din computer. Alternativt ender de 3 filer måske under Filer ikonet ude til venstre i Colab, hvorfra du kan downloade dem.</p></li>
+<li><p>Sørg for, at de 3 filer er tilgængelige for alle de øvrige.</p></li>
+</ul>
+</div>
+</div>
+</div>
+<p>Nu bliver det spændende, om Orange kan lave en model, som kan kende forskel på jeres stemmer, eller om nogen af jer lyder for ens.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 6: Model i et neuralt netværk for jeres egne data
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Indlæs både trænings- og testdata fra jeres egne lydfiler i Orange.</p></li>
+<li><p>Kig på Confusion Matrix og Predictions - misclassified både for test on train data and test on test data.</p></li>
+<li><p>Lyt til de lydklip, som modellen misklassificerer.</p></li>
+</ul>
+</div>
+</div>
+</div>
+<p>Indtil nu har vi talt meget lidt det neurale netværk. Vi vil på ingen måde gå i detaljer, men dog se en lille smule på det. I det neurale netværk er der i første omgang 2 skjulte lag med hver 5 neuroner. Uden at forstå detaljerne, kan vi gøre modellen mere kompliceret, og dermed måske bedre, ved at øge antal neuroner i hvert lag eller ved at lave flere skjulte lag.</p>
+<p>Desuden kan vi også beslutte, hvor lang tid Orange må bruge på at justere de mange vægte i modellen, så den passer bedst muligt til vores data. Dette kaldes for <strong>iterationer</strong>. Flere iterationer tager længere tid, men vil også ofte give et bedre resultat.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 7: Modellens størrelse og antal iterationer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Klik på <strong>Neural Network</strong> i Orange.</p></li>
+<li><p>Afprøv forskellige tal for antal neuroner og antal skjulte lag (skriv f.eks. 10,10,10 for 3 lag med 10 neuroner hver) både med test on train data og test on test data. Prøv både at opnå en lav klassifikationsgrad og en høj klassifikationsgrad.</p></li>
+<li><p>Afprøv også både mindre og større værdier for antal iterationer. Se igen på, hvad der giver lav eller høj klassifikationsgrad.</p></li>
+<li><p>Er der stadig lydklip, som misklassificeres i den model med størst klassifikationsgrad? Lyt i så fald til disse lydklip</p></li>
+</ul>
+</div>
+</div>
+</div>
+<p>Tillykke - du kender nu nogle af de begreber, som indgår i neurale net, der er en meget vigtig del af AI, og har en ide om, hvordan de anvendes i Orange. Hvis du får lyst til at vide meget mere, er følgende længere forløb et rigtigt godt sted at starte <a href="../undervisningsforlob/kunstige_neuroner_langt_forlob/kunstige_neuroner_forside.html">Kunstig neuron</a></p>
+
+
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/aimat\.dk");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
