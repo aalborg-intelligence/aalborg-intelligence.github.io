@@ -68,15 +68,15 @@ Lav opgave 1 - hvis noget driller, kan du måske få hjælp ved at se denne vide
 ### Opgave 1: Installér og afprøv Orange
 * Installér Orange
 
-* Åbn denne fil [Model i Orange](Det_lyder_som_dig_filer/Det_lyder_som_dig_Orange.zip). Den indeholder stukturen til at lave modellen, men du skal indlæse data.
+* Åbn denne fil [Model i Orange](Det_lyder_som_dig_filer/Det_lyder_som_dig_Orange.zip). Den indeholder stukturen til at lave modellen.
 
 * Hvis du ikke allerede har hentet [MFCC data](Det_lyder_som_dig_filer/MFCC_data.zip) , så hent dem og pak zip-filen ud, så du har adgang til filerne med træningsdata og testdata.
 
-* Klik på træningsdata i Orange og importer filen med træningsdata. 
+* Klik på **Træningsdata** i Orange og importer filen med træningsdata. 
 
-* Sæt ID er sat til meta (modellen skal ignorere denne værdi), sæt category (Marlene, Lisbeth, Ege eller Jan) til target, og sæt de 13 MFCC data til feature (det står de nok allerede som). 
+* Sæt ID til meta (modellen skal ignorere denne værdi), sæt category (Marlene, Lisbeth, Ege eller Jan) til target, og sæt de 13 MFCC data til feature (det står de nok allerede som). 
 
-* Gør det samme for testdata i Orange.
+* Gør det samme for **Testdata** i Orange.
 :::
 
 
@@ -101,15 +101,15 @@ Dermed er data klar i Orange, og modellen i det neurale netværk er faktisk ogs�
 
 :::
 
-Når vi før valgte at teste på træningsdata, er det på en måde lidt snyd. Det betyder, at vi først lader modellen træne på træningsdata, og derved tilpasse de mange vægte i modellen ^[Der er 124 vægte i det neurale netværk. Du kan senere lære, hvordan man regner det ud], så den passer bedst muligt til disse data - og så derefter at se, hvor godt modellen passer til præcis samme data.
+Når vi før valgte at teste på træningsdata, er det på en måde lidt snyd. Det betyder, at vi først lader modellen træne på træningsdata, og derved tilpasse de mange vægte i modellen ^[Der er 124 vægte i dette neurale netværk, så det er betydeligt flere end i den lineære model, men stadig ikke mange, når man taler om neurale netværk] så den passer bedst muligt til disse data - og så derefter at se, hvor godt modellen passer til præcis samme data.
 
 Vi bør i stedet træne modellen på træningsdata, for derefter at teste på nogle helt seperate data, som derfor kaldes for testdata. Derved "snyder" vi ikke længere, da modellen faktisk skal forudsige targetværdier ud fra featureværdier, den ikke brugte til at træne på.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 3: Test på testdata
-* Vælg i stedet at teste på testdata. Hvad bliver klassifikationsgraden (CA) nu? Det vil som regel blive ringere end ved test på træningsdata.
+* Vælg i stedet under **Test and Score** at teste på testdata. Hvad bliver klassifikationsgraden (CA) nu? Det vil som regel blive ringere end ved test på træningsdata.
 
-* Se igen på Confusion Matrix og på Predictions Misclassified, hvor der nu er flere fejl. 
+* Se igen på Confusion Matrix og på Predictions - Misclassified, hvor der nu er flere fejl. 
 
 * Hør lydklip for de misklassificerede.
 
@@ -120,7 +120,7 @@ Det bliver naturligvis først rigtigt interessant - og sværere for modellen - h
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 4: Alle læser samme tekst op.
-* Jeres lærer vælger en tekst, som I alle skal læse op. Mindst 2 minutter, og gerne længere. 
+* Jeres lærer vælger en tekst, som I alle skal læse op. Mindst 2 minutter, og gerne længere. ^[I kan f.eks. vælge at læse forordet i jeres matematikbog, hvis det er passende i længde og indhold. Så slår I to fluer med ét smæk]
 
 * Optag en lydfil på din telefon eller din computer (vigtigt, ikke en video, kun lyd)
  ^[Opgaven kan evt. være lavet hjemme i forvejen som en lektie, da det kan være upraktisk, hvis en hel klasse skal læse op samtidig!]
@@ -173,7 +173,7 @@ Nu bliver det spændende, om Orange kan lave en model, som kan kende forskel på
 
 :::  
 
-Indtil nu har vi talt meget lidt det neurale netværk. Vi vil på ingen måde gå i detaljer, men dog se en lille smule på det. I det neurale netværk er der i første omgang 2 skjulte lag med hver 5 neuroner. Uden at forstå detaljerne, kan vi gøre modellen mere kompliceret, og dermed måske bedre, ved at øge antal neuroner i hvert lag eller ved at lave flere skjulte lag.
+Indtil nu har vi talt meget lidt om det neurale netværk. Vi vil på ingen måde gå i detaljer, men dog se en lille smule på det. I det neurale netværk er der i første omgang 2 skjulte lag med hver 5 neuroner. Uden at forstå detaljerne, kan vi gøre modellen mere kompliceret, og dermed måske bedre, ved at øge antal neuroner i hvert lag eller ved at lave flere skjulte lag.
 
 Desuden kan vi også beslutte, hvor lang tid Orange må bruge på at justere de mange vægte i modellen, så den passer bedst muligt til vores data. Dette kaldes for **iterationer**. Flere iterationer tager længere tid, men vil også ofte give et bedre resultat.
 
@@ -182,12 +182,12 @@ Desuden kan vi også beslutte, hvor lang tid Orange må bruge på at justere de 
 
 * Klik på **Neural Network** i Orange.
 
-* Afprøv forskellige tal for antal neuroner og antal skjulte lag (skriv f.eks. 10,10,10 for 3 lag med 10 neuroner hver) både med test on train data og test on test data. Prøv både at opnå en lav klassifikationsgrad og en høj klassifikationsgrad.
+* Afprøv forskellige tal for antal neuroner og antal skjulte lag (skriv f.eks. 10,10,10 for 3 lag med 10 neuroner hver) både med test on train data og test on test data. Hvad giver en lav klassifikationsgrad? Hvad giver en høj klassifikationsgrad?
 
 * Afprøv også både mindre og større værdier for antal iterationer. Se igen på, hvad der giver lav eller høj klassifikationsgrad.
 
-* Er der stadig lydklip, som misklassificeres i den model med størst klassifikationsgrad? Lyt i så fald til disse lydklip
+* Er der stadig lydklip, som misklassificeres i din model med størst klassifikationsgrad? Lyt i så fald til disse lydklip.
 
 :::  
 
-Tillykke - du kender nu nogle af de begreber, som indgår i neurale net, der er en meget vigtig del af AI, og har en ide om, hvordan de anvendes i Orange. Hvis du får lyst til at vide meget mere, er følgende længere forløb et rigtigt godt sted at starte [Kunstig neuron](../undervisningsforlob/kunstige_neuroner_langt_forlob/kunstige_neuroner_forside.qmd)
+Tillykke - du kender nu nogle af de begreber, som indgår i neurale net, der er en meget vigtig del af AI, og har en ide om, hvordan de anvendes i Orange. Hvis du får lyst til at vide meget mere (og noget sværere), er følgende længere forløb et rigtigt godt sted at forsætte [Kunstig neuron](../undervisningsforlob/kunstige_neuroner_langt_forlob/kunstige_neuroner_forside.qmd).
