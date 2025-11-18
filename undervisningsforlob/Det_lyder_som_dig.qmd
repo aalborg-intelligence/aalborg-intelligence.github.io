@@ -34,7 +34,7 @@ Da lydfilerne er 2-2,5 minutter lange, men vi vil arbejde med meget korte lydfil
 
 ### Neurale netværk
 
-**Neurale netværk** arbejder ikke direkte på lyd, som mennesker gør - men på såkaldte **features**. I denne sammenhæng skal vi bruge oplæserens navn, et ID og en række tal, som beskriver frekvenser m.m. i lydfilen på en smart måde. Da det er fysik og ganske svært, vil vi ikke her for alvor gå i dybden, men måske du har haft eller får noget i fysik om analyse af lyd og svingninger. Du får dog lige en kort introduktion til, hvad det er.
+**Neurale netværk** arbejder ikke direkte på lyd, som mennesker gør - men på såkaldte **features**. I denne sammenhæng skal vi bruge oplæserens navn, et ID og en række tal, som beskriver frekvenser m.m. i lydfilen på en smart måde. Da det er fysik og ganske svært, vil vi ikke her for alvor gå i dybden, men måske du har haft eller får du noget i fysik om analyse af lyd og svingninger. Du får dog lige en kort introduktion til, hvad det er.
 
 Det vi skal bruge hedder **Mel-Frequency Cepstral Coefficients (MFCC)**, som er en metode, der bruges til at analysere og repræsentere lydsignaler, især tale og musik, ved at fange de vigtigste egenskaber ved lydsignalet, som det opfattes af det menneskelige øre. Mennesker opfatter lyd ikke-lineært med frekvens – vi er mere følsomme over for forskelle i lave frekvenser (f.eks. mellem 200 og 400 Hz) end i høje (f.eks. mellem 5000 og 5200 Hz).
 MFCC tager højde for dette ved at bruge en Mel-skala, som efterligner, hvordan øret opfatter frekvenser. Detaljerne er på SRP niveau, men hvis du har lyst til at vide mere, så kan du læse her: [MFCC](https://www.geeksforgeeks.org/nlp/mel-frequency-cepstral-coefficients-mfcc-for-speech-recognition/?utm_source=chatgpt.com)  
@@ -74,7 +74,7 @@ Lav opgave 1 - hvis noget driller, kan du måske få hjælp ved at se denne vide
 
 * Klik på **Træningsdata** i Orange og importer filen med træningsdata. 
 
-* Sæt ID til meta (modellen skal ignorere denne værdi), sæt category (Marlene, Lisbeth, Ege eller Jan) til target, og sæt de 13 MFCC data til feature (det står de nok allerede som). 
+* Sæt ID til meta (modellen skal ignorere denne værdi), sæt category (Malene, Lisbeth, Ege eller Jan) til target, og sæt de 13 MFCC data til feature (det står de nok allerede som). 
 
 * Gør det samme for **Testdata** i Orange.
 :::
@@ -109,7 +109,7 @@ Vi bør i stedet træne modellen på træningsdata, for derefter at teste på no
 ### Opgave 3: Test på testdata
 * Vælg i stedet under **Test and Score** at teste på testdata. Hvad bliver klassifikationsgraden (CA) nu? Det vil som regel blive ringere end ved test på træningsdata.
 
-* Se igen på Confusion Matrix og på Predictions - Misclassified, hvor der nu er flere fejl. 
+* Se igen på Confusion Matrix og på Predictions - misclassified, hvor der nu er flere fejl. 
 
 * Hør lydklip for de misklassificerede.
 
@@ -122,14 +122,14 @@ Det bliver naturligvis først rigtigt interessant - og sværere for modellen - h
 ### Opgave 4: Alle læser samme tekst op.
 * Jeres lærer vælger en tekst, som I alle skal læse op. Mindst 2 minutter, og gerne længere. ^[I kan f.eks. vælge at læse forordet i jeres matematikbog, hvis det er passende i længde og indhold. Så slår I to fluer med ét smæk]
 
-* Optag en lydfil på din telefon eller din computer (vigtigt, ikke en video, kun lyd)
+* Optag en lydfil på din telefon eller computer (vigtigt, ikke en video, kun lyd)
  ^[Opgaven kan evt. være lavet hjemme i forvejen som en lektie, da det kan være upraktisk, hvis en hel klasse skal læse op samtidig!]
  
 * Giv filen med din egen oplæsning dit navn.
 
 * Saml alle lydfilerne på samme computer.
 
-* Filerne skal være i wav, flac eller m4a format. ^[Filerne vil typisk være på 2-4 MB hver, men kan godt med nogle optagere være lavet i højere kvalitet, så filen er ca. 10 MB. Hvis filen er tæt på 100 MB, har man nok i stedet fået lavet en video, hvilket ikke var meningen.Små filer gør det næste skridt hurtigere.]
+* Filerne skal være i wav, flac eller m4a format. ^[Filerne vil typisk være på 2-4 MB hver, men kan godt med nogle optagere være lavet i højere kvalitet, så filen er ca. 10 MB. Hvis filen er tæt på 100 MB, har man nok i stedet fået lavet en video, hvilket ikke var meningen. Små filer gør det næste skridt hurtigere.]
 
 :::
 
@@ -139,7 +139,7 @@ Som det næste skal I have opdelt lydfilerne i små sekvenser på 3 sekunder, og
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 5: Generer MFCC data
-Alle behøver ikke at lave denne del, som er temmelig teknisk - det er nok, at én person gør det, og derefter deler fierne med alle.
+Alle behøver ikke at lave denne del, som er temmelig teknisk. Det er nok, at én person gør det, og derefter deler filerne med alle.
 
 * Hent denne fil med et [Python-script](Det_lyder_som_dig_filer/Det_lyder_som_dig_Python.zip)
 
@@ -182,12 +182,14 @@ Desuden kan vi også beslutte, hvor lang tid Orange må bruge på at justere de 
 
 * Klik på **Neural Network** i Orange.
 
-* Afprøv forskellige tal for antal neuroner og antal skjulte lag (skriv f.eks. 10,10,10 for 3 lag med 10 neuroner hver) både med test on train data og test on test data. Hvad giver en lav klassifikationsgrad? Hvad giver en høj klassifikationsgrad?
+* Afprøv forskellige værdier for antal neuroner og antal skjulte lag (skriv f.eks. 10,10,10 for 3 lag med 10 neuroner hver) både med test on train data og test on test data. Hvad giver en lav klassifikationsgrad? Hvad giver en høj klassifikationsgrad?
 
 * Afprøv også både mindre og større værdier for antal iterationer. Se igen på, hvad der giver lav eller høj klassifikationsgrad.
 
-* Er der stadig lydklip, som misklassificeres i din model med størst klassifikationsgrad? Lyt i så fald til disse lydklip.
+* Er der stadig lydklip, som misklassificeres i den af dine modeller, som har bedst klassifikationsgrad? Lyt i så fald til disse lydklip.
 
 :::  
 
-Tillykke - du kender nu nogle af de begreber, som indgår i neurale net, der er en meget vigtig del af AI, og har en ide om, hvordan de anvendes i Orange. Hvis du får lyst til at vide meget mere (og noget sværere), er følgende længere forløb et rigtigt godt sted at forsætte [Kunstig neuron](../undervisningsforlob/kunstige_neuroner_langt_forlob/kunstige_neuroner_forside.qmd).
+Tillykke - du kender nu nogle af de begreber, som indgår i neurale net, der er en meget vigtig del af AI, og har en ide om, hvordan de anvendes i Orange. 
+
+Hvis du får lyst til at vide meget mere (og noget sværere), er følgende længere forløb et rigtigt godt sted at forsætte [Kunstig neuron](../undervisningsforlob/kunstige_neuroner_langt_forlob/kunstige_neuroner_forside.qmd).
