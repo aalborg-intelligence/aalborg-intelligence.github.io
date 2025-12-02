@@ -186,6 +186,7 @@ window.Quarto = {
   <li><a href="#klassificering-ved-beregning-kan-udelades" id="toc-klassificering-ved-beregning-kan-udelades" class="nav-link" data-scroll-target="#klassificering-ved-beregning-kan-udelades">Klassificering ved beregning (kan udelades)</a></li>
   </ul></li>
   <li><a href="#tre-features" id="toc-tre-features" class="nav-link" data-scroll-target="#tre-features">Tre features</a></li>
+  <li><a href="#delvis-facitliste" id="toc-delvis-facitliste" class="nav-link" data-scroll-target="#delvis-facitliste">Delvis facitliste</a></li>
   </ul>
 </nav>
 </nav>
@@ -331,7 +332,7 @@ Figur&nbsp;6: Et håndskrevet "0" fra MNIST datasættet, men hvor farveskalaen e
 </figure>
 </div>
 <p>Vi skal nu prøve, om vi ud fra de 784 gråskalaværdier kan "udvinde" nogle få, men sigende værdier, som kan bruges til at forudsige, hvilket ciffer der er på billedet. I første omgang vil vi prøve, om vi kan kende forskel på 0- og 1-taller.</p>
-<p>Det første, vi vil gøre, er at lave billederne i en lavere opløsning svarende til, at billederne bliver mere pixeleret. Vi vil for eksempel lave et <span class="math inline">\(7 \times 7\)</span> pixel billede ved at inddele det oprindelige <span class="math inline">\(28 \times 28\)</span> pixel billede i <span class="math inline">\(2 \times 2\)</span> pixels, hvor vi så tager gennemsnittet af de pixelværdien. Et eksempel på det ses i <a href="#fig-pixeleret0" class="quarto-xref">figur&nbsp;7</a>:</p>
+<p>Det første, vi vil gøre, er at lave billederne i en lavere opløsning svarende til, at billederne bliver mere pixeleret. Vi vil for eksempel lave et <span class="math inline">\(7 \times 7\)</span> pixel billede ved at inddele det oprindelige <span class="math inline">\(28 \times 28\)</span> pixel billede i <span class="math inline">\(2 \times 2\)</span> pixels, hvor vi så tager gennemsnittet af de fire pixelværdier. Et eksempel på det ses i <a href="#fig-pixeleret0" class="quarto-xref">figur&nbsp;7</a>:</p>
 <div id="fig-pixeleret0" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-pixeleret0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -369,7 +370,7 @@ Figur&nbsp;8: Et billede af 1 med en oprindelige opløsning på <span class="mat
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Det kunne godt se ud som om, at der bruges flere farvede pixels på at skrive et 0, end der bliver brugt på at skrive et 1-tal. Vi vil derfor helt enkelt udregne den gennemsnitlige pixelværdi af hele billedet.</p>
+<p>Det kunne godt se ud som om, at der bruges flere farvede pixels på at skrive et 0, end der bliver brugt på at skrive et 1-tal. Vi vil derfor helt enkelt udregne den gennemsnitlige pixelværdi af hele billedet:</p>
 <ul>
 <li>Udregne den gennemsnitlige pixelværdi for nedenstående to billeder:</li>
 </ul>
@@ -378,9 +379,9 @@ Figur&nbsp;8: Et billede af 1 med en oprindelige opløsning på <span class="mat
 <p><img src="mnist_filer/pixel_gns.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
 </figure>
 </div>
-<p>Et andet bud på en feature er helt enkelt, hvor mange pixels, der er helt hvide (det vil her sige med en pixelværdi på 0). Vi vil nemlig forvente, at et 1-tal fylder mindre end et 0, så antallet af helt hvide pixels må forventes at være større på billederne af 1-taller.</p>
+<p>Et andet bud på en simpel feature er at tælle hvor mange pixels, der er helt hvide (det vil her sige med en pixelværdi på 0, fordi vi har vendt farveskalaen om). Vi vil nemlig forvente, at et 1-tal fylder mindre end et 0, så antallet af helt hvide pixels må forventes at være større på billederne af 1-taller.</p>
 <ul>
-<li><p>Tæl antallet at hele hvide pixels på ovenstående to billeder.</p></li>
+<li><p>Tæl antallet at helt hvide pixels på ovenstående to billeder.</p></li>
 <li><p>Vi har nu beregnet to forskellige features for de to billeder. Er værdierne som forventet?</p></li>
 <li><p>Det er klart, at den gennemsnitlige pixelværdi og antallet af helt hvide pixels hænger sammen. Forklar med ord hvilken sammenhæng, man vil forvente.</p></li>
 </ul>
@@ -400,13 +401,16 @@ Figur&nbsp;8: Et billede af 1 med en oprindelige opløsning på <span class="mat
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p><a href="https://apps01.math.aau.dk/ai/cifre/" target="_blank">Åbn denne app</a>. Øverst kan du vælge hvilket ciffer fra MNIST datasættet, du vil se. Dernæst kan du vælge pixelopløsning (<span class="math inline">\(7 \times 7\)</span>, <span class="math inline">\(14 \times 14\)</span> eller det oprindelige <span class="math inline">\(28 \times 28\)</span>). Herefter kan du vælge, om du vil have vist pixelværdierne på det pixelerede billede eller ej. Endelig kan du trykke på "Forrige billede" eller "Næste billede" for at bladre i de forskellige billeder fra MNIST datasættet.</p>
+<ul>
+<li><a href="https://apps01.math.aau.dk/ai/cifre/" target="_blank">Åbn denne app</a>.</li>
+</ul>
+<p>Øverst kan du vælge hvilket ciffer fra MNIST datasættet, du vil se. Dernæst kan du vælge pixelopløsning (<span class="math inline">\(7 \times 7\)</span>, <span class="math inline">\(14 \times 14\)</span> eller det oprindelige <span class="math inline">\(28 \times 28\)</span>). Herefter kan du vælge, om du vil have vist pixelværdierne på det pixelerede billede eller ej. Endelig kan du trykke på "Forrige billede" eller "Næste billede" for at bladre i de forskellige billeder fra MNIST datasættet.</p>
 <ul>
 <li>Start med at bladre lidt rundt blandt de forskellige cifre, så du får et indtryk af datasættet.</li>
 </ul>
 <p>I tabellen under det oprindelige billede, kan du se de to features "pixel_gns" og "antal_tomme", som er de to features, du udregnede i opgave 1.</p>
 <ul>
-<li>Det første 0 (med et id på 0) og det første 1-tal (med id på 100) svarer til de to billeder, som du regnede på i opgave 1. Kontrollér, om du har regnet rigtigt!</li>
+<li>Det første 0 (med et id på 0) og det første 1-tal (med id på 100) svarer til de to billeder, som du regnede på i opgave 1. Kontrollér, om du har regnet rigtigt (Obs! Den gennemsnitlige pixelværdi, som bliver vist i app’en, er baseret på det oprindelige <span class="math inline">\(28 \times 28\)</span> billede, så der kan være mindre afrundingsfejl i dit resultat)!</li>
 </ul>
 </div>
 </div>
@@ -455,9 +459,14 @@ Figur&nbsp;8: Et billede af 1 med en oprindelige opløsning på <span class="mat
 <div id="callout-5" class="callout-5-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Vi vil starte med at undersøge de to features hver for sig.</p>
+<p><span class="fremhaev">Gennemsnitlig pixelværdi</span></p>
 <ul>
+<li><p>Bestem det udvidede kvartilsæt for "pixel_gns" for både 0 og 1.</p></li>
 <li><p>Tegn i samme figur et boksplot af "pixel_gns" for både 0 og 1.</p></li>
 <li><p>Forklar niveau- og spredningsforskelle i de to boksplots.</p></li>
+</ul>
+<p><span class="fremhaev">Antal hvide pixels</span></p>
+<ul>
 <li><p>Gentag ovenstående, men for "antal_tomme".</p></li>
 <li><p>Vil man kunne bruge enten "pixel_gns" eller "antal_tomme" alene til at kende forskel på 0 og 1?</p></li>
 </ul>
@@ -622,36 +631,37 @@ Figur&nbsp;10: Et billede af et håndskrevet 0 og 3-tal med en opløsning på <s
 </figcaption>
 </figure>
 </div>
-<p>På <a href="#fig-pixel03_7x7_vandret" class="quarto-xref">figur&nbsp;13</a> har vi lagt et vandret vindue ind over en række af pixels på de to billeder. Vi vil her tælle, hvor mange gange pixelværdierne "topper". En sådan "top" kalder vi for et lokalt maksimum. På billedet af 0, kan vi se, at der er to lokale maksima, mens der på billedet af 3-tallet kun er ét lokalt maksimum. Hvis vi ser på de vandrette pixelværdier på et billede af et 0, vil vi i "toppen" og "bunden" af 0’et forvente ét lokalt maksimum, men vi i mange af de vandrette vinduer i midten af 0’et vil tænke, at der ofte vil være to lokale maksima. Dette er illustreret på <a href="#fig-lok-max0_vandret" class="quarto-xref">figur&nbsp;11</a>.</p>
-<div id="fig-lok-max0_vandret" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-lok-max0_vandret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="mnist_filer/lok-max0_vandret.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
-</div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-lok-max0_vandret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;11: Antallet af vandrette lokale maksima på et billede af et håndskrevet 0.
-</figcaption>
-</figure>
-</div>
-<p>Ser vi derimod på vandrette pixelværdier på et billede af et 3-tal, vil der både være ét og to lokale maksima, som illustreret på <a href="#fig-lok-max3_vandret" class="quarto-xref">figur&nbsp;12</a>.</p>
-<div id="fig-lok-max3_vandret" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-lok-max3_vandret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="mnist_filer/lok-max3_vandret.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
-</div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-lok-max3_vandret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;12: Antallet af vandrette lokale maksima på et billede af et håndskrevet 3-tal.
-</figcaption>
-</figure>
-</div>
-<p>Idéen med at tælle antallet af vandrette lokale maksimaer baseret på pixelværdi er illustreret i <a href="#fig-pixel03_7x7_vandret" class="quarto-xref">figur&nbsp;13</a>. For de to vandrette vinduer, som er lagt ind på billedet, kan vi se, at 0’et har to vandrette maksima, mens 3-tallet har ét.</p>
+<p>På <a href="#fig-pixel03_7x7_vandret" class="quarto-xref">figur&nbsp;11</a> har vi lagt et vandret vindue ind over en enkelt række af pixels på de to billeder.</p>
 <div id="fig-pixel03_7x7_vandret" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-pixel03_7x7_vandret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="mnist_filer/pixel03_7x7_vandret.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-pixel03_7x7_vandret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;13: Et billede af et håndskrevet 0 og 3-tal med et vandret vindue indlagt.
+Figur&nbsp;11: Et billede af et håndskrevet 0 og 3-tal med et vandret vindue indlagt.
+</figcaption>
+</figure>
+</div>
+<p>Vi vil her tælle, hvor mange gange pixelværdierne "topper". En sådan "top" kalder vi for et lokalt maksimum. På billedet af 0, kan vi se, at der er to lokale maksima, mens der på billedet af 3-tallet kun er ét lokalt maksimum.</p>
+<p>Men antallet af "toppe" ændrer sig alt efter, hvor vi placerer det vandrette vindue. På et billede af et 0 er dette illustreret på <a href="#fig-lok-max0_vandret" class="quarto-xref">figur&nbsp;12</a>. Hvis vi ser på de vandrette pixelværdier, vil vi i "toppen" og "bunden" af 0’et forvente ét lokalt maksimum, mens vi for mange af de vandrette vinduer i midten af 0’et vil tænke, at der ofte vil være to lokale maksima.</p>
+<div id="fig-lok-max0_vandret" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-lok-max0_vandret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="mnist_filer/lok-max0_vandret.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-lok-max0_vandret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;12: Antallet af vandrette lokale maksima på et billede af et håndskrevet 0.
+</figcaption>
+</figure>
+</div>
+<p>Ser vi derimod på vandrette pixelværdier på et billede af et 3-tal, vil der både være ét og to lokale maksima, som illustreret på <a href="#fig-lok-max3_vandret" class="quarto-xref">figur&nbsp;13</a>.</p>
+<div id="fig-lok-max3_vandret" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-lok-max3_vandret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="mnist_filer/lok-max3_vandret.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-lok-max3_vandret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;13: Antallet af vandrette lokale maksima på et billede af et håndskrevet 3-tal.
 </figcaption>
 </figure>
 </div>
@@ -662,32 +672,32 @@ Figur&nbsp;13: Et billede af et håndskrevet 0 og 3-tal med et vandret vindue in
 <div id="fig-lok-max0_lodret" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-lok-max0_lodret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="mnist_filer/lok-max0_lodret.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+<img src="mnist_filer/lok-max0_lodret.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-lok-max0_lodret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figur&nbsp;14: Antallet af lodrette lokale maksima på et billede af et håndskrevet 0.
 </figcaption>
 </figure>
 </div>
-<p>På et 3-tal kan være derimod være mellem en og tre lokal maksima (se <a href="#fig-lok-max3_lodret" class="quarto-xref">figur&nbsp;15</a>).</p>
+<p>På et 3-tal kan der derimod være mellem ét og tre lokale maksima (se <a href="#fig-lok-max3_lodret" class="quarto-xref">figur&nbsp;15</a>).</p>
 <div id="fig-lok-max3_lodret" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-lok-max3_lodret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="mnist_filer/lok-max3_lodret.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+<img src="mnist_filer/lok-max3_lodret.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-lok-max3_lodret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figur&nbsp;15: Antallet af lodrette lokale maksima på et billede af et håndskrevet 3.
 </figcaption>
 </figure>
 </div>
-<p>Princippet baseret på pixelværdier er illustreret i <a href="#fig-pixel03_7x7_lodret" class="quarto-xref">figur&nbsp;16</a>.</p>
+<p>Et konkret eksempel er vist i <a href="#fig-pixel03_7x7_lodret" class="quarto-xref">figur&nbsp;16</a>. På billedet af 0’et til venstre er der som forventet to lokale maksima, mens der på billedet af 3-tallet til højre som forventet er tre lokale maksima.</p>
 <div id="fig-pixel03_7x7_lodret" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-pixel03_7x7_lodret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="mnist_filer/pixel03_7x7_lodret.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-pixel03_7x7_lodret-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;16: Et billede af et håndskrevet 0 og 2-tal med et lodret vindue indlagt.
+Figur&nbsp;16: Et billede af et håndskrevet 0 og 3-tal med et lodret vindue indlagt.
 </figcaption>
 </figure>
 </div>
@@ -708,14 +718,25 @@ Figur&nbsp;16: Et billede af et håndskrevet 0 og 2-tal med et lodret vindue ind
 <p><img src="mnist_filer/pixel03_7x7.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
 </figure>
 </div>
+<p><span class="fremhaev">Vandrette maksima</span></p>
 <p>Med udgangspunkt i ovenstående billede af et 0 og et 3-tal skal du:</p>
 <ul>
-<li><p>Bestem antallet af lokale maksima i alle vandrette rækker.</p></li>
+<li>Bestem antallet af lokale maksima i alle vandrette rækker.</li>
+</ul>
+<p>Vi ser nu bort fra de rækker, hvor der ikke var nogle maksima:</p>
+<ul>
 <li><p>Udregn det gennemsnitlige antal vandrette lokale maksima.</p></li>
 <li><p>Bestem det største antal lokale maksima i alle vandrette rækker.</p></li>
-<li><p>Bestem antallet af lokale maksima i alle lodrette rækker.</p></li>
+</ul>
+<p><span class="fremhaev">Lodrette maksima</span></p>
+<p>Med udgangspunkt i ovenstående billede af et 0 og et 3-tal skal du:</p>
+<ul>
+<li>Bestem antallet af lokale maksima i alle lodrette søjler.</li>
+</ul>
+<p>Vi ser nu bort fra de søjler, hvor der ikke var nogle maksima:</p>
+<ul>
 <li><p>Udregn det gennemsnitlige antal lodrette lokale maksima.</p></li>
-<li><p>Bestem det største antal lokale maksima i alle lodrette rækker.</p></li>
+<li><p>Bestem det største antal lokale maksima i alle lodrette søjler.</p></li>
 </ul>
 </div>
 </div>
@@ -739,8 +760,14 @@ Figur&nbsp;16: Et billede af et håndskrevet 0 og 2-tal med et lodret vindue ind
 </ul>
 <p>Vælg nu en opløsning på <span class="math inline">\(28 \times 28\)</span> pixels og sæt under "Features" flueben ved "Vis lodrette lokale maksima" og "Vis vandrette lokale maksima.”</p>
 <ul>
-<li><p>Se på de første ti billeder af håndskrevne 0’er. Er antallet af vandrette og lodrette lokale maksima som forventet? Hvis ikke – kan du forklare hvorfor?</p></li>
-<li><p>Gentag ovenstående men se nu på de første ti billeder af håndskrevne 3-taller.</p></li>
+<li>Se på de første ti billeder af håndskrevne 0’er. Hvad er værdien cirka af:
+<ul>
+<li>Det gennemsnitlige antal vandrette maksima ("vandret_gns")? Kan du forklare det?</li>
+<li>Det største antal vandrette maksima ("vandret_max")? Kan du forklare det?</li>
+<li>Det gennemsnitlige antal lodrette maksima ("lodret_gns")? Kan du forklare det?</li>
+<li>Det største antal lodrette maksima ("lodret_max")? Kan du forklare det?</li>
+</ul></li>
+<li>Gentag ovenstående men se nu på de første ti billeder af håndskrevne 3-taller.</li>
 </ul>
 </div>
 </div>
@@ -871,7 +898,7 @@ Sådan gør du i GeoGebra
 <section id="tre-features" class="level2">
 <h2 class="anchored" data-anchor-id="tre-features">Tre features</h2>
 <p>Du har formentlig opdaget, at de to nye features ikke er helt tossede i forhold til at kende forskel på 0’ere og 3-taller, men at der også er nogle cifre, som vi ikke kan kende forskel på baseret på disse to features. Vi vil derfor prøve at tilføje en tredje feature og se, om vi kan få en højere klassifikationsnøjagtighed.</p>
-<p>Ser vi på <a href="#fig-lok-max0_vandret" class="quarto-xref">figur&nbsp;11</a> og <strong>?@fig-lok-max1_vandret</strong> kan vi se, at både 0’er og 3-taller typisk har mellem en og to vandrette lokale maksima. Derimod illustrerer <a href="#fig-lok-max0_lodret" class="quarto-xref">figur&nbsp;14</a> og <strong>?@fig-lok-max1_lodret</strong>, at 0’er også typisk har mellem en og to lodrette lokale maksima, mens 3-taller typisk kan have op til tre lodrette lokale maksima. Vi vil derfor som en tredje feature bruge det <strong>maksimale</strong> antal lodrette lokale maksima. Her vil 0’ere typisk være karakteriseret ved at det maksimale antal lodrette lokale maksima vil være to, mens det tilsvarende tal for 3-taller vil være tre.</p>
+<p>Ser vi på <a href="#fig-lok-max0_vandret" class="quarto-xref">figur&nbsp;12</a> og <strong>?@fig-lok-max1_vandret</strong> kan vi se, at både 0’er og 3-taller typisk har mellem en og to vandrette lokale maksima. Derimod illustrerer <a href="#fig-lok-max0_lodret" class="quarto-xref">figur&nbsp;14</a> og <strong>?@fig-lok-max1_lodret</strong>, at 0’er også typisk har mellem en og to lodrette lokale maksima, mens 3-taller typisk kan have op til tre lodrette lokale maksima. Vi vil derfor som en tredje feature bruge det <strong>maksimale</strong> antal lodrette lokale maksima. Her vil 0’ere typisk være karakteriseret ved at det maksimale antal lodrette lokale maksima vil være to, mens det tilsvarende tal for 3-taller vil være tre.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -907,6 +934,10 @@ Sådan gør du i GeoGebra
 </div>
 </div>
 </div>
+</section>
+<section id="delvis-facitliste" class="level2">
+<h2 class="anchored" data-anchor-id="delvis-facitliste">Delvis facitliste</h2>
+<p><a href="../undervisningsforlob/mnist_filer/mnist_facit.html" target="_blank">Facitliste</a>.</p>
 
 
 </section>
