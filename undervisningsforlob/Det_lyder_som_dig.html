@@ -176,11 +176,12 @@ window.Quarto = {
    
   <ul>
   <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
-  <li><a href="#den-grimme-ælling---oplæst-af-4-forskellige-personer" id="toc-den-grimme-ælling---oplæst-af-4-forskellige-personer" class="nav-link" data-scroll-target="#den-grimme-ælling---oplæst-af-4-forskellige-personer">Den grimme ælling - oplæst af 4 forskellige personer</a>
+  <li><a href="#hvad-er-ai" id="toc-hvad-er-ai" class="nav-link" data-scroll-target="#hvad-er-ai">Hvad er AI?</a></li>
+  <li><a href="#den-grimme-ælling---oplæst-af-fire-forskellige-personer" id="toc-den-grimme-ælling---oplæst-af-fire-forskellige-personer" class="nav-link" data-scroll-target="#den-grimme-ælling---oplæst-af-fire-forskellige-personer">Den grimme ælling - oplæst af fire forskellige personer</a>
   <ul class="collapse">
   <li><a href="#kunstige-neurale-netværk" id="toc-kunstige-neurale-netværk" class="nav-link" data-scroll-target="#kunstige-neurale-netværk">Kunstige neurale netværk</a></li>
   <li><a href="#sammenligning-med-lineær-regression" id="toc-sammenligning-med-lineær-regression" class="nav-link" data-scroll-target="#sammenligning-med-lineær-regression">Sammenligning med lineær regression</a></li>
-  <li><a href="#det-kunstige-neurale-netværk-i-orange" id="toc-det-kunstige-neurale-netværk-i-orange" class="nav-link" data-scroll-target="#det-kunstige-neurale-netværk-i-orange">Det kunstige neurale netværk i "Orange"</a></li>
+  <li><a href="#det-kunstige-neurale-netværk-i-orange" id="toc-det-kunstige-neurale-netværk-i-orange" class="nav-link" data-scroll-target="#det-kunstige-neurale-netværk-i-orange">Det kunstige neurale netværk i Orange</a></li>
   </ul></li>
   <li><a href="#jeres-egne-data" id="toc-jeres-egne-data" class="nav-link" data-scroll-target="#jeres-egne-data">Jeres egne data</a></li>
   </ul>
@@ -238,30 +239,35 @@ window.Quarto = {
 <section id="formål" class="level3 purpose">
 <h3 class="anchored" data-anchor-id="formål">Formål</h3>
 <p>Vi vil sammen undersøge, hvor godt og hvordan AI kan genkende personer ud fra ganske få sekunders lydklip. Konkret med brug af lydklip med dig og dine klassekammerater.</p>
-<p>Undervejs vil du blive introduceret til mange af de centrale begreber om træning af de såkaldte neurale netværk, som AI gør brug af. Dette sker blandt andet med programmet "Orange".</p>
+<p>Undervejs vil du blive introduceret til mange af de centrale begreber om træning af de såkaldte neurale netværk, som AI gør brug af. Dette sker blandt andet med programmet Orange.</p>
 </section>
-<section id="den-grimme-ælling---oplæst-af-4-forskellige-personer" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="den-grimme-ælling---oplæst-af-4-forskellige-personer">Den grimme ælling - oplæst af 4 forskellige personer</h2>
-<p>Inden vi kommer til jeres egne data, vil jeg gerne vise jer hele processen med brug af vores data. Til det formål har tre af mine kolleger og jeg alle læst den samme tekst op. Du kan høre lydfilerne fra vores oplæsning her: <a href="Det_lyder_som_dig_filer/Malene.m4a">Malene</a>, <a href="Det_lyder_som_dig_filer/Lisbeth.m4a">Lisbeth</a>, <a href="Det_lyder_som_dig_filer/Ege.m4a">Ege</a> og <a href="Det_lyder_som_dig_filer/Jan.m4a">Jan</a>.</p>
+<section id="hvad-er-ai" class="level2">
+<h2 class="anchored" data-anchor-id="hvad-er-ai">Hvad er AI?</h2>
+<p>Start med at se de første 10:40 minutter af denne video.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/ivrBEopralQ" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+</section>
+<section id="den-grimme-ælling---oplæst-af-fire-forskellige-personer" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="den-grimme-ælling---oplæst-af-fire-forskellige-personer">Den grimme ælling - oplæst af fire forskellige personer</h2>
+<p>Inden vi kommer til jeres egne data, starter vi lige med at se på hele processen med brug af vores data. Til det formål har vi fire oplæsninger af den samme tekst. I kan høre lydfilerne fra oplæsningerne her: <a href="Det_lyder_som_dig_filer/Malene.m4a">Malene</a>, <a href="Det_lyder_som_dig_filer/Lisbeth.m4a">Lisbeth</a>, <a href="Det_lyder_som_dig_filer/Ege.m4a">Ege</a> og <a href="Det_lyder_som_dig_filer/Jan.m4a">Jan</a>.</p>
 <p>Alle lydfilerne er 2-2,5 minutter lange, men da vi gerne vil arbejde med meget korte lydfiler, opdeles hver lydfil i sekvenser af 3 sekunder. Du kan høre disse små sekvenser her: <a href="Det_lyder_som_dig_filer/sekvenser.zip">korte sekvenser</a>.</p>
 <section id="kunstige-neurale-netværk" class="level3">
 <h3 class="anchored" data-anchor-id="kunstige-neurale-netværk">Kunstige neurale netværk</h3>
-<p><strong>Kunstige neurale netværk</strong> arbejder ikke direkte på lyd, som mennesker gør – men på såkaldte <strong>features</strong>. I denne sammenhæng skal vi bruge oplæserens navn, et ID og en række tal, som beskriver frekvenser med mere i lydfilen på en smart måde. Da det er fysik og ganske svært, vil vi ikke her for alvor gå i dybden med, hvordan det gøres, men måske du har haft eller får du noget i fysik om analyse af lyd og svingninger. Du får dog lige en kort introduktion til, hvad det er.</p>
-<p>Det, vi skal bruge, hedder <strong>Mel-Frequency Cepstral Coefficients (MFCC)</strong>, som er en metode, der bruges til at analysere og repræsentere lydsignaler, især tale og musik, ved at fange de vigtigste egenskaber ved lydsignalet, som det opfattes af det menneskelige øre. Mennesker opfatter lyd ikke-lineært med frekvens –- vi er mere følsomme over for forskelle i lave frekvenser (for eksempel mellem 200 og 400 Hz) end i høje (for eksempel mellem 5000 og 5200 Hz). MFCC tager højde for dette ved at bruge en Mel-skala, som efterligner, hvordan øret opfatter frekvenser. Detaljerne er på SRP niveau, men hvis du har lyst til at vide mere, så kan du læse her: <a href="https://www.geeksforgeeks.org/nlp/mel-frequency-cepstral-coefficients-mfcc-for-speech-recognition/?utm_source=chatgpt.com">MFCC</a>.</p>
-<p>Jeg har i forvejen lavet disse MFCC data for hver af de små lydsekvenser. Jeg har desuden delt op i <strong>træningsdata</strong>, som vi vil bruge til at træne et kunstigt neuralt netværk, og <strong>testdata</strong>, som efterfølgende skal teste, hvor god modellen i det kunstige neurale netværk er blevet. Du kan se disse data her: <a href="Det_lyder_som_dig_filer/MFCC_data.zip">MFCC data</a>.</p>
-<p>Til træningsdata har jeg brugt <span class="math inline">\(75\%\)</span> af lydsekvenserne for hver af de 4 oplæsere, mens de resterende <span class="math inline">\(25\%\)</span> er anvendt til testdata.</p>
+<p><strong>Kunstige neurale netværk</strong> arbejder ikke direkte på lyd, som mennesker gør – men på såkaldte <strong>features</strong>. I denne sammenhæng skal vi bruge oplæserens navn, et ID og en række tal, som beskriver frekvenser med mere i lydfilen på en smart måde. Da det er fysik og ganske svært, vil vi ikke her for alvor gå i dybden med, hvordan det gøres, men måske du har haft eller får noget i fysik om analyse af lyd og svingninger. Du får dog lige en kort introduktion til, hvad det er.</p>
+<p>Det, vi skal bruge, hedder <strong>Mel-Frequency Cepstral Coefficients (MFCC)</strong>, som er en metode, der bruges til at analysere og repræsentere lydsignaler, især tale og musik, ved at fange de vigtigste egenskaber ved lydsignalet, som det opfattes af det menneskelige øre. Mennesker opfatter lyd ikke-lineært med frekvens – vi er mere følsomme over for forskelle i lave frekvenser (for eksempel mellem 200 og 400 Hz) end i høje (for eksempel mellem 5000 og 5200 Hz). MFCC tager højde for dette ved at bruge en Mel-skala, som efterligner, hvordan øret opfatter frekvenser. Detaljerne er på SRP niveau, men hvis du har lyst til at vide mere, så kan du læse her: <a href="https://www.geeksforgeeks.org/nlp/mel-frequency-cepstral-coefficients-mfcc-for-speech-recognition/?utm_source=chatgpt.com">MFCC</a>.</p>
+<p>Vi har i forvejen lavet disse MFCC data for hver af de små lydsekvenser. Vi har desuden opdelt data i <strong>træningsdata</strong>, som vi vil bruge til at træne et kunstigt neuralt netværk, og <strong>testdata</strong>, som efterfølgende skal teste, hvor god modellen i det kunstige neurale netværk er blevet. Du kan se disse data her: <a href="Det_lyder_som_dig_filer/MFCC_data.zip">MFCC data</a>.</p>
+<p>Til træningsdata har vi brugt <span class="math inline">\(75\%\)</span> af lydsekvenserne for hver af de fire oplæsere, mens de resterende <span class="math inline">\(25\%\)</span> er anvendt til testdata.</p>
 </section>
 <section id="sammenligning-med-lineær-regression" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="sammenligning-med-lineær-regression">Sammenligning med lineær regression</h3>
 <p>Det at træne et neuralt netværk minder om at lave lineær regression, som du kender.</p>
 <p>I lineær regression har man en række punkter – det er træningsdata.</p>
-<p>Hvert punkt består af et <span class="math inline">\(x\)</span>-koordinat og et <span class="math inline">\(y\)</span>-koordinat. Her er <span class="math inline">\(x\)</span>-koordinaten en <strong>feature</strong>, og der er kun den ene feature, mens <span class="math inline">\(y\)</span>-koordinaten er <strong>target</strong>.</p>
-<p>I lineær sammenhæng er modellen<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> <span class="math inline">\(y=a\cdot x+b\)</span>, og det gælder om at bestemme <span class="math inline">\(a\)</span> og <span class="math inline">\(b\)</span>, så modellen for featureværdierne (<span class="math inline">\(x\)</span>-koordinaterne) samlet set bedst muligt rammer targetværdierne (<span class="math inline">\(y\)</span>-koordinaterne). I forhold til et neuralt netværk vil <span class="math inline">\(a\)</span> og <span class="math inline">\(b\)</span> kaldes for <strong>vægte</strong>.</p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Hvis det skal være helt korrekt er der også et normalfordelt støjled <span class="math inline">\(N(\mu, \sigma)\)</span>, men det undlader man som regel at tage med på gymnasieniveau.</p></div></div><p>I et kunstigt neuralt netværk er modellen betydeligt mere kompliceret, og der er mange flere vægte end de to i lineær regression (i store netværk kan der være milliarder af vægte), men idéen er den samme. Man skal også i kunstige neurale netværk bestemme vægtene i modellen, så den for featureværdierne samlet set bedst muligt rammer targetværdierne.</p>
-<p>I lineær regression skal modellen komme så tæt på targetværdien <span class="math inline">\(y\)</span> for hver featureværdi <span class="math inline">\(x\)</span>. I vores tilfælde er det anderledes, da vi ikke skal tæt på en talværdi, men i stedet skal vælge mellem de 4 personer – dette kaldes for <strong>klassifikation</strong>. I lineær regression handler det således om, at linjen (modellen) kommer tæt på punkterne, mens det i klassifikation handler om, at modellen skal forudsige den rigtige oplæser for så mange som muligt af de små lydklip. Man taler derfor om <strong>klassifikationsnøjagtigheden (CA)</strong>, som er andelen af korrekte forudsigelser. Så hvis <span class="math inline">\(CA=0.85\)</span>, har modellen korrekt forudsagt <span class="math inline">\(85\%\)</span> af targetværdierne og dermed <span class="math inline">\(15\%\)</span> forkert.</p>
+<p>Hvert punkt består af et <span class="math inline">\(x\)</span>-koordinat og et <span class="math inline">\(y\)</span>-koordinat. Her er <span class="math inline">\(x\)</span>-koordinaten en <strong>feature</strong>, og der er kun den ene feature, mens <span class="math inline">\(y\)</span>-koordinaten er <strong>target</strong> (den vi gerne vil "ramme").</p>
+<p>Når vi laver lineær regression, er modellen<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> <span class="math inline">\(y=a\cdot x+b\)</span>, og det gælder om at bestemme <span class="math inline">\(a\)</span> og <span class="math inline">\(b\)</span>, så modellen for featureværdierne (<span class="math inline">\(x\)</span>-koordinaterne) samlet set bedst muligt rammer targetværdierne (<span class="math inline">\(y\)</span>-koordinaterne). I forhold til et neuralt netværk vil <span class="math inline">\(a\)</span> og <span class="math inline">\(b\)</span> kaldes for <strong>vægte</strong>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Hvis det skal være helt korrekt er der også et normalfordelt støjled <span class="math inline">\(N(\mu, \sigma),\)</span> men det undlader man som regel at tage med på gymnasieniveau.</p></div></div><p>I et kunstigt neuralt netværk er modellen betydeligt mere kompliceret, og der er mange flere vægte end de to i lineær regression (i store netværk kan der være milliarder af vægte), men idéen er den samme. Man skal også i kunstige neurale netværk bestemme vægtene i modellen, så den for featureværdierne samlet set bedst muligt rammer targetværdierne.</p>
+<p>I lineær regression skal modellen komme så tæt på targetværdien <span class="math inline">\(y\)</span> for hver featureværdi <span class="math inline">\(x\)</span>. I vores tilfælde er det anderledes, da vi ikke skal tæt på en talværdi, men i stedet skal vælge mellem de fire personer – dette kaldes for <strong>klassifikation</strong>. I lineær regression handler det således om, at linjen (modellen) kommer tæt på punkterne, mens det i klassifikation handler om, at modellen skal forudsige den rigtige oplæser for så mange som muligt af de små lydklip. Man taler derfor om <strong>klassifikationsnøjagtigheden (CA)</strong>, som er andelen af korrekte forudsigelser. Så hvis <span class="math inline">\(CA=0.85\)</span>, har modellen korrekt forudsagt <span class="math inline">\(85\%\)</span> af targetværdierne. Dermed er der altså <span class="math inline">\(15\%\)</span> forkerte forudsigelser.</p>
 </section>
 <section id="det-kunstige-neurale-netværk-i-orange" class="level3 page-columns page-full">
-<h3 class="anchored" data-anchor-id="det-kunstige-neurale-netværk-i-orange">Det kunstige neurale netværk i "Orange"</h3>
+<h3 class="anchored" data-anchor-id="det-kunstige-neurale-netværk-i-orange">Det kunstige neurale netværk i Orange</h3>
 <p>Nok snak om teori – vi skal have det afprøvet i praksis.</p>
 <p>Vi vil anvende programmet <a href="https://orangedatamining.com/">Orange Data Mining</a> til at træne og teste et neuralt netværk på MFCC data for lydfilerne.</p>
 <p>Lav opgave 1 – hvis noget driller, kan du måske få hjælp ved at se denne video (video mangler).</p>
@@ -279,16 +285,16 @@ window.Quarto = {
 <div class="callout-body-container callout-body">
 <ul>
 <li><p>Installér Orange.</p></li>
-<li><p>Åbn denne fil <a href="Det_lyder_som_dig_filer/Det_lyder_som_dig_Orange.zip">Model i Orange</a>. Den indeholder stukturen til at lave modellen.</p></li>
+<li><p>Download filen <a href="Det_lyder_som_dig_filer/Det_lyder_som_dig_Orange.zip">Model i Orange</a> og åbn filen "Det_lyder_som_dig_Orange.ows". Den indeholder stukturen til at lave modellen.</p></li>
 <li><p>Hvis du ikke allerede har hentet <a href="Det_lyder_som_dig_filer/MFCC_data.zip">MFCC data</a> , så hent dem og pak zip-filen ud, så du har adgang til filerne med træningsdata og testdata.</p></li>
-<li><p>Klik på <strong>Træningsdata</strong> i Orange og importer filen med træningsdata.</p></li>
-<li><p>Sæt ID til meta (modellen skal ignorere denne værdi), sæt category ("Malene", "Lisbeth", "Ege" eller "Jan") til target, og sæt de 13 MFCC data til feature (det står de nok allerede som).</p></li>
-<li><p>Gør det samme for <strong>Testdata</strong> i Orange.</p></li>
+<li><p>Klik på "Træningsdata" i modellen i Orange og importer filen med træningsdata.</p></li>
+<li><p>Sæt "id" til "meta" (modellen skal ignorere denne værdi), sæt "category" ("Malene", "Lisbeth", "Ege" eller "Jan") til "target", og sæt de 13 MFCC data til "feature" (det står de nok allerede som).</p></li>
+<li><p>Gør det samme for "Testdata" i modellen i Orange.</p></li>
 </ul>
 </div>
 </div>
 </div>
-<p>Dermed er data klar i "Orange", og modellen i det kunstige neurale netværk er faktisk også trænet. Men hvor god er modellen blevet?</p>
+<p>Dermed er data klar i Orange, og modellen i det kunstige neurale netværk er faktisk også trænet. Men hvor god er modellen blevet?</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -302,19 +308,19 @@ window.Quarto = {
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li><p>Klik på <strong>"Test and Score"</strong> i Orange. Hvad er klassifikationsgraden (CA)?</p></li>
-<li><p>Under "Test and score" kan man ude til venstre vælge forskellige måder at teste på. Sørg for, at den indtil videre står på "Test on train data".</p></li>
-<li><p>Klik på <strong>"Confusion matrix"</strong> for at se, hvilke input, der er klassificeret korrekt, og hvilke der er klassificeret forkert.</p></li>
-<li><p>Sørg så for, at både "Predictions" og "Probabilities" er valgt ude til venstre og klik så på "Select Misclassified" i bunden.</p></li>
-<li><p>Klik derefter på <strong>"Predictions - misclassified"</strong> ude til højre i "Orange". Her kan du for hver af de misklassificerede lydfiler se filens ID, hvem der har lavet lydfilen, hvem modellen fejagtigt mener, det skal være, og procenter for, hvor meget modellen tror, at filen er fra hver af de 4 muligheder. Der er lige nu kun ét misklassificeret klip.</p></li>
+<li><p>Klik på "Test and Score" i Orange. Hvad er <strong>klassifikationsgraden (CA)</strong>?</p></li>
+<li><p>Under "Test and Score" kan man ude til venstre vælge forskellige måder at teste på. Sørg for, at den indtil videre står på "Test on train data".</p></li>
+<li><p>Klik på "Confusion matrix" for at se, hvilke input, der er klassificeret korrekt, og hvilke der er klassificeret forkert.</p></li>
+<li><p>Sørg så for, at både "Predictions" og "Probabilities" er valgt ude til venstre og klik så på "Select Misclassified" i bunden. Luk vinduet ned.</p></li>
+<li><p>Klik derefter på "Predictions - misclassified" ude til højre i Orange. Her kan du for hver af de misklassificerede lydfiler se filens ID, hvem der har lavet lydfilen (under "category"), hvem modellen fejlagtigt mener, det er (under "category(Neural Network)"), og procenter for, hvor meget modellen tror, at filen er fra hver af de 4 muligheder. Der er lige nu kun ét misklassificeret klip. Notér "category" og "id" for dette lydklip.</p></li>
 <li><p>Hvis du ikke allerede har hente de små 3 sekunders lydklip, så gør det nu: <a href="Det_lyder_som_dig_filer/sekvenser.zip">Korte sekvenser</a>.</p></li>
 <li><p>Find det misklassificerede klip og lyt til det.</p></li>
 </ul>
 </div>
 </div>
 </div>
-<p>Når vi før valgte at teste på træningsdata, er det på en måde lidt snyd. Det betyder, at vi først lader modellen træne på træningsdata, og derved tilpasse de mange vægte i modellen <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> så den passer bedst muligt til disse data – og så derefter at se, hvor godt modellen passer til præcis samme data.</p>
-<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Der er 124 vægte i dette neurale netværk, så det er betydeligt flere end i den lineære model, men stadig ikke mange, når man taler om neurale netværk.</p></div></div><p>Vi bør i stedet træne modellen på træningsdata, for derefter at teste på nogle helt separate data, som derfor kaldes for testdata. Derved "snyder" vi ikke længere, da modellen faktisk skal forudsige targetværdier ud fra featureværdier, den ikke brugte til at træne på.</p>
+<p>Når vi før valgte at teste på træningsdata, er det på en måde lidt snyd. Det betyder, at vi først lader modellen træne på træningsdata, og derved tilpasse de mange vægte i modellen<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> så den passer bedst muligt til disse data – og så derefter at se, hvor godt modellen passer til præcis samme data.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Der er 124 vægte i dette neurale netværk, så det er betydeligt flere end i den lineære model, men stadig ikke mange, når man taler om neurale netværk.</p></div></div><p>Vi bør i stedet træne modellen på <strong>træningsdata</strong>, for derefter at teste på nogle helt separate data, som derfor kaldes for <strong>testdata</strong>. Derved "snyder" vi ikke længere, da modellen faktisk skal forudsige targetværdier ud fra featureværdier, den ikke brugte til at træne på.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -327,10 +333,11 @@ window.Quarto = {
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
+<p>Gå tilbage til modellen i Orange.</p>
 <ul>
-<li><p>Vælg i stedet under <strong>"Test and Score"</strong> at teste på testdata. Hvad bliver klassifikationsgraden (CA) nu? Det vil som regel blive ringere end ved test på træningsdata.</p></li>
+<li><p>Vælg i stedet under "Test and Score" at teste på testdata (til venstre skal du vælge "Test on test data"). Hvad bliver klassifikationsgraden (CA) nu? Den vil som regel blive ringere end ved test på træningsdata.</p></li>
 <li><p>Se igen på "Confusion Matrix" og på "Predictions – misclassified", hvor der nu er flere fejl.</p></li>
-<li><p>Hør lydklip for de misklassificerede.</p></li>
+<li><p>Hør lydklippene for de misklassificerede.</p></li>
 </ul>
 </div>
 </div>
@@ -339,7 +346,7 @@ window.Quarto = {
 </section>
 <section id="jeres-egne-data" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="jeres-egne-data">Jeres egne data</h2>
-<p>Det bliver naturligvis først rigtigt interessant – og sværere for modellen – hvis der er flere end 4 oplæsere.</p>
+<p>Det bliver naturligvis først rigtigt interessant – og sværere for modellen – hvis der er flere end fire oplæsere.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -352,17 +359,18 @@ window.Quarto = {
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
+<p>Denne opgave kan eventuelt være lavet hjemme i forvejen som en lektie, da det kan være upraktisk, hvis en hel klasse skal læse op samtidig!</p>
 <ul>
-<li><p>Jeres lærer vælger en tekst, som I alle skal læse op. Mindst 2 minutter, og gerne længere<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p></li>
-<li><p>Optag en lydfil på din telefon eller computer (vigtigt, <em>ikke</em> en video, kun lyd!)<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p></li>
+<li><p>Jeres lærer vælger en tekst, som I alle skal læse op. Mindst 2 minutter, og gerne længere (I kan for eksempel vælge at læse forordet i jeres matematikbog, hvis det er passende i længde og indhold. Så slår I to fluer med ét smæk!).</p></li>
+<li><p>Optag en lydfil på din telefon eller computer (vigtigt, <em>ikke</em> en video, kun lyd!).</p></li>
 <li><p>Giv filen med din egen oplæsning dit navn.</p></li>
 <li><p>Saml alle lydfilerne på samme computer.</p></li>
-<li><p>Filerne skal være i "wav", "flac" eller "m4a" format. <a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p></li>
+<li><p>Filerne skal være i "wav", "flac" eller "m4a" format. <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p></li>
 </ul>
 </div>
 </div>
 </div>
-<div class="no-row-height column-margin column-container"><div id="fn5"><p><sup>5</sup>&nbsp;Filerne vil typisk være på 2-4 MB hver, men kan godt med nogle optagere være lavet i højere kvalitet, så filen er ca. 10 MB. Hvis filen er tæt på 100 MB, har man nok i stedet fået lavet en video, hvilket ikke var meningen. Små filer gør det næste skridt hurtigere.</p></div></div><div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Opgaven kan eventuelt være lavet hjemme i forvejen som en lektie, da det kan være upraktisk, hvis en hel klasse skal læse op samtidig!</p></div></div><div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;I kan for eksempel vælge at læse forordet i jeres matematikbog, hvis det er passende i længde og indhold. Så slår I to fluer med ét smæk!</p></div><div id="fn6"><p><sup>6</sup>&nbsp;Python er et meget anvendt programmeringssprog.</p></div><div id="fn7"><p><sup>7</sup>&nbsp;Colabs er en gratis side online, som kan bruges til Python scripts, så man ikke selv skal igennem en lidt besværlig installation af Python.</p></div></div><p>Som det næste skal I have opdelt lydfilerne i små sekvenser på 3 sekunder, og derefter lavet MFCC data til hver sekvens. Det bliver lidt teknisk, da I skal bruge et Python-script <a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> i Googles Colab <a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>, men I kan heldigvis gøre det sammen. Hvis der blandt jer er en Python ekspert, kan I også bruge koden på en computer lokalt, hvilket er noget hurtigere.</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Filerne vil typisk være på 2-4 MB hver, men kan godt med nogle optagere være lavet i højere kvalitet, så filen er ca. 10 MB. Hvis filen er tæt på 100 MB, har man nok i stedet fået lavet en video, hvilket ikke var meningen. Små filer gør det næste skridt hurtigere.</p></div><div id="fn4"><p><sup>4</sup>&nbsp;Python er et meget anvendt programmeringssprog.</p></div><div id="fn5"><p><sup>5</sup>&nbsp;Colab er en gratis side online, som kan bruges til Python scripts, så man ikke selv skal igennem en lidt besværlig installation af Python.</p></div></div><p>Som det næste skal I have opdelt lydfilerne i små sekvenser på 3 sekunder, og derefter have lavet MFCC data til hver sekvens. Det bliver lidt teknisk, da I skal bruge et Python-script<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> i Googles Colab<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>, men I kan heldigvis gøre det sammen. Hvis der blandt jer er en Python ekspert, kan I også bruge koden på en computer lokalt, hvilket er noget hurtigere.</p>
 <p>(endnu en lille video, som ikke er lavet endnu)</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
@@ -380,17 +388,19 @@ window.Quarto = {
 <ul>
 <li><p>Hent denne fil med et <a href="Det_lyder_som_dig_filer/Det_lyder_som_dig_Python.zip">Python-script</a>.</p></li>
 <li><p>Åbn siden <a href="https://colab.research.google.com/">Google Colab</a> og log ind med en gmail.</p></li>
-<li><p>Importér Python-scriptet i Colab.</p></li>
-<li><p>Vælg <strong>"Kør alle"</strong> på siden.</p></li>
-<li><p>Undervejs skal du vælge lydfilerne med jeres oplæsninger. Når det er gjort, tager det noget tid at uploade filerne.</p></li>
+<li><p>Importér Python-scriptet i Colab (vælg "Fil" <span class="math inline">\(\rightarrow\)</span> "Upload notesbog").</p></li>
+<li><p>Vælg "Kør alle" på siden:</p>
+<ul>
+<li><p>Undervejs skal du vælge lydfilerne med jeres oplæsninger (det er i boksen, hvor der står "# 1) Multi-upload af lydfiler…", og du skal måske scrolle lidt ned, før den kommer til syne). Når det er gjort, tager det noget tid at uploade filerne.</p></li>
 <li><p>Når filerne er hentet, skal du vælge, om du vil gemme de små 3 sekunders lydklip, så du kan høre dem hver for sig. Sig ja til det.</p></li>
-<li><p>Afhængigt af, hvordan din Colab er sat op, kan det være lidt forskelligt, hvordan du får gemt de 3 filer - testdata, trainingdata og en zip fil med de små lydklip. Måske du bliver bedt om at tillade, at Colab gemmer flere filer direkte på din computer. Alternativt ender de 3 filer måske under "Filer" ikonet ude til venstre i Colab, hvorfra du kan downloade dem.</p></li>
+<li><p>Afhængigt af, hvordan din Colab er sat op, kan det være lidt forskelligt, hvordan du får gemt de 3 filer: "testdata.csv", "trainingdata.csv" og en zip filen "segments_export.zip" med de små lydklip. Måske du bliver bedt om at tillade, at Colab gemmer flere filer direkte på din computer. Alternativt ender de 3 filer måske under "Filer" ikonet ude til venstre i Colab, hvorfra du kan downloade dem.</p></li>
+</ul></li>
 <li><p>Sørg for, at de 3 filer er tilgængelige for alle de øvrige.</p></li>
 </ul>
 </div>
 </div>
 </div>
-<p>Nu bliver det spændende, om "Orange" kan lave en model, som kan kende forskel på jeres stemmer, eller om nogen af jer lyder for ens.</p>
+<p>Nu bliver det spændende, om Orange kan lave en model, som kan kende forskel på jeres stemmer, eller om nogen af jer lyder for ens.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -404,15 +414,15 @@ window.Quarto = {
 <div id="callout-7" class="callout-7-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li><p>Indlæs både trænings- og testdata fra jeres egne lydfiler i "Orange".</p></li>
-<li><p>Kig på "Confusion Matrix" og "Predictions – misclassified" både for "Test on train data" and "Test on test data".</p></li>
+<li><p>Indlæs både trænings- og testdata fra jeres egne lydfiler i Orange.</p></li>
+<li><p>Kig på "Confusion Matrix" og "Predictions – misclassified" både for "Test on train data" og "Test on test data".</p></li>
 <li><p>Lyt til de lydklip, som modellen misklassificerer.</p></li>
 </ul>
 </div>
 </div>
 </div>
 <p>Indtil nu har vi talt meget lidt om det kunstige neurale netværk. Vi vil på ingen måde gå i detaljer, men dog se en lille smule på det. I det kunstige neurale netværk er der i første omgang 2 skjulte lag med hver 5 neuroner. Uden at forstå detaljerne, kan vi gøre modellen mere kompliceret, og dermed måske bedre, ved at øge antal neuroner i hvert lag eller ved at lave flere skjulte lag.</p>
-<p>Desuden kan vi også beslutte, hvor lang tid "Orange" må bruge på at justere de mange vægte i modellen, så den passer bedst muligt til vores data. Dette kaldes for <strong>iterationer</strong>. Flere iterationer tager længere tid, men vil også ofte give et bedre resultat.</p>
+<p>Desuden kan vi også beslutte, hvor lang tid Orange må bruge på at justere de mange vægte i modellen, så den passer bedst muligt til vores data. Dette kaldes for <strong>iterationer</strong>. Flere iterationer tager længere tid, men vil også ofte give et bedre resultat.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -426,16 +436,15 @@ window.Quarto = {
 <div id="callout-8" class="callout-8-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li><p>Klik på <strong>"Neural Network"</strong> i "Orange".</p></li>
-<li><p>Afprøv forskellige værdier for antal neuroner og antal skjulte lag (skriv f.eks. 10,10,10 for 3 lag med 10 neuroner hver) både med "Test on train data" og "Test on test data". Hvad giver en lav klassifikationsgrad? Hvad giver en høj klassifikationsgrad?</p></li>
-<li><p>Afprøv også både mindre og større værdier for antal iterationer. Se igen på, hvad der giver lav eller høj klassifikationsgrad.</p></li>
-<li><p>Er der stadig lydklip, som misklassificeres i den af dine modeller, som har bedst klassifikationsgrad? Lyt i så fald til disse lydklip.</p></li>
+<li><p>Klik på "Neural Network" i modellen i Orange og afprøv forskellige værdier for antal neuroner og antal skjulte lag. Skriv for eksempel under "Neurons in hidden layers": 10,10,10 for 3 lag med 10 neuroner i hver. Klik på "Test and Score" og vælg "Test on test data". Hvad giver en lav klassifikationsnøjagtighed (CA)? Hvad giver en høj klassifikationsnøjagtighed (CA)?</p></li>
+<li><p>Afprøv også både mindre og større værdier for antal iterationer (det vælges i "Neural Network" under "Maximal number of iterations"). Se igen på, hvad der giver lav eller høj klassifikationsnøjagtighed (CA).</p></li>
+<li><p>Er der stadig lydklip, som misklassificeres i den af dine modeller, som har bedst klassifikationsnøjagtighed (CA)? Lyt i så fald til disse lydklip.</p></li>
 </ul>
 </div>
 </div>
 </div>
-<p>Tillykke – du kender nu nogle af de begreber, som indgår i kunstige neurale net, der er en meget vigtig del af AI, og har en ide om, hvordan de anvendes i "Orange".</p>
-<p>Hvis du får lyst til at vide meget mere (og noget sværere), er følgende længere forløb et rigtigt godt sted at forsætte: <a href="../undervisningsforlob/kunstige_neuroner_langt_forlob/kunstige_neuroner_forside.html">Langt forløb om kunstig neuroner</a>.</p>
+<p>Tillykke – du kender nu nogle af de begreber, som indgår i kunstige neurale net, der er en meget vigtig del af AI, og du har en idé om, hvordan de anvendes i Orange.</p>
+<p>Hvis du får lyst til at vide meget mere (og noget sværere), er følgende længere forløb et rigtigt godt sted at fortsætte: <a href="../undervisningsforlob/kunstige_neuroner_langt_forlob/kunstige_neuroner_forside.html">Langt forløb om kunstig neuroner</a>.</p>
 
 
 </section>
