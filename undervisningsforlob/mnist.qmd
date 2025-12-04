@@ -68,7 +68,7 @@ Det betyder, at hvis man udelukkende er interesseret i gråskalaværdier, så ka
 
 ## MNIST datasættet
 
-Der findes et stort datasæt -- det såkaldte [MNIST[^2] datasæt](https://www.kaggle.com/datasets/oddrationale/mnist-in-csv?resource=download), hvor man har samlet 60000 håndskrevne cifre. Datasættet består af 60000 rækker, som hver repræsenterer et håndskrevet ciffer mellem $0$ og $9$. Der er i alt 785 kolonner. Den første kolonne kaldet \"label\" angiver hvilket ciffer, der er tale om. Det er den værdi, som vi i sidste ende gerne vil kunne forudsige. En sådan værdi kaldes også for en **targetværdi**. De resterende 784 kolonner angiver gråskalaværdierne fra et $28 \times 28$ pixel billede af et håndskrevet ciffer.
+Der findes et stort datasæt -- det såkaldte [MNIST datasæt](https://www.kaggle.com/datasets/oddrationale/mnist-in-csv?resource=download)[^2], hvor man har samlet 60000 håndskrevne cifre. Datasættet består af 60000 rækker, som hver repræsenterer et håndskrevet ciffer mellem $0$ og $9$. Der er i alt 785 kolonner. Den første kolonne kaldet \"label\" angiver hvilket ciffer, der er tale om. Det er den værdi, som vi i sidste ende gerne vil kunne forudsige. En sådan værdi kaldes også for en **targetværdi**. De resterende 784 kolonner angiver gråskalaværdierne fra et $28 \times 28$ pixel billede af et håndskrevet ciffer.
 
 [^2]: MNIST står for \"Modified National Institute of Standards\".
 
@@ -225,6 +225,16 @@ Vi vil starte med at undersøge, om vi kan kende forskel på 0 og 1 alene basere
 
 + Find id'et på de punkter, som ligger på den forkerte side af linjen. Man siger, at disse punkter er blevet klassificeret forkert. Brug app'en til at få vist et billede af disse tal. Kan du forklare, hvorfor disse billeder bliver klassificeret forkert, når vi ser på pixel gennemsnittet alene?
 
+Tabellen herunder kaldes for en **confusion matrix**.
+
+|  | Klassificeret som 0  | Klassificeret som 1 |
+|:---:|:---:|:---:|
+| **Faktisk 0 (rød)** | | |
+| **Faktisk 1 (blå)** | | |
+: {.bordered}
+
++ Se på dit punktplot og udfyld på den baggrund en confusion matrix (husk, at der er 100 røde og 100 blå punkter).
+
 Klassifikationsnøjagtigheden (**CA** for *classification accuracy* på engelsk) angiver hvor stor en procentdel af data, som er blevet klassificeret korrekt.
 
 + Udregn klassifikationsnøjagtigheden.
@@ -257,7 +267,7 @@ I opgave 6 ovenfor kom du formentlig frem til, at hvis vi alene skal adskille 0'
 
 :::
 
-## Kan vi kende forskel på 0 og 3?
+## Hvad med 0 og 3?
 
 Det går jo strygende! Tæl antallet af hvide pixels i billedet, og du kan kende forskel på 0 og 1. Men hvad nu, hvis vi vil kende forskel på 0 og 3. Går det mon lige så nemt? Et eksempel på et håndskrevet 0 og 3-tal er vist i @fig-pixel03.
 
@@ -363,13 +373,13 @@ Vi ser nu bort fra de søjler, hvor der ikke var nogle maksima:
 
 ### Opgave 11: Vandrette og lodrette lokale maksima
 
-Brug igen [app'en](https://apps01.math.aau.dk/ai/cifre/){target="_blank"}. Sæt under \"Features\" flueben ved \"Vis lodrette lokale maksima\" og \"Vis vandrette lokale maksima\".
+Brug igen [app'en](https://apps01.math.aau.dk/ai/cifre/){target="_blank"} med en pixel-opløsning på $7 \times 7$ pixels. Sæt under \"Features\" flueben ved \"Vis lodrette lokale maksima\" og \"Vis vandrette lokale maksima\".
 
 Billederne fra opgave 10 har id 0 og 300.
 
 + Kontroller ved hjælp af app'en dit resultat fra opgave 10.
 
-Vælg nu en opløsning på $28 \times 28$ pixels og sæt under \"Features\" flueben ved \"Vis lodrette lokale maksima\" og \"Vis vandrette lokale maksima\."
+Sæt under \"Features\" flueben ved \"Vis lodrette lokale maksima\" og \"Vis vandrette lokale maksima\."
 
 + Se på de første ti billeder af håndskrevne 0'er. Hvad er værdien cirka af:
   - Det gennemsnitlige antal vandrette maksima (\"vandret_gns\")? Kan du forklare det?
@@ -377,7 +387,7 @@ Vælg nu en opløsning på $28 \times 28$ pixels og sæt under \"Features\" flue
   - Det gennemsnitlige antal lodrette maksima (\"lodret_gns\")? Kan du forklare det?
   - Det største antal lodrette maksima (\"lodret_max\")? Kan du forklare det?
   
-+ Gentag ovenstående men se nu på de første ti billeder af håndskrevne 3-taller.
++ Gentag ovenstående, men se nu på de første ti billeder af håndskrevne 3-taller.
 
 :::
 
@@ -396,12 +406,12 @@ Under fanen \"Download data\" vælger du derfor:
 
 :::
 
-I opgave 11 så vi, at de håndskrevne tal ikke altid helt opfører sig, som vi kunne forvente i forhold til antallet af lodrette og vandrette lokale maksima. De er simpelthen nogle gange skrevet lidt skørt, så der enten er flere eller færre lokale maksima end forventet. Men det kunne jo godt være, at der vil være information at hente, hvis vi ser på de gennemsnitlige værdier af de lodrette og vandrette lokale maksima. Det prøver vi i næste opgave.
+I opgave 11 så vi, at de håndskrevne tal ikke altid helt opfører sig, som vi kunne forvente i forhold til antallet af lodrette og vandrette lokale maksima. Tallene er simpelthen nogle gange skrevet lidt skørt, så der enten er flere eller færre lokale maksima end forventet. Men det kunne jo godt være, at der vil være information at hente, hvis vi ser på de gennemsnitlige værdier af de lodrette og vandrette lokale maksima. Det prøver vi i næste opgave.
 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 13: Plot af gennemsnitsværdier
+### Opgave 13: Plot af gennemsnitsværdier med pixel-opløsning på 28
 
 + Lav et punktplot med \"lodret_gns\" ud af $x$-aksen og \"vandret_gns\" op af $y$-aksen. Sørg for at alle punkter, som svarer til billeder af 0'er repræsenteres ved røde krydser og alle punkter, som svarer til billeder af 3-taller repræsenteres ved grønne cirkler (det er for bedre at kunne se, at nogle af punkterne ligger oveni hinanden).
 
@@ -413,8 +423,8 @@ I opgave 11 så vi, at de håndskrevne tal ikke altid helt opfører sig, som vi 
 
 + Stil dig i celle `I2` (det skulle gerne være den første tomme celle i anden række).
 + Skriv `(C2,E2)` (det skulle give dig værdien for \"lodret_gns\" og \"vandret_gns\" for det første billede).
-+ Markér cellen. Tag ved den lille firkant nederst til højre og træk ned, så du får punkter for alle 200 billeder.
-+ Justér på akserne på tegneblokken, så du kan se alle punkterne. Markér alle punkterne, højreklikke og trykke på \"Basis\". Sæt flueben ved \"Fast objekt\" (det sikrer, at du ikke ved en fejl kan flytte på punkterne). *Hvis* der er vist et navn ved punkterne i tegneblokken,  fjerner du også fluebenet ved \"Vis navn\".
++ Markér cellen. Tag ved den lille firkant nederst til højre og træk ned, så du får punkter for alle 200 billeder. Du skulle gerne kunne se punkterne i tegneblokken. 
++ Justér på akserne på tegneblokken, så du kan se alle punkterne. Markér alle punkterne i regnearket, højreklikke og trykke på \"Egenskaber\" $\rightarrow$ \"Basis\". Sæt flueben ved \"Fast objekt\" (det sikrer, at du ikke ved en fejl kan flytte på punkterne). *Hvis* der er vist et navn ved punkterne i tegneblokken,  fjerner du også fluebenet ved \"Vis navn\".
 + Markér alle de punkter i regnearket, som har en \"label\" værdi på 0. Højreklik og vælg \"Egenskaber\". Under fanen \"Farve\" vælger du rød. Under fanen \"Stil\" vælger du under \"Punktmarkering\" et kryds.
 + Farv på tilsvarende måde alle punkterne med en \"label\" værdi på 3 grønne og vælg en cirkel som punktmarkering.
 + Højreklik på tegneblokken og vælg \"Tegneblok\". Gå ind under fanen \"xAkse\". Under \"Navn\" skriver du \"lodret gns\" og tilsvarende navngiver du $y$-aksen \"vandret gns\".
@@ -425,15 +435,41 @@ I opgave 11 så vi, at de håndskrevne tal ikke altid helt opfører sig, som vi 
 
 + Indtegn i dit (nye) punktplot en ret linje, som så godt som muligt kan adskille de røde krydser fra de grønne cirkler. Nedskriv ligningen for denne linje.
 
-+ Udvælg et 0 og et 3-tal, som ligger \"på den forkerte\" side af din linje og som vi altså har svært ved at kende forskel på. Find id'et på cifret og slå det op i app'en. Kan du ud fra billedet forklare, hvorfor det er svært at kende forskel?
++ Udvælg et 0 og et 3-tal, som ligger \"på den forkerte\" side af din linje, og som vi altså har svært ved at kende forskel på. Find id'et på tallet og slå det op i app'en (hvis du holder musen henover punktet, får du det tilhørende cellenavn i regnearket -- herefter kan du finde id'et i regnearket). Kan du ud fra billedet forklare, hvorfor det er svært at kende forskel?
 
-+ Tæl (så godt som muligt -- der kan være punkter, som ligger oveni hinanden) hvor mange cifre, som bliver klassificeret forkert, og udregne på den baggrund en klassifikationsnøjagtighed.
++ Udfyld på baggrund af dit punktplot en confusion matrix.
+
++ Tæl hvor mange cifre, som bliver klassificeret forkert og udregn klassifikationsnøjagtigheden.
+
+:::
+
+Når vi ser på nogle af de cifre, som vi ikke fik klassificeret korrekt, kan det måske godt undre, hvad der går galt. På @fig-misklas0_id8 kan vi se et 0 (med id 8), som vi ikke får klassificeret korrekt. I forhold til det punktplot, du lige har lavet, ligger dette cifre for langt til højre. Det vil sige, at det gennemsnitlige antal lodrette maksima er for stort (vi forventer måske en værdi på omkring $1.8$). Det kan vi også se på @fig-misklas0_id8. Der er flere søjler med $3$ og $4$ lodrette maksima, hvilket samlet set resulterer i et gennemsnit på $3.33$. Men hvorfor egentlig? Det er da et nydeligt, rundt 0! Forklaringen skal findes i tykkelsen af stregen og den måde, tallet er tegnet på. Personen, der har tegnet 0'et, har tegnet tykt, men ikke været i stand til at lægge et jævnt tryk hele vejen rundt. Det betyder, at der lodret er opstået flere lokale maksima, end vi vil forvente.
+
+![Et billede af et 0 (id'et er 8) med en pixel-opløsning på $28$. ](mnist_filer/misklas0_id8.png){#fig-misklas0_id8 width=80% fig-align="center"}
+
+Man kunne derfor få den tanke, at dette fænomen, som jo ikke kan bruges til at kendetegne cifret, måske kan undgås, hvis vi ser på en lavere pixel-opløsning. I figur @fig-lavere_pixel0_id8 ses det samme ciffer, men med en pixel-opløsning på henholdsvis $7$ og $14$. 
+
+![Et billede af det samme 0 som ses i @fig-misklas0_id8, men med en pixel-opløsning på henholdsvis $7$ og $14$.](mnist_filer/lavere_pixel0_id8.png){#fig-lavere_pixel0_id8 width=100% fig-align="center"}
+
+Her kan vi se, at det forventede antal lodrette og vandrette maksima i en pixel-opløsning på $7$, som forventet ligger mellem $1$ og $2$, mens der i den højere pixel-opløsning på $14$ sniger sig nogle søjler ind med $3$ lodrette maksima.
+
+Vi vil derfor nu undersøge, om vi kan få en højere klassifikationsnøjagtighed ved at bruge en pixel-opløsning på $7$.
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 14: Plot af gennemsnitsværdier med pixel-opløsning på 7 og 14
+
+* Gentag opgave 13, men nu med data baseret på en pixel-opløsning på henholdsvis $7$ og $14$.
+
+* Får du en bedre klassifikationsnøjagtighed i de to tilfælde?
+
 
 :::
 
 ### Klassificering ved beregning (kan udelades)
 
-Det er desværre ikke muligt præcist at tælle, hvor mange cifre der er klassificeret forkert, fordi nogle af punkterne ligger oveni hinanden. Men vi kan heldigvis *beregne* om et punkt ligger over eller under linjen. Det gøres ved at betragte den lodrette forskel fra et punkt og ned til linjen[^3]. 
+Nogle gange er det svært med øjemål at se, om et punkt lige præcis ligger over eller under en linje. Andre gange kan det være umuligt præcist at tælle, hvor mange cifre der er klassificeret forkert, fordi nogle af punkterne ligger oveni hinanden. Men vi kan heldigvis *beregne* om et punkt ligger over eller under linjen. Det gøres ved at betragte den lodrette forskel fra et punkt og ned til linjen[^3]. 
 
 [^3]: Med mindre skillelinjen er lodret!
 
@@ -450,9 +486,9 @@ Hvis denne forskel er positiv ligger punktet over linjen og omvendt, hvis forske
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 14: Klassificering ved beregning (kan springes over)
+### Opgave 15: Klassificering ved beregning (kan springes over)
 
-* Brug ligningen for den ligning du fandt i opgave 13. Hvis din ligning er på formen $ax+by+c=0$, så start med at isolere $y$.
+* Brug ligningen for den ligning du fandt i opgave 14 (med en pixelopløsning på $14$). Hvis din ligning er på formen $ax+by+c=0,$ så start med at isolere $y$.
 
 * For hvert punkt i dit punktplot skal du udregne den lodrette forskel fra punktet til din linje.
 
@@ -460,6 +496,10 @@ Hvis denne forskel er positiv ligger punktet over linjen og omvendt, hvis forske
 
 <details>
 <summary> Sådan gør du i GeoGebra </summary>
+
+* Definér først funktionen, som beskriver linjen, kald den for eksempel for $f$.
+
+* Udregn forskellen i kolonne `J2` ved at skrive `=E2-f(C2)`.
 
 Hvis du i kolonne `J` har udregnet den lodrette forskel, så vil vi i kolonne `K` skrive et 1-tal, hvis det tilhørende punkt er klassificeret korrekt og 0 ellers. Det gør sådan her: 
 
@@ -482,38 +522,40 @@ For alle de grønne punkter er det lige omvendt:
 :::
 
 
-## Tre features
+<!-- ## Tre features -->
 
-Du har formentlig opdaget, at de to nye features ikke er helt tossede i forhold til at kende forskel på 0'ere og 3-taller, men at der også er nogle cifre, som vi ikke kan kende forskel på baseret på disse to features. Vi vil derfor prøve at tilføje en tredje feature og se, om vi kan få en højere klassifikationsnøjagtighed.
+<!-- Du har formentlig opdaget, at de to nye features ikke er helt tossede i forhold til at kende forskel på 0'ere og 3-taller, men at der også er nogle cifre, som vi ikke kan kende forskel på baseret på disse to features. Vi vil derfor prøve at tilføje en tredje feature og se, om vi kan få en højere klassifikationsnøjagtighed. -->
 
-Ser vi på @fig-lok-max0_vandret og @fig-lok-max1_vandret kan vi se, at både 0'er og 3-taller typisk har mellem en og to vandrette lokale maksima. Derimod illustrerer @fig-lok-max0_lodret og @fig-lok-max1_lodret, at 0'er også typisk har mellem en og to lodrette lokale maksima, mens 3-taller typisk kan have op til tre lodrette lokale maksima. Vi vil derfor som en tredje feature bruge det **maksimale** antal lodrette lokale maksima. Her vil 0'ere typisk være karakteriseret ved at det maksimale antal lodrette lokale maksima vil være to, mens det tilsvarende tal for 3-taller vil være tre.
+<!-- Ser vi på @fig-lok-max0_vandret og @fig-lok-max3_vandret kan vi se, at både 0'er og 3-taller typisk har mellem en og to vandrette lokale maksima. Derimod illustrerer @fig-lok-max0_lodret og @fig-lok-max3_lodret, at 0'er også typisk har mellem en og to lodrette lokale maksima, mens 3-taller typisk kan have op til tre lodrette lokale maksima. Vi vil derfor som en tredje feature bruge det **maksimale** antal lodrette lokale maksima. Her vil 0'ere typisk være karakteriseret ved, at det maksimale antal lodrette lokale maksima vil være to, mens det tilsvarende tal for 3-taller vil være tre. -->
 
-::: {.callout-note collapse="false" appearance="minimal"}
+<!-- ::: {.callout-note collapse="false" appearance="minimal"} -->
 
-### Opgave 15: Plot af tre features
+<!-- ### Opgave 15: Plot af tre features -->
 
-+ Lav et punktplot med \"lodret_gns\" ud af $x$-aksen, \"vandret_gns\" op af $y$-aksen og \"lodret_max\" op af $z$-aksen. Sørg for at alle punkter, som svarer til billeder af 0'er farves røde og alle punkter, som svarer til billeder af 3-taller farves grønne.
+<!-- Vælg datasættet med en pixelopløsning på $14$.  -->
 
-<details>
-<summary> Sådan gør du i GeoGebra </summary>
+<!-- + Lav et punktplot med \"lodret_gns\" ud af $x$-aksen, \"vandret_gns\" op af $y$-aksen og \"lodret_max\" op af $z$-aksen. Sørg for at alle punkter, som svarer til billeder af 0'er farves røde og alle punkter, som svarer til billeder af 3-taller farves grønne. -->
 
-Åbn datasættet i Excel og kopiere det hele over i et \"Regneark\" i GeoGebra (tryk på \"Vis\" $\rightarrow$ \"Regneark\").
+<!-- <details> -->
+<!-- <summary> Sådan gør du i GeoGebra </summary> -->
 
-+ Gør som i opgave 13, men skriv i stedet i celle `I2` følgende: `(C2,E2,D2)` (det skulle give dig værdien for \"lodret_gns\", \"vandret_gns\" og \"lodret max\" for det første billede).
-+ Udfyld for alle 200 cifre og farv igen punkterne (vær opmærksom på at man i 3D-plot ikke kan vælge punktmarkering).
-+ Vælg \"Vis\" $\rightarrow$ \"3D Grafik\"
+<!-- Åbn datasættet i Excel og kopiere det hele over i et \"Regneark\" i GeoGebra (tryk på \"Vis\" $\rightarrow$ \"Regneark\"). -->
 
-</details>
+<!-- + Gør som i opgave 13, men skriv i stedet i celle `I2` følgende: `(C2,E2,D2)` (det skulle give dig værdien for \"lodret_gns\", \"vandret_gns\" og \"lodret max\" for det første billede). -->
+<!-- + Udfyld for alle 200 cifre og farv igen punkterne (vær opmærksom på at man i 3D-plot ikke kan vælge punktmarkering). -->
+<!-- + Vælg \"Vis\" $\rightarrow$ \"3D Grafik\" -->
 
-+ Sammenlign med det punktplot, som du lavede i opgave 9. Egner de to nye features sig bedre til at kende forskel på 0'er og 3-taller?
+<!-- </details> -->
 
-+ Indtegn i dit (nye) punktplot en ret linje, som så godt som muligt kan adskille de røde krydser fra de grønne cirkler. Nedskriv ligningen for denne linje.
+<!-- + Sammenlign med det punktplot, som du lavede i opgave 9. Egner de to nye features sig bedre til at kende forskel på 0'er og 3-taller? -->
 
-+ Udvælg et 0 og et 3-tal, som ligger \"på den forkerte\" side af din linje og som vi altså har svært ved at kende forskel på. Find id'et på cifret og slå det op i app'en. Kan du ud fra billedet forklare, hvorfor det er svært at kende forskel?
+<!-- + Indtegn i dit (nye) punktplot en ret linje, som så godt som muligt kan adskille de røde krydser fra de grønne cirkler. Nedskriv ligningen for denne linje. -->
 
-+ Tæl (så godt som muligt -- der kan være punkter, som ligger oveni hinanden) hvor mange cifre, som bliver klassificeret forkert, og udregne på den baggrund en klassifikationsnøjagtighed.
+<!-- + Udvælg et 0 og et 3-tal, som ligger \"på den forkerte\" side af din linje og som vi altså har svært ved at kende forskel på. Find id'et på cifret og slå det op i app'en. Kan du ud fra billedet forklare, hvorfor det er svært at kende forskel? -->
 
-:::
+<!-- + Tæl (så godt som muligt -- der kan være punkter, som ligger oveni hinanden) hvor mange cifre, som bliver klassificeret forkert, og udregne på den baggrund en klassifikationsnøjagtighed. -->
+
+<!-- ::: -->
 
 ## Delvis facitliste
 
