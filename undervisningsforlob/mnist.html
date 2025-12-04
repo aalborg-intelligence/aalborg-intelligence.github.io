@@ -179,13 +179,12 @@ window.Quarto = {
   <li><a href="#rgb-farvemodellen" id="toc-rgb-farvemodellen" class="nav-link" data-scroll-target="#rgb-farvemodellen">RGB-farvemodellen</a></li>
   <li><a href="#mnist-datasættet" id="toc-mnist-datasættet" class="nav-link" data-scroll-target="#mnist-datasættet">MNIST datasættet</a></li>
   <li><a href="#kan-vi-kende-forskel-på-0-og-1" id="toc-kan-vi-kende-forskel-på-0-og-1" class="nav-link" data-scroll-target="#kan-vi-kende-forskel-på-0-og-1">Kan vi kende forskel på 0 og 1?</a></li>
-  <li><a href="#kan-vi-kende-forskel-på-0-og-3" id="toc-kan-vi-kende-forskel-på-0-og-3" class="nav-link" data-scroll-target="#kan-vi-kende-forskel-på-0-og-3">Kan vi kende forskel på 0 og 3?</a>
+  <li><a href="#hvad-med-0-og-3" id="toc-hvad-med-0-og-3" class="nav-link" data-scroll-target="#hvad-med-0-og-3">Hvad med 0 og 3?</a>
   <ul class="collapse">
   <li><a href="#vandrette-lokale-maksima" id="toc-vandrette-lokale-maksima" class="nav-link" data-scroll-target="#vandrette-lokale-maksima">Vandrette lokale maksima</a></li>
   <li><a href="#lodrette-lokale-maksima" id="toc-lodrette-lokale-maksima" class="nav-link" data-scroll-target="#lodrette-lokale-maksima">Lodrette lokale maksima</a></li>
   <li><a href="#klassificering-ved-beregning-kan-udelades" id="toc-klassificering-ved-beregning-kan-udelades" class="nav-link" data-scroll-target="#klassificering-ved-beregning-kan-udelades">Klassificering ved beregning (kan udelades)</a></li>
   </ul></li>
-  <li><a href="#tre-features" id="toc-tre-features" class="nav-link" data-scroll-target="#tre-features">Tre features</a></li>
   <li><a href="#delvis-facitliste" id="toc-delvis-facitliste" class="nav-link" data-scroll-target="#delvis-facitliste">Delvis facitliste</a></li>
   </ul>
 </nav>
@@ -304,7 +303,7 @@ Figur&nbsp;4: Forskellige toner af grå repræsenteret ved én værdi.
 </section>
 <section id="mnist-datasættet" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="mnist-datasættet">MNIST datasættet</h2>
-<p>Der findes et stort datasæt – det såkaldte <a href="https://www.kaggle.com/datasets/oddrationale/mnist-in-csv?resource=download">MNIST</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> datasæt, hvor man har samlet 60000 håndskrevne cifre. Datasættet består af 60000 rækker, som hver repræsenterer et håndskrevet ciffer mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(9\)</span>. Der er i alt 785 kolonner. Den første kolonne kaldet "label" angiver hvilket ciffer, der er tale om. Det er den værdi, som vi i sidste ende gerne vil kunne forudsige. En sådan værdi kaldes også for en <strong>targetværdi</strong>. De resterende 784 kolonner angiver gråskalaværdierne fra et <span class="math inline">\(28 \times 28\)</span> pixel billede af et håndskrevet ciffer.</p>
+<p>Der findes et stort datasæt – det såkaldte <a href="https://www.kaggle.com/datasets/oddrationale/mnist-in-csv?resource=download">MNIST datasæt</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, hvor man har samlet 60000 håndskrevne cifre. Datasættet består af 60000 rækker, som hver repræsenterer et håndskrevet ciffer mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(9\)</span>. Der er i alt 785 kolonner. Den første kolonne kaldet "label" angiver hvilket ciffer, der er tale om. Det er den værdi, som vi i sidste ende gerne vil kunne forudsige. En sådan værdi kaldes også for en <strong>targetværdi</strong>. De resterende 784 kolonner angiver gråskalaværdierne fra et <span class="math inline">\(28 \times 28\)</span> pixel billede af et håndskrevet ciffer.</p>
 <div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;MNIST står for "Modified National Institute of Standards".</p></div></div><p>På <a href="#fig-mnist0_original" class="quarto-xref">figur&nbsp;5</a> ses et håndskrevet "0" fra MNIST datasættet.</p>
 <div id="fig-mnist0_original" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
@@ -525,6 +524,31 @@ Sådan gør du i GeoGebra
 <li><p>Hvor mange punkter kommer som minimum til at ligge på den forkerte side af linjen?</p></li>
 <li><p>Find id’et på de punkter, som ligger på den forkerte side af linjen. Man siger, at disse punkter er blevet klassificeret forkert. Brug app’en til at få vist et billede af disse tal. Kan du forklare, hvorfor disse billeder bliver klassificeret forkert, når vi ser på pixel gennemsnittet alene?</p></li>
 </ul>
+<p>Tabellen herunder kaldes for en <strong>confusion matrix</strong>.</p>
+<table class="table-bordered table">
+<thead>
+<tr class="header">
+<th style="text-align: center;"></th>
+<th style="text-align: center;">Klassificeret som 0</th>
+<th style="text-align: center;">Klassificeret som 1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><strong>Faktisk 0 (rød)</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>Faktisk 1 (blå)</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Se på dit punktplot og udfyld på den baggrund en confusion matrix (husk, at der er 100 røde og 100 blå punkter).</li>
+</ul>
 <p>Klassifikationsnøjagtigheden (<strong>CA</strong> for <em>classification accuracy</em> på engelsk) angiver hvor stor en procentdel af data, som er blevet klassificeret korrekt.</p>
 <ul>
 <li>Udregn klassifikationsnøjagtigheden.</li>
@@ -564,8 +588,8 @@ Sådan gør du i GeoGebra
 </div>
 </div>
 </section>
-<section id="kan-vi-kende-forskel-på-0-og-3" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="kan-vi-kende-forskel-på-0-og-3">Kan vi kende forskel på 0 og 3?</h2>
+<section id="hvad-med-0-og-3" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="hvad-med-0-og-3">Hvad med 0 og 3?</h2>
 <p>Det går jo strygende! Tæl antallet af hvide pixels i billedet, og du kan kende forskel på 0 og 1. Men hvad nu, hvis vi vil kende forskel på 0 og 3. Går det mon lige så nemt? Et eksempel på et håndskrevet 0 og 3-tal er vist i <a href="#fig-pixel03" class="quarto-xref">figur&nbsp;9</a>.</p>
 <div id="fig-pixel03" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
@@ -753,12 +777,12 @@ Figur&nbsp;16: Et billede af et håndskrevet 0 og 3-tal med et lodret vindue ind
 </div>
 <div id="callout-12" class="callout-12-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Brug igen <a href="https://apps01.math.aau.dk/ai/cifre/" target="_blank">app’en</a>. Sæt under "Features" flueben ved "Vis lodrette lokale maksima" og "Vis vandrette lokale maksima".</p>
+<p>Brug igen <a href="https://apps01.math.aau.dk/ai/cifre/" target="_blank">app’en</a> med en pixel-opløsning på <span class="math inline">\(7 \times 7\)</span> pixels. Sæt under "Features" flueben ved "Vis lodrette lokale maksima" og "Vis vandrette lokale maksima".</p>
 <p>Billederne fra opgave 10 har id 0 og 300.</p>
 <ul>
 <li>Kontroller ved hjælp af app’en dit resultat fra opgave 10.</li>
 </ul>
-<p>Vælg nu en opløsning på <span class="math inline">\(28 \times 28\)</span> pixels og sæt under "Features" flueben ved "Vis lodrette lokale maksima" og "Vis vandrette lokale maksima.”</p>
+<p>Sæt under "Features" flueben ved "Vis lodrette lokale maksima" og "Vis vandrette lokale maksima.”</p>
 <ul>
 <li>Se på de første ti billeder af håndskrevne 0’er. Hvad er værdien cirka af:
 <ul>
@@ -767,7 +791,7 @@ Figur&nbsp;16: Et billede af et håndskrevet 0 og 3-tal med et lodret vindue ind
 <li>Det gennemsnitlige antal lodrette maksima ("lodret_gns")? Kan du forklare det?</li>
 <li>Det største antal lodrette maksima ("lodret_max")? Kan du forklare det?</li>
 </ul></li>
-<li>Gentag ovenstående men se nu på de første ti billeder af håndskrevne 3-taller.</li>
+<li>Gentag ovenstående, men se nu på de første ti billeder af håndskrevne 3-taller.</li>
 </ul>
 </div>
 </div>
@@ -795,14 +819,14 @@ Figur&nbsp;16: Et billede af et håndskrevet 0 og 3-tal med et lodret vindue ind
 </div>
 </div>
 </div>
-<p>I opgave 11 så vi, at de håndskrevne tal ikke altid helt opfører sig, som vi kunne forvente i forhold til antallet af lodrette og vandrette lokale maksima. De er simpelthen nogle gange skrevet lidt skørt, så der enten er flere eller færre lokale maksima end forventet. Men det kunne jo godt være, at der vil være information at hente, hvis vi ser på de gennemsnitlige værdier af de lodrette og vandrette lokale maksima. Det prøver vi i næste opgave.</p>
+<p>I opgave 11 så vi, at de håndskrevne tal ikke altid helt opfører sig, som vi kunne forvente i forhold til antallet af lodrette og vandrette lokale maksima. Tallene er simpelthen nogle gange skrevet lidt skørt, så der enten er flere eller færre lokale maksima end forventet. Men det kunne jo godt være, at der vil være information at hente, hvis vi ser på de gennemsnitlige værdier af de lodrette og vandrette lokale maksima. Det prøver vi i næste opgave.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 13: Plot af gennemsnitsværdier
+<span class="screen-reader-only">Note</span>Opgave 13: Plot af gennemsnitsværdier med pixel-opløsning på 28
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -819,8 +843,8 @@ Sådan gør du i GeoGebra
 <ul>
 <li>Stil dig i celle <code>I2</code> (det skulle gerne være den første tomme celle i anden række).</li>
 <li>Skriv <code>(C2,E2)</code> (det skulle give dig værdien for "lodret_gns" og "vandret_gns" for det første billede).</li>
-<li>Markér cellen. Tag ved den lille firkant nederst til højre og træk ned, så du får punkter for alle 200 billeder.</li>
-<li>Justér på akserne på tegneblokken, så du kan se alle punkterne. Markér alle punkterne, højreklikke og trykke på "Basis". Sæt flueben ved "Fast objekt" (det sikrer, at du ikke ved en fejl kan flytte på punkterne). <em>Hvis</em> der er vist et navn ved punkterne i tegneblokken, fjerner du også fluebenet ved "Vis navn".</li>
+<li>Markér cellen. Tag ved den lille firkant nederst til højre og træk ned, så du får punkter for alle 200 billeder. Du skulle gerne kunne se punkterne i tegneblokken.</li>
+<li>Justér på akserne på tegneblokken, så du kan se alle punkterne. Markér alle punkterne i regnearket, højreklikke og trykke på "Egenskaber" <span class="math inline">\(\rightarrow\)</span> "Basis". Sæt flueben ved "Fast objekt" (det sikrer, at du ikke ved en fejl kan flytte på punkterne). <em>Hvis</em> der er vist et navn ved punkterne i tegneblokken, fjerner du også fluebenet ved "Vis navn".</li>
 <li>Markér alle de punkter i regnearket, som har en "label" værdi på 0. Højreklik og vælg "Egenskaber". Under fanen "Farve" vælger du rød. Under fanen "Stil" vælger du under "Punktmarkering" et kryds.</li>
 <li>Farv på tilsvarende måde alle punkterne med en "label" værdi på 3 grønne og vælg en cirkel som punktmarkering.</li>
 <li>Højreklik på tegneblokken og vælg "Tegneblok". Gå ind under fanen "xAkse". Under "Navn" skriver du "lodret gns" og tilsvarende navngiver du <span class="math inline">\(y\)</span>-aksen "vandret gns".</li>
@@ -829,8 +853,52 @@ Sådan gør du i GeoGebra
 <ul>
 <li><p>Sammenlign med det punktplot, som du lavede i opgave 9. Egner de to nye features sig bedre til at kende forskel på 0’er og 3-taller?</p></li>
 <li><p>Indtegn i dit (nye) punktplot en ret linje, som så godt som muligt kan adskille de røde krydser fra de grønne cirkler. Nedskriv ligningen for denne linje.</p></li>
-<li><p>Udvælg et 0 og et 3-tal, som ligger "på den forkerte" side af din linje og som vi altså har svært ved at kende forskel på. Find id’et på cifret og slå det op i app’en. Kan du ud fra billedet forklare, hvorfor det er svært at kende forskel?</p></li>
-<li><p>Tæl (så godt som muligt – der kan være punkter, som ligger oveni hinanden) hvor mange cifre, som bliver klassificeret forkert, og udregne på den baggrund en klassifikationsnøjagtighed.</p></li>
+<li><p>Udvælg et 0 og et 3-tal, som ligger "på den forkerte" side af din linje, og som vi altså har svært ved at kende forskel på. Find id’et på tallet og slå det op i app’en (hvis du holder musen henover punktet, får du det tilhørende cellenavn i regnearket – herefter kan du finde id’et i regnearket). Kan du ud fra billedet forklare, hvorfor det er svært at kende forskel?</p></li>
+<li><p>Udfyld på baggrund af dit punktplot en confusion matrix.</p></li>
+<li><p>Tæl hvor mange cifre, som bliver klassificeret forkert og udregn klassifikationsnøjagtigheden.</p></li>
+</ul>
+</div>
+</div>
+</div>
+<p>Når vi ser på nogle af de cifre, som vi ikke fik klassificeret korrekt, kan det måske godt undre, hvad der går galt. På <a href="#fig-misklas0_id8" class="quarto-xref">figur&nbsp;17</a> kan vi se et 0 (med id 8), som vi ikke får klassificeret korrekt. I forhold til det punktplot, du lige har lavet, ligger dette cifre for langt til højre. Det vil sige, at det gennemsnitlige antal lodrette maksima er for stort (vi forventer måske en værdi på omkring <span class="math inline">\(1.8\)</span>). Det kan vi også se på <a href="#fig-misklas0_id8" class="quarto-xref">figur&nbsp;17</a>. Der er flere søjler med <span class="math inline">\(3\)</span> og <span class="math inline">\(4\)</span> lodrette maksima, hvilket samlet set resulterer i et gennemsnit på <span class="math inline">\(3.33\)</span>. Men hvorfor egentlig? Det er da et nydeligt, rundt 0! Forklaringen skal findes i tykkelsen af stregen og den måde, tallet er tegnet på. Personen, der har tegnet 0’et, har tegnet tykt, men ikke været i stand til at lægge et jævnt tryk hele vejen rundt. Det betyder, at der lodret er opstået flere lokale maksima, end vi vil forvente.</p>
+<div id="fig-misklas0_id8" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-misklas0_id8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="mnist_filer/misklas0_id8.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-misklas0_id8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;17: Et billede af et 0 (id’et er 8) med en pixel-opløsning på <span class="math inline">\(28\)</span>.
+</figcaption>
+</figure>
+</div>
+<p>Man kunne derfor få den tanke, at dette fænomen, som jo ikke kan bruges til at kendetegne cifret, måske kan undgås, hvis vi ser på en lavere pixel-opløsning. I figur <a href="#fig-lavere_pixel0_id8" class="quarto-xref">figur&nbsp;18</a> ses det samme ciffer, men med en pixel-opløsning på henholdsvis <span class="math inline">\(7\)</span> og <span class="math inline">\(14\)</span>.</p>
+<div id="fig-lavere_pixel0_id8" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-lavere_pixel0_id8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="mnist_filer/lavere_pixel0_id8.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-lavere_pixel0_id8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;18: Et billede af det samme 0 som ses i <a href="#fig-misklas0_id8" class="quarto-xref">figur&nbsp;17</a>, men med en pixel-opløsning på henholdsvis <span class="math inline">\(7\)</span> og <span class="math inline">\(14\)</span>.
+</figcaption>
+</figure>
+</div>
+<p>Her kan vi se, at det forventede antal lodrette og vandrette maksima i en pixel-opløsning på <span class="math inline">\(7\)</span>, som forventet ligger mellem <span class="math inline">\(1\)</span> og <span class="math inline">\(2\)</span>, mens der i den højere pixel-opløsning på <span class="math inline">\(14\)</span> sniger sig nogle søjler ind med <span class="math inline">\(3\)</span> lodrette maksima.</p>
+<p>Vi vil derfor nu undersøge, om vi kan få en højere klassifikationsnøjagtighed ved at bruge en pixel-opløsning på <span class="math inline">\(7\)</span>.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 14: Plot af gennemsnitsværdier med pixel-opløsning på 7 og 14
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-15" class="callout-15-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Gentag opgave 13, men nu med data baseret på en pixel-opløsning på henholdsvis <span class="math inline">\(7\)</span> og <span class="math inline">\(14\)</span>.</p></li>
+<li><p>Får du en bedre klassifikationsnøjagtighed i de to tilfælde?</p></li>
 </ul>
 </div>
 </div>
@@ -838,36 +906,36 @@ Sådan gør du i GeoGebra
 </section>
 <section id="klassificering-ved-beregning-kan-udelades" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="klassificering-ved-beregning-kan-udelades">Klassificering ved beregning (kan udelades)</h3>
-<p>Det er desværre ikke muligt præcist at tælle, hvor mange cifre der er klassificeret forkert, fordi nogle af punkterne ligger oveni hinanden. Men vi kan heldigvis <em>beregne</em> om et punkt ligger over eller under linjen. Det gøres ved at betragte den lodrette forskel fra et punkt og ned til linjen<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
-<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Med mindre skillelinjen er lodret!</p></div></div><p>Dette er illustreret i <a href="#fig-lodret_afstand" class="quarto-xref">figur&nbsp;17</a>:</p>
+<p>Nogle gange er det svært med øjemål at se, om et punkt lige præcis ligger over eller under en linje. Andre gange kan det være umuligt præcist at tælle, hvor mange cifre der er klassificeret forkert, fordi nogle af punkterne ligger oveni hinanden. Men vi kan heldigvis <em>beregne</em> om et punkt ligger over eller under linjen. Det gøres ved at betragte den lodrette forskel fra et punkt og ned til linjen<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Med mindre skillelinjen er lodret!</p></div></div><p>Dette er illustreret i <a href="#fig-lodret_afstand" class="quarto-xref">figur&nbsp;19</a>:</p>
 <div id="fig-lodret_afstand" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-lodret_afstand-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="ALS_filer/lodret_afstand.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-lodret_afstand-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;17: Beregning af den lodrette forskel fra et punkt til en linje.
+Figur&nbsp;19: Beregning af den lodrette forskel fra et punkt til en linje.
 </figcaption>
 </figure>
 </div>
-<p>Den lodrette forskel fra punktet <span class="math inline">\(P(x_1,y_1)\)</span> ned til linjen med ligning <span class="math inline">\(y= a \cdot x + b\)</span> må være (se <a href="#fig-lodret_afstand" class="quarto-xref">figur&nbsp;17</a>):</p>
+<p>Den lodrette forskel fra punktet <span class="math inline">\(P(x_1,y_1)\)</span> ned til linjen med ligning <span class="math inline">\(y= a \cdot x + b\)</span> må være (se <a href="#fig-lodret_afstand" class="quarto-xref">figur&nbsp;19</a>):</p>
 <p><span class="math display">\[
 y_1 - (a \cdot x_1 + b)
 \]</span> Hvis denne forskel er positiv ligger punktet over linjen og omvendt, hvis forskellen er negativ.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 14: Klassificering ved beregning (kan springes over)
+<span class="screen-reader-only">Note</span>Opgave 15: Klassificering ved beregning (kan springes over)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-15" class="callout-15-contents callout-collapse collapse show">
+<div id="callout-16" class="callout-16-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li><p>Brug ligningen for den ligning du fandt i opgave 13. Hvis din ligning er på formen <span class="math inline">\(ax+by+c=0\)</span>, så start med at isolere <span class="math inline">\(y\)</span>.</p></li>
+<li><p>Brug ligningen for den ligning du fandt i opgave 14 (med en pixelopløsning på <span class="math inline">\(14\)</span>). Hvis din ligning er på formen <span class="math inline">\(ax+by+c=0,\)</span> så start med at isolere <span class="math inline">\(y\)</span>.</p></li>
 <li><p>For hvert punkt i dit punktplot skal du udregne den lodrette forskel fra punktet til din linje.</p></li>
 <li><p>Lav nu en klassificering ved hjælp af fortegnet på den beregnede forskel.</p></li>
 </ul>
@@ -875,6 +943,10 @@ y_1 - (a \cdot x_1 + b)
 <summary>
 Sådan gør du i GeoGebra
 </summary>
+<ul>
+<li><p>Definér først funktionen, som beskriver linjen, kald den for eksempel for <span class="math inline">\(f\)</span>.</p></li>
+<li><p>Udregn forskellen i kolonne <code>J2</code> ved at skrive <code>=E2-f(C2)</code>.</p></li>
+</ul>
 <p>Hvis du i kolonne <code>J</code> har udregnet den lodrette forskel, så vil vi i kolonne <code>K</code> skrive et 1-tal, hvis det tilhørende punkt er klassificeret korrekt og 0 ellers. Det gør sådan her:</p>
 <p><span class="fremhaev">De røde punkter</span></p>
 <ul>
@@ -893,47 +965,26 @@ Sådan gør du i GeoGebra
 </div>
 </div>
 </div>
+<!-- ## Tre features -->
+<!-- Du har formentlig opdaget, at de to nye features ikke er helt tossede i forhold til at kende forskel på 0'ere og 3-taller, men at der også er nogle cifre, som vi ikke kan kende forskel på baseret på disse to features. Vi vil derfor prøve at tilføje en tredje feature og se, om vi kan få en højere klassifikationsnøjagtighed. -->
+<!-- Ser vi på @fig-lok-max0_vandret og @fig-lok-max3_vandret kan vi se, at både 0'er og 3-taller typisk har mellem en og to vandrette lokale maksima. Derimod illustrerer @fig-lok-max0_lodret og @fig-lok-max3_lodret, at 0'er også typisk har mellem en og to lodrette lokale maksima, mens 3-taller typisk kan have op til tre lodrette lokale maksima. Vi vil derfor som en tredje feature bruge det **maksimale** antal lodrette lokale maksima. Her vil 0'ere typisk være karakteriseret ved, at det maksimale antal lodrette lokale maksima vil være to, mens det tilsvarende tal for 3-taller vil være tre. -->
+<!-- ::: {.callout-note collapse="false" appearance="minimal"} -->
+<!-- ### Opgave 15: Plot af tre features -->
+<!-- Vælg datasættet med en pixelopløsning på $14$.  -->
+<!-- + Lav et punktplot med \"lodret_gns\" ud af $x$-aksen, \"vandret_gns\" op af $y$-aksen og \"lodret_max\" op af $z$-aksen. Sørg for at alle punkter, som svarer til billeder af 0'er farves røde og alle punkter, som svarer til billeder af 3-taller farves grønne. -->
+<!-- <details> -->
+<!-- <summary> Sådan gør du i GeoGebra </summary> -->
+<!-- Åbn datasættet i Excel og kopiere det hele over i et \"Regneark\" i GeoGebra (tryk på \"Vis\" $\rightarrow$ \"Regneark\"). -->
+<!-- + Gør som i opgave 13, men skriv i stedet i celle `I2` følgende: `(C2,E2,D2)` (det skulle give dig værdien for \"lodret_gns\", \"vandret_gns\" og \"lodret max\" for det første billede). -->
+<!-- + Udfyld for alle 200 cifre og farv igen punkterne (vær opmærksom på at man i 3D-plot ikke kan vælge punktmarkering). -->
+<!-- + Vælg \"Vis\" $\rightarrow$ \"3D Grafik\" -->
+<!-- </details> -->
+<!-- + Sammenlign med det punktplot, som du lavede i opgave 9. Egner de to nye features sig bedre til at kende forskel på 0'er og 3-taller? -->
+<!-- + Indtegn i dit (nye) punktplot en ret linje, som så godt som muligt kan adskille de røde krydser fra de grønne cirkler. Nedskriv ligningen for denne linje. -->
+<!-- + Udvælg et 0 og et 3-tal, som ligger \"på den forkerte\" side af din linje og som vi altså har svært ved at kende forskel på. Find id'et på cifret og slå det op i app'en. Kan du ud fra billedet forklare, hvorfor det er svært at kende forskel? -->
+<!-- + Tæl (så godt som muligt -- der kan være punkter, som ligger oveni hinanden) hvor mange cifre, som bliver klassificeret forkert, og udregne på den baggrund en klassifikationsnøjagtighed. -->
+<!-- ::: -->
 </section>
-</section>
-<section id="tre-features" class="level2">
-<h2 class="anchored" data-anchor-id="tre-features">Tre features</h2>
-<p>Du har formentlig opdaget, at de to nye features ikke er helt tossede i forhold til at kende forskel på 0’ere og 3-taller, men at der også er nogle cifre, som vi ikke kan kende forskel på baseret på disse to features. Vi vil derfor prøve at tilføje en tredje feature og se, om vi kan få en højere klassifikationsnøjagtighed.</p>
-<p>Ser vi på <a href="#fig-lok-max0_vandret" class="quarto-xref">figur&nbsp;12</a> og <strong>?@fig-lok-max1_vandret</strong> kan vi se, at både 0’er og 3-taller typisk har mellem en og to vandrette lokale maksima. Derimod illustrerer <a href="#fig-lok-max0_lodret" class="quarto-xref">figur&nbsp;14</a> og <strong>?@fig-lok-max1_lodret</strong>, at 0’er også typisk har mellem en og to lodrette lokale maksima, mens 3-taller typisk kan have op til tre lodrette lokale maksima. Vi vil derfor som en tredje feature bruge det <strong>maksimale</strong> antal lodrette lokale maksima. Her vil 0’ere typisk være karakteriseret ved at det maksimale antal lodrette lokale maksima vil være to, mens det tilsvarende tal for 3-taller vil være tre.</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 15: Plot af tre features
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-16" class="callout-16-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<ul>
-<li>Lav et punktplot med "lodret_gns" ud af <span class="math inline">\(x\)</span>-aksen, "vandret_gns" op af <span class="math inline">\(y\)</span>-aksen og "lodret_max" op af <span class="math inline">\(z\)</span>-aksen. Sørg for at alle punkter, som svarer til billeder af 0’er farves røde og alle punkter, som svarer til billeder af 3-taller farves grønne.</li>
-</ul>
-<details>
-<summary>
-Sådan gør du i GeoGebra
-</summary>
-<p>Åbn datasættet i Excel og kopiere det hele over i et "Regneark" i GeoGebra (tryk på "Vis" <span class="math inline">\(\rightarrow\)</span> "Regneark").</p>
-<ul>
-<li>Gør som i opgave 13, men skriv i stedet i celle <code>I2</code> følgende: <code>(C2,E2,D2)</code> (det skulle give dig værdien for "lodret_gns", "vandret_gns" og "lodret max" for det første billede).</li>
-<li>Udfyld for alle 200 cifre og farv igen punkterne (vær opmærksom på at man i 3D-plot ikke kan vælge punktmarkering).</li>
-<li>Vælg "Vis" <span class="math inline">\(\rightarrow\)</span> "3D Grafik"</li>
-</ul>
-</details>
-<ul>
-<li><p>Sammenlign med det punktplot, som du lavede i opgave 9. Egner de to nye features sig bedre til at kende forskel på 0’er og 3-taller?</p></li>
-<li><p>Indtegn i dit (nye) punktplot en ret linje, som så godt som muligt kan adskille de røde krydser fra de grønne cirkler. Nedskriv ligningen for denne linje.</p></li>
-<li><p>Udvælg et 0 og et 3-tal, som ligger "på den forkerte" side af din linje og som vi altså har svært ved at kende forskel på. Find id’et på cifret og slå det op i app’en. Kan du ud fra billedet forklare, hvorfor det er svært at kende forskel?</p></li>
-<li><p>Tæl (så godt som muligt – der kan være punkter, som ligger oveni hinanden) hvor mange cifre, som bliver klassificeret forkert, og udregne på den baggrund en klassifikationsnøjagtighed.</p></li>
-</ul>
-</div>
-</div>
-</div>
 </section>
 <section id="delvis-facitliste" class="level2">
 <h2 class="anchored" data-anchor-id="delvis-facitliste">Delvis facitliste</h2>
