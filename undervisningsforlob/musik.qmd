@@ -1,0 +1,123 @@
+---
+title: "Kmeans-musik"
+description-meta: "test"
+image: ""
+categories:
+  - Kort
+---
+
+## Anvendelse af K-Means
+
+Ved flere musiktjenester kan man få forslag til ny musik som man sikkert gerne vil høre. En måde man kan lave dette på er ved hjælp af K-means.
+
+For at kunne opdele musiknumre i grupper er det nødvendigt at finde nogle informationer/features til hvert nummer. En oplagt information kunne umiddelbart være musikgenre : rock, pop, klassisk, country m.m.. 
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Musikfeatures?
+Overvej hvilke andre features man kan bruge til at opdele musiknumre efter.
+:::
+
+Opdelingen skal egentlig foretages af en computer som også selv kan analysere musiknumrene og finde features værdier. Nogle af de features der benyttes er: Lydniveau, Energi, Instrumentalitet, Dansbarhed, Positivitet og Tempo.
+
+For at anvende K-means her bør hver feature enten være angivet på samme skala, f.eks. fra 0 til 1, eller ændres ved feature-skalering så hver feature får lige stor betydning. 
+
+Her ses på et mindre eksempel med 15 musiknumre man ønsker at opdele i 3 grupper ud fra 3 features : danceabilty, energy og speechiness.
+Desuden er alle numrer smidt i en tilfældig gruppe
+
+| nummer  | danceability  | energy | speechiness| gruppe|
+|--------|--------|--------|--------|--------|
+|Barbie Girl|	0,76|	0,95|	0,04| 1|
+|Shape of You|	0,83|	0,65|	0,08|2|
+|Set Fire to the Rain|	0,60|	0,67|	0,02|3|
+|Wake Me Up|	0,53|	0,78|	0,05|1|
+|Baby One More Time|	0,76|	0,70|	0,03|2|
+|Just The Way You Are|	0,64|	0,84|	0,04|3|
+|New Rules|	0,76|	0,72|	0,07|1|
+|Stan|	0,78|	0,74|	0,21|2|
+|In Da Club|	0,90|	0,71|	0,37|3|
+|Blinding Lights|	0,51|	0,80|	0,06|1|
+|Blank Space|	0,76|	0,70|	0,05|2|
+|Dance Monkey|	0,82|	0,59|	0,09|3|
+|Hotline Bling|	0,90|	0,62|	0,06|1|
+|Die To Live|	0,42|	0,97|	0,14|2|
+|White Iverson|	0,67|	0,52|	0,04|3|
+
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opdeling af musiknumre i 3 grupper : beregn centrum
+Ud fra skemaet ønsker vi nu at få beregnet centrum for hver af de tre grupper.
+
+| gruppe  | danceability  | energy | speechiness|
+|--------|--------|--------|--------|--------|
+|1 |	0,692|	0,774|	0,056| 
+|2||||
+|3||||
+a) Beregn selv centrum for gruppe 1 og tjek at facit er korrekt.
+b) beregn centrum for de to andre grupper. 
+:::
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Beregn afstande til centrer
+Nu skal vi igang med at finde afstanden fra hvert nummer til hvert centrum. Her skal du selvfølgelig bruge resultatet fra forrige opgave hvor du fandt de tre centrummer.
+
+| nummer  | afstand centrum 1  | afstand centrum 2 | afstand centrum 3|
+|--------|--------|--------|--------|--------|
+|Barbie Girl|	0,189|	0,213|	0,295|
+|Shape of You|	|	|	|
+
+a) Beregn selv afstanden fra "barbie girl" til hver af de 3 centrer og tjek at det er korrekt.
+b) beregn afstand fra "shape of you" til de 3 centrer. 
+:::
+
+
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Bestemmelse af nye grupper
+Herunder er alle afstande til de tre centre beregnet for alle numre. Desuden er der angivet en ny gruppe for "barbie girl".
+
+| nummer  | afstand centrum 1  | afstand centrum 2 | afstand centrum 3|gruppe |ny gruppe|
+|--------|--------|--------|--------|--------|--------|
+|Barbie Girl|	0,189|	0,213|	0,295|1||
+|Shape of You|	0,187|	0,159|	0,110|2||
+|Set Fire to the Rain|	0,143|	0,160|	0,156|3||
+|Wake Me Up|	0,162|	0,189|	0,235|1||
+|Baby One More Time|	0,104|	0,102|	0,095|2||
+|Just The Way You Are|	0,086|	0,128|	0,207|3||
+|New Rules|	0,088|	0,067|	0,076|1||
+|Stan	|0,181|	0,129|	0,134|2||
+|In Da Club|	0,382|	0,331|	0,314|3||
+|Blinding Lights|	0,184|	0,210|	0,259|1||
+|Blank Space|	0,101|	0,089|	0,078|2||
+|Dance Monkey|	0,227|	0,196|	0,123|3||
+|Hotline Bling|	0,259|	0,235|	0,187|1||
+|Die To Live|	0,346|	0,365|	0,432|2||
+|White Iverson|	0,255|	0,243|	0,172|3||
+
+a) Bestem selv ny gruppe for alle numrene.
+b) forklar hvorfor vi ikke er færdige med at opdele i de 3 ønskede grupper med kmeans metoden. 
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Endelig løsning på opdeling.
+Der er allerede lavet nogle beregninger, men der skal laves meget mere før det er færdigt. Der er to gode muligheder for at finde den endelige opdeling hvor den ene er let a1), mens den anden er langt svæere og teknisk a2).
+a1) Brug programmet orange (link), hvor du kan få hjælp til at installere programmet her (link). Med orange kan du få lavet opdelingen med kmeans, ved at benytte filen med dataen for musikken (link til fil her).
+Ved videoen https://www.youtube.com/watch?v=J1ZWQwak2Q4 er vist et eksempel hvor man benytter orange. Du kan gøre tilsvarende men skal her blot have filen med musik hentet ind i orange, benytte metoden kmeans (under unsupervised) og endelig få resultaterne vist i en tabel. Husk desuden at få ændret kmeans-metoden så den opdeler i 3 grupper.
+
+
+a2) Benyt excel eller kodning til at fortage alle beregninger indtil ingen numrer skifter gruppe. Dette er en svær/teknisk opgave.
+
+b) Endelig har vi fået en opdeling af de 15 musiknumrer i 3 grupper.  Overvej om det giver god mening med hvilke numrer der er kmet i samme gruppe.  
+
+:::
+
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Ekstraopgave : Bregning af SUMPAR
+a) Beregn SAUMPAR ud fra grupperne fra starten. 
+b) Beregn ligeledes SUMPAR ud fra de grupper de efterfølgende kom i.
+c) Hvis man samenligner de to resultater, viser det så det ønskede ?
+:::
