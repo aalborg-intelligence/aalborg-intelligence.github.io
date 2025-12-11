@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="test">
+
+<title>Sandsynlighed og mængdeteori – AI MAT - matematikken bag magien</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-c9773902334eb0d2669f10110b305e83.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-Y219BCPS45"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+ 
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'analytics_storage': 'denied'
+  });
+gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo light-content">
+    <img src="../../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../undervisningsforlob/index.html"> 
+<span class="menu-text">Undervisningsforløb</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../materialer/index.html"> 
+<span class="menu-text">Materialer</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../srp/index.html"> 
+<span class="menu-text">SRP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../apps/index.html"> 
+<span class="menu-text">Apps</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Om os</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.youtube.com/@ai-mat"> 
+<span class="menu-text"><img src="../../logo/YouTube/youtube-color-darkblue-icon.svg" style="height:2em"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indhold</h2>
+   
+  <ul>
+  <li><a href="#sandsynlighed-og-mængdeteori" id="toc-sandsynlighed-og-mængdeteori" class="nav-link active" data-scroll-target="#sandsynlighed-og-mængdeteori">Sandsynlighed og mængdeteori</a></li>
+  <li><a href="#indledning" id="toc-indledning" class="nav-link" data-scroll-target="#indledning">Indledning</a></li>
+  <li><a href="#mængdeteori" id="toc-mængdeteori" class="nav-link" data-scroll-target="#mængdeteori">Mængdeteori</a></li>
+  <li><a href="#sandsynlighed" id="toc-sandsynlighed" class="nav-link" data-scroll-target="#sandsynlighed">Sandsynlighed</a></li>
+  <li><a href="#estimat-for-sandsynlighed." id="toc-estimat-for-sandsynlighed." class="nav-link" data-scroll-target="#estimat-for-sandsynlighed.">Estimat for sandsynlighed.</a></li>
+  <li><a href="#betinget-sandsynlighed-uafhængighed-og-betinget-sandsynlighed." id="toc-betinget-sandsynlighed-uafhængighed-og-betinget-sandsynlighed." class="nav-link" data-scroll-target="#betinget-sandsynlighed-uafhængighed-og-betinget-sandsynlighed.">Betinget sandsynlighed, uafhængighed og betinget sandsynlighed.</a></li>
+  <li><a href="#opdeling-og-sandsynlighed" id="toc-opdeling-og-sandsynlighed" class="nav-link" data-scroll-target="#opdeling-og-sandsynlighed">Opdeling og sandsynlighed</a></li>
+  <li><a href="#eksamensspørgsmål" id="toc-eksamensspørgsmål" class="nav-link" data-scroll-target="#eksamensspørgsmål">Eksamensspørgsmål</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Sandsynlighed og mængdeteori</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="sandsynlighed-og-mængdeteori" class="level2">
+<h2 class="anchored" data-anchor-id="sandsynlighed-og-mængdeteori">Sandsynlighed og mængdeteori</h2>
+</section>
+<section id="indledning" class="level2">
+<h2 class="anchored" data-anchor-id="indledning">Indledning</h2>
+<p>I det følgende ses på Sandsynlighedsteori. Alle har selvfølgelig en fornemmelse for hvor sandsynligt det er, at nogle hændelser indtræffer – for eksempel at man slå en sekser med en terning eller trække et rødt kort fra et spil kort. Hurtigt kan det dog blive mere besværligt og for at kunne arbejde systematisk med sandsynligheder, er det nødvendigt først at forstå mængdeteori, som kan være med til at give overblik over hændelser.</p>
+</section>
+<section id="mængdeteori" class="level2">
+<h2 class="anchored" data-anchor-id="mængdeteori">Mængdeteori</h2>
+<p>En mængde er blot en samling af elementer. Det kunne være en samling der indeholder bogstaverne <span class="math inline">\(b\)</span>, <span class="math inline">\(d\)</span> og <span class="math inline">\(k\)</span>. Denne mængde noteres som <span class="math inline">\(\{b,d,k\}\)</span>. Vi siger at mængden indeholder elementerne deri, og hvis vi kalder mængden for <span class="math inline">\(M\)</span> betyder <span class="math inline">\(a\in M\)</span> netop at <span class="math inline">\(M\)</span> indeholder elementet <span class="math inline">\(a\)</span> (eller at <span class="math inline">\(a\)</span> er indeholdt i <span class="math inline">\(M\)</span>). At et element <span class="math inline">\(x\)</span> ikke er i mængden <span class="math inline">\(M\)</span> kan skrives som <span class="math inline">\(x\not \in M\)</span>.</p>
+<p>Bemærk at en mængde kan indeholde alt muligt, det kunne også være en mængde med tal som <span class="math inline">\(\{1,3,5\}\)</span> eller en mængde med personer.</p>
+<p>Hvis man har to mængder <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span>, da siger vi at de to mængder er ens hvis det er sådan, at ethvert element der er i <span class="math inline">\(A\)</span> også er i <span class="math inline">\(B\)</span> og ethvert element der er i <span class="math inline">\(B\)</span> også er i <span class="math inline">\(A\)</span>. Hvis <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> er ens skrives det som <span class="math inline">\(A=B\)</span>.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Ens mængder?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Overvej hvilke af følgende mængder der er ens: <span class="math inline">\(A=\{1,2,3,5\}\)</span> <span class="math inline">\(B=\{1,4,5\}\)</span> <span class="math inline">\(C=\{1,3,2,5\}\)</span> <span class="math inline">\(D=\{1,3,5,2,1,1\}\)</span></p>
+</div>
+</div>
+</div>
+<p>Her er det faktisk de tre mængder <span class="math inline">\(A\)</span>, <span class="math inline">\(C\)</span> og <span class="math inline">\(D\)</span> som er ens, hvilket viser at rækkefølgen ved opskrivningen af elementerne ikke er vigtig og heller ikke om et element skrives flere gange ved mængden. Det vigtige er altså blot om et element er med i mængden eller ej.</p>
+<p>Ofte vil man arbejde med flere mængder og kombinere disse til at lave nye mængder.</p>
+<p>Givet to mængder <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span>, da indføres foreningsmængden af <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> betegnet med <span class="math inline">\(A\cup B\)</span> som mængden som netop indeholder de elementer som er i <span class="math inline">\(A\)</span> eller <span class="math inline">\(B\)</span> eller begge af disse.</p>
+<p>Desuden indføres fællesmængden af <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> betegnet med <span class="math inline">\(A\cap B\)</span> som mængden som netop indeholder de elementer som er indeholdt i både <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span>.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Foreningsmængde og fællesmængde
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Hvis <span class="math inline">\(A=\{1,2,3,4,5,6\}\)</span> og <span class="math inline">\(B=\{2,4,6,8\}\)</span> bestem da de to mængder <span class="math inline">\(A\cup B\)</span> og <span class="math inline">\(A\cap B\)</span>.</p>
+</div>
+</div>
+</div>
+<p>Igen svar til opgaverne (måske skjult).</p>
+<p><span class="math inline">\(A\cup B=\{1,2,3,4,5,6,8\}\)</span> og <span class="math inline">\(A\cap B=\{2,4,6\}\)</span></p>
+<p>En af de vigtige mængder er den tomme mængde som betegnes med <span class="math inline">\(\emptyset\)</span>. Hvis to mængder <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> opfylder at <span class="math inline">\(A\cap B=\emptyset\)</span> siges at <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> er disjunkte. Disjunkte mængder har derved ikke nogen elementer til fælles, og man kunne også sige at der ikke er noget overlap mellem de to mængder.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Disjunkte mængder
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Overvej hvilke af følgende mængder der er disjunkte med hinanden: <span class="math inline">\(A=\{1,2,3,5\}\)</span> <span class="math inline">\(B=\{1,4,6\}\)</span> <span class="math inline">\(C=\{3,5,7\}\)</span></p>
+</div>
+</div>
+</div>
+<p>Svar : Her er det mængderne <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> samt <span class="math inline">\(B\)</span> og <span class="math inline">\(C\)</span> som er disjunkte.</p>
+<p>Ofte når man betragter mængder vil man udelukkende have elementer af en bestemt slags. Som tidligere kunne det være at alle elementer er heltal. Her tænker vi at vi arbejder indenfor et Univers <span class="math inline">\(U\)</span> som er alle mulige tænkelige elemeter, og de mængder vi ellers ser på indeholder så elementer som er i mængden <span class="math inline">\(U\)</span>.</p>
+<p>Givet et univers <span class="math inline">\(U\)</span> og en mængde <span class="math inline">\(A\)</span> som kun indeholder elementer som også er i <span class="math inline">\(U\)</span>, da indføres komplementærmængden for <span class="math inline">\(A\)</span> noteret <span class="math inline">\(\overline{A}\)</span> som mængden indeholdende netop de elementer fra <span class="math inline">\(U\)</span> som ikke er i <span class="math inline">\(A\)</span>.</p>
+<p>Hvis vi arbejder med et univers <span class="math inline">\(U=\{1,2,3,4,5,6,7,8\}\)</span> og har at <span class="math inline">\(A=\{1,2,3\}\)</span> da er <span class="math inline">\(\overline{A}= \{4,5,6,7,8\}\)</span>.</p>
+<p>Den følgende figur viser såkaldte veen-diagrammer for foreningsmængde, fællesmængde og komplementærmængde</p>
+<p>Figur mangler.</p>
+<p>Givet en mængde <span class="math inline">\(A\)</span>, så kaldes <span class="math inline">\(A_1,A_2,...,A_n\)</span> en opdeling af <span class="math inline">\(A\)</span> hvis <span class="math inline">\(A_1,A_2,...,A_n\)</span> er mængder som er parvis disjunkte og hvor <span class="math display">\[A=A_1\cup A_2\cup \cdots \cup A_n.\]</span> Hvis man har mængden <span class="math inline">\(A=\{1,2,3,4,5,6,7,8\}\)</span> kan man lave en opdeling af <span class="math inline">\(A\)</span> i to mængder <span class="math inline">\(A_1\)</span> og <span class="math inline">\(A_2\)</span> hvor <span class="math inline">\(A_1\)</span> indeholder de lige tal fra <span class="math inline">\(A\)</span> mens <span class="math inline">\(A_2\)</span> indeholder de uligetal fra <span class="math inline">\(A\)</span>.</p>
+<p>Hvis det var en mængde indeholdende elever på et gymnasie, kunne man lave en opdeling efter klasser man kommer fra.</p>
+</section>
+<section id="sandsynlighed" class="level2">
+<h2 class="anchored" data-anchor-id="sandsynlighed">Sandsynlighed</h2>
+<p>Ved sandsynlighedsregning tænker man, at man udfører et forsøg/eksperiment og der så er nogle mulige udfald. Mængden af disse udfald kaldes udfaldsrummet.</p>
+<p>På forhånd ved man ikke hvad udfaldet bliver, men ofte kender man sandsynligheden for hvert udfald sker. Rent matematisk svarer det til en såkaldt sandsynlighedfunktion.</p>
+<p>En sandsynlighedsfunktion <span class="math inline">\(P\)</span> er en funktion, der til hvert udfald <span class="math inline">\(u_i\)</span> i et udfaldsrum <span class="math inline">\(U=\{u_1,u_2,\ldots,u_n\}\)</span> knytter et reelt tal <span class="math inline">\(P(u_i)\)</span>, hvor der gælder, at <span class="math inline">\(P(u_i)\geq 0\)</span> og hvor <span class="math display">\[P(u_1)+P(u_2)+\cdots + P(u_n)=1=100 \%.\]</span> <span class="math inline">\(P(U_i)\)</span> kaldes sandsynligheden for udfaldet <span class="math inline">\(u_i\)</span>.</p>
+<p>Hvis vi tænker på et konkret eksempel kunne det være at man slår med en almindelig terning hvor udfaldet kan være <span class="math inline">\(1,2,3,4,5,6\)</span>. Her vil sandsynligheden for at man slår <span class="math inline">\(3\)</span> være <span class="math inline">\(P(3)=\frac{1}{6}\)</span>. Ved dette eksempel er sandsynligheden for hvert udfald ens.</p>
+<p>Hvis sandsynligheden for hvert udfald er den samme kaldes sandsynlighedsfeltet for symmetrisk. Hvis der ialt er <span class="math inline">\(n\)</span> udfald vil sandsynligheden for et udfald <span class="math inline">\(u\in U\)</span> ved et symmetrisk sandsynlighedsfelt være <span class="math display">\[P(u)=\frac{1}{n}.\]</span></p>
+<p>Ofte vil vi ikke kun se på sandsynligheden for et udfald, men derimod for noget som kan dække over flere forskellige udfald, dette kaldes en hændelse. Ved en terning kunne det være sandsynligheden for at slå noget lige.</p>
+<p>Hvis vi igen arbejder med et symmetrisk sandsynlighedfelt og <span class="math inline">\(A\)</span> er en hændelse som ialt består af <span class="math inline">\(k\)</span> udfald bliver sandsynligheden for <span class="math inline">\(A\)</span> <span class="math display">\[P(A)=\frac{k}{n}.\]</span> I forhold til en hændelse <span class="math inline">\(A\)</span> kan man også tænke på de udfald som er i <span class="math inline">\(A\)</span> som gunstige udfald, hvorved vi kan bruge formlen <span class="math display">\[P(A)=\frac{antal\ gunstige \ udfald}{antal \ mulige \ udfald}.\]</span></p>
+<p>Hvis man ser på sandsynligheden for at slå noget lige med en almindelig terning, har vi da at hændelsen svarer til udfaldene <span class="math inline">\(2,4\)</span> og <span class="math inline">\(6\)</span>. Derved bliver sandsynligheden <span class="math inline">\(P=\frac{antal\ gunstige}{antal \ mulige}=\frac{3}{6}=\frac{1}{2}\)</span>.</p>
+<p>Det er selvfølgelig ikke altid man har et symmetrisk sandsynlighedfelt. Hvis man se på et eksempel med en maskine der producerer bolde, og for hver gang der bliver lavet en bold er der <span class="math inline">\(20 \%\)</span> chance for den bliver rød, <span class="math inline">\(40 \%\)</span> chance for den bliver blå, <span class="math inline">\(10 \%\)</span> chance for den bliver grøn og <span class="math inline">\(30 \%\)</span> chance for den bliver gul.</p>
+<p>Her Har vi udfaldsrummet <span class="math inline">\(\{rød, blå, grøn , gul\}\)</span>. Desuden er <span class="math inline">\(P(rød)=20 \%\)</span> $P(blå)=10 % og $P(grøn)=30 %.</p>
+<p>Hvis vi ser på hændelsen at der laves en rød eller blå bold, da bliver sandsynligheden. <span class="math display">\[P=P(rød)+P(blå)=20\%+40\%=60\%.\]</span> Altså bliver der blot summen af sandsynlighederne for hvert af udfaldene fra hændelsen.</p>
+<p>Hvis man ser på hændelser som mængder kan man nu finde resultater for hændelser som kan laves vha. foreningsmængde og fællesmængde. Her får man følgende resultat:</p>
+<p><span class="math display">\[P(A\cup B)=P(A)+P(B)-P(A\cap B).\]</span> Dette resultat ses ud fra veen-diagrammet fra figur ??. Hvis man tager alle udfald fra <span class="math inline">\(A\)</span> og bagefter tager alle udfald fra <span class="math inline">\(B\)</span>, vil de udfald som er i begge, svarende til fællesmængden, blive taget to gange.</p>
+<p>Hvis de to hændelser <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> er disjunkte, hvorved <span class="math inline">\(A\cap B\)</span> er den tomme mængde, bliver <span class="math display">\[P(A\cup B)=P(A)+P(B).\]</span> Når man ser på hændelsen <span class="math inline">\(\overline{A}\)</span> svarende til komplementærmængden af en mændelse <span class="math inline">\(A\)</span> er det oplagt at <span class="math display">\[P(\overline{A})=1-P(A).\]</span></p>
+<p>Eksempel: Hvis man kaster to gange med en ganske almindelig terning og ønsker at finde sandsynligheden for at man mindst en af gangene får en 6’er. Hvis man <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> svarer til hændelsen at man slår en 6’er ved hhv. første og andet kast (og det ved det modsatte kast er ligemeget hvad man slår), da er den ønskede sandsynlighed: <span class="math display">\[P(A\cup B)=P(A)+P(B)-P(A\cap B).\]</span> Her må <span class="math inline">\(P(A)=P(B)=\frac{1}{6}\)</span> og <span class="math inline">\(P(A\cap B)=\frac{1}{36}\)</span> da <span class="math inline">\(A\cap B\)</span> må svare til at man får en 6’er ved begge kast. Derved er <span class="math display">\[P(A\cup B)=P(A)+P(B)-P(A\cap B)=\frac{1}{6}+\frac{1}{6}-\frac{1}{36}=\frac{11}{36}.\]</span> Her bemærkes at udfaldet hvor man ved begge kast får en 6’er både er i hændelsen <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span>.</p>
+</section>
+<section id="estimat-for-sandsynlighed." class="level2">
+<h2 class="anchored" data-anchor-id="estimat-for-sandsynlighed.">Estimat for sandsynlighed.</h2>
+<p>Ofte vil man støde på tilfælde hvor man ikke kender en sandsynlighed, og heller ikke bare kan regne sandsynligheden ud. Det kunne f.eks. være sandsynligheden for at vinde ved lykkehjul ved et reklamespil. Her vil firmaer ofte få det til at fremgå som om det er let at vinde et større beløb ved at alle felter er lige store. For at få et estimat for sandsynligheden for at vinde kunne man prøve lykkehjulet en del gange og finde et estimat,<span class="math inline">\(\hat{p}\)</span>, for sandsynligheden for at vinde ved at benytte formlen <span class="math display">\[\hat{p}=\frac{antal\ gunstige}{antal \ mulige}.\]</span> Her har vi blandt andet antaget at der er uafhængighed mellem udfaldet ved hvert forsøg, og sandsynligheden ikke ændres. Estimatet for sandsynlighed fås på denne måde ved en stikprøve hvor man prøver nogle gange.</p>
+</section>
+<section id="betinget-sandsynlighed-uafhængighed-og-betinget-sandsynlighed." class="level2">
+<h2 class="anchored" data-anchor-id="betinget-sandsynlighed-uafhængighed-og-betinget-sandsynlighed.">Betinget sandsynlighed, uafhængighed og betinget sandsynlighed.</h2>
+<p>Givet to hændelser <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> så benyttes notationen <span class="math inline">\(P(A|B)\)</span> for sandsynligheden for, at <span class="math inline">\(B\)</span> sker, når det er givet, at <span class="math inline">\(B\)</span> er sket. Det læses derfor også som sandsynligheden for <span class="math inline">\(A\)</span> givet <span class="math inline">\(B\)</span>.</p>
+<p>Lad os se på et par eksempler:</p>
+<p>Eksempel 1: Vi ser igen på at man slår med en gaske almindelig terning. Her ønsker vi at bestemme sandsynligheden for at man slår noget lige givet at man slår mindst <span class="math inline">\(4\)</span>. Hvis <span class="math inline">\(A=\{2,4,6\}\)</span> svarer til at slå noget lige og <span class="math inline">\(B=\{4,5,6\}\)</span> svarer til at slå mindst <span class="math inline">\(4\)</span>, da er det netop sandsynlighden <span class="math inline">\(P(A|B)\)</span> vi skal have fundet. Her kan vi tænke på det som om at udfaldrummet kun består af <span class="math inline">\(B=\{4,5,6\}\)</span> og ved hændelsen <span class="math inline">\(A\)</span> skal vi kun se på den del som også er i <span class="math inline">\(B\)</span>. Da det samtidigt er et symmetrisk snadsynlighedsfelt vil vi få sandsynligheden ved <span class="math display">\[P(A|B)=\frac{antal\ gunstige}{antal \ mulige}=\frac{2}{3}.\]</span> I denne formel prøve vi lige at dele med antal udfald i tæller og nævner. <span class="math display">\[P(A|B)=\frac{antal\ gunstige}{antal \ mulige}=\frac{\frac{2}{6}}{\frac{3}{6}}.\]</span> Ved tælleren så vi egentlig på fællesmængden for de to hændelser og her er <span class="math inline">\(P(A\cap B)=\frac{2}{6}\)</span> mens nævneren svarer til <span class="math inline">\(P(B)=\frac{3}{6}\)</span>.</p>
+<p>Altså er <span class="math display">\[P(A|B)=\frac{P(A\cap B)}{P(B)}\]</span></p>
+<p>Eksempel 2: Her udvælger vi en tilfældig gymnasieelev og ser på om den udvalgte er interesseret i fodbold.</p>
+<p>Her kunne man se på Sandsynligheden for at den udvalgte er interesseret i fodbold givet at den udvalgte er en dreng.</p>
+<p>Alle vil nok tænke at en information om køn af den udvalgte vil ændre sandsynligheden for om den udvalgte er interesseret i fodbold.</p>
+<p>Lad os sige at der ialt er <span class="math inline">\(500\)</span> gymnasieelever, hvoraf <span class="math inline">\(200\)</span> er drenge og <span class="math inline">\(300\)</span> piger. Desuden er 120 drenge interesseret i fodbold mens <span class="math inline">\(90\)</span> piger er interesseret i fodbold.</p>
+<p>Vi kan nu beregne <span class="math inline">\(P(Fodbold)\)</span>, <span class="math inline">\(P(Fodbold| dreng)\)</span> og <span class="math inline">\(P(Fodbold| pige)\)</span>.</p>
+<p><span class="math display">\[P(Fodbold)=\frac{antal\ gunstige}{antal \ mulige}=\frac{210}{500}=42\%.\]</span> Hvis vi skal finde <span class="math inline">\(P(Fodbold| dreng)\)</span> er det sandsynligheden for at den udvalgte er interesseret i fodbold givet at den udvalgte er en drenge. Med denne formulering giver det meningen kun at se på drengene og om en udvalgt der vil være interesseret i fodbold for at bestemme <span class="math inline">\(P(Fodbold| dreng)\)</span>. <span class="math display">\[P(Fodbold| dreng)=\frac{antal\ gunstige}{antal \ mulige}=\frac{120}{200}=60\%.\]</span> Her ses at informationen med at det er en dreng der er udvalgt har betydning for om den udvalgte er interesseret i fodbold.</p>
+<p>Ved beregningen af <span class="math inline">\(P(Fodbold| dreng)\)</span> kunne vi i tæller og nævner dividere med antallet af gymnasierelever ialt og få <span class="math display">\[P(Fodbold| dreng)=\frac{\frac{120}{500}}{\frac{200}{500}}.\]</span></p>
+<p>Her svarer nævneren til sandsynligheden for at den udvalgte er en dreng, men nævneren svarer til at den udvalgte både er en dreng og han er interesseret i fodbold, hvorved det er en fællesmængde. Altså <span class="math display">\[P(Fodbold| dreng)=\frac{P(Fodbold \cap dreng)}{P(dreng)}\]</span></p>
+<p>sætning:</p>
+<p>Givet to hændelser <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span>, da er den betingede sandsynlighed <span class="math inline">\(P(A|B)\)</span> givet ved <span class="math display">\[P(A|B)=\frac{P(A\cap B)}{P(B)}\]</span> og sandsynligheden for <span class="math inline">\(A\cap B\)</span> er <span class="math display">\[P(A\cap B)=P(B)\cdot P(A|B)\]</span> Beregningen med formlen svarer til at man begrænser sig til udfald hvor <span class="math inline">\(B\)</span> indtræffer og ser hvor sandsynligt det er at <span class="math inline">\(A\)</span> indtræffer der.</p>
+<p>Man siger to hændelser er uafhængige, hvis viden om at den ene hændelse indtræffer ikke påvirker sandsynligheden for den anden.</p>
+<p>Det vil sige at to hændelser <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> er uafhængige hvis <span class="math inline">\(P(A|B)=P(A)\)</span>.</p>
+<p>Ved eksempel 2 fra tidligere er der ikke uafhængighed mellem hændelserne med at den udvalgte er en dreng og hændelsen at den udvalgte er interesseret i foldbold. Ved eksemplet var <span class="math inline">\(P(Fodbold)=42\%\)</span> mens <span class="math inline">\(P(Fodbold|dreng)=60\%\)</span>.</p>
+<p>opgaver : På et gymnasie ønsker man at se på om der er sammenhæng mellem om elever har fået morgenmad og om de føler sig motiveret i 1. lektion.</p>
+<p>Man har ialt fået svar fra <span class="math inline">\(700\)</span> elever, hvoraf <span class="math inline">\(600\)</span> havde fået morgenmad og <span class="math inline">\(100\)</span> ikke have fået morgenmad. Af dem som havde fået morgenmad var der <span class="math inline">\(500\)</span> der svarede at de var motiveret i 1.lektion, og af dem som ikke havde fået morgenmad var der <span class="math inline">\(55\)</span> der svarede at de var motiveret i 1.lektion. Hvis <span class="math inline">\(A\)</span> svarer til hændelsen at en elev har fået morgenmad og <span class="math inline">\(B\)</span> svarer til at en elev er motiveret i 1.lektion, bestem da følgende</p>
+<ol type="a">
+<li>Bestem sandsynligheden for at en tilfældig udvalgt elev får morgenmad.</li>
+<li>Bestem sandsynligheden for at en tilfældigt udvalgt elev både har fået morgenmad og er motiveret i 1. lektion.</li>
+<li>bestem sandsynligheden for at en elev er motiveret i 1. lektion givet at eleven har fået morgenmad.</li>
+<li>bestem sandsynligheden for at en elev er motiveret i 1. lektion givet at eleven ikke har fået morgenmad.</li>
+<li>er der uafhængighed mellem hændelserne A og B.</li>
+</ol>
+<p>Et af de helt centrale resultater for betingede sandsynligheder er Bayes sætning.</p>
+<p>Bayes Sætning/Formel: Givet to hændelser <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> da gælder at</p>
+<p><span class="math display">\[P(A|B)=\frac{P(B|A)\cdot P(A)}{P(B)}.\]</span></p>
+<p>Bevis: Givet to mængder <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> så ved vi at <span class="math inline">\(A\cap B=B\cap A\)</span>, og derved er <span class="math inline">\(P(A\cap B)=P(B\cap A)\)</span>. Ved at benytte formel ?? for at finde begge disse sandsynligheder får vi: <span class="math inline">\(P(A)\cdot P(B|A)=P(B)\cdot P(A|B)\)</span>. Her isoleres <span class="math inline">\(P(A|B)\)</span> ved at gange med <span class="math inline">\(P(B)\)</span>, hvorved <span class="math display">\[\frac{P(B|A)\cdot P(A)}{P(B)}=P(A|B).\]</span></p>
+<p>Ofte benyttes Bayes sætning til at bestemme den betingede sandsynlighed <span class="math inline">\(P(A|B)\)</span> ud fra den betingede sandsynlighed <span class="math inline">\(P(B|A)\)</span>.</p>
+<p>Eksempel fortsat. Her arbejder vi videre med eksemplet med køn og interesse for fodbold.</p>
+<p>Vi ønsker at finde sandsynligheden for at en udvalgt er en dreng givet at det er en som er interesseret i fodbold. Vi ønsker altså sandsynligheden <span class="math inline">\(P(dreng|fodbold)\)</span>. Fra bayes sætning får vi</p>
+<p><span class="math display">\[P(dreng|fodbold)=\frac{P(fodbold|dreng)\cdot P(dreng)}{P(fodbold)}.\]</span> Fra eksemplet har vi udregnet alle sandsynligheder og får så <span class="math display">\[P(dreng|fodbold)=\frac{60 \% \cdot 40 \%}{42\%}=57,14\%.\]</span> Her skal vi huske at ved eksmplet var det 40 % som var drenge, men der var samtidigt en større del af dem som var interesseret i fodbold end piger. Derved er det forventet at den udregnede sandsynlighed blev over 40 %.</p>
+<p>Opgave: Fortsættelse af opgaven fra tidligere med motivation i 1. lektion og morgenmad.</p>
+<ol start="6" type="a">
+<li>Bestem sandsynligheden for at en elev har fået morgenmad givet at eleven er motiveret i 1. lektion.</li>
+</ol>
+</section>
+<section id="opdeling-og-sandsynlighed" class="level2">
+<h2 class="anchored" data-anchor-id="opdeling-og-sandsynlighed">Opdeling og sandsynlighed</h2>
+<p>Ud fra formel …… følger det at hvis <span class="math inline">\(A_1,A_2,...,A_n\)</span> er en opdeling for en hændelse <span class="math inline">\(U\)</span> så er <span class="math display">\[P(A)=P(A_1)+P(A_2)+\cdots+P(A_n).\]</span> Når vi skal finde sandsynligheden for en hændelse <span class="math inline">\(B\)</span> kan det til tider være en ide at benytte en opdeling af ens univers <span class="math inline">\(U\)</span>.</p>
+<p>Sætning/bevis.</p>
+<p>Hvis <span class="math inline">\(B\)</span> er en hændelse og <span class="math inline">\(A_1,A_2,...,A_n\)</span> en opdeling af ens univers <span class="math inline">\(U\)</span>, så er <span class="math display">\[P(B)=P(B|A_1)\cdot P(A_1)+P(B|A_2)\cdot P(A_2)+\cdots +P(B|A_n)\cdot P(A_n).\]</span> Fra figur …. ses at B kan opdeles i mængderne <span class="math display">\[B\cap A_1,B\cap A_2,\ldots,B\cap A_n.\]</span> Derved er <span class="math display">\[P(B)=P(B\cap A_1)+P(B\cap A_2)+\cdots+P(B\cap A_n).\]</span> Ved at benytte ???? for hvert led på højresiden får vi derfor at <span class="math display">\[P(B)=P(B|A_1)\cdot P(A_1)+P(B|A_2)\cdot P(A_2)+\cdots +P(B|A_n)\cdot P(A_n).\]</span></p>
+<p>Lad os tage eksepmlet fra tidligere med fodbold, men hvor vi lige glemmer antallet af elever, men blot tænker vi har oplysning om at <span class="math inline">\(40\%\)</span> er drenge, <span class="math inline">\(60\%\)</span> er piger, <span class="math inline">\(60\%\)</span> af drengene er interesseret i fodbold og <span class="math inline">\(30\%\)</span> af pigerne er interesseret i fodbold.</p>
+<p>Hvis man ønsker at beregne sandsynligheden for at en tildældig udvalgt er interesseret i fodbold kan vi lave en opdeling af alle gymnasieeleverne med henholdsvis drenge og piger. Derved får vi: <span class="math display">\[P(Fodbold)=P(Fodbold|dreng)\cdot P(dreng)+P(Fodbold|pige)\cdot P(pige)\]</span> <span class="math display">\[=60\%\cdot 40\%+30\% \cdot 60 \%=42\%.\]</span> Hvis vi ved …. ligeledes kun have haft de angivne procenter og ikke antal kunne vi have beregnet</p>
+<p><span class="math display">\[P(dreng|fodbold)=\frac{P(fodbold|dreng)\cdot P(dreng)}{P(Fodbold|dreng)\cdot P(dreng)+P(Fodbold|pige)\cdot P(pige)}.\]</span></p>
+<p>Opgave: Fortsættelse af opgaven fra tidligere med motivation i 1. lektion og morgenmad. Nu arbejder vi dog med følgende tal: <span class="math inline">\(80\%\)</span> af alle elever har fået morgenmad. <span class="math inline">\(85 \%\)</span> af dem der har fået morgemad er motiveret i 1. lektion. <span class="math inline">\(55\%\)</span> af dem der ikke har fået morgenmad er motiveret i 1.lektion.</p>
+<ol start="7" type="a">
+<li>Benyt opdeling og bayes formel til at bestemme sandsynligheden for at en elev har fået morgenmad givet at eleven er motiveret i 1.lektion.</li>
+</ol>
+<p>eksempel med sygdom klippes ind.</p>
+</section>
+<section id="eksamensspørgsmål" class="level2">
+<h2 class="anchored" data-anchor-id="eksamensspørgsmål">Eksamensspørgsmål</h2>
+<p>betinget sandsynlighed. Bayes formel + bevis opdeling og sandsynlighed for hændelse. Benyt ved AI/ sygdom</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/aimat\.dk");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
