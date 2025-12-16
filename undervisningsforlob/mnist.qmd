@@ -1,7 +1,7 @@
 ---
 title: "Kan vi genkende håndskrevne tal?"
-description-meta: "Hvordan får man en computer til at genkende håndskrevne tal? I dette forløb skal vi se på, hvordan man ud fra et billede af et håndskrevet tal kan lave en algortime, som kan genkende tallet."
-image: "mnist_filer/pixel03.png"
+description: "Hvordan får man en computer til at genkende håndskrevne tal? I dette forløb skal vi se på, hvordan man ud fra et billede af et håndskrevet tal kan lave en algortime, som kan genkende tallet."
+image: "mnist_filer/lok-max3_vandret.png"
 categories:
   - C-niveau
   - Kort
@@ -16,7 +16,7 @@ Forløbet kræver kendskab til:
 + Koordinatsystemer.
 + Rette linjer.
 
-**Tidsforbrug:** Ca. 90 minutter.
+**Tidsforbrug:** Ca. 120 minutter.
 
 :::
 
@@ -25,7 +25,7 @@ Forløbet kræver kendskab til:
 
 ### Formål
 
-Nogle gange har man brug for, at håndskreven tekst kan digitaliseres. Det kan for eksempel være i en eksamenssituation, hvor din lærer og censor skriver din karakter på en liste, som efterfølgende skal tastes ind på en computer. Det ville være smart, hvis man kunne scanne listen eller tage et billede af den, hvorefter alle tal korrekt vil blive genkendt (så du ikke får en forkert karakter!). Dette forløb handler om, hvordan det kan gøres. 
+Nogle gange har man brug for, at håndskrevet tekst kan digitaliseres. Det kan for eksempel være i en eksamenssituation, hvor din lærer og censor skriver din karakter på en liste, som efterfølgende skal tastes ind på en computer. Det ville være smart, hvis man kunne scanne listen eller tage et billede af den, hvorefter alle tal korrekt vil blive genkendt (så du ikke får en forkert karakter!). Dette forløb handler om, hvordan det kan gøres. 
 
 :::
 
@@ -41,9 +41,9 @@ Fordi alle farver bliver repræsenteret ved disse tre farver, taler man om en **
 
 Vi kan skrue på lysstyrken i hver af de tre subpixels. Hvis der er skruet fuldt op for farven, er værdien 255, mens helt slukket svarer til værdien[^1] 0.
 
-[^1]: Tallene fra 0 til 255 kan i det binære talsystem repræsenteres ved 8 bits svarende til 1 byte.
+[^1]: Tallene fra 0 til 255 kan i det binære talsystem repræsenteres ved 8 bits svarende til 1 byte, fordi $2^8=256$.
 
-Vores øje opfatter ikke farven på de tre subpixels individuelt, men vi vil i stedet se en blandingsfarve. Hvis der for eksempel er skruet fuldt op på alle tre farver, så vil vores øje opfatte det som hvid. Det vil sige, at den pixel, som er vist i @fig-subpixel lyser hvid for os!
+Vores øje opfatter ikke farven på de tre subpixels individuelt, men vi ser i stedet se en blandingsfarve. Hvis der for eksempel er skruet fuldt op på alle tre farver, så vil vores øje opfatte det som hvid. Det vil sige, at den pixel, som er vist i @fig-subpixel vil lyse hvid for os!
 
 Skruer vi helt op for rød og blå, men slukker for grøn fås en pink farve (som kaldes for magenta):
 
@@ -105,17 +105,17 @@ Idéen er, som nævnt tidligere, at vi ud fra $7 \times 7$ billederne vil udvind
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 1: Beregning af featuers
+### Opgave 1: Beregning af features
 
 Det kunne godt se ud som om, at der bruges flere farvede pixels på at skrive et 0, end der bliver brugt på at skrive et 1-tal. Vi vil derfor helt enkelt udregne den gennemsnitlige pixelværdi af hele billedet:
 
-* Udregne den gennemsnitlige pixelværdi for nedenstående to billeder:
+* Udregn den gennemsnitlige pixelværdi for nedenstående to billeder:
 
 ![](mnist_filer/pixel_gns.png){width=80% fig-align="center"}
 
 Et andet bud på en simpel feature er at tælle hvor mange pixels, der er helt hvide (det vil her sige med en pixelværdi på 0, fordi vi har vendt farveskalaen om). Vi vil nemlig forvente, at et 1-tal fylder mindre end et 0, så antallet af helt hvide pixels må forventes at være større på billederne af 1-taller.
 
-* Tæl antallet at helt hvide pixels på ovenstående to billeder.
+* Tæl antallet af helt hvide pixels på ovenstående to billeder.
 
 * Vi har nu beregnet to forskellige features for de to billeder. Er værdierne som forventet?
 
@@ -209,20 +209,6 @@ Vi vil starte med at undersøge de to features hver for sig.
 
 </details>
 
-<details>
-<summary> Sådan gør du i Excel </summary>
-
-* Indsæt et tomt punktplot (det er vigtigt at det er et **punkt**-plot og ikke et linjeplot).
-* Højreklik på diagrammet og tryk på \"Vælg data...\".
-* Tryk på \"Tilføj\"-ikonet.
-* Ved \"Serienavn\" skriver du \"Tallet 0\"
-* Under \"X-serieværdier\" markerer du de første 100 tal i søjlen med \"pixel_gns\" (`C2:C101`).
-* Under \"Y-serieværdier\" markerer du de første 100 tal i søjlen med \"antal_tomme\" (`D2:D101`).
-* Tilføj en serie i samme punktplot og giv den navnet \"Tallet 1\"
-* Under \"X-serieværdier\" markerer du de sidste 100 tal i søjlen med \"pixel_gns\" (`C102:C201`).
-* Under \"Y-serieværdier\" markerer du de sidste 100 tal i søjlen med \"antal_tomme\" (`D102:D201`).
-
-</details>
 
 :::
 
@@ -231,6 +217,8 @@ Vi vil starte med at undersøge de to features hver for sig.
 ### Opgave 6: Klassifikation baseret på en eller to features
 
 Vi vil starte med at undersøge, om vi kan kende forskel på 0 og 1 alene baseret på én af de to features.
+
+Brug det punktplot, som du lavede i opgave 5.
 
 [Gennemsnitlig pixelværdi]{.fremhaev}
 
@@ -252,7 +240,7 @@ Tabellen herunder kaldes for en **confusion matrix**.
 
 Klassifikationsnøjagtigheden (**CA** for *classification accuracy* på engelsk) angiver hvor stor en procentdel af data, som er blevet klassificeret korrekt.
 
-+ Udregn klassifikationsnøjagtigheden.
++ Udregn klassifikationsnøjagtigheden[^4].
 
 [Antal hvide pixels]{.fremhaev}
 
@@ -266,11 +254,13 @@ Vi vil nu undersøge, hvor mange billeder vi kan klassificere korrekt, ved kun a
 
 Til sidst vil vi prøve at undersøge, om vi kan gøre det bedre ved at bruge begge features.
 
-+ Indtegn en ret linje i koordinatsystemet.
++ Indtegn en ret linje i koordinatsystemet (gør det for eksempel i GeoGebra ved at trykke på ikonet \"Linje\", hvor man kan tegne en ret linje gennem to punkter. På den måde er det nemt at justere på linjen ved at flytte på de to punkter).
 
 + Svar på de samme spørgsmål som ovenfor, men nu baseret på den generelle rette linje.
 
 :::
+
+[^4]: Man får her en forholdsvis høj klassifikationsnøjagtighed. Det er i virkeligheden lidt snyd. Vi finder nemlig ud af, hvor god modellen er til at klassificere de billeder, som modellen er trænet på. I virkeligheden bør man undersøge, hvor god modellen er til at klassificere nye, ukendte billeder. Et sådant datasæt med nye og ukendte billder kalder man for et **testdatasæt**. Det kan du læse mere om i noten [Overfitting, modeludvælgelse og krydsvalidering](../materialer/krydsvalidering/krydsvalidering.qmd).
 
 I opgave 6 ovenfor kom du formentlig frem til, at hvis vi alene skal adskille 0'er fra 1-taller, så er det faktisk nok at tælle antallet af hvide pixels i billedet! Gør vi det, kan vi med vores træningsdata få en klassifikationsnøjagtighed på $98.5\%$.
 
@@ -313,7 +303,7 @@ Brug igen [app'en](https://apps01.math.aau.dk/ai/cifre/){target="_blank"}, som v
 
 :::
 
-Det er ret tydeligt, at den gennemsnitlige pixelværdi og antallet af hvide pixels i billedet på ingen måde kan bruges til at kende forskel på 0 og 3. Det skyldes, at man åbenbart bruger cirka lige meget \"blyantsfarve\" på at skrive 0, som man gør på at skrive 3. Det viser med al tydelighed, at de features, man vælger, er fuldstændig afhængig af det klassifikationsproblem, som man står med. To features kan være formidable til ét klassifikationsproblem (at kende forskel på 0 og 1), mens de er elendige til at andet klassifikationsproblem (at kende forskel på 0 og 3). Det betyder, at vi må på jagt efter nye features!
+Det er ret tydeligt, at den gennemsnitlige pixelværdi og antallet af hvide pixels i billedet på ingen måde kan bruges til at kende forskel på 0 og 3. Det skyldes, at man åbenbart bruger cirka lige meget \"blyantsfarve\" på at skrive 0, som man gør på at skrive 3. Det viser med al tydelighed, at de features, som er gode at vælge, er fuldstændig afhængig af det klassifikationsproblem, som man står med. To features kan være formidable til ét klassifikationsproblem (at kende forskel på 0 og 1), mens de er elendige til at andet klassifikationsproblem (at kende forskel på 0 og 3). Det betyder, at vi må på jagt efter nye features!
 
 ### Vandrette lokale maksima
 
@@ -458,7 +448,7 @@ I opgave 11 så vi, at de håndskrevne tal ikke altid helt opfører sig, som vi 
 
 :::
 
-Når vi ser på nogle af de cifre, som vi ikke fik klassificeret korrekt, kan det måske godt undre, hvad der går galt. På @fig-misklas0_id8 kan vi se et 0 (med id 8), som vi ikke får klassificeret korrekt. I forhold til det punktplot, du lige har lavet, ligger dette cifre for langt til højre. Det vil sige, at det gennemsnitlige antal lodrette maksima er for stort (vi forventer måske en værdi på omkring $1.8$). Det kan vi også se på @fig-misklas0_id8. Der er flere søjler med $3$ og $4$ lodrette maksima, hvilket samlet set resulterer i et gennemsnit på $3.33$. Men hvorfor egentlig? Det er da et nydeligt, rundt 0! Forklaringen skal findes i tykkelsen af stregen og den måde, tallet er tegnet på. Personen, der har tegnet 0'et, har tegnet tykt, men ikke været i stand til at lægge et jævnt tryk hele vejen rundt. Det betyder, at der lodret er opstået flere lokale maksima, end vi vil forvente.
+Når vi ser på nogle af de cifre, som vi ikke fik klassificeret korrekt, kan det måske godt undre, hvad der går galt. På @fig-misklas0_id8 kan vi se et 0 (med id 8), som vi ikke får klassificeret korrekt. I forhold til det punktplot, du lige har lavet, ligger dette ciffer for langt til højre. Det vil sige, at det gennemsnitlige antal lodrette maksima er for stort (vi forventer måske en værdi på omkring $1.8$). Det kan vi også se på @fig-misklas0_id8. Der er flere søjler med $3$ og $4$ lodrette maksima, hvilket samlet set resulterer i et gennemsnit på $3.33$. Men hvorfor egentlig? Det er da et nydeligt, rundt 0! Forklaringen skal findes i tykkelsen af stregen og den måde, tallet er tegnet på. Personen, der har tegnet 0'et, har tegnet tykt, men ikke været i stand til at lægge et jævnt tryk hele vejen rundt. Det betyder, at der lodret er opstået flere lokale maksima, end vi vil forvente.
 
 ![Et billede af et 0 (id'et er 8) med en pixel-opløsning på $28$. ](mnist_filer/misklas0_id8.png){#fig-misklas0_id8 width=80% fig-align="center"}
 
@@ -497,7 +487,7 @@ Den lodrette forskel fra punktet $P(x_1,y_1)$ ned til linjen med ligning $y= a \
 $$
 y_1 - (a \cdot x_1 + b)
 $$
-Hvis denne forskel er positiv ligger punktet over linjen og omvendt, hvis forskellen er negativ.
+Hvis denne forskel er positiv, ligger punktet over linjen og omvendt, hvis forskellen er negativ.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
