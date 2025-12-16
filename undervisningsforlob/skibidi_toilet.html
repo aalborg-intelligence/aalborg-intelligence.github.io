@@ -285,7 +285,7 @@ window.Quarto = {
 <p>Vi skal så ud fra en eller flere feature variable for hver person træne en kunstig neuron til at kunne klassificere, om en ny person ved, hvad "skibidi toilet" betyder.</p>
 <p>Vi vil dog ikke fokusere på netværket, men på mulige værdier af tabsfunktionen, idet vi bruger <em>squared error</em> som tabsfunktion: <span id="eq-tabsfunktion"><span class="math display">\[
 E = \frac{1}{2} \sum \left (t-o \right)^2
-\tag{1}\]</span></span> hvor der summeres over alle træningsdata.</p>
+\tag{1}\]</span></span> hvor der summeres over alle træningsdata. Husk, at <span class="math inline">\(t\)</span> kun kan værdierne <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>, mens <span class="math inline">\(o\)</span> er et reelt tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -308,7 +308,7 @@ E = \frac{1}{2} \sum \left (t-o \right)^2
 </div>
 </div>
 </div>
-<p>Så <span class="math inline">\(o=0.5\)</span> giver os et udgangspunkt, som værdien af tabsfunktionen i hvert fald bør komme under, men mon ikke det kan blive bedre end det?</p>
+<p>Så <span class="math inline">\(o=0.5\)</span> giver os et udgangspunkt, som værdien af tabsfunktionen i hvert fald bør komme under, men mon ikke det kan blive bedre end det? Vi kigger således på en meget simpel model, hvor værdien af <span class="math inline">\(o\)</span> er ens for alle input.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -394,7 +394,7 @@ E = \frac{1}{2} \sum \left (t-o \right)^2
 <div id="callout-7" class="callout-7-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Se i datasættet, hvilken værdi <span class="math inline">\(q\)</span> har ved at tælle andelen, som har svaret "Ja".</li>
+<li>Bestem værdien <span class="math inline">\(q\)</span> ud fra datasættet ved at tælle, hvor mange dom har svaret "Ja" og dividere med det samlede antal.</li>
 <li>Udregn værdien af <span class="math inline">\(E\)</span> ud fra <span class="math inline">\(n\)</span> og <span class="math inline">\(q\)</span>.</li>
 <li>Sammenlign med den værdi af tabsfunktionen, som træningen i opgave 1 gav. Hvad fortæller det om den trænede model?</li>
 <li>Brug app’en med andre værdier på start-vægtene, learning-rate og/eller antal iterationer for at få værdien af tabsfunktionen så lav som mulig.</li>
@@ -402,11 +402,11 @@ E = \frac{1}{2} \sum \left (t-o \right)^2
 </div>
 </div>
 </div>
-<p>I opgave 6 har du nok set, at du ved hjælp af app’en kan træne en model, hvor værdien af tabsfunktionen er væsentligt mindre end den mindste værdi af tabsfunktionen, som du kan få, hvis <span class="math inline">\(p\)</span> er sat til den fast værdi for alle input. Det skyldes selvfølgelig, at den nye model også tager højde for de to feature variable alder (<span class="math inline">\(x_1\)</span>) og tid (<span class="math inline">\(x_2\)</span>), så <span class="math inline">\(p\)</span> nu ikke længere er et fast tal, men afhænger af alder og tid.</p>
+<p>I opgave 6 har du nok set, at du ved hjælp af app’en kan træne en model, hvor værdien af tabsfunktionen er væsentligt mindre end den mindste værdi af tabsfunktionen, som du kan få, hvis <span class="math inline">\(p\)</span> er sat til en fast værdi for alle input. Det skyldes selvfølgelig, at den nye model også tager højde for de to feature variable alder (<span class="math inline">\(x_1\)</span>) og tid (<span class="math inline">\(x_2\)</span>), så <span class="math inline">\(p\)</span> nu ikke længere er et fast tal, men afhænger af alder og tid.</p>
 </section>
 <section id="klassifikationsnøjagtigheden" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="klassifikationsnøjagtigheden">Klassifikationsnøjagtigheden</h2>
-<p>Måske du i opgave 1 så på klassifikationsnøjagtigheden (CA). Hvis ikke, så lav opgave 1 igen. <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>: Klassifikationsnøjagtigheden er den andel af input, som modellen klassificerer korrekt. Så CA=0,85 betyder, at modellen rammer rigtigt for 85% de givne input og forkert for 15%.</p>
+<p>Måske du i opgave 1 så på klassifikationsnøjagtigheden (CA). Hvis ikke, så lav opgave 1 igen. <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>: Klassifikationsnøjagtigheden er den andel af input, som modellen klassificerer korrekt. Så CA=0,85 betyder, at modellen rammer rigtigt for 85% de givne input og forkert for 15%. Her skal det bemærkes, at vi klassificerer ud fra, om <span class="math inline">\(o&gt;0,5\)</span>, hvor vi klassificerer som "Ja".</p>
 <div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Feature variable er værdier, som i forhold til modellen skal beskrive de vigtigste egenskaber ved personen.</p></div></div><div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
