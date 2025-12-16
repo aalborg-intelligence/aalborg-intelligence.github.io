@@ -94,16 +94,16 @@ angiver at brugeren ikke har set filmen.
 Som det første vil vi gerne finde ud af, hvilke film der typisk bliver
 set af den samme bruger. Lad os kalde filmene i tjenestens katalog for
 $f_1,\ldots,f_p$. Vi kigger så på en delmængde
-$J\subseteq \{f_1,\ldots,f_p \}$ af filmene. Lad $F_J$ angive hændelsen,
-at en bruger har set alle filmene i $J$. Sandsynligheden for, at
-brugeren har set alle film i $J$, er givet ved: $$
-P(F_J)= P(\text{ En bruger har set alle film i } J)
+$J\subseteq \{f_1,\ldots,f_p \}$ af filmene. Lad $H_J$ angive hændelsen,
+at en bruger har set alle filmene i $J$. Så $H_J$ er en mængde bestående af alle de brugere, som har set alle film i mængden $J$. Det er derfor vigtigt at skelne mellem mængden $H_J$, der består af brugere, og mængden $J$, der består af film. Sandsynligheden for, at
+en tilfældigt udvalgt bruger har set alle film i $J$, er givet ved: $$
+P(H_J)= P(\text{ En bruger har set alle film i } J)
 $$
 
-Vi kan estimere $P(F_J)$ ved *frekvensen* $\hat{P}(F_{J})$, som er
+Vi kan estimere $P(H_J)$ ved *frekvensen* $\hat{P}(H_{J})$, som er
 andelen af brugerne, der har set alle film i $J$. $$
 \begin{aligned}
-\hat{P}(F_J) &= \frac{\text{Antal brugere der så alle film i } J}{\text{Samlet antal brugere}}\\
+\hat{P}(H_J) &= \frac{\text{Antal brugere der så alle film i } J}{\text{Samlet antal brugere}}\\
 &= \frac{\text{Antal brugere der så alle film i } J}{n} 
 \end{aligned}
 $$ {#eq-TA} Populære filmkombinationer vil have høj frekvens.
@@ -114,9 +114,9 @@ Hvis tjenesten har 1000 brugere, hvoraf 411 har set \"Titanic\", 358 har
 set \"Mission: Impossible\" og 198 har set både \"Titanic\" og \"Mission:
 Impossible\", så er $$
 \begin{aligned}
-&\hat{P}(F_{\{\text{Titanic}\}}) = \frac{411}{1000}=0.411\\
-&\hat{P}(F_{\{\text{Mission: Impossible}\}}) = \frac{358}{1000}=0.358\\
-&\hat{P}(F_{\{\text{Titanic, Mission: Impossible}\}}) = \frac{198}{1000}=0.198
+&\hat{P}(H_{\{\text{Titanic}\}}) = \frac{411}{1000}=0.411\\
+&\hat{P}(H_{\{\text{Mission: Impossible}\}}) = \frac{358}{1000}=0.358\\
+&\hat{P}(H_{\{\text{Titanic, Mission: Impossible}\}}) = \frac{198}{1000}=0.198
 \end{aligned} 
 $$ \"Titanic\" var altså den mest populære af de to film, idet $41.1\%$ af
 brugerne havde set den, mens kun $35.5\%$ havde set \"Mission: Impossible\".
@@ -130,12 +130,12 @@ også vil se filmene i mængden $J$. Vi antager, at mængderne ${I}$ og
 ${J}$ er disjunkte, altså at de ikke har nogen film tilfælles.
 Sandsynligheden for at se alle filmene i $J$, givet at man har set alle
 filmene i $I$, kan beskrives ved en *betinget sandsynlighed*.[^3] $$
-P(F_{J}\mid F_{I}) = \frac{P(F_{I}\cap F_{J})}{P(F_{I})}
-$$ Fælleshændelsen $F_I \cap F_J$ er hændelsen, at man har set alle
+P(H_{J}\mid H_{I}) = \frac{P(H_{I}\cap H_{J})}{P(H_{I})}
+$$ Fælleshændelsen $H_I \cap H_J$ er hændelsen, at man har set alle
 filmene i $I$ og alle filmene i $J$. Det vil sige, at man har set alle
-filmene i $I\cup J$. Derfor er $F_{I}\cap F_{J} = F_{I\cup J}$ og dermed
+filmene i $I\cup J$. Derfor er $H_{I}\cap H_{J} = H_{I\cup J}$ og dermed
 $$
-\frac{P(F_{J}\cap F_{I})}{P(F_{I})}=\frac{P(F_{I\cup J} )}{P(F_{I})}
+\frac{P(H_{J}\cap H_{I})}{P(H_{I})}=\frac{P(H_{I\cup J} )}{P(H_{I})}
 $$ {#eq-betinget}
 
 [^3]: Hvis du har brug for at genopfriske betingede sandsynligheder, kan
@@ -149,14 +149,14 @@ $I$ og $J$.
 Streamingtjenesten kan bruge disse betingede sandsynligheder til at
 foreslå nye film. Hvis de har registreret, at du har set alle film i
 $I$, vil de foreslå en ny liste af film $J$, hvor
-$\hat{P}(F_J \mid F_I)$ er høj.
+$\hat{P}(H_J \mid H_I)$ er høj.
 
 Man kan estimere sandsynligheden (@eq-betinget) ved at indsætte
 estimaterne for tæller og nævner fra (@eq-TA). Det giver $$
-\hat{P}(F_J\mid F_I) = \frac{\hat{P}(F_{{I} \cup {J}})}{\hat{P}(F_{I})}.
+\hat{P}(H_J\mid H_I) = \frac{\hat{P}(H_{{I} \cup {J}})}{\hat{P}(H_{I})}.
 $$ {#eq-C} I beregninger er det nyttigt at vide at $$
 \begin{aligned}
-\hat{P}(F_J \mid F_I) &= \frac{\hat{P}(F_{I\cup J})}{\hat{P}(F_{I})}\\
+\hat{P}(H_J \mid H_I) &= \frac{\hat{P}(H_{I\cup J})}{\hat{P}(H_{I})}\\
 &=\frac{\frac{\text{Antal der har set alle film i } I\cup J}{n}}{\frac{\text{Antal der har set alle film i } I }{n}}\\
 &=\frac{\text{Antal der har set alle film i } I \cup J}{\text{Antal der har set alle film i } I}
 \end{aligned}
@@ -213,11 +213,11 @@ Vi ser igen på filmtjenesten fra @exm-eks1. En bruger har lige set
 \"Titanic\", og filmtjenesten vil nu gerne anbefale en ny film. Vi ser
 derfor på sandsynligheden for, at en bruger, der har set \"Titanic\", også
 har set \"Mission: Impossible\". Vi finder
-$$\hat{P}(F_{\text{Mission: Impossible}} \mid F_{\text{ Titanic }} ) = \frac{198}{411} \approx 0.482$$
+$$\hat{P}(H_{\{\text{Mission: Impossible}\}} \mid H_{\{\text{Titanic}\} } ) = \frac{198}{411} \approx 0.482$$
 Det er altså cirka 48,2% af de brugere, der har set \"Titanic\", der også
 har set \"Mission: Impossible\". Hvis der er 145 brugere, der både har set
 \"Titanic\" og \"Jurassic Park\", så er
-$$\hat{P}(F_{\text{ Jurassic Park}} \mid F_{\text{ Titanic }}) = \frac{145}{411} \approx 0.353 $$
+$$\hat{P}(H_{\{\text{Jurassic Park}\} } \mid H_{\{\text{Titanic}\} }) = \frac{145}{411} \approx 0.353 $$
 Folk, der har set \"Titanic\", er således mere tilbøjelige til at se
 \"Mission: Impossible\" end \"Jurassic Park\". \"Mission: Impossible\" vil
 derfor være den bedste anbefaling.
@@ -282,15 +282,15 @@ Den anden er, hvor mange procent af filmen, der udgøres af actionscener.
 Den kalder vi $x_2$. Begge features måles på en skala fra 0 til 100
 procent. 
 Vi prædikterer så en given brugers ratings ved modellen
-$$ \hat{r}=b + p_1x_1 + p_2x_2, $$ {#eq-multipel2}
+$$ \hat{r}=b + a_1x_1 + a_2x_2, $$ {#eq-multipel2}
 Her er $\hat{r}$ den prædikterede rating.[^111]
-Der indgår tre konstanter $b$, $p_1$ og $p_2$ kaldet  *vægte*[^4], som afhænger af den specifikke bruger.
+Der indgår tre konstanter $b$, $a_1$ og $a_2$ kaldet  *vægte*[^4], som afhænger af den specifikke bruger.
 
 [^111]: Hatten over $r$'et angiver, at det er en prædikteret værdi, mens et $r$ uden hat betegner brugerens faktiske rating.
 
 ::: {#exm-eks3}
-En bruger har vægtene $b=2$, $p_1=-0.02$
-og $p_2=0.05$. Brugerens ratings prædikteres derfor ved
+En bruger har vægtene $b=2$, $a_1=-0.02$
+og $a_2=0.05$. Brugerens ratings prædikteres derfor ved
 $$\hat{r}= 2 - 0.02x_1 + 0.05x_2$$ En romantisk film har måske $x_1=50$ og
 $x_2=0$. Vi forventer så, at brugeren ville give filmen ratingen
 $$\hat{r}=2-0.02\cdot 50+0.05\cdot 0=1$$ En actionfilm ville måske have
@@ -303,7 +303,7 @@ Det gør dog ikke noget. Vi vil aldrig kunne forudsige brugerens ratings præcis
 
 Vi ser nu på fortolkningen af vægtene i modellen (@eq-multipel2). Hvis der hverken er
 kærlighed eller action i filmen, det vil sige hvis $x_1=x_2=0$, så er
-$$\hat{r}= b + p_1\cdot 0 + p_2\cdot 0 = b$$ 
+$$\hat{r}= b + a_1\cdot 0 + a_2\cdot 0 = b$$ 
 Vi kan altså fortolke $b$ som
 brugerens forventede rating af en film, der hverken indeholder kærlighed eller
 action. Dette minder om skæringen i en lineær regressionsmodel, og vi
@@ -311,30 +311,30 @@ vil derfor omtale $b$ som *skæringen*.
 
 Vi ser også, at hvis andelen af kærlighedsscener $x_1$ stiger med 1
 procentpoint til $x_1+1$, og $x_2$ fastholdes, så stiger den prædikterede rating fra
-$$\hat{r}= b+p_1x_1 + p_2x_2$$ til
-$$\hat{r}=b+p_1(x_1+1) + p_2x_2 = b+p_1x_1 + p_2x_2 +p_1$$ Vi ser, at når
-$x_1$ vokser med 1 enhed, så vokser ratingen med $p_1$ (hvis altså $x_2$
+$$\hat{r}= b+a_1x_1 + a_2x_2$$ til
+$$\hat{r}=b+a_1(x_1+1) + a_2x_2 = b+a_1x_1 + a_2x_2 +a_1$$ Vi ser, at når
+$x_1$ vokser med 1 enhed, så vokser ratingen med $a_1$ (hvis altså $x_2$
 samtidig fastholdes). Dette minder om fortolkningen af
 hældningskoefficienten i en lineær regressionsmodel. Man kan derfor
-tænke på $p_1$ som hældningen for $x_1$. 
+tænke på $a_1$ som hældningen for $x_1$. 
 På samme vis kan man
 argumentere for, at hvis $x_1$ fastholdes, mens $x_2$ vokser med 1
-enhed, så stiger ratingen med $p_2$. Vi kan altså opfatte $p_2$ som en
+enhed, så stiger ratingen med $a_2$. Vi kan altså opfatte $a_2$ som en
 hældningskoefficient for $x_2$.
 
-Fortegnet for $p_2$ afslører, om brugeren vurderer action positivt eller
-negativt. Hvis $p_2$ er positiv, stiger ratingen, jo mere action der er
-i filmen. Jo større $p_2$ er, desto mere begejsret er brugeren for
-action. Hvis $p_2$ er negativ, falder ratingen, jo mere action der er i
-filmen. Tilsvarende fortæller $p_1$ noget om, hvor glad brugeren er for
-kærlighedsfilm.  Vi kan derfor fortolke $p_1$ og $p_2$ som mål for
-brugerens præferencer. I @exm-eks3 var $p_1$ negativ, mens $p_2$ var positiv, svarende til at brugeren godt kan lide action, men ikke kan lide romantik. Vi så da også, at actionfilmen fik højere rating end den romantiske film.
+Fortegnet for $a_2$ afslører, om brugeren vurderer action positivt eller
+negativt. Hvis $a_2$ er positiv, stiger ratingen, jo mere action der er
+i filmen. Jo større $a_2$ er, desto mere begejsret er brugeren for
+action. Hvis $a_2$ er negativ, falder ratingen, jo mere action der er i
+filmen. Tilsvarende fortæller $a_1$ noget om, hvor glad brugeren er for
+kærlighedsfilm.  Vi kan derfor fortolke $a_1$ og $a_2$ som mål for
+brugerens præferencer. I @exm-eks3 var $a_1$ negativ, mens $a_2$ var positiv, svarende til at brugeren godt kan lide action, men ikke kan lide romantik. Vi så da også, at actionfilmen fik højere rating end den romantiske film.
 
 Modellen i (@eq-multipel2) har mange ligheder med den lineære
 regressionsmodel, blot er der to variable $x_1$ og $x_2$ i stedet for en
 enkelt $x$-variabel. Den kaldes derfor for den *multiple lineære
-regressionsmodel*. Der indgår tre vægte, nemlig $b$, $p_1$ og
-$p_2$. Disse vægte afhænger af brugerens præferencer og er derfor specifikke for den
+regressionsmodel*. Der indgår tre vægte, nemlig $b$, $a_1$ og
+$a_2$. Disse vægte afhænger af brugerens præferencer og er derfor specifikke for den
 enkelte bruger. Der skal således laves en multipel lineær regressionsmodel
 for hver enkelt bruger.
 
@@ -354,9 +354,9 @@ rate bedst.
 
 Mere generelt kunne man vælge at betragte $M$ features. Vi ville så have
 $M$ variable $x_1,\ldots, x_M$. For hver bruger ville vi have så have
-$M$ vægte $p_1,\ldots,p_M$, der beskriver brugerens præferencer, og en
-skæring $b$. Vi prædiktere brugerens rating af en film som
-$$\hat{r} = b+ p_{1}x_{1} + p_{2}x_{2} + \dotsm + p_{M}x_{M}$$ {#eq-multipel}
+$M$ vægte $a_1,\ldots,a_M$, der beskriver brugerens præferencer, og en
+skæring $b$. Vi prædikterer brugerens rating af en film som
+$$\hat{r} = b+ a_{1}x_{1} + a_{2}x_{2} + \dotsm + a_{M}x_{M}$$ {#eq-multipel}
 Dette kaldes en *multipel lineær regressionsmodel med $M$ variable*.
 
 
@@ -364,10 +364,10 @@ Dette kaldes en *multipel lineær regressionsmodel med $M$ variable*.
 
 Vi vil altså gerne have lavet en multipel lineær regressionsmodel for en
 bruger. I det følgende ser vi bare på en model med to features som i
-(@eq-multipel2). Men hvor får vi brugerens præferencevægte
-$b,p_{1},p_{2}$ fra? Svaret er, at det vil vi få en computer til at
+(@eq-multipel2). Men hvor får vi brugerens vægte
+$b,a_{1},a_{2}$ fra? Svaret er, at det vil vi få en computer til at
 *lære* ud fra data, som streamingtjenesten har indsamlet om brugerens
-tildligere ratings af film.[^5] Et eksempel på sådan et datasæt kan ses
+tidligere ratings af film.[^5] Et eksempel på sådan et datasæt kan ses
 i @tbl-ratings. Bemærk, at datasættet kun indeholder de film, som
 brugeren faktisk har set og tildelt en rating.
 
@@ -391,7 +391,7 @@ $x_{1j}$ og $x_{2j}$. Vores model prædikterer så brugerens rating af den
 $j$te film ved
 
 $$
-\hat{r}_{j} = b+p_{1}x_{1j} + p_{2}x_{2j}
+\hat{r}_{j} = b+a_{1}x_{1j} + a_{2}x_{2j}
 $$ {#eq-model}
 
 Hvis modellen er god, skulle den prædikterede rating $\hat{r}_j$ gerne
@@ -408,8 +408,8 @@ Her er $N$ antallet af film, som brugeren har ratet.
 
 Størrelsen $E$ kaldes en *tabsfunktion*. Hvis modellen er god, skal
 tabsfunktionen altså være så lille som muligt. Tabsfunktionen afhænger
-af, hvordan vi har valgt vægtene $b$, $p_1$ og $p_2$. Man kan altså
-betragte $E$ som en funktion af vægtene. Vi ønsker at finde de vægte,
+af, hvordan vi har valgt vægtene $b$, $a_1$ og $a_2$. Man kan altså
+betragte $E$ som en funktion af vægtene $E=E(b,a_1,a_2)$. Vi ønsker at finde de vægte,
 der minimerer tabsfunktionen, svarende til at vores prædikterede ratings
 kommer så tæt på de faktiske ratings som muligt.[^6]
 
@@ -422,10 +422,10 @@ funktionen og lede efter minimum i de punkter, hvor den afledede funktion er nul
 Noget tilsvarende gør sig gældende, når der er flere variable. Her er
 det bare de partielle afledede[^7], der alle skal være nul i et minimumspunkt.
 <!-- KUNNE MAN SKRIVE NOGET OM DET I NOTEN OM PARTIELLE AFLEDTE?  -->
-I vores tilfælde søger vi altså værdier af $b$, $p_1$ og $p_2$, så $$
+I vores tilfælde søger vi altså værdier af $b$, $a_1$ og $a_2$, så $$
 \begin{aligned}
-\frac{\partial E}{\partial p_1} = 0\\ \\
-\frac{\partial E}{\partial p_2} = 0\\ \\
+\frac{\partial E}{\partial a_1} = 0\\ \\
+\frac{\partial E}{\partial a_2} = 0\\ \\
 \frac{\partial E}{\partial b} = 0
 \end{aligned}
 $$ 
@@ -434,8 +434,8 @@ Man kan vise følgende (se opgave 8 i forløbet [Hvad skal du se på Netflix?](.
 
 $$
 \begin{aligned}
-&\frac{\partial E}{\partial p_1} = -2x_{11}(r_1-\hat{r}_1)- \dotsm -2x_{1N}(r_N-\hat{r}_N)\\ \\
-&\frac{\partial E}{\partial p_2} = -2x_{21}(r_1-\hat{r}_1) - \dotsm -2x_{2N}(r_N-\hat{r}_N) \\ \\
+&\frac{\partial E}{\partial a_1} = -2x_{11}(r_1-\hat{r}_1)- \dotsm -2x_{1N}(r_N-\hat{r}_N)\\ \\
+&\frac{\partial E}{\partial a_2} = -2x_{21}(r_1-\hat{r}_1) - \dotsm -2x_{2N}(r_N-\hat{r}_N) \\ \\
 &\frac{\partial E}{\partial b} = - 2(r_1-\hat{r}_1) - \dotsm  - 2(r_N-\hat{r}_N)
 \end{aligned}
 $$ {#eq-partiel} 
@@ -443,16 +443,14 @@ $$ {#eq-partiel}
 For at finde minimumspunktet, skal vi altså løse
 ligningerne $$
 \begin{aligned}
-&\frac{\partial E}{\partial p_1} = -2x_{11}(r_1-\hat{r}_1)- \dotsm -2x_{1N}(r_N-\hat{r}_N)=0\\
-&\frac{\partial E}{\partial p_2} = -2x_{21}(r_1-\hat{r}_1) - \dotsm -2x_{2N}(r_N-\hat{r}_N)=0 \\
+&\frac{\partial E}{\partial a_1} = -2x_{11}(r_1-\hat{r}_1)- \dotsm -2x_{1N}(r_N-\hat{r}_N)=0\\
+&\frac{\partial E}{\partial a_2} = -2x_{21}(r_1-\hat{r}_1) - \dotsm -2x_{2N}(r_N-\hat{r}_N)=0 \\
 &\frac{\partial E}{\partial b} = - 2(r_1-\hat{r}_1) - \dotsm  - 2(r_N-\hat{r}_N)=0
 \end{aligned}
 $$ Det viser sig, at disse ligninger kan løses eksplicit og give en
-formel for estimaterne for $b$, $p_1$ og $p_2$. Det vil vi dog ikke gøre
-her.
+formel for estimaterne for $b$, $a_1$ og $a_2$. Det vil vi dog ikke gøre her.
 
-[^7]: Hvis du ikke kender til partielle afledede, eller du har brug for
-    en genopfriskning, kan du læse om det i noten om [Funktioner af
+[^7]: Hvis du ikke kender til partielle afledede, eller du har brug for en genopfriskning, kan du læse om det i noten om [Funktioner af
     flere
     variable](../funktioner_af_flere_variable/funktioner_af_flere_variable.qmd).
 
@@ -558,7 +556,7 @@ features. Vi betragter altså $x_1,\ldots,x_M$ som ukendte underliggende
 variable, også kaldet *latente variable*, som har indflydelse på,
 hvordan man vurderer filmen. Man kunne forestille sig, at de måler
 diffust definerede egenskaber ved filmen, så som \"hvor sjov filmen er\"
-eller \"hvor gode skuespillerne er\". Men vi det ikke, og vi behøver
+eller \"hvor gode skuespillerne er\". Men vi ved det ikke, og vi behøver
 heller ikke at vide det, bare der kommer gode anbefalinger ud af det!
 
 Vi kalder $i$te brugers rating af $j$te film for $r_{ij}$. Vi vil nu
@@ -567,11 +565,11 @@ $j$te film. Det er altså den værdi, der står i $i$te række og $j$te
 søjle i @tbl-rates. Hver film har sine egne værdier af de $M$ features.
 For $j$te film betegner vi dem $x_{1j},\ldots,x_{Mj}$. Disse værdier
 kalder vi *featurevægtene*. Den $i$te brugers præferencer for de $M$
-features beskrives ved *præferencevægtene* $p_{i1},\ldots,p_{iM}$. Vi
+features beskrives ved *præferencevægtene* $a_{i1},\ldots,a_{iM}$. Vi
 modellerer så $i$te brugers rating af $j$te film ved
 
 $$
-\hat{r}_{ij} = p_{i1}x_{1j} + p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj}
+\hat{r}_{ij} = a_{i1}x_{1j} + a_{i2}x_{2j} + \dotsm + a_{iM}x_{Mj}
 $${#eq-modelij}
 
 Det minder om den multiple lineære regressionsmodel (@eq-multipel).
@@ -587,6 +585,7 @@ dog være lille i forhold til det samlede antal kombinationer af film og
 bruger, som vil være $n\cdot p$. I stedet for at skulle estimere
 samtlige $n\cdot p$ værdier af $r_{ij}$, skal vi kun estimere
 $M\cdot p + n\cdot M$ vægte.
+Hvis for eksempel vi har $n=10.000$ brugere og $p=2.000$ film, er $np = 20.000.000$, men hvis $M=5$, så er $Mp+nM = 60.000$, som er betydeligt mindre.
 
 ::: {.callout-tip collapse="true" appearance="minimal"}
 ### Matrixfaktorisering
@@ -610,10 +609,10 @@ søjle svarer til en film.
 Tilsvarende kan præferencevægtene sættes op i en $(n\times M)$-matrix,
 hvor hver række svarer til en bruger, og hver søjle svarer til en
 feature:\
-$$P=\begin{bmatrix} p_{11} & p_{12} & \cdots & p_{1M}\\
- p_{21} & p_{22} & \cdots & p_{2M}\\
+$$A=\begin{bmatrix} a_{11} & a_{12} & \cdots & a_{1M}\\
+ a_{21} & a_{22} & \cdots & a_{2M}\\
   \vdots & \vdots &  & \vdots\\
-   p_{n1} & p_{n2} & \cdots & p_{nM}\\
+   a_{n1} & a_{n2} & \cdots & a_{nM}\\
 \end{bmatrix}$$
 
 Featurevægtene $x_{j1},\ldots, x_{jp}$ kan stilles op i en
@@ -626,16 +625,16 @@ $$X=\begin{bmatrix} x_{11} & x_{12} & \cdots & x_{1p}\\
 til en film.
 
 To matricer kan ganges sammen, hvis den første har lige så mange søjler,
-som den anden har rækker. For eksempel er der $M$ søjler i $P$ og $M$
+som den anden har rækker. For eksempel er der $M$ søjler i $A$ og $M$
 rækker i $X$ (begge dele svarende til de $M$ features). De kan altså
-ganges sammen til *matrixproduktet* $P\cdot X$. Resultatet bliver en ny
+ganges sammen til *matrixproduktet* $A \cdot X$. Resultatet bliver en ny
 $(n\times p)$-matrix, som vi vil kalde $\hat{R}$. Det tal, der skal stå
 i $i$te række og $j$te søjle af $\hat{R}$, kalder vi $\hat{r}_{ij}$. For
-at udregne $\hat{r}_{ij}$ skal vi bruge værdierne i $i$te række af $P$
-og $j$te søjle af $Q$. Vi udregner så
-$$\hat{r}_{ij} =  p_{i1}x_{1j} +p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj} $$
+at udregne $\hat{r}_{ij}$ skal vi bruge værdierne i $i$te række af $A$
+og $j$te søjle af $X$. Vi udregner så
+$$\hat{r}_{ij} =  a_{i1}x_{1j} +a_{i2}x_{2j} + \dotsm + a_{iM}x_{Mj} $$
 Dette stemmer netop overens med modellen (@eq-model). Vi kan derfor
-skrive vores model kort som $$\hat{R} = P\cdot X$$ Det vil sige, at
+skrive vores model kort som $$\hat{R} = A\cdot X$$ Det vil sige, at
 vores rating-matrix $\hat{R}$ er faktoriseret som et produkt af to
 matricer. Deraf navnet matrixfaktorisering.
 :::
@@ -646,7 +645,7 @@ Da vi lavede multipel lineær regression, var der også en skæring i
 modellen, som svarede til ratingen, når alle features var nul.
 Tilsvarende er det oplagt at tilføje en skæring i\
 (@eq-modelij). Det gøres ofte med modellen
-$$\hat{r}_{ij} =  b + c_i + d_j+ p_{i1}x_{1j} +p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj} $$
+$$\hat{r}_{ij} =  b + c_i + d_j+ a_{i1}x_{1j} +a_{i2}x_{2j} + \dotsm + a_{iM}x_{Mj} $$
 Her angiver $b$ den gennemsnitlige rating for alle film, når alle
 featurevægte er nul. Hver bruger har desuden et personligt led $c_i$,
 der tager højde for, at nogle brugere er mere tilbøjelige til at give
@@ -664,13 +663,13 @@ end gennemsnittet. For nemheds skyld arbejder vi videre med modellen
 
 For at kunne bruge modellen i (@eq-matrixfak) skal vi have estimeret alle
 featurevægtene $x_{1j},x_{2j},\ldots,x_{Mj}$ og alle præferencevægtene
-$p_{i1},p_{i2},\ldots, p_{iM}$. Til det formål tager vi udgangspunkt i
+$a_{i1},a_{i2},\ldots, a_{iM}$. Til det formål tager vi udgangspunkt i
 et datasæt på formen i @tbl-rates, som streamingtjenesten har indsamlet.
 
 Vi ønsker at prædiktere $i$te brugers rating af $j$te film ved
 
 $$
-\hat{r}_{ij} = p_{i1}x_{1j} + p_{i2}x_{2j} + \dotsm + p_{iM}x_{Mj}
+\hat{r}_{ij} = a_{i1}x_{1j} + a_{i2}x_{2j} + \dotsm + a_{iM}x_{Mj}
 $${#eq-matrixfak}
 
 Som i den multiple lineære regressionsmodel, sammenligner vi
@@ -696,13 +695,13 @@ sum, og en sum differentieres som bekendt ledvist. Man kan vise, at de partielle
 
 $$
 \begin{aligned}
-\frac{\partial }{\partial p_{im}} (r_{ij}-\hat{r}_{ij})^2 = -2 (r_{ij}-\hat{r}_{ij})x_{mj}\\
-\frac{\partial }{\partial x_{mj}} (r_{ij}-\hat{r}_{ij})^2 = -2 (r_{ij}-\hat{r}_{ij})p_{im}
+\frac{\partial }{\partial a_{im}} (r_{ij}-\hat{r}_{ij})^2 = -2 (r_{ij}-\hat{r}_{ij})x_{mj}\\
+\frac{\partial }{\partial x_{mj}} (r_{ij}-\hat{r}_{ij})^2 = -2 (r_{ij}-\hat{r}_{ij})a_{im}
 \end{aligned}
 $$ {#eq-partiel1} 
 
 Desuden gælder der for $l\neq i$, at $$
-\frac{\partial }{\partial p_{lm}} (r_{ij}-\hat{r}_{ij})^2 = 0
+\frac{\partial }{\partial a_{lm}} (r_{ij}-\hat{r}_{ij})^2 = 0
 $$ {#eq-partiel2} og for $k \neq j$ $$
 \frac{\partial }{\partial x_{mk}} (r_{ij}-\hat{r}_{ij})^2 = 0
 $$ {#eq-partiel3} 
