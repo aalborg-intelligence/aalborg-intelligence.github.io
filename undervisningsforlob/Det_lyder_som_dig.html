@@ -184,6 +184,7 @@ window.Quarto = {
   <li><a href="#det-kunstige-neurale-netværk-i-orange" id="toc-det-kunstige-neurale-netværk-i-orange" class="nav-link" data-scroll-target="#det-kunstige-neurale-netværk-i-orange">Det kunstige neurale netværk i Orange</a></li>
   </ul></li>
   <li><a href="#jeres-egne-data" id="toc-jeres-egne-data" class="nav-link" data-scroll-target="#jeres-egne-data">Jeres egne data</a></li>
+  <li><a href="#det-kunstige-neurale-netværk" id="toc-det-kunstige-neurale-netværk" class="nav-link" data-scroll-target="#det-kunstige-neurale-netværk">Det kunstige neurale netværk</a></li>
   </ul>
 </nav>
 </nav>
@@ -266,6 +267,7 @@ window.Quarto = {
 <p>Når vi laver lineær regression, er modellen<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> <span class="math inline">\(y=a\cdot x+b\)</span>, og det gælder om at bestemme <span class="math inline">\(a\)</span> og <span class="math inline">\(b\)</span>, så modellen for featureværdierne (<span class="math inline">\(x\)</span>-koordinaterne) samlet set bedst muligt rammer targetværdierne (<span class="math inline">\(y\)</span>-koordinaterne). I forhold til et neuralt netværk vil <span class="math inline">\(a\)</span> og <span class="math inline">\(b\)</span> kaldes for <strong>vægte</strong>.</p>
 <div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Hvis det skal være helt korrekt er der også et normalfordelt støjled <span class="math inline">\(N(\mu, \sigma),\)</span> men det undlader man som regel at tage med på gymnasieniveau.</p></div></div><p>I et kunstigt neuralt netværk er modellen betydeligt mere kompliceret, og der er mange flere vægte end de to i lineær regression (i store netværk kan der være milliarder af vægte), men idéen er den samme. Man skal også i kunstige neurale netværk bestemme vægtene i modellen, så den for featureværdierne samlet set bedst muligt rammer targetværdierne.</p>
 <p>I lineær regression skal modellen komme så tæt på targetværdien <span class="math inline">\(y\)</span> for hver featureværdi <span class="math inline">\(x\)</span>. I vores tilfælde er det anderledes, da vi ikke skal tæt på en talværdi, men i stedet skal vælge mellem de fire personer – dette kaldes for <strong>klassifikation</strong>. I lineær regression handler det således om, at linjen (modellen) kommer tæt på punkterne, mens det i klassifikation handler om, at modellen skal forudsige den rigtige oplæser for så mange som muligt af de små lydklip. Man taler derfor om <strong>klassifikationsnøjagtigheden (CA)</strong>, som er andelen af korrekte forudsigelser. Så hvis <span class="math inline">\(CA=0.85\)</span>, har modellen korrekt forudsagt <span class="math inline">\(85\%\)</span> af targetværdierne. Dermed er der altså <span class="math inline">\(15\%\)</span> forkerte forudsigelser.</p>
+<p>Når man træner et kunstigt neuralt netværk, vælger man de vægte i modellen, der giver den højeste klassifikationsnøjagtighed på vores træningsdata.</p>
 </section>
 <section id="det-kunstige-neurale-netværk-i-orange" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="det-kunstige-neurale-netværk-i-orange">Det kunstige neurale netværk i Orange</h3>
@@ -316,7 +318,7 @@ window.Quarto = {
 <li><p>Sørg så for, at både "Predictions" og "Probabilities" er valgt ude til venstre og klik så på "Select Misclassified" i bunden. Luk vinduet ned.</p></li>
 <li><p>Klik derefter på "Predictions - misclassified" ude til højre i Orange. Her kan du for hver af de misklassificerede lydfiler se filens ID, hvem der har lavet lydfilen (under "category"), hvem modellen fejlagtigt mener, det er (under "category(Neural Network)"), og procenter for, hvor meget modellen tror, at filen er fra hver af de 4 muligheder. Der er lige nu kun ét misklassificeret klip. Notér "category" og "id" for dette lydklip.</p></li>
 <li><p>Hvis du ikke allerede har hente de små 3 sekunders lydklip, så gør det nu: <a href="Det_lyder_som_dig_filer/sekvenser.zip">Korte sekvenser</a>.</p></li>
-<li><p>Find det misklassificerede klip og lyt til det Er der noget ved klippet som gør det særligt svært at klassificere korrekt?</p></li>
+<li><p>Find det misklassificerede klip og lyt til det. Er der noget ved klippet som gør det særligt svært at klassificere korrekt?</p></li>
 </ul>
 </div>
 </div>
@@ -424,6 +426,9 @@ window.Quarto = {
 </div>
 </div>
 </div>
+</section>
+<section id="det-kunstige-neurale-netværk" class="level2">
+<h2 class="anchored" data-anchor-id="det-kunstige-neurale-netværk">Det kunstige neurale netværk</h2>
 <p>Indtil nu har vi talt meget lidt om det kunstige neurale netværk. Vi vil på ingen måde gå i detaljer, men dog se en lille smule på det. I det kunstige neurale netværk er der i første omgang 2 skjulte lag med hver 5 neuroner. Uden at forstå detaljerne, kan vi gøre modellen mere kompliceret, og dermed måske bedre, ved at øge antal neuroner i hvert lag eller ved at lave flere skjulte lag.</p>
 <p>Desuden kan vi også beslutte, hvor lang tid Orange må bruge på at justere de mange vægte i modellen, så den passer bedst muligt til vores data. Dette kaldes for <strong>iterationer</strong>. Flere iterationer tager længere tid, men vil også ofte give et bedre resultat.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
