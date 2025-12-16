@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="test">
+<meta name="description" content="I denne note giver vi en kort introduktion til mængdeteori og sandsynlighedsregning – herunder betinget sandsynlighed og uafhængige hændelser.">
 
 <title>Sandsynlighed og mængdeteori – AI MAT - matematikken bag magien</title>
 <style>
@@ -41,7 +41,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-c9773902334eb0d2669f10110b305e83.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-4b4a1becbb477b3eb0a6f941e6b56241.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -116,7 +116,7 @@ window.Quarto = {
 
 </head>
 
-<body class="floating nav-fixed quarto-light">
+<body class="floating nav-fixed slimcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -175,10 +175,18 @@ window.Quarto = {
     <h2 id="toc-title">Indhold</h2>
    
   <ul>
-  <li><a href="#sandsynlighed-og-mængdeteori" id="toc-sandsynlighed-og-mængdeteori" class="nav-link active" data-scroll-target="#sandsynlighed-og-mængdeteori">Sandsynlighed og mængdeteori</a></li>
-  <li><a href="#indledning" id="toc-indledning" class="nav-link" data-scroll-target="#indledning">Indledning</a></li>
-  <li><a href="#mængdeteori" id="toc-mængdeteori" class="nav-link" data-scroll-target="#mængdeteori">Mængdeteori</a></li>
-  <li><a href="#sandsynlighed" id="toc-sandsynlighed" class="nav-link" data-scroll-target="#sandsynlighed">Sandsynlighed</a></li>
+  <li><a href="#mængdeteori" id="toc-mængdeteori" class="nav-link active" data-scroll-target="#mængdeteori">Mængdeteori</a>
+  <ul class="collapse">
+  <li><a href="#foreningsmængde-og-fællesmængde" id="toc-foreningsmængde-og-fællesmængde" class="nav-link" data-scroll-target="#foreningsmængde-og-fællesmængde">Foreningsmængde og fællesmængde</a></li>
+  <li><a href="#disjunkte-mængder" id="toc-disjunkte-mængder" class="nav-link" data-scroll-target="#disjunkte-mængder">Disjunkte mængder</a></li>
+  <li><a href="#komplementærmængde" id="toc-komplementærmængde" class="nav-link" data-scroll-target="#komplementærmængde">Komplementærmængde</a></li>
+  </ul></li>
+  <li><a href="#sandsynlighed" id="toc-sandsynlighed" class="nav-link" data-scroll-target="#sandsynlighed">Sandsynlighed</a>
+  <ul class="collapse">
+  <li><a href="#hændelse" id="toc-hændelse" class="nav-link" data-scroll-target="#hændelse">Hændelse</a></li>
+  <li><a href="#lige-antal-øjne" id="toc-lige-antal-øjne" class="nav-link" data-scroll-target="#lige-antal-øjne">Lige antal øjne</a></li>
+  <li><a href="#symmetriske-sandsynlighedsfelter" id="toc-symmetriske-sandsynlighedsfelter" class="nav-link" data-scroll-target="#symmetriske-sandsynlighedsfelter">Symmetriske sandsynlighedsfelter</a></li>
+  </ul></li>
   <li><a href="#estimat-for-sandsynlighed." id="toc-estimat-for-sandsynlighed." class="nav-link" data-scroll-target="#estimat-for-sandsynlighed.">Estimat for sandsynlighed.</a></li>
   <li><a href="#betinget-sandsynlighed-uafhængighed-og-betinget-sandsynlighed." id="toc-betinget-sandsynlighed-uafhængighed-og-betinget-sandsynlighed." class="nav-link" data-scroll-target="#betinget-sandsynlighed-uafhængighed-og-betinget-sandsynlighed.">Betinget sandsynlighed, uafhængighed og betinget sandsynlighed.</a></li>
   <li><a href="#opdeling-og-sandsynlighed" id="toc-opdeling-og-sandsynlighed" class="nav-link" data-scroll-target="#opdeling-og-sandsynlighed">Opdeling og sandsynlighed</a></li>
@@ -191,7 +199,7 @@ window.Quarto = {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -212,90 +220,235 @@ window.Quarto = {
 </header>
 
 
-<section id="sandsynlighed-og-mængdeteori" class="level2">
-<h2 class="anchored" data-anchor-id="sandsynlighed-og-mængdeteori">Sandsynlighed og mængdeteori</h2>
-</section>
-<section id="indledning" class="level2">
-<h2 class="anchored" data-anchor-id="indledning">Indledning</h2>
-<p>I det følgende ses på Sandsynlighedsteori. Alle har selvfølgelig en fornemmelse for hvor sandsynligt det er, at nogle hændelser indtræffer – for eksempel at man slå en sekser med en terning eller trække et rødt kort fra et spil kort. Hurtigt kan det dog blive mere besværligt og for at kunne arbejde systematisk med sandsynligheder, er det nødvendigt først at forstå mængdeteori, som kan være med til at give overblik over hændelser.</p>
-</section>
-<section id="mængdeteori" class="level2">
+<p>I det følgende skal vi se på sandsynlighedsteori. Alle har selvfølgelig en fornemmelse for, hvor sandsynligt det er, at nogle hændelser indtræffer – for eksempel at man slår en sekser med en terning eller trækker et rødt kort fra et spil kort. Hurtigt kan det dog blive mere besværligt og for at kunne arbejde systematisk med sandsynligheder, er det nødvendigt først at forstå mængdeteori, som kan være med til at give overblik over hændelser.</p>
+<section id="mængdeteori" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="mængdeteori">Mængdeteori</h2>
-<p>En mængde er blot en samling af elementer. Det kunne være en samling der indeholder bogstaverne <span class="math inline">\(b\)</span>, <span class="math inline">\(d\)</span> og <span class="math inline">\(k\)</span>. Denne mængde noteres som <span class="math inline">\(\{b,d,k\}\)</span>. Vi siger at mængden indeholder elementerne deri, og hvis vi kalder mængden for <span class="math inline">\(M\)</span> betyder <span class="math inline">\(a\in M\)</span> netop at <span class="math inline">\(M\)</span> indeholder elementet <span class="math inline">\(a\)</span> (eller at <span class="math inline">\(a\)</span> er indeholdt i <span class="math inline">\(M\)</span>). At et element <span class="math inline">\(x\)</span> ikke er i mængden <span class="math inline">\(M\)</span> kan skrives som <span class="math inline">\(x\not \in M\)</span>.</p>
-<p>Bemærk at en mængde kan indeholde alt muligt, det kunne også være en mængde med tal som <span class="math inline">\(\{1,3,5\}\)</span> eller en mængde med personer.</p>
-<p>Hvis man har to mængder <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span>, da siger vi at de to mængder er ens hvis det er sådan, at ethvert element der er i <span class="math inline">\(A\)</span> også er i <span class="math inline">\(B\)</span> og ethvert element der er i <span class="math inline">\(B\)</span> også er i <span class="math inline">\(A\)</span>. Hvis <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> er ens skrives det som <span class="math inline">\(A=B\)</span>.</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<p>En mængde er blot en samling af elementer. Det kunne være en samling der indeholder bogstaverne <span class="math inline">\(b\)</span>, <span class="math inline">\(d\)</span> og <span class="math inline">\(k\)</span>. Denne mængde skrives</p>
+<p><span class="math display">\[\{b,d,k\}\]</span></p>
+<p>Vi siger, at mængden indeholder elementerne <span class="math inline">\(b\)</span>, <span class="math inline">\(d\)</span> og <span class="math inline">\(k\)</span>. Hvis vi kalder mængden for <span class="math inline">\(M\)</span>, betyder <span class="math inline">\(d\in M\)</span> netop, at <span class="math inline">\(M\)</span> indeholder elementet <span class="math inline">\(d\)</span> (eller at <span class="math inline">\(d\)</span> er indeholdt i <span class="math inline">\(M\)</span>). At et element <span class="math inline">\(x\)</span> ikke er i mængden <span class="math inline">\(M\)</span>, kan skrives som <span class="math inline">\(x\not \in M\)</span>.</p>
+<p>Bemærk, at en mængde kan indeholde alt muligt, det kunne også være en mængde med tal som <span class="math inline">\(\{1,3,5\}\)</span> eller en mængde med personer.</p>
+<p>Hvis man har to mængder <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span>, da siger vi, at de to mængder er ens, hvis det er sådan, at ethvert element, der er i <span class="math inline">\(A\)</span>, også er i <span class="math inline">\(B\)</span>, og ethvert element, der er i <span class="math inline">\(B\)</span>, også er i <span class="math inline">\(A\)</span>. Hvis <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> er ens, skrives det som <span class="math inline">\(A=B\)</span>.</p>
+<div id="exm-eks1" class="theorem example">
+<p><span class="theorem-title"><strong>Eksempel 1 (Ens mængder)</strong></span> Vi ser på følgende fire mængder: <span class="math display">\[
+\begin{aligned}
+A &amp;=\{1,2,3,5\} \\
+B &amp;=\{1,4,5\} \\
+C &amp;=\{1,3,2,5\} \\
+D &amp;=\{1,3,5,2,1,1\}.
+\end{aligned}
+\]</span> Hvilke af disse er mon ens? Her er det faktisk de tre mængder <span class="math inline">\(A\)</span>, <span class="math inline">\(C\)</span> og <span class="math inline">\(D\)</span>, som er ens, hvilket viser, at rækkefølgen ved opskrivningen af elementerne ikke er vigtig, og heller ikke om et element skrives flere gange ved mængden. Det vigtige er altså blot, om et element er med i mængden eller ej.</p>
 </div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Ens mængder?
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Overvej hvilke af følgende mængder der er ens: <span class="math inline">\(A=\{1,2,3,5\}\)</span> <span class="math inline">\(B=\{1,4,5\}\)</span> <span class="math inline">\(C=\{1,3,2,5\}\)</span> <span class="math inline">\(D=\{1,3,5,2,1,1\}\)</span></p>
-</div>
-</div>
-</div>
-<p>Her er det faktisk de tre mængder <span class="math inline">\(A\)</span>, <span class="math inline">\(C\)</span> og <span class="math inline">\(D\)</span> som er ens, hvilket viser at rækkefølgen ved opskrivningen af elementerne ikke er vigtig og heller ikke om et element skrives flere gange ved mængden. Det vigtige er altså blot om et element er med i mængden eller ej.</p>
 <p>Ofte vil man arbejde med flere mængder og kombinere disse til at lave nye mængder.</p>
-<p>Givet to mængder <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span>, da indføres foreningsmængden af <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> betegnet med <span class="math inline">\(A\cup B\)</span> som mængden som netop indeholder de elementer som er i <span class="math inline">\(A\)</span> eller <span class="math inline">\(B\)</span> eller begge af disse.</p>
-<p>Desuden indføres fællesmængden af <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> betegnet med <span class="math inline">\(A\cap B\)</span> som mængden som netop indeholder de elementer som er indeholdt i både <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span>.</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<section id="foreningsmængde-og-fællesmængde" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="foreningsmængde-og-fællesmængde">Foreningsmængde og fællesmængde</h3>
+<p>Givet to mængder <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span>, da indføres foreningsmængden af <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> betegnet med</p>
+<p><span class="math display">\[A\cup B\]</span></p>
+<p>som mængden, der netop indeholder de elementer, som er i <span class="math inline">\(A\)</span> <u>eller</u> <span class="math inline">\(B\)</span> <u>eller</u> begge af disse. Dette er illustreret i <a href="#fig-AcupB" class="quarto-xref">figur&nbsp;1</a>.</p>
+<div id="fig-AcupB" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-AcupB-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/AcupB.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
 </div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Foreningsmængde og fællesmængde
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-AcupB-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;1: Foreningsmængden <span class="math inline">\(A\cup B\)</span>.
+</figcaption>
+</figure>
 </div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+<p>Desuden indføres fællesmængden af <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> betegnet med</p>
+<p><span class="math display">\[A\cap B\]</span></p>
+<p>som mængden, der netop indeholder de elementer, som er indeholdt i <u>både</u> <span class="math inline">\(A\)</span> <u>og</u> <span class="math inline">\(B\)</span>. Det er vist i <a href="#fig-AcapB" class="quarto-xref">figur&nbsp;2</a>.</p>
+<div id="fig-AcapB" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-AcapB-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/AcapB.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Hvis <span class="math inline">\(A=\{1,2,3,4,5,6\}\)</span> og <span class="math inline">\(B=\{2,4,6,8\}\)</span> bestem da de to mængder <span class="math inline">\(A\cup B\)</span> og <span class="math inline">\(A\cap B\)</span>.</p>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-AcapB-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;2: Fællesmængden <span class="math inline">\(A\cap B\)</span>.
+</figcaption>
+</figure>
 </div>
+<div id="exm-eks2" class="theorem example">
+<p><span class="theorem-title"><strong>Eksempel 2 (Foreningsmængde og fællesmængde)</strong></span> Vi lader</p>
+<p><span class="math display">\[
+A=\{1,2,3,4,5,6\} \quad \textrm{og} \quad B=\{2,4,6,8\}.
+\]</span> Foreningsmængden er da</p>
+<p><span class="math display">\[
+A\cup B=\{1,2,3,4,5,6,8\}
+\]</span> og fællesmængden</p>
+<p><span class="math display">\[
+A\cap B=\{2,4,6\}.
+\]</span></p>
 </div>
+</section>
+<section id="disjunkte-mængder" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="disjunkte-mængder">Disjunkte mængder</h3>
+<p>En vigtig mængde er den tomme mængde, som betegnes med <span class="math inline">\(\emptyset\)</span>. Det er altså mængden uden elementer.</p>
+<p>Hvis to mængder <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> opfylder, at <span class="math inline">\(A\cap B=\emptyset\)</span> siger man, at <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> er disjunkte. Disjunkte mængder har derved ikke nogen elementer til fælles. Man kan også sige, at der ikke er noget overlap mellem de to mængder. Et eksempel på to disjunkte mængder er vist i <a href="#fig-disjunkte" class="quarto-xref">figur&nbsp;3</a>. Her ses det tydeligt, at de to mængder ikke overlapper.</p>
+<div id="fig-disjunkte" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-disjunkte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/disjunkte.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
 </div>
-<p>Igen svar til opgaverne (måske skjult).</p>
-<p><span class="math inline">\(A\cup B=\{1,2,3,4,5,6,8\}\)</span> og <span class="math inline">\(A\cap B=\{2,4,6\}\)</span></p>
-<p>En af de vigtige mængder er den tomme mængde som betegnes med <span class="math inline">\(\emptyset\)</span>. Hvis to mængder <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> opfylder at <span class="math inline">\(A\cap B=\emptyset\)</span> siges at <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> er disjunkte. Disjunkte mængder har derved ikke nogen elementer til fælles, og man kunne også sige at der ikke er noget overlap mellem de to mængder.</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-disjunkte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;3: To disjunkte mængder <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span>.
+</figcaption>
+</figure>
 </div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Disjunkte mængder
+<div id="exm-eks3" class="theorem example">
+<p><span class="theorem-title"><strong>Eksempel 3 (Disjunkte mængder)</strong></span> Vi ser på følgende tre mængder:</p>
+<p><span class="math display">\[
+\begin{aligned}
+A &amp;=\{1,2,3,5\} \\
+B &amp;=\{1,4,6\} \\
+C &amp;=\{3,5,7\}.
+\end{aligned}
+\]</span> Her er</p>
+<p><span class="math display">\[
+\begin{aligned}
+A \cap B &amp;= \{1\} \\
+A \cap C &amp;= \{3, 5\} \\
+B \cap C &amp;= \emptyset.
+\end{aligned}
+\]</span> Det vil sige, at <span class="math inline">\(B\)</span> og <span class="math inline">\(C\)</span> er disjunkte.</p>
 </div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</section>
+<section id="komplementærmængde" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="komplementærmængde">Komplementærmængde</h3>
+<p>Når man betragter mængder, vil man ofte udelukkende se på elementer af en bestemt slags. Som i de tidligere eksempler kunne det være, at alle elementer er heltal. Her tænker vi, at vi arbejder indenfor et univers <span class="math inline">\(U\)</span>, som er alle mulige tænkelige elementer, og de mængder vi ellers ser på indeholder så elementer, som er i mængden <span class="math inline">\(U\)</span>.</p>
+<p>Lad os se på et univers <span class="math inline">\(U\)</span> og en mængde <span class="math inline">\(A\)</span>, som kun indeholder elementer, der også er i <span class="math inline">\(U\)</span>. Vi vil så indføre komplementærmængden for <span class="math inline">\(A\)</span>, som mængden indeholdende netop de elementer fra <span class="math inline">\(U\)</span>, som <u>ikke</u> er i <span class="math inline">\(A\)</span>. Komplementærmængden til <span class="math inline">\(A\)</span> skrives <span class="math inline">\(\overline{A}\)</span>. Dette er illustreret i <a href="#fig-complementA" class="quarto-xref">figur&nbsp;4</a>.</p>
+<div id="fig-complementA" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-complementA-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/complementA.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Overvej hvilke af følgende mængder der er disjunkte med hinanden: <span class="math inline">\(A=\{1,2,3,5\}\)</span> <span class="math inline">\(B=\{1,4,6\}\)</span> <span class="math inline">\(C=\{3,5,7\}\)</span></p>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-complementA-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;4: Komplementærmængden <span class="math inline">\(\overline{A}\)</span>.
+</figcaption>
+</figure>
 </div>
+<p>Lad os de på et eksempel.</p>
+<div id="exm-eks4" class="theorem example">
+<p><span class="theorem-title"><strong>Eksempel 4 (Komplementærmængde)</strong></span> Vi ser på et univers</p>
+<p><span class="math display">\[
+U=\{1,2,3,4,5,6,7,8\}
+\]</span></p>
+<p>og en mængde <span class="math inline">\(A\)</span>:</p>
+<p><span class="math display">\[
+A=\{1,2,3\}.
+\]</span></p>
+<p>Da er komplementærmængden til <span class="math inline">\(A\)</span>:</p>
+<p><span class="math display">\[
+\overline{A}= \{4,5,6,7,8\}
+\]</span></p>
+<p>fordi det netop er alle de elementer i universet <span class="math inline">\(U\)</span>, som <u>ikke</u> er i <span class="math inline">\(A\)</span>.</p>
 </div>
+<p>Givet en mængde <span class="math inline">\(A\)</span>, så kaldes <span class="math inline">\(A_1,A_2,...,A_n\)</span> en opdeling af <span class="math inline">\(A\)</span>, hvis <span class="math inline">\(A_1,A_2,...,A_n\)</span> er mængder, som er parvis disjunkte, og hvor</p>
+<p><span class="math display">\[
+A=A_1\cup A_2\cup \cdots \cup A_n.
+\]</span></p>
+<p>Et eksempel på en opdeling af en mængde <span class="math inline">\(A\)</span> i mængderne <span class="math inline">\(A_1, A_2, A_3, A_4\)</span> og <span class="math inline">\(A_5\)</span> ses i <a href="#fig-opdeling" class="quarto-xref">figur&nbsp;5</a>.</p>
+<div id="fig-opdeling" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-opdeling-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/opdeling.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
 </div>
-<p>Svar : Her er det mængderne <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> samt <span class="math inline">\(B\)</span> og <span class="math inline">\(C\)</span> som er disjunkte.</p>
-<p>Ofte når man betragter mængder vil man udelukkende have elementer af en bestemt slags. Som tidligere kunne det være at alle elementer er heltal. Her tænker vi at vi arbejder indenfor et Univers <span class="math inline">\(U\)</span> som er alle mulige tænkelige elemeter, og de mængder vi ellers ser på indeholder så elementer som er i mængden <span class="math inline">\(U\)</span>.</p>
-<p>Givet et univers <span class="math inline">\(U\)</span> og en mængde <span class="math inline">\(A\)</span> som kun indeholder elementer som også er i <span class="math inline">\(U\)</span>, da indføres komplementærmængden for <span class="math inline">\(A\)</span> noteret <span class="math inline">\(\overline{A}\)</span> som mængden indeholdende netop de elementer fra <span class="math inline">\(U\)</span> som ikke er i <span class="math inline">\(A\)</span>.</p>
-<p>Hvis vi arbejder med et univers <span class="math inline">\(U=\{1,2,3,4,5,6,7,8\}\)</span> og har at <span class="math inline">\(A=\{1,2,3\}\)</span> da er <span class="math inline">\(\overline{A}= \{4,5,6,7,8\}\)</span>.</p>
-<p>Den følgende figur viser såkaldte veen-diagrammer for foreningsmængde, fællesmængde og komplementærmængde</p>
-<p>Figur mangler.</p>
-<p>Givet en mængde <span class="math inline">\(A\)</span>, så kaldes <span class="math inline">\(A_1,A_2,...,A_n\)</span> en opdeling af <span class="math inline">\(A\)</span> hvis <span class="math inline">\(A_1,A_2,...,A_n\)</span> er mængder som er parvis disjunkte og hvor <span class="math display">\[A=A_1\cup A_2\cup \cdots \cup A_n.\]</span> Hvis man har mængden <span class="math inline">\(A=\{1,2,3,4,5,6,7,8\}\)</span> kan man lave en opdeling af <span class="math inline">\(A\)</span> i to mængder <span class="math inline">\(A_1\)</span> og <span class="math inline">\(A_2\)</span> hvor <span class="math inline">\(A_1\)</span> indeholder de lige tal fra <span class="math inline">\(A\)</span> mens <span class="math inline">\(A_2\)</span> indeholder de uligetal fra <span class="math inline">\(A\)</span>.</p>
-<p>Hvis det var en mængde indeholdende elever på et gymnasie, kunne man lave en opdeling efter klasser man kommer fra.</p>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-opdeling-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;5: Opdeling af <span class="math inline">\(A\)</span> i mængderne <span class="math inline">\(A_1, A_2, A_3, A_4\)</span> og <span class="math inline">\(A_5\)</span>.
+</figcaption>
+</figure>
+</div>
+<div id="exm-eks5" class="theorem example">
+<p><span class="theorem-title"><strong>Eksempel 5 (Opdeling)</strong></span> Hvis man har mængden</p>
+<p><span class="math display">\[
+A=\{1,2,3,4,5,6,7,8\}
+\]</span></p>
+<p>kan man lave en opdeling af <span class="math inline">\(A\)</span> i to mængder <span class="math inline">\(A_1\)</span> og <span class="math inline">\(A_2\)</span>, hvor <span class="math inline">\(A_1\)</span> indeholder de lige tal fra <span class="math inline">\(A\)</span>, mens <span class="math inline">\(A_2\)</span> indeholder de ulige tal fra <span class="math inline">\(A\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+A_1 &amp;= \{2, 4, 6, 8\} \\
+A_2 &amp;= \{1, 3, 5, 7\}.
+\end{aligned}
+\]</span></p>
+</div>
+<p>Hvis det var en mængde indeholdende elever på et gymnasium, kunne man lave en opdeling efter hvilke klasser, man kommer fra.</p>
+</section>
 </section>
 <section id="sandsynlighed" class="level2">
 <h2 class="anchored" data-anchor-id="sandsynlighed">Sandsynlighed</h2>
-<p>Ved sandsynlighedsregning tænker man, at man udfører et forsøg/eksperiment og der så er nogle mulige udfald. Mængden af disse udfald kaldes udfaldsrummet.</p>
-<p>På forhånd ved man ikke hvad udfaldet bliver, men ofte kender man sandsynligheden for hvert udfald sker. Rent matematisk svarer det til en såkaldt sandsynlighedfunktion.</p>
-<p>En sandsynlighedsfunktion <span class="math inline">\(P\)</span> er en funktion, der til hvert udfald <span class="math inline">\(u_i\)</span> i et udfaldsrum <span class="math inline">\(U=\{u_1,u_2,\ldots,u_n\}\)</span> knytter et reelt tal <span class="math inline">\(P(u_i)\)</span>, hvor der gælder, at <span class="math inline">\(P(u_i)\geq 0\)</span> og hvor <span class="math display">\[P(u_1)+P(u_2)+\cdots + P(u_n)=1=100 \%.\]</span> <span class="math inline">\(P(U_i)\)</span> kaldes sandsynligheden for udfaldet <span class="math inline">\(u_i\)</span>.</p>
-<p>Hvis vi tænker på et konkret eksempel kunne det være at man slår med en almindelig terning hvor udfaldet kan være <span class="math inline">\(1,2,3,4,5,6\)</span>. Her vil sandsynligheden for at man slår <span class="math inline">\(3\)</span> være <span class="math inline">\(P(3)=\frac{1}{6}\)</span>. Ved dette eksempel er sandsynligheden for hvert udfald ens.</p>
-<p>Hvis sandsynligheden for hvert udfald er den samme kaldes sandsynlighedsfeltet for symmetrisk. Hvis der ialt er <span class="math inline">\(n\)</span> udfald vil sandsynligheden for et udfald <span class="math inline">\(u\in U\)</span> ved et symmetrisk sandsynlighedsfelt være <span class="math display">\[P(u)=\frac{1}{n}.\]</span></p>
-<p>Ofte vil vi ikke kun se på sandsynligheden for et udfald, men derimod for noget som kan dække over flere forskellige udfald, dette kaldes en hændelse. Ved en terning kunne det være sandsynligheden for at slå noget lige.</p>
+<p>I sandsynlighedsregning tænker man, at man udfører et forsøg eller et eksperiment, hvor der er nogle mulige udfald. Mængden af disse udfald kaldes udfaldsrummet.</p>
+<p>På forhånd ved man ikke, hvad resultatet af et eksperiment bliver, men ofte kender man sandsynligheden for at hvert udfald indtræffer. Rent matematisk svarer det til, at man kender en såkaldt sandsynlighedfunktion.</p>
+<p>En sandsynlighedsfunktion <span class="math inline">\(P\)</span> er en funktion, der til hvert udfald <span class="math inline">\(u_i\)</span> i et udfaldsrum <span class="math inline">\(U=\{u_1,u_2,\ldots,u_n\}\)</span> knytter et reelt tal <span class="math inline">\(P(u_i)\)</span>, hvor der gælder, at <span class="math inline">\(0 \leq P(u_i)\leq 1\)</span> og hvor</p>
+<p><span class="math display">\[
+P(u_1)+P(u_2)+\cdots + P(u_n)=1=100 \%.
+\]</span></p>
+<p><span class="math inline">\(P(u_i)\)</span> kaldes sandsynligheden for udfaldet <span class="math inline">\(u_i\)</span>. En sådan sandsynlighedsfunktion <span class="math inline">\(P\)</span> knyttet til et udfaldsrum <span class="math inline">\(U\)</span> kaldes for et sandsynlighedsfelt.</p>
+<p>Lad os se på et konkret eksempel.</p>
+<div id="exm-eks6" class="theorem example">
+<p><span class="theorem-title"><strong>Eksempel 6 (Sandsynlighedsfunktion)</strong></span> Vi tænker, at man slår med en almindelig terning, hvor udfaldet kan være <span class="math inline">\(1,2,3,4,5,6\)</span>. Her vil sandsynligheden for, at man slår <span class="math inline">\(3\)</span> være <span class="math inline">\(P(3)=\frac{1}{6}\)</span>. Ved dette eksempel er sandsynligheden for hvert udfald ens. Sandsynlighedsfeltet kan skrives op på denne måde:</p>
+<table class="table-bordered table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(u\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(1\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(2\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(3\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(4\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(5\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(6\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(P(u)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{1}{6}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{1}{6}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{1}{6}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{1}{6}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{1}{6}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{1}{6}\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="hændelse" class="level3">
+<h3 class="anchored" data-anchor-id="hændelse">Hændelse</h3>
+<p>En delmængde <span class="math inline">\(A\)</span> af udfaldsrummet <span class="math inline">\(U\)</span> kaldes for en hændelse. Hvis udfaldsrummet <span class="math inline">\(U= \{u_1, u_2, \dots, u_n\}\)</span> og hændelsen <span class="math inline">\(A\)</span> består af udfaldene</p>
+<p><span class="math display">\[
+A = \{u_i, u_j, \dots, u_k\}
+\]</span></p>
+<p>så definerer vi sandsynligheden for <span class="math inline">\(A\)</span> ved</p>
+<p><span class="math display">\[
+P(A) = P (u_i) + P(u_j) + \cdots + P(u_k).
+\]</span> ::: {#exm-eks7}</p>
+</section>
+<section id="lige-antal-øjne" class="level3">
+<h3 class="anchored" data-anchor-id="lige-antal-øjne">Lige antal øjne</h3>
+<p>Vi ser igen på sandsynlighedsfeltet i <a href="#exm-eks6" class="quarto-xref">eksempel&nbsp;6</a>. Et eksempel på hændelse er, at terningen viser et lige antal øjne. Det vil sige, at</p>
+<p><span class="math display">\[
+A= \{2, 4, 6\}
+\]</span></p>
+<p>og</p>
+<p><span class="math display">\[
+P(A) = P(2) + P(4) + P(6) = \frac{1}{6} + \frac{1}{6} + \frac{1}{6} = \frac{3}{6} = \frac{1}{2}.
+\]</span></p>
+<p>:::</p>
+</section>
+<section id="symmetriske-sandsynlighedsfelter" class="level3">
+<h3 class="anchored" data-anchor-id="symmetriske-sandsynlighedsfelter">Symmetriske sandsynlighedsfelter</h3>
+<p>Hvis sandsynligheden for hvert udfald er den samme kaldes sandsynlighedsfeltet for symmetrisk. Det vil sige, at sandsynlighedsfeltet i <a href="#exm-eks6" class="quarto-xref">eksempel&nbsp;6</a> er symmetrisk. Hvis der ialt er <span class="math inline">\(n\)</span> udfald vil sandsynligheden for et udfald <span class="math inline">\(u\in U\)</span> i et symmetrisk sandsynlighedsfelt være</p>
+<p><span class="math display">\[
+P(u)=\frac{1}{n}.
+\]</span></p>
+<!-- Ofte vil vi ikke kun se på sandsynligheden for et udfald, men derimod for noget som kan dække over flere forskellige udfald, dette kaldes en hændelse. Ved en terning kunne det være sandsynligheden for at slå noget lige. -->
 <p>Hvis vi igen arbejder med et symmetrisk sandsynlighedfelt og <span class="math inline">\(A\)</span> er en hændelse som ialt består af <span class="math inline">\(k\)</span> udfald bliver sandsynligheden for <span class="math inline">\(A\)</span> <span class="math display">\[P(A)=\frac{k}{n}.\]</span> I forhold til en hændelse <span class="math inline">\(A\)</span> kan man også tænke på de udfald som er i <span class="math inline">\(A\)</span> som gunstige udfald, hvorved vi kan bruge formlen <span class="math display">\[P(A)=\frac{antal\ gunstige \ udfald}{antal \ mulige \ udfald}.\]</span></p>
 <p>Hvis man ser på sandsynligheden for at slå noget lige med en almindelig terning, har vi da at hændelsen svarer til udfaldene <span class="math inline">\(2,4\)</span> og <span class="math inline">\(6\)</span>. Derved bliver sandsynligheden <span class="math inline">\(P=\frac{antal\ gunstige}{antal \ mulige}=\frac{3}{6}=\frac{1}{2}\)</span>.</p>
 <p>Det er selvfølgelig ikke altid man har et symmetrisk sandsynlighedfelt. Hvis man se på et eksempel med en maskine der producerer bolde, og for hver gang der bliver lavet en bold er der <span class="math inline">\(20 \%\)</span> chance for den bliver rød, <span class="math inline">\(40 \%\)</span> chance for den bliver blå, <span class="math inline">\(10 \%\)</span> chance for den bliver grøn og <span class="math inline">\(30 \%\)</span> chance for den bliver gul.</p>
@@ -305,6 +458,7 @@ window.Quarto = {
 <p><span class="math display">\[P(A\cup B)=P(A)+P(B)-P(A\cap B).\]</span> Dette resultat ses ud fra veen-diagrammet fra figur ??. Hvis man tager alle udfald fra <span class="math inline">\(A\)</span> og bagefter tager alle udfald fra <span class="math inline">\(B\)</span>, vil de udfald som er i begge, svarende til fællesmængden, blive taget to gange.</p>
 <p>Hvis de to hændelser <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> er disjunkte, hvorved <span class="math inline">\(A\cap B\)</span> er den tomme mængde, bliver <span class="math display">\[P(A\cup B)=P(A)+P(B).\]</span> Når man ser på hændelsen <span class="math inline">\(\overline{A}\)</span> svarende til komplementærmængden af en mændelse <span class="math inline">\(A\)</span> er det oplagt at <span class="math display">\[P(\overline{A})=1-P(A).\]</span></p>
 <p>Eksempel: Hvis man kaster to gange med en ganske almindelig terning og ønsker at finde sandsynligheden for at man mindst en af gangene får en 6’er. Hvis man <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> svarer til hændelsen at man slår en 6’er ved hhv. første og andet kast (og det ved det modsatte kast er ligemeget hvad man slår), da er den ønskede sandsynlighed: <span class="math display">\[P(A\cup B)=P(A)+P(B)-P(A\cap B).\]</span> Her må <span class="math inline">\(P(A)=P(B)=\frac{1}{6}\)</span> og <span class="math inline">\(P(A\cap B)=\frac{1}{36}\)</span> da <span class="math inline">\(A\cap B\)</span> må svare til at man får en 6’er ved begge kast. Derved er <span class="math display">\[P(A\cup B)=P(A)+P(B)-P(A\cap B)=\frac{1}{6}+\frac{1}{6}-\frac{1}{36}=\frac{11}{36}.\]</span> Her bemærkes at udfaldet hvor man ved begge kast får en 6’er både er i hændelsen <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span>.</p>
+</section>
 </section>
 <section id="estimat-for-sandsynlighed." class="level2">
 <h2 class="anchored" data-anchor-id="estimat-for-sandsynlighed.">Estimat for sandsynlighed.</h2>
