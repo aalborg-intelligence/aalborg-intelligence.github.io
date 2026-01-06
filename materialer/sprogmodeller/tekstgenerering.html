@@ -175,7 +175,12 @@ window.Quarto = {
     <h2 id="toc-title">Indhold</h2>
    
   <ul>
-  <li><a href="#træning-af-netværket" id="toc-træning-af-netværket" class="nav-link active" data-scroll-target="#træning-af-netværket">Træning af netværket</a></li>
+  <li><a href="#video-tekstgenerering-med-neurale-netværk" id="toc-video-tekstgenerering-med-neurale-netværk" class="nav-link active" data-scroll-target="#video-tekstgenerering-med-neurale-netværk">VIDEO: Tekstgenerering med neurale netværk</a></li>
+  <li><a href="#video-det-neurale-netværks-struktur" id="toc-video-det-neurale-netværks-struktur" class="nav-link" data-scroll-target="#video-det-neurale-netværks-struktur">VIDEO: Det neurale netværks struktur</a></li>
+  <li><a href="#træning-af-netværket" id="toc-træning-af-netværket" class="nav-link" data-scroll-target="#træning-af-netværket">Træning af netværket</a>
+  <ul class="collapse">
+  <li><a href="#video-træning-af-det-neurale-netværk" id="toc-video-træning-af-det-neurale-netværk" class="nav-link" data-scroll-target="#video-træning-af-det-neurale-netværk">VIDEO: Træning af det neurale netværk</a></li>
+  </ul></li>
   <li><a href="#tekstgenerering" id="toc-tekstgenerering" class="nav-link" data-scroll-target="#tekstgenerering">Tekstgenerering</a></li>
   </ul>
 </nav>
@@ -232,7 +237,10 @@ da det er den samlede sandsynlighed for at få et af de mulige ord.</p></li>
 <li><p>Hvis ord<span class="math inline">\(_i\)</span> er et dårligt bud på næste ord, skal <span class="math inline">\(z_i\)</span> være tæt på <span class="math inline">\(0\)</span>.</p></li>
 </ul>
 </div>
-<p>&nbsp;</p>
+<section id="video-tekstgenerering-med-neurale-netværk" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="video-tekstgenerering-med-neurale-netværk">VIDEO: Tekstgenerering med neurale netværk</h3>
+<p>Den overordnede idé med at generere nye ord ved hjælp af et neuralt netværk er forklaret i videoen her.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/kpo1T30zEpE" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 <p>Vores neurale netværk skal altså være en funktion, der tager vektoren <span class="math inline">\(\vec{x}\)</span> som input og giver vektoren <span class="math inline">\(\vec{z}\)</span> som output. Funktionen dannes ved at sammensætte en masse simplere funktioner. For at holde overblik kan man skitsere det neurale netværk som i <a href="#fig-NN_tekst" class="quarto-xref">figur&nbsp;1</a>.</p>
 <div id="fig-NN_tekst" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
@@ -264,6 +272,11 @@ y_i=u_{i,0}+u_{i,1}h_1+u_{i,2}h_2+\ldots + u_{i,d}h_{d}
 z_i=\frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}
 \]</span> Vi så i <a href="../../materialer/sprogmodeller/word2vec.html">Word2Vec-noten</a>, at <span class="math inline">\(\vec{z}\)</span> opfylder (<a href="#eq-betingelse1" class="quarto-xref">1</a>) og (<a href="#eq-betingelse2" class="quarto-xref">2</a>), således at det giver mening at tænke på <span class="math inline">\(\vec{z}\)</span> som en vektor af sandsynligheder. Dette <span class="math inline">\(\vec{z}\)</span> er vores outputvektor.</p></li>
 </ul>
+</section>
+<section id="video-det-neurale-netværks-struktur" class="level3">
+<h3 class="anchored" data-anchor-id="video-det-neurale-netværks-struktur">VIDEO: Det neurale netværks struktur</h3>
+<p>Opbygningen af det neurale netværk, som skal bruges til at generere det næste ord i en sætning, er forklaret i videoen her.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/uYhWbCIaF_U" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 <p>Samlet set er der ret mange vægte i modellen. Der er <span class="math inline">\(d\cdot (3m+1)\)</span> vægte i det skjulte lag og <span class="math inline">\((d+1)\cdot V\)</span> vægte i ouputlaget. I alt bliver det <span class="math inline">\(d\cdot(1+3m +V) +V\)</span> vægte.</p>
 <p>Hvis vi tager et meget simpelt eksempel, hvor alle ord repræsenteres ved en 3-dimensional vektor (<span class="math inline">\(m=3\)</span>), vi har et ordforråd på <span class="math inline">\(V=2000\)</span> ord og vi vælger, at der skal være <span class="math inline">\(d=50\)</span> neuroner i det skjulte lag, så får vi i alt</p>
 <p><span class="math display">\[
@@ -273,6 +286,7 @@ d\cdot(1+3m +V) +V = 50 \cdot (1 + 3 \cdot 3+2000) + 2000 =102500
 <p>Læg mærke til, at valget af <span class="math inline">\(d\)</span> er det, der bestemmer antallet af vægte: <span class="math inline">\(m\)</span> var fastlagt da vi lavede Word2Vec, <span class="math inline">\(V\)</span> er antallet af ord i vores ordforråd, og 3-tallet er antal ord, vi prædikterer udfra. Valget af <span class="math inline">\(d\)</span> er i praksis et kompromis. Jo større <span class="math inline">\(d\)</span> er, des mere præcis en model kan vi lave. Omvendt bliver der også flere vægte, der skal bestemmes. Det kræver stor regnekraft. Desuden kræver det meget træningsdata, hvis man vil undgå overfitting - et problem, som du kan læse mere om <a href="../../materialer/krydsvalidering/krydsvalidering.html">i noten om krydsvalidering</a>.</p>
 <p><br>
 </p>
+</section>
 <section id="træning-af-netværket" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="træning-af-netværket">Træning af netværket</h2>
 <p>Som sagt indgår der ret mange vægte i modellen. Indtil nu har vi ikke sagt, hvilken værdi disse vægte skal have. Husk på, at vores neurale netværk skal give os sandsynligheden for, at et ord er næste ord i en sætning, når vi kender de 3 foregående ord. For at lære, hvilket ord der typisk kommer efter tre givne ord i virkelige tekster, får vi endnu engang brug for noget træningsdata i form af vores store tekstkorpus. Ud fra dette tekstkorpus laver vi et datasæt bestående af alle 4-gram, det vil sige alle sekvenser på 4 ord, der forekommer i teksten. De tre første ord kalder vi input, og det sidste kalder vi <em>target</em>.</p>
@@ -357,6 +371,11 @@ Figur&nbsp;2: Grafen for <span class="math inline">\(\ln(x)\)</span> og <span cl
 </figure>
 </div>
 <p>Dette gentager vi nu for hver eneste række i vores træningsdata. Vi beregner en cross-entropy for hver. Til sidst lægger vi alle disse cross-entropy sammen til en samlet tabsfunktion <span class="math inline">\(L\)</span>, som helst skal være så lille som muligt. Vi har udregnet <span class="math inline">\(L\)</span> udfra vores træningsdata og vægtene. Træningsdata er det, vi går ud fra, vi ved, så det kan vi ikke lave om på for at minimere <span class="math inline">\(L\)</span>. Derfor betragter vi nu <span class="math inline">\(L\)</span> som en funktion af vægtene <span class="math inline">\(w_{j,k}\)</span> og <span class="math inline">\(u_{i,j}\)</span>. Vi ønsker at bestemme vægtene således, at <span class="math inline">\(L\)</span> bliver mindst mulig svarende til, at vores sandsynligheder kommer så tæt på target som muligt. Vi skal altså finde minimum for en funktion af mange variable. Det kan man for eksempel gøre ved hjælp af <a href="../../materialer/gradientnedstigning/gradientnedstigning.html">gradientnedstigning</a>. For at lave gradientnedstigning er det vigtigt at kunne finde de partielle afledede af <span class="math inline">\(L\)</span>. En smart måde at lave gradientnedstigning på kaldes <em>backpropagation</em>. Et simpelt eksempel på backpropagation findes i noten om <a href="../../materialer/simple_neurale_net/simple_neurale_net.html">simple neurale net</a>.</p>
+<section id="video-træning-af-det-neurale-netværk" class="level3">
+<h3 class="anchored" data-anchor-id="video-træning-af-det-neurale-netværk">VIDEO: Træning af det neurale netværk</h3>
+<p>Hvordan, det neurale netværk, som skal bruges til tekstgenerering, trænes, er forklaret i videoen her (bemærk, at vi i videoen bruger det danske ord <em>krydsentropi</em> i stedet for det engelske <em>cross-entropy</em>).</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/gsBpd2YDv3Y" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+</section>
 </section>
 <section id="tekstgenerering" class="level2">
 <h2 class="anchored" data-anchor-id="tekstgenerering">Tekstgenerering</h2>
