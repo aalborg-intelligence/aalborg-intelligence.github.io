@@ -190,11 +190,14 @@ laver Word2Vec. Vi er ude på at forstå, hvordan et ord forholder sig til
 dets kontekst, altså de omkringstående ord. Derfor er der ikke noget
 problem i, at vinduet både indeholder ord før og efter fokusordet. 
 
-I de næste to afsnit ser vi på,
-hvordan man kan bruge vektorer til at modellere sandsynligheden for, at et fokusord $w$ har $c$ som
-kontekstord. Det vil vi sidenhen
-benytte til at vælge vektorerne, således at sandsynlighederne matcher, hvor hyppigt vi observerer $c$ som kontekstord til $w$  i
-datasættet.
+### VIDEO: Introduktion til Word2Vec
+
+I videoen her forklarer vi idéen bag Word2Vec.
+
+{{< video https://www.youtube.com/embed/DVGvvXHI7wQ >}}
+
+
+I de næste to afsnit ser vi på, hvordan man kan bruge vektorer til at modellere sandsynligheden for, at et fokusord $w$ har $c$ som kontekstord. Det vil vi sidenhen benytte til at vælge vektorerne, således at sandsynlighederne matcher, hvor hyppigt vi observerer $c$ som kontekstord til $w$  i datasættet.
 
 ## Fokus- og kontekstvektorer 
 
@@ -327,7 +330,14 @@ man stadigvæk godt kan give mening til formlen
 (@eq-skalar). Intuitionen fra to eller tre dimensioner er
 derfor god at have, selv om vi arbejder med højere dimensioner.
 
-### Eksempel 1 
+### VIDEO: Fokus- og kontekstvektorer
+
+I videoen her forklarer vi idéen og intuitionen bag fokus- og kontekstvektorer.
+
+{{< video https://www.youtube.com/embed/OdiOc22SLh8 >}}
+
+
+:::{#exm-eks1}
 
 Lad os sige, at vi har fundet en
 vektorrepræsentation, der opfylder det ønskede. Det gav vektorerne
@@ -387,6 +397,8 @@ Her er $\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{lufte}}$
 større end $\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{lufte}}$
 svarende til, at \"hund\" oftere har \"lufte\" som kontekst, end \"kat\"
 har. 
+
+:::
 
 ::: {.callout-tip collapse="true" appearance="minimal"}
 
@@ -473,11 +485,14 @@ $${#eq-sshmodel}
 
 Egenskaberne ved softmax sikrer, at punkt 1. til 3. ovenfor er opfyldt.
 
+### VIDEO: Model for sandsynligheder
+
+I videoen her forklarer vi modellen for sandsynligheder, som gennemgået ovenfor.
+
+{{< video https://www.youtube.com/embed/D8arPNL_sOA >}}
 
 
-
-
-### Eksempel 2
+:::{#exm-eks2}
 
 Antag, at vores ordforråd kun består af de tre ord \"hund\", \"pels\" og \"fjer\", og at vi har fundet vektorrepræsentationer for de tre ord.
 
@@ -510,6 +525,7 @@ P(\text{kontekst = hund} \mid \text{fokus = hund}) &= \frac{\mathrm{e}^{\vec{v}_
 $$
 "Pels" er altså det mest sandsynlige kontekstord til \"hund\", mens \"fjer\" sjældent er kontekst til \"hund\".
 
+:::
 
 
 ::: {.callout-tip collapse="true" appearance="minimal"}
@@ -650,6 +666,13 @@ Ligning (@eq-Lfunktion) viser, at $L$ afhænger af, hvordan vi har valgt fokus- 
  Hvordan finder man minimum for $L$ i praksis? Det kan man
 for eksempel gøre ved hjælp af [gradientnedstigning](../gradientnedstigning/gradientnedstigning.qmd), som vi ikke vil komme nærmere ind på her.
 
+
+### VIDEO: Estimation af vektorrepræsentationer
+
+I videoen her forklarer vi, hvordan vi opstiller tabsfunktionen $L$, som minimeres for at bestemme en vektorrepræsentation for alle fokus- og kontekstord.
+
+{{< video https://www.youtube.com/embed/940yYmus8X8 >}}
+
 Der er rigtig mange ord i det danske sprog. For hvert af dem skal vi
 finde både en fokus- og en kontekstvektor, der hver har $m$ koordinater.
 Alt i alt giver det rigtig mange koordinater, der skal bestemmes.
@@ -721,4 +744,12 @@ samme kontekst, og dermed har næsten samme vektorrepræsentation, så vil
 man alligevel få \"mad\" som muligt næste ord.
 
 Bemærk, at resultatet af Word2Vec afhænger meget af, hvilket træningsdata vi har brugt. Antag for eksempel, at vi kun træner modellen på tekster skrevet af folk, der ikke kan lide hunde. Så vil $\vec{v}_{\text{hund}}$ have en tendens til at pege i samme retning som andre negativt ladede ord, fordi de ofte optræder sammen med negative kontekstord. Når vi sidenhen genererer ny tekst, vil vi få en tendens til at danne sætninger, der omtaler hunde negativt.
+
+### VIDEO: Fra vektorer til tekstgenerering
+
+Den overordnede idé med at bruge ords vektorrepræsentationer til at prædiktere det næste ord i en sætning er forklaret i videoen her.
+
+{{< video https://www.youtube.com/embed/eKI2Nd-s9Cw >}}
+
+
 
