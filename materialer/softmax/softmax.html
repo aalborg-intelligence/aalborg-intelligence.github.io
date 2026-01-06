@@ -41,7 +41,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ab79595d7b8ccafd0fb7897ae80cbae7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-ece03592d64235babf60c362785df9bd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -177,10 +177,17 @@ window.Quarto = {
   <ul>
   <li><a href="#hvor-hårdt-skal-du-arbejde-i-matematiktimerne" id="toc-hvor-hårdt-skal-du-arbejde-i-matematiktimerne" class="nav-link active" data-scroll-target="#hvor-hårdt-skal-du-arbejde-i-matematiktimerne">Hvor hårdt skal du arbejde i matematiktimerne?</a></li>
   <li><a href="#træningsdata" id="toc-træningsdata" class="nav-link" data-scroll-target="#træningsdata">Træningsdata</a></li>
-  <li><a href="#feedforward" id="toc-feedforward" class="nav-link" data-scroll-target="#feedforward">Feedforward</a></li>
-  <li><a href="#cross-entropy-tabsfunktionen" id="toc-cross-entropy-tabsfunktionen" class="nav-link" data-scroll-target="#cross-entropy-tabsfunktionen">Cross-entropy tabsfunktionen</a></li>
+  <li><a href="#feedforward" id="toc-feedforward" class="nav-link" data-scroll-target="#feedforward">Feedforward</a>
+  <ul class="collapse">
+  <li><a href="#video-introduktion-og-softmax" id="toc-video-introduktion-og-softmax" class="nav-link" data-scroll-target="#video-introduktion-og-softmax">VIDEO: Introduktion og softmax</a></li>
+  </ul></li>
+  <li><a href="#cross-entropy-tabsfunktionen" id="toc-cross-entropy-tabsfunktionen" class="nav-link" data-scroll-target="#cross-entropy-tabsfunktionen">Cross-entropy tabsfunktionen</a>
+  <ul class="collapse">
+  <li><a href="#video-cross-entropy-tabsfunktion" id="toc-video-cross-entropy-tabsfunktion" class="nav-link" data-scroll-target="#video-cross-entropy-tabsfunktion">VIDEO: Cross-entropy tabsfunktion</a></li>
+  </ul></li>
   <li><a href="#opdatering-af-vægtene" id="toc-opdatering-af-vægtene" class="nav-link" data-scroll-target="#opdatering-af-vægtene">Opdatering af vægtene</a>
   <ul class="collapse">
+  <li><a href="#video-opdateringsregel" id="toc-video-opdateringsregel" class="nav-link" data-scroll-target="#video-opdateringsregel">VIDEO: Opdateringsregel</a></li>
   <li><a href="#opdatering-ved-hjælp-af-hele-træningsdatasættet" id="toc-opdatering-ved-hjælp-af-hele-træningsdatasættet" class="nav-link" data-scroll-target="#opdatering-ved-hjælp-af-hele-træningsdatasættet">Opdatering ved hjælp af hele træningsdatasættet</a></li>
   </ul></li>
   <li><a href="#tilbage-til-eksemplet" id="toc-tilbage-til-eksemplet" class="nav-link" data-scroll-target="#tilbage-til-eksemplet">Tilbage til eksemplet</a></li>
@@ -673,6 +680,10 @@ o_J &amp;= \frac{\mathrm{e}^{z_J}}{\sum_{i=1}^J \mathrm{e}^{z_i}} \\
 </div>
 </div>
 </div>
+<section id="video-introduktion-og-softmax" class="level3">
+<h3 class="anchored" data-anchor-id="video-introduktion-og-softmax">VIDEO: Introduktion og softmax</h3>
+<p>I videoen her forklarer vi om softmax og feedforward-udtrykkene.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/TUz5QB68mHU" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 <p>Vi har indtil videre skrevet, at outputværdierne kan fortolkes som sandsynligheder. Men bare fordi at en række tal (<span class="math inline">\(o_1, o_2, \dots, o_J\)</span>) alle ligger mellem 0 og 1 og alle summerer til 1, så er det jo ikke sikkert, at de på en fornuftig måde angiver sandsynligheden for de fire forskellige muligheder, som de enkelte elever har. For eksempel kunne de fleste lærere nok ønske sig, at</p>
 <p><span class="math display">\[
 o_1 = 0.5, \quad 0_2 = 0.5, \quad o_3=0, \quad o_4=0
@@ -680,6 +691,7 @@ o_1 = 0.5, \quad 0_2 = 0.5, \quad o_3=0, \quad o_4=0
 <p>Det svarer til, at cirka halvdelen af elever bliver i klassen og regner opgaver, mens den anden halvdel sætter sig ud og regner. Til gengæld er der <em>ingen</em>, som går i kantinen og feder den, ligsom der heller ikke er nogle, som bare går hjem.</p>
 <p>For at vores nye AI assistent skal give et nogenlunde retvisende billede af virkeligheden (det vil sige elevernes valg og ikke lærerens ønsker!) skal vi have fundet nogle outputværdier, som for det første afhænger af inputværdierne (man kan jo se på <a href="#fig-trainingdata" class="quarto-xref">figur&nbsp;1</a> at inputværdierne har indflydelse), og som for det andet rent faktisk giver en realistisk sandsynlighed for hver af de fire muligheder. Det gør vi ved at blive ved med at "skrue" på alle vægtene indtil, at de beregnede outputværdier i (<a href="#eq-o_j" class="quarto-xref">5</a>) giver et godt bud på sandsynlighederne for de 4 muligheder.</p>
 <p>Hvordan, det rent faktisk lader sig gøre, kommer her.</p>
+</section>
 </section>
 <section id="cross-entropy-tabsfunktionen" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="cross-entropy-tabsfunktionen">Cross-entropy tabsfunktionen</h2>
@@ -795,6 +807,11 @@ E &amp;= - \left( 0 \cdot \ln(0.10) + 1 \cdot \ln(0.85) + 0 \cdot \ln(0.03) + 0 
 \end{aligned}
 \]</span></p>
 <p>Altså kan vi her se, at det netværk, som er bedre, også har en lavere værdi af tabsfunktionen. Hele idéen er derfor, at vi for et givent træningsdatasæt vil bestemme de værdier af vægtene, som minimerer tabsfunktionen. Hvordan det gøres forklares i det næste afsnit.</p>
+<section id="video-cross-entropy-tabsfunktion" class="level3">
+<h3 class="anchored" data-anchor-id="video-cross-entropy-tabsfunktion">VIDEO: Cross-entropy tabsfunktion</h3>
+<p>I videoen her forklarer vi om cross-entropy tabsfunktionen.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/kXCQFj5ZoG0" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+</section>
 </section>
 <section id="opdatering-af-vægtene" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="opdatering-af-vægtene">Opdatering af vægtene</h2>
@@ -939,6 +956,11 @@ w_{j,k}^{(\textrm{ny})} \leftarrow w_{j,k} + \eta \cdot (t_j - o_j) \cdot x_k
 </div>
 </div>
 </div>
+<section id="video-opdateringsregel" class="level3">
+<h3 class="anchored" data-anchor-id="video-opdateringsregel">VIDEO: Opdateringsregel</h3>
+<p>I videoen her forklarer vi ovenstående opdateringsregel.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/iRKl7rvr8Sw" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+</section>
 <section id="opdatering-ved-hjælp-af-hele-træningsdatasættet" class="level3">
 <h3 class="anchored" data-anchor-id="opdatering-ved-hjælp-af-hele-træningsdatasættet">Opdatering ved hjælp af hele træningsdatasættet</h3>
 <p>I det ovenstående har vi udledt opdateringsreglen for <span class="math inline">\(w_{j,k}\)</span>-vægten baseret ét enkelt træningseksempel ad gangen ved at finde minimum for tabsfunktionen:</p>

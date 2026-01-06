@@ -43,7 +43,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ab79595d7b8ccafd0fb7897ae80cbae7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-ece03592d64235babf60c362785df9bd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -206,8 +206,15 @@ window.Quarto = {
     <h2 id="toc-title">Indhold</h2>
    
   <ul>
-  <li><a href="#medlemsapp-til-good-food" id="toc-medlemsapp-til-good-food" class="nav-link active" data-scroll-target="#medlemsapp-til-good-food">Medlemsapp til Good Food</a></li>
-  <li><a href="#hvordan-bestemmes-vægtene" id="toc-hvordan-bestemmes-vægtene" class="nav-link" data-scroll-target="#hvordan-bestemmes-vægtene">Hvordan bestemmes vægtene?</a></li>
+  <li><a href="#medlemsapp-til-good-food" id="toc-medlemsapp-til-good-food" class="nav-link active" data-scroll-target="#medlemsapp-til-good-food">Medlemsapp til Good Food</a>
+  <ul class="collapse">
+  <li><a href="#video-introduktion" id="toc-video-introduktion" class="nav-link" data-scroll-target="#video-introduktion">VIDEO: Introduktion</a></li>
+  </ul></li>
+  <li><a href="#hvordan-bestemmes-vægtene" id="toc-hvordan-bestemmes-vægtene" class="nav-link" data-scroll-target="#hvordan-bestemmes-vægtene">Hvordan bestemmes vægtene?</a>
+  <ul class="collapse">
+  <li><a href="#video-træningsdata-og-tabsfunktion" id="toc-video-træningsdata-og-tabsfunktion" class="nav-link" data-scroll-target="#video-træningsdata-og-tabsfunktion">VIDEO: Træningsdata og tabsfunktion</a></li>
+  <li><a href="#video-opdateringsregler" id="toc-video-opdateringsregler" class="nav-link" data-scroll-target="#video-opdateringsregler">VIDEO: Opdateringsregler</a></li>
+  </ul></li>
   <li><a href="#aktiviteringsfunktioner" id="toc-aktiviteringsfunktioner" class="nav-link" data-scroll-target="#aktiviteringsfunktioner">Aktiviteringsfunktioner</a></li>
   <li><a href="#smartere-end-adaline" id="toc-smartere-end-adaline" class="nav-link" data-scroll-target="#smartere-end-adaline">Smartere end ADALINE?</a></li>
   <li><a href="#overblik" id="toc-overblik" class="nav-link" data-scroll-target="#overblik">Overblik</a>
@@ -324,7 +331,11 @@ Figur&nbsp;3: Grafisk illustration af en kunstig neuron i eksemplet om Good Food
 </figure>
 </div>
 <p>Opgaven bliver nu, at finde værdier af disse vægte sådan, at outputværdien <span class="math inline">\(o\)</span> for givne værdier af <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> bliver god til at modellere sandsynligheden for, om tilbuddet aktiveres eller ej.</p>
-<p>Det er her, at træningsdata kommer i spil, fordi vi for en lang række af inputværdier <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> jo faktisk ved, om tilbuddet blev aktiveret eller ej (husk på at den oplysning er gemt i targetværdien <span class="math inline">\(t\)</span>).</p>
+<section id="video-introduktion" class="level3">
+<h3 class="anchored" data-anchor-id="video-introduktion">VIDEO: Introduktion</h3>
+<p>I videoen herunder giver vi en introduktion til kunstige neuroner.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/OHFhWwe2AuQ" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<p>Altså: Vi vil gerne bestemme nogle værdier af vægtene <span class="math inline">\(w_0\)</span>, <span class="math inline">\(w_1\)</span> og <span class="math inline">\(w_2\)</span>, så vores kunstige neuron bliver god til at forudsige, om et tilbud aktiveres eller ej. Det er her, at træningsdata kommer i spil, fordi vi for en lang række af inputværdier <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> jo faktisk ved, om tilbuddet blev aktiveret eller ej (husk på at den oplysning er gemt i targetværdien <span class="math inline">\(t\)</span>).</p>
 <p>Forestil dig for en stund at vi på en eller anden måde har bestemt værdier af <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span>. Vi kan nu sammenligne værdien af <span class="math inline">\(o\)</span> (vores pt bedste bud på sandsynligheden) og targetværdien (som er den værdi, vi gerne vil kunne forudsige). Hvis <span class="math inline">\(t=0\)</span> vil vi også gerne have, at <span class="math inline">\(o\)</span> er tæt på <span class="math inline">\(0\)</span>, og omvendt hvis <span class="math inline">\(t=1\)</span> vil vi gerne have, at <span class="math inline">\(o\)</span> er tæt på <span class="math inline">\(1\)</span>. Det vil sige, at differensen</p>
 <p><span class="math display">\[
 t-o = t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2)
@@ -338,6 +349,7 @@ E = \frac{1}{2} \sum \left ( t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2) \righ
 <p>hvor der altså her summeres over alle træningsdata. Vi har lige ganget med <span class="math inline">\(\frac{1}{2}\)</span> foran. Det kan virke lidt mærkeligt, men du ser fidusen senere.</p>
 <p>Hvis vægtene <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span> er valgt, så sigmoid-funktionen er god til at prædiktere, om tilbuddet aktiveres eller ej, så vil ovenstående udtryk være tæt på <span class="math inline">\(0\)</span>. Det vil sige, at hvis <span class="math inline">\(E\)</span> er tæt på <span class="math inline">\(0\)</span>, så har vi valgte gode værdier af vægtene, mens hvis <span class="math inline">\(E\)</span> er langt væk fra <span class="math inline">\(0\)</span>, så har vi valgt mindre gode værdier af vægtene (i forhold til det overordnede ønske om at være i stand til at prædiktere om tilbuddet aktiveres eller ej). Denne funktion <span class="math inline">\(E\)</span>, som jo afhænger af vægtene <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span>, kaldes for en <strong>tabsfunktion</strong> (eller på engelsk <strong>loss function</strong>).</p>
 <p>Nu er vægtene jo ikke givet på forhånd, men det er lige præcis tabsfunktionen, man bruger til at bestemme "gode" værdier af vægtene. Det gøres ved at bestemme de værdier af vægtene, som minimerer tabsfunktionen. Det er altså et optimeringsproblem, vi står overfor. Hvordan det løses, kan du læse om i næste afsnit.</p>
+</section>
 </section>
 <section id="hvordan-bestemmes-vægtene" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="hvordan-bestemmes-vægtene">Hvordan bestemmes vægtene?</h2>
@@ -373,6 +385,10 @@ E(w_0, w_1, &amp;\dots, w_n) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}
 \sigma(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2.
 \end{aligned}
 \]</span></p>
+<section id="video-træningsdata-og-tabsfunktion" class="level3">
+<h3 class="anchored" data-anchor-id="video-træningsdata-og-tabsfunktion">VIDEO: Træningsdata og tabsfunktion</h3>
+<p>I videoen her forklarer vi om træningsdata og tabsfunktionen.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/LTYHfQegGY0" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 <p>Tabsfunktionen er en <a href="../../materialer/funktioner_af_flere_variable/funktioner_af_flere_variable.html">funktion af flere variable</a>. I princippet kan man bestemme minimum ved at sætte alle de partielle afledede lig med <span class="math inline">\(0\)</span>, løse ligningerne og dernæst overbevise sig selv om, at man har fundet et minimum. Det vil give et ligningssystem med <span class="math inline">\(n+1\)</span> ligninger, som alle er koblet med hinanden. Det viser sig, at være en beregningsmæssig tung opgave at løse dette ligningssystem analytisk. Derfor bruger man i stedet for den metode, som kaldes for <a href="../../materialer/gradientnedstigning/gradientnedstigning.html">gradientnedstigning</a>. Gradientnedstigning går ud på først at vælge tilfældige værdier af vægtene <span class="math inline">\(w_0, w_1, \cdots, w_n\)</span>. Det viser sig så, at den negative gradient vil pege i den retning, hvor funktionsværdien falder mest. Derfor er idéen at bevæge sig et lille stykke i den negative gradients retning – fordi vi så kommer lidt tættere på minimum. Når vi har gjort det, beregner vi gradienten igen, og bevæger os igen et lille stykke i den negative gradients retning. Det forsætter vi med indtil værdien af tabsfunktionen ikke ændrer sig særlig meget, hvilket svarer til, at vi har fundet minimum.</p>
 <p>Når vi for alle vægtene bevæger os et lille stykke i den negative gradients retning, kan opdateringen af vægtene skrives sådan her:</p>
 <p><span class="math display">\[
@@ -479,6 +495,11 @@ w_n^{(\textrm{ny})} \leftarrow &amp; w_n + \eta \cdot \sum_{m=1}^{M} \left (t^{(
 </div>
 </div>
 <p>I praksis vil man som sagt blive ved med at opdatere vægtene, indtil værdien af tabsfunktionen ikke ændrer sig særlig meget.</p>
+</section>
+<section id="video-opdateringsregler" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="video-opdateringsregler">VIDEO: Opdateringsregler</h3>
+<p>I videoen her udleder vi ovenstående opdateringsregler.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/Eg7NMnGdCeQ" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 <p>Når vi på den måde har bestemt værdien af vægtene, kan vi bruge outputværdien <span class="math inline">\(o\)</span> til at forudsige, om en kunde vil aktivere tilbuddet eller ej. Det vil vi gøre på denne måde:</p>
 <p><span id="eq-pred"><span class="math display">\[
 \textrm{Kunden aktiverer tilbuddet: }
@@ -557,8 +578,8 @@ o = \sigma (-0.298 - 0.0375\cdot x_1 + 0.000769\cdot x_2) &gt; 0.5.
 o = \sigma (-0.298 - 0.0375\cdot x_1 + 0.000769\cdot x_2).
 \]</span> Da får vi <span class="math display">\[
 \begin{aligned}
-&amp;\textrm{Hans:} \quad \quad &amp;o=\sigma (-0.298 - 0.0375\cdot 50 + 0.000769\cdot 3500) = 0.627 \\
-&amp;\textrm{Gerda:} \quad \quad &amp;o=\sigma (-0.298 - 0.0375\cdot 65 + 0.000769\cdot 2800) = 0.358
+&amp;\textrm{Hans:} \quad  &amp;o=\sigma (-0.298 - 0.0375\cdot 50 + 0.000769\cdot 3500) = 0.627 \\
+&amp;\textrm{Gerda:} \quad &amp;o=\sigma (-0.298 - 0.0375\cdot 65 + 0.000769\cdot 2800) = 0.358
 \end{aligned}
 \]</span></p>
 <p>Ifølge vores model er der altså en sandsynlighed på <span class="math inline">\(62.7 \%\)</span> for, at Hans vil aktivere tilbuddet, mens den tilsvarende sandsynlighed for Gerda er på <span class="math inline">\(35.8 \%\)</span>. Vores bedste bud vil derfor være at prædiktere, at Hans vil aktivere tilbuddet, mens Gerda ikke vil. Vi vælger derfor at vise det pågældende tilbud til Hans, men ikke til Gerda.</p>
@@ -578,6 +599,7 @@ Figur&nbsp;6: Datasættet fra <a href="#fig-alder_vs_forbrug2" class="quarto-xre
 </div>
 <p>På <a href="#fig-alder_vs_forbrug_eks" class="quarto-xref">figur&nbsp;6</a> ses de to punkter <span class="math inline">\((50,3500)\)</span> og <span class="math inline">\((65,2800)\)</span>, som repræsenterer Hans og Gerda indtegnet. Her ses det også, at Hans’ punkt ligger over linjen (svarende til at vi mener, at han vil aktivere tilbuddet), mens Gerdas punkt ligger under linjen (svarende til at vi ikke mener, at hun vil aktivere tilbuddet).</p>
 </div>
+</section>
 </section>
 <section id="aktiviteringsfunktioner" class="level2">
 <h2 class="anchored" data-anchor-id="aktiviteringsfunktioner">Aktiviteringsfunktioner</h2>
@@ -807,7 +829,7 @@ Kort beskrivelse
 </thead>
 <tbody class="list">
 
-<tr data-index="0" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1766070767150" data-listing-reading-time-sort="2" data-listing-word-count-sort="318" data-listing-title-sort="Aktiveringsfunktioner" data-listing-filename-sort="aktiveringsfunktioner.qmd">
+<tr data-index="0" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1767690964624" data-listing-reading-time-sort="2" data-listing-word-count-sort="318" data-listing-title-sort="Aktiveringsfunktioner" data-listing-filename-sort="aktiveringsfunktioner.qmd">
 <td>
 <a href="../../undervisningsforlob/aktiveringsfunktioner.html" class="title listing-title">Aktiveringsfunktioner</a>
 </td>
@@ -817,7 +839,7 @@ Kort beskrivelse
 
 </tr>
 
-<tr data-index="1" data-categories="QS1uaXZlYXUlMkNCaW90ZWtub2xvZ2klMkNLb3J0" data-listing-file-modified-sort="1766070767971" data-listing-reading-time-sort="1" data-listing-word-count-sort="149" data-listing-title-sort="Screeningsprogrammer" data-listing-filename-sort="screeningsprogrammer.qmd">
+<tr data-index="1" data-categories="QS1uaXZlYXUlMkNCaW90ZWtub2xvZ2klMkNLb3J0" data-listing-file-modified-sort="1767690965428" data-listing-reading-time-sort="1" data-listing-word-count-sort="149" data-listing-title-sort="Screeningsprogrammer" data-listing-filename-sort="screeningsprogrammer.qmd">
 <td>
 <a href="../../undervisningsforlob/screeningsprogrammer.html" class="title listing-title">Screeningsprogrammer</a>
 </td>
@@ -827,7 +849,7 @@ Kort beskrivelse
 
 </tr>
 
-<tr data-index="2" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1766070767574" data-listing-reading-time-sort="3" data-listing-word-count-sort="576" data-listing-title-sort="Opklar et mord!" data-listing-filename-sort="opklar_et_mord.qmd">
+<tr data-index="2" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1767690965030" data-listing-reading-time-sort="3" data-listing-word-count-sort="576" data-listing-title-sort="Opklar et mord!" data-listing-filename-sort="opklar_et_mord.qmd">
 <td>
 <a href="../../undervisningsforlob/opklar_et_mord.html" class="title listing-title">Opklar et mord!</a>
 </td>
