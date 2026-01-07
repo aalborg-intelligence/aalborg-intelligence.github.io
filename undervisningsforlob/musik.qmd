@@ -1,28 +1,51 @@
 ---
 title: "Kmeans-musik"
-description: "test"
+description: "Vi vil se, hvordan man kan inddele musiknumre i grupper, f.eks. til at give anbefalingen i en musiktjeneste"
 image: ""
 categories:
+  - A-niveau
   - Kort
 ---
 
-## Anvendelse af K-Means
 
-Ved flere musiktjenester kan man få forslag til ny musik som man sikkert gerne vil høre. En måde man kan lave dette på er ved hjælp af K-means.
+::: {.callout-caution collapse="true" appearance="minimal"}
+### Forudsætninger og tidsforbrug
+
+- Afstand mellem punkter. 
+- Sumtegn
+
+**Tidsforbrug:** 2-3 timer
+
+:::
+
+::: {.purpose}
+
+### Formål
+
+I dette forløb vil vi se på, hvordan algoritmen K-means kan anvendes til at inddele musiknumre i grupper, f.eks. for at en musiktjeneste kan give anbefalinger til ny ny musik, som man sikkert gerne vil høre.
+:::
+
+## K-means til inddeling af musiknumre i grupper
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 1: Teori om K-means
+
+* Læs [noten Clustering med K-means](../materialer/k-means/k-means.qmd) ... *til og med* afsnittet \"Eksempel på algoritmen\".
+
+:::
 
 For at kunne opdele musiknumre i grupper er det nødvendigt at finde nogle informationer/features til hvert nummer. En oplagt information kunne umiddelbart være musikgenre : rock, pop, klassisk, country m.m.. 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Musikfeatures?
+### Opgave 2: Musikfeatures
 Overvej hvilke andre features man kan bruge til at opdele musiknumre efter.
 :::
 
 Opdelingen skal egentlig foretages af en computer som også selv kan analysere musiknumrene og finde features værdier. Nogle af de features der benyttes er: Lydniveau, Energi, Instrumentalitet, Dansbarhed, Positivitet og Tempo.
 
-For at anvende K-means her bør hver feature enten være angivet på samme skala, f.eks. fra 0 til 1, eller ændres ved feature-skalering så hver feature får lige stor betydning. 
+For at anvende K-means her bør hver feature enten være angivet på samme skala, f.eks. fra 0 til 1, eller ændres ved *feature-skalering*, så hver feature får lige stor betydning. 
 
-Her ses på et mindre eksempel med 15 musiknumre man ønsker at opdele i 3 grupper ud fra 3 features : danceabilty, energy og speechiness.
-Desuden er alle numrer smidt i en tilfældig gruppe
+Her ses på et mindre eksempel med 15 musiknumre man ønsker at opdele i 3 grupper ud fra 3 features : danceabilty, energy og speechiness.Numrene er placeret i tilfældige gruppe fra start i forhold til algoritmen.
 
 | nummer  | danceability  | energy | speechiness| gruppe|
 |--------|--------|--------|--------|--------|
@@ -43,9 +66,8 @@ Desuden er alle numrer smidt i en tilfældig gruppe
 |White Iverson|	0,67|	0,52|	0,04|3|
 
 
-
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opdeling af musiknumre i 3 grupper : beregn centrum
+### Opgave 3: Opdeling af musiknumre i 3 grupper - beregn centrum
 Ud fra skemaet ønsker vi nu at få beregnet centrum for hver af de tre grupper.
 
 | gruppe  | danceability  | energy | speechiness|
@@ -53,30 +75,29 @@ Ud fra skemaet ønsker vi nu at få beregnet centrum for hver af de tre grupper.
 |1 |	0,692|	0,774|	0,056| 
 |2||||
 |3||||
-a) Beregn selv centrum for gruppe 1 og tjek at facit er korrekt.
-b) beregn centrum for de to andre grupper. 
+ * Beregn centrum for gruppe 1 og tjek at facit er korrekt.
+ * beregn centrum for de to andre grupper. 
 :::
 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Beregn afstande til centrer
-Nu skal vi igang med at finde afstanden fra hvert nummer til hvert centrum. Her skal du selvfølgelig bruge resultatet fra forrige opgave hvor du fandt de tre centrummer.
+### Opgave 4: Beregn afstande til centre
+Nu skal vi igang med at finde afstanden fra hvert nummer til hvert centrum. Her skal du selvfølgelig bruge resultatet fra forrige opgave, hvor du fandt de tre centre.
 
 | nummer  | afstand centrum 1  | afstand centrum 2 | afstand centrum 3|
 |--------|--------|--------|--------|--------|
 |Barbie Girl|	0,189|	0,213|	0,295|
 |Shape of You|	|	|	|
 
-a) Beregn selv afstanden fra "barbie girl" til hver af de 3 centrer og tjek at det er korrekt.
-b) beregn afstand fra "shape of you" til de 3 centrer. 
+ * Beregn afstanden fra \"Barbie girl\" til hver af de 3 centre og tjek, at det er korrekt.
+ * beregn afstand fra \"Shape of you\" til de 3 centre. 
 :::
 
 
 
-
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Bestemmelse af nye grupper
-Herunder er alle afstande til de tre centre beregnet for alle numre. Desuden er der angivet en ny gruppe for "barbie girl".
+### Opgave 5: Bestemmelse af nye grupper
+Herunder er alle afstande til de tre centre beregnet for alle numre. Desuden er der angivet en ny gruppe for \"Barbie girl\", da det nummer ligger tættest på centrum for gruppe 1.
 
 | nummer  | afstand centrum 1  | afstand centrum 2 | afstand centrum 3|gruppe |ny gruppe|
 |--------|--------|--------|--------|--------|--------|
@@ -96,27 +117,32 @@ Herunder er alle afstande til de tre centre beregnet for alle numre. Desuden er 
 |Die To Live|	0,346|	0,365|	0,432|2||
 |White Iverson|	0,255|	0,243|	0,172|3||
 
-a) Bestem selv ny gruppe for alle numrene.
-b) forklar hvorfor vi ikke er færdige med at opdele i de 3 ønskede grupper med kmeans metoden. 
+ * Bestem ny gruppe for alle numrene.
+ * forklar hvorfor vi ikke er færdige med at opdele i de 3 ønskede grupper med kmeans metoden. 
 :::
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Endelig løsning på opdeling.
-Der er allerede lavet nogle beregninger, men der skal laves meget mere før det er færdigt. Der er to gode muligheder for at finde den endelige opdeling hvor den ene er let a1), mens den anden er langt svæere og teknisk a2).
-a1) Brug programmet orange (link), hvor du kan få hjælp til at installere programmet her (link). Med orange kan du få lavet opdelingen med kmeans, ved at benytte filen med dataen for musikken (link til fil her).
-Ved videoen https://www.youtube.com/watch?v=J1ZWQwak2Q4 er vist et eksempel hvor man benytter orange. Du kan gøre tilsvarende men skal her blot have filen med musik hentet ind i orange, benytte metoden kmeans (under unsupervised) og endelig få resultaterne vist i en tabel. Husk desuden at få ændret kmeans-metoden så den opdeler i 3 grupper.
+Der er allerede lavet nogle beregninger, men der skal laves meget mere, før det er færdigt. 
+
+Der er to gode muligheder for at finde den endelige opdeling hvor den ene er let a1), mens den anden er langt svæere og teknisk a2).
+
+* a1) Brug programmet Orange (link), hvor du kan få hjælp til at installere programmet her (link). Med orange kan du få lavet opdelingen med K-means, ved at benytte filen med dataen for musikken (link til fil her).
+Ved videoen https://www.youtube.com/watch?v=J1ZWQwak2Q4 er vist et eksempel, hvor man benytter orange. 
+
+Du kan gøre tilsvarende men skal her blot have filen med musik hentet ind i orange, benytte metoden kmeans (under unsupervised) og endelig få resultaterne vist i en tabel. Husk desuden at få ændret kmeans-metoden så den opdeler i 3 grupper.
 
 
-a2) Benyt excel eller kodning til at fortage alle beregninger indtil ingen numrer skifter gruppe. Dette er en svær/teknisk opgave.
+* a2) Benyt excel eller kodning til at fortage alle beregninger indtil ingen numre skifter gruppe. Dette er en svær/teknisk opgave.
 
-b) Endelig har vi fået en opdeling af de 15 musiknumrer i 3 grupper.  Overvej om det giver god mening med hvilke numrer der er kmet i samme gruppe.  
+* Endelig har vi fået en opdeling af de 15 musiknumrer i 3 grupper. Hvis du kender numrene, kan du overveje, om inddelingen er fornuftig.   
 
 :::
 
 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Ekstraopgave : Bregning af SUMPAR
+### Ekstraopgave : Beregning af SUMPAR
 a) Beregn SAUMPAR ud fra grupperne fra starten. 
 b) Beregn ligeledes SUMPAR ud fra de grupper de efterfølgende kom i.
 c) Hvis man samenligner de to resultater, viser det så det ønskede ?
