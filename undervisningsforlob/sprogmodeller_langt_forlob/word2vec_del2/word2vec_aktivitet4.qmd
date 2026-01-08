@@ -1,97 +1,97 @@
-Læs afsnittet [\"Fokus- og kontekstvektorer\" i noten Word2Vec](/materialer/sprogmodeller/word2vec.qmd#fokus--og-kontekstvektorer). 
+Læs afsnittet [\"Model for sandsynligheder\" i noten Word2Vec](/materialer/sprogmodeller/word2vec.qmd#model-for-sandsynligheder) eller se videoen:
 
+{{< video https://www.youtube.com/embed/D8arPNL_sOA >}}
 
-Husk på denne vigtige pointe:
+Vi starter med at minde om definitionen af Softmax:
+
 
 ::: {.highlight2 }
 
-Vi vil gerne have, at vores fokus- og kontekstvektorer skal opfylde, at
-hvis $w$ ofte har $c$ som kontekst, så er skalarproduktet
-$\vec{v}_{w}\cdot \vec{k}_{c}$ stort, mens en
-meget negativ værdi af
-$\vec{v}_{w}\cdot \vec{k}_{c}$ indikerer, at $w$
-sjældent har $c$ som kontekst.
+**Softmax**
+
+Hvis $\vec{y}$ er en vektor med $V$ koordinater:
+
+$$
+\vec{y} = 
+\begin{pmatrix}
+y_1 \\
+y_2 \\
+\vdots \\
+y_V
+\end{pmatrix}
+$$
+
+så er $\text{Softmax}\big(\vec{y}\big)=\vec{z}$, hvor $\vec{z}$ er en ny vektor med $V$ koordinater. Den $i$'te koordinat i $\vec{z}$ er givet ved
+
+$$
+z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}
+$$ {#eq-softmax}
 
 :::
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 4: Fokus- og kontekstvektorer
+### Opgave 7: Softmax
 
-Lad os sige, at vi har lavet 2-dimensionale fokus- og kontekstvektorer, som
-beskrevet i afsnittet [\"Fokus- og kontekstvektorer\"](/materialer/sprogmodeller/word2vec.qmd#fokus--og-kontekstvektorer).
+Lad $\vec{y}$ være vektoren
+$$\vec{y}= \begin{pmatrix} 1 \\2 \\-1 \end{pmatrix}$$
+
+a) Beregn $\vec{z} = \text{Softmax}(\vec{y})$.
+
+b) Kontroller at følgende er opfyldt:
+
+   - $0<z_i<1$
+   
+   - $z_1 + z_2 + \dotsm + z_V = 1$
+   
+   - Hvis $y_i < y_j$, så er $z_i < z_j$.
+
+:::
+
+
+Husk på, at vi betegner sandsynligheden for, at $\text{ord}_i$ er et kontekstord til $w$, med 
+
+$$
+P(\text{kontekst = ord}_i\mid \text{fokus = }w)
+$$
+Denne sandsynlighed beregnes ved først at bestemme skalarproduktet
+
+$$
+y_i = \vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}
+$$
+for $i \in \{1, 2, ..., V\}$, hvor $V$ er antallet af ord i vores ordforråd. 
+
+Herefter bruges Softmax:
 
 $$
 \begin{aligned}
-&\vec{v}_{\text{bil}} =  \begin{pmatrix} -2\\ 1\end{pmatrix}, \quad
-\vec{v}_{\text{cykel}} =  \begin{pmatrix} -1\\ 2\end{pmatrix} \\
-&\vec{k}_{\text{hjul}}  =  \begin{pmatrix} -1.5\\1.5\end{pmatrix}, \quad
-\vec{k}_{\text{motor}} =  \begin{pmatrix} -2\\ 0  \end{pmatrix}, \quad
-\vec{k}_{\text{jordbær}} =  \begin{pmatrix} 3\\-1 \end{pmatrix}
+P(\text{kontekst = ord}_i\mid \text{fokus = }w) &= z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \\ &= \frac{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}}}{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_V}}}
 \end{aligned}
-$$
+$${#eq-sshmodel}
 
-- Udregn skalarprodukterne $\vec{v}_{\text{cykel}}\cdot \vec{k}_{\text{hjul}}$ og $\vec{v}_{\text{cykel}}\cdot \vec{k}_{\text{jordbær}}$. Passer det med, hvilket ord, der oftest er kontekst til \"cykel\"?
 
-- Udregn skalarprodukterne $\vec{v}_{\text{cykel}}\cdot \vec{k}_{\text{motor}}$ og $\vec{v}_{\text{bil}}\cdot \vec{k}_{\text{motor}}$. Passer det med, hvilket fokusord, der oftest har \"motor\" som kontekst?
-
-- Udregn skalarprodukterne $\vec{v}_{\text{cykel}}\cdot \vec{k}_{\text{hjul}}$ og $\vec{v}_{\text{bil}}\cdot \vec{k}_{\text{hjul}}$. Sammenlign med resultatet for kontekstordet \"motor\" i opgaven før og kommentér på resultatet.
-
-- Tegn alle vektorerne ind i et koordinatsystem. Passer det med, hvordan vi gerne vil have vektorerne til at ligge?
-
-:::
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 5: Fokus- og kontekstvektorer
+### Opgave 8: Model for sandsynligheder
 
-Antag, at vi har lavet 3-dimensionale fokus- og kontekstvektorer som
-beskrevet i afsnittet [\"Fokus- og kontekstvektorer\"](/materialer/sprogmodeller/word2vec.qmd#fokus--og-kontekstvektorer). Så skulle ord, der ofte har samme
-kontekst, gerne have fokusvektorer af nogenlunde samme længde og retning, mens fokusvektorerne for ord,
-der betyder noget helt forskelligt, kan have meget forskellig længde
-og retning. Antag, at fokusvektorerne for \"kat\", \"hund\", \"mis\"
-og \"kælk\" er 
+Antag, at vores ordforråd består af de tre ord \"sommer\", \"sol\" og \"sne\". Vi har lavet en model for sandsynligheder for kontekstord som i (@eq-sshmodel), hvor 
+fokusvektoren for \"sommer\" og kontekstvektorerne for \"sommer\", \"sol\" og
+\"sne\" er givet ved 
 $$
 \begin{aligned}
-\vec{v}_{\text{kat}}=\begin{pmatrix}0\\2\\1 \end{pmatrix},\quad
-\vec{v}_{\text{hund}}=\begin{pmatrix}0\\1.2\\1.8\end{pmatrix}, \\
+\vec{v}_{\text{sommer}}=\begin{pmatrix} 1\\1\end{pmatrix},\quad
+\vec{k}_{\text{sommer}}=\begin{pmatrix} 1\\-1 \end{pmatrix} ,\\
 \\
-\vec{v}_{\text{mis}}=\begin{pmatrix}-0.5\\2\\0.8\end{pmatrix},\quad
-\vec{v}_{\text{kælk}}=\begin{pmatrix} 0\\-1\\-2 \end{pmatrix}
+\vec{k}_{\text{sol}}=\begin{pmatrix} 0\\2\end{pmatrix},\quad
+\vec{k}_{\text{sne}} =\begin{pmatrix} -1\\-2\end{pmatrix}
 \end{aligned}
 $$
 
-a)    Find længden af de fire vektorer. 
-b)    Find vinklen mellem $\vec{v}_{\text{kat}}$ og de tre øvrige vektorer. 
-c)    Stemmer resultatet overens med, hvilke ord der er tættest på \"kat\" i
-    betydning? 
-d)   Tegn vektorerne ind i GeoGebra. Skriv for eksempel `kat=(0,2,1)` i inputfeltet i GeoGebra og vælg derefter \"Vis\" $\rightarrow$ \"3D Grafik\".
-    
-:::  
+a) Indtegn repræsentanter for de fire vektorer i et koordinatsystem. 
 
+b) Hvad er sandsynligheden for, at hvert af de tre ord er kontekst til \"sommer\"?     
 
-::: {.callout-note collapse="false" appearance="minimal"}
-
-### Opgave 6: Fokus- og kontekstvektorer
-
-Antag, at vi har lavet 4-dimensionale fokus- og kontekstvektorer
-således, at jo større skalarproduktet
-$\vec{v}_{w}\cdot \vec{k}_{c}$ er, desto mere
-sandsynligt er det, at ordet $w$ har $c$ som kontekst. vektoren
-for \"hund\" og kontekstvektorerne for \"pels\" og \"fjer\" er
-$$
-\begin{aligned}
-\vec{v}_{\text{hund}}=\begin{pmatrix} 0.5\\2\\1\\-1\end{pmatrix} ,\quad
-\vec{k}_{\text{pels}}=\begin{pmatrix} 0\\3\\2\\-2\end{pmatrix},\quad
-\vec{k}_{\text{fjer}}=\begin{pmatrix} 1\\-2\\1.5\\0.5\end{pmatrix}
-\end{aligned}
-$$
-
-a)    Udregn skalarprodukterne
-    $\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{pels}}$ og
-    $\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{fjer}}$. 
-b)    Passer det med, hvilket af ordene \"pels\" og \"fjer\" der er mest
-    sandsynligt som kontekst til \"hund\"?
+c) Passer svaret fra b. med, hvilket af de tre ord, som du umiddelbart vil tænke, oftest optræder som kontekst til sommer?
 
 :::
-
