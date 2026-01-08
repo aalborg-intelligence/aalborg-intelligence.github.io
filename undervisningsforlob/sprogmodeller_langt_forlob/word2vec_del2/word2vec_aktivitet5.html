@@ -182,92 +182,85 @@ window.Quarto = {
 
 
 
-<p>Læs afsnittet <a href="../../../materialer/sprogmodeller/word2vec.html#model-for-sandsynligheder">"Model for sandsynligheder" i noten Word2Vec</a>.</p>
-<p>Vi starter med at minde om definitionen af Softmax:</p>
-<div class="highlight2">
-<p><strong>Softmax</strong></p>
-<p>Hvis <span class="math inline">\(\vec{y}\)</span> er en vektor med <span class="math inline">\(V\)</span> koordinater:</p>
-<p><span class="math display">\[
-\vec{y} =
-\begin{pmatrix}
-y_1 \\
-y_2 \\
-\vdots \\
-y_V
-\end{pmatrix}
-\]</span></p>
-<p>så er <span class="math inline">\(\text{Softmax}\big(\vec{y}\big)=\vec{z}\)</span>, hvor <span class="math inline">\(\vec{z}\)</span> er en ny vektor med <span class="math inline">\(V\)</span> koordinater. Den <span class="math inline">\(i\)</span>’te koordinat i <span class="math inline">\(\vec{z}\)</span> er givet ved</p>
-<p><span id="eq-softmax"><span class="math display">\[
-z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}
-\tag{1}\]</span></span></p>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<p>Læs afsnittet <a href="../../../materialer/sprogmodeller/word2vec.html#estimation-af-vektorrepræsentationer">"Estimation af vektorrepræsentationer" i noten Word2Vec</a> eller se videoen her:</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/940yYmus8X8" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<p>Tabsfunktionen er en funktion af flere variable, nemlig alle vægtene. Vi skal finde de vægte, der minimerer tabsfunktionen. Du ved, at for at finde minimum for en funktion af én variabel, skal man se på, hvornår den afledte funktion er nul. For funktioner af flere variable gælder tilsvarende, at minimum skal findes i et punkt hvor alle de <em>partielle afledede</em> er nul. Hvis du ikke har hørt om partielle afledede før, kan du læse mere i boksen herunder.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 7: Softmax
+<span class="screen-reader-only">Tip</span>Partielle afledede
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Lad <span class="math inline">\(\vec{y}\)</span> være vektoren <span class="math display">\[\vec{y}= \begin{pmatrix} 1 \\2 \\-1 \end{pmatrix}\]</span></p>
-<ol type="a">
-<li><p>Beregn <span class="math inline">\(\vec{z} = \text{Softmax}(\vec{y})\)</span>.</p></li>
-<li><p>Kontroller at følgende er opfyldt:</p>
-<ul>
-<li><p><span class="math inline">\(0&lt;z_i&lt;1\)</span></p></li>
-<li><p><span class="math inline">\(z_1 + z_2 + \dotsm + z_V = 1\)</span></p></li>
-<li><p>Hvis <span class="math inline">\(y_i &lt; y_j\)</span>, så er <span class="math inline">\(z_i &lt; z_j\)</span>.</p></li>
-</ul></li>
-</ol>
-</div>
-</div>
-</div>
-<p>Husk på, at vi betegner sandsynligheden for, at <span class="math inline">\(\text{ord}_i\)</span> er et kontekstord til <span class="math inline">\(w\)</span>, med</p>
+<p>Funktionen</p>
 <p><span class="math display">\[
-P(\text{kontekst = ord}_i\mid \text{fokus = }w)
-\]</span> Denne sandsynlighed beregnes ved først at bestemme skalarproduktet</p>
+f(x,y) = x^2+3xy+\mathrm{e}^y
+\]</span></p>
+<p>afhænger ikke kun af én, men af to variable nemlig <span class="math inline">\(x\)</span> og <span class="math inline">\(y\)</span>. Man kan derfor differentiere <span class="math inline">\(f\)</span> både med hensyn til <span class="math inline">\(x\)</span> (hvor man betragter <span class="math inline">\(y\)</span> som en konstant) og med hensyn til <span class="math inline">\(y\)</span> (hvor man betragter <span class="math inline">\(x\)</span> som en konstant). Disse afledede kaldes for partielle afledede og betegnes med</p>
 <p><span class="math display">\[
-y_i = \vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}
-\]</span> for <span class="math inline">\(i \in \{1, 2, ..., V\}\)</span>, hvor <span class="math inline">\(V\)</span> er antallet af ord i vores ordforråd.</p>
-<p>Herefter bruges Softmax:</p>
-<p><span id="eq-sshmodel"><span class="math display">\[
-\begin{aligned}
-P(\text{kontekst = ord}_i\mid \text{fokus = }w) &amp;= z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \\ &amp;= \frac{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}}}{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_V}}}
-\end{aligned}
-\tag{2}\]</span></span></p>
+\frac{\partial f}{\partial x} \quad \textrm{og} \quad \frac{\partial f}{\partial y}
+\]</span></p>
+<p>Når man for eksempel skal finde <span class="math inline">\(\frac{\partial f}{\partial x}\)</span>, så differentierer man <span class="math inline">\(f(x,y)\)</span>, hvor man tænker på <span class="math inline">\(x\)</span> som den variable og <span class="math inline">\(y\)</span> som en konstant. Tilsvarende med <span class="math inline">\(\frac{\partial f}{\partial y}\)</span>. I dette eksempel giver det:</p>
+<p><span class="math display">\[
+\frac{\partial f}{\partial x} = \frac{\partial }{\partial x} (x^2) + \frac{\partial }{\partial x} (3xy) + \frac{\partial }{\partial x} (\mathrm{e}^y) = 2x + 3y + 0 = 2x + 3y
+\]</span></p>
+<p>og</p>
+<p><span class="math display">\[
+\frac{\partial f}{\partial y} = \frac{\partial }{\partial y} (x^2) + \frac{\partial }{\partial y} (3xy) + \frac{\partial }{\partial y} (\mathrm{e}^y) = 0 + 3x + \mathrm{e}^y
+\]</span></p>
+</div>
+</div>
+</div>
+<p>Da Softmax-funktionen indgår i tabsfunktionen, får man brug for at finde partielle afledede af denne funktion. Husk på, at Softmax-funktionen er defineret sådan her:</p>
+<p><span class="math display">\[
+z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} =\mathrm{e}^{y_i} \cdot \frac{1}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}
+\]</span></p>
+<p>For at differentiere denne funktion kan man enten bruge produktreglen eller kvotientreglen, som vi lige genopfrisker her:</p>
+<div class="highlight">
+<p><strong>Produktreglen for differentiation</strong></p>
+<p><span class="math display">\[
+\left ( f \cdot g\right)'(x) = f'(x)\cdot g(x) + f(x) \cdot g'(x)
+\]</span><br>
+</p>
+<p><strong>Kvotientreglen for differentiation </strong></p>
+<p><span class="math display">\[
+\left ( \frac{f}{g}\right)'(x) = \frac{f'(x) \cdot g(x)-f(x) \cdot g'(x)}{(g(x))^2}, \quad g(x) \neq 0
+\]</span></p>
+</div>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 8: Model for sandsynligheder
+<span class="screen-reader-only">Note</span>Opgave 9: Partielle afledede af Softmax-funktionen
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Antag, at vores ordforråd består af de tre ord "sommer", "sol" og "sne". Vi har lavet en model for sandsynligheder for kontekstord som i (<a href="#eq-sshmodel" class="quarto-xref">2</a>), hvor fokusvektoren for "sommer" og kontekstvektorerne for "sommer", "sol" og "sne" er givet ved <span class="math display">\[
-\begin{aligned}
-\vec{v}_{\text{sommer}}=\begin{pmatrix} 1\\1\end{pmatrix},\quad
-\vec{k}_{\text{sommer}}=\begin{pmatrix} 1\\-1 \end{pmatrix} ,\\
-\\
-\vec{k}_{\text{sol}}=\begin{pmatrix} 0\\2\end{pmatrix},\quad
-\vec{k}_{\text{sne}} =\begin{pmatrix} -1\\-2\end{pmatrix}
-\end{aligned}
+<ul>
+<li><p>Vis følgende egenskaber ved de partielle afledede af Softmax-funktionen:</p>
+<p><span class="math display">\[\frac{\partial z_i}{\partial y_i} = z_i(1-z_i) \quad \quad \textrm{og} \quad\quad \frac{\partial z_i}{\partial y_j} = -z_iz_j, \quad i\neq j\]</span></p>
+<p>Husk på, at</p>
+<p><span class="math display">\[
+\frac{\partial }{\partial y_i} (\mathrm{e}^{y_i}) = \mathrm{e}^{y_i}
 \]</span></p>
-<ol type="a">
-<li><p>Indtegn repræsentanter for de fire vektorer i et koordinatsystem.</p></li>
-<li><p>Hvad er sandsynligheden for, at hvert af de tre ord er kontekst til "sommer"?</p></li>
-<li><p>Passer svaret fra b. med, hvilket af de tre ord, som du umiddelbart vil tænke, oftest optræder som kontekst til sommer?</p></li>
-</ol>
+<p>mens</p>
+<p><span class="math display">\[
+\frac{\partial }{\partial y_j} (\mathrm{e}^{y_i}) = 0   
+\]</span></p>
+<p>hvis <span class="math inline">\(i \neq j\)</span>.</p></li>
+</ul>
 </div>
 </div>
 </div>
+<p>Bemærk, at ovenstående opgaver giver, at man ikke behøver at kende værdien af <span class="math inline">\(\vec{y}\)</span> i det punkt, hvor man differentierer, men kun funktionsværdien <span class="math inline">\(\vec{z}\)</span>. Det viser sig at have meget store beregningsmæssige fordele, når man skal finde minimum for tabsfunktionen, så det er faktisk en overordentlig vigtig egenskab!</p>
 
 
 

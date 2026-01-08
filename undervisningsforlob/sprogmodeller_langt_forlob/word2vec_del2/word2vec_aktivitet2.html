@@ -83,6 +83,35 @@ gtag('js', new Date());
 gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -153,7 +182,8 @@ gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
 
 
 
-<p>Læs afsnittet <a href="../../../materialer/sprogmodeller/word2vec.html#betydning-og-kontekst">"Betydning og kontekst" i noten Word2Vec</a>.</p>
+<p>Læs afsnittet <a href="../../../materialer/sprogmodeller/word2vec.html#betydning-og-kontekst">"Betydning og kontekst"</a> og <a href="../../../materialer/sprogmodeller/word2vec.html#træningsdata">"Træningsdata"</a> i noten Word2Vec eller se videoen her:</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/DVGvvXHI7wQ" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 <p>Vi gentager her en vigtig pointe:</p>
 <div class="highlight centertext">
 <p><strong>Betydningen af et ord er bestemt af den kontekst, ordet indgår i.</strong></p>
@@ -174,6 +204,66 @@ gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
 <ul>
 <li><p>Skriv mindst to sætninger, hvor man ud fra konteksten forstår to forskellige betydninger af "får".</p></li>
 <li><p>Find selv på et ord med flere betydninger og skriv mindst to sætninger, som afslører betydningen.</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 3: Træningsdata
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Betragt følgende tekstkorpus:</p>
+<div class="llm_saetninger">
+<p>Matematik er det sjoveste fag i verden</p>
+</div>
+<ul>
+<li><p>Udfyld med udgangspunkt i ovenstående tekstkorpus og et 3-ords vindue nedenstående tabel (se eventuelt <a href="../../../materialer/sprogmodeller/word2vec.html#tbl-data">tabel 1 i noten om Word2vec</a>). Bemærk, at kontekstcellen skal være blank, hvis den tilsvarende plads i vinduet er tom.</p>
+<table class="table-bordered table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Fokus</th>
+<th style="text-align: center;">Kontekst</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Matematik</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Matematik</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">er</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">er</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">det</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">det</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+</tr>
+</tbody>
+</table></li>
 </ul>
 </div>
 </div>
