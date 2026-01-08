@@ -97,11 +97,37 @@ h1, h2, h3, h4, h5 {
   color: $color-morkblaa;
 }
 
+
 h2.aimat {
-  background-image: $icon-lyseblaa;
-  background-repeat: no-repeat;
-  padding-left: 3em;
+  display: flex;                // gør overskriften til flex-container
+  align-items: center;          // ikon og tekst på samme linje
+  gap: 0.5rem;                  // afstand mellem ikon og tekst
+  width: 100%;                  // fyld hele linjen
+  justify-content: flex-start;  // venstrejusteret
 }
+
+h2.aimat::before {
+  content: "";
+  display: inline-block;
+  height: 1.8em;
+  width: 1.8em;
+  background: $icon-lyseblaa no-repeat center / contain;
+  flex: 0 0 auto;               // ikon skal ikke strækkes
+  border-top-left-radius: 3px; 
+}
+
+/* Sørg for at teksten kan bryde korrekt */
+h2.aimat {
+  flex-wrap: nowrap;            // ingen wrap mellem ikon og tekst
+}
+
+h2.aimat span {
+  flex: 1 1 auto;
+  min-width: 0;                 // tillader ord at bryde
+  white-space: normal;          // bryd som normalt
+}
+
+
 
 .callout {
   background-size: 2.7rem 2.7rem;
