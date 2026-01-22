@@ -1,7 +1,7 @@
 ---
 title: "Kmeans-musik"
-description: "Vi vil se, hvordan man kan inddele musiknumre i grupper, f.eks. til at give anbefalingen i en musiktjeneste"
-image: ""
+description: "Vi vil se, hvordan man kan inddele musiknumre i grupper, som for eksempel kan bruges til at give anbefalingen i en musiktjeneste."
+image: "musik/musik.jpg"
 categories:
   - A-niveau
   - Kort
@@ -10,11 +10,12 @@ categories:
 
 ::: {.callout-caution collapse="true" appearance="minimal"}
 ### Forudsætninger og tidsforbrug
+Forløbet kræver kendskab til:
 
 - Afstand mellem punkter. 
-- Sumtegn
+- Sumtegn.
 
-**Tidsforbrug:** 2-3 timer
+**Tidsforbrug:** 2-3 timer.
 
 :::
 
@@ -22,60 +23,74 @@ categories:
 
 ### Formål
 
-I dette forløb vil vi se på, hvordan algoritmen *K-means* kan anvendes til at inddele musiknumre i grupper, f.eks. for at en musiktjeneste kan give anbefalinger til ny musik, som man sikkert gerne vil høre.
+I dette forløb vil vi se på, hvordan algoritmen *K-means* kan anvendes til at inddele musiknumre i grupper, for eksempel for at en musiktjeneste kan give anbefalinger til ny musik, som man sikkert gerne vil høre.
 :::
 
 ## K-means til inddeling af musiknumre i grupper
 
+Læs noten [Clustering med K-means](../materialer/kmeans/kmeans.qmd){target='blank'} *til og med* afsnittet \"Eksempel på algoritmen\". De første to afsnit kan godt være lidt svære, men det vigtige er, at du forstår eksempel 1.
+
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 1: Teori om K-means
 
-* Læs [noten Clustering med K-means](../materialer/kmeans/kmeans.qmd) *til og med* afsnittet \"Eksempel på algoritmen\".
+En gruppe består af punkterne $(2,2)$, $(7,3)$ og $(6,5)$. 
+
+*  Indtegn de tre punkter i et koordinatsystem.
+
+* Udregn gruppens midtpunkt og indtegn midtpunktet i koordinatsystemet.
 
 :::
 
-For at kunne opdele musiknumre i grupper er det nødvendigt at finde nogle informationer/features til hvert nummer. En oplagt information kunne umiddelbart være musikgenre : rock, pop, klassisk, country m.m.. 
+Nu er det ikke bare punkter, men musiknumre, som vi gerne vil inddele i grupper. Det er derfor nødvendigt at finde nogle informationer (også kaldet for features) til hvert nummer. En oplagt information kunne umiddelbart være musikgenre: Rock, pop, klassisk, country og så videre. 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 2: Musikfeatures
-Overvej hvilke andre features man kan bruge til at opdele musiknumre efter.
+* Overvej hvilke andre features man kan bruge til at opdele musiknumre efter.
 :::
 
-Opdelingen skal egentlig foretages af en computer, som også selv kan analysere musiknumrene og finde featureværdier. Nogle af de features, der benyttes er: Lydniveau, Energi, Instrumentalitet, Dansbarhed, Positivitet og Tempo.
+Opdelingen skal egentlig foretages af en computer, som også selv kan analysere musiknumrene og finde featureværdier. Nogle af de features, der benyttes er: Lydniveau, energi, instrumentalitet, dansbarhed, positivitet og tempo.
 
-For at anvende K-means her, bør hver feature enten være angivet på samme skala, f.eks. fra 0 til 1, eller ændres ved *feature-skalering*, så hver feature får lige stor betydning. 
+For at anvende K-means her, bør hver feature enten være angivet på samme skala, for eksempel fra $0$ til $1$, eller ændres ved hjælp af en metode, som kaldes for **feature-skalering**, som gør, at hver feature får lige stor betydning. 
 
-Her ses på et mindre eksempel med 15 musiknumre, man ønsker at opdele i 3 grupper ud fra 3 features : danceabilty, energy og speechiness.Numrene er placeret i tilfældige grupper fra start i forhold til algoritmen.
+Her ses på et mindre eksempel med 15 musiknumre, man ønsker at opdele i 3 grupper ud fra 3 features: Danceabilty, energy og speechiness. Numrene er her placeret i helt tilfældige grupper.
 
-| nummer  | danceability  | energy | speechiness| gruppe|
-|--------|--------|--------|--------|--------|
-|Barbie Girl|	0,76|	0,95|	0,04| 1|
-|Shape of You|	0,83|	0,65|	0,08|2|
-|Set Fire to the Rain|	0,60|	0,67|	0,02|3|
-|Wake Me Up|	0,53|	0,78|	0,05|1|
-|Baby One More Time|	0,76|	0,70|	0,03|2|
-|Just The Way You Are|	0,64|	0,84|	0,04|3|
-|New Rules|	0,76|	0,72|	0,07|1|
-|Stan|	0,78|	0,74|	0,21|2|
-|In Da Club|	0,90|	0,71|	0,37|3|
-|Blinding Lights|	0,51|	0,80|	0,06|1|
-|Blank Space|	0,76|	0,70|	0,05|2|
-|Dance Monkey|	0,82|	0,59|	0,09|3|
-|Hotline Bling|	0,90|	0,62|	0,06|1|
-|Die To Live|	0,42|	0,97|	0,14|2|
-|White Iverson|	0,67|	0,52|	0,04|3|
+::: {.bordered #tbl-musik}
 
+| Nummer  | Danceability  | Energy | Speechiness| Gruppe|
+|--------|:--------:|:--------:|:--------:|:--------:|
+|Barbie Girl|	$0.76$ |	$0.95$ |	$0.04$ | $1$ |
+|Shape of You|	$0.83$ |	$0.65$ |	$0.08$ | $2$ |
+|Set Fire to the Rain|	$0.60$ |	$0.67$ |	$0.02$ | $3$ |
+|Wake Me Up|	$0.53$ |	$0.78$ |	$0.05$ | $1$ |
+|Baby One More Time|	$0.76$ |	$0.70$ |	$0.03$ | $2$ |
+|Just The Way You Are|	$0.64$ |	$0.84$ |	$0.04$ | $3$ |
+|New Rules|	$0.76$ |	$0.72$ |	$0.07$ | $1$ |
+|Stan|	$0.78$ |	$0.74$ |	$0.21$ | $2$ |
+|In Da Club|	$0.90$ |	$0.71$ |	$0.37$ | $3$ |
+|Blinding Lights|	$0.51$ |	$0.80$ |	$0.06$ | $1$ |
+|Blank Space|	$0.76$ |	$0.70$ |	$0.05$ | $2$ |
+|Dance Monkey|	$0.82$ |	$0.59$ |	$0.09$ | $3$ |
+|Hotline Bling|	$0.90$ |	$0.62$ |	$0.06$ | $1$ |
+|Die To Live|	$0.42$ |	$0.97$ |	$0.14$ | $2$ |
+|White Iverson|	$0.67$ |	$0.52$ |	$0.04$ | $3$ |
+
+Tabel med 15 musiknumre og 3 tilhørende features: Danceabilty, energy og speechiness. Alle musiknumrene er her placeret i en tilfældig gruppe.
+:::
+
+\
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 3: Opdeling af musiknumre i 3 grupper - beregn centrum
-Ud fra skemaet ønsker vi nu at få beregnet centrum for hver af de tre grupper.
+Ud fra ovenstående skemaet ønsker vi nu at få beregnet centrum for hver af de tre grupper.
 
-| gruppe  | danceability  | energy | speechiness|
-|--------|--------|--------|--------|--------|
-|1 |	0,692|	0,774|	0,056| 
-|2||||
-|3||||
- * Beregn centrum for gruppe 1 og tjek, at facit er korrekt.
+| Gruppe  | Danceability  | Energy | Speechiness|
+|:--------:|:--------:|:--------:|:--------:|
+| $1$ |	$0.692$ |	$0.774$ |	$0.056$ | 
+| $2$ ||||
+| $3$ ||||
+: {.bordered}
+
+ * Beregn centrum for gruppe $1$ og tjek, at ovenstående facit er korrekt.
  * Beregn centrum for de to andre grupper. 
 :::
 
@@ -84,10 +99,11 @@ Ud fra skemaet ønsker vi nu at få beregnet centrum for hver af de tre grupper.
 ### Opgave 4: Beregn afstande til centre
 Nu skal vi igang med at finde afstanden fra hvert nummer til hvert centrum. Her skal du selvfølgelig bruge resultatet fra opgave 3, hvor du fandt de tre centre.
 
-| nummer  | afstand centrum 1  | afstand centrum 2 | afstand centrum 3|
-|--------|--------|--------|--------|--------|
-|Barbie Girl|	0,189|	0,213|	0,295|
+| Nummer  | Afstand centrum 1  | Afstand centrum 2 | Afstand centrum 3|
+|--------|:--------:|:--------:|:--------:|
+|Barbie Girl|	$0.189$ |	$0.213$ |	$0.295$ |
 |Shape of You|	|	|	|
+: {.bordered}
 
  * Beregn afstanden fra \"Barbie girl\" til hver af de 3 centre og tjek, at det er korrekt.
  * Beregn afstand fra \"Shape of you\" til de 3 centre. 
@@ -95,57 +111,105 @@ Nu skal vi igang med at finde afstanden fra hvert nummer til hvert centrum. Her 
 
 
 
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 5: Bestemmelse af nye grupper
 Herunder er afstanden til de tre centre beregnet for alle numrene. 
 
-| nummer  | afstand centrum 1  | afstand centrum 2 | afstand centrum 3|gruppe |ny gruppe|
-|--------|--------|--------|--------|--------|--------|
-|Barbie Girl|	0,189|	0,213|	0,295|1||
-|Shape of You|	0,187|	0,159|	0,110|2||
-|Set Fire to the Rain|	0,143|	0,160|	0,156|3||
-|Wake Me Up|	0,162|	0,189|	0,235|1||
-|Baby One More Time|	0,104|	0,102|	0,095|2||
-|Just The Way You Are|	0,086|	0,128|	0,207|3||
-|New Rules|	0,088|	0,067|	0,076|1||
-|Stan	|0,181|	0,129|	0,134|2||
-|In Da Club|	0,382|	0,331|	0,314|3||
-|Blinding Lights|	0,184|	0,210|	0,259|1||
-|Blank Space|	0,101|	0,089|	0,078|2||
-|Dance Monkey|	0,227|	0,196|	0,123|3||
-|Hotline Bling|	0,259|	0,235|	0,187|1||
-|Die To Live|	0,346|	0,365|	0,432|2||
-|White Iverson|	0,255|	0,243|	0,172|3||
+| Nummer  | Afstand centrum 1  | Afstand centrum 2 | Afstand centrum 3| Opr. gruppe | Ny gruppe|
+|--------|:--------:|:--------:|:--------:|:--------:|:--------:|
+|Barbie Girl|	$0.189$ |	$0.213$ |	$0.295$ | $1$ ||
+|Shape of You| $0.187$ | $0.159$ |	$0.110$ |$2$ ||
+|Set Fire to the Rain|	$0.143$ |	$0.160$ |	$0.156$ | $3$ ||
+|Wake Me Up|	$0.162$ |	$0.189$ |	$0.235$ | $1$ ||
+|Baby One More Time|	$0.104$ |	$0.102$ |	$0.095$ | $2$ ||
+|Just The Way You Are|	$0.086$ |	$0.128$ |	$0.207$ | $3$ ||
+|New Rules|	$0.088$ |	$0.067$ |	$0.076$ | $1$ ||
+|Stan	| $0.181$ |	$0.129$ |	$0.134$ | $2$ ||
+|In Da Club|	$0.382$ |	$0.331$ |	$0.314$ | $3$ ||
+|Blinding Lights|	$0.184$ |	$0.210$ |	$0.259$ | $1$ ||
+|Blank Space|	$0.101$ |	$0.089$ |	$0.078$ | $2$ ||
+|Dance Monkey|	$0.227$ |	$0.196$ |	$0.123$ | $3$ ||
+|Hotline Bling|	$0.259$ |	$0.235$ |	$0.187$ | $1$||
+|Die To Live|	$0.346$ |	$0.365$ |	$0.432$ | $2$ ||
+|White Iverson|	$0.255$ |	$0.243$ |	$0.172$ | $3$ ||
+: {.bordered}
 
- * Bestem ny gruppe for hvert nummer - det centrum, som numret er tættest på.
- * forklar hvorfor vi ikke dermed er færdige med at opdele i de 3 ønskede grupper med K-means metoden. 
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 5: Bestemmelse af nye grupper
+
+Brug ovenstående tabel.
+
+ * Bestem den nye gruppe for hvert nummer ved at bruge det centrum, som nummeret er tættest på.
+ * Forklar hvorfor vi *ikke* er færdige med at opdele i de 3 ønskede grupper med K-means metoden. 
 :::
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 6: Endelig løsning på opdeling.
-Der er allerede lavet nogle beregninger, men der skal laves meget mere, før det er færdigt. 
+### Opgave 6: Endelig løsning på opdeling
 
-Der er to gode muligheder for at finde den endelige opdeling hvor den ene er let a1), mens den anden er langt svæere og teknisk a2).
+Der er allerede lavet nogle beregninger, men der skal laves [mange]{.underline} flere, før K-means algoritmen er færdig! 
 
-* a1) Brug programmet Orange (link), hvor du kan få hjælp til at installere programmet her (link). Med orange kan du få lavet opdelingen med K-means, ved at benytte filen med dataen for musikken (link til fil her).
-Ved videoen https://www.youtube.com/watch?v=J1ZWQwak2Q4 er vist et eksempel, hvor man benytter orange. 
+Der er nu to muligheder for at finde den endelige opdeling, hvor den første mulighed er let, mens den anden er langt sværere og mere teknisk. Du (eller din lærer) vælger selv, hvilken mulighed du skal gå videre med:
 
-Du kan gøre tilsvarende men skal her blot have filen med musik hentet ind i orange, benytte metoden kmeans (under unsupervised) og endelig få resultaterne vist i en tabel. Husk desuden at få ændret kmeans-metoden så den opdeler i 3 grupper.
+[Mulighed 1]{.fremhaev_underline}
+
+Brug programmet [Orange](https://orangedatamining.com/). Du kan få hjælp til at installere programmet [her](https://www.youtube.com/watch?v=g8-wIwVfAw0). I orange kan du få lavet opdelingen med K-means, ved at benytte data fra @tbl-musik (filen med data kan downloades [her](musik/musik.xlsx)). I videoen [K-means i Orange](https://youtu.be/txowjvN_ro4) viser vi, hvordan man bruger Orange.
+
+* Lav K-means i Orange, som vi viser det i videoen.
+
+* Hvis du kender numrene, kan du overveje, om inddelingen er fornuftig.   
 
 
-* a2) Benyt excel eller kodning til at fortage alle beregninger indtil ingen numre skifter gruppe. Dette er en svær/teknisk opgave.
 
-* Endelig har vi fået en opdeling af de 15 musiknumrer i 3 grupper. Hvis du kender numrene, kan du overveje, om inddelingen er fornuftig.   
+[Mulighed 2]{.fremhaev_underline}
+
+
+* Benyt Excel eller kodning til at fortage alle beregninger indtil ingen numre skifter gruppe. 
+
+* Hvis du kender numrene, kan du overveje, om inddelingen er fornuftig.   
 
 :::
 
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 6: Plot af punkter og løsning
 
+Værdierne af de tre features giver et punkt i et 3-dimensionalt koordinatsystem. For eksempel svarer nummeret \"Barbie Girl\" til punktet med koordinater $(0.76, 0.95, 0.04)$.
+
+* Tegn i GeoGebra eller et andet program et 3-dimensionalt punktplot af de 15 punkter, som svarer til de 15 musiknumre.
+
+* Farvelæg punkterne, så punkter i samme inddeling får samme farve.
+
+<details>
+<summary> Sådan gør du i GeoGebra </summary>
+
+* Vælg i GeoGebra \"Vis\" $\rightarrow$ \"Regneark\" og dernæst \"Vis\" $\rightarrow$ \"3D Grafik\".
+
+* Kopier datasættet ind i regnearket og tilføj en søjle, som angiver hvilken gruppe musiknummeret er kommet i.
+
+* Stil dig i celle `F2` og skriv `=(B2,C2,D2)` (du skulle nu gerne kunne se det første punkt i \"3D Grafik\").
+
+* Stil dig igen i celle `F2`, højreklik og vælg \"Egenskaber\". Fjern eventuelt fluebenet ved \"Vis navn\". Vælg herefter fanen \"Avanceret\". 
+
+- I det felt, hvor der står \"Rød\", skriver du `If(E2==1,1,0)`. 
+
+- I det felt, hvor der står \"Grøn\", skriver du `If(E2==2,1,0)`. 
+
+- I det felt, hvor der står \"Blå\", skriver du `If(E2==3,1,0)`. 
+
+Det kommer til at se sådan her ud (hvis du har GeoGebra på dansk bliver \"If\" lavet om til \"Hvis\"):
+
+![](musik/ggb_help.png){width=60% fig-align="center"}
+
+- Marker igen celle `F2` og tag ved den lille kasse i nederste hjørne af celle `F2` og trække ned, så du får udfyldt kolonne `F` for hele datasættet. Alle punkterne skulle nu gerne blive vist i \"3D Grafik\" og være farvet som ønsket.
+
+</details>
+
+* Når du drejer rundt i dit 3-dimensionale koordinatsystemer, giver inddelingen af punkterne så mening i forhold til punkternes placering?
+
+:::
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Ekstraopgave : Beregning af SUMPAR
 
- * Læs resten af [noten Clustering med K-means](../materialer/kmeans/kmeans.qmd) .
- * Beregn SAUMPAR ud fra grupperne fra starten. 
- * Beregn ligeledes SUMPAR ud fra de grupper de efterfølgende kom i.
- * Hvis man sammenligner de to resultater, viser det så det ønskede ?
+ * Læs resten af noten [Clustering med K-means](../materialer/kmeans/kmeans.qmd){target='blank'}.
+ * Beregn $SUMPAR$ ud fra de grupper, som vi startede med i @tbl-musik. 
+ * Beregn ligeledes $SUMPAR$ ud fra de grupper, som vi endte med i opgave 6.
+ * Hvis man sammenligner de to resultater, viser det så det ønskede?
 :::
