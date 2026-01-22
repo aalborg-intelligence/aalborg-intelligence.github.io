@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Vi vil se, hvordan man kan inddele musiknumre i grupper, f.eks. til at give anbefalingen i en musiktjeneste">
+<meta name="description" content="Vi vil se, hvordan man kan inddele musiknumre i grupper, som for eksempel kan bruges til at give anbefalingen i en musiktjeneste.">
 
 <title>Inddeling af musik i grupper – AI MAT - matematikken bag magien</title>
 <style>
@@ -116,7 +116,7 @@ window.Quarto = {
 
 </head>
 
-<body class="floating nav-fixed quarto-light">
+<body class="floating nav-fixed slimcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -176,6 +176,7 @@ window.Quarto = {
    
   <ul>
   <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
+  <li><a href="#midterpunkt" id="toc-midterpunkt" class="nav-link" data-scroll-target="#midterpunkt">Midterpunkt</a></li>
   <li><a href="#k-means-til-inddeling-af-musiknumre-i-grupper" id="toc-k-means-til-inddeling-af-musiknumre-i-grupper" class="nav-link" data-scroll-target="#k-means-til-inddeling-af-musiknumre-i-grupper">K-means til inddeling af musiknumre i grupper</a></li>
   </ul>
 </nav>
@@ -185,7 +186,7 @@ window.Quarto = {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -222,450 +223,605 @@ window.Quarto = {
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<p>Forløbet kræver kendskab til:</p>
 <ul>
 <li>Afstand mellem punkter.</li>
 </ul>
-<p><strong>Tidsforbrug:</strong> 2-3 timer</p>
+<p><strong>Tidsforbrug:</strong> 2-3 timer.</p>
 </div>
 </div>
 </div>
 <section id="formål" class="level3 purpose">
 <h3 class="anchored" data-anchor-id="formål">Formål</h3>
-<p>I dette forløb vil vi se på, hvordan en algoritme, der hedder <em>K-means</em>, kan anvendes til at inddele musiknumre i grupper, f.eks. for at en musiktjeneste kan give anbefalinger til ny musik, som man sikkert gerne vil høre.</p>
+<p>I dette forløb vil vi se på, hvordan en algoritme, der hedder <strong>K-means</strong>, kan anvendes til at inddele musiknumre i grupper, for eksempel for at en musiktjeneste kan give anbefalinger til ny musik, som man sikkert gerne vil høre.</p>
 </section>
-<section id="k-means-til-inddeling-af-musiknumre-i-grupper" class="level2">
-<h2 class="anchored" data-anchor-id="k-means-til-inddeling-af-musiknumre-i-grupper">K-means til inddeling af musiknumre i grupper</h2>
-<p>For at kunne opdele musiknumre i grupper er det nødvendigt at finde nogle informationer/features til hvert nummer. En oplagt information kunne umiddelbart være musikgenre : rock, pop, klassisk, country m.m..</p>
+<section id="midterpunkt" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="midterpunkt">Midterpunkt</h2>
+<p>Inden vi går i gang med musiknumre, skal vi se på, hvordan man kan finde midterpunktet for en gruppe af punkter. Hvis vi for eksempel har fire punkter med koordinatsæt:</p>
+<p><span class="math display">\[
+(3,2) \qquad (8,6) \qquad (4,6) \qquad (2,5)
+\]</span> så kan vi beregne denne gruppes midterpunkt ved at tage gennemsnittet af alle <span class="math inline">\(1.\)</span> koordinaterne samt gennemsnittet af alle <span class="math inline">\(2.\)</span> koordinaterne. Dette vil give koordinatsættet til midterpunktet:</p>
+<p><span class="math display">\[
+\left ( \frac{3+8+4+2}{4}, \frac{2+6+6+5}{4} \right)=(4.25, 4.75)
+\]</span></p>
+<p>På <a href="#fig-midterpunkt" class="quarto-xref">figur&nbsp;1</a> ses de fire punkter (blå) og midterpunktet (lyserødt). Læg mærke til, hvordan midterpunktet pænt ligger midt blandt de fire andre punkter.</p>
+<div id="fig-midterpunkt" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-midterpunkt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="musik/midterpunkt.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-midterpunkt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;1: Fire blå punkter med det lyserøde punkt som midterpunkt.
+</figcaption>
+</figure>
+</div>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 1: Musikfeatures
+<span class="screen-reader-only">Note</span>Opgave 1: Midterpunkt
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Overvej hvilke andre features man kan bruge til at opdele musiknumre efter.</p>
+<p>En gruppe består af punkterne <span class="math inline">\((2,2)\)</span>, <span class="math inline">\((7,3)\)</span> og <span class="math inline">\((6,5)\)</span>.</p>
+<ul>
+<li><p>Indtegn de tre punkter i et koordinatsystem.</p></li>
+<li><p>Udregn gruppens midterpunkt og indtegn midterpunktet i koordinatsystemet.</p></li>
+</ul>
 </div>
 </div>
 </div>
-<p>Opdelingen skal egentlig foretages af en computer, som også selv kan analysere musiknumrene og finde featureværdier. Nogle af de features, der benyttes er: Lydniveau, Energi, Instrumentalitet, Dansbarhed, Positivitet og Tempo.</p>
-<p>For at anvende K-means her, bør hver feature enten være angivet på samme skala, f.eks. fra 0 til 1, eller ændres ved <a href="../materialer/afstande/feature_scaling.html">feature-skalering</a>, så hver feature får lige stor betydning.</p>
-<p>Her ses på et mindre eksempel med 15 musiknumre, man ønsker at opdele i 3 grupper ud fra 3 features : danceabilty, energy og speechiness.</p>
-<p>Numrene er placeret i en tilfældig af de 3 grupper fra start, så algoritmen har et sted at starte. Opgaven er så, at numrene skal inddeles på en måde, så rimeligt ens numre er i samme gruppe. Der behøver ikke være lige mange numre i hver gruppe i den færdige inddeling, men der skal være 3 grupper med numre i vores eksempel.</p>
-<table class="table">
-<thead>
-<tr class="header">
-<th>nummer</th>
-<th>danceability</th>
-<th>energy</th>
-<th>speechiness</th>
-<th>gruppe</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Barbie Girl</td>
-<td>0,76</td>
-<td>0,95</td>
-<td>0,04</td>
-<td>1</td>
-</tr>
-<tr class="even">
-<td>Shape of You</td>
-<td>0,83</td>
-<td>0,65</td>
-<td>0,08</td>
-<td>2</td>
-</tr>
-<tr class="odd">
-<td>Set Fire to the Rain</td>
-<td>0,60</td>
-<td>0,67</td>
-<td>0,02</td>
-<td>3</td>
-</tr>
-<tr class="even">
-<td>Wake Me Up</td>
-<td>0,53</td>
-<td>0,78</td>
-<td>0,05</td>
-<td>1</td>
-</tr>
-<tr class="odd">
-<td>Baby One More Time</td>
-<td>0,76</td>
-<td>0,70</td>
-<td>0,03</td>
-<td>2</td>
-</tr>
-<tr class="even">
-<td>Just The Way You Are</td>
-<td>0,64</td>
-<td>0,84</td>
-<td>0,04</td>
-<td>3</td>
-</tr>
-<tr class="odd">
-<td>New Rules</td>
-<td>0,76</td>
-<td>0,72</td>
-<td>0,07</td>
-<td>1</td>
-</tr>
-<tr class="even">
-<td>Stan</td>
-<td>0,78</td>
-<td>0,74</td>
-<td>0,21</td>
-<td>2</td>
-</tr>
-<tr class="odd">
-<td>In Da Club</td>
-<td>0,90</td>
-<td>0,71</td>
-<td>0,37</td>
-<td>3</td>
-</tr>
-<tr class="even">
-<td>Blinding Lights</td>
-<td>0,51</td>
-<td>0,80</td>
-<td>0,06</td>
-<td>1</td>
-</tr>
-<tr class="odd">
-<td>Blank Space</td>
-<td>0,76</td>
-<td>0,70</td>
-<td>0,05</td>
-<td>2</td>
-</tr>
-<tr class="even">
-<td>Dance Monkey</td>
-<td>0,82</td>
-<td>0,59</td>
-<td>0,09</td>
-<td>3</td>
-</tr>
-<tr class="odd">
-<td>Hotline Bling</td>
-<td>0,90</td>
-<td>0,62</td>
-<td>0,06</td>
-<td>1</td>
-</tr>
-<tr class="even">
-<td>Die To Live</td>
-<td>0,42</td>
-<td>0,97</td>
-<td>0,14</td>
-<td>2</td>
-</tr>
-<tr class="odd">
-<td>White Iverson</td>
-<td>0,67</td>
-<td>0,52</td>
-<td>0,04</td>
-<td>3</td>
-</tr>
-</tbody>
-</table>
-<p>Ideen er nu, at vi udregner et centrum (gennemsnit) for alle numrene i gruppe 1, et andet gennemsnit for alle numrene i gruppe 2 og et tredje gennemsnit for alle numrene i gruppe 3. Derefter ser vi på hvert enkelt nummer og afgør, hvilket af de tre centre, numret ligger tættest på. Hvis numret ligger tættet på cemtrum for den gruppe, numret allerede er i, sker der ikke noget. Hvis numret derimod ligger tættet på centrum for en af de andre grupper, bliver numret flyttet til den pågældende gruppe.</p>
+</section>
+<section id="k-means-til-inddeling-af-musiknumre-i-grupper" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="k-means-til-inddeling-af-musiknumre-i-grupper">K-means til inddeling af musiknumre i grupper</h2>
+<p>For at kunne opdele musiknumre i grupper er det nødvendigt at finde nogle informationer (også kaldet for features) til hvert nummer. En oplagt information kunne umiddelbart være musikgenre: Rock, pop, klassisk, country og så videre.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 2: Opdeling af musiknumre i 3 grupper - beregn centrum
+<span class="screen-reader-only">Note</span>Opgave 2: Musikfeatures
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Ud fra skemaet overnfor ønsker vi nu at få beregnet centrum for hver af de tre grupper. I tabellen her er centrum for gruppe 1 allerede beregnet.</p>
-<table class="table">
-<thead>
-<tr class="header">
-<th>gruppe</th>
-<th>danceability</th>
-<th>energy</th>
-<th>speechiness</th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1</td>
-<td>0,692</td>
-<td>0,774</td>
-<td>0,056</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>2</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>3</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
 <ul>
-<li>Beregn gennemsnittet af værdierne for danceability for gruppe 1. Se at det passer med værdien i tabellen.</li>
-<li>Beregn også gennemsnit for energy og speechiness for gruppe 1. Se at det passer med tabellens værdier.</li>
-<li>Beregn på samme måde centrum (de tre gennemsnitsværdier) for gruppe 2 og gruppe 3.</li>
+<li>Overvej hvilke andre features man kan bruge til at opdele musiknumre efter.</li>
 </ul>
 </div>
 </div>
 </div>
-<p>Vi skal nu for hvert enkelt nummer have undersøgt, hvilket af de tre centre, numret ligger tættet på. Du kender allerede formlen for afstand mellem to punkter i planen, hvor hver punkt har to koordinater. <span class="math display">\[|PQ|= \sqrt{(x_2 - x_1)^2+(y_2 - y_1)^2}\]</span> Når der er flere koordinater, udvides formlen blot med flere led under kvadratrodstegnet. I vores eksempel er der de tre værdier danceability, energy og speechiness, så der bliver tre led. <span class="math display">\[|PQ|= \sqrt{(x_2)^2+(y_2 - y_1)^2+(z_2 - z_1)^2}\]</span></p>
+<p>Når man skal lave en opdeling af nogle musiknumre, bliver opdelingen foretaget af en computer, som også selv kan analysere musiknumrene og finde featureværdier. Nogle af de features, man kan bruge er: Lydniveau, energi, instrumentalitet, dansbarhed, positivitet og tempo.</p>
+<p>For at anvende algoritmen K-means, skal alle features først og fremmest være talværdier. Derudover bør hver feature enten være angivet på samme skala, for eksempel fra <span class="math inline">\(0\)</span> til <span class="math inline">\(1\)</span>, eller ændres ved hjælp af en metode, som kaldes for <a href="../materialer/afstande/feature_scaling.html">feature-skalering</a>, som gør, at hver feature får lige stor betydning.</p>
+<p>Her ses på et mindre eksempel med 15 musiknumre, man ønsker at opdele i tre grupper ud fra tre features: Danceabilty, energy og speechiness.</p>
+<div id="tbl-musik" class="bordered quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
+<div aria-describedby="tbl-musik-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table-bordered table">
+<thead>
+<tr class="header">
+<th>Nummer</th>
+<th style="text-align: center;">Danceability</th>
+<th style="text-align: center;">Energy</th>
+<th style="text-align: center;">Speechiness</th>
+<th style="text-align: center;">Gruppe</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Barbie Girl</td>
+<td style="text-align: center;"><span class="math inline">\(0.76\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.95\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.04\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="even">
+<td>Shape of You</td>
+<td style="text-align: center;"><span class="math inline">\(0.83\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.65\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.08\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+</tr>
+<tr class="odd">
+<td>Set Fire to the Rain</td>
+<td style="text-align: center;"><span class="math inline">\(0.60\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.67\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.02\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
+</tr>
+<tr class="even">
+<td>Wake Me Up</td>
+<td style="text-align: center;"><span class="math inline">\(0.53\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.78\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.05\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="odd">
+<td>Baby One More Time</td>
+<td style="text-align: center;"><span class="math inline">\(0.76\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.70\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.03\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+</tr>
+<tr class="even">
+<td>Just The Way You Are</td>
+<td style="text-align: center;"><span class="math inline">\(0.64\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.84\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.04\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
+</tr>
+<tr class="odd">
+<td>New Rules</td>
+<td style="text-align: center;"><span class="math inline">\(0.76\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.72\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.07\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="even">
+<td>Stan</td>
+<td style="text-align: center;"><span class="math inline">\(0.78\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.74\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.21\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+</tr>
+<tr class="odd">
+<td>In Da Club</td>
+<td style="text-align: center;"><span class="math inline">\(0.90\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.71\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.37\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
+</tr>
+<tr class="even">
+<td>Blinding Lights</td>
+<td style="text-align: center;"><span class="math inline">\(0.51\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.80\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.06\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="odd">
+<td>Blank Space</td>
+<td style="text-align: center;"><span class="math inline">\(0.76\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.70\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.05\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+</tr>
+<tr class="even">
+<td>Dance Monkey</td>
+<td style="text-align: center;"><span class="math inline">\(0.82\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.59\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.09\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
+</tr>
+<tr class="odd">
+<td>Hotline Bling</td>
+<td style="text-align: center;"><span class="math inline">\(0.90\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.62\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.06\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="even">
+<td>Die To Live</td>
+<td style="text-align: center;"><span class="math inline">\(0.42\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.97\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.14\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+</tr>
+<tr class="odd">
+<td>White Iverson</td>
+<td style="text-align: center;"><span class="math inline">\(0.67\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.52\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.04\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-tbl margin-caption" id="tbl-musik-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabel&nbsp;1: Tabel med 15 musiknumre og tre tilhørende features: Danceabilty, energy og speechiness. Alle musiknumrene er her placeret i en tilfældig gruppe.
+</figcaption>
+</figure>
+</div>
+<p>Numrene er her placeret i en tilfældig af de tre grupper fra start, så algoritmen har et sted at starte. Opgaven er så, at numrene skal inddeles på en måde, så rimeligt ens numre kommer i samme gruppe. Der behøver ikke være lige mange numre i hver gruppe i den færdige inddeling, men der skal være tre grupper med numre i vores eksempel.</p>
+<p>Fordi alle musiknumrene er repræsenteret ved tre features, kan vi tænke på hvert nummer, som et punkt i et 3-dimensionelt koordinatsystem. For eksempel svarer nummeret "Barbie Girl" til punktet med koordinatsæt <span class="math inline">\((0.76, 0.95, 0.04)\)</span>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 3: Beregn afstande til centre
+<span class="screen-reader-only">Note</span>Opgave 3: Plot af punkter
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Nu skal vi igang med at finde afstanden fra hvert nummer til hvert centrum. Her skal du selvfølgelig bruge resultatet fra opgave 2, hvor du fandt de tre centre.</p>
-<table class="table">
-<thead>
-<tr class="header">
-<th>nummer</th>
-<th>afstand centrum 1</th>
-<th>afstand centrum 2</th>
-<th>afstand centrum 3</th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Barbie Girl</td>
-<td>0,189</td>
-<td>0,213</td>
-<td>0,295</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Shape of You</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
+<p>Data fra <a href="#tbl-musik" class="quarto-xref">tabel&nbsp;1</a> kan downloades <a href="musik/musik.xlsx">her</a>.</p>
 <ul>
-<li>Beregn afstanden fra "Barbie girl" til hver af de 3 centre og tjek, at det er korrekt.</li>
-<li>Beregn afstand fra "Shape of You" til hver af de 3 centre.</li>
+<li>Tegn i GeoGebra eller et andet program et 3-dimensionalt punktplot af de 15 punkter, som svarer til de 15 musiknumre.</li>
 </ul>
+<details>
+<summary>
+Sådan gør du i GeoGebra
+</summary>
+<ul>
+<li><p>Vælg i GeoGebra "Vis" <span class="math inline">\(\rightarrow\)</span> "Regneark" og dernæst "Vis" <span class="math inline">\(\rightarrow\)</span> "3D Grafik".</p></li>
+<li><p>Kopier datasættet ind i regnearket.</p></li>
+<li><p>Lad søjle <code>E</code> så tom og stil dig i celle <code>F2</code> og skriv <code>=(B2,C2,D2)</code> (du skulle nu gerne kunne se det første punkt i "3D Grafik").</p></li>
+<li><p>Stil dig igen i celle <code>F2</code>, højreklik og vælg "Egenskaber". Fjern fluebenet ved "Vis navn".</p></li>
+<li><p>Marker igen celle <code>F2</code> og tag ved den lille kasse i nederste hjørne af celle <code>F2</code> og trække ned, så du får udfyldt kolonne <code>F</code> for hele datasættet. Alle punkterne skulle nu gerne blive vist i "3D Grafik".</p></li>
+</ul>
+</details>
 </div>
 </div>
 </div>
+<p>Idéen er nu, at vi udregner et midterpunkt for alle numrene i gruppe 1, et andet midterpunkt for alle numrene i gruppe 2 og et tredje midterpunkt for alle numrene i gruppe 3. Da vores punkter nu har tre koordinater, findes midterpunktet ved at tage gennemsnittet af henholdsvis alle <span class="math inline">\(1.\)</span>, <span class="math inline">\(2.\)</span> og <span class="math inline">\(3.\)</span> koordinater.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 4: Bestemmelse af nye grupper
+<span class="screen-reader-only">Note</span>Opgave 4: Opdeling af musiknumre i tre grupper - beregn midterpunkt
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Herunder er afstanden til de tre centre beregnet for alle numrene.</p>
-<table class="table">
-<colgroup>
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
-</colgroup>
+<p>Ud fra <a href="#tbl-musik" class="quarto-xref">tabel&nbsp;1</a> ovenfor ønsker vi altså at få beregnet midterpunktet for hver af de tre grupper.</p>
+<p>I tabellen her er midterpunktet for gruppe 1 allerede beregnet.</p>
+<table class="table-bordered table">
 <thead>
 <tr class="header">
-<th>nummer</th>
-<th>afstand centrum 1</th>
-<th>afstand centrum 2</th>
-<th>afstand centrum 3</th>
-<th>gruppe</th>
-<th>ny gruppe</th>
+<th style="text-align: center;">Gruppe</th>
+<th style="text-align: center;">Danceability</th>
+<th style="text-align: center;">Energy</th>
+<th style="text-align: center;">Speechiness</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Barbie Girl</td>
-<td>0,189</td>
-<td>0,213</td>
-<td>0,295</td>
-<td>1</td>
-<td></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.692\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.774\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.056\)</span></td>
 </tr>
 <tr class="even">
-<td>Shape of You</td>
-<td>0,187</td>
-<td>0,159</td>
-<td>0,110</td>
-<td>2</td>
-<td></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
 </tr>
 <tr class="odd">
-<td>Set Fire to the Rain</td>
-<td>0,143</td>
-<td>0,160</td>
-<td>0,156</td>
-<td>3</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Wake Me Up</td>
-<td>0,162</td>
-<td>0,189</td>
-<td>0,235</td>
-<td>1</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>Baby One More Time</td>
-<td>0,104</td>
-<td>0,102</td>
-<td>0,095</td>
-<td>2</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Just The Way You Are</td>
-<td>0,086</td>
-<td>0,128</td>
-<td>0,207</td>
-<td>3</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>New Rules</td>
-<td>0,088</td>
-<td>0,067</td>
-<td>0,076</td>
-<td>1</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Stan</td>
-<td>0,181</td>
-<td>0,129</td>
-<td>0,134</td>
-<td>2</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>In Da Club</td>
-<td>0,382</td>
-<td>0,331</td>
-<td>0,314</td>
-<td>3</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Blinding Lights</td>
-<td>0,184</td>
-<td>0,210</td>
-<td>0,259</td>
-<td>1</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>Blank Space</td>
-<td>0,101</td>
-<td>0,089</td>
-<td>0,078</td>
-<td>2</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Dance Monkey</td>
-<td>0,227</td>
-<td>0,196</td>
-<td>0,123</td>
-<td>3</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>Hotline Bling</td>
-<td>0,259</td>
-<td>0,235</td>
-<td>0,187</td>
-<td>1</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Die To Live</td>
-<td>0,346</td>
-<td>0,365</td>
-<td>0,432</td>
-<td>2</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>White Iverson</td>
-<td>0,255</td>
-<td>0,243</td>
-<td>0,172</td>
-<td>3</td>
-<td></td>
+<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>Bestem ny gruppe for hvert nummer - det centrum, som numret er tættest på.</li>
-<li>Overvej, hvorfor vi ikke dermed er færdige med at opdele numrene i de 3 ønskede grupper.</li>
+<li>Beregn gennemsnittet af værdierne for danceability for gruppe 1. Se at det passer med værdien i tabellen.</li>
+<li>Beregn også gennemsnit for energy og speechiness for gruppe 1. Se at det passer med tabellens værdier.</li>
+<li>Beregn på samme måde midterpunktet (de tre gennemsnitsværdier) for gruppe 2 og gruppe 3.</li>
 </ul>
 </div>
 </div>
 </div>
-<p>Beregningerne skal så gentages, typisk mange gange, indtil der ingen ændringer sker. Når algoritmen har fået inddelt alle numrene i tre grupper, så yderligere en omgang beregninger ikke flytter numre mellem grupperne, er algoritmen færdig. Men det kan godt kræve rigtigt mange beregninger, som vi derfor ikke vil lave manuelt.</p>
-<p>Hvis du er god til regneark, f.eks. i Excel, kan du få Excel til smart at lave beregningerne. Her vil vi dog i stedet bruge det gratis program <strong>Orange</strong>, som vi også bruger til andre forløb på aimat.dk</p>
+<p>Herefter vil vi se på hvert enkelt nummer og afgøre, hvilket af de tre midterpunkt, nummeret ligger tættest på. Hvis nummeret ligger tættest på midterpunktet for den gruppe, nummeret allerede er i, sker der ikke noget. Hvis nummeret derimod ligger tættest på midterpunktet for en af de andre grupper, bliver nummeret flyttet til den pågældende gruppe. Dette er idéen bag K-means, som vi kan opsummere sådan her:</p>
+<p><span class="fremhaev_underline">K-means algoritmen</span></p>
+<ol type="1">
+<li><p>Start med at sætte alle musiknumre i en tilfældig af de tre grupper.</p></li>
+<li><p>Udregn midterpunktet for hver af de tre grupper.</p></li>
+<li><p>Udregn for <em>hvert</em> musiknummer afstanden fra det punkt, som repræsenterer musiknummeret, til hver af de tre midterpunkter. Placér musiknummeret i den gruppe, hvis midterpunkt nummeret er tættest på.</p></li>
+<li><p>Gentag punkt 2 og 3, indtil ingen musiknumre skifter gruppe.</p></li>
+</ol>
+<p>K-means algoritmen er et eksempel på det, som man kalder for <strong>unsupervised learning</strong>, fordi vi ikke på forhånd har nogle informationer om, hvilke musiknumre som passer sammen.</p>
+<p>Vi skal altså nu for hvert enkelt nummer have undersøgt, hvilket af de tre midterpunktet, nummeret ligger tættest på. Du kender allerede formlen for afstand mellem to punkter i planen, hvor hvert punkt har to koordinater</p>
+<p><span class="math display">\[P(x_1,y_1) \qquad \textrm{og} \qquad Q(x_2,y_2)\]</span></p>
+<p>Da er afstanden mellem <span class="math inline">\(P\)</span> og <span class="math inline">\(Q\)</span>:</p>
+<p><span class="math display">\[
+|PQ|= \sqrt{(x_2 - x_1)^2+(y_2 - y_1)^2}
+\]</span></p>
+<p>Når der er tre koordinater:</p>
+<p><span class="math display">\[P(x_1,y_1,z_1) \qquad \textrm{og} \qquad Q(x_2,y_2,z_2)\]</span> udvides formlen blot med et led mere under kvadratrodstegnet:</p>
+<p><span class="math display">\[
+|PQ|= \sqrt{(x_2-x_1)^2+(y_2 - y_1)^2+(z_2 - z_1)^2}
+\]</span></p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 5: Endelig opdeling med brug af Orange.
+<span class="screen-reader-only">Note</span>Opgave 5: Beregn afstande til midterpunkter
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
+<p>Nu skal vi igang med at finde afstanden fra hvert nummer til hvert af de tre midterpunkter. Her skal du selvfølgelig bruge resultatet fra opgave 4, hvor du fandt de tre midterpunkter.</p>
+<table class="table-bordered table">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 26%">
+<col style="width: 26%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Nummer</th>
+<th style="text-align: center;">Afstand midterpunkt 1</th>
+<th style="text-align: center;">Afstand midterpunkt 2</th>
+<th style="text-align: center;">Afstand midterpunkt 3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Barbie Girl</td>
+<td style="text-align: center;"><span class="math inline">\(0.189\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.213\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.295\)</span></td>
+</tr>
+<tr class="even">
+<td>Shape of You</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li><p>Installer <a href="https://orangedatamining.com/">Orange</a>. Du kan få hjælp til at installere programmet <a href="https://www.youtube.com/watch?v=g8-wIwVfAw0">her</a>.</p></li>
-<li><p>Se denne video &lt;<link mangler="">&gt;</p></li>
-<li><p>Lav selv samme løsning i Orange for at få den endelige opdeling i de tre ønskede grupper.</p></li>
-<li><p>Hvis du kender numrene, kan du overveje, om inddelingen er fornuftig. Sæt gerne en “titel” på hver af grupperne.</p></li>
+<li>Beregn afstanden fra "Barbie girl" til hver af de tre midterpunkter og tjek, at det er korrekt.</li>
+<li>Beregn afstand fra "Shape of You" til hver af de tre midterpunkter.</li>
 </ul>
 </div>
 </div>
 </div>
-<p>Som et alternativ til Orange eller Excel, kan du også bede en AI chatbot om at lave K-means på vores data. Det er let, men giver heller ikke selv kontrol med, hvad der foregår, eller om det gøres korrekt.</p>
+<p>Herunder er afstanden til de tre midterpunkter beregnet for alle numrene.</p>
+<table class="table-bordered table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 17%">
+<col style="width: 17%">
+<col style="width: 17%">
+<col style="width: 17%">
+<col style="width: 17%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Nummer</th>
+<th style="text-align: center;">Afstand midterpunkt 1</th>
+<th style="text-align: center;">Afstand midterpunkt 2</th>
+<th style="text-align: center;">Afstand midterpunkt 3</th>
+<th style="text-align: center;">Opr. gruppe</th>
+<th style="text-align: center;">Ny gruppe</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Barbie Girl</td>
+<td style="text-align: center;"><span class="math inline">\(0.189\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.213\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.295\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td>Shape of You</td>
+<td style="text-align: center;"><span class="math inline">\(0.187\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.159\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.110\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td>Set Fire to the Rain</td>
+<td style="text-align: center;"><span class="math inline">\(0.143\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.160\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.156\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td>Wake Me Up</td>
+<td style="text-align: center;"><span class="math inline">\(0.162\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.189\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.235\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td>Baby One More Time</td>
+<td style="text-align: center;"><span class="math inline">\(0.104\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.102\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.095\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td>Just The Way You Are</td>
+<td style="text-align: center;"><span class="math inline">\(0.086\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.128\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.207\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td>New Rules</td>
+<td style="text-align: center;"><span class="math inline">\(0.088\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.067\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.076\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td>Stan</td>
+<td style="text-align: center;"><span class="math inline">\(0.181\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.129\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.134\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td>In Da Club</td>
+<td style="text-align: center;"><span class="math inline">\(0.382\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.331\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.314\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td>Blinding Lights</td>
+<td style="text-align: center;"><span class="math inline">\(0.184\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.210\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.259\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td>Blank Space</td>
+<td style="text-align: center;"><span class="math inline">\(0.101\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.089\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.078\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td>Dance Monkey</td>
+<td style="text-align: center;"><span class="math inline">\(0.227\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.196\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.123\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td>Hotline Bling</td>
+<td style="text-align: center;"><span class="math inline">\(0.259\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.235\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.187\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td>Die To Live</td>
+<td style="text-align: center;"><span class="math inline">\(0.346\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.365\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.432\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td>White Iverson</td>
+<td style="text-align: center;"><span class="math inline">\(0.255\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.243\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.172\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 6: Bestemmelse af nye grupper
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Brug ovenstående tabel.</p>
+<ul>
+<li>Bestem den nye gruppe for hvert nummer ved at bruge det midterpunkt, som nummeret er tættest på.</li>
+<li>Overvej, hvorfor vi <em>ikke</em> er færdige med at opdele i de tre ønskede grupper.</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Beregningerne skal så gentages, typisk mange gange, indtil der ingen ændringer sker. Når algoritmen har fået inddelt alle numrene i tre grupper, så yderligere en omgang beregninger ikke flytter numrene mellem grupperne, er algoritmen færdig. Men det kan godt kræve rigtigt mange beregninger, som vi derfor ikke vil lave manuelt.</p>
+<p>Hvis du er god til regneark, for eksempel Excel, kan du få Excel til smart at lave beregningerne. Alternativt kan du bruge et gratis program <strong>Orange</strong>, som vi også bruger til andre forløb her på siden.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 7: Endelig løsning på opdeling
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Der er allerede lavet nogle beregninger, men der skal laves <u>mange</u> flere, før K-means algoritmen er færdig!</p>
+<p>Der er nu to muligheder for at finde den endelige opdeling, hvor den første mulighed er let, mens den anden er langt sværere og mere teknisk. Du (eller din lærer!) vælger selv, hvilken mulighed du skal gå videre med:</p>
+<p><span class="fremhaev_underline">Mulighed 1</span></p>
+<p>Brug programmet <a href="https://orangedatamining.com/">Orange</a>. Du kan få hjælp til at installere programmet <a href="https://www.youtube.com/watch?v=g8-wIwVfAw0">her</a>. I Orange kan du få lavet opdelingen med K-means, ved at benytte data fra <a href="#tbl-musik" class="quarto-xref">tabel&nbsp;1</a> (filen findes <a href="musik/musik.xlsx">her</a>).</p>
+<ul>
+<li><p>Se videoen <a href="https://youtu.be/txowjvN_ro4">K-means i Orange</a>, hvor vi viser, hvordan man bruger Orange til at lave K-means.</p></li>
+<li><p>Lav selv samme løsning i Orange (som vi har vist i videoen) for at få den endelige opdeling i de tre ønskede grupper.</p></li>
+<li><p>Hvis du kender numrene, kan du overveje, om inddelingen er fornuftig. Sæt gerne en "titel" på hver af grupperne.</p></li>
+</ul>
+<p><span class="fremhaev_underline">Mulighed 2</span></p>
+<ul>
+<li><p>Benyt Excel eller kodning til at fortage alle beregninger indtil ingen numre skifter gruppe.</p></li>
+<li><p>Hvis du kender numrene, kan du overveje, om inddelingen er fornuftig.</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 8: Plot af punkter og løsning
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Tag udgangspunkt i det punktplot, som du lavede i opgave 3.</p>
+<ul>
+<li>Farvelæg punkterne, så punkter i samme inddeling får samme farve.</li>
+</ul>
+<details>
+<summary>
+Sådan gør du i GeoGebra
+</summary>
+<ul>
+<li><p>Gå ind i regnearket og tilføj en søjle (i <code>E</code>), som angiver hvilken gruppe musiknummeret er kommet i.</p></li>
+<li><p>Stil dig i celle <code>F2</code>, højreklik og vælg "Egenskaber". Vælg herefter fanen "Avanceret".</p></li>
+<li><p>I det felt, hvor der står "Rød", skriver du <code>If(E2==1,1,0)</code>.</p></li>
+<li><p>I det felt, hvor der står "Grøn", skriver du <code>If(E2==2,1,0)</code>.</p></li>
+<li><p>I det felt, hvor der står "Blå", skriver du <code>If(E2==3,1,0)</code>.</p></li>
+</ul>
+<p>Det kommer til at se sådan her ud (hvis du har GeoGebra på dansk bliver "If" lavet om til "Hvis"):</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="musik/ggb_help.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
+</figure>
+</div>
+<ul>
+<li>Marker igen celle <code>F2</code> og tag ved den lille kasse i nederste hjørne af celle <code>F2</code> og trække ned, så du får udfyldt kolonne <code>F</code> for hele datasættet. Alle punkterne skulle nu gerne være farvet som ønsket.</li>
+</ul>
+</details>
+<ul>
+<li>Når du drejer rundt i dit 3-dimensionale koordinatsystemer, giver inddelingen af punkterne så mening i forhold til punkternes placering?</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -674,13 +830,13 @@ window.Quarto = {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
+<div id="callout-10" class="callout-10-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Læs <a href="../materialer/kmeans/kmeans.html">noten Clustering med K-means</a> .</li>
-<li>Beregn SAUMPAR ud fra grupperne fra starten.</li>
-<li>Beregn ligeledes SUMPAR ud fra de grupper de efterfølgende kom i.</li>
-<li>Hvis man sammenligner de to resultater, viser det så det ønskede ?</li>
+<li>Læs noten <a href="../materialer/kmeans/kmeans.html" target="blank">Clustering med K-means</a>.</li>
+<li>Beregn <span class="math inline">\(SUMPAR\)</span> ud fra de grupper, som vi startede med i <a href="#tbl-musik" class="quarto-xref">tabel&nbsp;1</a>.</li>
+<li>Beregn ligeledes <span class="math inline">\(SUMPAR\)</span> ud fra de grupper, som vi endte med i opgave 6.</li>
+<li>Hvis man sammenligner de to resultater, viser det så det ønskede?</li>
 </ul>
 </div>
 </div>
