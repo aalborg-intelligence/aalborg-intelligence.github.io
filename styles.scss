@@ -93,6 +93,74 @@ $pagination-padding-x: .75rem;
   background-image: linear-gradient(to bottom right, $color-pink, $color-lysblaa);
 }*/
 
+
+
+/* Tillad at footeren må komme op, hvis der er plads */
+main {
+  min-height: auto !important;
+}
+
+
+
+/* Ram ALLE relevante lag i footeren */
+footer.quarto-page-footer,
+.quarto-page-footer,
+.quarto-page-footer .nav-footer {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Quarto giver ofte padding på .nav-footer – nulstil den specifikt */
+.nav-footer {
+  padding-top: 0 !important;
+  padding-bottom: 0.5rem; /* justér efter behov */
+}
+
+
+table thead th {
+  color: $color-morkblaa !important;
+}
+
+
+/* 1) Grundlayout: fast tabel, ingen “ekstra” bredde fra borders/padding */
+.forlob-table table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;             /* så borders ikke lægger ekstra bredde til */
+}
+
+/* 2) Sikre, at indhold ikke sprænger kolonnebredderne */
+.forlob-table table th,
+.forlob-table table td {
+  box-sizing: border-box;                /* padding tælles inden i cellens bredde */
+  overflow-wrap: anywhere;               /* bryd lange ord/links */
+  word-break: break-word;                /* ekstra sikkerhed */
+  white-space: normal;                   /* tillad linjebrud */
+  /* valgfrit: gør teksten lidt mere kompakt */
+  /* padding: .5rem .6rem; */
+}
+
+/* 3) Hvis dit tema genererer <colgroup>, så kan du styre bredder hér */
+.forlob-table table colgroup col:nth-child(1) { width: 15%; }
+.forlob-table table colgroup col:nth-child(2) { width: 15%; }
+.forlob-table table colgroup col:nth-child(3) { width: 35%; }
+.forlob-table table colgroup col:nth-child(4) { width: 35%; }
+
+/* 4) Hvis der IKKE er <colgroup>, så sæt bredder på th/td (fallback) */
+.forlob-table table thead th:nth-child(1),
+.forlob-table table tbody td:nth-child(1) { width: 15%; }
+
+.forlob-table table thead th:nth-child(2),
+.forlob-table table tbody td:nth-child(2) { width: 15%; }
+
+.forlob-table table thead th:nth-child(3),
+.forlob-table table tbody td:nth-child(3) { width: 35%; }
+
+.forlob-table table thead th:nth-child(4),
+.forlob-table table tbody td:nth-child(4) { width: 35%; }
+
+
+
 h1, h2, h3, h4, h5 {
   color: $color-morkblaa;
 }
