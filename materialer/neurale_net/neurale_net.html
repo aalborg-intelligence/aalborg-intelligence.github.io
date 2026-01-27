@@ -51,8 +51,6 @@ div.csl-indent {
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
 <link href="../../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -63,7 +61,7 @@ div.csl-indent {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ae6acae51e2cf9c73bd46ab5a58c2583.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-53556a820fe3d850452b88a74116d88a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -91,35 +89,6 @@ div.csl-indent {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-main-listing-content .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-title','listing-description-meta',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-main-listing-content'] = new List('listing-main-listing-content', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-Y219BCPS45"></script>
 
 <script type="text/javascript">
@@ -287,8 +256,8 @@ window.Quarto = {
 
 
 <p>Denne note giver en grundig gennemgang af matematikken bag kunstige neurale netværk.</p>
-<section id="hvad-er-kunstig-intelligens-og-hvad-skal-vi-med-det" class="level1 page-columns page-full">
-<h1>Hvad er kunstig intelligens og hvad skal vi med det?</h1>
+<section id="hvad-er-kunstig-intelligens-og-hvad-skal-vi-med-det" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="hvad-er-kunstig-intelligens-og-hvad-skal-vi-med-det">Hvad er kunstig intelligens og hvad skal vi med det?</h2>
 <p>Forestil dig at du gerne vil have en funktion <span class="math inline">\(f\)</span>, som tager et billede som input og som output fortæller dig, om der er en hund på billedet eller ej. Det kan illustreres sådan her:</p>
 <div id="fig-funktion" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
@@ -302,8 +271,8 @@ Figur&nbsp;1: Funktion, der tager et billede som input, og som returnerer "ja" e
 </div>
 <p>Okay, det er måske ikke så tit, at man har brug for en funktion, som kan detektere, om der er en hund på et billede, men hvad så hvis funktionen i stedet kan afgøre, om der er en kræftknude på et røntgenbillede? Eller hvis den kan genkende håndskrevet tekst? Sidstnævnte bliver for eksempel flittigt brugt til sortering af breve. Vi ønsker os i virkeligheden at være i stand til at programmere en funktion, som kan "tænke" som et menneske. Når jeg ser et billede, kan jeg på ingen tid afgøre, om der er en hund på billedet eller ej. Står jeg med et brev i hånden, kan jeg som regel også læse navn og adresse. En læge vil også kunne kigge på et røntgenbillede og afgøre, om der er en kræftknude eller ej. Det er i bund og grund, det vi forstår ved kunstig intelligens. At få computeren til at "tænke" som et menneske. Nu kunne man måske godt indvende "hvad skal det til for?". Der er vel ingen grund til at få en computer til at finde kræftknuder på et røntgenbillede, hvis vi allerede kan få en læge til det? Men hvad nu, hvis computeren faktisk kan opdage kræftknuder tidligere end lægen? Eller hvad hvis man har så mange røntgenbilleder, at det vil være smart, at få en computer til at kigge dem igennem først?</p>
 </section>
-<section id="sec-hvordanFunktion" class="level1 page-columns page-full">
-<h1>Hvordan laver man en funktion, som kan finde "ting" på billeder?</h1>
+<section id="sec-hvordanFunktion" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="sec-hvordanFunktion">Hvordan laver man en funktion, som kan finde "ting" på billeder?</h2>
 <p>Lad os sige, at vi nu kan se fidusen med den der lidt mærkelige funktion, som kan tage et billede som input, og som output kan fortælle et eller andet om billedet. Men det er jo ikke ligefrem den slags input og output, som vi plejer at arbejde med. Vi er for eksempel vant til at se på en eksponentialfunktion, der som input kan tage et hvilket som helst reelt tal og som output giver et positivt reelt tal. Vi plejer at sige, at funktionens defintionsmængde <span class="math inline">\(Dm(f)=\mathbb{R}\)</span> og at funktionens værdimængde <span class="math inline">\(Vm(f)=\mathbb{R}_+\)</span>. Det kan også skrives sådan her: <span class="math display">\[f: \mathbb{R} \rightarrow \mathbb{R}_+\]</span> Men hvordan giver man så et billede som input? Digitale billeder består af en masse "pixels". En pixel svarer til et lille kvadratisk udsnit af billedet, som lidt forenklet er vist på <a href="#fig-pixel" class="quarto-xref">figur&nbsp;2</a>.</p>
 <div id="fig-pixel" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
@@ -324,14 +293,14 @@ Figur&nbsp;2: Et digitalt billede består af pixels.
 \tag{1}\]</span></span> Så i et lidt forenklet setup leder vi altså efter en funktion, som tager en <span class="math inline">\(64\)</span>-dimensional vektor som input, og som output leverer et tal i intervallet <span class="math inline">\([0,1]\)</span>: <span class="math display">\[
 f: \mathbb{R}^{64} \rightarrow [0,1]
 \]</span> Så langt så godt. Men hvad gør vi så nu? Skal vi sige, at hvis der findes nogle forholdsvis mørke pixels i midten og nogle mørke pixels, som stikker op fra de andre mørke pixels (halen), så er det en hund...? Det virker ikke umiddelbart specielt anvendeligt. Og hvad nu hvis hunden sidder på sin hale eller man kun kan se dens hoved? Inden for den tidligere klassiske kunstig intelligens ville man netop forsøge sig med denne fremgangsmåde, men AI-forskerne løb efterhånden panden mod en mur, ligesom vi noget forenklet har skitseret det her. Det virker simpelthen som en helt uoverskuelig opgave at skulle programmere en computer på den klassiske måde (a la "gør dit og dut og dat og hvis A så B ellers C... osv.") <span class="citation" data-cites="videnskabsteori">(<a href="#ref-videnskabsteori" role="doc-biblioref">Sørensen and Johansen 2020</a>)</span>. Problemet er blandt andet, at vi jo faktisk ikke en gang selv fuldstændigt og i detaljer kan forklare, hvordan vi selv genkender en hund på et billede. Det er "bare" noget vores hjerne gør (fordi den i virkeligheden har øvet sig på rigtig mange "hundebilleder"). Det var netop denne erkendelse, som førte til udviklingen af kunstige neurale netværk: Hvis vi ikke selv præcist og detaljeret kan forklare, hvad vores hjerne gør, så skulle vi måske i stedet prøve at programmere vores computer, så den efterligner den måde den menneskelige hjerne fungerer på. Man vendte sig derfor mod biologien <span class="citation" data-cites="baktoft">(<a href="#ref-baktoft" role="doc-biblioref">Baktoft 2014</a>)</span> og blev inspireret af den måde millionvis af neuroner i hjernen kommunikerer med hinanden på (men det må du hellere spørge en biologilærer om). Man kan derfor tænke på kunstige neurale netværk som en forsimplet model af den menneskelige hjerne. Det får også den konsekvens, at vores funktion ender med at blive lidt magi. Vi kan ikke nødvendigvis forklare, hvorfor den præcis ser ud som den gør, men vi kan blot i sidste ende forhåbentlig konstatere, at det virker! Det er faktisk lidt grænseoverskridende. Vi er jo for eksempel vant til at kunne fortolke på de konstanter, som indgår i en lineær funktion, der er anvendt i en given sammenhæng. Men her må du glemme alt om at tillægge de konstanter, vi nu er på jagt efter, nogen som helst betydning!</p>
-<section id="video-kunstige-neurale-netværk-1" class="level2">
-<h2 class="anchored" data-anchor-id="video-kunstige-neurale-netværk-1">VIDEO: Kunstige neurale netværk 1</h2>
+<section id="video-kunstige-neurale-netværk-1" class="level3">
+<h3 class="anchored" data-anchor-id="video-kunstige-neurale-netværk-1">VIDEO: Kunstige neurale netværk 1</h3>
 <p>I denne video forklarer vi lidt om, hvad et kunstigt neuralt netværk er samt hvilke input- og outputværdier, man kan bruge.</p>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/09LTr2eVOWg" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 </section>
 </section>
-<section id="sec-feedforward" class="level1 page-columns page-full">
-<h1>Hvordan virker et kunstigt neuralt netværk?</h1>
+<section id="sec-feedforward" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="sec-feedforward">Hvordan virker et kunstigt neuralt netværk?</h2>
 <p>Kunstige neurale netværk som bruges i den virkelige verden består som regel af millionvis af de såkaldte neuroner. For at holde tingene simple vil vi her begrænse os til nogle få. Forståelsesmæssigt mister man ingenting, notationen bliver blot lidt simplere. På <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a> ser du et sådant simpelt kunstigt neuralt netværk, hvor alle cirklerne repræsenterer disse neuroner. I første omgang ser det måske lidt uoverskueligt ud, men vi tager det et skridt ad gangen.</p>
 <div id="fig-simple_NN_weights" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
@@ -372,16 +341,14 @@ Figur&nbsp;4: Grafen for sigmoid-funktionen.
 </div>
 </div>
 <p>Sigmoid-funktionens differentialkvotient har en bestemt egenskab, som det fremgår af denne sætning:</p>
-<blockquote class="blockquote">
 <div id="thm-sigmoid_diff" class="theorem">
 <p><span class="theorem-title"><strong>Sætning 1</strong></span> Om sigmoid-funktionens differentialkvotient gælder <span class="math display">\[
 \sigma'(x) = \sigma(x) \cdot (1 - \sigma(x)).
-\]</span> Det vil sige, hvis <span class="math inline">\(y=\sigma(x)\)</span> så er <span class="math display">\[
+\]</span> Det vil sige, hvis <span class="math inline">\(y=\sigma(x)\)</span>, så er <span class="math display">\[
 y' = y \cdot (1 - y).
 \]</span></p>
 </div>
-</blockquote>
-<p>Beviset er ikke så svært og overlades til læseren (se eventuelt også forløbet om <a href="../../undervisningsforlob/aktiveringsfunktioner.html#sigmoid">aktiveringsfunktioner</a>).</p>
+<p>Beviset er ikke så svært og overlades til læseren (se eventuelt også forløbet om <a href="../../undervisningsforlob/aktiveringsfunktioner.html#sigmoid">aktiveringsfunktioner</a>){target=“_blank”}.</p>
 <p>Det er netop sigmoid-funktionen, som bruges til at udregne <span class="math inline">\(y_1\)</span>: <span id="eq-y_1_1"><span class="math display">\[
 y_1=\sigma(r_1 \cdot x_1 + r_2 \cdot x_2+r_3 \cdot x_3+r_4 \cdot x_4+r_0)
 \tag{4}\]</span></span> Det vil sige, at <span id="eq-y_1_2"><span class="math display">\[
@@ -408,14 +375,14 @@ o=\sigma(w_1 \cdot z_1 + w_2 \cdot z_2 + w_0)
   \begin{pmatrix}w_0\\w_1\\w_2\end{pmatrix}
   \]</span></p>
 <p>Det gøres ved hjælp af en fiks teknik, som kaldes for <strong>backpropagation</strong>, som vi nu skal se nærmere på.</p>
-<section id="video-kunstige-neurale-netværk-2" class="level2">
-<h2 class="anchored" data-anchor-id="video-kunstige-neurale-netværk-2">VIDEO: Kunstige neurale netværk 2</h2>
+<section id="video-kunstige-neurale-netværk-2" class="level3">
+<h3 class="anchored" data-anchor-id="video-kunstige-neurale-netværk-2">VIDEO: Kunstige neurale netværk 2</h3>
 <p>I denne video giver vi et eksempel på et simpelt kunstig neuralt netværk og forklarer <strong>feedforward</strong>.</p>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/hUlyeMJGvXM" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 </section>
 </section>
-<section id="sec-backpropagation_bogstaver" class="level1 page-columns page-full">
-<h1>Hvordan træner man et kunstigt neuralt netværk?</h1>
+<section id="sec-backpropagation_bogstaver" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="sec-backpropagation_bogstaver">Hvordan træner man et kunstigt neuralt netværk?</h2>
 <p>Vi har altså nu set på, hvordan et kunstigt neuralt netværk virker, hvis vi kender værdierne for alle vægte og bias. Det store spørgsmål er nu, hvordan man får bestemt disse vægte, så netværket bliver så godt så muligt til at finde hundebilleder, eller hvad vi nu er på jagt efter.</p>
 <p>Det første, vi må gøre, er at opstille et mål for, hvor godt et givet netværk er. Så lad os sige, at vi allerede har nogle vægte (i starten vælger man bare nogle mere eller mindre tilfældige vægte). Og lad os se på eksemplet hvor vi har fire inputværdier: <span class="math display">\[\vec{x}=
 \begin{pmatrix}
@@ -464,18 +431,18 @@ Figur&nbsp;5: Eksempel på grafen for en tabsfunktion, som kun afhænger af to v
 \]</span> og så ændrer vi værdien af <span class="math inline">\(s_1\)</span> en lille smule i retning af den negative partielle afledede. Vi viser, at vi ændrer værdien af <span class="math inline">\(s_1\)</span> til en ny værdi, ved at bruge en pil: <span id="eq-opdatering_s1"><span class="math display">\[
 s_1^{\textrm{ny}} \leftarrow s_1 - \eta  \frac{\partial E}{\partial s_1}
 \tag{13}\]</span></span> Lad os lige bruge lidt tid på at forstå, hvad der står her! Venstresiden er den nye værdi af vægten <span class="math inline">\(s_1\)</span>. Denne værdi beregnes ved hjælp af udtrykket på højresiden. Her angiver <span class="math inline">\(s_1\)</span> den gamle/oprindelige værdi af <span class="math inline">\(s_1\)</span>. Symbolet <span class="math inline">\(\eta\)</span> (udtales "eta") er her et lille, positivt tal (for eksempel <span class="math inline">\(0.05\)</span>) som angiver, at vi bare gerne vil ændre <span class="math inline">\(s_1\)</span> en lille smule<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Derfor må <span class="math inline">\(\eta\)</span> ikke være al for stor. Man kalder også <span class="math inline">\(\eta\)</span> for læringsraten eller på engelsk: <em>learning rate</em>. Endelig viser <span class="math inline">\(-\frac{\partial E}{\partial s_1}\)</span>, at vi ønsker, at ændre alle vægte i retning af den negative gradient. Det vil nu sige, at alle <span class="math inline">\(19\)</span> vægte opdateres vha. formler, som den i (<a href="#eq-opdatering_s1" class="quarto-xref">13</a>). Altså skal vi nu bare have fundet et udtryk for alle de <span class="math inline">\(19\)</span> partielle afledede, og vi er i mål! Dette er netop, hvad <strong>backpropagation algoritmen</strong> gør, som vi gennemgår i det følgende.</p>
-<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Hvis vi ændrer <span class="math inline">\(s_1\)</span> for hurtigt (svarende til at <span class="math inline">\(\eta\)</span> er for stor), så kan vi risikere at "træde forbi" det søgte minimum. Omvendt, hvis vi ændrer <span class="math inline">\(s_1\)</span> for langsomt (svarende til at <span class="math inline">\(\eta\)</span> er for lille), så kommer det til at tage alt for lang tid at bestemme minimum. Man er derfor typisk nødt til at prøve sig lidt frem for at finde en passende værdi af <span class="math inline">\(\eta\)</span>.</p></div></div><section id="video-kunstige-neurale-netværk-3" class="level2">
-<h2 class="anchored" data-anchor-id="video-kunstige-neurale-netværk-3">VIDEO: Kunstige neurale netværk 3</h2>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Hvis vi ændrer <span class="math inline">\(s_1\)</span> for hurtigt (svarende til at <span class="math inline">\(\eta\)</span> er for stor), så kan vi risikere at "træde forbi" det søgte minimum. Omvendt, hvis vi ændrer <span class="math inline">\(s_1\)</span> for langsomt (svarende til at <span class="math inline">\(\eta\)</span> er for lille), så kommer det til at tage alt for lang tid at bestemme minimum. Man er derfor typisk nødt til at prøve sig lidt frem for at finde en passende værdi af <span class="math inline">\(\eta\)</span>.</p></div></div><section id="video-kunstige-neurale-netværk-3" class="level3">
+<h3 class="anchored" data-anchor-id="video-kunstige-neurale-netværk-3">VIDEO: Kunstige neurale netværk 3</h3>
 <p>I videoen her forklarer vi, hvad targetværdier er, og hvordan tabsfunktionen defineres.</p>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/v2Jv5RTlZMw" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 </section>
-<section id="video-kunstige-neurale-netværk-4" class="level2">
-<h2 class="anchored" data-anchor-id="video-kunstige-neurale-netværk-4">VIDEO: Kunstige neurale netværk 4</h2>
+<section id="video-kunstige-neurale-netværk-4" class="level3">
+<h3 class="anchored" data-anchor-id="video-kunstige-neurale-netværk-4">VIDEO: Kunstige neurale netværk 4</h3>
 <p>I denne video bliver gradientnedstigning forklaret.</p>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/ll3OO6Q2TuA" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 </section>
-<section id="sec-opdatering_w" class="level2">
-<h2 class="anchored" data-anchor-id="sec-opdatering_w">Opdatering af <span class="math inline">\(w\)</span>-vægtene</h2>
+<section id="sec-opdatering_w" class="level3">
+<h3 class="anchored" data-anchor-id="sec-opdatering_w">Opdatering af <span class="math inline">\(w\)</span>-vægtene</h3>
 <p>Når man bruger backpropagation, starter man med at finde de partielle afledede for de vægte, som direkte påvirker outputværdien <span class="math inline">\(o\)</span>. På <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a> fremgår det, at det er vægtene <span class="math inline">\(w_0, w_1\)</span> og <span class="math inline">\(w_2\)</span> (husk at vi kalder vores bias for <span class="math inline">\(w_0\)</span>). Lad os starte med at finde den partielle afledede for <span class="math inline">\(w_1\)</span>. Ved at bruge kædereglen får vi: <span class="math display">\[
 \frac{\partial E}{\partial w_1} = \frac{d E}{d o} \cdot \frac{\partial o}{\partial w_1}
 \]</span> Vi ved fra (<a href="#eq-error_func" class="quarto-xref">12</a>), at <span class="math inline">\(E=\frac{1}{2}(t-o)^2\)</span> og derfor er: <span id="eq-dEdo"><span class="math display">\[
@@ -525,13 +492,13 @@ w_2^{\textrm{ny}} &amp;\leftarrow w_2 + \eta  \cdot \delta \cdot z_2 \\
 <p>Men hvordan foregår det der med de opdateringsregler så egentligt? Jo altså vi starter med at sætte vægtene mere eller mindre tilfældigt. Så laver vi ved hjælp af vores træningseksempel <span class="math inline">\((\vec{x},t)\)</span> et <strong>feedforward</strong> i netværket, som det er beskrevet i <a href="#sec-feedforward" class="quarto-xref">afsnit&nbsp;3</a>. Derfor får vi beregnet outputværdien <span class="math inline">\(o\)</span> samt <span class="math inline">\(z_1\)</span> og <span class="math inline">\(z_2\)</span> (husk at <span class="math inline">\(z_1\)</span> og <span class="math inline">\(z_2\)</span> bruges til at beregne <span class="math inline">\(o\)</span>). Desuden kender vi jo fra vores træningsdata target-værdien <span class="math inline">\(t\)</span>. Og voila! Alt hvad der indgår på højresiderne i ovenstående opdateringsregler har vi nu adgang til, og vi kan derfor beregne de nye <span class="math inline">\(w\)</span> vægte.</p>
 <p>Så mangler vi bare at finde opdateringsreglerne for de restende vægte!</p>
 </section>
-<section id="video-kunstige-neurale-netværk-5" class="level2">
-<h2 class="anchored" data-anchor-id="video-kunstige-neurale-netværk-5">VIDEO: Kunstige neurale netværk 5</h2>
+<section id="video-kunstige-neurale-netværk-5" class="level3">
+<h3 class="anchored" data-anchor-id="video-kunstige-neurale-netværk-5">VIDEO: Kunstige neurale netværk 5</h3>
 <p>I videoen her forklarer vi hvordan <span class="math inline">\(w\)</span>-vægtene opdateres.</p>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/X5g4h3cKSok" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 </section>
-<section id="sec-opdatering_uv" class="level2">
-<h2 class="anchored" data-anchor-id="sec-opdatering_uv">Opdatering af <span class="math inline">\(u\)</span>- og <span class="math inline">\(v\)</span>-vægtene</h2>
+<section id="sec-opdatering_uv" class="level3">
+<h3 class="anchored" data-anchor-id="sec-opdatering_uv">Opdatering af <span class="math inline">\(u\)</span>- og <span class="math inline">\(v\)</span>-vægtene</h3>
 <p>Vi går nu et trin længere tilbage i netværket - væk fra outputlaget. Her kan vi se neuronerne, som fyrer værdierne <span class="math inline">\(z_1\)</span> og <span class="math inline">\(z_2\)</span>, som bliver påvirket af <span class="math inline">\(u\)</span>- og <span class="math inline">\(v\)</span>-vægtene. Lad os her starte med at bestemme opdateringsreglerne for <span class="math inline">\(v\)</span>-vægtene. For at gøre det skal vi finde ud af hvordan <span class="math inline">\(v\)</span>-vægtene påvirker neuronerne længere fremme i netværket. Se igen på <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a>. Her er det tydeligt, at <span class="math inline">\(v\)</span>-vægtene påvirker den mørkegrønne neuron, som fyrer værdien <span class="math inline">\(z_1\)</span>, som igen påvirker outputværdien. Derfor kan vi bruge kædereglen på følgende måde: <span class="math display">\[
 \frac{\partial E}{\partial v_1} = \frac{d E}{d o} \cdot \frac{\partial o}{\partial z_1} \cdot \frac{\partial z_1}{\partial v_1}
 \]</span> Vi ved allerede fra (<a href="#eq-dEdo" class="quarto-xref">14</a>), at <span class="math display">\[
@@ -606,13 +573,13 @@ u_2^{\textrm{ny}} &amp;\leftarrow u_2 + \eta  \cdot \delta \cdot w_2 \cdot z_2 \
 </div>
 </div>
 </section>
-<section id="video-kunstige-neurale-netværk-6" class="level2">
-<h2 class="anchored" data-anchor-id="video-kunstige-neurale-netværk-6">VIDEO: Kunstige neurale netværk 6</h2>
+<section id="video-kunstige-neurale-netværk-6" class="level3">
+<h3 class="anchored" data-anchor-id="video-kunstige-neurale-netværk-6">VIDEO: Kunstige neurale netværk 6</h3>
 <p>I videoen her forklarer vi, hvordan <span class="math inline">\(v\)</span>-vægtene opdateres.</p>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/CVG2lh9T6lg" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 </section>
-<section id="sec-opdatering_rs" class="level2">
-<h2 class="anchored" data-anchor-id="sec-opdatering_rs">Opdatering af <span class="math inline">\(r\)</span>- og <span class="math inline">\(s\)</span>-vægtene</h2>
+<section id="sec-opdatering_rs" class="level3">
+<h3 class="anchored" data-anchor-id="sec-opdatering_rs">Opdatering af <span class="math inline">\(r\)</span>- og <span class="math inline">\(s\)</span>-vægtene</h3>
 <p>Så er vi endelig fremme ved <span class="math inline">\(r\)</span>- og <span class="math inline">\(s\)</span> vægtene. Start lige med at tage en dyb indånding! Nu bliver det lidt mere kompliceret. Se på <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a>. Lad os starte med at finde den partielle afledede af <span class="math inline">\(E\)</span> med hensyn til <span class="math inline">\(r_1\)</span>. Når man ser på netværket, kan man se, at <span class="math inline">\(r_1\)</span> i første omgang påvirker <span class="math inline">\(y_1\)</span>, <span class="math inline">\(y_1\)</span> påvirker både <span class="math inline">\(z_1\)</span> og <span class="math inline">\(z_2\)</span>, som så til sidst påvirker outputværdien <span class="math inline">\(o\)</span>. Det kan illustreres sådan her <span class="math display">\[
 \begin{matrix}
 &amp; &amp; &amp; &amp; z_1 &amp; &amp; &amp; \\
@@ -724,18 +691,18 @@ s_4^{\textrm{ny}} &amp;\leftarrow s_4 + \eta \cdot \delta \cdot \Big(w_1 \cdot z
 </div>
 <p>Det var faktisk det! Altså det blev jo en værre omgang bogstavgymnastik, men faktum er, at vi er i mål med at udlede backpropagation algoritmen for vores simple netværk i <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a>. Hurra for det!</p>
 </section>
-<section id="video-kunstige-neurale-netværk-7" class="level2">
-<h2 class="anchored" data-anchor-id="video-kunstige-neurale-netværk-7">VIDEO: Kunstige neurale netværk 7</h2>
+<section id="video-kunstige-neurale-netværk-7" class="level3">
+<h3 class="anchored" data-anchor-id="video-kunstige-neurale-netværk-7">VIDEO: Kunstige neurale netværk 7</h3>
 <p>I denne video forklares hvordan <span class="math inline">\(r\)</span>-vægtene opdateres.</p>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/fUFH8hVvGMU" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 </section>
 </section>
-<section id="neurale-netværk-helt-generelt" class="level1">
-<h1>Neurale netværk helt generelt</h1>
+<section id="neurale-netværk-helt-generelt" class="level2">
+<h2 class="anchored" data-anchor-id="neurale-netværk-helt-generelt">Neurale netværk helt generelt</h2>
 <p>Hvis du er helt vild - så kan du i <a href="../../materialer/neurale_net/neurale_net_helt_generelt.html">noten om neurale netværk helt generelt</a> læse mere om, hvordan man beskriver et neuralt netværk med et vilkårligt antal skjulte lag, og hvordan opdateringsreglerne bliver i det tilfælde. Det bliver lidt mere langhåret, men det er ikke umuligt!</p>
 </section>
-<section id="valg-af-tabsfunktion" class="level1 page-columns page-full">
-<h1>Valg af tabsfunktion</h1>
+<section id="valg-af-tabsfunktion" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="valg-af-tabsfunktion">Valg af tabsfunktion</h2>
 <p>I <a href="#sec-backpropagation_bogstaver" class="quarto-xref">afsnit&nbsp;4</a> definerede vi tabsfunktionen ved <span class="math display">\[
 E = \frac{1}{2}(t-o)^2
 \]</span> mens vi <a href="../../materialer/neurale_net/neurale_net_helt_generelt.html">neurale netværk helt generelt</a> så, hvordan denne tabsfunktionen kan generaliseres, når outputlaget har mere end én neuron. I alle tilfælde er der tale om en <em>kvadratisk</em> tabsfunktion, fordi vi ser på den kvadrerede forskel på target-værdi <span class="math inline">\(t\)</span> og outputværdi <span class="math inline">\(o\)</span>. Men det er et <em>valg</em> at definere tabsfunktionen på denne måde, man kunne have defineret mange andre tabsfunktioner i stedet for. Egentlig ønsker vi blot en tabsfunktion <span class="math inline">\(E\)</span> med følgende egenskaber:</p>
@@ -790,133 +757,143 @@ w_1^{\textrm{ny}} \leftarrow w_1 + \eta  \cdot \underbrace{\frac{t-o}{o \cdot (1
 w_1^{\textrm{ny}} \leftarrow w_1 + \eta  \cdot (t-o) \cdot  z_1
 \]</span> Her ses det tydeligt, at hvis der er stor forskel på target-værdi <span class="math inline">\(t\)</span> og outputværdi <span class="math inline">\(o\)</span>, så vil det give anledning til en stor opdatering af <span class="math inline">\(w_1\)</span>-vægten<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> - også selvom <span class="math inline">\(o\)</span> er tæt på <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span>. På den måde passer cross-entropy tabsfunktionen bedre sammen med sigmoid aktiveringsfunktionen, end den kvadratiske tabsfunktion gør. Simpelthen fordi det potentielle problem omkring langsom læring undgås.</p>
 <div class="no-row-height column-margin column-container"><div id="fn5"><p><sup>5</sup>&nbsp;Med mindre selvfølgelig at <span class="math inline">\(z_1\)</span> er tæt på <span class="math inline">\(0\)</span>, men i det tilfælde vil <span class="math inline">\(w_1\)</span> alligevel ikke have særlig stor indflydelse på outputværdien <span class="math inline">\(o\)</span>.</p></div></div></section>
-<section id="billedgenkendelse-og-kunstige-neurale-netværk" class="level1 page-columns page-full">
-<h1>Billedgenkendelse og kunstige neurale netværk</h1>
+<section id="billedgenkendelse-og-kunstige-neurale-netværk" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="billedgenkendelse-og-kunstige-neurale-netværk">Billedgenkendelse og kunstige neurale netværk</h2>
 <p>Vi startede egentlig med at sige, at vi godt kunne tænke os at træne et kunstigt neuralt netværk, så det kan bruges til at afgøre, om der er en hund på et billede eller ej. Og egentlig kan det godt lade sig gøre med det, vi har lært indtil nu. Der er bare én afgørende ting ved billedgenkendelse, som vi ikke har taget højde for. I <a href="#sec-hvordanFunktion" class="quarto-xref">afsnit&nbsp;2</a> forklarede vi, hvordan man kan repræsentere et sort/hvidt billede ved hjælp af en vektor. for eksempel vil et billede på <span class="math inline">\(10 \times 10\)</span> pixels kunne repræsenteres ved en <span class="math inline">\(100\)</span> dimensional vektor. Vi kan så lave et kunstigt neuralt netværk med <span class="math inline">\(100\)</span> input neuroner, et antal skjulte lag og en outputneuron. Men gør vi det, så tillægger vi det ingen som helst betydning, at nogle af de <span class="math inline">\(100\)</span> pixels i billedet er tætte på hinanden, mens andre igen er langt væk fra hinanden. I stedet behandler vi alle pixels fuldstændig ens uden at tage højde for den indbyrdes placering, de enkelte pixels har i forhold til hinanden. Det giver ikke ret meget mening, når man behandler billeder. Det vil med andre ord sige, at vi faktisk smider værdifuld information ud med badevandet!</p>
 <p>Det faktum tages der højde for i de såkaldte <em>convolutional neural networks</em>. Som illustration ser vi på et <span class="math inline">\(10 \times 10\)</span> pixels billede, hvis pixelværdier vi vil repræsentere på denne måde:</p>
-<table class="table">
-<thead>
-<tr class="header">
-<th style="text-align: left;"><span class="math inline">\(x_{1,1}\)</span></th>
-<th style="text-align: left;"><span class="math inline">\(x_{1,2}\)</span></th>
-<th style="text-align: left;"><span class="math inline">\(x_{1,3}\)</span></th>
-<th style="text-align: left;"><span class="math inline">\(x_{1,4}\)</span></th>
-<th style="text-align: left;"><span class="math inline">\(x_{1,5}\)</span></th>
-<th style="text-align: left;"><span class="math inline">\(x_{1,6}\)</span></th>
-<th style="text-align: left;"><span class="math inline">\(x_{1,7}\)</span></th>
-<th style="text-align: left;"><span class="math inline">\(x_{1,8}\)</span></th>
-<th style="text-align: left;"><span class="math inline">\(x_{1,9}\)</span></th>
-<th style="text-align: left;"><span class="math inline">\(x_{1,10}\)</span></th>
-</tr>
-</thead>
+<table class="no-header table-bordered table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+</colgroup>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;"><span class="math inline">\(x_{2,1}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{2,2}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{2,3}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{2,4}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{2,5}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{2,6}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{2,7}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{2,8}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{2,9}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{2,10}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{1,1}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{1,2}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{1,3}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{1,4}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{1,5}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{1,6}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{1,7}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{1,8}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{1,9}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{1,10}\)</span></td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><span class="math inline">\(x_{3,1}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{3,2}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{3,3}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{3,4}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{3,5}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{3,6}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{3,7}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{3,8}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{3,9}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{3,10}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{2,1}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{2,2}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{2,3}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{2,4}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{2,5}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{2,6}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{2,7}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{2,8}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{2,9}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{2,10}\)</span></td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><span class="math inline">\(x_{4,1}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{4,2}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{4,3}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{4,4}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{4,5}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{4,6}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{4,7}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{4,8}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{4,9}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{4,10}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{3,1}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{3,2}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{3,3}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{3,4}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{3,5}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{3,6}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{3,7}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{3,8}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{3,9}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{3,10}\)</span></td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><span class="math inline">\(x_{5,1}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{5,2}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{5,3}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{5,4}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{5,5}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{5,6}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{5,7}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{5,8}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{5,9}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{5,10}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{4,1}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{4,2}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{4,3}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{4,4}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{4,5}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{4,6}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{4,7}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{4,8}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{4,9}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{4,10}\)</span></td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><span class="math inline">\(x_{6,1}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{6,2}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{6,3}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{6,4}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{6,5}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{6,6}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{6,7}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{6,8}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{6,9}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{6,10}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{5,1}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{5,2}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{5,3}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{5,4}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{5,5}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{5,6}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{5,7}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{5,8}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{5,9}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{5,10}\)</span></td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><span class="math inline">\(x_{7,1}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{7,2}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{7,3}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{7,4}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{7,5}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{7,6}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{7,7}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{7,8}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{7,9}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{7,10}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{6,1}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{6,2}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{6,3}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{6,4}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{6,5}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{6,6}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{6,7}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{6,8}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{6,9}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{6,10}\)</span></td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><span class="math inline">\(x_{8,1}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{8,2}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{8,3}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{8,4}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{8,5}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{8,6}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{8,7}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{8,8}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{8,9}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{8,10}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{7,1}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{7,2}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{7,3}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{7,4}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{7,5}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{7,6}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{7,7}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{7,8}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{7,9}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{7,10}\)</span></td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><span class="math inline">\(x_{9,1}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{9,2}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{9,3}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{9,4}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{9,5}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{9,6}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{9,7}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{9,8}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{9,9}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{9,10}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{8,1}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{8,2}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{8,3}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{8,4}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{8,5}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{8,6}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{8,7}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{8,8}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{8,9}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{8,10}\)</span></td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><span class="math inline">\(x_{10,1}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{10,2}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{10,3}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{10,4}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{10,5}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{10,6}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{10,7}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{10,8}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{10,9}\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(x_{10,10}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{9,1}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{9,2}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{9,3}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{9,4}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{9,5}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{9,6}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{9,7}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{9,8}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{9,9}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{9,10}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(x_{10,1}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{10,2}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{10,3}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{10,4}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{10,5}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{10,6}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{10,7}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{10,8}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{10,9}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(x_{10,10}\)</span></td>
 </tr>
 </tbody>
 </table>
@@ -1119,92 +1096,18 @@ Figur&nbsp;11: Convolutional neural network.
 <p>Havde vi i stedet lavet et fuldt forbundet kunstigt neuralt netværk med <span class="math inline">\(100\)</span> input neuroner, ét skjult lag med <span class="math inline">\(64\)</span> neuroner samt én outputneuron, så skulle vi først have bruge <span class="math inline">\(101 \cdot
 64=6464\)</span> vægte for at forbinde input neuronerne med samtlige neuroner i det første skjulte lag. Herefter har vi brug for <span class="math inline">\(65\)</span> vægte for at forbinde det skjulte lag med outputneuronen. Alt i alt giver det <span class="math inline">\(6529\)</span> vægte! Der er altså en voldsom forskel i antallet af vægte, som skal læres. For at undgå overfitting må vi have mange flere træningsdata, end vi har vægte. Det betyder, at vi typisk vil kunne nøjes med færre træningseksempler i et convolutional neural netværk sammenlignet med et klassisk fuldt forbundet kunstigt neuralt netværk. Ydermere viser det sig, at convolutional neurale netværk kan trænes til at klassificere billeder langt bedre end et almindeligt kunstigt neuralt netværk. Netop fordi at de forskellige pixels placeringer i forhold til hinanden tages i betragtning, når et convolutional neuralt netværk konstrueres.</p>
 </section>
-<section id="relaterede-forløb" class="level1">
-<h1>Relaterede forløb</h1>
-<div id="listing-main-listing-content" class="quarto-listing quarto-listing-container-table">
-<table class="quarto-listing-table table">
-<thead>
-<tr>
-
-<th>
-Forløb
-</th>
-
-<th>
-Kort beskrivelse
-</th>
-
-</tr>
-</thead>
-<tbody class="list">
-
-<tr data-index="0" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1769500997938" data-listing-reading-time-sort="2" data-listing-word-count-sort="318" data-listing-title-sort="Aktiveringsfunktioner" data-listing-filename-sort="aktiveringsfunktioner.qmd">
-<td>
-<a href="../../undervisningsforlob/aktiveringsfunktioner.html" class="title listing-title">Aktiveringsfunktioner</a>
-</td>
-<td>
-<span class="listing-description-meta">&nbsp;</span>
-</td>
-
-</tr>
-
-<tr data-index="1" data-categories="QS1uaXZlYXUlMkNCaW90ZWtub2xvZ2klMkNLb3J0" data-listing-file-modified-sort="1769500998752" data-listing-reading-time-sort="1" data-listing-word-count-sort="149" data-listing-title-sort="Screeningsprogrammer" data-listing-filename-sort="screeningsprogrammer.qmd">
-<td>
-<a href="../../undervisningsforlob/screeningsprogrammer.html" class="title listing-title">Screeningsprogrammer</a>
-</td>
-<td>
-<span class="listing-description-meta">&nbsp;</span>
-</td>
-
-</tr>
-
-<tr data-index="2" data-categories="QS1uaXZlYXUlMkNLb3J0" data-listing-file-modified-sort="1769500998356" data-listing-reading-time-sort="3" data-listing-word-count-sort="576" data-listing-title-sort="Opklar et mord!" data-listing-filename-sort="opklar_et_mord.qmd">
-<td>
-<a href="../../undervisningsforlob/opklar_et_mord.html" class="title listing-title">Opklar et mord!</a>
-</td>
-<td>
-<span class="listing-description-meta">&nbsp;</span>
-</td>
-
-</tr>
-
-<tr data-index="3" data-listing-filename-sort="Opdatering_af_vægte_i_en_kunstig_neuron.qmd">
-<td>
-<a href="../../undervisningsforlob/Opdatering_af_vægte_i_en_kunstig_neuron.qmd" class="title listing-title">&nbsp;</a>
-</td>
-<td>
-<span class="listing-description-meta">&nbsp;</span>
-</td>
-
-</tr>
-
-<tr data-index="4" data-listing-filename-sort="Opdatering_af_vægte_i_NN_med_2_skjulte_lag.qmd">
-<td>
-<a href="../../undervisningsforlob/Opdatering_af_vægte_i_NN_med_2_skjulte_lag.qmd" class="title listing-title">&nbsp;</a>
-</td>
-<td>
-<span class="listing-description-meta">&nbsp;</span>
-</td>
-
-</tr>
-
-<tr data-index="5" data-listing-filename-sort="Opdatering_af_vægte_i_NN_med_1_skjult_lag.qmd">
-<td>
-<a href="../../undervisningsforlob/Opdatering_af_vægte_i_NN_med_1_skjult_lag.qmd" class="title listing-title">&nbsp;</a>
-</td>
-<td>
-<span class="listing-description-meta">&nbsp;</span>
-</td>
-
-</tr>
-
-</tbody>
-</table>
-<div class="listing-no-matching d-none">No matching items</div>
-</div>
+<section id="relaterede-forløb" class="level2">
+<h2 class="anchored" data-anchor-id="relaterede-forløb">Relaterede forløb</h2>
+<ul>
+<li><a href="../../undervisningsforlob/aktiveringsfunktioner.html" target="_blank">Aktiveringsfunktioner</a>.</li>
+<li><a href="../../undervisningsforlob/screeningsprogrammer.html" target="_blank">Screeningsprogrammer</a>.</li>
+<li><a href="../../undervisningsforlob/opklar_et_mord.html" target="_blank">Opklar et mord!</a></li>
+<li><a href="../../undervisningsforlob/opdatering_af_vaegte/opdatering_af_vaegte_i_en_kunstig_neuron.html" target="_blank">Opdatering af vægte i en kunstig neuron</a>.</li>
+<li><a href="../../undervisningsforlob/opdatering_af_vaegte/opdatering_af_vaegte_i_NN_med_2_skjulte_lag.html" target="_blank">Opdatering af vægte i et simpelt neuralt netværk med to skjulte lag</a>.</li>
+<li><a href="../../undervisningsforlob/opdatering_af_vaegte/opdatering_af_vaegte_i_NN_med_1_skjult_lag.html" target="_blank">Opdatering af vægte i et simpelt neuralt netværk med ét skjult lag (med cross-entropy som tabsfunktion)</a>.</li>
+</ul>
 </section>
-<section id="videre-læsning" class="level1">
-
+<section id="videre-læsning" class="level2">
 
 
 
@@ -1651,7 +1554,7 @@ Sørensen, Henrik Kragh, and Mikkel Willum Johansen. 2020. <em>"Invitation Til d
     </div>
   </div>
 </footer>
-<script src="scripts/navbar-tooltips.js"></script>
+<script src="../../scripts/navbar-tooltips.js"></script>
 
 
 
