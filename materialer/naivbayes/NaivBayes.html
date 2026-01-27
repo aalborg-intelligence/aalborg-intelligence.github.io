@@ -181,24 +181,25 @@ window.Quarto = {
     <h2 id="toc-title">Indhold</h2>
    
   <ul>
-  <li><a href="#bayes-klassifikation" id="toc-bayes-klassifikation" class="nav-link active" data-scroll-target="#bayes-klassifikation">Bayes klassifikation</a></li>
-  <li><a href="#bayes-klassifier" id="toc-bayes-klassifier" class="nav-link" data-scroll-target="#bayes-klassifier">Bayes klassifier</a></li>
-  <li><a href="#betinget-sandsynlighed-og-uafhængighed" id="toc-betinget-sandsynlighed-og-uafhængighed" class="nav-link" data-scroll-target="#betinget-sandsynlighed-og-uafhængighed">Betinget sandsynlighed og uafhængighed</a>
+  <li><a href="#introduktion" id="toc-introduktion" class="nav-link active" data-scroll-target="#introduktion">Introduktion</a></li>
+  <li><a href="#notation" id="toc-notation" class="nav-link" data-scroll-target="#notation">Notation</a>
   <ul class="collapse">
-  <li><a href="#eksempel-med-betinget-sandsynlighed" id="toc-eksempel-med-betinget-sandsynlighed" class="nav-link" data-scroll-target="#eksempel-med-betinget-sandsynlighed">Eksempel med betinget sandsynlighed</a></li>
-  </ul></li>
+  <li><a href="#betinget-sandsynlighed-og-uafhængighed" id="toc-betinget-sandsynlighed-og-uafhængighed" class="nav-link" data-scroll-target="#betinget-sandsynlighed-og-uafhængighed">Betinget sandsynlighed og uafhængighed</a></li>
   <li><a href="#stokastisk-uafhængighed" id="toc-stokastisk-uafhængighed" class="nav-link" data-scroll-target="#stokastisk-uafhængighed">Stokastisk uafhængighed</a></li>
   <li><a href="#bayes-sætning" id="toc-bayes-sætning" class="nav-link" data-scroll-target="#bayes-sætning">Bayes’ sætning</a></li>
-  <li><a href="#binær-bayes-klassifier" id="toc-binær-bayes-klassifier" class="nav-link" data-scroll-target="#binær-bayes-klassifier">Binær Bayes klassifier</a></li>
-  <li><a href="#bayes-sætning-i-anvendelse" id="toc-bayes-sætning-i-anvendelse" class="nav-link" data-scroll-target="#bayes-sætning-i-anvendelse">Bayes’ sætning i anvendelse</a></li>
-  <li><a href="#naiv-bayes-klassifier" id="toc-naiv-bayes-klassifier" class="nav-link" data-scroll-target="#naiv-bayes-klassifier">Naiv Bayes klassifier</a></li>
-  <li><a href="#posterior-forholdet-score-og-vægte" id="toc-posterior-forholdet-score-og-vægte" class="nav-link" data-scroll-target="#posterior-forholdet-score-og-vægte">Posterior forholdet, score og vægte</a>
+  </ul></li>
+  <li><a href="#binær-bayes-klassifier" id="toc-binær-bayes-klassifier" class="nav-link" data-scroll-target="#binær-bayes-klassifier">Binær Bayes klassifier</a>
   <ul class="collapse">
+  <li><a href="#bayes-sætning-i-anvendelse" id="toc-bayes-sætning-i-anvendelse" class="nav-link" data-scroll-target="#bayes-sætning-i-anvendelse">Bayes’ sætning i anvendelse</a></li>
+  </ul></li>
+  <li><a href="#naiv-bayes-klassifier" id="toc-naiv-bayes-klassifier" class="nav-link" data-scroll-target="#naiv-bayes-klassifier">Naiv Bayes klassifier</a>
+  <ul class="collapse">
+  <li><a href="#posterior-forholdet-score-og-vægte" id="toc-posterior-forholdet-score-og-vægte" class="nav-link" data-scroll-target="#posterior-forholdet-score-og-vægte">Posterior forholdet, score og vægte</a></li>
   <li><a href="#vægten-w_0" id="toc-vægten-w_0" class="nav-link" data-scroll-target="#vægten-w_0">Vægten <span class="math inline">\(w_0\)</span></a></li>
   <li><a href="#vægtene-w_i" id="toc-vægtene-w_i" class="nav-link" data-scroll-target="#vægtene-w_i">Vægtene <span class="math inline">\(w_i\)</span></a></li>
   </ul></li>
   <li><a href="#eksempel-med-rødblå-blok" id="toc-eksempel-med-rødblå-blok" class="nav-link" data-scroll-target="#eksempel-med-rødblå-blok">Eksempel med rød/blå blok</a></li>
-  <li><a href="#opgave-ham-or-spam" id="toc-opgave-ham-or-spam" class="nav-link" data-scroll-target="#opgave-ham-or-spam">Opgave: Ham or Spam?</a></li>
+  <li><a href="#relaterede-forløb" id="toc-relaterede-forløb" class="nav-link" data-scroll-target="#relaterede-forløb">Relaterede forløb</a></li>
   </ul>
 </nav>
 </nav>
@@ -228,13 +229,13 @@ window.Quarto = {
 </header>
 
 
-<p>Denne note handler om klassifikation ved hjælp af den metode, som kaldes for <strong>naiv Bayes</strong>.</p>
-<section id="bayes-klassifikation" class="level2">
-<h2 class="anchored" data-anchor-id="bayes-klassifikation">Bayes klassifikation</h2>
+<p>Denne note handler om klassifikation ved hjælp af den metode, som kaldes for <strong>Naiv Bayes klassifier</strong>.</p>
+<section id="introduktion" class="level2">
+<h2 class="anchored" data-anchor-id="introduktion">Introduktion</h2>
 <p>For at introducere teorien om Bayes naive klassifikation, vil vi starte med at se på et eksempel for at få en idé om, hvad Bayes klassifikation går ud på.</p>
 <p>Vi vil se på en person, og vi ønsker at give et bud på, om vedkommende stemmer på rød eller blå blok. Vi har på forhånd oplysninger om en del andre personer og ønsker at bruge den viden til at give det bedste bud på, om personen stemmer på rød eller blå blok.</p>
 <p>Her har vi følgende data, der viser, hvem der stemmer på rød og blå blok.</p>
-<table class="table">
+<table class="table-bordered table">
 <colgroup>
 <col style="width: 9%">
 <col style="width: 10%">
@@ -295,133 +296,147 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Brug tabellen ovenfor og giv det bedste bud på hvilken blok en person stemmer på:</p>
-<ol type="a">
-<li><p>Hvis det er en tilfældig person.</p></li>
-<li><p>Hvis det er en mand.</p></li>
-</ol>
-</div>
-</div>
-</div>
-<p>Fra skemaet med oplysninger kan det være svære at give et bud på, hvad en ældre kvinde fra Sjælland vil stemme på, da oplysningen om køn tyder på personen vil stemme på rød, mens information om, at det er en ældre person, tyder på, at personen vil stemme på blå. Endelig vil oplysningen om, at kvinden bor på Sjælland igen få os til at tænke, at hun stemmer på rød blok.</p>
-<p>Her kunne vi selvfølgelig løse problemet ved at få information for hver kombination af køn, aldersgruppe og bopæl. Men det viser sig ikke at være en helt gangbar fremgangsmåde. Forklaringen følger her: Hvis vi ser på kombinationer af køn, aldersgruppe og bopæl vil det i dette eksempel give <span class="math inline">\(2\cdot 2\cdot 3=12\)</span> kombinationer, og hvis vi i stedet havde set på, om man svarer ja eller nej til <span class="math inline">\(50\)</span> spørgsmål, vil man kunne få <span class="math inline">\(2^{50}\)</span> forskellige kombinationer af svar. Hvis man ser på en person, der har svaret på de <span class="math inline">\(50\)</span> spørgsmål, kan man her forvente, at man i ens data kun har ganske få eller måske slet ingen personer, der har svaret på fuldstændig samme måde, og der vil ikke være meget at basere ens bud på.</p>
+<p>Hvis vi for eksempel udvælger en tilfældig person, vil vi ud fra ovenstående tabel tænke, at der er <span class="math inline">\(51.85 \%\)</span> chance for at vedkommende stemmer på rød blok. Vælger vi en tilfældig mand, vil vi derimod tænke, at der er <span class="math inline">\(48.00 \%\)</span> chance for, at han vil stemme på rød blok.</p>
+<!-- ::: {.callout-note collapse="true" appearance="minimal"} -->
+<!-- ### Opgave  -->
+<!-- Brug tabellen ovenfor og giv det bedste bud på hvilken blok en person stemmer på: -->
+<!-- * Hvis det er en tilfældig person. -->
+<!-- * Hvis det er en mand. -->
+<!-- ::: -->
+<p>Fra skemaet med oplysninger kan det være svære at give et bud på, hvad en ældre kvinde fra Sjælland vil stemme på, da oplysningen om køn tyder på, at personen vil stemme på rød blok, mens informationen om, at det er en ældre person, tyder på, at personen vil stemme på blå blok. Endelig vil oplysningen om, at kvinden bor på Sjælland igen få os til at tænke, at hun stemmer på rød blok.</p>
+<p>Her kunne vi selvfølgelig løse problemet ved at få information for hver kombination af køn, aldersgruppe og bopæl. Men det viser sig ikke at være en helt gangbar fremgangsmåde. Forklaringen følger her: Hvis vi ser på kombinationer af køn, aldersgruppe og bopæl vil det i dette eksempel give <span class="math inline">\(2\cdot 2\cdot 3=12\)</span> kombinationer, og hvis vi i stedet havde set på, om man svarer ja eller nej til <span class="math inline">\(50\)</span> spørgsmål, vil man kunne få <span class="math inline">\(2^{50}\)</span> forskellige kombinationer af svar. Hvis man ser på en person, der har svaret på de <span class="math inline">\(50\)</span> spørgsmål, kan man her forvente, at man i de observerede data kun har ganske få eller måske slet ingen personer, der har svaret på fuldstændig samme måde, og der vil ikke være meget at basere ens bud på.</p>
 <p>Derfor ønsker vi en metode, hvor vores bud, på hvad en ny person vil stemme på, udelukkende baseres på information svarende til det fra skemaet ovenfor, hvor vi ikke ser på alle de forskellige kombinationer. Det er <em>det</em> Naive Bayes klassifikation kan.</p>
 </section>
-<section id="bayes-klassifier" class="level2">
-<h2 class="anchored" data-anchor-id="bayes-klassifier">Bayes klassifier</h2>
-<p>I det følgende indfører vi det nødvendige matematik og notation til Naive Bayes klassifikation. Først og fremmest indfører vi en stokastisk variabel <span class="math inline">\(Y\)</span>, som kan antage de værdier, der svarer til vores forskellige forudsigelser/bud. I vores eksempel vil <span class="math display">\[Y\in\{blå, rød\}.\]</span></p>
+<section id="notation" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="notation">Notation</h2>
+<p>I det følgende indfører vi den nødvendige matematik og notation til Naive Bayes klassifikation. Først og fremmest indfører vi en stokastisk variabel <span class="math inline">\(Y\)</span>, som kan antage de værdier, der svarer til vores forskellige forudsigelser/bud. I vores eksempel vil <span class="math display">\[Y\in\{\textrm{blå}, \textrm{rød}\}.\]</span></p>
 <p>Lidt mere generelt siger man, at <span class="math inline">\(Y\)</span> skal være en diskret stokastisk variabel med et bestemt antal mulige udfald, og der behøver altså ikke nødvendigvis kun at være to udfald.</p>
-<p>Derudover indfører vi en stokastisk variabel <span class="math inline">\(\mathbf{X}\)</span>, hvor de mulige udfald er alle kombinationer af informationer. Her kan vi tænke <span class="math inline">\(\mathbf{X}\)</span> som en stokastisk vektor <span class="math inline">\(\mathbf{X} =(X_1,X_2,…,X_q)\)</span>, hvor man ved eksemplet kunne sige <span class="math inline">\(X_1\)</span>:køn, <span class="math inline">\(X_2\)</span>:aldersgruppe og <span class="math inline">\(X_3\)</span>:bopæl, og et udfald kunne være <span class="math inline">\(\mathbf{x}=(kvinde,ældre,Sjælland)\)</span>.</p>
-<p>For hvert udfald af <span class="math inline">\(Y\)</span> ønsker vi, at bestemme sandsynligheden for at værdien <span class="math inline">\(y\)</span> antages, når vi allerede har observeret, at <span class="math inline">\(\mathbf{X}=\mathbf{x}\)</span>.</p>
-<p>Sandsynligheden vil vi skrive som <span class="math display">\[P(Y = y \mid \mathbf{X} = \mathbf{x})\]</span></p>
+<p>Derudover indfører vi en stokastisk vektor <span class="math inline">\(\vec{X}\)</span>, hvor de mulige udfald er alle kombinationer af informationer. Her kan vi tænke <span class="math inline">\(\vec{X}\)</span> som en stokastisk vektor bestående af en række stokatiske vektorer <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, <span class="math inline">\(\dots\)</span>, <span class="math inline">\(X_q\)</span>:</p>
+<p><span class="math display">\[
+\vec{X} = \begin{pmatrix}
+X_1 \\
+X_2 \\
+\vdots \\
+X_q
+\end{pmatrix}
+\]</span></p>
+<p>hvor man i vores eksempel kunne sige</p>
+<p><span class="math display">\[
+\begin{aligned}
+X_1 &amp;: \textrm{køn} \\
+X_2 &amp;: \textrm{aldersgruppe} \\
+X_3 &amp;: \textrm{bopæl}
+\end{aligned}
+\]</span></p>
+<p>og et udfald kunne være</p>
+<p><span class="math display">\[
+\vec{x}=
+\begin{pmatrix}
+\textrm{kvinde} \\
+\textrm{ældre} \\
+\textrm{Sjælland}
+\end{pmatrix}
+\]</span></p>
+<p>For hvert udfald af <span class="math inline">\(Y\)</span> ønsker vi, at bestemme sandsynligheden for at værdien <span class="math inline">\(y\)</span> antages, når vi allerede har observeret, at <span class="math inline">\(\vec{X}=\vec{x}\)</span>.</p>
+<p>Sandsynligheden vil vi skrive som <span class="math display">\[P(Y = y \mid \vec{X} = \vec{x})\]</span></p>
 <p>Denne notation og betydningen deraf ser vi snart på.</p>
-<p>Vi kalder <span class="math inline">\(P(Y = y \mid \mathbf{X} = \mathbf{x})\)</span> en <strong>posterior sandsynlighed</strong>, fordi den udtrykker sandsynligheden for <span class="math inline">\(Y\)</span> <strong>efter</strong> (post), vi har informationen <span class="math inline">\(\mathbf{x}\)</span>.</p>
-<p>Det mest sandsynlige udfald for <span class="math inline">\(Y\)</span>, når vi har informationen <span class="math inline">\(\mathbf{x}\)</span>, betegnes <span class="math inline">\(C(\mathbf{x})\)</span> og kaldes <strong>Bayes klassifikation</strong>.</p>
-</section>
-<section id="betinget-sandsynlighed-og-uafhængighed" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="betinget-sandsynlighed-og-uafhængighed">Betinget sandsynlighed og uafhængighed</h2>
-<p>Først vender vi dog lige tilbage til notationen <span class="math inline">\(P(Y = y \mid \mathbf{X} = \mathbf{x})\)</span>, som vi kaldte en posterior sandsynlighed. I sandsynlighedsregningen kalder vi det også for en <strong>betinget sandsynlighed</strong>, hvilket er grunden til notationen <span class="math inline">\(P(Y = y \mid \mathbf{X} = \mathbf{x})\)</span>.</p>
+<p>Vi kalder <span class="math inline">\(P(Y = y \mid \vec{X} = \vec{x})\)</span> en <strong>posterior sandsynlighed</strong>, fordi den udtrykker sandsynligheden for <span class="math inline">\(Y\)</span> <strong>efter</strong> (post), vi har informationen <span class="math inline">\(\vec{x}\)</span>.</p>
+<p>Det mest sandsynlige udfald for <span class="math inline">\(Y\)</span>, når vi har informationen <span class="math inline">\(\vec{x}\)</span>, betegnes <span class="math inline">\(C(\vec{x})\)</span> og kaldes <strong>Bayes klassifikation</strong>.</p>
+<section id="betinget-sandsynlighed-og-uafhængighed" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="betinget-sandsynlighed-og-uafhængighed">Betinget sandsynlighed og uafhængighed</h3>
+<p>Først vender vi dog lige tilbage til notationen <span class="math inline">\(P(Y = y \mid \vec{X} = \vec{x})\)</span>, som vi kaldte en posterior sandsynlighed. I sandsynlighedsregningen kalder vi det også for en <strong>betinget sandsynlighed</strong>, hvilket er grunden til notationen <span class="math inline">\(P(Y = y \mid \vec{X} = \vec{x})\)</span>.</p>
 <p>Givet to hændelser <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> så benyttes notationen <span class="math inline">\(P(A\mid B)\)</span> som sandsynligheden for, at <span class="math inline">\(A\)</span> sker, når det er givet, at <span class="math inline">\(B\)</span> er sket. Det læses derfor også som sandsynligheden for <span class="math inline">\(A\)</span> givet <span class="math inline">\(B\)</span>.</p>
-<p>Så <span class="math inline">\(P(Y = y \mid \mathbf{X} = \mathbf{x})\)</span> er derved sandsynligheden for <span class="math inline">\(Y = y\)</span>, når det er givet, at <span class="math inline">\(\mathbf{X} = \mathbf{x}\)</span>.</p>
-<p>Et banalt eksempel kunne være at <span class="math inline">\(Y\)</span> angiver antal ben på et givent dyr, mens <span class="math inline">\(\mathbf{X}\)</span> angiver dyrearten. Her er det oplagt, at sandsynligheden for fire eller to ben afhænger af hvilken dyreart, der er tale om.</p>
+<p>Så <span class="math inline">\(P(Y = y \mid \vec{X} = \vec{x})\)</span> er altså sandsynligheden for <span class="math inline">\(Y = y\)</span>, når det er givet, at <span class="math inline">\(\vec{X} = \vec{x}\)</span>.</p>
+<p>Et banalt eksempel kunne være at <span class="math inline">\(Y\)</span> angiver antal ben på et givent dyr, mens <span class="math inline">\(\vec{X}\)</span> angiver dyrearten. Her er det oplagt, at sandsynligheden for fire eller to ben afhænger af hvilken dyreart, der er tale om.</p>
 <p>Formelt defineres betinget sandsynlighed for to <em>hændelser</em> <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> som: <span id="eq-betinget_ssh"><span class="math display">\[P(A\mid B) = \frac{P(A \cap B)}{P(B)} \tag{1}\]</span></span></p>
-<p>Udtrykket <span class="math inline">\(P(A \cap B)\)</span> i tælleren er sandsynligheden for <em>fælleshændelsen</em> mellem <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> – det vil sige hændelsen, at både <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> indtræffer – og i nævneren sørger vi for, at man kun ser på de udfald, hvor <span class="math inline">\(B\)</span> er givet<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Man siger også, at nævneren <em>normaliserer</em> sandsynligheden i forhold til sandsynligheden for hændelsen <span class="math inline">\(B\)</span>.</p></div></div><section id="eksempel-med-betinget-sandsynlighed" class="level3">
-<h3 class="anchored" data-anchor-id="eksempel-med-betinget-sandsynlighed">Eksempel med betinget sandsynlighed</h3>
-<p>Lad os fokusere på en almindelig terning med seks sider. Lad <span class="math inline">\(B\)</span> være hændelsen at antal øjne er mindre eller lig med <span class="math inline">\(3\)</span>. Det vil sige, at hændelsen <span class="math inline">\(B\)</span> består af udfaldene: <span class="math inline">\(B\)</span> = {⚀, ⚁, ⚂}. Lad hændelsen <span class="math inline">\(A\)</span> være udfald med ulige antal øjne: <span class="math inline">\(A\)</span> = {⚀, ⚂, ⚄}.</p>
+<p>Udtrykket <span class="math inline">\(P(A \cap B)\)</span> i tælleren er sandsynligheden for <em>fælleshændelsen</em> mellem <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> – det vil sige hændelsen, at <u>både</u> <span class="math inline">\(A\)</span> <u>og</u> <span class="math inline">\(B\)</span> indtræffer – og i nævneren sørger vi for, at man kun ser på de udfald, hvor <span class="math inline">\(B\)</span> er givet<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Man siger også, at nævneren <em>normaliserer</em> sandsynligheden i forhold til sandsynligheden for hændelsen <span class="math inline">\(B\)</span>.</p></div></div><p>Du kan læse mere om betingede sandsynligheder i noten <a href="../../materialer/sandsynlighed/sandsynlighed.html" target="_blank">Sandsynlighedsregning og mængdeteori</a>.</p>
+<div id="exm-eks1" class="theorem example">
+<p><span class="theorem-title"><strong>Eksempel 1 (Betinget sandsynlighed)</strong></span> Lad os fokusere på en almindelig terning med seks sider. Lad <span class="math inline">\(B\)</span> være hændelsen at antal øjne er mindre eller lig med <span class="math inline">\(3\)</span>. Det vil sige, at hændelsen <span class="math inline">\(B\)</span> består af udfaldene: <span class="math inline">\(B\)</span> = {⚀, ⚁, ⚂}. Lad hændelsen <span class="math inline">\(A\)</span> være udfald med ulige antal øjne: <span class="math inline">\(A\)</span> = {⚀, ⚂, ⚄}.</p>
 <p>Da kan vi nemt indse, at <span class="math display">\[P(A) = 3/6 = 1/2\]</span> samt ligeledes at <span class="math display">\[P(B) = 1/2\]</span> på grund af det symmetriske udfaldsrum.</p>
 <p>Ser vi imidlertid på den betingede sandsynlighed for at <span class="math inline">\(A\)</span> indtræffer givet, at <span class="math inline">\(B\)</span> allerede er indtruffet, får vi <span class="math inline">\(P(A\mid B)\)</span>. Det svarer til sandsynligheden for at slå et ulige antal øjne, hvis vi allerede ved at antallet af øjne er mindre end eller lig med <span class="math inline">\(3\)</span>.</p>
-<p>Først ser vi, at <span class="math inline">\(A\cap B\)</span> = {⚀, ⚂, ⚄} <span class="math inline">\(\cap\)</span> {⚀, ⚁, ⚂} = {⚀, ⚂}, hvilket igen på grund af det symmetriske sandsynlighedsfelt betyder, at <span class="math display">\[P(A\cap B) = 2/6 = 1/3\]</span> Efter at vi normaliserer sandsynligheden ud fra betingelsen om at <span class="math inline">\(B\)</span> <strong>er</strong> indtruffet får vi <span class="math display">\[P(A\mid B) =  \frac{P(A \cap B)}{P(B)} = \frac{1/3}{1/2}  = \frac{2}{3}.\]</span> At betinge med hændelsen <span class="math inline">\(B\)</span> svarer i dette simple eksempel til at <em>indskrænke</em> udfaldet for <span class="math inline">\(A\)</span> fra alle ulige øjne til dem, som er mindre end eller lig med <span class="math inline">\(3\)</span>. Der er således tre mulige udfald i vores “<span class="math inline">\(B\)</span>-verden”, hvoraf to er ulige.</p>
+<p>Først ser vi, at <span class="math inline">\(A\cap B\)</span> = {⚀, ⚂, ⚄} <span class="math inline">\(\cap\)</span> {⚀, ⚁, ⚂} = {⚀, ⚂}, hvilket igen på grund af det symmetriske sandsynlighedsfelt betyder, at <span class="math display">\[P(A\cap B) = 2/6 = 1/3\]</span> Efter at vi normaliserer sandsynligheden ud fra betingelsen om at <span class="math inline">\(B\)</span> <strong>er</strong> indtruffet får vi <span class="math display">\[P(A\mid B) =  \frac{P(A \cap B)}{P(B)} = \frac{1/3}{1/2}  = \frac{2}{3}.\]</span> At betinge med hændelsen <span class="math inline">\(B\)</span> svarer i dette simple eksempel til at <em>indskrænke</em> udfaldet for <span class="math inline">\(A\)</span> fra alle ulige øjne til dem, som er mindre end eller lig med <span class="math inline">\(3\)</span>. Der er således tre mulige udfald i vores "<span class="math inline">\(B\)</span>-verden", hvoraf to er ulige.</p>
+</div>
 </section>
-</section>
-<section id="stokastisk-uafhængighed" class="level2">
-<h2 class="anchored" data-anchor-id="stokastisk-uafhængighed">Stokastisk uafhængighed</h2>
+<section id="stokastisk-uafhængighed" class="level3">
+<h3 class="anchored" data-anchor-id="stokastisk-uafhængighed">Stokastisk uafhængighed</h3>
 <p>Man siger, at to hændelser <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> er uafhængige af hinanden, hvis <span class="math display">\[P(A \cap B) = P(A) \cdot P(B)\]</span> Hvis vi ser på udtrykket for <span class="math inline">\(P(A\mid B)\)</span> i (<a href="#eq-betinget_ssh" class="quarto-xref">1</a>) og antager, at <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> er uafhængige, ser vi at <span class="math display">\[
 P(A\mid B) = \frac{P(A\cap B)}{P(B)} \stackrel{\text{uafh.}}{=} \frac{P(A) \cdot P(B)}{P(B)} = P(A)
 \]</span> Med andre ord betyder det, at sandsynligheden for <span class="math inline">\(A\)</span> givet <span class="math inline">\(B\)</span> er den samme som sandsynligheden for <span class="math inline">\(A\)</span>. Det vil sige, at oplysningen om, at <span class="math inline">\(B\)</span> allerede er indtruffet, ikke ændrer på sandsynligheden for <span class="math inline">\(A\)</span>. Information om <span class="math inline">\(B\)</span> tilfører altså ikke noget nyt i forhold til information om <span class="math inline">\(A\)</span>, og det giver derfor mening af sige, at <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> er uafhængige af hinanden.</p>
 </section>
-<section id="bayes-sætning" class="level2">
-<h2 class="anchored" data-anchor-id="bayes-sætning">Bayes’ sætning</h2>
-<p>En meget vigtig matematisk egenskab ved betinget sandsynlighed er muligheden for at ombytte rollerne i formlen, således vi kan udtrykke <span class="math inline">\(P(B\mid A)\)</span> ud fra vores viden om <span class="math inline">\(P(A\mid B)\)</span>. Sætningen kaldes Bayes’ sætning (eller formel) og kan let vises ved først at bestemme <span class="math inline">\(P(A\cap B)\)</span> ved at isolere denne sandsynlighed. Fra (<a href="#eq-betinget_ssh" class="quarto-xref">1</a>) får vi</p>
+<section id="bayes-sætning" class="level3">
+<h3 class="anchored" data-anchor-id="bayes-sætning">Bayes’ sætning</h3>
+<p>En meget vigtig matematisk egenskab ved betinget sandsynlighed er muligheden for at ombytte rollerne i formlen, således vi kan udtrykke <span class="math inline">\(P(B\mid A)\)</span> ud fra vores viden om <span class="math inline">\(P(A\mid B)\)</span>. Sætningen kaldes Bayes’ sætning (eller formel) og kan vises på denne måde:</p>
+<p>Fra (<a href="#eq-betinget_ssh" class="quarto-xref">1</a>) får vi</p>
 <p><span class="math display">\[P(A\cap B)=P(A\mid B)\cdot P(B)\]</span> På helt tilsvarende vis må der også gælde, at</p>
 <p><span class="math display">\[P(B\cap A)=P(B\mid A)\cdot P(A)\]</span> Og da <span class="math inline">\(A\cap B=B\cap A\)</span> må også <span class="math inline">\(P(A\cap B)=P(B\cap A)\)</span>. De to ovenfor udledte sandsynligheder, må derfor være ens:</p>
-<p><span class="math display">\[P(A\mid B)\cdot P(B)=P(B\mid A)\cdot P(A)\]</span> Her Kan <span class="math inline">\(P(A\mid B)\)</span> isoleres <span class="math display">\[
+<p><span class="math display">\[P(A\mid B)\cdot P(B)=P(B\mid A)\cdot P(A)\]</span> Her kan <span class="math inline">\(P(A\mid B)\)</span> isoleres <span class="math display">\[
 P(A\mid B)=  \frac{P(B\mid A)\cdot P(A)}{P(B)}
 \]</span> Dette resultat er netop <strong>Bayes’ sætning</strong>:</p>
-<blockquote class="blockquote">
 <div id="thm-bayes" class="theorem">
 <p><span class="theorem-title"><strong>Sætning 1 (Bayes’ sætning)</strong></span> Lad <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> være hændelser, hvor <span class="math inline">\(P(B) \neq 0\)</span>. Da gælder, at <span class="math display">\[
 P(A\mid B)=  \frac{P(B\mid A)\cdot P(A)}{P(B)}
 \]</span></p>
 </div>
-</blockquote>
 <p>Vi kan altså ved at kende <span class="math inline">\(P(B\mid A)\)</span>, <span class="math inline">\(P(B)\)</span> og <span class="math inline">\(P(A)\)</span> udtrykke den betingede sandsynlighed <span class="math inline">\(P(A\mid B)\)</span>. Vi vender lige om lidt tilbage til, hvad vi kan bruge det til.</p>
-<p>Som sidste bemærkning er det væsentligt at understrege, at <span class="math inline">\(P(A\mid B) \neq P(B\mid A)\)</span> med mindre <span class="math inline">\(P(A) = P(B)\)</span> jævnfør (<a href="#eq-betinget_ssh" class="quarto-xref">1</a>) ovenfor. F.eks. er sandsynligheden for et tilfældigt dyr er en elefant, givet dyret har fire ben ikke den samme som sandsynligheden for, at dyret har fire ben givet, at dyret er en elefant!</p>
+<p>Som sidste bemærkning er det væsentligt at understrege, at <span class="math inline">\(P(A\mid B) \neq P(B\mid A)\)</span> med mindre <span class="math inline">\(P(A) = P(B)\)</span> jævnfør (<a href="#eq-betinget_ssh" class="quarto-xref">1</a>) ovenfor. For eksempel er sandsynligheden for et tilfældigt dyr er en elefant, givet dyret har fire ben ikke den samme som sandsynligheden for, at dyret har fire ben givet, at dyret er en elefant!</p>
+</section>
 </section>
 <section id="binær-bayes-klassifier" class="level2">
 <h2 class="anchored" data-anchor-id="binær-bayes-klassifier">Binær Bayes klassifier</h2>
-<p>Antag nu at <span class="math inline">\(Y\)</span> kun kan antage to tilstande som ved eksemplet med <em>rød</em> eller <em>blå</em>. I dette tilfælde oversætter man ofte de to udfald til henholdsvis <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>, eller i visse sammenhænge til <span class="math inline">\(-1\)</span> og <span class="math inline">\(+1\)</span>. Husk på at <strong>Bayes klassifikationen</strong> <span class="math inline">\(C(\mathbf{x})\)</span> er det mest sandsynlige udfald for <span class="math inline">\(Y\)</span>, når vi har informationen <span class="math inline">\(\mathbf{x}\)</span>. I det tilfælde hvor <span class="math inline">\(Y\)</span> kun kan antage to tilstande, får vi derfor</p>
-<p><span id="eq-binar_bayes_klassifikation1"><span class="math display">\[ C(\mathbf{x}) = \begin{cases}
-0 &amp; \textrm{hvis } P(Y = 0 \mid \mathbf{X} = \mathbf{x}) &gt; P(Y = 1 \mid \mathbf{X} = \mathbf{x}) \\
+<p>Antag nu, at <span class="math inline">\(Y\)</span> kun kan antage to tilstande som i eksemplet med <em>rød</em> eller <em>blå</em> blok. I dette tilfælde oversætter man ofte de to udfald til henholdsvis <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>, eller i visse sammenhænge til <span class="math inline">\(-1\)</span> og <span class="math inline">\(+1\)</span>. Husk på, at <strong>Bayes klassifikationen</strong> <span class="math inline">\(C(\vec{x})\)</span> er det mest sandsynlige udfald for <span class="math inline">\(Y\)</span>, når vi har informationen <span class="math inline">\(\vec{x}\)</span>. I det tilfælde hvor <span class="math inline">\(Y\)</span> kun kan antage to tilstande, får vi derfor</p>
+<p><span id="eq-binar_bayes_klassifikation1"><span class="math display">\[ C(\vec{x}) = \begin{cases}
+0 &amp; \textrm{hvis } P(Y = 0 \mid \vec{X} = \vec{x}) &gt; P(Y = 1 \mid \vec{X} = \vec{x}) \\
 1 &amp; \textrm{ellers} \\
 \end{cases} \tag{2}\]</span></span></p>
 <p>Dette kan også udtrykkes på anden vis: <span class="math display">\[
 \begin{aligned}
-P(Y = 0 \mid \mathbf{X} = \mathbf{x}) &gt; P(Y = 1 \mid \mathbf{X} = \mathbf{x}) \Leftrightarrow
-\frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})} &gt; 1.
+P(Y = 0 \mid \vec{X} = \vec{x}) &gt; P(Y = 1 \mid \vec{X} = \vec{x}) \Leftrightarrow
+\frac{P(Y = 0 \mid \vec{X} = \vec{x})}{P(Y = 1 \mid \vec{X} = \vec{x})} &gt; 1.
 \end{aligned}
-\]</span> Her er vi dog nødt til at antage, at <span class="math display">\[P(Y = 1 \mid \mathbf{X} = \mathbf{x})\neq 0,\]</span> så vi ikke kommer til at dividere med <span class="math inline">\(0\)</span>.</p>
+\]</span> Her er vi dog nødt til at antage, at <span class="math display">\[P(Y = 1 \mid \vec{X} = \vec{x})\neq 0,\]</span> så vi ikke kommer til at dividere med <span class="math inline">\(0\)</span>.</p>
 <p>Bruger vi denne omskrivning, kan vi udtrykke den binære Bayes klassifikation i (<a href="#eq-binar_bayes_klassifikation1" class="quarto-xref">2</a>) på denne måde:</p>
-<p><span id="eq-binar_bayes_klassifikation2"><span class="math display">\[ C(\mathbf{x}) = \begin{cases}
-0 &amp; \textrm{hvis } \frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})} &gt; 1 \\
+<p><span id="eq-binar_bayes_klassifikation2"><span class="math display">\[ C(\vec{x}) = \begin{cases}
+0 &amp; \textrm{hvis } \frac{P(Y = 0 \mid \vec{X} = \vec{x})}{P(Y = 1 \mid \vec{X} = \vec{x})} &gt; 1 \\
 1 &amp; \textrm{ellers} \\
 \end{cases} \tag{3}\]</span></span></p>
 <p>I det følgende vil vi benytte os af Bayes’ sætning til at se på, hvordan ovenstående brøk kan beregnes.</p>
-</section>
-<section id="bayes-sætning-i-anvendelse" class="level2">
-<h2 class="anchored" data-anchor-id="bayes-sætning-i-anvendelse">Bayes’ sætning i anvendelse</h2>
+<section id="bayes-sætning-i-anvendelse" class="level3">
+<h3 class="anchored" data-anchor-id="bayes-sætning-i-anvendelse">Bayes’ sætning i anvendelse</h3>
 <p>Vi bruger først Bayes’ sætning til at udtrykke <span class="math inline">\(P(A\mid C)\)</span> og <span class="math inline">\(P(B\mid C)\)</span>. <span class="math display">\[
-P(A\mid C) = \frac{P(C\mid A)P(A)}{P(C)} \quad\text{og}\quad
-P(B\mid C) = \frac{P(C\mid B)P(B)}{P(C)},
+P(A\mid C) = \frac{P(C\mid A) \cdot P(A)}{P(C)}
+\]</span></p>
+<p>og</p>
+<p><span class="math display">\[
+P(B\mid C) = \frac{P(C\mid B) \cdot P(B)}{P(C)},
 \]</span> Når vi bestemmer forholdet mellem <span class="math inline">\(P(A\mid C)\)</span> og <span class="math inline">\(P(B\mid C)\)</span> vil vi kunne slippe af med nævneren, som de har til fælles:</p>
 <p><span class="math display">\[
 \begin{aligned}
-\frac{P(A\mid C)}{P(B\mid C)} &amp;= \frac{\frac{P(C\mid A)P(A)}{P(C)}}{\frac{P(C\mid B)P(B)}{P(C)}}  
-= \frac{P(C\mid A)P(A)}{P(C)} \cdot \frac{P(C)}{P(C\mid B)P(B)} \\
-&amp;= \frac{P(C\mid A)P(A)}{P(C\mid B)P(B)},
+\frac{P(A\mid C)}{P(B\mid C)} &amp;= \frac{\frac{P(C\mid A) \cdot P(A)}{P(C)}}{\frac{P(C\mid B) \cdot P(B)}{P(C)}}  
+= \frac{P(C\mid A) \cdot P(A)}{P(C)} \cdot \frac{P(C)}{P(C\mid B) \cdot P(B)} \\
+&amp;= \frac{P(C\mid A) \cdot P(A)}{P(C\mid B) \cdot P(B)},
 \end{aligned}
 \]</span> hvor vi har udnyttet, at man dividerer med en brøk ved at gange med den omvendte brøk.</p>
-<p>I den binære Bayes klassifikation i (<a href="#eq-binar_bayes_klassifikation2" class="quarto-xref">3</a>) indgår brøken <span class="math inline">\(\frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})}\)</span>, som vi ved at benytte ovenstående kan omskrive til: <span id="eq-forhold_posterior_ssh"><span class="math display">\[
-\frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})} =
-\frac{P(\mathbf{X} = \mathbf{x} \mid Y = 0)P(Y = 0)}{P(\mathbf{X} = \mathbf{x} \mid Y = 1)P(Y = 1)}.
+<p>I den binære Bayes klassifikation i (<a href="#eq-binar_bayes_klassifikation2" class="quarto-xref">3</a>) indgår brøken <span class="math inline">\(\frac{P(Y = 0 \mid \vec{X} = \vec{x})}{P(Y = 1 \mid \vec{X} = \vec{x})}\)</span>, som vi ved at benytte ovenstående kan omskrive til: <span id="eq-forhold_posterior_ssh"><span class="math display">\[
+\frac{P(Y = 0 \mid \vec{X} = \vec{x})}{P(Y = 1 \mid \vec{X} = \vec{x})} =
+\frac{P(\vec{X} = \vec{x} \mid Y = 0)P(Y = 0)}{P(\vec{X} = \vec{x} \mid Y = 1)P(Y = 1)}.
 \tag{4}\]</span></span></p>
 </section>
-<section id="naiv-bayes-klassifier" class="level2">
+</section>
+<section id="naiv-bayes-klassifier" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="naiv-bayes-klassifier">Naiv Bayes klassifier</h2>
-<p>Ud fra udtrykket for forholdet mellem de to posterior sandsynligheder <span class="math inline">\(P(Y = 0 \mid \mathbf{X} = \mathbf{x})\)</span> og <span class="math inline">\(P(Y = 1 \mid \mathbf{X} = \mathbf{x})\)</span> som indgår i (<a href="#eq-forhold_posterior_ssh" class="quarto-xref">4</a>) kan vi se, at der indgår to typer af sandsynligheder:</p>
-<p><span class="math display">\[P(\mathbf{X} = \mathbf{x}\mid Y = y) \quad \textrm{og} \quad P(Y = y)\]</span></p>
-<p>Disse benævnes henholdsvis <em>likelihood</em> og <em>prior sandsynlighed</em>, idet <span class="math inline">\(P(\mathbf{X} = \mathbf{x}\mid Y = y)\)</span> udtrykker <em>likelihooden</em> (troligheden) for at observere <span class="math inline">\(\mathbf{X} = \mathbf{x}\)</span> givet <span class="math inline">\(Y = y\)</span>. Omvendt er <em>prior sandsynligheden</em> <span class="math inline">\(P(Y = y)\)</span> et udtryk for forhåndsandsynligheden for at <span class="math inline">\(Y = y\)</span>. Altså bruger vi disse betegnelser:</p>
+<p>Ud fra udtrykket for forholdet mellem de to posterior sandsynligheder <span class="math inline">\(P(Y = 0 \mid \vec{X} = \vec{x})\)</span> og <span class="math inline">\(P(Y = 1 \mid \vec{X} = \vec{x})\)</span> som indgår i (<a href="#eq-forhold_posterior_ssh" class="quarto-xref">4</a>) kan vi se, at der indgår to typer af sandsynligheder:</p>
+<p><span class="math display">\[P(\vec{X} = \vec{x}\mid Y = y) \quad \textrm{og} \quad P(Y = y)\]</span></p>
+<p>Disse benævnes henholdsvis <em>likelihood</em> og <em>prior sandsynlighed</em>, idet <span class="math inline">\(P(\vec{X} = \vec{x}\mid Y = y)\)</span> udtrykker <em>likelihooden</em> (troligheden) for at observere <span class="math inline">\(\vec{X} = \vec{x}\)</span> givet <span class="math inline">\(Y = y\)</span>. Omvendt er <em>prior sandsynligheden</em> <span class="math inline">\(P(Y = y)\)</span> et udtryk for forhåndsandsynligheden for at <span class="math inline">\(Y = y\)</span>. Altså bruger vi disse betegnelser:</p>
 <p><span class="math display">\[
 \begin{aligned}
-&amp;\textrm{Likelihood: }  &amp;P(\mathbf{X} = \mathbf{x}\mid Y = y) \\
+&amp;\textrm{Likelihood: }  &amp;P(\vec{X} = \vec{x}\mid Y = y) \\
 &amp;\textrm{Prior sandsynlighed: } &amp;P(Y = y)
 \end{aligned}
 \]</span></p>
 <p>Vi kan sammenfatte udtrykket i (<a href="#eq-forhold_posterior_ssh" class="quarto-xref">4</a>) til det såkaldte <em>posterior forhold</em>: <span class="math display">\[
-\underbrace{\frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})}}_\text{Posterior forhold} =
-\underbrace{\frac{P(\mathbf{X} = \mathbf{x} \mid Y = 0)}{P(\mathbf{X} = \mathbf{x} \mid Y = 1)}}_\text{Likelihood forhold} \cdot
+\underbrace{\frac{P(Y = 0 \mid \vec{X} = \vec{x})}{P(Y = 1 \mid \vec{X} = \vec{x})}}_\text{Posterior forhold} =
+\underbrace{\frac{P(\vec{X} = \vec{x} \mid Y = 0)}{P(\vec{X} = \vec{x} \mid Y = 1)}}_\text{Likelihood forhold} \cdot
 \underbrace{\frac{P(Y = 0)}{P(Y = 1)}}_\text{Prior forhold}
 \]</span></p>
 <p>Hvis vi vender tilbage til vores spørgsmål om at stemme på blå eller rød blok og så kan vi sige, at <span class="math display">\[ Y=
@@ -429,41 +444,47 @@ P(B\mid C) = \frac{P(C\mid B)P(B)}{P(C)},
 0 &amp; \textrm {hvis der stemmes på rød blok} \\
 1 &amp; \textrm {hvis der stemmes på blå blok} \\
 \end{cases}
-\]</span> Hvis <span class="math inline">\(x=(kvinde, ung, Sjælland)\)</span>, så udtrykker <span class="math inline">\(P(\mathbf{X} = \mathbf{x} \mid Y = 0)\)</span> således sandsynligheden for, at en person er en ung kvinde fra Sjælland givet, at personen stemmer på <em>rød blok</em>. Når man skal bestemme den sandsynlighed skal vi huske, at det er sandsynligheden for det <em>samlede</em> udsagn med køn, alder og bopæl.</p>
+\]</span> Hvis <span class="math display">\[
+\vec{x}=
+\begin{pmatrix}
+\textrm{kvinde} \\
+\textrm{ung} \\
+\textrm{Sjælland}
+\end{pmatrix}
+\]</span> så udtrykker <span class="math inline">\(P(\vec{X} = \vec{x} \mid Y = 0)\)</span> således sandsynligheden for, at en person er en ung kvinde fra Sjælland givet, at personen stemmer på <em>rød blok</em>. Når man skal bestemme den sandsynlighed skal vi huske, at det er sandsynligheden for det <em>samlede</em> udsagn med køn, alder og bopæl.</p>
 <p>For at kunne beregne ovenstående sandsynligheder bliver vi nødt til at antage et eller andet, der gør det muligt. Man siger, at vi opstiller en <em>model</em>.</p>
-<p>Én af de simpleste modeller er at antage at køn, alder og bopæl er uafhængige af hinanden givet <span class="math inline">\(Y = y\)</span>. Denne forsimplende antagelse har medvirket til metodens navn: <em>Naiv Bayes</em> eller <em>Uafhængig Bayes klassifikation</em>.</p>
+<p>Én af de simpleste modeller er at antage at køn, alder og bopæl er uafhængige af hinanden givet <span class="math inline">\(Y = y\)</span>. Denne forsimplende antagelse har medvirket til metodens navn: <strong>Naiv Bayes</strong> eller <strong>Uafhængig Bayes klassifikation</strong>.</p>
 <p>Det betyder ifølge vores tidligere definition af uafhængighed at <span class="math display">\[
 \begin{aligned}
-P(\mathbf{X} = \mathbf{x} \mid Y = y) &amp;=
+P(\vec{X} = \vec{x} \mid Y = y) &amp;=
 P(X_1 = x_1, X_2 = x_2, \dots, X_q = x_q \mid Y = y)\\
 &amp;= P(X_1 = x_1\mid Y = y)P(X_2 = x_2\mid Y = y)\cdots P(X_q = x_q \mid Y = y)\\
 &amp;= \prod_{i=1}^q P(X_i = x_i\mid Y = y),
 \end{aligned}
 \]</span> hvor <span class="math inline">\(\prod\)</span>-symbolet i sidste linje betyder, at vi tager produktet af alle faktorerne på formen <span class="math inline">\(P(X_i = x_i\mid Y = y)\)</span> fra <span class="math inline">\(i=1\)</span> op til <span class="math inline">\(q\)</span> – altså præcist det, som står i linjen over. Det minder således om sum-tegnet <span class="math display">\[\sum_{i=1}^n x_i = x_1 + x_2 + \cdots + x_n,\]</span> men blot for multiplikation i stedet for addition.</p>
-</section>
-<section id="posterior-forholdet-score-og-vægte" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="posterior-forholdet-score-og-vægte">Posterior forholdet, score og vægte</h2>
+<section id="posterior-forholdet-score-og-vægte" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="posterior-forholdet-score-og-vægte">Posterior forholdet, score og vægte</h3>
 <p>Samler vi nu udtrykkene, som indgår i vores posterior forhold i (<a href="#eq-forhold_posterior_ssh" class="quarto-xref">4</a>), samtidig med at vi antager, at <span class="math inline">\(X_1, X_2, \cdots, X_q\)</span> er uafhængige af hinanden givet <span class="math inline">\(Y\)</span>, får vi nedenstående:</p>
 <p><span class="math display">\[
 \begin{aligned}
-\frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})} &amp;=
-\frac{P(Y=0)}{P(Y=1)}\cdot \frac{P(\mathbf{X} = \mathbf{x} \mid Y = 0)}{P(\mathbf{X} = \mathbf{x} \mid Y = 1)} \\
+\frac{P(Y = 0 \mid \vec{X} = \vec{x})}{P(Y = 1 \mid \vec{X} = \vec{x})} &amp;=
+\frac{P(Y=0)}{P(Y=1)}\cdot \frac{P(\vec{X} = \vec{x} \mid Y = 0)}{P(\vec{X} = \vec{x} \mid Y = 1)} \\
 &amp;= \frac{P(Y = 0)}{P(Y = 1)}
 \prod_{i=1}^q\frac{P(X_i = x_i \mid Y = 0)}{P(X_i = x_i \mid Y = 1)},
 \end{aligned}
 \]</span></p>
-<p>hvor hver faktor på højre siden bidrager ligeligt til, om observationen <span class="math inline">\(\mathbf{x}\)</span> skal klassificeres som <span class="math inline">\(Y=0\)</span> eller <span class="math inline">\(Y=1\)</span>.</p>
-<p>Når vi skal lave beregninger på computer baseret på data, er det ofte væsentligt at tage højde for numerisk præcision. Alle tal på en computer skal <em>repræsenteres</em> af et endelig antal bits. Det betyder, at visse tal (f.eks. <span class="math inline">\(1/3\)</span>) bliver afrundet efter et vist antal decimaler. Derfor kan der opstå problemer, når man enten ganger eller adderer meget små (eller store) tal sammen. For at undgå dette i udtrykket ovenfor, er det derfor tit en god idé at benytte sig af (den naturlige) logaritme på begge sider af lighedstegnet:</p>
+<p>hvor hver faktor på højre siden bidrager ligeligt til, om observationen <span class="math inline">\(\vec{x}\)</span> skal klassificeres som <span class="math inline">\(Y=0\)</span> eller <span class="math inline">\(Y=1\)</span>.</p>
+<p>Når vi skal lave beregninger på computer baseret på data, er det ofte væsentligt at tage højde for numerisk præcision. Alle tal på en computer skal <em>repræsenteres</em> af et endelig antal bits. Det betyder, at visse tal (for eksempel <span class="math inline">\(1/3\)</span>) bliver afrundet efter et vist antal decimaler. Derfor kan der opstå problemer, når man enten ganger eller adderer meget små (eller store) tal sammen. For at undgå dette i udtrykket ovenfor, er det derfor tit en god idé at benytte sig af (den naturlige) logaritme på begge sider af lighedstegnet:</p>
 <p><span id="eq-posterior_forhold_ln"><span class="math display">\[
 \begin{aligned}
-\ln \left(\frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})}\right) &amp;=
+\ln \left(\frac{P(Y = 0 \mid \vec{X} = \vec{x})}{P(Y = 1 \mid \vec{X} = \vec{x})}\right) &amp;=
 \ln \left(\frac{P(Y = 0)}{P(Y = 1)}\right) +
 \sum_{i=1}^q \ln \left(\frac{P(X_i = x_i \mid Y = 0)}{P(X_i = x_i \mid Y = 1)}\right),
 \end{aligned}
 \tag{5}\]</span></span></p>
 <p>hvor vi har brugt logaritmeregnereglen <span class="math display">\[\ln(a\cdot b) = \ln(a) + \ln(b)\]</span> gentagende gange.</p>
-<p>Vi minder om, at forholdet mellem <span class="math inline">\(P(Y = 0 \mid \mathbf{X} = \mathbf{x})\)</span> og <span class="math inline">\(P(Y = 1 \mid \mathbf{X} = \mathbf{x})\)</span> er af særlig interesse omkring værdien 1 – se (<a href="#eq-binar_bayes_klassifikation2" class="quarto-xref">3</a>). Når forholdet er <span class="math inline">\(1\)</span> betyder det, at de to klasser er lige sandsynlige givet <span class="math inline">\(\mathbf{x}\)</span>. Endvidere, når forholdet er over <span class="math inline">\(1\)</span>, er <span class="math inline">\(Y=0\)</span> mere sandsynlig end <span class="math inline">\(Y=1\)</span>, og når det er under <span class="math inline">\(1\)</span>, er det omvendte tilfældet.</p>
-<p>Lad os nu se på hvilken effekt det får, at vi ikke længere ser direkte på det posterior forhold <span class="math display">\[ \frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})}\]</span> men i stedet på logaritmen af det posterior forhold <span class="math display">\[ \ln \left ( \frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})}\right )\]</span></p>
+<p>Vi minder om, at forholdet mellem <span class="math inline">\(P(Y = 0 \mid \vec{X} = \vec{x})\)</span> og <span class="math inline">\(P(Y = 1 \mid \vec{X} = \vec{x})\)</span> er af særlig interesse omkring værdien 1 – se (<a href="#eq-binar_bayes_klassifikation2" class="quarto-xref">3</a>). Når forholdet er <span class="math inline">\(1\)</span> betyder det, at de to klasser er lige sandsynlige givet <span class="math inline">\(\vec{x}\)</span>. Endvidere, når forholdet er over <span class="math inline">\(1\)</span>, er <span class="math inline">\(Y=0\)</span> mere sandsynlig end <span class="math inline">\(Y=1\)</span>, og når det er under <span class="math inline">\(1\)</span>, er det omvendte tilfældet.</p>
+<p>Lad os nu se på hvilken effekt det får, at vi ikke længere ser direkte på det posterior forhold <span class="math display">\[ \frac{P(Y = 0 \mid \vec{X} = \vec{x})}{P(Y = 1 \mid \vec{X} = \vec{x})}\]</span> men i stedet på logaritmen af det posterior forhold <span class="math display">\[ \ln \left ( \frac{P(Y = 0 \mid \vec{X} = \vec{x})}{P(Y = 1 \mid \vec{X} = \vec{x})}\right )\]</span></p>
 <p>I <a href="#fig-ln" class="quarto-xref">figur&nbsp;1</a> nedenfor er grafen for logaritmefunktionen tegnet for <span class="math inline">\(x\in ]0, 10].\)</span></p>
 <div id="fig-ln" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
@@ -476,21 +497,21 @@ Figur&nbsp;1: Grafen for <span class="math inline">\(f(x)=\ln (x)\)</span>.
 </figure>
 </div>
 <p>Vi ved, at <span class="math inline">\(\ln(1) = 0\)</span> (hvilket også kan ses på grafen i <a href="#fig-ln" class="quarto-xref">figur&nbsp;1</a>), samt at for <span class="math inline">\(x&lt;1\)</span> er <span class="math inline">\(\ln(x)&lt;0\)</span>, mens for <span class="math inline">\(x&gt;1\)</span> er <span class="math inline">\(\ln(x)&gt;0\)</span>.</p>
-<p>Så når vi ser på <span class="math display">\[\ln \left(\frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})}\right)\]</span> bliver det vigtige nu, om denne størrelse er positiv eller negativ.</p>
+<p>Så når vi ser på <span class="math display">\[\ln \left(\frac{P(Y = 0 \mid \vec{X} = \vec{x})}{P(Y = 1 \mid \vec{X} = \vec{x})}\right)\]</span> bliver det vigtige nu, om denne størrelse er positiv eller negativ.</p>
 <p>Lad os derfor indføre <span class="math inline">\(S\)</span> som en <em>score</em>, der er lig med logaritmen til posterior forholdet:</p>
 <p><span id="eq-scoreS"><span class="math display">\[
-S = \ln \left(\frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})}\right)
+S = \ln \left(\frac{P(Y = 0 \mid \vec{X} = \vec{x})}{P(Y = 1 \mid \vec{X} = \vec{x})}\right)
 \tag{6}\]</span></span></p>
 <p>Den binære Bayes klassifikation i (<a href="#eq-binar_bayes_klassifikation2" class="quarto-xref">3</a>) kan derfor i stedet skrives ved hjælp af scoren <span class="math inline">\(S\)</span> på denne måde:</p>
-<p><span id="eq-binar_bayes_klassifikation3"><span class="math display">\[ C(\mathbf{x}) = \begin{cases}
+<p><span id="eq-binar_bayes_klassifikation3"><span class="math display">\[ C(\vec{x}) = \begin{cases}
 0 &amp; \textrm{hvis } \ S&gt;0  \\
 1 &amp; \textrm{ellers} \\
 \end{cases} \tag{7}\]</span></span></p>
-<p>Vi ved således, at hvis <span class="math inline">\(S&gt;0\)</span>, så klassificerer vi <span class="math inline">\(\mathbf{x}\)</span>, som <span class="math inline">\(C(x)=0\)</span> og ellers <span class="math inline">\(C(x)=1\)</span>.</p>
+<p>Vi ved således, at hvis <span class="math inline">\(S&gt;0\)</span>, så klassificerer vi <span class="math inline">\(\vec{x}\)</span>, som <span class="math inline">\(C(\vec{x})=0\)</span> og ellers <span class="math inline">\(C(\vec{x})=1\)</span>.</p>
 <p>Sammenholder vi definitionen af <span class="math inline">\(S\)</span> i (<a href="#eq-scoreS" class="quarto-xref">6</a>) med udtrykket i (<a href="#eq-posterior_forhold_ln" class="quarto-xref">5</a>), ser vi, at <span class="math inline">\(S\)</span> også kan skrives som</p>
 <p><span id="eq-scoreS2"><span class="math display">\[
 \begin{aligned}
-S &amp;= \ln \left(\frac{P(Y = 0 \mid \mathbf{X} = \mathbf{x})}{P(Y = 1 \mid \mathbf{X} = \mathbf{x})}\right) \\&amp;=
+S &amp;= \ln \left(\frac{P(Y = 0 \mid \vec{X} = \vec{x})}{P(Y = 1 \mid \vec{X} = \vec{x})}\right) \\&amp;=
 \ln \left(\frac{P(Y = 0)}{P(Y = 1)}\right) +
 \sum_{i=1}^q \ln \left(\frac{P(X_i = x_i \mid Y = 0)}{P(X_i = x_i \mid Y = 1)}\right),
 \end{aligned}
@@ -501,16 +522,17 @@ w_0 = \ln \left(\frac{P(Y = 0)}{P(Y = 1)}\right)
 w_i(x_i) = \ln \left(\frac{P(X_i = x_i \mid Y = 0)}{P(X_i = x_i \mid Y = 1)}\right)
 \]</span> kan vi skrive udtrykket for <span class="math inline">\(S\)</span> i (<a href="#eq-scoreS2" class="quarto-xref">8</a>) som <span id="eq-score_ved_vaegte"><span class="math display">\[
 S = w_0 + \sum_{i = 1}^q w_i(x_i),
-\tag{9}\]</span></span> hvor det tydeliggøres, at hvis <span class="math inline">\(w_i(x_i)&gt;0\)</span>, så understøtter bidraget fra den <span class="math inline">\(i\)</span>’te oplysning <span class="math inline">\(x_i\)</span>, at <span class="math inline">\(Y=0\)</span> og ellers hvis <span class="math inline">\(w_i(x_i)&lt;0\)</span> at <span class="math inline">\(Y=1\)</span>. Denne egenskab gør, at man også kan omtale <span class="math inline">\(w_i(x_i)\)</span> som en slags “bevismæssig” vægt.</p>
+\tag{9}\]</span></span> hvor det tydeliggøres, at hvis <span class="math inline">\(w_i(x_i)&gt;0\)</span>, så understøtter bidraget fra den <span class="math inline">\(i\)</span>’te oplysning <span class="math inline">\(x_i\)</span>, at <span class="math inline">\(Y=0\)</span>, og ellers hvis <span class="math inline">\(w_i(x_i)&lt;0\)</span>, at <span class="math inline">\(Y=1\)</span>. Denne egenskab gør, at man også kan omtale <span class="math inline">\(w_i(x_i)\)</span> som en slags "bevismæssig" vægt.</p>
+</section>
 <section id="vægten-w_0" class="level3">
 <h3 class="anchored" data-anchor-id="vægten-w_0">Vægten <span class="math inline">\(w_0\)</span></h3>
 <p>Vi har altså set i (<a href="#eq-posterior_forhold_ln" class="quarto-xref">5</a>) og (<a href="#eq-score_ved_vaegte" class="quarto-xref">9</a>), hvordan vi kan omskrive forholdet mellem posterior sandsynlighederne for de to klasser <span class="math inline">\(Y=0\)</span> og <span class="math inline">\(Y=1\)</span> til en sum af bidrag.</p>
-<p>Det første led <span class="math inline">\(w_0\)</span> afhænger ikke af nogen information <span class="math inline">\(x_i\)</span>, og vi har tidligere omtalt disse sandsynligheder som <em>prior</em> sandsynligheder. Man kan sige, at det er vores umiddelbare bud på hvad <span class="math inline">\(Y\)</span> er, uden at vi kender noget som helst til informationerne i <span class="math inline">\(\mathbf{x}\)</span>.</p>
+<p>Det første led <span class="math inline">\(w_0\)</span> afhænger ikke af nogen information <span class="math inline">\(x_i\)</span>, og vi har tidligere omtalt disse sandsynligheder som <em>prior</em> sandsynligheder. Man kan sige, at det er vores umiddelbare bud på hvad <span class="math inline">\(Y\)</span> er, uden at vi kender noget som helst til informationerne i <span class="math inline">\(\vec{x}\)</span>.</p>
 <p>Når vi går fra vores <em>model</em>, som vi har udledt i det foregående, til at skulle implementere den i en specifik anvendelse, bliver vi derfor nødt til at estimere de parametre, som indgår i modellen. For <span class="math inline">\(w_0\)</span> betyder det, at vi skal estimere både <span class="math inline">\(P(Y=0)\)</span> og <span class="math inline">\(P(Y=1)\)</span>. Her vil det være oplagt blot at estimere <span class="math inline">\(P(Y=0)\)</span> og <span class="math inline">\(P(Y=1)\)</span> ud fra træningsdata ved helt simpelt at bestemme andelen, som stemmer på henholdsvis rød og blå, hvorefter vi kan beregne <span class="math display">\[
 w_0 = \ln \left(\frac{P(Y = 0)}{P(Y = 1)}\right)\]</span></p>
 <p>Hvis du vil se en mere teoretisk begrundelse for dette valg, kan du folde boksen nedenfor ud.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -519,7 +541,7 @@ w_0 = \ln \left(\frac{P(Y = 0)}{P(Y = 1)}\right)\]</span></p>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Vi ønsker at bestemme det bedst mulige estimat for <span class="math inline">\(p=P(Y=0)\)</span> ud fra vores træningsdata. Vi vil her tænke på resultaterne fra datasættet som kommende fra et binomialforsøg med sandsynligheds-parameter <span class="math inline">\(p\)</span> og antalsparameter <span class="math inline">\(n\)</span>. I eksemplet kan vi derfor lade <span class="math inline">\(Z\)</span> være en stokastisk variabel, der betegner antallet, som stemmer på rød blok. Det vil sige, at</p>
 <p><span class="math display">\[ Z \sim bin(n,p) \]</span></p>
@@ -550,7 +572,7 @@ P(Z = r) = {n \choose r}p^r(1-p)^{n-r} = \frac{n!}{(n-r)!r!}p^r(1-p)^{n-r}
 <h2 class="anchored" data-anchor-id="eksempel-med-rødblå-blok">Eksempel med rød/blå blok</h2>
 <p>Lad os se på eksemplet fra tidligere med at stemme på rød eller blå blok, hvor vi tænker på <span class="math inline">\(Y=0\)</span> som en stemme på rød blok og <span class="math inline">\(Y=1\)</span> som en stemme på blå blok.</p>
 <p>Vi havde allerede følgende information fra træningsdata:</p>
-<table class="table">
+<table class="table-bordered table">
 <colgroup>
 <col style="width: 9%">
 <col style="width: 10%">
@@ -615,9 +637,9 @@ P(Z = r) = {n \choose r}p^r(1-p)^{n-r} = \frac{n!}{(n-r)!r!}p^r(1-p)^{n-r}
 <p>For at kunne beregne vores vægte <span class="math display">\[w_i(x_i) = \ln \left(\frac{P(X_i = x_i \mid Y = 0)}{P(X_i = x_i \mid Y = 1)}\right)
 \]</span></p>
 <p>skal vi for at beregne tælleren i ovenstående brøk have fat på hvor stor en andel af de stemmer, der går til rød blok, som kommer fra henholdsvis mænd, kvinder, unge, ældre og så videre.</p>
-<p>Vi tager beregningen for kvinder og starter med at finde <span class="math inline">\(P(X_1 = kvinde \mid Y = 0)\)</span>. Her ved vi at <span class="math inline">\(55 \%\)</span> af de i alt <span class="math inline">\(5500\)</span> kvinder stemte på rød blok. Samtidig ved vi, at der var <span class="math inline">\(51.85 \%\)</span> ud af i alt <span class="math inline">\(10000\)</span> adspurgte (det vil sige <span class="math inline">\(5185\)</span> pesroner), som stemte på rød blok. Derfor får vi <span class="math display">\[P(X_1 = kvinde \mid Y = 0)=\frac{55\% \cdot 5500}{5185}=58.34 \%\]</span> Da <span class="math inline">\(X_1\)</span> kun kan antage værdierne kvinde og mand, ved vi også, at</p>
-<p><span class="math display">\[P(X_1 = mand \mid Y = 0)=100\%-58.34 \%=41.66\%.\]</span> På tilsvarende måde kan vi finde <span class="math inline">\(P(X_1 = kvinde \mid Y = 1)\)</span>. Her ved vi, at <span class="math inline">\(45 \%\)</span> af de <span class="math inline">\(5500\)</span> kvinder stemte på blå blok, og samtidig ved vi, at der var <span class="math inline">\(4815\)</span> stemmer på blå blok i alt (igen <span class="math inline">\(48.15 \%\)</span> af <span class="math inline">\(10000\)</span>). Derfor får vi <span class="math display">\[P(X_1 = kvinde \mid Y = 1)=\frac{45\%\cdot 5500}{4815}= 51.40 \%\]</span> og <span class="math display">\[P(X_1 = mand \mid Y = 1)=100\%-51.40 \%=48.60\%\]</span> Alle tilsvarende sandsynligheder kan beregnes, så man kan se hvor stor en andel af stemmerne på de to blokke, der kommer fra hver gruppe. Resultatet ses i nedenstående tabel:</p>
-<table class="table">
+<p>Vi tager beregningen for kvinder og starter med at finde <span class="math inline">\(P(X_1 = \textrm{kvinde} \mid Y = 0)\)</span>. Her ved vi at <span class="math inline">\(55 \%\)</span> af de i alt <span class="math inline">\(5500\)</span> kvinder stemte på rød blok. Samtidig ved vi, at der var <span class="math inline">\(51.85 \%\)</span> ud af i alt <span class="math inline">\(10000\)</span> adspurgte (det vil sige <span class="math inline">\(5185\)</span> pesroner), som stemte på rød blok. Derfor får vi <span class="math display">\[P(X_1 = \textrm{kvinde} \mid Y = 0)=\frac{55\% \cdot 5500}{5185}=58.34 \%\]</span> Da <span class="math inline">\(X_1\)</span> kun kan antage værdierne kvinde og mand, ved vi også, at</p>
+<p><span class="math display">\[P(X_1 = \textrm{mand} \mid Y = 0)=100\%-58.34 \%=41.66\%.\]</span> På tilsvarende måde kan vi finde <span class="math inline">\(P(X_1 = \textrm{kvinde} \mid Y = 1)\)</span>. Her ved vi, at <span class="math inline">\(45 \%\)</span> af de <span class="math inline">\(5500\)</span> kvinder stemte på blå blok, og samtidig ved vi, at der var <span class="math inline">\(4815\)</span> stemmer på blå blok i alt (igen <span class="math inline">\(48.15 \%\)</span> af <span class="math inline">\(10000\)</span>). Derfor får vi <span class="math display">\[P(X_1 = \textrm{kvinde} \mid Y = 1)=\frac{45\%\cdot 5500}{4815}= 51.40 \%\]</span> og <span class="math display">\[P(X_1 = \textrm{mand} \mid Y = 1)=100\%-51.40 \%=48.60\%\]</span> Alle tilsvarende sandsynligheder kan beregnes, så man kan se hvor stor en andel af stemmerne på de to blokke, der kommer fra hver gruppe. Resultatet ses i nedenstående tabel:</p>
+<table class="table-bordered table">
 <colgroup>
 <col style="width: 7%">
 <col style="width: 12%">
@@ -663,362 +685,68 @@ P(Z = r) = {n \choose r}p^r(1-p)^{n-r} = \frac{n!}{(n-r)!r!}p^r(1-p)^{n-r}
 </tr>
 </tbody>
 </table>
-<p>Nu kan vi bestemme vægtene <span class="math inline">\(w_i(x_i)\)</span>. Her findes <span class="math inline">\(w_1(kvinde)\)</span> ved</p>
-<p><span class="math display">\[w_1(kvinde) = \ln \left(\frac{P(X_1 = kvinde \mid Y = 0)}{P(X_1 = kvinde \mid Y = 1)}\right)=\ln \left(\frac{58.34\%}{51.40\%}\right)=0.1267\]</span> Herunder ses vægtene for alle grupper:</p>
-<table class="table">
+<p>Nu kan vi bestemme vægtene <span class="math inline">\(w_i(x_i)\)</span>. Her findes <span class="math inline">\(w_1(\textrm{kvinde})\)</span> ved</p>
+<p><span class="math display">\[w_1(\textrm{kvinde}) = \ln \left(\frac{P(X_1 = \textrm{kvinde} \mid Y = 0)}{P(X_1 = \textrm{kvinde} \mid Y = 1)}\right)=\ln \left(\frac{58.34\%}{51.40\%}\right)=0.1267\]</span> Herunder ses vægtene for alle grupper:</p>
+<table class="table-bordered table">
 <colgroup>
 <col style="width: 12%">
 <col style="width: 12%">
 <col style="width: 12%">
 <col style="width: 12%">
-<col style="width: 12%">
-<col style="width: 12%">
-<col style="width: 12%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
 <col style="width: 12%">
 </colgroup>
 <thead>
 <tr class="header">
-<th><span class="math inline">\(w_0\)</span></th>
-<th><span class="math inline">\(w_1\)</span></th>
-<th></th>
-<th><span class="math inline">\(w_2\)</span></th>
-<th></th>
-<th><span class="math inline">\(w_3\)</span></th>
-<th></th>
-<th></th>
+<th style="text-align: center;"><span class="math inline">\(w_0\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(w_1\)</span></th>
+<th style="text-align: center;"></th>
+<th style="text-align: center;"><span class="math inline">\(w_2\)</span></th>
+<th style="text-align: right;"></th>
+<th style="text-align: right;"><span class="math inline">\(w_3\)</span></th>
+<th style="text-align: right;"></th>
+<th style="text-align: center;"></th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td></td>
-<td>Mænd</td>
-<td>Kvinder</td>
-<td>Unge</td>
-<td>Ældre</td>
-<td>Sjælland</td>
-<td>Jylland</td>
-<td>Anden bopæl</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Mænd</td>
+<td style="text-align: center;">Kvinder</td>
+<td style="text-align: center;">Unge</td>
+<td style="text-align: right;">Ældre</td>
+<td style="text-align: right;">Sjælland</td>
+<td style="text-align: right;">Jylland</td>
+<td style="text-align: center;">Anden bopæl</td>
 </tr>
 <tr class="even">
-<td><span class="math inline">\(0.074\)</span></td>
-<td><span class="math inline">\(-0.154\)</span></td>
-<td><span class="math inline">\(0.127\)</span></td>
-<td><span class="math inline">\(0.545\)</span></td>
-<td><span class="math inline">\(-0.175\)</span></td>
-<td><span class="math inline">\(0.086\)</span></td>
-<td><span class="math inline">\(-0.078\)</span></td>
-<td><span class="math inline">\(0.037\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.074\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(-0.154\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.127\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.545\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(-0.175\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.086\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(-0.078\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.037\)</span></td>
 </tr>
 </tbody>
 </table>
 <p>Tidligere havde vi indset, at når <span class="math inline">\(w_i(x_i)&gt;0\)</span>, så understøtter bidraget fra den <span class="math inline">\(i\)</span>’te oplysning <span class="math inline">\(x_i\)</span>, at <span class="math inline">\(Y=0\)</span> (altså at stemme på rød blok). I tabellen ovenfor ses det derfor, at oplysningerne kvinde, ung, Sjælland og anden bopæl gør det mere sandsynligt med en stemme på rød blok, mens oplysningerne mand, ældre og Jylland gør det mere sandsynligt med en stemme på blå blok.</p>
-<p>Vi kan nu beregne scoren <span class="math inline">\(S\)</span> for en kvinde, som er ældre og fra Sjælland, altså hvor <span class="math inline">\(x=(kvinde,ældre,Sjælland)\)</span>. <span class="math display">\[\begin{equation}
+<p>Vi kan nu beregne scoren <span class="math inline">\(S\)</span> for en kvinde, som er ældre og fra Sjælland, altså hvor <span class="math inline">\(x=(\textrm{kvinde},\textrm{ældre},\textrm{Sjælland})\)</span>. <span class="math display">\[\begin{equation}
 \begin{split}
-S &amp;  = w_0 + \sum_{i = 1}^q w_i(x_i)=w_0+w_1(kvinde)+w_2(ældre)+w_3(Sjælland) \\
+S &amp;  = w_0 + \sum_{i = 1}^q w_i(x_i)=w_0+w_1(\textrm{kvinde})+w_2(\textrm{ældre})+w_3(\textrm{Sjælland}) \\
 &amp; =0.074+0.127+(-0.175)+0.086=0.112
 \end{split}
 \end{equation}\]</span></p>
 <p>Derved bliver forudsigelsen ud fra Bayes Naive metode, at en ældre kvinde, der bor på Sjælland, med størst sandsynlighed stemmer på rød blok.</p>
 </section>
-<section id="opgave-ham-or-spam" class="level2">
-<h2 class="anchored" data-anchor-id="opgave-ham-or-spam">Opgave: Ham or Spam?</h2>
-<p>I denne opgave skal vi se på, hvordan man kan lave et simpelt spamfilter. Vi har et datasæt med <span class="math inline">\(35000\)</span> mails med oplysninger om emailens oprindelse (Danmark, Europa uden Danmark, USA og anden oprindelse), afsenders mailadresse (firma, Google, Hotmail og anden) samt indhold (dating, spil og andet). Målet er, at man gerne ud fra disse oplysninger gerne automatisk vil kunne afgøre, om det er spam og derved at mailen ikke skal vises i mail-boxen, eller om det er Ham (non-spam). For hver af de <span class="math inline">\(35000\)</span> mails er det også noteret om, der er tale om spam eller ham.</p>
-<p>Træningsdata består af</p>
-<table class="table">
-<thead>
-<tr class="header">
-<th></th>
-<th>Oprindelse</th>
-<th></th>
-<th></th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td></td>
-<td>DK</td>
-<td>Europa</td>
-<td>USA</td>
-<td>Andet</td>
-</tr>
-<tr class="even">
-<td>Spam</td>
-<td><span class="math inline">\(20 \%\)</span></td>
-<td><span class="math inline">\(30 \%\)</span></td>
-<td><span class="math inline">\(35 \%\)</span></td>
-<td><span class="math inline">\(55 \%\)</span></td>
-</tr>
-<tr class="odd">
-<td>Ham</td>
-<td><span class="math inline">\(80 \%\)</span></td>
-<td><span class="math inline">\(70 \%\)</span></td>
-<td><span class="math inline">\(65 \%\)</span></td>
-<td><span class="math inline">\(45\%\)</span></td>
-</tr>
-<tr class="even">
-<td>Antal</td>
-<td><span class="math inline">\(10000\)</span></td>
-<td><span class="math inline">\(12000\)</span></td>
-<td><span class="math inline">\(8000\)</span></td>
-<td><span class="math inline">\(5000\)</span></td>
-</tr>
-</tbody>
-</table>
-<p>og</p>
-<table class="table">
-<thead>
-<tr class="header">
-<th></th>
-<th>Mail</th>
-<th></th>
-<th></th>
-<th></th>
-<th>Indhold</th>
-<th></th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td></td>
-<td>Firma</td>
-<td>Google</td>
-<td>Hotmail</td>
-<td>Andet</td>
-<td>Dating</td>
-<td>Spil</td>
-<td>Andet</td>
-</tr>
-<tr class="even">
-<td>Spam</td>
-<td><span class="math inline">\(10 \%\)</span></td>
-<td><span class="math inline">\(20 \%\)</span></td>
-<td><span class="math inline">\(60 \%\)</span></td>
-<td><span class="math inline">\(80 \%\)</span></td>
-<td><span class="math inline">\(80 \%\)</span></td>
-<td><span class="math inline">\(90 \%\)</span></td>
-<td><span class="math inline">\(12.5 \%\)</span></td>
-</tr>
-<tr class="odd">
-<td>Ham</td>
-<td><span class="math inline">\(90 \%\)</span></td>
-<td><span class="math inline">\(80 \%\)</span></td>
-<td><span class="math inline">\(40 \%\)</span></td>
-<td><span class="math inline">\(20 \%\)</span></td>
-<td><span class="math inline">\(20\%\)</span></td>
-<td><span class="math inline">\(10\%\)</span></td>
-<td><span class="math inline">\(87.5\%\)</span></td>
-</tr>
-<tr class="even">
-<td>Antal</td>
-<td><span class="math inline">\(17000\)</span></td>
-<td><span class="math inline">\(6450\)</span></td>
-<td><span class="math inline">\(5400\)</span></td>
-<td><span class="math inline">\(6150\)</span></td>
-<td><span class="math inline">\(4325\)</span></td>
-<td><span class="math inline">\(4975\)</span></td>
-<td><span class="math inline">\(25700\)</span></td>
-</tr>
-</tbody>
-</table>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 1
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<ol type="a">
-<li><p>Hvis man blot modtager en mail fra en Hotmail-konto, vil man da tænke, at det er spam eller ham?</p></li>
-<li><p>Hvis man blot modtager en tilfældig mail, vil man da tænke, at det er spam eller ham?</p></li>
-<li><p>Forklar hvorfor det kan være svært at afgøre, om det er spam, hvis man modtager en mail fra Danmark, som er sendt fra en firma-mail og hvor indhold er relateret til dating.</p></li>
-</ol>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 2
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Indfør selv stokastiske variable <span class="math inline">\(X1\)</span>, <span class="math inline">\(X2\)</span>, <span class="math inline">\(X3\)</span> og <span class="math inline">\(Y\)</span> og angiv udfaldsrum for hver af dem.</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 3
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<ol type="a">
-<li>Opstil posterior forholdet</li>
-</ol>
-<p><span class="math display">\[ \frac{P(Y = 0 \mid X_1=x_1, X_2=x_2, X_3=x_3)}{P(Y = 1 \mid X_1=x_1, X_2=x_2, X_3=x_3)}\]</span></p>
-<p>og forklar det smarte, der er sket ved at bruge Bayes formel.</p>
-<ol start="2" type="a">
-<li>Redegør for betydningen af forholdet og forklar hvorfor man ser på, om det er over eller under <span class="math inline">\(1\)</span>.</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 4
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Angiv den antagelse (modelforudsætning), som anvendes ved Bayes Naive klassifikation, og forklar hvad det gør for beregningen af sandsynlighederne fra opgave 3.</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 5
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Bestem prior forholdet</p>
-<p><span class="math display">\[\frac{P(Y=0)}{P(Y=1)}\]</span></p>
-<p>og beregn på den baggrund vægten</p>
-<p><span class="math display">\[w_0 = \ln \left ( \frac{P(Y=0)}{P(Y=1)} \right )\]</span></p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 6
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Bestem alle betingede sandsynligheder</p>
-<p><span class="math display">\[P(X_i=x_i \mid Y=0) \quad \textrm{og} \quad P(X_i=x_i \mid Y=1)\]</span></p>
-<p>for hver enkelt information, givet at det er henholdsvis spam og ham (i alt 22 sandsynligheder) og forklar idéen bag én af disse udregninger.</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 7
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>For hver af de 11 informationer bestemmes forholdet mellem sandsynlighederne</p>
-<p><span class="math display">\[ \frac{P(X_i=x_i \mid Y=0)}{P(X_i=x_i \mid Y=1)}\]</span></p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 8
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-10" class="callout-10-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Forklar hvordan man kommer fra resultaterne i opgave 7 til vægte og udregn vægtene hørende til hver af informationerne (i alt 11).</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 9
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-11" class="callout-11-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Forklar hvad der sker ved at benytte logaritmen på udtrykket fra opgave 3 og 4, hvor man ellers ganger faktorer sammen.</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 10
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-12" class="callout-12-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Afgør ud fra de vægte, som du har beregnet i opgave 8, hvilke informationer der taler for spam, og hvilke der taler for ham.</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 11
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-13" class="callout-13-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Afgør ved at beregne scoren <span class="math inline">\(S\)</span>, om man vil tænke at en mail er ham eller spam i følgende to situationer:</p>
+<section id="relaterede-forløb" class="level2">
+<h2 class="anchored" data-anchor-id="relaterede-forløb">Relaterede forløb</h2>
 <ul>
-<li>Mailens oprindelse er andet, den er sendt fra en hotmail-konto og omhandler ikke dating eller spil.</li>
-<li>Mailen er en firma-mail fra Danmark med indhold relateret til dating.</li>
+<li><a href="../../undervisningsforlob/hamorspam.html" target="_blank">Ham or Spam?</a></li>
 </ul>
-</div>
-</div>
-</div>
 
 
 </section>
