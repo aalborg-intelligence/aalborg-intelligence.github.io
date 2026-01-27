@@ -61,7 +61,7 @@ onlinevirksomhederne, bruger de mange ressourcer på at forfine og
 videreudvikle algoritmerne, og de præcise algoritmer, der bruges i dag,
 er typisk en forretningshemmelighed!
 
-# En samarbejdsbaseret algoritme
+## En samarbejdsbaseret algoritme
 
 Vi ser først et eksempel på, hvordan man kan lave samarbejdsbaserede
 anbefalinger. Vi forestiller os derfor en filmstreamingtjeneste, der
@@ -76,7 +76,7 @@ tjenesten har $n$ kunder, så indsamler den et datasæt som illustreret i
 film. Et 1-tal betyder, at brugeren har set filmen, og et 0 angiver, at
 brugeren ikke har set filmen.
 
-::: {#tbl-data}
+::: {#tbl-data .bordered}
 | Brugernummer | \"Blinkende lygter\" | \"Olsen-banden\" | \"Hævnen\" |
 |:------------:|:------------------:|:--------------:|:--------:|
 |      1       |         1          |       0        |    0     |
@@ -89,7 +89,7 @@ svarer til en bruger, hvor 1 angiver at brugeren har set filmen, mens 0
 angiver at brugeren ikke har set filmen.
 :::
 
-## Hyppige filmkombinationer
+### Hyppige filmkombinationer
 
 Som det første vil vi gerne finde ud af, hvilke film der typisk bliver
 set af den samme bruger. Lad os kalde filmene i tjenestens katalog for
@@ -122,7 +122,7 @@ $$ \"Titanic\" var altså den mest populære af de to film, idet $41.1\%$ af
 brugerne havde set den, mens kun $35.5\%$ havde set \"Mission: Impossible\".
 :::
 
-## Andre har også set...
+### Andre har også set...
 
 Streamingtjenesten har registreret, at du har set alle filmene i mængden
 $I$. De vil nu gerne kunne udtale sig om, hvor sandsynligt det er, at du
@@ -206,6 +206,9 @@ indtruffet. Dette er ofte tilfældet. Nogle gange kan vi dog have at
 $P(A\mid B)=P(A)$, altså at vi ikke får nogen ny viden om
 sandsynligheden for $A$ ud fra vores viden om $B.$ I dette tilfælde
 siger vi, at $A$ og $B$ er *stokastisk uafhængige*.
+
+Du kan læse mere i noten om [Sandsynlighedsregning og mængdeteori](../sandsynlighed/sandsynlighed.qmd).
+
 :::
 
 ::: {#exm-eks2}
@@ -226,7 +229,7 @@ derfor være den bedste anbefaling.
 
 
 
-## Begrænsninger ved algoritmen
+### Begrænsninger ved algoritmen
 
 Vi har beskrevet en simpel og klassisk måde at lave anbefalinger på, og
 er særligt relevant for onlineforretninger, som vil lave forslag af
@@ -259,7 +262,7 @@ for eksempel data om:
 For at tage alle disse oplysninger i betragtning, får man brug for meget
 mere komplicerede algoritmer.
 
-# En indholdsbaseret algoritme
+## En indholdsbaseret algoritme
 
 En af de ting, Netflix gør for at få flere oplysninger om din filmsmag,
 er, at de beder dig rate de film, du har set. I dag sker det med likes,
@@ -274,7 +277,7 @@ formodes at afhænge dels af egenskaber ved filmen, kaldet *features*, og
 dels af dine egne præferencer, det vil sige, hvor positivt eller
 negativt du vurderer forskellige features.
 
-## Multipel lineær regression
+### Multipel lineær regression
 
 Som eksempel kan vi kigge på to features. Den første er, hvor mange
 procent af filmen, der udgøres af kærlighedsscener. Den kalder vi $x_1$.
@@ -350,7 +353,7 @@ rate bedst.
 
 
 
-### Flere variable
+#### Flere variable
 
 Mere generelt kunne man vælge at betragte $M$ features. Vi ville så have
 $M$ variable $x_1,\ldots, x_M$. For hver bruger ville vi have så have
@@ -360,7 +363,7 @@ $$\hat{r} = b+ a_{1}x_{1} + a_{2}x_{2} + \dotsm + a_{M}x_{M}$$ {#eq-multipel}
 Dette kaldes en *multipel lineær regressionsmodel med $M$ variable*.
 
 
-## Estimation af vægte
+### Estimation af vægte
 
 Vi vil altså gerne have lavet en multipel lineær regressionsmodel for en
 bruger. I det følgende ser vi bare på en model med to features som i
@@ -374,7 +377,7 @@ brugeren faktisk har set og tildelt en rating.
 [^5]: At lære en computer at lave prædiktioner ud fra et datasæt kaldes *maskinlæring*, eller på engelsk
     *machine learning*, og er et centralt element i de fleste former for kunstig intelligens.
 
-::: {#tbl-ratings}
+::: {#tbl-ratings .bordered}
 |        | $x_1$ | $x_2$ | Rating |
 |:------:|:-----:|:-----:|:------:|
 | Film 1 |   0   |  40   |   4    |
@@ -456,7 +459,7 @@ formel for estimaterne for $b$, $a_1$ og $a_2$. Det vil vi dog ikke gøre her.
 
 
 
-## Mere fleksible modeller
+### Mere fleksible modeller
 
 Multiple lineære regressionsmodeller er meget populære. En af grundene
 er, at de er simple og nemme at fortolke. Det kan være godt for Netflix
@@ -511,7 +514,7 @@ krydsvalidering](../krydsvalidering/krydsvalidering.qmd). I næste afsnit
 skal vi se et eksempel på, hvordan man kan lade algoritmen vælge
 features selv.
 
-# Samarbejdsbaserede modeller for ratings
+## Samarbejdsbaserede modeller for ratings
 
 Da vi lavede den multiple lineære regressionsmodel, kiggede vi
 udelukkende på data for en enkelt bruger. Det viser sig dog, at man kan
@@ -521,7 +524,7 @@ vi tager udgangspunkt i et datasæt over alle brugeres ratings. Det kunne
 se ud som vist i @tbl-rates. NA står for \"not available\" og betyder, at
 brugeren ikke har set filmen.
 
-::: {#tbl-rates}
+::: {#tbl-rates .bordered}
 |          | Film 1 | Film 2 | Film 3 |
 |:--------:|:------:|:------:|:------:|
 | Bruger 1 |   1    |   NA   |   4    |
@@ -533,7 +536,7 @@ Eksempel på datasæt over brugeres ratings på en skala fra 1 til 5. NA
 angiver, at brugeren ikke har set filmen.
 :::
 
-## Matrixfaktorisering
+### Matrixfaktorisering
 
 Den algoritme, vi vil se på, kaldes *matrixfaktorisering*[^8].
 Algoritmen blev forslået i 2006 i forbindelse med konkurrencen \"The
@@ -639,7 +642,7 @@ vores rating-matrix $\hat{R}$ er faktoriseret som et produkt af to
 matricer. Deraf navnet matrixfaktorisering.
 :::
 
-### Skæring i modellen
+#### Skæring i modellen
 
 Da vi lavede multipel lineær regression, var der også en skæring i
 modellen, som svarede til ratingen, når alle features var nul.
@@ -659,7 +662,7 @@ end gennemsnittet. For nemheds skyld arbejder vi videre med modellen
 (@eq-modelij) i det følgende.
 
 
-## Estimation af vægte
+### Estimation af vægte
 
 For at kunne bruge modellen i (@eq-matrixfak) skal vi have estimeret alle
 featurevægtene $x_{1j},x_{2j},\ldots,x_{Mj}$ og alle præferencevægtene
@@ -709,7 +712,7 @@ $$ {#eq-partiel3}
 Disse formler gør, at en computer nemt kan lave gradientnedstigning.
 
 
-# Moderne anbefalingssystemer
+## Moderne anbefalingssystemer
 
 Vi har skelnet mellem indholdsbaserede og samarbejdsbaserede
 anbefalingssystemer. De algoritmer der bruges i praksis indeholder dog
@@ -732,3 +735,8 @@ tilfælles.
 Som nævnt er det afgørende i konkurrencen mellem streamingtjenester, at
 de er i stand til at levere gode anbefalinger til brugerne. Derfor
 arbejdes der også til stadighed på at gøre algoritmerne bedre.
+
+## Relaterede forløb
+
+* [Hvad skal du se på Netflix?](../../undervisningsforlob/anbefalingssystemer.qmd){target="_blank"}
+

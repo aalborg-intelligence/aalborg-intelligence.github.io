@@ -8,7 +8,7 @@ nocite: |
 
 
 
-# K-means
+## K-means
 
 Når $K$-means metoden bruges, er målet at inddele nogle observationer i grupper, så observationerne i hver gruppe minder meget om hinanden.
 
@@ -62,7 +62,7 @@ Idéen er så nu, at vi vil prøve at bestemme grupperne $S_1, S_2, \dots, S_k$ 
 
 Det er desværre ikke lige til at finde den optimale løsning på dette problem, men her angives en metode/algoritme, som forhåbentlig finder en god løsning.
 
-# Algoritme
+## Algoritme
 
 Vi vil nu se på en metode til at finde en god løsning til $K$-means problemet. 
 Vi får her brug for \"midterpunktet\" for hver gruppe, som vi vil kalde for $\vec{\mu_1},\vec{\mu_2},...,\vec{\mu_k}$. Ved midterpunktet vil vi simpelthen bare forstå gennemsnittet af alle punkter i den pågældende gruppe.
@@ -97,7 +97,7 @@ punkter kommer til at skifte til en anden gruppe.
 
 Det virker jo meget rimeligt. Så er spørgsmålet bare, om denne fremgangsmåde virkelig fungerer! Det vil vi se nærmere på i afsnittet om [sammenhængen mellem SUMPAR og SUMMIDT](#sec-SUMPAR_SUMMIDT). Men lad os starte med at se på et par eksempler.
 
-# Eksempel på beregning af midterpunkter
+## Eksempel på beregning af midterpunkter
 
 Først kunne det måske være rart at få en fornemmelse af, hvorfor $\vec{\mu_1},\vec{\mu_2},...,\vec{\mu_k}$ betegnes som midterpunkter. 
 
@@ -138,7 +138,7 @@ Dette er illustreret i @fig-midterpunkter.
 På @fig-midterpunkter bliver det tydeligt, hvorfor det er fornuftigt at vælge midterpunkterne, som det sker i trin 2 i algoritmen -- midterpunkterne ligger simpelthen i \"midten\" af hver gruppe.
 ::: 
 
-# Eksempel på algoritmen
+## Eksempel på algoritmen
 
 Lad os nu prøve at bruge algoritmen på punkterne fra @exm-midterpunkter. I @fig-punkter_to_grupper_1 ses punkterne indtegnet, men uden angivelse af hvilken gruppe hvert enkelt punkt tilhører.
 
@@ -287,7 +287,7 @@ pander(dist_grp)
 ```
 Vi kan nu se, at ingen af punkterne har skiftet gruppe, og algoritmen stopper derfor. Den endelige inddeling i grupper bliver derfor som vist i @fig-punkter_to_grupper_5, hvilket nok også er den inddelingen, som vi ville have valgt bare ved at kigge på punkterne med det blotte øje.
 
-# Fornuftigt valg af midterpunkter og grupper
+## Fornuftigt valg af midterpunkter og grupper
 
 Vi vil nu argumentere for, hvorfor algoritmen virker. Vi starter med at se på, hvorfor det er fornuftigt at vælge midterpunkterne, som vi gør i trin 2 i algoritmen.
 
@@ -339,7 +339,7 @@ Lad os nu se på valget af grupper ved trin $3$ i algoritmen. For en punkt $\vec
 
 Når et punkt skifter gruppe vil $SUMMIDT$ ikke længere være optimal i forhold til $\vec{\mu_1},\vec{\mu_2},...,\vec{\mu_k}$ før de bliver opdateret igen. I algoritmen bliver disse to trin netop gentaget, indtil ingen punkter skifter gruppe, hvorved $SUMMIDT$ har ramt et lokalt minimum i forhold til valg af gruppe for det enkelt punkt og valg af midterpunkt for hver gruppe.
 
-# Sammenhængen mellem SUMPAR og SUMMIDT {#sec-SUMPAR_SUMMIDT}
+## Sammenhængen mellem SUMPAR og SUMMIDT {#sec-SUMPAR_SUMMIDT}
 
 Nu vil vi endelig se på sammenhængen mellem de to summer $SUMMIDT$ i (@eq-SUMMIDT) og $SUMPAR$ i (@eq-SUMPAR). Vi vil vise, at 
 $$SUMPAR=2\cdot SUMMIDT$$ 
@@ -494,13 +494,13 @@ $$
 
 Det vil altså sige, at hvis vi minimerer summen $SUMMIDT$, så har vi også minimeret summen $SUMPAR$, hvilket præcis var, hvad vi oprindeligt ønskede.
 
-# Opsummering/optimal løsning
+## Opsummering/optimal løsning
 
 Nu har vi set på selve algoritmen og fundet ud af, at den finder et lokalt minimum for summen $SUMPAR$, som man ønsker minimeret. Der er dog ingen garanti for, at man opnår et globalt minimum, eller hvor lang tid algoritmen er om at finde en løsning.
 
 Det er egentlig heller ikke noget problem at få lavet en algoritme, der finder en optimal løsning, problemet er blot, at den vil køre alt for langsomt. En sådan optimal algoritme kan laves ved blot at undersøge hver mulig inddeling i grupper og så finde den inddeling, der giver den mindste værdi af $SUMPAR$. Dog vil det være sådan, at selv ved blot $2$ grupper og $100$ punkter vil der være $2^{99}$ muligheder[^7], der skal tjekkes. At undersøge så mange muligheder er ikke praktisk muligt -- selv ikke på en computer!
 
-# K-means ikke blot med punkter
+## K-means ikke blot med punkter
 Indtil videre har vi udelukkende set på data som værende punkter, hvor vi kan anvende euklidisk afstand for at måle afstanden mellem punkterne. Det kunne dog være langt mere interessant f.eks. at arbejde med mennesker og information om dem (f.eks. alder, køn, forbrug og så videre) og stadigvæk med et ønske om at inddele disse mennesker i et bestemt antal grupper, hvor der er stor ligmed mellem dem indenfor samme gruppe. Her skal man selvfølgelig have tænkt lidt over, hvordan man kommer fra mennesker til punkter og efterfølgende får noget, der svarer til euklidisk afstand. Det kan man læse meget mere om under [feature-skalering](../afstande/feature_scaling.qmd).
 
 [^1]: En gruppe $S_i$ er egentlig en mængde, og $|S_i|$ er kardinaliteten af denne mængde -- altså antallet af elementer i mængden. 
@@ -510,3 +510,8 @@ Indtil videre har vi udelukkende set på data som værende punkter, hvor vi kan 
 [^5]: Den kommutative lov siger, at $k \cdot (\vec a \cdot \vec b) =  (k \cdot\vec a) \cdot (\vec b) =  (\vec a ) \cdot (k \cdot\vec b)$
 [^6]: Det svarer bare til at sætte uden for en parentes.
 [^7]: Fordi for hvert punkt kan punktet enten være i den ene eller den anden gruppe. Det giver i første omgang $2^{100}$ grupper. Nu vil en inddeling hvor for eksempel punktet $A$ og $B$ er i gruppe $1$, mens $C$ er i gruppe $2$ være den samme inddeling, som hvis $C$ er i gruppe $1$ og $A$ og $B$ er i gruppe $2$. På grund af denne symmetri ender vi derfor samlet set med $2^{100}/2=2^{99}$ grupper. 
+
+## Relaterede forløb
+
+* [Inddeling af musik i grupper](../../undervisningsforlob/musik.qmd){target="_blank"}.
+

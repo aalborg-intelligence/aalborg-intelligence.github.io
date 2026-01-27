@@ -5,23 +5,6 @@ description-meta: "I denne note giver vi en grundig gennemgang af matematikken b
 bibliography: referencer.bib
 nocite: | 
   @*
-listing:
-  id: main-listing-content
-  field-display-names:
-    description-meta: "Kort beskrivelse"
-    title: "Forløb"
-  filter-ui: false 
-  sort-ui: false 
-  sort: false
-  type: table
-  contents: 
-    - path: ../../undervisningsforlob/aktiveringsfunktioner.qmd 
-    - path: ../../undervisningsforlob/screeningsprogrammer.qmd 
-    - path: ../../undervisningsforlob/opklar_et_mord.qmd 
-    - path: ../../undervisningsforlob/Opdatering_af_vægte_i_en_kunstig_neuron.qmd
-    - path: ../../undervisningsforlob/Opdatering_af_vægte_i_NN_med_2_skjulte_lag.qmd
-    - path: ../../undervisningsforlob/Opdatering_af_vægte_i_NN_med_1_skjult_lag.qmd
-  fields: [title, description-meta] 
 ---
 
 ```{r setup-med-pakker-osv}
@@ -32,7 +15,7 @@ library(huxtable)
 
 Denne note giver en grundig gennemgang af matematikken bag kunstige neurale netværk.
 
-# Hvad er kunstig intelligens og hvad skal vi med det?
+## Hvad er kunstig intelligens og hvad skal vi med det?
 
 Forestil dig at du gerne vil have en funktion $f$, som tager et billede
 som input og som output fortæller dig, om der er en hund på billedet
@@ -60,7 +43,7 @@ kræftknuder tidligere end lægen? Eller hvad hvis man har så mange
 røntgenbilleder, at det vil være smart, at få en computer til at kigge
 dem igennem først?
 
-# Hvordan laver man en funktion, som kan finde \"ting\" på billeder? {#sec-hvordanFunktion}
+## Hvordan laver man en funktion, som kan finde \"ting\" på billeder? {#sec-hvordanFunktion}
 
 Lad os sige, at vi nu kan se fidusen med den der lidt mærkelige funktion,
 som kan tage et billede som input, og som output kan fortælle et eller
@@ -138,14 +121,14 @@ fortolke på de konstanter, som indgår i en lineær funktion, der er
 anvendt i en given sammenhæng. Men her må du glemme alt om at tillægge
 de konstanter, vi nu er på jagt efter, nogen som helst betydning!
 
-## VIDEO: Kunstige neurale netværk 1
+### VIDEO: Kunstige neurale netværk 1
 
 I denne video forklarer vi lidt om, hvad et kunstigt neuralt netværk er samt hvilke input- og outputværdier, man kan bruge.
 
 {{< video https://www.youtube.com/embed/09LTr2eVOWg >}}
 
 
-# Hvordan virker et kunstigt neuralt netværk? {#sec-feedforward}
+## Hvordan virker et kunstigt neuralt netværk? {#sec-feedforward}
 
 Kunstige neurale netværk som bruges i den virkelige verden består som
 regel af millionvis af de såkaldte neuroner. For at holde tingene simple
@@ -221,20 +204,20 @@ fig
 Sigmoid-funktionens differentialkvotient har en bestemt egenskab, som
 det fremgår af denne sætning:
 
->::: {#thm-sigmoid_diff} 
->
->
+::: {#thm-sigmoid_diff} 
+
+
 Om sigmoid-funktionens differentialkvotient gælder
 $$
 \sigma'(x) = \sigma(x) \cdot (1 - \sigma(x)).
 $$ 
-Det vil sige, hvis $y=\sigma(x)$ så er 
+Det vil sige, hvis $y=\sigma(x)$, så er 
 $$
 y' = y \cdot (1 - y).
 $$
 :::
 
-Beviset er ikke så svært og overlades til læseren (se eventuelt også forløbet om [aktiveringsfunktioner](../../undervisningsforlob/aktiveringsfunktioner.qmd#sigmoid)).
+Beviset er ikke så svært og overlades til læseren (se eventuelt også forløbet om [aktiveringsfunktioner](../../undervisningsforlob/aktiveringsfunktioner.qmd#sigmoid)){target="_blank"}.
 
 Det er netop sigmoid-funktionen, som bruges til at udregne $y_1$:
 $$
@@ -300,14 +283,14 @@ $$
 Det gøres ved hjælp af en fiks teknik, som kaldes for
 **backpropagation**, som vi nu skal se nærmere på.
 
-## VIDEO: Kunstige neurale netværk 2
+### VIDEO: Kunstige neurale netværk 2
 
 I denne video giver vi et eksempel på et simpelt kunstig neuralt netværk og forklarer **feedforward**. 
 
 {{< video https://www.youtube.com/embed/hUlyeMJGvXM >}}
 
 
-# Hvordan træner man et kunstigt neuralt netværk? {#sec-backpropagation_bogstaver}
+## Hvordan træner man et kunstigt neuralt netværk? {#sec-backpropagation_bogstaver}
 
 Vi har altså nu set på, hvordan et kunstigt neuralt netværk virker, hvis
 vi kender værdierne for alle vægte og bias. Det store spørgsmål er nu,
@@ -474,14 +457,14 @@ følgende.
 
 [^5]: Hvis vi ændrer $s_1$ for hurtigt (svarende til at $\eta$ er for stor), så kan vi risikere at \"træde forbi\" det søgte minimum. Omvendt, hvis vi ændrer $s_1$ for langsomt (svarende til at $\eta$ er for lille), så kommer det til at tage alt for lang tid at bestemme minimum. Man er derfor typisk nødt til at prøve sig lidt frem for at finde en passende værdi af $\eta$.
 
-## VIDEO: Kunstige neurale netværk 3
+### VIDEO: Kunstige neurale netværk 3
 
 I videoen her forklarer vi, hvad targetværdier er, og hvordan tabsfunktionen defineres.
 
 {{< video https://www.youtube.com/embed/v2Jv5RTlZMw >}}
 
 
-## VIDEO: Kunstige neurale netværk 4
+### VIDEO: Kunstige neurale netværk 4
 
 I denne video bliver gradientnedstigning forklaret. 
 
@@ -490,7 +473,7 @@ I denne video bliver gradientnedstigning forklaret.
 
 
 
-## Opdatering af $w$-vægtene {#sec-opdatering_w}
+### Opdatering af $w$-vægtene {#sec-opdatering_w}
 
 Når man bruger backpropagation, starter man med at finde de partielle
 afledede for de vægte, som direkte påvirker outputværdien $o$. På
@@ -591,13 +574,13 @@ kan derfor beregne de nye $w$ vægte.
 
 Så mangler vi bare at finde opdateringsreglerne for de restende vægte!
 
-## VIDEO: Kunstige neurale netværk 5
+### VIDEO: Kunstige neurale netværk 5
 
 I videoen her forklarer vi hvordan $w$-vægtene opdateres. 
 
 {{< video https://www.youtube.com/embed/X5g4h3cKSok >}}
 
-## Opdatering af $u$- og $v$-vægtene {#sec-opdatering_uv}
+### Opdatering af $u$- og $v$-vægtene {#sec-opdatering_uv}
 
 Vi går nu et trin længere tilbage i netværket - væk fra outputlaget. Her
 kan vi se neuronerne, som fyrer værdierne $z_1$ og $z_2$, som bliver
@@ -689,14 +672,14 @@ $$
 $$
 :::
 
-## VIDEO: Kunstige neurale netværk 6
+### VIDEO: Kunstige neurale netværk 6
 
 I videoen her forklarer vi, hvordan $v$-vægtene opdateres.
 
 {{< video https://www.youtube.com/embed/CVG2lh9T6lg >}}
 
 
-## Opdatering af $r$- og $s$-vægtene {#sec-opdatering_rs}
+### Opdatering af $r$- og $s$-vægtene {#sec-opdatering_rs}
 
 Så er vi endelig fremme ved $r$- og $s$ vægtene. Start lige med at tage
 en dyb indånding! Nu bliver det lidt mere kompliceret. Se på
@@ -856,20 +839,20 @@ Det var faktisk det! Altså det blev jo en værre omgang bogstavgymnastik,
 men faktum er, at vi er i mål med at udlede backpropagation algoritmen
 for vores simple netværk i @fig-simple_NN_weights. Hurra for det!
 
-## VIDEO: Kunstige neurale netværk 7
+### VIDEO: Kunstige neurale netværk 7
 
 I denne video forklares hvordan $r$-vægtene opdateres.
 
 {{< video https://www.youtube.com/embed/fUFH8hVvGMU >}}
 
 
-# Neurale netværk helt generelt
+## Neurale netværk helt generelt
 
 Hvis du er helt vild - så kan du i [noten om neurale netværk helt generelt](neurale_net_helt_generelt.qmd) læse mere om, hvordan man beskriver et neuralt netværk med et vilkårligt antal skjulte lag, og hvordan opdateringsreglerne bliver i det tilfælde. Det bliver lidt mere langhåret, men det er ikke umuligt!
 
 
 
-# Valg af tabsfunktion
+## Valg af tabsfunktion
 
 I @sec-backpropagation_bogstaver definerede vi tabsfunktionen ved
 $$
@@ -1016,7 +999,7 @@ passer cross-entropy tabsfunktionen bedre sammen med sigmoid
 aktiveringsfunktionen, end den kvadratiske tabsfunktion gør. Simpelthen
 fordi det potentielle problem omkring langsom læring undgås.
 
-# Billedgenkendelse og kunstige neurale netværk
+## Billedgenkendelse og kunstige neurale netværk
 
 Vi startede egentlig med at sige, at vi godt kunne tænke os at træne et
 kunstigt neuralt netværk, så det kan bruges til at afgøre, om der er en
@@ -1049,17 +1032,19 @@ hvis pixelværdier vi vil repræsentere på denne måde:
 #set_all_borders(p1)
 ```
 
-  $x_{1,1}$    $x_{1,2}$    $x_{1,3}$    $x_{1,4}$    $x_{1,5}$    $x_{1,6}$    $x_{1,7}$    $x_{1,8}$    $x_{1,9}$    $x_{1,10}$
-  ------------ ------------ ------------ ------------ ------------ ------------ ------------ ------------ ------------ -------------
-   $x_{2,1}$    $x_{2,2}$    $x_{2,3}$    $x_{2,4}$    $x_{2,5}$    $x_{2,6}$    $x_{2,7}$    $x_{2,8}$    $x_{2,9}$    $x_{2,10}$
-   $x_{3,1}$    $x_{3,2}$    $x_{3,3}$    $x_{3,4}$    $x_{3,5}$    $x_{3,6}$    $x_{3,7}$    $x_{3,8}$    $x_{3,9}$    $x_{3,10}$
-   $x_{4,1}$    $x_{4,2}$    $x_{4,3}$    $x_{4,4}$    $x_{4,5}$    $x_{4,6}$    $x_{4,7}$    $x_{4,8}$    $x_{4,9}$    $x_{4,10}$
-   $x_{5,1}$    $x_{5,2}$    $x_{5,3}$    $x_{5,4}$    $x_{5,5}$    $x_{5,6}$    $x_{5,7}$    $x_{5,8}$    $x_{5,9}$    $x_{5,10}$
-   $x_{6,1}$    $x_{6,2}$    $x_{6,3}$    $x_{6,4}$    $x_{6,5}$    $x_{6,6}$    $x_{6,7}$    $x_{6,8}$    $x_{6,9}$    $x_{6,10}$
-   $x_{7,1}$    $x_{7,2}$    $x_{7,3}$    $x_{7,4}$    $x_{7,5}$    $x_{7,6}$    $x_{7,7}$    $x_{7,8}$    $x_{7,9}$    $x_{7,10}$
-   $x_{8,1}$    $x_{8,2}$    $x_{8,3}$    $x_{8,4}$    $x_{8,5}$    $x_{8,6}$    $x_{8,7}$    $x_{8,8}$    $x_{8,9}$    $x_{8,10}$
-   $x_{9,1}$    $x_{9,2}$    $x_{9,3}$    $x_{9,4}$    $x_{9,5}$    $x_{9,6}$    $x_{9,7}$    $x_{9,8}$    $x_{9,9}$    $x_{9,10}$
-   $x_{10,1}$   $x_{10,2}$   $x_{10,3}$   $x_{10,4}$   $x_{10,5}$   $x_{10,6}$   $x_{10,7}$   $x_{10,8}$   $x_{10,9}$   $x_{10,10}$
+| | | | | | | | | | |
+|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
+|$x_{1,1}$|$x_{1,2}$|$x_{1,3}$|$x_{1,4}$|$x_{1,5}$|$x_{1,6}$|$x_{1,7}$|$x_{1,8}$|$x_{1,9}$|$x_{1,10}$|
+|$x_{2,1}$|$x_{2,2}$|$x_{2,3}$|$x_{2,4}$|$x_{2,5}$|$x_{2,6}$|$x_{2,7}$|$x_{2,8}$|$x_{2,9}$|$x_{2,10}$|
+|$x_{3,1}$|$x_{3,2}$|$x_{3,3}$|$x_{3,4}$|$x_{3,5}$|$x_{3,6}$|$x_{3,7}$|$x_{3,8}$|$x_{3,9}$|$x_{3,10}$|
+|$x_{4,1}$|$x_{4,2}$|$x_{4,3}$|$x_{4,4}$|$x_{4,5}$|$x_{4,6}$|$x_{4,7}$|$x_{4,8}$|$x_{4,9}$|$x_{4,10}$|
+|$x_{5,1}$|$x_{5,2}$|$x_{5,3}$|$x_{5,4}$|$x_{5,5}$|$x_{5,6}$|$x_{5,7}$|$x_{5,8}$|$x_{5,9}$|$x_{5,10}$|
+|$x_{6,1}$|$x_{6,2}$|$x_{6,3}$|$x_{6,4}$|$x_{6,5}$|$x_{6,6}$|$x_{6,7}$|$x_{6,8}$|$x_{6,9}$|$x_{6,10}$|
+|$x_{7,1}$|$x_{7,2}$|$x_{7,3}$|$x_{7,4}$|$x_{7,5}$|$x_{7,6}$|$x_{7,7}$|$x_{7,8}$|$x_{7,9}$|$x_{7,10}$|
+|$x_{8,1}$|$x_{8,2}$|$x_{8,3}$|$x_{8,4}$|$x_{8,5}$|$x_{8,6}$|$x_{8,7}$|$x_{8,8}$|$x_{8,9}$|$x_{8,10}$|
+|$x_{9,1}$|$x_{9,2}$|$x_{9,3}$|$x_{9,4}$|$x_{9,5}$|$x_{9,6}$|$x_{9,7}$|$x_{9,8}$|$x_{9,9}$|$x_{9,10}$|
+|$x_{10,1}$|$x_{10,2}$|$x_{10,3}$|$x_{10,4}$|$x_{10,5}$|$x_{10,6}$|$x_{10,7}$|$x_{10,8}$|$x_{10,9}$|$x_{10,10}$|
+: {.no-header .bordered}
 
 Det vil sige, at $x_{5,8}$ er pixelværdien i række $5$ og kolonne $8$ i
 billedet. Husk at når billedet er sort/hvidt, er denne værdi et heltal
@@ -1307,13 +1292,17 @@ billeder langt bedre end et almindeligt kunstigt neuralt netværk. Netop
 fordi at de forskellige pixels placeringer i forhold til hinanden tages
 i betragtning, når et convolutional neuralt netværk konstrueres.
 
-# Relaterede forløb
+## Relaterede forløb
 
-::: {#main-listing-content}
-:::
+* [Aktiveringsfunktioner](../../undervisningsforlob/aktiveringsfunktioner.qmd){target="_blank"}. 
+* [Screeningsprogrammer](../../undervisningsforlob/screeningsprogrammer.qmd){target="_blank"}.
+* [Opklar et mord!](../../undervisningsforlob/opklar_et_mord.qmd){target="_blank"}
+* [Opdatering af vægte i en kunstig neuron](../../undervisningsforlob/opdatering_af_vaegte/opdatering_af_vaegte_i_en_kunstig_neuron.qmd){target="_blank"}.
+* [Opdatering af vægte i et simpelt neuralt netværk med to skjulte lag](../../undervisningsforlob/opdatering_af_vaegte/opdatering_af_vaegte_i_NN_med_2_skjulte_lag.qmd){target="_blank"}.
+* [Opdatering af vægte i et simpelt neuralt netværk med ét skjult lag (med cross-entropy som tabsfunktion)](../../undervisningsforlob/opdatering_af_vaegte/opdatering_af_vaegte_i_NN_med_1_skjult_lag.qmd){target="_blank"}.
 
 
-# Videre læsning
+## Videre læsning
 
 [^1]: Du kan med god ret spørge: \"Hvorfor nu det?\". I virkeligheden
     afhænger den jo af millionvis af variable. Svaret er, at hvis vi
