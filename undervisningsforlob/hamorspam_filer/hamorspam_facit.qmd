@@ -49,8 +49,11 @@ $$
 * Posterior forholdet 
    $$ 
    \begin{aligned}
-   &\frac{P(Y = \textrm{spam} \mid X_1=x_1, X_2=x_2, X_3=x_3)}{P(Y = \textrm{ham} \mid X_1=x_1,    X_2=x_2, X_3=x_3)} = \\ 
-   &\frac{P(X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{spam} ) \cdot    P(Y=\textrm{spam})}{P(X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{ham} ) \cdot    P(Y=\textrm{ham})} = \\ &\frac{P(Y=\textrm{spam})}{P(Y=\textrm{ham})} \cdot \frac{P(X_1=x_1,      X_2=x_2, X_3=x_3 \mid Y = \textrm{spam} )}{P(X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{ham} )}
+   &\frac{P(Y = \textrm{spam} \mid X_1=x_1, X_2=x_2, X_3=x_3)}{P(Y = \textrm{ham} \mid X_1=x_1,    X_2=x_2, X_3=x_3)} = \\ \\
+   &\frac{\frac{P(X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{spam} ) \cdot    P(Y=\textrm{spam})}{P(X_1=x_1, X_2=x_2, X_3=x_3)}}{\frac{P(X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{ham} ) \cdot    P(Y=\textrm{ham})}{P(X_1=x_1, X_2=x_2, X_3=x_3)}}
+   = \\ \\
+   &\frac{P(X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{spam} ) \cdot    P(Y=\textrm{spam})}{P(X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{ham} ) \cdot    P(Y=\textrm{ham})}
+   = \\ \\ &\frac{P(Y=\textrm{spam})}{P(Y=\textrm{ham})} \cdot \frac{P(X_1=x_1,      X_2=x_2, X_3=x_3 \mid Y = \textrm{spam} )}{P(X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{ham} )}
    \end{aligned}
    $$
 
@@ -64,7 +67,9 @@ $$
   så svarer det til, at
   
   $$
-  P(Y = \textrm{spam} \mid X_1=x_1, X_2=x_2, X_3=x_3) > P(Y = \textrm{ham} \mid X_1=x_1,    X_2=x_2, X_3=x_3)
+  \begin{aligned}
+  P(Y = \textrm{spam} \mid X_1=x_1, &X_2=x_2, X_3=x_3) > \\ &P(Y = \textrm{ham} \mid X_1=x_1,    X_2=x_2, X_3=x_3)
+  \end{aligned}
   $$
   Det vil sige, at hvis posterior forholdet er større end $1$, så vil der være størst chance for, at der er tale om en spam mail.
 
@@ -74,39 +79,163 @@ $$
 ::: {.callout-note collapse="true" appearance="minimal"}  
 ### Facit -- opgave 4
 
+Vi antager, at oprindelse, mail og indhold er uafhængige af hinanden givet information om, om mailen er ham eller spam. 
+
+Det betyder, at
+
+$$
+\begin{aligned}
+P(&X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{ham} ) = \\ &P(X_1=x_1 \mid Y = \textrm{ham} ) \cdot P(X_2=x_2\mid Y = \textrm{ham} ) \cdot P(X_3=x_3 \mid Y = \textrm{ham} )
+\end{aligned}
+$$
+og
+
+$$
+\begin{aligned}
+P(&X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{spam} ) = \\ &P(X_1=x_1 \mid Y = \textrm{spam} ) \cdot P(X_2=x_2\mid Y = \textrm{spam} ) \cdot P(X_3=x_3 \mid Y = \textrm{spam} )
+\end{aligned}
+$$
+
+
+
 :::
 
 ::: {.callout-note collapse="true" appearance="minimal"}  
 ### Facit -- opgave 5
+
+
+Prior forholdet 
+
+$$\frac{P(Y=\textrm{spam})}{P(Y=\textrm{ham})} \approx \frac{0.3186}{0.6814}\approx0.4675$$
+
+og beregn på den baggrund vægten 
+
+$$w_0 \approx -0.7603$$
 
 :::
 
 ::: {.callout-note collapse="true" appearance="minimal"}  
 ### Facit -- opgave 6
 
+| | $P(X_i=x_i \mid Y=\textrm{spam})$ | $P(X_i=x_i \mid Y=\textrm{ham})$ |
+|-|:-:|:-:|
+| **Oprindelse** | | |
+| $X_1 = \textrm{DK}$ | $17.94 \%$ | $33.54 \%$ | 
+| $X_1 = \textrm{Europa}$ | $32.29 \%$ | $35.22 \%$ | 
+| $X_1 = \textrm{USA}$ | $25.11 \%$ | $21.80 \%$ | 
+| $X_1 = \textrm{Andet}$ | $24.66 \%$ | $9.43 \%$ | 
+| **Mail** | | |
+| $X_2 = \textrm{Firma}$ | $15.25 \%$ | $64.15 \%$ | 
+| $X_2 = \textrm{Google}$ | $11.57 \%$ | $21.64 \%$ | 
+| $X_2 = \textrm{Hotmail}$ | $29.06 \%$ | $9.06 \%$ | 
+| $X_2 = \textrm{Andet}$ | $44.13 \%$ | $5.16 \%$ | 
+| **Indhold** | | |
+| $X_3 = \textrm{Dating}$ | $31.03 \%$ | $3.63 \%$ | 
+| $X_3 = \textrm{Spil}$ | $40.16 \%$ | $2.09 \%$ | 
+| $X_3 = \textrm{Andet}$ | $28.81 \%$ | $94.29 \%$ | 
+: {.bordered}
+
+\
+
 :::
 
 ::: {.callout-note collapse="true" appearance="minimal"}  
 ### Facit -- opgave 7
+
+| | $P(X_i=x_i \mid Y=\textrm{spam}) / P(X_i=x_i \mid Y=\textrm{ham})$ |
+|-|:-:|
+| **Oprindelse** | | |
+| $X_1 = \textrm{DK}$ | $0.5348$ | 
+| $X_1 = \textrm{Europa}$ | $0.9167$ | 
+| $X_1 = \textrm{USA}$ | $1.1518$ | 
+| $X_1 = \textrm{Andet}$ | $2.6143$ | 
+| **Mail** | | |
+| $X_2 = \textrm{Firma}$ | $0.2377$ |
+| $X_2 = \textrm{Google}$ | $0.5348$ | 
+| $X_2 = \textrm{Hotmail}$ | $3.2085$ |
+| $X_2 = \textrm{Andet}$ | $8.5561$ |
+| **Indhold** | | |
+| $X_3 = \textrm{Dating}$ | $8.5561$ |
+| $X_3 = \textrm{Spil}$ | $19.2511$ |
+| $X_3 = \textrm{Andet}$ | $0.3056$ | 
+: {.bordered}
+
+\
 
 :::
 
 ::: {.callout-note collapse="true" appearance="minimal"}  
 ### Facit -- opgave 8
 
+Vægtene beregnes sådan her:
+
+$$
+w_i(x_i) = \ln \left(\frac{P(X_i = x_i \mid Y = \textrm{spam})}{P(X_i = x_i \mid Y = \textrm{ham})}\right)
+$$
+
+
+|  | $w_i(x_i)$ |
+|-|:-:|
+| **Oprindelse** | | |
+| $X_1 = \textrm{DK}$ | $-0.6259$ | 
+| $X_1 = \textrm{Europa}$ | $-0.0870$ | 
+| $X_1 = \textrm{USA}$ | $0.1413$ | 
+| $X_1 = \textrm{Andet}$ | $0.9610$ | 
+| **Mail** | | |
+| $X_2 = \textrm{Firma}$ | $-1.4369$ |
+| $X_2 = \textrm{Google}$ | $-0.6259$ | 
+| $X_2 = \textrm{Hotmail}$ | $1.1658$ |
+| $X_2 = \textrm{Andet}$ | $2.1466$ |
+| **Indhold** | | |
+| $X_3 = \textrm{Dating}$ | $2.1466$ |
+| $X_3 = \textrm{Spil}$ | $2.9576$ |
+| $X_3 = \textrm{Andet}$ | $-1.1856$ | 
+: {.bordered}
+
+\
+
+
 :::
 
 ::: {.callout-note collapse="true" appearance="minimal"}  
 ### Facit -- opgave 9
+
+Gange bliver lavet om til plus. Eller hvis vi skal sige det lidt fint: Multiplikation bliver til addition.
 
 :::
 
 ::: {.callout-note collapse="true" appearance="minimal"}  
 ### Facit -- opgave 10
 
+Faktorer som taler for spam (positiv vægt):
+
+* Oprindelse fra USA og andet.
+* Mail fra Hotmail og andet.
+* Indhold fra dating og spil.
+
+
+
+Faktorer som taler for ham (negativ vægt):
+
+* Oprindelse fra DK og Europa.
+* Mail fra firma og Google.
+* Indhold fra andet.
+
 :::
 
 ::: {.callout-note collapse="true" appearance="minimal"}  
 ### Facit -- opgave 11
+
+* Mailens oprindelse er andet, den er sendt fra en hotmail-konto og omhandler ikke dating eller spil:
+
+   $$S=0.1809$$
+   
+   Det taler for, at der er tale om spam.
+   
+* Mailen er en firma-mail fra Danmark med indhold relateret til dating:
+
+   $$S=-0.6765$$
+   
+   Det taler for, at der er tale om ham.
 
 :::
