@@ -1,7 +1,7 @@
 ---
 title: "Feature-skalering"
 image: "images/fig_min_max_skalering.png"
-description: "Hvis de data, man arbejder med, måler vidt forskellige ting -- måske endda på vidt forskellige skalaer -- så vil man som oftest have brug for at \"justere\" data, så de er på samme skala. Det er præcis, hvad feature-skalering går ud på."
+description: "Hvis de data, man arbejder med, måler vidt forskellige ting -- måske endda på vidt forskellige skalaer -- så vil man som oftest have brug for at \"justere\" data, så de er på samme skala. Det er præcis, hvad feature-skalering går ud på." 
 categories:
   - A-niveau
 ---
@@ -9,7 +9,7 @@ categories:
 Hvis de data, man arbejder med, måler vidt forskellige ting -- måske endda på vidt forskellige skalaer -- så vil man som oftest have brug for at \"justere\" data, så de er på samme skala.
 
 ## Afstand med hovedet under armen
-Det er ikke altid helt klart, hvordan man skal bestemme afstanden mellem to datapunkter, hvis koordinaterne i hvert datapunkter beskriver vidt forskellige ting. Vi vil her se nærmere på, hvilke problemer, der kan opstå, hvis man ikke tænker sig om -- og hvad man kan gøre for at løse dem.
+Det er ikke altid helt klart, hvordan man skal bestemme afstanden mellem to datapunkter, hvis koordinaterne i hvert datapunkt beskriver vidt forskellige ting. Vi vil her se nærmere på, hvilke problemer der kan opstå, hvis man ikke tænker sig om -- og hvad man kan gøre for at løse dem.
 
 Lad os forestille os, at data består af vægt og højde for nogle personer, så hvert datapunkt er på formen
 $$(v,h)$$
@@ -60,7 +60,7 @@ Nu er
 Der er nu længst fra $A$ til $B$.
 
 Det er ikke ret smart. Skal man finde de datapunkter, som ligger tættest på hinanden, er svaret
-tilsyneladende som vinden blæser og afhængig af hvilken enhed, vi har valgt at måle i.
+tilsyneladende som vinden blæser og afhænger af, hvilken enhed vi har valgt at måle i.
 
 Men selv hvis begge variable er i samme enhed, kan Pythagoras brugt med
 hovedet under armen være uheldigt, som nedenstående eksempel illustrerer.
@@ -108,7 +108,7 @@ Det vil sige, at vi definerer afstanden fra $(x_1,y_1)$ til $(x_2,y_2)$ som
 
 $$\sqrt{\left ( \frac{x_2-x_1}{b-a} \right )^2+ \left ( \frac{y_2-y_1}{d-c} \right )^2}$$ {#eq-min_max_skalering}
 
-Det får den betydning, at hvis $x$-værdierne f.eks. kan varierer i et langt bredere interval end $y$-værdierne (dvs. at $b-a>d-c$), så bliver forskellen på $x$-værdierne i ovenstående afstandsmål skaleret mere ned (fordi vi kommer til at dividere med et større tal). 
+Det får den betydning, at hvis $x$-værdierne f.eks. kan variere i et langt bredere interval end $y$-værdierne (dvs. at $b-a>d-c$), så bliver forskellen på $x$-værdierne i ovenstående afstandsmål skaleret mere ned (fordi vi kommer til at dividere med et større tal). 
 
 En anden måde at forstå dette afstandsmål på, er ved at erstatte hvert punkt $(x_i,y_i)$ med et nyt skaleret punkt:
 
@@ -124,7 +124,7 @@ $$\sqrt{\left(\frac{x_2-a}{b-a}-\frac{x_1-a}{b-a}\right)^2 +\left(\frac{y_2-c}{d
 
 Bemærk, at det præcis er afstandsmålet i (@eq-min_max_skalering), som vi startede ud med.  
 
-## Mindre naivt, mere bøvlet: Feature-skaling
+## Mindre naivt, mere bøvlet: Feature-skalering
 
 Den skalering vi har præsenteret i (@eq-norm) benytter ikke som sådan information om data, men kun om den mindste og største værdi, som henholdsvis $x$- og $y$-værdierne ligger imellem (nemlig $a$ og $b$ for $x$-værdierne og $c$ og $d$ for $y$-værdierne).
 
@@ -233,7 +233,7 @@ Anvendes formlerne i (@eq-feature_scaling_x) og (@eq-feature_scaling_y) til feat
 
 ![Datapunkterne fra eksemplet omkring udgifter til bolig og mælk *efter* feature skalering.](images/fig_bolig_milk_feature_skalering.png){#fig-bolig_milk_feature_skalering}
 
-Læg her mærke til at afstanden mellem $A$ og $B$ nu er blevet endnu større end afstanden mellem $A$ og $C$. Det ses også, at $y$-værdien for det skalerede punkt for familie $B$  er cirka $2.8$. Sammenlignes dette med standard normalfordelingen, kan vi se, at der er tale om en forholdsvis ekstrem værdi[^2]. Det vil sige, at vi ud fra de skalerede værdier kan se, at familien $B$'s mælkeforbrug på $1700$ kroner rent faktisk er usædvanligt sammenlignet med de andre families mælkeforbrug. 
+Læg her mærke til at afstanden mellem $A$ og $B$ nu er blevet endnu større end afstanden mellem $A$ og $C$. Det ses også, at $y$-værdien for det skalerede punkt for familie $B$  er cirka $2.8$. Sammenlignes dette med standard normalfordelingen, kan vi se, at der er tale om en forholdsvis ekstrem værdi[^2]. Det vil sige, at vi ud fra de skalerede værdier kan se, at familien $B$'s mælkeforbrug på $1700$ kroner rent faktisk er usædvanligt sammenlignet med de andre familiers mælkeforbrug. 
 
 
 [^1]: I virkelighedens verden kan der godt være værdier, som er mindre end $-2$ eller større end $2$, men som oftest vil det være sådan, at omkring $95 \%$ af værdierne vil ligge mellem $-2$ og $2$ efter feature skalering. 
