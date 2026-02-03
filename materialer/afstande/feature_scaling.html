@@ -183,7 +183,7 @@ window.Quarto = {
   <ul>
   <li><a href="#afstand-med-hovedet-under-armen" id="toc-afstand-med-hovedet-under-armen" class="nav-link active" data-scroll-target="#afstand-med-hovedet-under-armen">Afstand med hovedet under armen</a></li>
   <li><a href="#første-naive-tilgang-min-max-skalering" id="toc-første-naive-tilgang-min-max-skalering" class="nav-link" data-scroll-target="#første-naive-tilgang-min-max-skalering">Første naive tilgang: Min-Max skalering</a></li>
-  <li><a href="#mindre-naivt-mere-bøvlet-feature-skaling" id="toc-mindre-naivt-mere-bøvlet-feature-skaling" class="nav-link" data-scroll-target="#mindre-naivt-mere-bøvlet-feature-skaling">Mindre naivt, mere bøvlet: Feature-skaling</a></li>
+  <li><a href="#mindre-naivt-mere-bøvlet-feature-skalering" id="toc-mindre-naivt-mere-bøvlet-feature-skalering" class="nav-link" data-scroll-target="#mindre-naivt-mere-bøvlet-feature-skalering">Mindre naivt, mere bøvlet: Feature-skalering</a></li>
   <li><a href="#eksempel-min-max-og-feature-skalering" id="toc-eksempel-min-max-og-feature-skalering" class="nav-link" data-scroll-target="#eksempel-min-max-og-feature-skalering">Eksempel: Min-max og feature skalering</a></li>
   <li><a href="#relaterede-forløb" id="toc-relaterede-forløb" class="nav-link" data-scroll-target="#relaterede-forløb">Relaterede forløb</a></li>
   </ul>
@@ -221,7 +221,7 @@ window.Quarto = {
 <p>Hvis de data, man arbejder med, måler vidt forskellige ting – måske endda på vidt forskellige skalaer – så vil man som oftest have brug for at "justere" data, så de er på samme skala.</p>
 <section id="afstand-med-hovedet-under-armen" class="level2">
 <h2 class="anchored" data-anchor-id="afstand-med-hovedet-under-armen">Afstand med hovedet under armen</h2>
-<p>Det er ikke altid helt klart, hvordan man skal bestemme afstanden mellem to datapunkter, hvis koordinaterne i hvert datapunkter beskriver vidt forskellige ting. Vi vil her se nærmere på, hvilke problemer, der kan opstå, hvis man ikke tænker sig om – og hvad man kan gøre for at løse dem.</p>
+<p>Det er ikke altid helt klart, hvordan man skal bestemme afstanden mellem to datapunkter, hvis koordinaterne i hvert datapunkt beskriver vidt forskellige ting. Vi vil her se nærmere på, hvilke problemer der kan opstå, hvis man ikke tænker sig om – og hvad man kan gøre for at løse dem.</p>
 <p>Lad os forestille os, at data består af vægt og højde for nogle personer, så hvert datapunkt er på formen <span class="math display">\[(v,h)\]</span> hvor <span class="math inline">\(v\)</span> er den pågældende persons vægt og <span class="math inline">\(h\)</span> er højden. Her er det faktisk ikke klart, hvad afstanden mellem to punkter <span class="math inline">\((v_1,h_1)\)</span> og <span class="math inline">\((v_2,h_2)\)</span> skal være. Altså, hvornår to punkter ligger tæt på hinanden.</p>
 <p>Et første bud kunne være at bestemme den <a href="../../materialer/afstande/AfstandeMellemPunkteriPlanen.html#sec-euklidisk_afstand">euklidiske afstand</a> mellem de to punkter – det der bare svarer til at bruge Pythagoras. Gør vi det får vi følgende afstandsmål mellem punkterne <span class="math inline">\((v_1,h_1)\)</span> og <span class="math inline">\((v_2,h_2)\)</span>:</p>
 <p><span class="math display">\[\sqrt{(v_2-v_1)^2+(h_2-h_1)^2}\]</span></p>
@@ -285,7 +285,7 @@ window.Quarto = {
 &amp;\text{Afstanden mellem B og C: } \sqrt{10^2+0.10^2} \simeq 10
 \end{align*}\]</span></p>
 <p>Der er nu længst fra <span class="math inline">\(A\)</span> til <span class="math inline">\(B\)</span>.</p>
-<p>Det er ikke ret smart. Skal man finde de datapunkter, som ligger tættest på hinanden, er svaret tilsyneladende som vinden blæser og afhængig af hvilken enhed, vi har valgt at måle i.</p>
+<p>Det er ikke ret smart. Skal man finde de datapunkter, som ligger tættest på hinanden, er svaret tilsyneladende som vinden blæser og afhænger af, hvilken enhed vi har valgt at måle i.</p>
 <p>Men selv hvis begge variable er i samme enhed, kan Pythagoras brugt med hovedet under armen være uheldigt, som nedenstående eksempel illustrerer.</p>
 <p>Vi forestiller os, at vi har data for, hvor meget familierne <span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span> og <span class="math inline">\(C\)</span> bruger på bolig og på mælk om måneden. Begge variable kan være i kroner. I tabellen ses et eksempel:</p>
 <table class="table-bordered table">
@@ -336,7 +336,7 @@ Figur&nbsp;1: Datapunkter i planen, hvor <span class="math inline">\(x\)</span>-
 <p>Idéen er nu, at vi skalerer, så afstandene langs <span class="math inline">\(x\)</span>-aksen får samme vægt som afstandene langs <span class="math inline">\(y\)</span>-aksen.</p>
 <p>Det vil sige, at vi definerer afstanden fra <span class="math inline">\((x_1,y_1)\)</span> til <span class="math inline">\((x_2,y_2)\)</span> som</p>
 <p><span id="eq-min_max_skalering"><span class="math display">\[\sqrt{\left ( \frac{x_2-x_1}{b-a} \right )^2+ \left ( \frac{y_2-y_1}{d-c} \right )^2} \tag{1}\]</span></span></p>
-<p>Det får den betydning, at hvis <span class="math inline">\(x\)</span>-værdierne f.eks. kan varierer i et langt bredere interval end <span class="math inline">\(y\)</span>-værdierne (dvs. at <span class="math inline">\(b-a&gt;d-c\)</span>), så bliver forskellen på <span class="math inline">\(x\)</span>-værdierne i ovenstående afstandsmål skaleret mere ned (fordi vi kommer til at dividere med et større tal).</p>
+<p>Det får den betydning, at hvis <span class="math inline">\(x\)</span>-værdierne f.eks. kan variere i et langt bredere interval end <span class="math inline">\(y\)</span>-værdierne (dvs. at <span class="math inline">\(b-a&gt;d-c\)</span>), så bliver forskellen på <span class="math inline">\(x\)</span>-værdierne i ovenstående afstandsmål skaleret mere ned (fordi vi kommer til at dividere med et større tal).</p>
 <p>En anden måde at forstå dette afstandsmål på, er ved at erstatte hvert punkt <span class="math inline">\((x_i,y_i)\)</span> med et nyt skaleret punkt:</p>
 <p><span id="eq-norm"><span class="math display">\[(x_i,y_i)_{Norm}=\left(\frac{x_i-a}{b-a}, \frac{y_i-c}{d-c}\right) \tag{2}\]</span></span></p>
 <p>Resultatet af at lave denne skalering af punkterne fra <a href="#fig-min_max_skalering" class="quarto-xref">figur&nbsp;1</a> ses i <a href="#fig-min_max_skalering2" class="quarto-xref">figur&nbsp;2</a>.</p>
@@ -354,8 +354,8 @@ Figur&nbsp;2: Datapunkterne fra <a href="#fig-min_max_skalering" class="quarto-x
 <p><span class="math display">\[\sqrt{\left(\frac{x_2-a}{b-a}-\frac{x_1-a}{b-a}\right)^2 +\left(\frac{y_2-c}{d-c}-\frac{y_1-c}{d-c}\right)^2}=\sqrt{\left(\frac{x_2-x_1}{b-a}\right)^2+\left(\frac{y_2-y_1}{d-c}\right)^2}\]</span></p>
 <p>Bemærk, at det præcis er afstandsmålet i (<a href="#eq-min_max_skalering" class="quarto-xref">1</a>), som vi startede ud med.</p>
 </section>
-<section id="mindre-naivt-mere-bøvlet-feature-skaling" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="mindre-naivt-mere-bøvlet-feature-skaling">Mindre naivt, mere bøvlet: Feature-skaling</h2>
+<section id="mindre-naivt-mere-bøvlet-feature-skalering" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="mindre-naivt-mere-bøvlet-feature-skalering">Mindre naivt, mere bøvlet: Feature-skalering</h2>
 <p>Den skalering vi har præsenteret i (<a href="#eq-norm" class="quarto-xref">2</a>) benytter ikke som sådan information om data, men kun om den mindste og største værdi, som henholdsvis <span class="math inline">\(x\)</span>- og <span class="math inline">\(y\)</span>-værdierne ligger imellem (nemlig <span class="math inline">\(a\)</span> og <span class="math inline">\(b\)</span> for <span class="math inline">\(x\)</span>-værdierne og <span class="math inline">\(c\)</span> og <span class="math inline">\(d\)</span> for <span class="math inline">\(y\)</span>-værdierne).</p>
 <p>Et alternativ til dette er at bruge <em>alle</em> data til at bestemme skaleringen (og ikke kun den største og den mindste værdi). Dette kaldes for <em>feature-skaling</em>, når vi arbejder med perceptroner eller neurale netværk.</p>
 <p>Hvis de data, der skal læres fra – det vil sige træningsdata – er <span class="math display">\[(x_1,y_1), (x_2,y_2),\ldots, (x_n,y_n)\]</span> så skalerer vi langs førsteaksen ved, at</p>
@@ -505,7 +505,7 @@ Figur&nbsp;6: Datapunkterne fra eksemplet omkring udgifter til bolig og mælk <e
 </figcaption>
 </figure>
 </div>
-<p>Læg her mærke til at afstanden mellem <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> nu er blevet endnu større end afstanden mellem <span class="math inline">\(A\)</span> og <span class="math inline">\(C\)</span>. Det ses også, at <span class="math inline">\(y\)</span>-værdien for det skalerede punkt for familie <span class="math inline">\(B\)</span> er cirka <span class="math inline">\(2.8\)</span>. Sammenlignes dette med standard normalfordelingen, kan vi se, at der er tale om en forholdsvis ekstrem værdi<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Det vil sige, at vi ud fra de skalerede værdier kan se, at familien <span class="math inline">\(B\)</span>’s mælkeforbrug på <span class="math inline">\(1700\)</span> kroner rent faktisk er usædvanligt sammenlignet med de andre families mælkeforbrug.</p>
+<p>Læg her mærke til at afstanden mellem <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> nu er blevet endnu større end afstanden mellem <span class="math inline">\(A\)</span> og <span class="math inline">\(C\)</span>. Det ses også, at <span class="math inline">\(y\)</span>-værdien for det skalerede punkt for familie <span class="math inline">\(B\)</span> er cirka <span class="math inline">\(2.8\)</span>. Sammenlignes dette med standard normalfordelingen, kan vi se, at der er tale om en forholdsvis ekstrem værdi<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Det vil sige, at vi ud fra de skalerede værdier kan se, at familien <span class="math inline">\(B\)</span>’s mælkeforbrug på <span class="math inline">\(1700\)</span> kroner rent faktisk er usædvanligt sammenlignet med de andre familiers mælkeforbrug.</p>
 <div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Husk på at for en standard normalfordelt stokastisk variabel vil omkring <span class="math inline">\(95 \%\)</span> af værdierne ligge mellem <span class="math inline">\(-2\)</span> og <span class="math inline">\(2\)</span>.</p></div></div></section>
 <section id="relaterede-forløb" class="level2">
 <h2 class="anchored" data-anchor-id="relaterede-forløb">Relaterede forløb</h2>
