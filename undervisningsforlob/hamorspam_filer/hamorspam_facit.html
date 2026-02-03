@@ -271,8 +271,11 @@ Y \in \{\textrm{spam, ham}\}
 <ul>
 <li><p>Posterior forholdet <span class="math display">\[
 \begin{aligned}
-&amp;\frac{P(Y = \textrm{spam} \mid X_1=x_1, X_2=x_2, X_3=x_3)}{P(Y = \textrm{ham} \mid X_1=x_1,    X_2=x_2, X_3=x_3)} = \\
-&amp;\frac{P(X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{spam} ) \cdot    P(Y=\textrm{spam})}{P(X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{ham} ) \cdot    P(Y=\textrm{ham})} = \\ &amp;\frac{P(Y=\textrm{spam})}{P(Y=\textrm{ham})} \cdot \frac{P(X_1=x_1,      X_2=x_2, X_3=x_3 \mid Y = \textrm{spam} )}{P(X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{ham} )}
+&amp;\frac{P(Y = \textrm{spam} \mid X_1=x_1, X_2=x_2, X_3=x_3)}{P(Y = \textrm{ham} \mid X_1=x_1,    X_2=x_2, X_3=x_3)} = \\ \\
+&amp;\frac{\frac{P(X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{spam} ) \cdot    P(Y=\textrm{spam})}{P(X_1=x_1, X_2=x_2, X_3=x_3)}}{\frac{P(X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{ham} ) \cdot    P(Y=\textrm{ham})}{P(X_1=x_1, X_2=x_2, X_3=x_3)}}
+= \\ \\
+&amp;\frac{P(X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{spam} ) \cdot    P(Y=\textrm{spam})}{P(X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{ham} ) \cdot    P(Y=\textrm{ham})}
+= \\ \\ &amp;\frac{P(Y=\textrm{spam})}{P(Y=\textrm{ham})} \cdot \frac{P(X_1=x_1,      X_2=x_2, X_3=x_3 \mid Y = \textrm{spam} )}{P(X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{ham} )}
 \end{aligned}
 \]</span></p>
 <p>Når man bruger Bayes formel til at udlede ovenstående, forkorter <span class="math inline">\(P(X_1=x_1, X_2=x_2, X_3=x_3)\)</span> ud.</p></li>
@@ -281,13 +284,15 @@ Y \in \{\textrm{spam, ham}\}
 \]</span></p>
 <p>så svarer det til, at</p>
 <p><span class="math display">\[
-P(Y = \textrm{spam} \mid X_1=x_1, X_2=x_2, X_3=x_3) &gt; P(Y = \textrm{ham} \mid X_1=x_1,    X_2=x_2, X_3=x_3)
+\begin{aligned}
+P(Y = \textrm{spam} \mid X_1=x_1, &amp;X_2=x_2, X_3=x_3) &gt; \\ &amp;P(Y = \textrm{ham} \mid X_1=x_1,    X_2=x_2, X_3=x_3)
+\end{aligned}
 \]</span> Det vil sige, at hvis posterior forholdet er større end <span class="math inline">\(1\)</span>, så vil der være størst chance for, at der er tale om en spam mail.</p></li>
 </ul>
 </div>
 </div>
 </div>
-<div class="callout callout-style-simple callout-note no-icon callout-empty-content callout-titled">
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -299,11 +304,22 @@ P(Y = \textrm{spam} \mid X_1=x_1, X_2=x_2, X_3=x_3) &gt; P(Y = \textrm{ham} \mid
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-
+<p>Vi antager, at oprindelse, mail og indhold er uafhængige af hinanden givet information om, om mailen er ham eller spam.</p>
+<p>Det betyder, at</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(&amp;X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{ham} ) = \\ &amp;P(X_1=x_1 \mid Y = \textrm{ham} ) \cdot P(X_2=x_2\mid Y = \textrm{ham} ) \cdot P(X_3=x_3 \mid Y = \textrm{ham} )
+\end{aligned}
+\]</span> og</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(&amp;X_1=x_1, X_2=x_2, X_3=x_3 \mid Y = \textrm{spam} ) = \\ &amp;P(X_1=x_1 \mid Y = \textrm{spam} ) \cdot P(X_2=x_2\mid Y = \textrm{spam} ) \cdot P(X_3=x_3 \mid Y = \textrm{spam} )
+\end{aligned}
+\]</span></p>
 </div>
 </div>
 </div>
-<div class="callout callout-style-simple callout-note no-icon callout-empty-content callout-titled">
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -315,11 +331,14 @@ P(Y = \textrm{spam} \mid X_1=x_1, X_2=x_2, X_3=x_3) &gt; P(Y = \textrm{ham} \mid
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-
+<p>Prior forholdet</p>
+<p><span class="math display">\[\frac{P(Y=\textrm{spam})}{P(Y=\textrm{ham})} \approx \frac{0.3186}{0.6814}\approx0.4675\]</span></p>
+<p>og beregn på den baggrund vægten</p>
+<p><span class="math display">\[w_0 \approx -0.7603\]</span></p>
 </div>
 </div>
 </div>
-<div class="callout callout-style-simple callout-note no-icon callout-empty-content callout-titled">
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -331,11 +350,98 @@ P(Y = \textrm{spam} \mid X_1=x_1, X_2=x_2, X_3=x_3) &gt; P(Y = \textrm{ham} \mid
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-
+<table class="table-bordered table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 42%">
+<col style="width: 42%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: center;"><span class="math inline">\(P(X_i=x_i \mid Y=\textrm{spam})\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(P(X_i=x_i \mid Y=\textrm{ham})\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Oprindelse</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X_1 = \textrm{DK}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(17.94 \%\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(33.54 \%\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(X_1 = \textrm{Europa}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(32.29 \%\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(35.22 \%\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X_1 = \textrm{USA}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(25.11 \%\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(21.80 \%\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(X_1 = \textrm{Andet}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(24.66 \%\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(9.43 \%\)</span></td>
+</tr>
+<tr class="even">
+<td><strong>Mail</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(X_2 = \textrm{Firma}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(15.25 \%\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(64.15 \%\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X_2 = \textrm{Google}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(11.57 \%\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(21.64 \%\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(X_2 = \textrm{Hotmail}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(29.06 \%\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(9.06 \%\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X_2 = \textrm{Andet}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(44.13 \%\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(5.16 \%\)</span></td>
+</tr>
+<tr class="odd">
+<td><strong>Indhold</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X_3 = \textrm{Dating}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(31.03 \%\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(3.63 \%\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(X_3 = \textrm{Spil}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(40.16 \%\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2.09 \%\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X_3 = \textrm{Andet}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(28.81 \%\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(94.29 \%\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><br>
+</p>
 </div>
 </div>
 </div>
-<div class="callout callout-style-simple callout-note no-icon callout-empty-content callout-titled">
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -347,11 +453,78 @@ P(Y = \textrm{spam} \mid X_1=x_1, X_2=x_2, X_3=x_3) &gt; P(Y = \textrm{ham} \mid
 </div>
 <div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-
+<table class="table-bordered table">
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: center;"><span class="math inline">\(P(X_i=x_i \mid Y=\textrm{spam}) / P(X_i=x_i \mid Y=\textrm{ham})\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Oprindelse</strong></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X_1 = \textrm{DK}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.5348\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(X_1 = \textrm{Europa}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.9167\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X_1 = \textrm{USA}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1.1518\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(X_1 = \textrm{Andet}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2.6143\)</span></td>
+</tr>
+<tr class="even">
+<td><strong>Mail</strong></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(X_2 = \textrm{Firma}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.2377\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X_2 = \textrm{Google}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.5348\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(X_2 = \textrm{Hotmail}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(3.2085\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X_2 = \textrm{Andet}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(8.5561\)</span></td>
+</tr>
+<tr class="odd">
+<td><strong>Indhold</strong></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X_3 = \textrm{Dating}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(8.5561\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(X_3 = \textrm{Spil}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(19.2511\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X_3 = \textrm{Andet}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.3056\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><br>
+</p>
 </div>
 </div>
 </div>
-<div class="callout callout-style-simple callout-note no-icon callout-empty-content callout-titled">
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -363,11 +536,82 @@ P(Y = \textrm{spam} \mid X_1=x_1, X_2=x_2, X_3=x_3) &gt; P(Y = \textrm{ham} \mid
 </div>
 <div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-
+<p>Vægtene beregnes sådan her:</p>
+<p><span class="math display">\[
+w_i(x_i) = \ln \left(\frac{P(X_i = x_i \mid Y = \textrm{spam})}{P(X_i = x_i \mid Y = \textrm{ham})}\right)
+\]</span></p>
+<table class="table-bordered table">
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: center;"><span class="math inline">\(w_i(x_i)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Oprindelse</strong></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X_1 = \textrm{DK}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(-0.6259\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(X_1 = \textrm{Europa}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(-0.0870\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X_1 = \textrm{USA}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.1413\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(X_1 = \textrm{Andet}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.9610\)</span></td>
+</tr>
+<tr class="even">
+<td><strong>Mail</strong></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(X_2 = \textrm{Firma}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(-1.4369\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X_2 = \textrm{Google}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(-0.6259\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(X_2 = \textrm{Hotmail}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1.1658\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X_2 = \textrm{Andet}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2.1466\)</span></td>
+</tr>
+<tr class="odd">
+<td><strong>Indhold</strong></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X_3 = \textrm{Dating}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2.1466\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(X_3 = \textrm{Spil}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2.9576\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X_3 = \textrm{Andet}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(-1.1856\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><br>
+</p>
 </div>
 </div>
 </div>
-<div class="callout callout-style-simple callout-note no-icon callout-empty-content callout-titled">
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -379,11 +623,11 @@ P(Y = \textrm{spam} \mid X_1=x_1, X_2=x_2, X_3=x_3) &gt; P(Y = \textrm{ham} \mid
 </div>
 <div id="callout-9" class="callout-9-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-
+<p>Gange bliver lavet om til plus. Eller hvis vi skal sige det lidt fint: Multiplikation bliver til addition.</p>
 </div>
 </div>
 </div>
-<div class="callout callout-style-simple callout-note no-icon callout-empty-content callout-titled">
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -395,11 +639,22 @@ P(Y = \textrm{spam} \mid X_1=x_1, X_2=x_2, X_3=x_3) &gt; P(Y = \textrm{ham} \mid
 </div>
 <div id="callout-10" class="callout-10-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-
+<p>Faktorer som taler for spam (positiv vægt):</p>
+<ul>
+<li>Oprindelse fra USA og andet.</li>
+<li>Mail fra Hotmail og andet.</li>
+<li>Indhold fra dating og spil.</li>
+</ul>
+<p>Faktorer som taler for ham (negativ vægt):</p>
+<ul>
+<li>Oprindelse fra DK og Europa.</li>
+<li>Mail fra firma og Google.</li>
+<li>Indhold fra andet.</li>
+</ul>
 </div>
 </div>
 </div>
-<div class="callout callout-style-simple callout-note no-icon callout-empty-content callout-titled">
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -411,7 +666,14 @@ P(Y = \textrm{spam} \mid X_1=x_1, X_2=x_2, X_3=x_3) &gt; P(Y = \textrm{ham} \mid
 </div>
 <div id="callout-11" class="callout-11-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-
+<ul>
+<li><p>Mailens oprindelse er andet, den er sendt fra en hotmail-konto og omhandler ikke dating eller spil:</p>
+<p><span class="math display">\[S=0.1809\]</span></p>
+<p>Det taler for, at der er tale om spam.</p></li>
+<li><p>Mailen er en firma-mail fra Danmark med indhold relateret til dating:</p>
+<p><span class="math display">\[S=-0.6765\]</span></p>
+<p>Det taler for, at der er tale om ham.</p></li>
+</ul>
 </div>
 </div>
 </div>

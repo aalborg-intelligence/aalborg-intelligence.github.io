@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="I dette forløb skal vi se på, hvordan man kan lave et simpelt spamfilter ved hjælp af metoden Naiv Bayes klassifier.">
 
 <title>Ham or Spam? – AI MAT - matematikken bag magien</title>
 <style>
@@ -184,6 +185,7 @@ window.Quarto = {
   <li><a href="#introduktion" id="toc-introduktion" class="nav-link" data-scroll-target="#introduktion">Introduktion</a></li>
   <li><a href="#notation" id="toc-notation" class="nav-link" data-scroll-target="#notation">Notation</a></li>
   <li><a href="#binær-bayes-klassifier" id="toc-binær-bayes-klassifier" class="nav-link" data-scroll-target="#binær-bayes-klassifier">Binær Bayes klassifier</a></li>
+  <li><a href="#naiv-bayes-klassifier" id="toc-naiv-bayes-klassifier" class="nav-link" data-scroll-target="#naiv-bayes-klassifier">Naiv Bayes klassifier</a></li>
   <li><a href="#delvis-facitliste" id="toc-delvis-facitliste" class="nav-link" data-scroll-target="#delvis-facitliste">Delvis facitliste</a></li>
   </ul>
 </nav>
@@ -232,7 +234,8 @@ window.Quarto = {
 <div class="callout-body-container callout-body">
 <p>Forløbet kræver kendskab til:</p>
 <ul>
-<li>Sandsynlighedsregning (se eventuelt noten <a href="../materialer/sandsynlighed/sandsynlighed.html" target="_blank">Sandsynlighedsregning og mængdeteori</a>.</li>
+<li>Sandsynlighedsregning (se eventuelt noten <a href="../materialer/sandsynlighed/sandsynlighed.html" target="_blank">Sandsynlighedsregning og mængdeteori</a>).</li>
+<li>Den naturlige logaritme funktion.</li>
 </ul>
 <p><strong>Tidsforbrug:</strong> Ca. 2 x 90 minutter.</p>
 </div>
@@ -242,7 +245,30 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="formål">Formål</h3>
 <p>Formålet med dette forløb er at forstå, hvordan man kan lave et simpelt spamfilter ved hjælp af metoden, som kaldes for <strong>Naiv Bayes klassifier</strong>.</p>
 </section>
-<p>I dette forløb skal vi se på, hvordan man kan lave et simpelt spamfilter. Vi har et datasæt med <span class="math inline">\(35000\)</span> mails med oplysninger om emailens oprindelse (Danmark, Europa uden Danmark, USA og anden oprindelse), afsenders mailadresse (firma, Google, Hotmail og anden) samt indhold (dating, spil og andet). Målet er, at man gerne ud fra disse oplysninger gerne automatisk vil kunne afgøre, om det er spam (det vil sige, at mailen ikke skal vises i mail-boxen), eller om det er Ham (non-spam). For hver af de <span class="math inline">\(35000\)</span> mails er det også noteret om, der er tale om spam eller ham.</p>
+<p>I dette forløb skal vi se på, hvordan man kan lave et simpelt spamfilter. Vi har et datasæt med <span class="math inline">\(35000\)</span> mails, som fordeler sig mellem spam (det vil sige, at mailen ikke skal vises i mail-boxen) og ham (non-spam) på denne måde:</p>
+<table class="table-bordered table">
+<thead>
+<tr class="header">
+<th></th>
+<th>Antal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Spam</td>
+<td><span class="math inline">\(11150\)</span></td>
+</tr>
+<tr class="even">
+<td>Ham</td>
+<td><span class="math inline">\(23850\)</span></td>
+</tr>
+<tr class="odd">
+<td>Samlet antal mails</td>
+<td><span class="math inline">\(35000\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Desuden har vi oplysninger om emailens oprindelse (Danmark, Europa uden Danmark, USA og anden oprindelse), afsenders mailadresse (firma, Google, Hotmail og anden) samt indhold (dating, spil og andet). Målet er, at man ud fra disse oplysninger gerne automatisk vil kunne afgøre, om det er spam, eller om det er ham.</p>
 <p>Træningsdata består af</p>
 <table class="table-bordered table">
 <thead>
@@ -344,7 +370,7 @@ window.Quarto = {
 </table>
 <section id="introduktion" class="level2">
 <h2 class="anchored" data-anchor-id="introduktion">Introduktion</h2>
-<p>Læs afsnittet <a href="../materialer/naivbayes/NaivBayes.html#introduktion">Introduktion</a> i noten om <strong>Naiv Bayes klassifier</strong>.</p>
+<p>Læs afsnittet <a href="../materialer/naivbayes/NaivBayes.html#introduktion" target="_blank">Introduktion</a> i noten om <strong>Naiv Bayes klassifier</strong>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -368,7 +394,7 @@ window.Quarto = {
 </section>
 <section id="notation" class="level2">
 <h2 class="anchored" data-anchor-id="notation">Notation</h2>
-<p>Læs afsnittet <a href="../materialer/naivbayes/NaivBayes.html#notation">Notation</a> i noten om <strong>Naiv Bayes klassifier</strong>.</p>
+<p>Læs afsnittet <a href="../materialer/naivbayes/NaivBayes.html#notation" target="_blank">Notation</a> i noten om <strong>Naiv Bayes klassifier</strong>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -382,7 +408,7 @@ window.Quarto = {
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Indfør selv stokastiske variable <span class="math inline">\(X1\)</span>, <span class="math inline">\(X2\)</span>, <span class="math inline">\(X3\)</span> og <span class="math inline">\(Y\)</span> og angiv udfaldsrum for hver af dem.</li>
+<li>Indfør selv stokastiske variable <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, <span class="math inline">\(X_3\)</span> og <span class="math inline">\(Y\)</span> og angiv udfaldsrummet for hver af dem.</li>
 </ul>
 </div>
 </div>
@@ -390,7 +416,7 @@ window.Quarto = {
 </section>
 <section id="binær-bayes-klassifier" class="level2">
 <h2 class="anchored" data-anchor-id="binær-bayes-klassifier">Binær Bayes klassifier</h2>
-<p>Læs afsnittet <a href="../materialer/naivbayes/NaivBayes.html#binær-bayes-klassifier">Binær Bayes klassifier</a> i noten om <strong>Naiv Bayes klassifier</strong>.</p>
+<p>Læs afsnittet <a href="../materialer/naivbayes/NaivBayes.html#binær-bayes-klassifier" target="_blank">Binær Bayes klassifier</a> i noten om <strong>Binær Bayes klassifier</strong>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -404,16 +430,18 @@ window.Quarto = {
 <div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Opstil posterior forholdet</li>
-</ul>
-<p><span class="math display">\[ \frac{P(Y = 0 \mid X_1=x_1, X_2=x_2, X_3=x_3)}{P(Y = 1 \mid X_1=x_1, X_2=x_2, X_3=x_3)}\]</span></p>
-<p>og forklar det smarte, der er sket ved at bruge Bayes formel.</p>
-<ul>
-<li>Redegør for betydningen af forholdet og forklar hvorfor man ser på, om det er over eller under <span class="math inline">\(1\)</span>.</li>
+<li><p>Opstil posterior forholdet</p>
+<p><span class="math display">\[ \frac{P(Y = \textrm{spam} \mid X_1=x_1, X_2=x_2, X_3=x_3)}{P(Y = \textrm{ham} \mid X_1=x_1, X_2=x_2, X_3=x_3)}\]</span></p>
+<p>og forklar det smarte, der er sket ved at bruge Bayes formel.</p></li>
+<li><p>Redegør for betydningen af forholdet, og forklar hvorfor man ser på, om det er over eller under <span class="math inline">\(1\)</span>.</p></li>
 </ul>
 </div>
 </div>
 </div>
+</section>
+<section id="naiv-bayes-klassifier" class="level2">
+<h2 class="anchored" data-anchor-id="naiv-bayes-klassifier">Naiv Bayes klassifier</h2>
+<p>Læs afsnittet <a href="../materialer/naivbayes/NaivBayes.html#naiv-bayes-klassifier" target="_blank">Naiv Bayes klassifier</a> i noten om <strong>Naiv Bayes klassifier</strong>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -426,7 +454,7 @@ window.Quarto = {
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Angiv den antagelse (modelforudsætning), som anvendes ved Bayes Naive klassifikation, og forklar hvad det gør for beregningen af sandsynlighederne fra opgave 3.</p>
+<p>Angiv den antagelse (modelforudsætning), som anvendes ved Naiv Bayes klassifikation, og forklar hvad det gør for beregningen af sandsynlighederne fra opgave 3.</p>
 </div>
 </div>
 </div>
@@ -443,9 +471,9 @@ window.Quarto = {
 <div id="callout-6" class="callout-6-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Bestem prior forholdet</p>
-<p><span class="math display">\[\frac{P(Y=0)}{P(Y=1)}\]</span></p>
+<p><span class="math display">\[\frac{P(Y=\textrm{spam})}{P(Y=\textrm{ham})}\]</span></p>
 <p>og beregn på den baggrund vægten</p>
-<p><span class="math display">\[w_0 = \ln \left ( \frac{P(Y=0)}{P(Y=1)} \right )\]</span></p>
+<p><span class="math display">\[w_0 = \ln \left ( \frac{P(Y=\textrm{spam})}{P(Y=\textrm{ham})} \right )\]</span></p>
 </div>
 </div>
 </div>
@@ -462,8 +490,8 @@ window.Quarto = {
 <div id="callout-7" class="callout-7-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Bestem alle betingede sandsynligheder</p>
-<p><span class="math display">\[P(X_i=x_i \mid Y=0) \quad \textrm{og} \quad P(X_i=x_i \mid Y=1)\]</span></p>
-<p>for hver enkelt information, givet at det er henholdsvis spam og ham (i alt 22 sandsynligheder) og forklar idéen bag én af disse udregninger.</p>
+<p><span class="math display">\[P(X_i=x_i \mid Y=\textrm{spam}) \quad \textrm{og} \quad P(X_i=x_i \mid Y=\textrm{ham})\]</span></p>
+<p>for hver enkelt information givet, at det er henholdsvis spam og ham (i alt 22 sandsynligheder), og forklar idéen bag én af disse udregninger.</p>
 </div>
 </div>
 </div>
@@ -480,7 +508,7 @@ window.Quarto = {
 <div id="callout-8" class="callout-8-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>For hver af de 11 informationer bestemmes forholdet mellem sandsynlighederne</p>
-<p><span class="math display">\[ \frac{P(X_i=x_i \mid Y=0)}{P(X_i=x_i \mid Y=1)}\]</span></p>
+<p><span class="math display">\[ \frac{P(X_i=x_i \mid Y=\textrm{spam})}{P(X_i=x_i \mid Y=\textrm{ham})}\]</span></p>
 </div>
 </div>
 </div>
@@ -496,7 +524,7 @@ window.Quarto = {
 </div>
 <div id="callout-9" class="callout-9-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Forklar hvordan man kommer fra resultaterne i opgave 7 til vægte og udregn vægtene hørende til hver af informationerne (i alt 11).</p>
+<p>Forklar, hvordan man kommer fra resultaterne i opgave 7 til vægte og udregn vægtene hørende til hver af informationerne (i alt 11).</p>
 </div>
 </div>
 </div>
@@ -512,7 +540,7 @@ window.Quarto = {
 </div>
 <div id="callout-10" class="callout-10-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Forklar hvad der sker ved at benytte logaritmen på udtrykket fra opgave 3 og 4, hvor man ellers ganger faktorer sammen.</p>
+<p>Forklar, hvad der sker ved at benytte logaritmen på udtrykket fra opgave 3 og 4, hvor man ellers ganger faktorer sammen.</p>
 </div>
 </div>
 </div>
@@ -544,7 +572,7 @@ window.Quarto = {
 </div>
 <div id="callout-12" class="callout-12-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Afgør ved at beregne scoren <span class="math inline">\(S\)</span>, om man vil tænke at en mail er ham eller spam i følgende to situationer:</p>
+<p>Afgør ved at beregne scoren <span class="math inline">\(S\)</span>, om man vil tænke, at en mail er ham eller spam i følgende to situationer:</p>
 <ul>
 <li>Mailens oprindelse er andet, den er sendt fra en hotmail-konto og omhandler ikke dating eller spil.</li>
 <li>Mailen er en firma-mail fra Danmark med indhold relateret til dating.</li>
