@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="En funktion kan afhænge af flere forskellige variable end én, og denne type af funktioner viser sig at spille en helt central rolle i rigtig mange metoder inden for kunstig intelligens.">
+
+<title>Funktioner af flere variable – AI MAT - matematikken bag magien</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-cef6446724503988638a0362fd982987.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-Y219BCPS45"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+ 
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'analytics_storage': 'denied'
+  });
+gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="floating nav-fixed slimcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo light-content">
+    <img src="../../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../undervisningsforlob/index.html"> 
+<span class="menu-text">Undervisningsforløb</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../noter/index.html"> 
+<span class="menu-text">Noter</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../srp/index.html"> 
+<span class="menu-text">SRP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../apps/index.html"> 
+<span class="menu-text">Apps</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../til_laererne.html"> 
+<span class="menu-text">Til lærerne</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> <i class="bi bi-envelope" role="img" aria-label="Om os">
+</i> 
+<span class="menu-text">Om os</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@ai-mat" target="_blank"> <i class="bi bi-youtube" role="img" aria-label="YouTube">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indhold</h2>
+   
+  <ul>
+  <li><a href="#funktioner-af-én-variabel" id="toc-funktioner-af-én-variabel" class="nav-link active" data-scroll-target="#funktioner-af-én-variabel">Funktioner af én variabel</a></li>
+  <li><a href="#funktioner-af-to-variable" id="toc-funktioner-af-to-variable" class="nav-link" data-scroll-target="#funktioner-af-to-variable">Funktioner af to variable</a>
+  <ul class="collapse">
+  <li><a href="#snitfunktioner-og-snitkurver" id="toc-snitfunktioner-og-snitkurver" class="nav-link" data-scroll-target="#snitfunktioner-og-snitkurver">Snitfunktioner og snitkurver</a></li>
+  <li><a href="#partielle-afledede" id="toc-partielle-afledede" class="nav-link" data-scroll-target="#partielle-afledede">Partielle afledede</a></li>
+  <li><a href="#video-partielle-afledede" id="toc-video-partielle-afledede" class="nav-link" data-scroll-target="#video-partielle-afledede">VIDEO: Partielle afledede</a></li>
+  <li><a href="#grafisk-betydning-af-de-partielle-afledede" id="toc-grafisk-betydning-af-de-partielle-afledede" class="nav-link" data-scroll-target="#grafisk-betydning-af-de-partielle-afledede">Grafisk betydning af de partielle afledede</a></li>
+  <li><a href="#gradienten-og-betydningen-af-denne" id="toc-gradienten-og-betydningen-af-denne" class="nav-link" data-scroll-target="#gradienten-og-betydningen-af-denne">Gradienten og betydningen af denne</a></li>
+  </ul></li>
+  <li><a href="#funktioner-af-flere-variable" id="toc-funktioner-af-flere-variable" class="nav-link" data-scroll-target="#funktioner-af-flere-variable">Funktioner af flere variable</a></li>
+  <li><a href="#videre-læsning" id="toc-videre-læsning" class="nav-link" data-scroll-target="#videre-læsning">Videre læsning</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Funktioner af flere variable</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>En funktion kan godt afhænge af flere forskellige variable, og i det tilfælde taler man om en <strong>funktion af flere variable</strong>. Denne type af funktioner viser sig at spille en helt central rolle i rigtig mange metoder inden for kunstig intelligens. Derfor vil vi i denne note behandle de vigtigste begreber i forbindelse med funktioner af flere variable.</p>
+<section id="funktioner-af-én-variabel" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="funktioner-af-én-variabel">Funktioner af én variabel</h2>
+<p>Fra gymnasiematematikken kender vi lineære funktioner, eksponentialfunktioner, potensfunktioner og en hel masse andre typer af funktioner. Fælles for dem er, at de alle afhænger af én variabel <span class="math inline">\(x\)</span>. For eksempel de lineære funktioner:</p>
+<p><span class="math display">\[
+f(x)=a \cdot x+b.
+\]</span> Grafen for <span class="math inline">\(f\)</span> består af alle de punkter <span class="math inline">\((x,y)\)</span>, hvor <span class="math inline">\(y=f(x)\)</span>. Det er illustreret på <a href="#fig-graf_lin" class="quarto-xref">figur&nbsp;1</a>.</p>
+<div id="fig-graf_lin" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-graf_lin-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/graf_lin.png" class="img-fluid figure-img" style="width:75.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-graf_lin-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;1: Grafen for en lineær funktion <span class="math inline">\(f(x)=ax+b\)</span>, hvor det er illustreret at et punkt <span class="math inline">\((x,y)\)</span> ligger på grafen for <span class="math inline">\(f\)</span>, hvis <span class="math inline">\(y=f(x)\)</span>.
+</figcaption>
+</figure>
+</div>
+<p>Hvis funktionen <span class="math inline">\(f\)</span> tager et reelt tal som input og giver et reelt tal som output<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, så skriver man</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Hverken definitions- eller værdimængden for funktionen behøver ikke at være hele <span class="math inline">\(\mathbb{R}\)</span>, men kan godt bare være en delmængde af <span class="math inline">\(\mathbb{R}\)</span>.</p></div></div><p><span class="math display">\[
+f: \mathbb{R} \rightarrow \mathbb{R}.
+\]</span> Du har måske også været vant til at se en "maskine-metafor", som illustreret på <a href="#fig-maskine" class="quarto-xref">figur&nbsp;2</a>.</p>
+<div id="fig-maskine" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-maskine-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/maskine.png" class="img-fluid figure-img" style="width:75.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-maskine-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;2: Funktionen <span class="math inline">\(f\)</span> illustreret som en maskine.
+</figcaption>
+</figure>
+</div>
+<p>Her er tanken, at man sender et <span class="math inline">\(x\)</span> ind i funktionsmaskinen, som så ved hjælp af forskriften for <span class="math inline">\(f\)</span> beregner funktionsværdi <span class="math inline">\(y=f(x)\)</span>, som herefter bliver sendt ud af maskinen<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Faktisk er det ikke alle funktioner, som har en forskrift. For eksempel er der ikke nødvendigvis en forskrift for den funktion, hvis graf ses til venstre i <a href="#fig-grafer" class="quarto-xref">figur&nbsp;3</a>. Her vil man i stedet kunne aflæse en funktionsværdi for en given værdi af <span class="math inline">\(x\)</span>. En anden mulighed er, at funktionsværdien skal findes i en tabel.</p></div></div><p>For at der overhovedet er tale om en funktion, skal det være sådan, at der til enhver værdi af <span class="math inline">\(x\)</span> svarer én og kun én funktionsværdi <span class="math inline">\(f(x)\)</span>. Så hvis man for eksempel sender <span class="math inline">\(x=2\)</span> ind i maskinen, så må funktionen ikke nogle gange sende <span class="math inline">\(y=5\)</span> ud og andre gange <span class="math inline">\(y=-3\)</span>. Hvis <span class="math inline">\(x=2\)</span> kommer ind, så skal det altid være den samme funktionsværdi, der kommer ud.</p>
+<p>Grafisk er det illustreret på <a href="#fig-grafer" class="quarto-xref">figur&nbsp;3</a>.</p>
+<div id="fig-grafer" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-grafer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/grafer.png" class="img-fluid figure-img" style="width:75.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-grafer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;3: Til venstre ses grafen for en funktion. Til højre ses en kurve, som ikke kan være grafen for en funktion. Ved den grønne linje ses for eksempel en <span class="math inline">\(x\)</span>-værdi hvortil der svarer ikke kun én, men tre <span class="math inline">\(y\)</span>-værdier.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="funktioner-af-to-variable" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="funktioner-af-to-variable">Funktioner af to variable</h2>
+<p>Idéen med funktioner af to variable er en funktion <span class="math inline">\(f\)</span>, som skal bruge to tal som input for at give et output. Vi kalder her de to inputværdier for <span class="math inline">\(x\)</span> og <span class="math inline">\(y\)</span>. Her er et eksempel:</p>
+<p><span class="math display">\[
+f(x,y)= 2x^2-y^2+3xy+1.
+\]</span></p>
+<p>Grafen for <span class="math inline">\(f\)</span> består nu af alle de punkter <span class="math inline">\((x,y,z)\)</span> i et tre-dimensionelt koordinatsystem, hvor <span class="math inline">\(z=f(x,y)\)</span>. For eksempel er</p>
+<p><span class="math display">\[
+\begin{aligned}
+f(1,-2)&amp;=2\cdot 1^2-(-2)^2+3 \cdot 1 \cdot (-2)+1 \\
+&amp;=2-4-6+1=-7
+\end{aligned}
+\]</span> Det betyder, at punktet <span class="math inline">\(P(1,-2,-7)\)</span> ligger på grafen for <span class="math inline">\(f\)</span>. Grafen for <span class="math inline">\(f\)</span> og punktet <span class="math inline">\(P\)</span> ses i <a href="#fig-fun2" class="quarto-xref">figur&nbsp;4</a> herunder.</p>
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<script src="https://cdn.geogebra.org/apps/deployggb.js"></script>
+
+<!-- 
+Alle geogebra filer placeres i mappen _geogebra
+Erstat XXX med nr på app og erstat YYY med navn på ggb-fil -->
+<script>
+var parameters_funktion_af_to_variable = {
+"id": "ggbApplet_funktion_af_to_variable",
+"scaleContainerClass": "ggbContainer",
+"prerelease":false,
+"borderColor":null,
+"showMenuBar":false,
+"showAlgebraInput":false,
+"showToolBar":false,
+"showToolBarHelp":false,
+"showResetIcon":true,
+"enableLabelDrags":false,
+"enableShiftDragZoom":true,
+"enableRightClick":false,
+"errorDialogsActive":false,
+"useBrowserForJS":false,
+"capturingThreshold":null,
+"language":"da",
+// use this instead of ggbBase64 to load a .ggb file
+ "filename":"_geogebra/funktion_af_to_variable.ggb",
+};
+var applet_funktion_af_to_variable = new GGBApplet(parameters_funktion_af_to_variable, true);
+</script>
+
+
+
+<script>
+var parameters_funktion_af_to_variable_snitfkt_g = {
+"id": "ggbApplet_funktion_af_to_variable_snitfkt_g",
+"scaleContainerClass": "ggbContainer",
+"prerelease":false,
+"borderColor":null,
+"showMenuBar":false,
+"showAlgebraInput":false,
+"showToolBar":false,
+"showToolBarHelp":false,
+"showResetIcon":true,
+"enableLabelDrags":false,
+"enableShiftDragZoom":true,
+"enableRightClick":false,
+"errorDialogsActive":false,
+"useBrowserForJS":false,
+"capturingThreshold":null,
+"language":"da",
+// use this instead of ggbBase64 to load a .ggb file
+ "filename":"_geogebra/funktion_af_to_variable_snitfkt_g.ggb",
+};
+var applet_funktion_af_to_variable_snitfkt_g = new GGBApplet(parameters_funktion_af_to_variable_snitfkt_g, true);
+</script>
+
+
+
+<script>
+var parameters_funktion_af_to_variable_snitfkt_h = {
+"id": "ggbApplet_funktion_af_to_variable_snitfkt_h",
+"scaleContainerClass": "ggbContainer",
+"prerelease":false,
+"borderColor":null,
+"showMenuBar":false,
+"showAlgebraInput":false,
+"showToolBar":false,
+"showToolBarHelp":false,
+"showResetIcon":true,
+"enableLabelDrags":false,
+"enableShiftDragZoom":true,
+"enableRightClick":false,
+"errorDialogsActive":false,
+"useBrowserForJS":false,
+"capturingThreshold":null,
+"language":"da",
+// use this instead of ggbBase64 to load a .ggb file
+ "filename":"_geogebra/funktion_af_to_variable_snitfkt_h.ggb",
+};
+var applet_funktion_af_to_variable_snitfkt_h = new GGBApplet(parameters_funktion_af_to_variable_snitfkt_h, true);
+</script>
+
+
+
+<script>
+var parameters_funktion_af_to_variable_snitfkt_g_med_tangent = {
+"id": "ggbApplet_funktion_af_to_variable_snitfkt_g_med_tangent",
+"scaleContainerClass": "ggbContainer",
+"prerelease":false,
+"borderColor":null,
+"showMenuBar":false,
+"showAlgebraInput":false,
+"showToolBar":false,
+"showToolBarHelp":false,
+"showResetIcon":true,
+"enableLabelDrags":false,
+"enableShiftDragZoom":true,
+"enableRightClick":false,
+"errorDialogsActive":false,
+"useBrowserForJS":false,
+"capturingThreshold":null,
+"language":"da",
+// use this instead of ggbBase64 to load a .ggb file
+ "filename":"_geogebra/funktion_af_to_variable_snitfkt_g_med_tangent.ggb",
+};
+var applet_funktion_af_to_variable_snitfkt_g_med_tangent = new GGBApplet(parameters_funktion_af_to_variable_snitfkt_g_med_tangent, true);
+</script>
+
+
+
+<script>
+var parameters_funktion_af_to_variable_snitfkt_h_med_tangent = {
+"id": "ggbApplet_funktion_af_to_variable_snitfkt_h_med_tangent",
+"scaleContainerClass": "ggbContainer",
+"prerelease":false,
+"borderColor":null,
+"showMenuBar":false,
+"showAlgebraInput":false,
+"showToolBar":false,
+"showToolBarHelp":false,
+"showResetIcon":true,
+"enableLabelDrags":false,
+"enableShiftDragZoom":true,
+"enableRightClick":false,
+"errorDialogsActive":false,
+"useBrowserForJS":false,
+"capturingThreshold":null,
+"language":"da",
+// use this instead of ggbBase64 to load a .ggb file
+ "filename":"_geogebra/funktion_af_to_variable_snitfkt_h_med_tangent.ggb",
+};
+var applet_funktion_af_to_variable_snitfkt_h_med_tangent = new GGBApplet(parameters_funktion_af_to_variable_snitfkt_h_med_tangent, true);
+</script>
+
+
+
+<script>
+var parameters_funktion_af_to_variable_med_snitkurve_i_gradietens_retning = {
+"id": "ggbApplet_funktion_af_to_variable_med_snitkurve_i_gradietens_retning",
+"scaleContainerClass": "ggbContainer",
+"prerelease":false,
+"borderColor":null,
+"showMenuBar":false,
+"showAlgebraInput":false,
+"showToolBar":false,
+"showToolBarHelp":false,
+"showResetIcon":true,
+"enableLabelDrags":false,
+"enableShiftDragZoom":true,
+"enableRightClick":false,
+"errorDialogsActive":false,
+"useBrowserForJS":false,
+"capturingThreshold":null,
+"language":"da",
+// use this instead of ggbBase64 to load a .ggb file
+ "filename":"_geogebra/funktion_af_to_variable_med_snitkurve_i_gradietens_retning.ggb",
+};
+var applet_funktion_af_to_variable_med_snitkurve_i_gradietens_retning = new GGBApplet(parameters_funktion_af_to_variable_med_snitkurve_i_gradietens_retning, true);
+</script>
+
+
+
+<script>
+window.onload = function() {
+  applet_funktion_af_to_variable.inject('ggbApplet_funktion_af_to_variable');
+  applet_funktion_af_to_variable_snitfkt_g.inject('ggbApplet_funktion_af_to_variable_snitfkt_g');
+  applet_funktion_af_to_variable_snitfkt_h.inject('ggbApplet_funktion_af_to_variable_snitfkt_h');
+  applet_funktion_af_to_variable_snitfkt_g_med_tangent.inject('ggbApplet_funktion_af_to_variable_snitfkt_g_med_tangent');
+  applet_funktion_af_to_variable_snitfkt_h_med_tangent.inject('ggbApplet_funktion_af_to_variable_snitfkt_h_med_tangent');
+  applet_funktion_af_to_variable_med_snitkurve_i_gradietens_retning.inject('ggbApplet_funktion_af_to_variable_med_snitkurve_i_gradietens_retning');
+  
+  }
+</script>
+
+<div id="fig-fun2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-fun2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="ggbContainer" style="width:90%; margin: auto">
+<div id="ggbApplet_funktion_af_to_variable">
+
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-fun2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;4: Grafen for funktionen <span class="math inline">\(f\)</span> med forskrift <span class="math inline">\(f(x,y)=2x^2-y^2+3xy+1\)</span> samt punktet <span class="math inline">\(P(1,-2,-7)\)</span>.
+</figcaption>
+</figure>
+</div>
+<p>Faktisk kender du allerede en særlig type af funktioner af to variable. Nemlig den slags funktioner, hvis graf er en plan. Som du måske husker, kan en plan gennem punktet <span class="math inline">\((x_0,y_0,z_0)\)</span> og med normalvektor</p>
+<p><span class="math display">\[
+\vec n =
+\begin{pmatrix}
+a \\
+b \\
+c
+\end{pmatrix}
+\]</span></p>
+<p>beskrives ved ligningen</p>
+<p><span class="math display">\[
+a(x-x_0)+b(y-y_0)+c(z-z_0)=0.
+\]</span></p>
+<p>En alternativ skrivemåde er</p>
+<p><span class="math display">\[
+ax+by+cz+d=0.
+\]</span> Hvis <span class="math inline">\(c \neq 0\)</span> kan vi i denne ligning isolere <span class="math inline">\(z\)</span>:</p>
+<p><span class="math display">\[
+z = -\frac{a}{c}x -\frac{b}{c}y-\frac{d}{c}.
+\]</span></p>
+<p>En ikke-lodret plan i rummet er derfor graf for en funktion af to variable med en forskrift på formen</p>
+<p><span class="math display">\[
+f(x,y)= -\frac{a}{c}x -\frac{b}{c}y-\frac{d}{c}.
+\]</span> Og skrevet lidt simplere:</p>
+<p><span class="math display">\[
+f(x,y) = Ax+By+C,
+\]</span></p>
+<p>hvor <span class="math inline">\(A=-a/c, B=-b/c\)</span> og <span class="math inline">\(C=-d/c\)</span>.</p>
+<p>Vi kan igen bruge "maskine-metaforen" for funktioner af to variable, som illustreret i <a href="#fig-maskine2" class="quarto-xref">figur&nbsp;5</a>.</p>
+<div id="fig-maskine2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-maskine2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/maskine2.png" class="img-fluid figure-img" style="width:75.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-maskine2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;5: Funktionen <span class="math inline">\(f\)</span> af to variable illustreret som en maskine.
+</figcaption>
+</figure>
+</div>
+<p>For at vi kan tale om, at det er en funktion, kræver vi igen, at der til enhver værdi af <span class="math inline">\((x,y)\)</span> svarer én og kun én funktionsværdi <span class="math inline">\(z=f(x,y).\)</span> Maskinen skal altså altid returnere den samme funktionsværdi for en given værdi af <span class="math inline">\((x,y)\)</span>.</p>
+<p>Hvis en funktion <span class="math inline">\(f\)</span>, som input kan tage en <span class="math inline">\((x,y)\)</span>-værdi, og som output giver en funktionsværdi <span class="math inline">\(z\)</span>, skriver vi</p>
+<p><span class="math display">\[
+f: \mathbb{R}^2 \rightarrow \mathbb{R}.
+\]</span></p>
+<p>Her indikerer <span class="math inline">\(2\)</span>-tallet altså, at der er tale om en funktion af <em>to</em> variable.</p>
+<section id="snitfunktioner-og-snitkurver" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="snitfunktioner-og-snitkurver">Snitfunktioner og snitkurver</h3>
+<p>Vi vil nu for en funktion af to variable tage udgangspunkt i et konkret punkt <span class="math inline">\(P(x_0, y_0, f(x_0,y_0))\)</span>. Forestil dig at vi i <span class="math inline">\(P\)</span> laver et lodret snit ned gennem grafen for <span class="math inline">\(f\)</span> med en plan, som er parallel med <span class="math inline">\(x\)</span>-aksen. Det er lidt ligesom, at lave et snit ned gennem en lagkage! Et eksempel er vist i <a href="#fig-fun2snit_g" class="quarto-xref">figur&nbsp;6</a>. Den lyseblå plan svarer til den lagkagekniv, vi har skåret med, og den skærer altså lodret og er samtidig parallel med <span class="math inline">\(x\)</span>-aksen.</p>
+<p>Når man laver sådan et lodret snit med grafen for <span class="math inline">\(f\)</span>, så kalder man skæringen mellem den lodrette plan (lagkagekniven) og grafen for <span class="math inline">\(f\)</span> for en <em>snitkurve</em>. Snitkurven er markeret med sort på <a href="#fig-fun2snit_g" class="quarto-xref">figur&nbsp;6</a>. Den funktion, hvis graf svarer til snitkurven, kaldes for en <em>snitfunktion</em>. Forskriften for snitfunktionen fås ved, at vi fastholder <span class="math inline">\(y\)</span>-værdien på <span class="math inline">\(y_0\)</span> og lader <span class="math inline">\(x\)</span> varierer:</p>
+<p><span class="math display">\[
+g(x)=f(x,y_0).
+\]</span> Vi kan også lave et lodret snit gennem <span class="math inline">\(P(x_0,y_0,f(x_0,y_0))\)</span>, men hvor snittet i stedet er parallel med <span class="math inline">\(y\)</span>-aksen – se <a href="#fig-fun2snit_h" class="quarto-xref">figur&nbsp;7</a>. Det svarer til, at vi fastholder <span class="math inline">\(x\)</span> på værdien <span class="math inline">\(x_0\)</span> og lader <span class="math inline">\(y\)</span> variere. Gør vi det fås snitfunktionen</p>
+<p><span class="math display">\[
+h(y)=f(x_0,y).
+\]</span></p>
+<p>Lad os se på eksemplet fra tidligere <span class="math display">\[
+f(x,y)= 2x^2-y^2+3xy+1.
+\]</span></p>
+<p>Fastholder vi for eksempel <span class="math inline">\(y\)</span> på <span class="math inline">\(-2\)</span>, får vi snitfunktionen</p>
+<p><span class="math display">\[
+\begin{aligned}
+g(x) &amp;=f(x,-2)=2x^2-(-2)^2+3 \cdot x \cdot (-2)+1 \\
+&amp;=2x^2-6x-3.
+\end{aligned}
+\]</span> Den tilhørende snitkurve svarer til skæringskurven mellem grafen for <span class="math inline">\(f\)</span> og planen med ligning <span class="math inline">\(y=-2\)</span>, som ses i figuren herunder. Bemærk, at snitfunktionen <span class="math inline">\(g\)</span> er et andengradspolynomium, hvis graf er en parabel med grene, som vender opad, idet koefficienten til andengradsleddet er positiv.</p>
+<div id="fig-fun2snit_g" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-fun2snit_g-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="ggbContainer" style="width:90%; margin: auto">
+<div id="ggbApplet_funktion_af_to_variable_snitfkt_g">
+
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-fun2snit_g-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;6: Grafen for snitfunktionen <span class="math inline">\(g\)</span> med forskrift <span class="math inline">\(g(x)=2x^2-6x-3\)</span> markeret med sort. Den lyseblå plan er planen med ligning <span class="math inline">\(y=-2\)</span>.
+</figcaption>
+</figure>
+</div>
+<p>Fastholder vi derimod <span class="math inline">\(x\)</span> på <span class="math inline">\(1\)</span>, får vi snitfunktionen</p>
+<p><span class="math display">\[
+\begin{aligned}
+h(y)&amp;=f(1,y)=2 \cdot 1^2 -y^2 +3 \cdot 1 \cdot y +1 \\
+&amp;=-y^2+3y+3.
+\end{aligned}
+\]</span> Her ser vi igen, at snitfunktionen er et andengradspolynomium, og grafen vil være en parabel med grene, der vender nedad. Snitkurven svarer til skæringskurven mellem grafen for <span class="math inline">\(f\)</span> og planen med ligning <span class="math inline">\(x=1\)</span>, som vist herunder.</p>
+<div id="fig-fun2snit_h" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-fun2snit_h-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="ggbContainer" style="width:90%; margin: auto">
+<div id="ggbApplet_funktion_af_to_variable_snitfkt_h">
+
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-fun2snit_h-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;7: Grafen for snitfunktionen <span class="math inline">\(h\)</span> med forskrift <span class="math inline">\(h(y)=-y^2+3y+3\)</span> markeret med sort. Den lyseblå plan er planen med ligning <span class="math inline">\(x=1\)</span>.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="partielle-afledede" class="level3">
+<h3 class="anchored" data-anchor-id="partielle-afledede">Partielle afledede</h3>
+<p>Fra funktioner af én variabel ved vi, at nogle funktioner er differentiable. Det kan funktioner af to variable også være. Her defineres de såkaldte <em>partielle afledede</em> ved simpelthen af differentiere de to forskellige typer af snitfunktioner, som vi definerede ovenfor.</p>
+<p>Lad os forklare det lidt nærmere. Snitfunktionen <span class="math inline">\(g(x)=f(x,y_0)\)</span> er jo en "almindelig" funktion af én variabel <span class="math inline">\(x\)</span>. Hvis <span class="math inline">\(g\)</span> er differentiabel, så kalder man <span class="math inline">\(g'(x)\)</span> for den <em>partielle afledede af <span class="math inline">\(f\)</span> med hensyn til <span class="math inline">\(x\)</span></em>. Notationen for den partielle afledede af <span class="math inline">\(f\)</span> med hensyn til <span class="math inline">\(x\)</span> er som regel en af følgende:</p>
+<p><span class="math display">\[
+g'(x)=f_x(x,y_0)=\frac{\partial f}{\partial x}=\frac{\partial}{\partial x}f(x,y_0),
+\]</span></p>
+<p>hvor <span class="math inline">\(y_0\)</span> her er en konstant.</p>
+<p>Definitionen af den partielle afledede kan også skrives med den vante "grænseværdi-notation". Gør man det kommer det til at se sådan her ud:</p>
+<p><span class="math display">\[
+f_x(x,y_0) = \lim_{h \rightarrow 0} \frac{f(x+h,y_0)-f(x,y_0)}{h}
+\]</span></p>
+<p>Ser vi igen på vores eksempel, får vi</p>
+<p><span class="math display">\[
+f(x,y_0)= 2x^2-y_0^2+3xy_0+1.
+\]</span> Så vil den partielle afledede med hensyn til <span class="math inline">\(x\)</span> være</p>
+<p><span class="math display">\[
+f_x(x,y_0)=2 \cdot 2x-0 + 3 \cdot 1 \cdot y_0 + 0 = 4x+3y_0.
+\]</span> Bemærk her, at <span class="math inline">\(y_0^2\)</span> differentieret bliver <span class="math inline">\(0\)</span>, fordi <span class="math inline">\(y_0\)</span> er en konstant, og en konstant, som er lagt til, bliver som bekendt <span class="math inline">\(0\)</span>, når vi differentierer. Når vi skal differentiere udtrykket <span class="math inline">\(3xy_0\)</span>, så er <span class="math inline">\(y_0\)</span> en konstant, som er ganget på, og derfor lader vi den stå, når vi differentierer (ligesom vi lader <span class="math inline">\(3\)</span>-tallet stå og differentierer <span class="math inline">\(x\)</span>, som giver <span class="math inline">\(1\)</span>).</p>
+<p>Normalvis gider man ikke slæbe rundt på <span class="math inline">\(y_0\)</span> i ovenstående udtryk, fordi <span class="math inline">\(y_0\)</span> jo kan være en hvilken som helst værdi svarende til, at vi flytter det lodrette snit. Derfor skriver man som oftest bare</p>
+<p><span class="math display">\[
+f_x(x,y)=4x+3y.
+\]</span></p>
+<p>Når vi finder den partielle afledede med hensyn til <span class="math inline">\(x\)</span>, kan vi altså gøre det helt generelt, hvor vi bare tænker på <span class="math inline">\(y\)</span> som en konstant.</p>
+<p>Tidligere fastholdt vi <span class="math inline">\(y\)</span> på værdien <span class="math inline">\(-2\)</span>. Indsætter vi <span class="math inline">\(y=-2\)</span> i ovenstående udtryk for <span class="math inline">\(f_x(x,y)\)</span> får vi</p>
+<p><span class="math display">\[
+f_x(x,-2)=4x+3 \cdot (-2)=4x-6.
+\]</span> Men vi kunne lige så godt have differentieret snitfunktionen</p>
+<p><span class="math display">\[
+g(x)=f(x,-2)=2x^2-6x-3.
+\]</span> Gør vi det, får vi <span class="math display">\[
+g'(x)=4x-6,  
+\]</span> der heldigvis svarer til udtrykket for <span class="math inline">\(f_x(x,-2)\)</span>, som vi netop har fundet.</p>
+<p>Helt tilsvarende definerer vi den <em>partielle afledede af <span class="math inline">\(f\)</span> med hensyn til <span class="math inline">\(y\)</span></em> ved at differentiere snitfunktionen <span class="math inline">\(h(y)\)</span> (såfremt denne snitfunktion er differentiabel):</p>
+<p><span class="math display">\[
+h'(y)=f_y(x_0,y)=\frac{\partial f}{\partial y}=\frac{\partial}{\partial y}f(x_0,y)
+\]</span></p>
+<p>og med "grænseværdi-notationen" bliver det</p>
+<p><span class="math display">\[
+f_y(x_0,y) =
+\lim_{h \rightarrow 0} \frac{f(x_0,y+h)-f(x_0,y)}{h}.
+\]</span></p>
+<p>Ser vi igen på</p>
+<p><span class="math display">\[
+f(x_0,y)= 2x_0^2-y^2+3x_0y+1,
+\]</span></p>
+<p>så vil den partielle afledede med hensyn til <span class="math inline">\(y\)</span> være</p>
+<p><span class="math display">\[
+f_y(x_0,y)=0-2y+3x_0\cdot 1+0=3x_0-2y.
+\]</span></p>
+<p>Her er <span class="math inline">\(x_0\)</span> en konstant, og derfor er <span class="math inline">\(2x_0^2\)</span> differentieret <span class="math inline">\(0\)</span>, og <span class="math inline">\(3x_0y\)</span> differentieret med hensyn til <span class="math inline">\(y\)</span> bliver <span class="math inline">\(3x_0\)</span>.</p>
+<p>Igen vil vi som oftest bare skrive</p>
+<p><span class="math display">\[
+f_y(x,y)=3x-2y.
+\]</span></p>
+</section>
+<section id="video-partielle-afledede" class="level3">
+<h3 class="anchored" data-anchor-id="video-partielle-afledede">VIDEO: Partielle afledede</h3>
+<p>I videoen her giver vi en introduktion til funktioner af to variable og partielle afledede.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/tlq2UYWF2Rw" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+</section>
+<section id="grafisk-betydning-af-de-partielle-afledede" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="grafisk-betydning-af-de-partielle-afledede">Grafisk betydning af de partielle afledede</h3>
+<p>For en funktion <span class="math inline">\(f\)</span> af én variabel ved vi, at hvis <span class="math inline">\(f\)</span> er differentiabel i <span class="math inline">\(x_0\)</span>, så vil <span class="math inline">\(f'(x_0)\)</span> svarer til hældningen for tangenten til grafen for <span class="math inline">\(f\)</span> i punktet <span class="math inline">\((x_0,f(x_0))\)</span>.</p>
+<p>Vi kan nu udlede en tilsvarende grafisk betydning af de partielle afledede. Vi ser igen på snitfunktionen <span class="math inline">\(g(x)\)</span>, hvor <span class="math inline">\(y\)</span> er fastholdt på <span class="math inline">\(y_0\)</span>:</p>
+<p><span class="math display">\[
+g(x)=f(x,y_0)
+\]</span></p>
+<p>Den partielle afledede med hensyn til <span class="math inline">\(x\)</span> er så</p>
+<p><span class="math display">\[
+g'(x)=f_x(x,y_0).
+\]</span> Men nu må <span class="math inline">\(g'(x_0)\)</span> være hældningen for tangenten til grafen for snitfunktionen <span class="math inline">\(g\)</span> i punktet <span class="math inline">\((x_0,g(x_0))\)</span>.</p>
+<p>Lad os illustrere det med vores eksempel hvor <span class="math inline">\(f(x,y)= 2x^2-y^2+3xy+1\)</span>. Her er</p>
+<p><span class="math display">\[
+f_x(x,y)=4x+3y.
+\]</span> Vi fandt tidligere, at <span class="math inline">\(P(1,-2,-7)\)</span> ligger på grafen for <span class="math inline">\(f\)</span>. Ser vi på snitfunktionen <span class="math inline">\(g(x)=f(x,-2)\)</span>, så ligger <span class="math inline">\(P\)</span> altså også på den tilsvarende snitkurve. <!-- -- se også @fig-graf_snitkurve_y --> Udregner vi <span class="math inline">\(g'(1)=f_x(1,-2)\)</span>, får vi</p>
+<p><span class="math display">\[
+f_x(1,-2)=4 \cdot 1 + 3 \cdot (-2) = 4-6=-2
+\]</span></p>
+<p>Det betyder, at hvis vi tegner tangenten til snitkurven i <span class="math inline">\(P\)</span>, så vil denne tangent have en hældning på <span class="math inline">\(-2\)</span>, som illustreret i figuren herunder.</p>
+<div id="fig-fun2snit_g_tangent" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-fun2snit_g_tangent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="ggbContainer" style="width:90%; margin: auto">
+<div id="ggbApplet_funktion_af_to_variable_snitfkt_g_med_tangent">
+
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-fun2snit_g_tangent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;8: Tangenten (stiplet linje) til grafen for snitfunktionen <span class="math inline">\(g\)</span> med forskrift <span class="math inline">\(g(x)=2x^2-6x-3\)</span> i punktet <span class="math inline">\(P(1,-2,-7)\)</span> har en hældning på <span class="math inline">\(-2\)</span>.
+</figcaption>
+</figure>
+</div>
+<p>Helt tilsvarende kan vi fortolke den partielle afledede af <span class="math inline">\(f\)</span> med hensyn til <span class="math inline">\(y\)</span> i punktet <span class="math inline">\(P\)</span>. Vi fandt, at</p>
+<p><span class="math display">\[
+f_y(x,y)=3x-2y.
+\]</span></p>
+<p>Så i <span class="math inline">\((1,-2)\)</span> har vi</p>
+<p><span class="math display">\[
+f_y(1,-2)= 3 \cdot 1 - 2 \cdot (-2)=3+4=7
+\]</span> Altså vil tangenten til snitkurven hørende til snitfunktionen <span class="math inline">\(h(y)=f(1,y)\)</span> have en tangenthældning på <span class="math inline">\(7\)</span> i punktet <span class="math inline">\((-2,h(-2))\)</span>. Det er vist i figuren herunder.</p>
+<div id="fig-fun2snit_h_tangent" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-fun2snit_h_tangent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="ggbContainer" style="width:90%; margin: auto">
+<div id="ggbApplet_funktion_af_to_variable_snitfkt_h_med_tangent">
+
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-fun2snit_h_tangent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;9: Tangenten (stiplet linje) til grafen for snitfunktionen <span class="math inline">\(h\)</span> med forskrift <span class="math inline">\(h(y)=-y^2+3y+3\)</span> i punktet <span class="math inline">\(P(1,-2,-7)\)</span> har en hældning på <span class="math inline">\(7\)</span>.
+</figcaption>
+</figure>
+</div>
+<p>De partielle afledede svarer altså til tangenthældninger på snitkurver, som er fremkommet ved at finde skæringskurven mellem grafen for <span class="math inline">\(f\)</span> og en plan med ligning <span class="math inline">\(x=x_0\)</span> eller grafen for <span class="math inline">\(f\)</span> og en plan med ligning <span class="math inline">\(y=y_0\)</span>.</p>
+<p>Man kan også bestemme tangenthældninger for mere generelle snitkurver, som fremkommer ved, at man finder skæringskurven mellem grafen for <span class="math inline">\(f\)</span> og en plan med ligning <span class="math inline">\(ax+by+c=0\)</span> (som står vinkelret på <span class="math inline">\(xy\)</span>-planen). Differentierer man de tilhørende snitfunktioner, kalder man de afledede for <em>retningsafledede</em>. Det kan du læse meget mere om <a href="../../noter/gradientnedstigning/gradientnedstigning.html">her</a>.</p>
+<p>For funktioner af flere variable kan man også bestemme en ligning for en såkaldt <strong>tangentplan</strong>. Det kan du læse mere om <a href="../../noter/funktioner_af_flere_variable/tangentplaner.html">her</a>.</p>
+</section>
+<section id="gradienten-og-betydningen-af-denne" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="gradienten-og-betydningen-af-denne">Gradienten og betydningen af denne</h3>
+<p>Man definerer <em>gradienten</em> for en funktion <span class="math inline">\(f\)</span> af to variable, som den vektor hvis koordinater svarer til de partielle afledede. Gradienten skrives <span class="math inline">\(\nabla f (x,y)\)</span>. Det vil sige, at</p>
+<p><span class="math display">\[
+\nabla f(x,y) =
+\begin{pmatrix}
+f_x(x,y) \\ f_y(x,y)
+\end{pmatrix}.
+\]</span></p>
+<p>Vi ser her, at gradienten er en to-dimensionel vektor. Det betyder, at man kan tegne en repræsentant for vektoren i <span class="math inline">\(xy\)</span>-planen.</p>
+<p>Lad os regne lidt på det i vores eksempel. Vi husker, at <span class="math inline">\(f(x,y)=2x^2-y^2+3xy+1\)</span> og vi fandt ovenfor, at <span class="math display">\[
+f_x(1,-2)=-2
+\]</span> og</p>
+<p><span class="math display">\[
+f_y(1,-2)=7.
+\]</span> Det vil sige, at <span class="math display">\[
+\nabla f(1,-2) =
+\begin{pmatrix}
+-2 \\ 7
+\end{pmatrix}
+\]</span></p>
+<p>Tegner vi en repræsentant for denne vektor i <span class="math inline">\(xy\)</span>-planen med udgangspunkt i punktet <span class="math inline">\(Q(1,-2,0)\)</span> (som er projektionen af <span class="math inline">\(P(1,-2,-7)\)</span> op på <span class="math inline">\(xy\)</span>-planen) ses resultatet i <a href="#fig-fun2snit" class="quarto-xref">figur&nbsp;10</a> herunder. Hvis du drejer lidt rundt på grafen, kan du se, at gradienten angiver en retning i <span class="math inline">\(xy\)</span>-planen. Laver man et snit med en lodret plan gennem <span class="math inline">\(P\)</span>, som peger i gradientens retning fås den snitkurve, som er indtegnet med sort.</p>
+<div id="fig-fun2snit" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-fun2snit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="ggbContainer" style="width:90%; margin: auto">
+<div id="ggbApplet_funktion_af_to_variable_med_snitkurve_i_gradietens_retning">
+
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-fun2snit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;10: En repræsentant for vektoren <span class="math inline">\(\nabla f(1,-2)\)</span> er tegnet med udgangspunkt i <span class="math inline">\(P(1,-2,7)\)</span>’s projektion på <span class="math inline">\(xy\)</span>-planen.
+</figcaption>
+</figure>
+</div>
+<p>Det er jo alt sammen fint nok, men hvad skal man mon bruge det til? Det er nemmest at forklare, hvis du forestiller dig, at grafen for <span class="math inline">\(f\)</span> er et landskab, hvor du står i punktet <span class="math inline">\(P(x_0,y_0,f(x_0,y_0))\)</span>. Så viser det sig, at gradienten <span class="math inline">\(\nabla f(x_0,y_0)\)</span> peger i den retning, hvor funktionsværdien vokser mest<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. Det vil altså sige, at hvis du står i <span class="math inline">\(P\)</span> og gerne vil gå allermest opad bakke, så skal du gå i gradientens retning. Det svarer derfor til at følge den snitkurve, som er markeret på den interaktive figur ovenfor. Hvis du drejer rundt på grafen i den interaktive figur, kan du måske få en fornemmelse af, at snitkurven netop angiver den "sti", man skal følge, hvis man i punktet <span class="math inline">\(P\)</span> vil gå mest opad bakke.</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Argumentet for at det er rigtigt, kan du læse om <a href="../../noter/gradientnedstigning/gradientnedstigning.html#retningsafledede">her</a>.</p></div></div><p>Omvendt vil det også være sådan, at hvis du vil bevæge dig allermest nedad bakke, så skal du gå i retningen <span class="math inline">\(-\nabla f(x_0,y_0)\)</span> (det svarer til, at du lige har vendt dig rundt <span class="math inline">\(180^{\circ}\)</span> i forhold til den retning, som gradienten peger i). Beviset for at det forholder sig sådan, kan du læse <a href="../../noter/gradientnedstigning/gradientnedstigning.html">her</a>.</p>
+<p>Det er vigtigt her at bemærke, at det med at gå i gradientens positive eller negative retning for at gå allermest opad eller nedad bakke kun gælder i nærheden af punktet <span class="math inline">\(P\)</span>. Man kalder det derfor også for en "lokal" egenskab. Det betyder, at hvis man er kommet lidt væk fra punktet <span class="math inline">\(P\)</span>, så må man beregne en ny gradient i det nye punkt, man står i, og denne gradient vil nu formentlig pege i en ny retning. Det vil sige, at vi i dette nye punkt nu skal gå langs en ny "sti" for at gå allermest opad eller nedad bakke.</p>
+<p>Fint nok tænker du måske, men hvem gider at gå allermest opad bakke? Se det er her, at det fine kommer ind i billedet og grunden til, at vi overhovedet gider tale om funktioner af flere variable i forbindelse med kunstig intelligens. I rigtig mange metoder inden for kunstig intelligens skal "den kunstige intelligens" trænes for at blive god<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Eksempler er <a href="../../noter/neurale_net/neurale_net.html">generelle neurale netværk</a>, <a href="../../noter/perceptron/perceptron.html">perceptroner</a> og <a href="../../noter/simple_neurale_net/simple_neurale_net.html">simple neurale netværk</a>, som du kan læse meget mere om senere.</p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Og nu tænker du nok, at det er derfor, at man skal gå opad bakke, men det er alligevel ikke helt sådan det forholder sig <span class="emoji" data-emoji="blush">😊</span>.</p></div><div id="fn5"><p><sup>5</sup>&nbsp;Når et ekstremum for en funktion bestemmes på denne måde, kalder man det for en <em>numerisk</em> metode. Det står i modsætning til at bestemme ekstrema for en funktion <em>analytisk</em>. Bestemmes ekstrema analytisk sættes den afledede funktion (eller de partielle afledede funktioner) lig med <span class="math inline">\(0\)</span>, og herefter finder man ud af, om der er tale om et maksimum eller minimum (eller eventuelt ingen af delene). Nogle gange er det enten beregningsmæssigt tungt eller helt umuligt at løse de ligninger, som det kræves for at finde ekstrema analytisk. Derfor er de numeriske metoder smarte, også selvom man ikke nødvendigvis finder det præcise ekstrema, men kun et punkt som er tæt på. Du kender faktisk allerede en anden numerisk metode nemlig <em>Newton-Raphsons</em> metode, som bruges til at bestemme en funktions nulpunkter (det vil sige, at løse ligningen <span class="math inline">\(f(x)=0\)</span>).</p></div></div><p>Ser vi for eksempel på et kunstigt neuralt netværk, så kan det grundlæggende ingenting til at starte med. Men så giver man netværket nogle <em>træningsdata</em>, så det gradvist kan blive bedre. Det er her, at man siger, at man <em>træner</em> netværket. Det foregår ved, at man definerer en såkaldt <em>tabsfunktion</em>. Den måler basalt set, hvor godt netværket er lige nu. Man ønsker at tabsfunktionen skal minimeres (lille tab = godt netværk). Det kan være en meget kompliceret opgave, hvis man analytisk skal bestemme minimum for en sådan tabsfunktion, og det er lige præcis her, at gradienten kommer ind i billedet. Man starter nemlig et tilfældigt sted på grafen for tabsfunktionen (svarende til at man stiller sig i et punkt <span class="math inline">\(P\)</span> på grafen for en funktion <span class="math inline">\(f\)</span>). Så udregner man gradienten, og da man gerne vil finde minimum for tabsfunktionen, så går man et lille skridt i den negative gradients retning. For vi ved jo netop, at det er den retning, vi skal gå i, hvis vi gerne vil gå i den retning, hvor funktionsværdien falder mest (og det er jo smart, hvis man gerne vil ende i et minimum). Så står man i et nyt punkt på grafen, udregner gradienten i det nye punkt og går så et lille skridt i denne gradients negative retning. Sådan fortsætter man, indtil man har fundet minimum eller noget, der er tæt på (eller måske bare "godt nok" – det kan nemlig godt være et lokalt minimum, man rammer ind i)<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>. Se det er faktisk <em>the backbone</em> i nogle af de mest populære og moderne metoder inden for kunstig intelligens, som anvendes i dag!</p>
+</section>
+</section>
+<section id="funktioner-af-flere-variable" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="funktioner-af-flere-variable">Funktioner af flere variable</h2>
+<p>Vi har lige redegjort for, at gradienten er helt central i forbindelse med minimering af tabsfunktioner. Men faktisk vil det være sådan, at tabsfunktioner i virkeligheden ikke kun afhænger af to, men derimod af millioner af variable! Derfor har man helt generelt brug for at se på funktioner af flere variable end to. Vi kalder input-værdierne til funktionen <span class="math inline">\((x_1, x_2, \dots , x_n)\)</span>, og man taler så om en <em>funktion</em> af <span class="math inline">\(n\)</span> variable, hvis der for enhver værdi af <span class="math inline">\((x_1, x_2, \dots , x_n)\)</span> svarer én og kun én funktionsværdi: <span class="math display">\[
+y = f(x_1, x_2, \dots, x_n).
+\]</span></p>
+<p>Man skriver derfor</p>
+<p><span class="math display">\[
+f: \mathbb{R}^n \rightarrow \mathbb{R},
+\]</span> hvor <span class="math inline">\(n\)</span>’et her tydeliggør, at der er tale om en funktion af <span class="math inline">\(n\)</span> variable.</p>
+<p>Det er faktisk ikke helt så svært at forestille sig funktioner af flere variable end to, hvis nedenstående eksempel illustrerer.</p>
+<div id="exm-fortjeneste" class="theorem example page-columns page-full">
+<p><span class="theorem-title"><strong>Eksempel 1</strong></span> En virksomhed producerer en bestemt vare. Virksomhedens fortjeneste afhænger af en række faktorer. Fx antal solgte varer, løn til medarbejdere, elprisen, prisen på en bestemt råvare (som bruges i produktionen) og antal sygedage blandt medarbejderne. Virksomheden har fundet ud af, at fortjenesten tilnærmelsesvist kan udregnes på følgende måde<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>:</p>
+<div class="no-row-height column-margin column-container"><div id="fn6"><p><sup>6</sup>&nbsp;Bemærk, at eksemplet er fiktivt og tjener kun som en illustration.</p></div></div><p><span class="math display">\[
+\begin{aligned}
+\textrm{fortjeneste } = 7.2 \cdot \sqrt{\textrm{( antal solgte varer )}}- \textrm{( løn )} -0.9 \cdot \textrm{( elprisen )} \\ -1.4 \cdot \textrm{( pris på råvarer )} -0.5 \cdot \textrm{( antal sygedage )}^2
+\end{aligned}
+\]</span></p>
+<p>Det kan skrives som en funktion af fem variable <span class="math display">\[
+f(x_1, x_2, x_3, x_4,x_5) = 7.2 \cdot \sqrt{x_1}-x_2 -0.9 \cdot x_3 - 1.4 \cdot x_4 - 0.5 \cdot (x_5)^2,
+\]</span> hvor <span class="math inline">\(f(x_1,x_2,x_3,x,x_4,x_5)\)</span> betegner fortjeneste, <span class="math inline">\(x_1\)</span> er antal solgte varer, <span class="math inline">\(x_2\)</span> er løn til medarbejderne, <span class="math inline">\(x_3\)</span> er elprisen, <span class="math inline">\(x_4\)</span> er prisen på råvarer og <span class="math inline">\(x_5\)</span> er antal sygedage.</p>
+</div>
+<p>Grafen for en funktion <span class="math inline">\(f\)</span> af <span class="math inline">\(n\)</span> variable består af alle de punkter <span class="math inline">\((x_1, x_2, \dots, x_n,y)\)</span> i et <span class="math inline">\((n+1)\)</span>-dimensionalt koordinatsystem, hvor <span class="math inline">\(y = f(x_1, x_2, \dots, x_n)\)</span>. Koordinatsystemer på <span class="math inline">\(4\)</span> dimensioner eller flere er svære at rumme i vores <span class="math inline">\(3\)</span>-dimensionelle verden, så af den grund behøver vi ikke at bekymre os om, hvordan grafen for <span class="math inline">\(f\)</span> ser ud.</p>
+<p>De partielle afledede defineres helt som før. Når man for eksempel skal finde den partielle afledede med hensyn <span class="math inline">\(x_1\)</span>, så betragtes <span class="math inline">\(x_2, x_3, \dots, x_n\)</span> som konstanter, og man differentierer den tilsvarende snitfunktion med hensyn til <span class="math inline">\(x_1\)</span>. De partielle afledede betegnes med</p>
+<p><span class="math display">\[
+\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}, \dots, \frac{\partial f}{\partial x_n}.
+\]</span></p>
+<p>Gradienten defineres som en naturlig udvidelse af den tidligere definition</p>
+<p><span class="math display">\[
+\nabla f(x_1, x_2, \dots, x_n) =
+\begin{pmatrix}
+\frac{\partial f}{\partial x_1} \\
+\frac{\partial f}{\partial x_2} \\
+\vdots \\
+\frac{\partial f}{\partial x_n}
+\end{pmatrix}.
+\]</span></p>
+<p>Helt analogt til før viser det sig, at gradienten peger i den retning, hvor funktionsværdien vokser mest. Og minus gradienten peger så altså i den retning, hvor funktionsværdien aftager mest.</p>
+<p>Derfor kan vi igen gå i den negative gradients retning, når vi gerne vil minimere en tabsfunktion. Denne metode kaldes for øvrigt for <em>gradientnedstigning</em> eller på engelsk <em>gradient descent</em>.</p>
+</section>
+<section id="videre-læsning" class="level2">
+<h2 class="anchored" data-anchor-id="videre-læsning">Videre læsning</h2>
+<ul>
+<li>Forberedelsesmaterialet om "Funktioner af to variable" fra 2013. Ministeriet for børn og undervisning.</li>
+</ul>
+
+
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/aimat\.dk");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p><img src="../../logo/SVG/Bomaerke_03_AIMAT_2024.svg" class="footer-logo"> aimat.dk er finansieret af Novo Nordisk Fonden</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+<script src="../../scripts/navbar-tooltips.js"></script>
+
+
+
+
+</body></html>

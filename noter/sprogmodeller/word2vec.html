@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Idéen bag Word2Vec går ud på at repræsentere hvert ord i et sprog med en vektor, hvor ord, hvis betydning minder om hinanden, svarer til vektorer, med nogenlunde samme retning og længde.">
+
+<title>Word2vec – AI MAT - matematikken bag magien</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-cef6446724503988638a0362fd982987.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-Y219BCPS45"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+ 
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'analytics_storage': 'denied'
+  });
+gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="floating nav-fixed slimcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo light-content">
+    <img src="../../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../undervisningsforlob/index.html"> 
+<span class="menu-text">Undervisningsforløb</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../noter/index.html"> 
+<span class="menu-text">Noter</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../srp/index.html"> 
+<span class="menu-text">SRP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../apps/index.html"> 
+<span class="menu-text">Apps</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../til_laererne.html"> 
+<span class="menu-text">Til lærerne</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> <i class="bi bi-envelope" role="img" aria-label="Om os">
+</i> 
+<span class="menu-text">Om os</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@ai-mat" target="_blank"> <i class="bi bi-youtube" role="img" aria-label="YouTube">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indhold</h2>
+   
+  <ul>
+  <li><a href="#betydning-og-kontekst" id="toc-betydning-og-kontekst" class="nav-link active" data-scroll-target="#betydning-og-kontekst">Betydning og kontekst</a></li>
+  <li><a href="#træningsdata" id="toc-træningsdata" class="nav-link" data-scroll-target="#træningsdata">Træningsdata</a>
+  <ul class="collapse">
+  <li><a href="#video-introduktion-til-word2vec" id="toc-video-introduktion-til-word2vec" class="nav-link" data-scroll-target="#video-introduktion-til-word2vec">VIDEO: Introduktion til Word2Vec</a></li>
+  </ul></li>
+  <li><a href="#fokus--og-kontekstvektorer" id="toc-fokus--og-kontekstvektorer" class="nav-link" data-scroll-target="#fokus--og-kontekstvektorer">Fokus- og kontekstvektorer</a>
+  <ul class="collapse">
+  <li><a href="#video-fokus--og-kontekstvektorer" id="toc-video-fokus--og-kontekstvektorer" class="nav-link" data-scroll-target="#video-fokus--og-kontekstvektorer">VIDEO: Fokus- og kontekstvektorer</a></li>
+  </ul></li>
+  <li><a href="#model-for-sandsynligheder" id="toc-model-for-sandsynligheder" class="nav-link" data-scroll-target="#model-for-sandsynligheder">Model for sandsynligheder</a>
+  <ul class="collapse">
+  <li><a href="#video-model-for-sandsynligheder" id="toc-video-model-for-sandsynligheder" class="nav-link" data-scroll-target="#video-model-for-sandsynligheder">VIDEO: Model for sandsynligheder</a></li>
+  </ul></li>
+  <li><a href="#estimation-af-vektorrepræsentationer" id="toc-estimation-af-vektorrepræsentationer" class="nav-link" data-scroll-target="#estimation-af-vektorrepræsentationer">Estimation af vektorrepræsentationer</a>
+  <ul class="collapse">
+  <li><a href="#video-estimation-af-vektorrepræsentationer" id="toc-video-estimation-af-vektorrepræsentationer" class="nav-link" data-scroll-target="#video-estimation-af-vektorrepræsentationer">VIDEO: Estimation af vektorrepræsentationer</a></li>
+  </ul></li>
+  <li><a href="#fra-vektorer-til-tekstgenerering" id="toc-fra-vektorer-til-tekstgenerering" class="nav-link" data-scroll-target="#fra-vektorer-til-tekstgenerering">Fra vektorer til tekstgenerering</a>
+  <ul class="collapse">
+  <li><a href="#video-fra-vektorer-til-tekstgenerering" id="toc-video-fra-vektorer-til-tekstgenerering" class="nav-link" data-scroll-target="#video-fra-vektorer-til-tekstgenerering">VIDEO: Fra vektorer til tekstgenerering</a></li>
+  </ul></li>
+  <li><a href="#relaterede-forløb" id="toc-relaterede-forløb" class="nav-link" data-scroll-target="#relaterede-forløb">Relaterede forløb</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Word2vec</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Lad os se på en situation, hvor vi gerne vil kunne gætte næste ord i en sætning. Lad os sige, at vi har sætningen</p>
+<div class="llm_saetninger">
+<p>"Min hund har en blød —"</p>
+</div>
+<p>og vil gætte næste ord. Hvis vi har en stor mængde tekst til rådighed, et såkaldt <em>tekstkorpus</em>, kan vi selvfølgelig lede efter ordsekvensen "Min hund har en blød" og se hvilket ord, der oftest kommer efter, som beskrevet i noten om <a href="../../noter/sprogmodeller/simple.html">simple sprogmodeller</a>. Men hvis sekvensen ikke forekommer i vores korpus, så har vi et problem. I stedet kunne vi lede efter en sætning med en betydning, der minder om "Min hund har en blød" og se, hvad der kommer efter den. Men hvordan får vi en computer til at forstå betydningen af ord?</p>
+<p>Den simpleste måde at repræsentere et ord på i en computer ville være ved at nummerere alle ordene i det danske sprog fra 1 til <span class="math inline">\(V\)</span>, hvor <span class="math inline">\(V\)</span> er det samlede antal ord. Nummeret på et ord giver dog ikke megen information om ordets betydning.</p>
+<p>En anden nærliggende idé kunne være at repræsentere et ord ved bogstaverne i ordet. For at en computer skal kunne forstå det, kunne man give hvert bogstav et tal ud fra bogstavets nummer i alfabetet. Så ville "kat" blive til <span class="math inline">\((11,1,20)\)</span> og "hund" til <span class="math inline">\((8,21,14,4)\)</span>. Stavemåden fortæller dog heller ikke meget om betydningen af et ord. Ordet "mund" staves næsten lige som "hund", men har en helt anden betydning. Omvendt betyder ordet "vovse" næsten det samme som "hund", men staves helt anderledes.</p>
+<p>I stedet vil vi gerne repræsentere hvert ord med en vektor. Idéen er, at ord, hvis betydning ligner hinanden, skal repræsenteres med vektorer, der peger i nogenlunde samme retning og har nogenlunde samme længde, som illustreret på <a href="#fig-vektorer" class="quarto-xref">figur&nbsp;1</a>.</p>
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<script src="https://cdn.geogebra.org/apps/deployggb.js"></script>
+
+<!-- 
+Alle geogebra filer placeres i mappen _geogebra
+Erstat XXX med nr på app og erstat YYY med navn på ggb-fil -->
+<script>
+var parameters_vektorer = {
+"id": "ggbApplet_vektorer",
+"scaleContainerClass": "ggbContainer",
+"prerelease":false,
+"borderColor":null,
+"showMenuBar":false,
+"showAlgebraInput":false,
+"showToolBar":false,
+"showToolBarHelp":false,
+"showResetIcon":true,
+"enableLabelDrags":false,
+"enableShiftDragZoom":true,
+"enableRightClick":false,
+"errorDialogsActive":false,
+"useBrowserForJS":false,
+"capturingThreshold":null,
+"language":"da",
+// use this instead of ggbBase64 to load a .ggb file
+ "filename":"_geogebra/fig_simple.ggb",
+};
+var applet_vektorer = new GGBApplet(parameters_vektorer, true);
+</script>
+
+
+
+<script>
+window.onload = function() {
+  applet_vektorer.inject('ggbApplet_vektorer');
+  }
+</script>
+
+<div id="fig-vektorer" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" width="80%" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-vektorer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="ggbContainer" style="width:100%; margin: auto">
+<div id="ggbApplet_vektorer">
+
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-vektorer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;1: Eksempel på hvordan fire ord hver bliver repræsenteret som en vektor. Vektorerne, som repræsenterer dyrene, peger i nogenlunde samme retning sammenlignet med vektoreren, som repræsenterer ordet "kælk". Samtidig kan det også ses, at vektorerne, som repræsenterer ordene "kat" og "mis" ligner hinanden mere end vektoren, som repræsenterer ordet "hund".
+</figcaption>
+</figure>
+</div>
+<p>I kender vektorer i 2 eller 3 dimensioner og ved, at de kan skrives på formen <span class="math display">\[
+\begin{pmatrix}
+a_1\\a_2\end{pmatrix}\text{ og } \begin{pmatrix} a_1\\a_2 \\a_3
+\end{pmatrix}
+\]</span> hvor <span class="math inline">\(a_1, a_2\)</span> og (eventuelt) <span class="math inline">\(a_3\)</span> er reelle tal, der kaldes vektorens <em>koordinater</em>. Tre koordinater er dog ikke nok til at indfange betydningen af alle ord i sproget. Derfor bruger man i stedet en <em><span class="math inline">\(m\)</span>-dimensional vektor</em>, som man kan tænke på som en liste af <span class="math inline">\(m\)</span> koordinater <span class="math display">\[
+\begin{pmatrix}
+a_1\\a_2\\a_3\\ \vdots \\ a_m
+\end{pmatrix}
+\]</span> hvor <span class="math inline">\(a_1,a_2,a_3,\ldots,a_m\)</span> er reelle tal. I praksis vælger man <span class="math inline">\(m\)</span> stort, for eksempel <span class="math inline">\(m=100\)</span>. Man kan regne med <span class="math inline">\(m\)</span>-dimensionale vektorer, lige som man gør i to eller tre dimensioner. Vi kommer for eksempel til at se, hvordan man kan finde skalarprodukter. Til gengæld har man ikke mulighed for at visualisere en <span class="math inline">\(m\)</span>-dimensional vektor som en pil i et koordinatsystem, men det har vi heldigvis heller ikke brug for.</p>
+<p>I denne note ser vi på algoritmen <strong>Word2Vec</strong> som et eksempel på, hvordan man kan oversætte ord til vektorer, der repræsenterer ordenes betydning. Mere præcist kigger vi på en version af algoritmen, der hedder <em>skip-gram</em>. Word2Vec blev opfundet af en gruppe medarbejdere hos <a href="https://code.google.com/archive/p/word2vec/">Google i 2013</a>. I dag bruges diverse forfininger af algoritmen i mange store sprogmodeller.</p>
+<p><br>
+</p>
+<section id="betydning-og-kontekst" class="level2">
+<h2 class="anchored" data-anchor-id="betydning-og-kontekst">Betydning og kontekst</h2>
+<p>Hvilke egenskaber skal de vektorer, der repræsenterer ord, så have? Jo, idéen er, at vektorerne skal indfange betydningen af et ord i den forstand, at ord, hvis betydning minder om hinanden, svarer til vektorer, der ligner hinanden. Hvad vi forstår ved, at vektorer ligner hinanden, det kommer vi tilbage til. Men hvordan ved vi, om to ords betydning minder om hinanden?</p>
+<p>Sprogteoretikere, som for eksempel den danske <a href="https://lex.dk/Louis_Hjelmslev">Louis Hjelmslev</a> (1899-1965), har fundet ud af, at vi forstår betydningen af et ord ud fra, hvilke sproglige sammenhænge det optræder i, når man kigger i rigtig mange dokumenter. Ordet “kælk” forekommer for eksempel ofte i nærheden af ord som “sne”, “leg” og “bakke”. Det giver os en idé om betydningen. Den sproglige sammenhæng, et ord indgår i, kaldes også en <em>kontekst</em>. Når vi skal forstå et ord med flere betydninger, kigger vi også på konteksten. Vi forstår for eksempel betydningen af ordet "marsvin" forskelligt alt efter, om ordet "fisk" eller ordet "mælkebøtte" optræder i nærheden af det. Det vil altså sige:</p>
+<div class="highlight centertext">
+<p><strong>Betydningen af et ord er bestemt af den kontekst, ordet indgår i.</strong></p>
+</div>
+<p><br>
+</p>
+<p>To ord, der betyder næsten det samme, vil ofte optræde i samme kontekst. Ordene "hund" og "kat" er for eksempel forskellige, men de vil ofte optræde i sammenhænge, der ligner hinanden. Se bare på sætningerne</p>
+<div class="llm_saetninger">
+<p>"Min — har spist af sin madskål"</p>
+</div>
+<p>og</p>
+<div class="llm_saetninger">
+<p>"Sikken en blød pels, din — har"</p>
+</div>
+<p>Her ville der kunne stå "hund" eller "kat", men nok ikke "kælk" eller "badedragt". Betydningen af ordene "hund" og "kat" er tættere på hinanden end betydningen af "hund" og "kælk". På den anden side kunne der ikke stå "hund" i sætningen</p>
+<div class="llm_saetninger">
+<p>"Den lille — har hvide knurhår"</p>
+</div>
+<p>mens både "kat" og "mis" ville passe ind. Ordene "kat" og "hund" er altså tætte på hinanden, men ikke så tætte som "kat" og "mis".</p>
+<p>Vi ville jo gerne lave vores vektorer, således at ord, hvis betydning ligner hinanden, svarer til vektorer, der ligner hinanden. Mere præcist vil vi lave dem, således at ord, der ofte har samme kontekst, svarer til vektorer, der ligner hinanden. Vi vil derfor gerne have, at vektorerne for "hund" og "kat" minder mere om hinanden end vektorerne for "hund" og "kælk", men ikke så meget som "kat" og "mis". I <a href="#fig-vektorer" class="quarto-xref">figur&nbsp;1</a> ses et eksempel på, hvordan det kunne se ud.</p>
+</section>
+<section id="træningsdata" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="træningsdata">Træningsdata</h2>
+<p>Vi har altså brug for at vide, hvilken kontekst ordene indgår i. For at lære, hvilken kontekst et ord forekommer i, tager vi udgangspunkt i et stort tilgængeligt tekstkorpus. Vi kalder dette korpus for vores <em>træningsdata</em>.</p>
+<p>Ved konteksten til et ord vil vi her forstå de ord, der står umiddelbart før og efter ordet. Mere præcist vælger vi et vindue, lad os sige på fem ord, hvor ordet i midten er det, vi gerne vil kende betydningen af. Vi vil kalde dette for <em>fokusordet</em>. De to første ord og de to sidste ord i vinduet er fokusordets <em>kontekstord</em>. Se for eksempel på sætningen</p>
+<div class="llm_saetninger">
+<p><span class="boxed_inline">Den sorte <strong>hund</strong> logrer med</span> halen</p>
+</div>
+<p>Boksen angiver vores 5-ords vindue. Det midterste ord "hund" er vores fokusord, ordene "Den", "sorte", "logrer" og "med" er kontekstord til "hund".</p>
+<p>Vi starter med at placere vinduet omkring det første ord i vores datasæt og noterer dets fire kontekstord (eller færre, hvis vi er i starten eller slutningen af sætningen). Vi flytter nu vinduet mod højre et ord ad gangen, og hver gang noterer vi fokusordet og dets fire kontekstord. Vi gør det for al teksten i vores træningsdata og samler informationen i et datasæt som vist i <a href="#tbl-data" class="quarto-xref">tabel&nbsp;1</a>. Hver række i tabellen består af et fokusord og et af dets kontekstord.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Når man vil gætte det næste ord i en sætning, har man selvfølgelig kun lov til at bruge de ord, der kommer før ordet. Det er dog ikke det, vi er ude på, når vi laver Word2Vec. Vi er ude på at forstå, hvordan et ord forholder sig til dets kontekst, altså de omkringstående ord. Derfor er der ikke noget problem i, at vinduet både indeholder ord før og efter fokusordet.</p></div></div><div id="tbl-data" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
+<div aria-describedby="tbl-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Fokus</th>
+<th style="text-align: center;">Kontekst</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">sorte</td>
+<td style="text-align: center;">Den</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">sorte</td>
+<td style="text-align: center;">hund</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">sorte</td>
+<td style="text-align: center;">logrer</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">hund</td>
+<td style="text-align: center;">Den</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">hund</td>
+<td style="text-align: center;">sorte</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">hund</td>
+<td style="text-align: center;">logrer</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">hund</td>
+<td style="text-align: center;">med</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-tbl margin-caption" id="tbl-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabel&nbsp;1: Par af fokus- og kontekstord.
+</figcaption>
+</figure>
+</div>
+<section id="video-introduktion-til-word2vec" class="level3">
+<h3 class="anchored" data-anchor-id="video-introduktion-til-word2vec">VIDEO: Introduktion til Word2Vec</h3>
+<p>I videoen her forklarer vi idéen bag Word2Vec.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/DVGvvXHI7wQ" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<p>I de næste to afsnit ser vi på, hvordan man kan bruge vektorer til at modellere sandsynligheden for, at et fokusord <span class="math inline">\(w\)</span> har <span class="math inline">\(c\)</span> som kontekstord. Det vil vi sidenhen benytte til at vælge vektorerne, således at sandsynlighederne matcher, hvor hyppigt vi observerer <span class="math inline">\(c\)</span> som kontekstord til <span class="math inline">\(w\)</span> i datasættet.</p>
+</section>
+</section>
+<section id="fokus--og-kontekstvektorer" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="fokus--og-kontekstvektorer">Fokus- og kontekstvektorer</h2>
+<p>I første omgang vil vi lade hvert ord <span class="math inline">\(w\)</span> være repræsenteret af to vektorer, <span class="math inline">\(\vec{v}_{w}\)</span> og <span class="math inline">\(\vec{k}_{w}\)</span>, hvor <span class="math inline">\(\vec{v}_{w}\)</span> repræsenterer ordet, når det optræder som fokus, mens <span class="math inline">\(\vec{k}_{w}\)</span> repræsenterer ordet, når det optræder som kontekst. Ordet "hund" vil altså være repræsenteret ved vektoren <span class="math inline">\(\vec{v}_{\text{hund}}\)</span>, når det optræder som fokus og ved vektoren <span class="math inline">\(\vec{k}_{\text{hund}}\)</span>, når det optræder som kontekst.</p>
+<p>Betydningen af ordet <span class="math inline">\(w\)</span> afgøres som nævnt af, hvordan ordet forholder sig til konteksten. Det vil vi oversætte matematisk til, hvordan fokusvektoren <span class="math inline">\(\vec{v}_{w}\)</span> forholder sig til kontekstvektorerne <span class="math inline">\(\vec{k}_{c}\)</span> for diverse kontekstord <span class="math inline">\(c\)</span>. Vi vil derfor tænke på <span class="math inline">\(\vec{v}_{w}\)</span> som den vektor, der repræsenterer betydningen af ordet, og altså den vi er ude på at bestemme.</p>
+<p>For at måle hvordan fokusvektoren <span class="math inline">\(\vec{v}_{w}\)</span> for ordet <span class="math inline">\(w\)</span> forholder sig til kontekstvektoren <span class="math inline">\(\vec{k}_{c}\)</span> for ordet <span class="math inline">\(c\)</span>, vil vi bruge <em>skalarproduktet</em> <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span>. Husk på, at man finder skalarproduktet mellem to vektorer i to dimensioner ved formlen <span class="math display">\[
+\begin{pmatrix}
+a_1\\a_2
+\end{pmatrix}
+\cdot
+\begin{pmatrix}
+b_1\\b_2
+\end{pmatrix}
+=a_1b_1+a_2b_2
+\]</span> I tre dimensioner er formlen <span class="math display">\[
+\begin{pmatrix}
+a_1\\a_2\\a_3
+\end{pmatrix}
+\cdot
+\begin{pmatrix}
+b_1\\b_2\\b_3
+\end{pmatrix}
+=a_1b_1+a_2b_2+a_3b_3
+\]</span> Tilsvarende kan man definere skalarproduktet mellem to <span class="math inline">\(m\)</span>-dimensionale vektorer ved <span class="math display">\[
+\begin{pmatrix}
+a_1\\a_2\\a_3\\ \vdots\\a_m
+\end{pmatrix}
+\cdot
+\begin{pmatrix}
+b_1\\b_2\\b_3\\ \vdots \\b_m
+\end{pmatrix}
+=a_1b_1+a_2b_2+a_3b_3+\dotsm + a_mb_m
+\]</span> Det overordnede mål er nu:</p>
+<div class="highlight2">
+<p>Vi vil gerne have, at vores fokus- og kontekstvektorer skal opfylde, at hvis <span class="math inline">\(w\)</span> ofte har <span class="math inline">\(c\)</span> som kontekst, så er skalarproduktet <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span> stort, mens en meget negativ værdi af <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span> indikerer, at <span class="math inline">\(w\)</span> sjældent har <span class="math inline">\(c\)</span> som kontekst.</p>
+</div>
+<p><br>
+</p>
+<p>Hvad fortæller skalarproduktet om, hvordan to vektorer forholder sig til hinanden? I 2 og 3 dimensioner kan vi give en geometrisk fortolkning af skalarproduktet ved hjælp af formlen <span id="eq-skalar"><span class="math display">\[
+\vec{a}\cdot\vec{b} = |\vec{a}|\cdot |\vec{b}| \cdot \cos(v)
+\tag{1}\]</span></span> hvor <span class="math inline">\(v\)</span> er vinklen mellem vektorerne <span class="math inline">\(\vec{a}\)</span> og <span class="math inline">\(\vec{b}\)</span>, og <span class="math inline">\(|\vec{a}|\)</span> betegner længden af <span class="math inline">\(\vec{a}\)</span>, som findes med formlen <span class="math display">\[
+|\vec{a}|=\sqrt{\vec{a}\cdot\vec{a}}
+\]</span></p>
+<p>I 2 dimensioner svarer det til <span class="math display">\[
+|\vec{a}|=\sqrt{a_1^2 + a_2^2}
+\]</span></p>
+<p>Cosinus er en aftagende funktion på intervallet <span class="math inline">\([0^\circ,180^\circ ]\)</span>, så jo større vinklen <span class="math inline">\(v\)</span> er, desto mindre vil <span class="math inline">\(\cos(v)\)</span> være – se <a href="#fig-cos" class="quarto-xref">figur&nbsp;2</a>.</p>
+<div id="fig-cos" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-cos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/cosinus.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-cos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;2: Grafen for <span class="math inline">\(cos(v)\)</span>, hvor <span class="math inline">\(v\)</span> er målt i grader.
+</figcaption>
+</figure>
+</div>
+<p>Det betyder, at <span class="math inline">\(\cos(v)\)</span> er størst når vinklen mellem <span class="math inline">\(\vec{a}\)</span> og <span class="math inline">\(\vec{b}\)</span> er <span class="math inline">\(0^\circ\)</span>, svarende til at vektorerne peger samme vej. Her er <span class="math inline">\(\cos(v)=1\)</span>. Den mindste værdi af <span class="math inline">\(\cos(v)\)</span> er <span class="math inline">\(-1\)</span>, som antages ved en vinkel på <span class="math inline">\(180^\circ\)</span>, hvor vektorerne peger i modsat retning.</p>
+<p>Det vil sige, jo mindre vinklen mellem <span class="math inline">\(\vec{v}_{w}\)</span> og <span class="math inline">\(\vec{k}_{c}\)</span> er, desto større er deres skalarprodukt <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span> altså, og jo oftere har ordet <span class="math inline">\(w\)</span> dermed <span class="math inline">\(c\)</span> som kontekst. Desuden viser (<a href="#eq-skalar" class="quarto-xref">1</a>), at lange vektorer tæller mere, både positivt og negativt, end korte vektorer. Ord, der er gode til at forudsige konteksten udfra, for eksempel "logre", der ofte vil forekomme i hunderelaterede kontekster, vil derfor blive repræsenteret med lange fokusvektorer. Ord som "og" eller "er", der ikke indeholder megen information om konteksten, vil blive repræsenteret med kortere fokusvektorer. Altså vil <span class="math inline">\(|\vec{v}_{\text{logre}}|\)</span> være større end <span class="math inline">\(|\vec{v}_{\text{og}}|\)</span> og <span class="math inline">\(|\vec{v}_{\text{er}}|\)</span>.</p>
+<p>Bemærk også, at hvis to ord ofte optræder i samme kontekst, skal deres fokusvektorer gerne have nogenlunde samme skalarprodukt med alle kontekstvektorer. Formlen (<a href="#eq-skalar" class="quarto-xref">1</a>) viser, at det betyder, at de dels skal have nogenlunde samme længde og dels skal have nogenlunde samme vinkel med alle kontekstvektorerne. Sidstnævnte kræver, at de selv har nogenlunde samme retning. Ord, hvis betydning ligner hinanden, kommer derfor til at svare til fokusvektorer, hvis længde og retning ligner hinanden.</p>
+<p>I praksis bruger vi vektorer af højere dimension end 3. Det er måske ikke helt oplagt, hvad man skal forstå ved længden af en vektor eller vinklen mellem to vektorer i højere dimensioner, men det viser sig, at man stadigvæk godt kan give mening til formlen (<a href="#eq-skalar" class="quarto-xref">1</a>). Intuitionen fra to eller tre dimensioner er derfor god at have, selv om vi arbejder med højere dimensioner.</p>
+<section id="video-fokus--og-kontekstvektorer" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="video-fokus--og-kontekstvektorer">VIDEO: Fokus- og kontekstvektorer</h3>
+<p>I videoen her forklarer vi idéen og intuitionen bag fokus- og kontekstvektorer.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/OdiOc22SLh8" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<div id="exm-eks1" class="theorem example page-columns page-full">
+<p><span class="theorem-title"><strong>Eksempel 1</strong></span> Lad os sige, at vi har fundet en vektorrepræsentation, der opfylder det ønskede. Det gav vektorerne <span class="math display">\[
+\begin{aligned}
+&amp;\vec{v}_{\text{hund}} =  \begin{pmatrix} 3\\ 2\end{pmatrix}, \quad
+\vec{v}_{\text{kat}} =  \begin{pmatrix} 2\\ 3\end{pmatrix} \\
+&amp;\vec{k}_{\text{madskål}}  =  \begin{pmatrix} 3\\3\end{pmatrix}, \quad
+\vec{k}_{\text{badedragt}} =  \begin{pmatrix} -2\\-1.5 \end{pmatrix}, \quad
+\vec{k}_{\text{lufte}} =  \begin{pmatrix} 2\\0.5 \end{pmatrix}
+\end{aligned}
+\]</span> Vektorerne er vist i <a href="#fig-eks1" class="quarto-xref">figur&nbsp;3</a>, hvor fokusvektorer er lyserøde, og kontekstvektorer er blå.</p>
+<div id="fig-eks1" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-eks1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/eks1.png" class="img-fluid figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-eks1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;3: Repræsentanter for vektorerne i eksempel 1. Fokusvektorerne er lyserøde, og kontekstvektorerne er blå.
+</figcaption>
+</figure>
+</div>
+<p>Vi kan udregne skalarprodukterne <span class="math display">\[
+\begin{aligned}
+&amp;\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{madskål}} = \begin{pmatrix} 2\\ 3\end{pmatrix}  \cdot  \begin{pmatrix} 3\\ 3\end{pmatrix} = 2\cdot 3 +  3\cdot 3 = 15 \\
+&amp;\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{badedragt}} = \begin{pmatrix} 2\\ 3\end{pmatrix}  \cdot  \begin{pmatrix} -2\\ -1.5\end{pmatrix} = 2\cdot (-2) +  3\cdot (-1.5) = -8.5
+\end{aligned}
+\]</span> Vi ser, at <span class="math inline">\(\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{madskål}}\)</span> er større end <span class="math inline">\(\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{badedragt}}\)</span>. Det svarer til, at ordet "kat" oftere har "madskål" som kontekst, end det har "badedragt". Det ses også ved, at <span class="math inline">\(\vec{k}_{\text{madskål}}\)</span> peger i nogenlunde samme retning som <span class="math inline">\(\vec{v}_{\text{kat}}\)</span>, mens <span class="math inline">\(\vec{k}_{\text{badedragt}}\)</span> peger i en helt anden retning.</p>
+<p>Vi kan også udregne <span class="math display">\[
+\begin{aligned}
+&amp;\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{madskål}} = \begin{pmatrix} 3\\ 2\end{pmatrix}  \cdot  \begin{pmatrix} 3\\ 3\end{pmatrix} = 3\cdot 3 +  2\cdot 3 = 15
+\end{aligned}
+\]</span> Vi ser, at <span class="math inline">\(\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{madskål}} =\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{madskål}} =15\)</span>, svarende til at både "hund" og "kat" ofte har "madskål" som kontekst. Vi ser da også, at vektorerne <span class="math inline">\(\vec{v}_{hund}\)</span> og <span class="math inline">\(\vec{v}_{kat}\)</span> peger i nogenlunde samme retning og har nogenlunde samme længde, fordi de tit har samme kontekst. De to vektorer er dog ikke helt ens, da der også vil være nogle kontekstord, der ikke er lige hyppige for "hund" og "kat". Vi kan for eksempel udregne <span class="math display">\[
+\begin{aligned}
+&amp;\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{lufte}} = \begin{pmatrix} 3\\ 2\end{pmatrix}  \cdot  \begin{pmatrix} 2\\ 0.5\end{pmatrix} = 3\cdot 2 + 2\cdot 0.5 =7\\
+&amp;\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{lufte}} =\begin{pmatrix} 2\\ 3\end{pmatrix}  \cdot  \begin{pmatrix} 2\\ 0.5\end{pmatrix} = 2\cdot 2 + 3\cdot 0.5 = 5.5  
+\end{aligned}
+\]</span> Her er <span class="math inline">\(\vec{v}_{\text{hund}}\cdot \vec{k}_{\text{lufte}}\)</span> større end <span class="math inline">\(\vec{v}_{\text{kat}}\cdot \vec{k}_{\text{lufte}}\)</span> svarende til, at "hund" oftere har "lufte" som kontekst, end "kat" har.</p>
+</div>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Hvorfor to vektorer?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Måske har du undret dig over, hvorfor vi har brug for to forskellige vektorer for hvert ord. Hver gang et ord er kontekst for et andet, gælder det omvendte også. For eksempel er "logrer" kontekst for "hund" i dette vindue:</p>
+<p><span class="math display">\[
+\boxed{\textrm{ Den sorte }\textbf{hund} \textrm{ logrer med }} \textrm{ halen}
+\]</span> Samtidig er "hund" også kontekst for "logrer" i vinduet:</p>
+<p><span class="math display">\[
+\textrm{Den } \boxed{\textrm{ sorte hund }\textbf{logrer} \textrm{ med halen}}
+\]</span></p>
+<p>Alligevel er der ikke symmetri mellem de to ord. Når for eksempel fokusordet er "logrer", er det ret sandsynligt, at "hund" er et af kontekstordene. Fokusordet "hund" forekommer derimod i mange kontekster, der ikke involverer ordet "logrer". Sandsynligheden for kontekstordet afhænger derfor af, om det er "hund" eller "logrer", der er i fokus. Hvis vi kun brugte én vektor for hvert ord, <span class="math inline">\(\vec{u}_{\text{hund}}\)</span> og <span class="math inline">\(\vec{u}_{\text{logrer}}\)</span>, ville vi få samme skalarprodukt <span class="math inline">\(\vec{u}_{\text{hund}}\cdot \vec{u}_{\text{logrer}} =  \vec{u}_{\text{logrer}}\cdot \vec{u}_{\text{hund}}\)</span>, og dermed samme sandsynlighed, uanset hvilket ord der var i fokus.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="model-for-sandsynligheder" class="level2">
+<h2 class="anchored" data-anchor-id="model-for-sandsynligheder">Model for sandsynligheder</h2>
+<p>Som nævnt vil vi gerne have, at jo større skalarproduktet <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span> er, desto mere sandsynligt er det, at ordet <span class="math inline">\(w\)</span> har ordet <span class="math inline">\(c\)</span> som kontekst. Hvis der er <span class="math inline">\(V\)</span> antal ord i sproget, kan vi nummerere de mulige kontekstord som <span class="math inline">\(\text{ord}_1,\text{ord}_2,\ldots,\text{ord}_V\)</span>. For hvert af dem får vi et skalarprodukt <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}\)</span> for <span class="math inline">\(i=1,\ldots,V\)</span>. Hvis vi betegner sandsynligheden for, at <span class="math inline">\(\text{ord}_i\)</span> er et kontekstord til <span class="math inline">\(w\)</span>, med <span class="math inline">\(P(\text{kontekst = ord}_i\mid \text{fokus = }w)\)</span>, så vil vi gerne have, at følgende er opfyldt:</p>
+<ol type="1">
+<li><p>For hvert <span class="math inline">\(\text{ord}_i\)</span> er <span class="math display">\[0\leq P(\text{kontekst = ord}_i \mid \text{fokus = } w)\leq 1\]</span> da sandsynligheder skal ligge mellem 0 og 1.</p></li>
+<li><p>Den samlede sandsynlighed for at få et af de mulige kontekstord skal være 1, det vil sige, <span class="math display">\[\begin{aligned}
+1= &amp;P(\text{kontekst = ord}_1\mid \text{fokus = } w) + P(\text{kontekst = ord}_2\mid \text{fokus = }w)+ \dotsm \\
+&amp; + P(\text{kontekst = ord}_V\mid \text{fokus = }w ) = 1.
+\end{aligned}\]</span></p></li>
+<li><p>Jo større skalarproduktet <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}\)</span> er, desto større er sandsynligheden <span class="math inline">\(P(\text{kontekst = ord}_i\mid \text{fokus = } w)\)</span> for, at <span class="math inline">\(\text{ord}_i\)</span> er kontekstord til <span class="math inline">\(w\)</span>.</p></li>
+</ol>
+<p>Skalarprodukter kan imidlertid antage alle reelle værdier, så de egner sig ikke til at repræsentere sandsynligheder, der jo skal være tal mellem 0 og 1. Vi bruger derfor en funktion på skalarprodukterne for at få dem lavet om til sandsynligheder, der opfylder punkt 1. til 3 ovenfor. Den funktion, vi vil bruge, hedder <em>Softmax</em>. Hvis <span class="math inline">\(\vec{y}\)</span> er en vektor med <span class="math inline">\(V\)</span> koordinater:</p>
+<p><span class="math display">\[
+\vec{y} =
+\begin{pmatrix}
+y_1 \\
+y_2 \\
+\vdots \\
+y_V
+\end{pmatrix}
+\]</span></p>
+<p>så er <span class="math inline">\(\text{Softmax}\big(\vec{y}\big)=\vec{z}\)</span>, hvor <span class="math inline">\(\vec{z}\)</span> er en ny vektor med <span class="math inline">\(V\)</span> koordinater. Den <span class="math inline">\(i\)</span>’te koordinat i <span class="math inline">\(\vec{z}\)</span> er givet ved <span class="math display">\[z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}\]</span> Vi viser i boksen nedenfor, at Softmax opfylder:</p>
+<ul>
+<li><p><span class="math inline">\(0&lt;z_i&lt;1\)</span></p></li>
+<li><p><span class="math inline">\(z_1 + z_2 + \dotsm + z_V = 1\)</span></p></li>
+<li><p>Hvis <span class="math inline">\(y_i &lt; y_j\)</span>, så er <span class="math inline">\(z_i &lt; z_j\)</span>.</p></li>
+</ul>
+<p>Lader vi <span class="math inline">\(\vec{y}\)</span> være vektoren med <span class="math inline">\(i\)</span>’te koordinat <span class="math display">\[y_i = \vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}\]</span> og bruger Softmax på <span class="math inline">\(\vec{y}\)</span>, så får vi en vektor <span class="math inline">\(\vec{z}=\text{Softmax}\big(\vec{y}\big)\)</span>, der kan bruges som sandsynligheder. Mere præcist lader vi</p>
+<p><span id="eq-sshmodel"><span class="math display">\[
+\begin{aligned}
+P(\text{kontekst = ord}_i\mid \text{fokus = }w) &amp;= z_i = \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \\ &amp;= \frac{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}}}{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_V}}}
+\end{aligned}
+\tag{2}\]</span></span></p>
+<p>Egenskaberne ved softmax sikrer, at punkt 1. til 3. ovenfor er opfyldt.</p>
+<section id="video-model-for-sandsynligheder" class="level3">
+<h3 class="anchored" data-anchor-id="video-model-for-sandsynligheder">VIDEO: Model for sandsynligheder</h3>
+<p>I videoen her forklarer vi modellen for sandsynligheder, som gennemgået ovenfor.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/D8arPNL_sOA" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<div id="exm-eks2" class="theorem example">
+<p><span class="theorem-title"><strong>Eksempel 2</strong></span> Antag, at vores ordforråd kun består af de tre ord "hund", "pels" og "fjer", og at vi har fundet vektorrepræsentationer for de tre ord.</p>
+<p>Antag, at fokusvektoren for "hund" og kontekstvektorerne for "fjer", "pels" og "hund" er givet ved <span class="math display">\[
+    \begin{aligned}
+    \vec{v}_{\text{hund}}=\begin{pmatrix} 0.5\\2\end{pmatrix},\quad
+    \vec{k}_{\text{fjer}}=\begin{pmatrix} 1\\-1 \end{pmatrix}, \quad
+    \vec{k}_{\text{pels}}=\begin{pmatrix} 0\\1\end{pmatrix},\quad
+    \vec{k}_{\text{hund}}=\begin{pmatrix} 4\\-1\end{pmatrix}
+    \end{aligned}
+    \]</span> Vi beregner først skalarprodukterne <span class="math display">\[
+\begin{aligned}
+\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} &amp;= 0.5\cdot 1 + 2\cdot (-1)  =-1.5\\
+\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}}&amp;= 0.5\cdot 0 + 2\cdot 1  = 2\\
+\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} &amp;= 0.5 \cdot 4 + 2 \cdot (-1) = 0
+\end{aligned}
+\]</span> Derefter anvender vi Softmax for at finde sandsynlighederne <span class="math display">\[
+\begin{aligned}
+P(\text{kontekst = fjer} \mid \text{fokus = hund}) &amp;= \frac{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }}{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &amp;= \frac{\mathrm{e}^{-1.5}}{\mathrm{e}^{-1.5}+\mathrm{e}^{2 }+\mathrm{e}^{0 }}\\ &amp;\approx 0.026\\ \\
+P(\text{kontekst = pels} \mid \text{fokus = hund}) &amp;= \frac{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }}{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &amp;= \frac{\mathrm{e}^{2}}{\mathrm{e}^{-1.5}+\mathrm{e}^{2 }+\mathrm{e}^{0 }}\\ &amp;\approx 0.858\\ \\
+P(\text{kontekst = hund} \mid \text{fokus = hund}) &amp;= \frac{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }}{\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{fjer}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{pels}} }+\mathrm{e}^{\vec{v}_{\text{hund}} \cdot \vec{k}_{\text{hund}} }} \\ &amp;= \frac{\mathrm{e}^{0}}{\mathrm{e}^{-1.5}+\mathrm{e}^{2 }+\mathrm{e}^{0 }}\\ &amp;\approx 0.116
+\end{aligned}
+\]</span> “Pels” er altså det mest sandsynlige kontekstord til "hund", mens "fjer" sjældent er kontekst til "hund".</p>
+</div>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Egenskaber ved Softmax
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Vi viser nu de tre egenskaber ved Softmax.</p>
+<p><strong>Egenskab 1: <span class="math inline">\(0 &lt; z_i &lt; 1\)</span></strong></p>
+<p>Husk på, at</p>
+<p><span id="eq-softmax"><span class="math display">\[
+z_i=\frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}
+\tag{3}\]</span></span></p>
+<p>Da eksponentialfunktionen kun kan antage positive værdier, er både tæller og nævner positive, så <span class="math inline">\(z_i&gt;0\)</span>. Desuden er <span class="math display">\[\mathrm{e}^{y_i} &lt; \mathrm{e}^{y_1} + \dotsm +\mathrm{e}^{y_i} + \dotsm + \mathrm{e}^{y_V}\]</span> Derfor er <span class="math display">\[z_i=\frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} &lt; \frac{\mathrm{e}^{y_1} + \dotsm  + \mathrm{e}^{y_V}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} = 1\]</span></p>
+<p>Alt i alt har vi altså, at</p>
+<p><span class="math display">\[
+0 &lt; z_i &lt; 1
+\]</span></p>
+<p><strong>Egenskab 2: <span class="math inline">\(z_1 + \dotsm + z_V = 1\)</span></strong></p>
+<p>Ved at indsætte at <span class="math inline">\(z_i\)</span> er givet ved (<a href="#eq-softmax" class="quarto-xref">3</a>) og sætte på fælles brøkstreg, får vi <span class="math display">\[
+\begin{aligned}
+z_1 &amp;+ \dotsm  + z_V  = \\ &amp; \frac{\mathrm{e}^{y_1}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} + \dotsm + \frac{\mathrm{e}^{y_V}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} = \frac{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} = 1
+\end{aligned}
+\]</span></p>
+<p>Altså er:</p>
+<p><span class="math display">\[
+z_1 + \dotsm + z_V = 1
+\]</span></p>
+<p><strong>Egenskab 3: Hvis <span class="math inline">\(y_i &lt; y_j\)</span>, så er <span class="math inline">\(z_i &lt; z_j\)</span></strong></p>
+<p>Hvis <span class="math inline">\(y_i&lt; y_j\)</span>, så er <span class="math display">\[\mathrm{e}^{y_i} &lt; \mathrm{e}^{y_j}\]</span> Hvis vi dividerer med <span class="math inline">\(\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}\)</span> på begge sider af uligheden, får vi <span class="math display">\[ \frac{\mathrm{e}^{y_i}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} &lt; \frac{\mathrm{e}^{y_j}}{\mathrm{e}^{y_1} + \dotsm + \mathrm{e}^{y_V}} \]</span> Det betyder netop, at <span class="math inline">\(z_i&lt;z_j\)</span>.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="estimation-af-vektorrepræsentationer" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="estimation-af-vektorrepræsentationer">Estimation af vektorrepræsentationer</h2>
+<p>Vi mangler stadig at bestemme vektorrepræsentationerne <span class="math inline">\(\vec{v}_{w}\)</span> og <span class="math inline">\(\vec{k}_{c}\)</span>, så modellen i (<a href="#eq-sshmodel" class="quarto-xref">2</a>) kommer til at passe til virkelig tekst. Her får vi brug for det datasæt, som vi lavede ud fra vores træningsdata. Hver række i datasættet bestod af et fokusord <span class="math inline">\(w\)</span> og et kontekstord <span class="math inline">\(c\)</span>, som forekom i vores træningsdata. Lad os sige, at der er <span class="math inline">\(M\)</span> rækker i vores træningsdata. Vi betegner data i den <span class="math inline">\(j\)</span>te række med <span class="math inline">\((w^{(j)},c^{(j)})\)</span> for <span class="math inline">\(j=1,\ldots,M\)</span>. Vores datasæt har altså formen (jævnfør <a href="#tbl-data" class="quarto-xref">tabel&nbsp;1</a>):</p>
+<div id="tbl-data2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
+<div aria-describedby="tbl-data2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Fokus</th>
+<th style="text-align: center;">Kontekst</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(w^{(1)}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(c^{(1)}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(w^{(2)}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(c^{(2)}\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(w^{(3)}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(c^{(3)}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(w^{(j)}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(c^{(j)}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-tbl margin-caption" id="tbl-data2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabel&nbsp;2: Eksempel på datatabel med træningsdata.
+</figcaption>
+</figure>
+</div>
+<p>Bemærk, at hvert fokusord godt kan optræde flere gange i ovenstående tabel, som vi også så det i <a href="#tbl-data" class="quarto-xref">tabel&nbsp;1</a>.</p>
+<p>Vi ser nu på <span class="math inline">\(j\)</span>te række. Sandsynligheden for, at <span class="math inline">\(w^{(j)}\)</span> har netop <span class="math inline">\(c^{(j)}\)</span> som kontekst, er <span class="math inline">\(P(\text{kontekst = }c^{(j)}\mid \text{fokus = }w^{(j)})\)</span>. Vi vil nu finde den samlede sandsynlighed for, at fokusordene <span class="math inline">\(w^{(1)},\ldots,w^{(M)}\)</span> i vores datasæt har henholdsvis <span class="math inline">\(c^{(1)},\ldots,c^{(M)}\)</span> som kontekstord. Den kalder vi <span class="math inline">\(P(\text{data})\)</span>. Lad os antage, at alle vores par af fokus- og kontekstord er uafhængige af hinanden<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Så får vi den samlede sandsynlighed ved at gange de enkelte sandsynligheder sammen:</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;I praksis er ordpar, der forekommer i nærheden af hinanden ikke helt uafhængige. Hvis for eksempel parret <span class="math inline">\((\text{hund},\text{madskål})\)</span> forekommer, er det mere sandsynligt, at <span class="math inline">\((\text{hund}, \text{fodre})\)</span> forekommer i nærheden, end hvis der havde stået <span class="math inline">\((\text{hund},\text{hundesnor})\)</span>.</p></div></div><p><span id="eq-Pdata"><span class="math display">\[\begin{aligned}
+P(\text{data})  = &amp;P(\text{kontekst = }c^{(1)}\mid \text{fokus = }w^{(1)}) \cdot P(\text{kontekst = }c^{(2)}\mid \text{fokus = }w^{(2)}) \dotsm \\
+&amp;\cdot P(\text{kontekst = }c^{(M)}\mid \text{fokus = }w^{(M)})
+\end{aligned}
+\tag{4}\]</span></span></p>
+<p>Hvis vores model fra (<a href="#eq-sshmodel" class="quarto-xref">2</a>) passer godt til datasættet, skulle denne sandsynlighed gerne være høj.</p>
+<p>Da summer er nemmere at regne på end produkter<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, vælger vi at tage den naturlige logaritme på begge sider af (<a href="#eq-Pdata" class="quarto-xref">4</a>). Ved at bruge logaritmeregnereglen <span class="math inline">\(\ln(a \cdot b) = \ln(a) + \ln(b)\)</span> får vi, at <span class="math display">\[
+\begin{aligned}
+\ln (P(\text{data})) &amp;= \ln(P(\text{kontekst = }c^{(1)}\mid \text{fokus = }w^{(1)})) \\
+&amp; + \ln(P(\text{kontekst = }c^{(2)}\mid \text{fokus = }w^{(2)}))\\
+&amp; + \dotsm \\
+&amp;+ \ln(P(\text{kontekst = }c^{(M)}\mid \text{fokus = }w^{(M)}))
+\end{aligned}
+\]</span></p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;For eksempel er det meget nemmere at differentiere summer end produkt!</p></div></div><p>Da den naturlige logaritme er en voksende funktion, svarer store værdier af <span class="math inline">\(P(\text{data})\)</span> til store værdier af <span class="math inline">\(\ln (P(\text{data}))\)</span>, som igen svarer til små værdier af <span class="math inline">\(-\ln(P(\text{data}))\)</span>. Dette er illustreret på <a href="#fig-natural_ln" class="quarto-xref">figur&nbsp;4</a>:</p>
+<div id="fig-natural_ln" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-natural_ln-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../softmax/images/natural_ln.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-natural_ln-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;4: Grafen for <span class="math inline">\(\ln(x)\)</span> og <span class="math inline">\(-\ln(x)\)</span>.
+</figcaption>
+</figure>
+</div>
+<p>Hvis vores model er god, skal <span id="eq-Ldef"><span class="math display">\[
+\begin{aligned}
+L=&amp; - \ln(P(\text{data}) \\
+=&amp; -\ln(P(\text{kontekst = }c^{(1)}\mid \text{fokus = }w^{(1)})) \\
+&amp;- \ln(P(\text{kontekst = }c^{(2)}\mid \text{fokus = }w^{(2)})) \\
+&amp;- \dotsm \\
+&amp;- \ln(P(\text{kontekst = }c^{(M)}\mid \text{fokus = }w^{(M)}))
+\end{aligned}
+\tag{5}\]</span></span></p>
+<p>altså gerne være lav<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Vi kalder <span class="math inline">\(L\)</span> for vores <em>tabsfunktion</em>. Denne tabsfunktion kaldes også nogle gange for <em>cross-entropy</em>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Bemærk, at da <span class="math inline">\(P(\text{kontekst = }c^{(j)}\mid \text{fokus = }w^{(j)})\)</span> er en sandsynlighed, der ligger mellem 0 og 1, er <span class="math inline">\(\ln (P(\text{kontekst = }c^{(j)}\mid \text{fokus = }w^{(j)}))\)</span> negativ. Derfor er <span class="math inline">\(-\ln (P(\text{kontekst = }c^{(j)}\mid \text{fokus = }w^{(j)}))\)</span> positiv og <span class="math inline">\(L\)</span> er dermed også positiv. Når <span class="math inline">\(L\)</span> gerne skal være lav, betyder det altså, at den skal være så tæt på 0 som muligt.</p></div></div><p>Vi kan indsætte vores udtryk for sandsynlighederne fra (<a href="#eq-sshmodel" class="quarto-xref">2</a>) i (<a href="#eq-Ldef" class="quarto-xref">5</a>) og få <span id="eq-Lfunktion"><span class="math display">\[
+\begin{aligned}
+L = &amp;-\ln\left(\frac{\mathrm{e}^{\vec{v}_{w^{(1)}}\cdot \vec{k}_{c^{(1)}}}}{\mathrm{e}^{\vec{v}_{w^{(1)}}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w^{(1)}}\cdot \vec{k}_{\text{ord}_V}}}\right)
+\\ &amp;- \ln\left(\frac{\mathrm{e}^{\vec{v}_{w^{(2)}}\cdot \vec{k}_{c^{(2)}}}}{\mathrm{e}^{\vec{v}_{w^{(2)}}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w^{(2)}}\cdot \vec{k}_{\text{ord}_V}}}\right)\\
+&amp;- \dotsm \\
+&amp;- \ln\left(\frac{\mathrm{e}^{\vec{v}_{w^{(M)}}\cdot \vec{k}_{c^{(M)}}}}{\mathrm{e}^{\vec{v}_{w^{(M)}}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w^{(M)}}\cdot \vec{k}_{\text{ord}_V}}}\right)
+\end{aligned}
+\tag{6}\]</span></span> Bemærk her, at <span class="math inline">\(w^{(j)}\)</span> og <span class="math inline">\(c^{(j)}\)</span> refererer til henholdsvis fokus- og kontekstordet i den <span class="math inline">\(j\)</span>’te række i datasættet, mens <span class="math inline">\(\text{ord}_i\)</span> refererer til det <span class="math inline">\(i\)</span>’te ord i ordforrådet.</p>
+<p>Ligning (<a href="#eq-Lfunktion" class="quarto-xref">6</a>) viser, at <span class="math inline">\(L\)</span> afhænger af, hvordan vi har valgt fokus- og kontekstvektorerne. Vi kan altså betragte <span class="math inline">\(L\)</span> som en funktion af fokus- og kontekstvektorerne. Mere præcist er <span class="math inline">\(L\)</span> en funktion af alle koordinaterne i disse vektorer. For at få den bedst mulige model for vores træningsdata, ønsker vi at bestemme fokus- og kontekstvektorerne, således at de minimerer <span class="math inline">\(L\)</span>. Hvordan finder man minimum for <span class="math inline">\(L\)</span> i praksis? Det kan man for eksempel gøre ved hjælp af <a href="../../noter/gradientnedstigning/gradientnedstigning.html">gradientnedstigning</a>, som vi ikke vil komme nærmere ind på her.</p>
+<section id="video-estimation-af-vektorrepræsentationer" class="level3">
+<h3 class="anchored" data-anchor-id="video-estimation-af-vektorrepræsentationer">VIDEO: Estimation af vektorrepræsentationer</h3>
+<p>I videoen her forklarer vi, hvordan vi opstiller tabsfunktionen <span class="math inline">\(L\)</span>, som minimeres for at bestemme en vektorrepræsentation for alle fokus- og kontekstord.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/940yYmus8X8" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<p>Der er rigtig mange ord i det danske sprog. For hvert af dem skal vi finde både en fokus- og en kontekstvektor, der hver har <span class="math inline">\(m\)</span> koordinater. Alt i alt giver det rigtig mange koordinater, der skal bestemmes. Antallet af ord på dansk afhænger lidt af, hvad man forstår ved et ord, men 200.000 er et fornuftigt bud. Hvis vi vil repræsentere hver af dem ved to vektorer af dimension <span class="math inline">\(m=100\)</span>, får man brug for at bestemme 40.000.000 koordinater. For at kunne gøre det meningsfuldt, er man også nødt til at have enormt store mængder træningsdata til rådighed i form af et tekstkorpus med rigtig mange ord.</p>
+<p>Nu har vi set, hvordan man kan repræsentere et ord <span class="math inline">\(w\)</span> ved en fokusvektor <span class="math inline">\(\vec{v}_{w}\)</span> og en kontekstvektor <span class="math inline">\(\vec{k}_{w}\)</span>. Vektoren <span class="math inline">\(\vec{v}_{w}\)</span> er den, der viser, hvordan <span class="math inline">\(w\)</span> forholder sig til sin kontekst, så det er den, der repræsenterer betydningen af <span class="math inline">\(w\)</span>. Normalt vil man derfor arbejde videre med <span class="math inline">\(\vec{v}_{w}\)</span>, mens <span class="math inline">\(\vec{k}_{w}\)</span> smides væk. Når vektorerne <span class="math inline">\(\vec{v}_{w}\)</span> er fundet med Word2Vec, kan man bruge dem til at lave algoritmer til at generere tekst. Det ser vi på i næste afsnit.</p>
+<!-- ### Eksempel 3 {#eksempel-3 .unnumbered} -->
+<!-- Eges børnebog -->
+</section>
+</section>
+<section id="fra-vektorer-til-tekstgenerering" class="level2">
+<h2 class="anchored" data-anchor-id="fra-vektorer-til-tekstgenerering">Fra vektorer til tekstgenerering</h2>
+<p>I det følgende ser vi på, hvordan vektorrepræsentationerne, som vi fandt med Word2Vec, kan bruges til at lave en algoritme, der kan generere ny tekst. De fleste tekstgenereringsalgoritmer fungerer ved, at de danner teksten et ord ad gangen. Givet den tekst der allerede er dannet, prøver algoritmen hele tiden at gætte, hvad det næste ord skal være. Det kan gøres i to trin:</p>
+<ol type="1">
+<li><p>Først benyttes Word2Vec til at oversætte alle ordene i sproget til vektorer.</p></li>
+<li><p>Dernæst genereres teksten. Givet den tekst, der allerede er dannet, bruger vi en (kompliceret) funktion, der tager vektorrepræsentationerne af de hidtil genererede ord som input. Som output giver funktionen det mest sandsynlige næste ord (eller et af de mest sandsynlige).</p></li>
+</ol>
+<p>Hvis vi for eksempel har genereret teksten</p>
+<div class="llm_saetninger">
+<p>"Hunden spiser sit —"</p>
+</div>
+<p>så skal vi prøve at gætte, hvilket ord der kommer efter "sit". Vi oversætter derfor ordene "Hunden", "spiser" og "sit" til vektorerne <span class="math inline">\(\vec{v}_{\text{Hunden}}\)</span>, <span class="math inline">\(\vec{v}_{\text{spiser}}\)</span> og <span class="math inline">\(\vec{v}_{\text{sit}}\)</span>. Disse tre vektorer giver vi funktionen som input, og som output får vi et nyt ord. Det kunne være "kødben". Den funktion, der bruges i punkt 2., kunne for eksempel være et <em>neuralt netværk</em>. Du kan læse mere om, hvordan det fungerer i <a href="../../noter/sprogmodeller/tekstgenerering.html">Tekstgenerering med neurale netværk</a>.</p>
+<p>Det smarte ved at bruge vektorrepræsentationerne er, hvis vi for eksempel vil generere næste ord i</p>
+<div class="llm_saetninger">
+<p>"Jeg skal huske, at katten skal have —"</p>
+</div>
+<p>Det skulle gerne give "mad" som muligt næste ord. Men måske har sprogmodellen aldrig set sætningen "katten skal have mad". Hvis den til gengæld har set "hunden skal have mad", og modellen ved at "hunden" og "katten" tit har samme kontekst, og dermed har næsten samme vektorrepræsentation, så vil man alligevel få "mad" som muligt næste ord.</p>
+<p>Bemærk, at resultatet af Word2Vec afhænger meget af, hvilket træningsdata vi har brugt. Antag for eksempel, at vi kun træner modellen på tekster skrevet af folk, der ikke kan lide hunde. Så vil <span class="math inline">\(\vec{v}_{\text{hund}}\)</span> have en tendens til at pege i samme retning som andre negativt ladede ord, fordi de ofte optræder sammen med negative kontekstord. Når vi sidenhen genererer ny tekst, vil vi få en tendens til at danne sætninger, der omtaler hunde negativt.</p>
+<section id="video-fra-vektorer-til-tekstgenerering" class="level3">
+<h3 class="anchored" data-anchor-id="video-fra-vektorer-til-tekstgenerering">VIDEO: Fra vektorer til tekstgenerering</h3>
+<p>Den overordnede idé med at bruge ords vektorrepræsentationer til at prædiktere det næste ord i en sætning er forklaret i videoen her.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/eKI2Nd-s9Cw" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+</section>
+</section>
+<section id="relaterede-forløb" class="level2">
+<h2 class="anchored" data-anchor-id="relaterede-forløb">Relaterede forløb</h2>
+<ul>
+<li><a href="../../undervisningsforlob/word2vec.html" target="_blank">Word2vec</a>.</li>
+<li><a href="../../undervisningsforlob/sprogmodeller_langt_forlob/sprogmodeller_forside.html" target="_blank">Sprogmodeller</a> (langt forløb).</li>
+</ul>
+
+
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/aimat\.dk");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p><img src="../../logo/SVG/Bomaerke_03_AIMAT_2024.svg" class="footer-logo"> aimat.dk er finansieret af Novo Nordisk Fonden</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+<script src="../../scripts/navbar-tooltips.js"></script>
+
+
+
+
+</body></html>

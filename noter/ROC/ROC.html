@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Når man skal vælge en god algoritme, som kan anvendes til en klassifikation, har man brug for at kunne sammenligne, hvor godt forskellige algoritmer prædikterer. Hvordan det kan gøres, kan du læse om her.">
+
+<title>Sensitivitet, specificitet, ROC-kurver og AUC – AI MAT - matematikken bag magien</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-cef6446724503988638a0362fd982987.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-Y219BCPS45"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+ 
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'analytics_storage': 'denied'
+  });
+gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
+</script>
+<link href="../../site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="../../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="../../site_libs/plotly-binding-4.11.0/plotly.js"></script>
+<script src="../../site_libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="../../site_libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="../../site_libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+<script src="../../site_libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+<link href="../../site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="../../site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="floating nav-fixed slimcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo light-content">
+    <img src="../../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../undervisningsforlob/index.html"> 
+<span class="menu-text">Undervisningsforløb</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../noter/index.html"> 
+<span class="menu-text">Noter</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../srp/index.html"> 
+<span class="menu-text">SRP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../apps/index.html"> 
+<span class="menu-text">Apps</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../til_laererne.html"> 
+<span class="menu-text">Til lærerne</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> <i class="bi bi-envelope" role="img" aria-label="Om os">
+</i> 
+<span class="menu-text">Om os</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@ai-mat" target="_blank"> <i class="bi bi-youtube" role="img" aria-label="YouTube">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indhold</h2>
+   
+  <ul>
+  <li><a href="#sensitivitet-og-specificitet" id="toc-sensitivitet-og-specificitet" class="nav-link active" data-scroll-target="#sensitivitet-og-specificitet">Sensitivitet og specificitet</a></li>
+  <li><a href="#roc-kurver" id="toc-roc-kurver" class="nav-link" data-scroll-target="#roc-kurver">ROC-kurver</a></li>
+  <li><a href="#auc" id="toc-auc" class="nav-link" data-scroll-target="#auc">AUC</a></li>
+  <li><a href="#forskellige-overvejelser" id="toc-forskellige-overvejelser" class="nav-link" data-scroll-target="#forskellige-overvejelser">Forskellige overvejelser</a>
+  <ul class="collapse">
+  <li><a href="#hvornår-skal-man-bruge-sensitivitet-og-specificitet" id="toc-hvornår-skal-man-bruge-sensitivitet-og-specificitet" class="nav-link" data-scroll-target="#hvornår-skal-man-bruge-sensitivitet-og-specificitet">Hvornår skal man bruge sensitivitet og specificitet?</a></li>
+  <li><a href="#flere-inputvariable" id="toc-flere-inputvariable" class="nav-link" data-scroll-target="#flere-inputvariable">Flere inputvariable</a></li>
+  <li><a href="#overfitting" id="toc-overfitting" class="nav-link" data-scroll-target="#overfitting">Overfitting</a></li>
+  </ul></li>
+  <li><a href="#ekstra-positiv-og-negativ-prædiktiv-værdi" id="toc-ekstra-positiv-og-negativ-prædiktiv-værdi" class="nav-link" data-scroll-target="#ekstra-positiv-og-negativ-prædiktiv-værdi">Ekstra: Positiv og negativ prædiktiv værdi</a></li>
+  <li><a href="#relaterede-forløb" id="toc-relaterede-forløb" class="nav-link" data-scroll-target="#relaterede-forløb">Relaterede forløb</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Sensitivitet, specificitet, ROC-kurver og AUC</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Langt de fleste algoritmer, som vi behandler her på siden, handler om, hvordan AI kan bruges til klassifikation. Det kan være alt fra at prædiktere, om man vil stemme på rød eller blå blok ved næste valg baseret på svarene af en række spørgsmål til at prædiktere, om en patient har kræft baseret på forskellige diagnostiske test.</p>
+<p>Når man skal vælge en god algoritme, som kan anvendes til den form for klassifikation, har man brug for at kunne sammenligne, hvor godt forskellige algoritmer prædikterer. Man er derfor nødt til at have et mål for, hvor god en algoritme er til at forudsige klasser (fx rød eller blå blok). Det mest oplagte er at tælle, hvor mange observationer algoritmen klassificerer forkert. Man kan så beregne, hvor stor en andel af alle observationerne, der klassificeres forkert. Denne andel kaldes <em>fejlklassifikationsraten</em>. Det er dog ikke altid det bedste mål at bruge. Det handler denne note om.</p>
+<p>Som eksempel ser vi på et lille dataeksempel med <span class="math inline">\(20\)</span> datapunkter, der kan have klasserne rød og blå, hvor rød er meget sjældnere end blå. Desuden er der målt en inputvariabel <span class="math inline">\(x\)</span>. Vi ønsker at finde en algoritme, der kan prædiktere farven på en observation på baggrund af <span class="math inline">\(x\)</span>. Datapunkternes klasser og <span class="math inline">\(x\)</span>-værdier er angivet på <a href="#fig-data_eksempel" class="quarto-xref">figur&nbsp;1</a>. Ud fra figuren kunne det godt se ud til, at sandsynligheden for den røde klasse stiger, når <span class="math inline">\(x\)</span> stiger. Der er dog også flest blå med meget høje <span class="math inline">\(x\)</span>-værdier.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-data_eksempel" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-data_eksempel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="ROC_files/figure-html/fig-data_eksempel-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-data_eksempel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;1: Et lille dataeksempel med 20 datapunkter.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Mange prædiktionsalgoritmer benytter en tærskelværdi <span class="math inline">\(t\)</span>, således at klassen prædikteres som rød, når <span class="math inline">\(x&gt; t\)</span>, og blå når <span class="math inline">\(x\leq t\)</span>. På <a href="#fig-t10" class="quarto-xref">figur&nbsp;2</a> ses et eksempel med <span class="math inline">\(t=10\)</span>. De første <span class="math inline">\(10\)</span> observationer klassificeres korrekt til at være blå. De næste <span class="math inline">\(10\)</span> observationer prædikteres røde, selv om kun <span class="math inline">\(3\)</span> af dem faktisk er røde. Vi får altså <span class="math inline">\(7\)</span> fejlklassifikationer i alt. Det giver en fejlklassifikationsrate på <span class="math inline">\(7/20=0.35\)</span>.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-t10" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-t10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="ROC_files/figure-html/fig-t10-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-t10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;2: Klassifikation med tærskelværdi <span class="math inline">\(t=10\)</span>. Observationer i det blå område prædikteres blå, mens observationer i det røde område prædikteres røde. Udfyldte cirkler angiver korrekte klassifikationer. Åbne cirkler angiver fejlklassifikationer.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Vi kan gøre det samme for forskellige værdier af <span class="math inline">\(t\)</span> <!--**ovenstående kunne laves til en slider**--> og tælle antallet af fejlklassifikationer. Resultatet ses i <a href="#tbl-fejlklassifikationer" class="quarto-xref">tabel&nbsp;1</a>.</p>
+<div id="tbl-fejlklassifikationer" class="bordered quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
+<div aria-describedby="tbl-fejlklassifikationer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table-bordered table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Tærskelværdi <span class="math inline">\(t\)</span></th>
+<th style="text-align: center;">Antal fejl</th>
+<th style="text-align: center;">Fejlklassifikationsrate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(16\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.80\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(15\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.75\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(14\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.70\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(13\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.65\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(5\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(12\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.60\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(6\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(11\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.55\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(7\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.50\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(8\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(9\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.45\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(9\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(8\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.40\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(7\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.35\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(11\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(6\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.30\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(12\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(5\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.25\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(13\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(6\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.30\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(14\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(5\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.25\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(15\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.20\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(16\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(5\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.25\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(17\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.20\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(18\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(5\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.25\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(19\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.20\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(20\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.15\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-tbl margin-caption" id="tbl-fejlklassifikationer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabel&nbsp;1: Fejlklassifikationer for forskellige tærskelværdier <span class="math inline">\(t\)</span>.
+</figcaption>
+</figure>
+</div>
+<p>Den laveste fejlklassifikationsrate får vi ved at vælge <span class="math inline">\(t=20\)</span>, sådan at <em>alle</em> observationer prædikteres til at være blå. Men hvis vi er ude på at identificere de sjældne røde, så er sådan en test jo ikke meget værd, fordi vi aldrig vil prædiktere nogle observationer som røde. I ovenstående eksempel kunne man i stedet have valgt at sætte <span class="math inline">\(t=12\)</span>. Så får man ganske vist <span class="math inline">\(5\)</span> fejlklassifikationer i stedet for <span class="math inline">\(3\)</span>. Til gengæld finder man alle de røde. Det virker som et mere fornuftigt valg i vores eksempel.</p>
+<p>Hvordan vælger man så den bedste tærskelværdi? Det vil sige, hvordan finder man en god balance mellem ikke at lave for mange fejl og samtidig fange så mange som muligt fra den sjældne klasse? Her får vi brug for et mål for, hvor godt algoritmen prædikterer hver af de to klasser. Sensitivitet og specificitet er sådanne mål.</p>
+<section id="sensitivitet-og-specificitet" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="sensitivitet-og-specificitet">Sensitivitet og specificitet</h2>
+<p>Lad os igen se på situationen, hvor vi har en prædiktionsalgoritme, der prædikterer klasserne rød og blå. For at få et overblik over, hvor godt algoritmen prædikterer, kan man lave en <em>confusion matrix</em>, som skitseret på <a href="#fig-confusion" class="quarto-xref">figur&nbsp;3</a>, hvor et positivt resultat svarer til klassen rød<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Diagonalen (de grønne celler) svarer til observationer, der er klassificeret korrekt. En god algoritme skal have så mange observationer som muligt på diagonalen.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Ordene positiv og negativ stammer fra medicin, hvor man bruger en test til at klassificere patienter som syge eller raske. En positiv test indikerer, at patienten er syg. I andre sammenhænge svarer et positivt resultat til, at man har prædikteret den sjældne klasse.</p></div></div><div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-confusion" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-confusion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="ROC_files/figure-html/fig-confusion-1.png" class="img-fluid figure-img" width="480">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-confusion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;3: Illustration af confusion matrix.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Hvis vi udelukkende er interesseret i, hvor god algoritmen er til at prædiktere den røde klasse, kan vi kigge på <em>sensitiviteten</em>. Dette er sandsynligheden for, at en observation, hvis sande farve er rød, faktisk bliver klassificeret som rød, altså</p>
+<p><span id="eq-sens"><span class="math display">\[
+\textrm{sensitivitet} = P(\textrm{ en sand rød observation prædikteres som rød })
+\tag{1}\]</span></span></p>
+<p>Tilsvarende kan man måle, hvor god en algoritme er til at prædiktere den blå klasse ved at se på <em>specificiteten</em>. Dette er sandsynligheden for, at en sand blå observation faktisk bliver klassificeret som blå. Det kan udtrykkes som</p>
+<p><span class="math display">\[
+\textrm{specificitet} = P(\textrm{ en sand blå observation prædikteres som blå } ).
+\]</span></p>
+<p>Lad os se på eksemplet fra <a href="#fig-data_eksempel" class="quarto-xref">figur&nbsp;1</a> igen, hvor vi sætter tærskelværdien til <span class="math inline">\(t=15\)</span>. Vi udfylder confusion matricen med antallet af observationer i hver celle.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-t15" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-t15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="ROC_files/figure-html/fig-t15-1.png" class="img-fluid figure-img" width="384">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-t15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;4: Confusion matrix med <span class="math inline">\(t=15\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Sensitiviteten beregnes som andelen af det samlede antal sande røde, der bliver prædikteret røde. Ved at se på første søjle i <a href="#fig-t15" class="quarto-xref">figur&nbsp;4</a> finder vi, at der er <span class="math inline">\(2+1=3\)</span> sande røde, hvoraf <span class="math inline">\(2\)</span> bliver prædikteret røde. Det giver sensitiviteten</p>
+<p><span id="eq-sens_formel"><span class="math display">\[
+\textrm{sensitivitet} = \frac{\textrm{antal røde der prædikteres røde}}{\textrm{antal sande røde}} = \frac{2}{3} = 0.667.
+\tag{2}\]</span></span></p>
+<p>Tilsvarende kan vi beregne specificiteten ved at se på anden søjle.</p>
+<p><span class="math display">\[
+\textrm{specificitet} = \frac{\textrm{antal blå der prædikteres blå}}{\textrm{antal sande blå}} = \frac{14}{3+14}= 0.824.
+\]</span></p>
+<p>Algoritmen er altså bedst til at finde blå, da specificiteten er højere end sensitiviteten. Lad os prøve, om vi kan få højere sensitivitet med en anden værdi af <span class="math inline">\(t\)</span>. Værdien <span class="math inline">\(t=12\)</span> var den største værdi, der kunne finde alle de røde – se igen <a href="#fig-data_eksempel" class="quarto-xref">figur&nbsp;1</a>. Det giver os confusion matricen i <a href="#fig-t12" class="quarto-xref">figur&nbsp;5</a>.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-t12" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-t12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="ROC_files/figure-html/fig-t12-1.png" class="img-fluid figure-img" width="384">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-t12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;5: Confusion matrix med <span class="math inline">\(t=12\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Vi beregner igen sensitiviteten og specificiteten <span class="math display">\[\textrm{sensitivitet} = \frac{\textrm{antal røde der prædikteres røde}}{\textrm{antal sande røde}} = \frac{3}{3} = 1\]</span> og <span class="math display">\[\textrm{specificitet} = \frac{\textrm{antal blå der prædikteres blå}}{\textrm{antal sande blå}} = \frac{12}{5+12}= 0.706.\]</span> Vi ser altså, at prisen for at få en højere sensitivitet er en lavere specificitet.</p>
+<p>Endelig kan vi prøve med værdien <span class="math inline">\(t=20\)</span>, som var den, der gav den laveste fejlklassifikationsrate. Denne værdi giver confusion matricen i <a href="#fig-t20" class="quarto-xref">figur&nbsp;6</a>.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-t20" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-t20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="ROC_files/figure-html/fig-t20-1.png" class="img-fluid figure-img" width="384">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-t20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;6: Confusion matrix med <span class="math inline">\(t=20\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Vi finder sensitiviteten <span class="math display">\[
+\textrm{sensitivitet} = \frac{\textrm{antal røde der prædikteres røde}}{\textrm{antal sande røde}} = \frac{0}{3}= 0
+\]</span> og specificiteten <span class="math display">\[
+\textrm{specificitet} = \frac{\textrm{antal blå der prædikteres blå}}{\textrm{antal sande blå}} = \frac{17}{17}= 1.
+\]</span> Testen er altså rigtig god til at finde blå klasser, men elendig til at finde røde klasser.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Sensitivitet og specificitet som betingede sandsynligheder
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Sensitivitet og specificitet kan beskrives ved hjælp af betingede sandsynligheder. Lad <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> være to hændelser, således at <span class="math inline">\(B\)</span> har positiv sandsynlighed <span class="math inline">\(P(B)&gt;0\)</span>. <em>Den betingede sandsynlighed for <span class="math inline">\(A\)</span> givet <span class="math inline">\(B\)</span></em> betegnes <span class="math inline">\(P(A|B)\)</span> og er defineret som</p>
+<p><span id="eq-betinget"><span class="math display">\[
+P(A|B) = \frac{P(A\cap B)}{P(B)}.
+\tag{3}\]</span></span></p>
+<p>Her er <span class="math inline">\(A\cap B\)</span> <em>fælleshændelsen</em>, det vil sige hændelsen, at <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> forekommer samtidig. Vi fortolker <span class="math inline">\(P(A|B)\)</span> som sandsynligheden for, at hændelsen <span class="math inline">\(A\)</span> indtræffer, hvis vi ved, at hændelsen <span class="math inline">\(B\)</span> er indtruffet. Dette giver mening i forhold til definitionen (<a href="#eq-betinget" class="quarto-xref">3</a>), idet brøken angiver, hvor stor en andel af sandsynligheden for <span class="math inline">\(B\)</span>, der udgøres af sandsynligheden for, at <span class="math inline">\(A\)</span> indtræffer samtidig med <span class="math inline">\(B\)</span>.</p>
+<p>Lad os se på et eksempel, hvor vi slår to gange med en terning. Lad <span class="math inline">\(A\)</span> være hændelsen, at vi slår to seksere, og lad <span class="math inline">\(B\)</span> hændelsen, at den første terning viser seks. Da er</p>
+<p><span class="math display">\[
+P(A)=P(\textrm{to seksere})=1/36
+\]</span> og <span class="math display">\[
+P(B)=P(\textrm{første terning viser seks})=1/6.
+\]</span> Intuitivt vil man forvente, at sandsynligheden for to seksere vokser, hvis den første terning viser en sekser. Det kan vi bekræfte ved hjælp at betingede sandsynligheder. <span class="math display">\[
+P(\textrm{to seksere } | \textrm{ første terning viser seks}) = P(A|B) =  \frac{P(A\cap B)}{P(B)} = \frac{1/36}{1/6} = \frac{1}{6}.
+\]</span> Her har vi udnyttet, at <span class="math inline">\(A\cap B=A\)</span>, da første terning er nødt til at vise seks for, at vi kan få to seksere. Vi ser altså, at <span class="math display">\[
+P(\textrm{to seksere } | \textrm{ første terning viser seks}) = \frac{1}{6} \neq \frac{1}{36} = P(\textrm{to seksere}).
+\]</span></p>
+<p>Terningeksemplet viser et eksempel, hvor <span class="math inline">\(P(A)\neq P(A|B)\)</span>, altså hvor sandsynligheden for <span class="math inline">\(A\)</span> ændrer sig, hvis vi ved, at <span class="math inline">\(B\)</span> er indtruffet. Dette er ofte tilfældet. Nogle gange kan vi dog have at <span class="math inline">\(P(A|B)=P(A)\)</span>, altså at vi ikke får nogen ny viden om sandsynligheden for <span class="math inline">\(A\)</span> ud fra vores viden om <span class="math inline">\(B.\)</span> I dette tilfælde siger vi, at <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> er <em>uafhængige</em>.</p>
+<p>Sensitiviteten kan defineres formelt ved hjælp af betingede sandsynligheder som sandsynligheden for at få en rød prædiktion, <em>givet at den sande klasse er rød</em>, altså <span class="math display">\[
+\begin{aligned}
+\textrm{sensitivitet} &amp;= P(\textrm{ prædiktionen er rød }|\textrm{ den sande klasse er rød }) \\ \\
+&amp;= \frac{P(\textrm{ den sande klasse er rød og prædiktionen er rød })}{P(\textrm{ den sande klasse er rød })}.
+\end{aligned}
+\]</span> I praksis estimerer vi sandsynligheden for en sand rød som antallet af sande røde divideret med det samlede antal observationer. Sandsynligheden for, at en observation både er rød og klassificeres som rød, estimeres som antallet, der både er røde og klassificeres røde, divideret med det samlede antal observationer. Vi kan derfor estimere sensitiviteten ved <span class="math display">\[
+\begin{aligned}
+\textrm{sensitivitet} &amp;= \frac{(\textrm{antal røde der prædikteres røde})/(\textrm{samlet antal})}{(\textrm{antal røde})/(\textrm{samlet antal})} \\ \\
+&amp;= \frac{\textrm{antal røde der prædikteres røde}}{\textrm{antal røde}}.
+\end{aligned}
+\]</span> Det var netop den formel, vi brugte til at udregne sensitiviteten i (<a href="#eq-sens" class="quarto-xref">1</a>).</p>
+<p>Specificiteten kan tilsvarende defineres som <span class="math display">\[
+\begin{aligned}
+\textrm{specificitet} &amp;= P(\textrm{ prædiktionen er blå }|\textrm{ den sande klasse er blå }) \\ \\
+&amp;= \frac{P(\textrm{ den sande klasse er blå og prædiktionen er blå })}{P(\textrm{ den sande klasse er blå })}.
+\end{aligned}
+\]</span> Man kan som ovenfor regne sig frem til, at specificiteten kan estimeres ved <span class="math display">\[
+\begin{aligned}\textrm{specificitet} = \frac{\textrm{antal blå der prædikteres blå}}{\textrm{antal blå}}.
+\end{aligned}
+\]</span></p>
+<p>Du kan se mere i noten om <a href="../../noter/sandsynlighed/sandsynlighed.html" target="_blank">Sandsynlighedsregning og mængdeteori</a>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="roc-kurver" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="roc-kurver">ROC-kurver</h2>
+<p>I praksis har man brug for at finde en tærskelværdi <span class="math inline">\(t\)</span>, som giver en god afvejning mellem sensitivitet og specificitet. Det kan afhænge af anvendelsen, hvor højt man vægter de to. Hvis man er ude på at diagnosticere en sjælden sygdom, er det umiddelbart vigtigst, at sensitiviteten er høj, så man finder alle de syge. Dog er det problematisk, hvis specificiteten bliver for lav, da man så kommer til at diganosticere mange raske som syge, hvilket kan medføre unødvendige undersøgelser og behandlinger for patienten.</p>
+<p>Så hvordan vælger man en tærskelværdi, der giver en god afvejning mellem sensitivitet og specificitet? Som en hjælp kunne man udregne sensitivitet og specificitet for forskellige mulige værdier af <span class="math inline">\(t\)</span>. Det er for vores eksempel gjort i <a href="#tbl-sensitivitet" class="quarto-xref">tabel&nbsp;2</a>.</p>
+<div id="tbl-sensitivitet" class="bordered quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
+<div aria-describedby="tbl-sensitivitet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table-bordered table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Tærskelværdi <span class="math inline">\(t\)</span></th>
+<th style="text-align: center;">Sensitivitet</th>
+<th style="text-align: center;">Specificitet</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.059\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.118\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.176\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.235\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(5\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.294\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(6\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.353\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(7\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.412\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(8\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.471\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(9\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.529\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.588\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(11\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.647\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(12\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.706\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(13\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.667\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.706\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(14\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.667\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.765\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(15\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.667\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.824\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(16\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.333\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.824\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(17\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.333\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.882\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(18\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.882\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(19\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.941\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(20\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-tbl margin-caption" id="tbl-sensitivitet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabel&nbsp;2: Sensitivitet og specificitet for forskellige tærskelværdier.
+</figcaption>
+</figure>
+</div>
+<p>Man kan så gå ind i <a href="#tbl-sensitivitet" class="quarto-xref">tabel&nbsp;2</a> og lede efter et godt <span class="math inline">\(t\)</span>, hvor både sensitivitet og specificitet er høj. En tabel som ovenfor bliver dog hurtigt uoverskuelig, hvis man har et stort datasæt. For at få overblik kan man i stedet vælge at tegne samhørende værdier af sensitivitet og specificitet ind i et koordinatsystem. Traditionelt vælger man at have <span class="math inline">\(1-\textrm{specificitet}\)</span> på <span class="math inline">\(x\)</span>-aksen og <span class="math inline">\(\textrm{sensitivitet}\)</span> på <span class="math inline">\(y\)</span>-aksen. Den kurve, der fremkommer, når punkterne forbindes, kaldes en <em>ROC-kurve</em><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. På <a href="#fig-roc" class="quarto-xref">figur&nbsp;7</a> er ROC-kurven fra dataeksemplet i <a href="#fig-data_eksempel" class="quarto-xref">figur&nbsp;1</a> indtegnet.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;ROC står for <em>Receiver Operating Characteristic</em>.</p></div></div><div class="cell page-columns page-full">
+<div id="fig-roc" class="cell-output-display quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-roc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-324daaf3d734b5f2bbd1" style="width:100%;height:650px;"></div>
+<script type="application/json" data-for="htmlwidget-324daaf3d734b5f2bbd1">{"x":{"visdat":{"20e1487eefc5":["function () ","plotlyVisDat"]},"cur_data":"20e1487eefc5","attrs":{"20e1487eefc5":{"x":{},"y":{},"text":{},"mode":"lines+markers","showlegend":false,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"1 - specificitet"},"yaxis":{"domain":[0,1],"automargin":true,"title":"sensitivitet"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false,"displayModeBar":false},"data":[{"x":[0.94100000000000006,0.88200000000000001,0.82400000000000007,0.76500000000000001,0.70599999999999996,0.64700000000000002,0.58800000000000008,0.52900000000000003,0.47099999999999997,0.41200000000000003,0.35299999999999998,0.29400000000000004,0.29400000000000004,0.23499999999999999,0.17600000000000005,0.17600000000000005,0.11799999999999999,0.11799999999999999,0.059000000000000052,0],"y":[1,1,1,1,1,1,1,1,1,1,1,1,0.66700000000000004,0.66700000000000004,0.66700000000000004,0.33300000000000002,0.33300000000000002,0,0,0],"text":["Tærskelværdi: 1","Tærskelværdi: 2","Tærskelværdi: 3","Tærskelværdi: 4","Tærskelværdi: 5","Tærskelværdi: 6","Tærskelværdi: 7","Tærskelværdi: 8","Tærskelværdi: 9","Tærskelværdi: 10","Tærskelværdi: 11","Tærskelværdi: 12","Tærskelværdi: 13","Tærskelværdi: 14","Tærskelværdi: 15","Tærskelværdi: 16","Tærskelværdi: 17","Tærskelværdi: 18","Tærskelværdi: 19","Tærskelværdi: 20"],"mode":"lines+markers","showlegend":false,"type":"scatter","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-roc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;7: ROC-kurve for dataeksemplet i <a href="#fig-data_eksempel" class="quarto-xref">figur&nbsp;1</a>.
+</figcaption>
+</figure>
+</div>
+</div>
+<p>Vi vil gerne have både sensitivitet og specificitet til at være så tæt på <span class="math inline">\(1\)</span> som muligt. Det betyder derfor, at vi gerne vil have <span class="math inline">\(1-\textrm{specificitet}\)</span> så tæt på <span class="math inline">\(0\)</span> som muligt. Vi søger derfor samlet set et punkt på ROC-kurven, der ligger tæt på punktet <span class="math inline">\((0,1)\)</span>. Ud fra ROC-kurven kunne punktet <span class="math inline">\((0.176,0.667)\)</span> ligne et godt bud. Ifølge <a href="#tbl-sensitivitet" class="quarto-xref">tabel&nbsp;2</a> svarer det til en tærskelværdi på <span class="math inline">\(t=15\)</span>.</p>
+<p>Til sammenligning kunne vi forestille os en algoritme, der laver en hel tilfældig prædiktion, hvor hver observation bliver klassificeret som rød med sandsynlighed <span class="math inline">\(p\)</span> og blå med sandsynlighed <span class="math inline">\(1-p\)</span> uden at tage højde for værdien af <span class="math inline">\(x\)</span>. For sådan en algoritme er sandsynligheden for, at en sand rød prædikteres rød altså også <span class="math inline">\(p\)</span>, så</p>
+<p><span class="math display">\[\textrm{sensitivitet} = P(\textrm{ en sand rød prædikteres rød }) = P(\textrm{ rød prædiktion }) = p.\]</span> Tilsvarende kan vi beregne specificiteten <span class="math display">\[
+\textrm{specificitet} = P(\textrm{ en sand blå prædikteres blå }) = P(\textrm{ blå prædiktion }) = 1- p
+\]</span> og derfor</p>
+<p><span class="math display">\[1-\textrm{specificitet} = 1-( 1- p) =  p.\]</span> For sådan en test får vi altså et punkt på den tilhørende ROC-kurve med koordinatsæt</p>
+<p><span class="math display">\[
+(1-\textrm{specificitet},\textrm{sensitivitet}) = (p,p).
+\]</span> Alle punkter hvor første- og andenkoordinaten er ens ligger på identitetslinjen <span class="math inline">\(y=x\)</span>. Alt i alt viser dette, at punkterne på identitetslinjen svarer til helt tilfældig prædiktion. På <a href="#fig-roc" class="quarto-xref">figur&nbsp;7</a> er identitetslinjen <span class="math inline">\(y=x\)</span> også indtegnet. En prædiktionsalgoritme skal derfor helst give et punkt, der ligger over identitetslinjen. Ellers er den ikke bedre end et tilfældigt gæt.</p>
+</section>
+<section id="auc" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="auc">AUC</h2>
+<p>Hvis vi har brug for at sammenligne forskellige prædiktionsalgoritmer, kan det godt være svært at sammenligne deres fulde ROC-kurver. Det er nemmere at sammenligne et enkelt tal, der opsummerer, hvor god ROC-kuven er. Her kan AUC bruges.</p>
+<p>Husk på, at ROC-kurven gerne skulle ligge så tæt op mod punktet <span class="math inline">\((0,1)\)</span> og så langt over identitetslinjen som muligt. Vi kan derfor bruge <em>arealet under ROC-kurven</em>, også kaldet <em>AUC</em><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, som mål for hvor meget ROC-kurven er strakt opad mod <span class="math inline">\((0,1)\)</span>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;AUC står for <em>Area Under Curve</em>.</p></div></div><p>Optimalt set skulle ROC-kurven stige lodret op til punktet <span class="math inline">\((0,1)\)</span> og derefter fortsætte vandret over mod <span class="math inline">\((1,1)\)</span> (den orange kurve på <a href="#fig-auc" class="quarto-xref">figur&nbsp;8</a>), svarende til, at der er en <span class="math inline">\(t\)</span>-værdi, der giver perfekt prædiktion. I denne situation er <span class="math inline">\(AUC=1\)</span>. Omvendt så vi, at identitetslinjen (den grønne kurve på <a href="#fig-auc" class="quarto-xref">figur&nbsp;8</a>) svarer til fuldstændig tilfældig prædiktion uden brug af <span class="math inline">\(x\)</span>. Dette svarer til <span class="math inline">\(AUC=1/2\)</span>. En fornuftig algoritme skal således gerne have et <span class="math inline">\(AUC\)</span> mellem <span class="math inline">\(1/2\)</span> og <span class="math inline">\(1\)</span>, hvor høje tal er bedst. I vores dataeksempel (den sorte kurve på <a href="#fig-auc" class="quarto-xref">figur&nbsp;8</a>) kan man udregne <span class="math inline">\(AUC=0.804\)</span>.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-auc" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-auc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="ROC_files/figure-html/fig-auc-1.png" class="img-fluid figure-img" width="480">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-auc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;8: AUC for perfekt klassifikation (orange), tilfældig klassifikation (grøn) og vores dataeksempel (sort).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Man kan vise, at AUC har en konkret fortolkning. Hvis man tager et vilkårligt element fra den blå klasse og et fra den røde klasse, så vil AUC-værdien være sandsynligheden for, at <span class="math inline">\(x\)</span>-værdien for den røde klasse er højere end <span class="math inline">\(x\)</span>-værdien for den blå klasse. Hvis man prøver at gætte, hvilken af de to klasser der er rød ud fra <span class="math inline">\(x\)</span>-værdien, er AUC altså sandsynligheden for, at man gætter rigtigt.</p>
+</section>
+<section id="forskellige-overvejelser" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="forskellige-overvejelser">Forskellige overvejelser</h2>
+<section id="hvornår-skal-man-bruge-sensitivitet-og-specificitet" class="level3">
+<h3 class="anchored" data-anchor-id="hvornår-skal-man-bruge-sensitivitet-og-specificitet">Hvornår skal man bruge sensitivitet og specificitet?</h3>
+<p>Vi så i dataeksemplet fra <a href="#fig-data_eksempel" class="quarto-xref">figur&nbsp;1</a>, at fejlklassifikationsraten ikke egner sig som mål for, hvor godt en algoritme prædikterer, når en af klasserne er meget små. Her er det ofte en fordel at tillade flere fejlklassifikationer for at opnå en højere sensitivitet. Desuden kan det være en fordel at kigge på sensitivitet og specificitet i en situation, hvor man er mere interesseret i den ene klasse end i den anden. Det kunne fx være i forbindelse med test for sygdom under en epidemi, hvor det er vigtigere at finde alle de syge, så de kan komme i karantæne, end at man undgår at sende raske i karantæne.</p>
+</section>
+<section id="flere-inputvariable" class="level3">
+<h3 class="anchored" data-anchor-id="flere-inputvariable">Flere inputvariable</h3>
+<p>Ofte har man i praksis mere end én inputvariabel <span class="math inline">\(x\)</span> at prædiktere ud fra. Lad os sige, at vi har målt variablene <span class="math inline">\(x_1,x_2,\ldots,x_p\)</span>. Mange algoritmer (blandt andet <a href="../../noter/perceptron/perceptron.html">perceptronen</a>, <a href="../../noter/simple_neurale_net/simple_neurale_net.html">simple neurale netværk</a>, <a href="../../noter/neurale_net/neurale_net.html">neurale netværk</a> og <a href="../../noter/logistisk/log-reg.html">logistisk regression</a>) laver på en eller anden måde prædiktionerne ud fra en vægtet sum af variablene: <span class="math display">\[w_0+w_1x_1 + w_2x_2 + \dotsm +w_p x_p\]</span> hvor <span class="math inline">\(w_0, w_1, w_2,\ldots,w_p \in \mathbb{R}\)</span> er konstanter. Man prædikterer så den ene klasse når <span class="math display">\[w_0+w_1x_1 + w_2x_2 + \dotsm +w_p x_p &gt; t\]</span> og den anden klasse når <span class="math display">\[w_0+w_1x_1 + w_2x_2 + \dotsm +w_p x_p \leq t\]</span> hvor <span class="math inline">\(t\)</span> er en passende tærskelværdi. Ofte bruger algoritmen som udgangspunkt <span class="math inline">\(t=0\)</span>. Som i tilfældet med én inputvariabel kan det dog give mening at vælge et andet <span class="math inline">\(t\)</span> for at få bedre sensitivitet og specificitet. Igen kan man beregne confusion matricen, sensitivitet og specificitet for forskellige værdier af <span class="math inline">\(t\)</span> og tegne ROC-kurven for at finde et godt <span class="math inline">\(t\)</span>. Vil man sammenligne flere algoritmer, kan man desuden beregne deres AUC ud fra ROC-kurven.</p>
+</section>
+<section id="overfitting" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="overfitting">Overfitting</h3>
+<p>I eksemplet fra <a href="#fig-data_eksempel" class="quarto-xref">figur&nbsp;1</a> fandt vi, at <span class="math inline">\(t=15\)</span> virkede som et fornuftigt valg. Det var i hvert fald et <span class="math inline">\(t\)</span>, der passede godt på det datasæt, vi havde. Det betyder dog ikke, at det er det <span class="math inline">\(t\)</span>, der generaliserer bedst til nye data. Lad os sige, at vi får et nyt datasæt og gerne vil bruge prædiktionsalgoritmen på det. På <a href="#fig-test-data" class="quarto-xref">figur&nbsp;9</a> ses et eksempel på, hvordan et nyt datasæt kunne se ud.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-test-data" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-test-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="ROC_files/figure-html/fig-test-data-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-test-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;9: Det oprindelige data fra <a href="#fig-data_eksempel" class="quarto-xref">figur&nbsp;1</a> og et nyt datasæt klassificeret ud fra tærskelværdien <span class="math inline">\(t=15\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Med <span class="math inline">\(t=15\)</span> får vi fejlklassificeret <span class="math inline">\(3\)</span> ud af <span class="math inline">\(4\)</span> røde i det nye datasæt, så sensitiviteten er <span class="math inline">\(1/4=0.25\)</span>. Tilsvarende får vi fejlklassificeret <span class="math inline">\(4\)</span> ud af <span class="math inline">\(17\)</span> blå i det nye data, så specificiteten er <span class="math inline">\(13/17 = 0.765\)</span>. Da vi brugte det oprindelige data fik vi sensitiviteten <span class="math inline">\(0.667\)</span> og specificiteten <span class="math inline">\(0.824\)</span>. Både sensitivitet og specificitet er altså markant lavere for det nye data. Det sker, fordi <span class="math inline">\(t\)</span> er valgt til at give høj sensitivitet og specificitet på lige præcis det oprindelige data. Det garanterer imidlertid ikke, at det passer lige så godt til nye data. Vi siger, at algoritmen er <em>overfittet</em> til det oprindelige data. Sensitivitet og specificitet giver altså ikke et retvisende mål for, hvor godt algoritmen prædikterer på nye data. Du kan læse mere om <a href="../../noter/krydsvalidering/krydsvalidering.html">overfitting her</a>.</p>
+</section>
+</section>
+<section id="ekstra-positiv-og-negativ-prædiktiv-værdi" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="ekstra-positiv-og-negativ-prædiktiv-værdi">Ekstra: Positiv og negativ prædiktiv værdi</h2>
+<p>Sensitivitet og specificitet bruges til at afgøre, hvor god en prædiktionsalgoritme er til at ramme rigtigt inden for hver klasse. Hvis vi for eksempel er ude på at prædiktere sygdom, så måler sensitiviteten sandsynligheden for, at en syg erklæres syg, og specificiteten måler sandsynligheden for, at en rask erklæres rask. En patient vil dog ofte være mere interesseret i det omvendte spørgsmål: “Jeg har fået en positiv test. Hvad er sandsynligheden for, at jeg faktisk er syg?” Det kan lyde som næsten det samme, men det er faktisk et helt andet spørgsmål.</p>
+<p>Lad os igen kigge på eksemplet med den røde og den blå klasse. Sensitiviteten var sandsynligheden for, at en sand rød observation bliver prædikteret som rød. Her tager vi altså udgangspunkt i, at <em>den sande klasse er rød</em> og kigger på sandsynligheden for, at observationen bliver klassificeret korrekt. I stedet kunne man kigge på sandsynligheden for, at en rød prædiktion faktisk betyder, at den sande klasse er rød. Her tager vi udgangspunkt i, at <em>prædiktionen er rød</em> og beregner sandsynligheden for, at den sande klasse er rød. Dette kaldes <em>den positive prædiktive værdi</em>, som altså er givet ved <span class="math display">\[
+\textrm{positiv prædiktiv værdi} = P(\textrm{ en rød prædiktion er faktisk rød } ).
+\]</span> I praksis beregnes den positive prædiktive værdi ved formlen <span class="math display">\[
+\textrm{positiv prædiktiv værdi} = \frac{\textrm{antal røde prædiktioner som faktisk er røde}}{\textrm{antal røde prædiktioner}}.
+\]</span> Bemærk, at tælleren er den samme, som når vi beregner sensitivitet (<a href="#eq-sens_formel" class="quarto-xref">2</a>), mens nævneren er forskellig. Generelt vil sensitivitet og positiv prædiktiv værdi altså være forskellige tal.</p>
+<p>Lad os igen se på vores lille dataeksempel med tærsklen <span class="math inline">\(t=15\)</span>, der gav anledning til confusion matricen på <a href="#fig-t15" class="quarto-xref">figur&nbsp;4</a>. De røde prædiktioner findes i første række. Der er <span class="math inline">\(5\)</span> røde prædiktioner i alt, hvoraf <span class="math inline">\(2\)</span> faktisk er røde. Den positive prædiktive værdi kan udregnes til <span class="math display">\[
+\textrm{positiv prædiktiv værdi} = \frac{\textrm{ antal røde prædiktioner som faktisk er røde }}{\textrm{ antal røde prædiktioner }}\]</span> <span id="eq-ppv-eks"><span class="math display">\[= \frac{2}{5} = 0.4.
+\tag{4}\]</span></span> Det betyder altså, at hvis vi har en rød prædiktion, så er sandsynligheden for, at den sande klasse er rød kun <span class="math inline">\(0.4\)</span>. Det er tilfældet på trods af, at både sensitivitet og specificitet var høje. Kort fortalt er grunden, at den røde klasse er så sjælden, at det er usandsynligt, at den sande klasse er rød, uanset om prædiktionen er rød eller blå. En mere præcis forklaring kan du finde i boksen nederst på siden.</p>
+<p>Man kan selvfølgelig definere <em>den negative prædiktive værdi</em> tilsvarende. <span class="math display">\[
+\textrm{negativ prædiktiv værdi} = P(\textrm{ en blå prædiktion er faktisk blå } ).
+\]</span> Den negative prædiktive værdi kan beregnes ved <span class="math display">\[
+\textrm{negativ prædiktiv værdi} = \frac{\textrm{antal blå prædiktioner som faktisk er blå}}{\textrm{antal blå prædiktioner}}.
+\]</span></p>
+<p>Lad os igen se på vores lille dataeksempel med <span class="math inline">\(t=15\)</span> svarende til confusion matricen på <a href="#fig-t15" class="quarto-xref">figur&nbsp;4</a>. For at finde den negative prædiktive værdi, bruger vi formlen <span class="math display">\[
+\begin{aligned}
+\textrm{negativ prædiktiv værdi} &amp;= \frac{\textrm{ antal blå prædiktioner som faktisk er blå }}{\textrm{ antal blå prædiktioner}}\\
+&amp;= \frac{14}{15} = 0.933
+\end{aligned}
+\]</span> Får man en blå prædiktion, kan man altså være <span class="math inline">\(93.3\%\)</span> sikker på, at den er korrekt, mens man kun kunne være <span class="math inline">\(40\%\)</span> sikker på en rød prædiktion.</p>
+<p>Bemærk, at når vi beregner sensitivitet og specificitet, er det henholdsvis første og anden søjle i confusion matricen, vi bruger, mens det er henholdsvis første og anden række i confusion matricen, vi bruger til at beregne positiv og negativ prædiktiv værdi.</p>
+<p>En væsentlig forskel på sensitivitet/specificitet og positiv/negativ prædiktiv værdi er, at sensitivitet og specificitet er faste egenskaber ved prædiktionsalgoritmen. De kan beregnes ved at teste algoritmen på en gruppe blå og en gruppe røde observationer og se, hvor ofte vi rammer plet. Positiv og negativ prædiktiv værdi afhænger derimod af hyppigheden af klasserne<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Det betyder for eksempel, at hvis man forsøger at prædiktere sygdom under en epidemi, så ændrer sandsynligheden for sygdom sig hele tiden, og det gør den positive og negative prædiktive værdi derfor også.</p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;De matematiske detaljer er givet i boksen nedenfor.</p></div></div><div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Teori om sammenhængen mellem sensitivitet og positiv prædiktiv værdi
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Sensitiviteten var sandsynligheden for, at en sand rød blev klassificeret som rød. Udtrykt ved betingede sandsynligheder var det <span class="math display">\[
+\textrm{sensitivitet} = P(\textrm{ prædiktionen er rød }|\textrm{ den sande klasse er rød }).
+\]</span> Den positive prædiktive værdi kan tilsvarende udtrykkes ved hjælp af betingede sandsynligheder som <span class="math display">\[
+\textrm{positiv prædiktiv værdi} = P(\textrm{ den sande klasse er rød }|\textrm{ prædiktionen er rød }).
+\]</span> De to formler minder meget om hinanden. Der er bare byttet om på de to hændelser i den betingede sandsynlighed.</p>
+<p>Hvis <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> er to hændelser med <span class="math inline">\(P(A)&gt;0\)</span> og <span class="math inline">\(P(B)&gt;0\)</span>, så er <span class="math inline">\(P(A|B)\)</span> og <span class="math inline">\(P(B|A)\)</span> relateret via <em>Bayes’ formel</em> <span class="math display">\[P(A|B) = P(B|A)\cdot\frac{P(A)}{P(B)}\]</span> For at se, hvorfor det gælder, bruger vi først definitionen af <span class="math inline">\(P(A|B)\)</span> <span class="math display">\[P(A|B) = \frac{P(A\cap B)}{P(B)}\]</span> Vi forlænger brøken med <span class="math inline">\(P(A)\)</span> og bruger en brøkregneregel <span class="math display">\[P(A|B) = \frac{P(A\cap B)\cdot P(A)}{P(B)\cdot P(A)} =\frac{P(A\cap B)}{P(A)}\cdot \frac{P(A)}{P(B)}\]</span> Endelig bruger vi, at <span class="math inline">\(P(B|A)=\frac{P(A\cap B)}{P(A)}\)</span>. Det giver <span class="math display">\[P(A|B) = P(B|A)\cdot\frac{P(A)}{P(B)}.\]</span> Vi har hermed bevist Bayes’ formel.</p>
+<p>Lader vi <span class="math inline">\(A=\{\textrm{sand rød}\}\)</span> og <span class="math inline">\(B=\{\textrm{rød prædiktion}\}\)</span> i Bayes’ formel, får vi følgende sammenhæng mellem positiv prædiktiv værdi og sensitivitet <span class="math display">\[
+\textrm{positiv prædiktiv værdi} = P(\textrm{ sand rød }| \textrm{ rød prædiktion })\]</span> <span class="math display">\[= P( \textrm{ rød prædiktion }| \textrm{ sand rød })\cdot \frac{P(\textrm{ sand rød })}{P(\textrm{ rød prædiktion })}\]</span> <span id="eq-ppv"><span class="math display">\[= \textrm{sensitivitet}\cdot \frac{P(\textrm{ sand rød })}{P(\textrm{ rød prædiktion })}.
+\tag{5}\]</span></span> Formlen (<a href="#eq-ppv" class="quarto-xref">5</a>) viser, at hvis sandsynligheden for at tilhøre den røde klasse er meget lav i forhold til sandsynligheden for at lave en rød prædiktion, vil den positive prædiktive værdi være meget lavere end sensitiviteten.</p>
+<p>Lad os se lidt nærmere på nævneren i (<a href="#eq-ppv" class="quarto-xref">5</a>), det vil sige <span class="math inline">\(P(B)=P(\textrm{rød prædiktion})\)</span>. Husk på at <span class="math inline">\(A=\{\textrm{sand rød}\}\)</span>. <em>Komplementærhændelsen</em> til <span class="math inline">\(A\)</span> er hændelsen, at <span class="math inline">\(A\)</span> ikke indtræffer, og betegnes <span class="math inline">\(A^c\)</span>. I vores tilfælde er <span class="math inline">\(A^c=\{\textrm{ikke sand rød}\}=\{\textrm{sand blå}\}\)</span>. Hændelsen <span class="math inline">\(B\)</span>, at prædiktionen er rød, kan opnås ved, at prædiktionen er rød, og den underliggende klasse er rød, svarende til <span class="math inline">\(B \cap A\)</span>, eller ved at prædiktionen er rød, og den sande klasse er blå, svarende til <span class="math inline">\(B\cap A^c\)</span>. Vi kan derfor beregne sandsynligheden for <span class="math inline">\(B\)</span> som summen <span id="eq-lts"><span class="math display">\[P(B) = P(B\cap A) + P(B\cap A^c) \tag{6}\]</span></span> Vi bemærker nu, at definitionen af betinget sandsynlighed <span class="math display">\[P(B|A)=\frac{P(B\cap A)}{P(A)}\]</span> kan omskrives til <span class="math display">\[P(B|A)P(A) = P(B\cap A)\]</span> På samme vis fås <span class="math inline">\(P(B|A^c)P(A^c) = P(B \cap A^c)\)</span>. Dette kan vi indsætte i (<a href="#eq-lts" class="quarto-xref">6</a>) og få <span class="math display">\[P(B) = P(B\cap A) + P(B\cap A^c) = P(B | A)P(A) + P(B|A^c)P(A^c).\]</span> Denne formel kaldes <em>loven om den totale sandsynlighed</em>.</p>
+<p>Bruger vi loven om den totale sandsynlighed på formlen for positiv prædiktiv værdi (<a href="#eq-ppv" class="quarto-xref">5</a>), får vi <span class="math display">\[\textrm{positiv prædiktiv værdi} = \textrm{sensitivitet}\cdot \frac{P(\textrm{sand rød})}{P(\textrm{rød prædiktion})}\]</span> <span class="math display">\[
+\begin{aligned}
+= &amp;\textrm{sensitivitet}\cdot \\ &amp;\frac{P(\textrm{sand rød})}{P(\textrm{rød prædiktion} |\textrm{sand rød})P(\textrm{sand rød}) + P(\textrm{rød prædiktion}|\textrm{sand blå})P(\textrm{sand blå}) }
+\end{aligned}
+\]</span></p>
+<p><span id="eq-ppv-formel"><span class="math display">\[= \textrm{sensitivitet}\cdot \frac{P(\textrm{sand rød})}{\textrm{sensitivitet}\cdot P(\textrm{sand rød}) + (1-\textrm{specificitet})\cdot P(\textrm{sand blå}) }
+\tag{7}\]</span></span> Vi ser, at hvis specificiteten ikke er meget høj, og sandsynligheden for sand rød er lav (og dermed sandsynligheden for sand blå høj), så er tælleren i (<a href="#eq-ppv-formel" class="quarto-xref">7</a>) lille i forhold til nævneren. Den positive prædiktive værdi vil derfor være væsentligt lavere end sensitiviteten. Det var det, der skete i eksemplet (<a href="#eq-ppv-eks" class="quarto-xref">4</a>).</p>
+<p>Formlen (<a href="#eq-ppv-formel" class="quarto-xref">7</a>) viser desuden, at den positive prædiktive værdi afhænger af ikke bare sensitivitet og specificitet, men også af fordelingen mellem de to klasser (altså sandsynligheden for sand rød og sand blå). Hvis fordelingen ændrer sig, så den røde klasse for eksempel bliver mere sandsynlig, så ændrer den positive prædiktive værdi sig også. Dette er illustreret i figuren herunder. Her er det vist, hvordan den positive prædiktive værdi ændrer sig som en funktion af <span class="math inline">\(P(\textrm{ sand rød })\)</span> i et eksempel hvor sensitiviteten er <span class="math inline">\(0.9\)</span> og specificiteten er <span class="math inline">\(0.6\)</span>. Her ses det tydeligt, at jo større sandsynligheden for sand rød er, desto større bliver også den positive prædiktive værdi.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ROC_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="relaterede-forløb" class="level2">
+<h2 class="anchored" data-anchor-id="relaterede-forløb">Relaterede forløb</h2>
+<ul>
+<li><a href="../../undervisningsforlob/test_for_sygdomme.html" target="_blank">Test for sygdomme</a>.</li>
+</ul>
+
+
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/aimat\.dk");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p><img src="../../logo/SVG/Bomaerke_03_AIMAT_2024.svg" class="footer-logo"> aimat.dk er finansieret af Novo Nordisk Fonden</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+<script src="../../scripts/navbar-tooltips.js"></script>
+
+
+
+
+</body></html>

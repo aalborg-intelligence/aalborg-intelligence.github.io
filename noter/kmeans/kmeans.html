@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Clustering med K-means er en metode, som kan bruges til at opdele observationer i et antal grupper.">
+
+<title>Clustering med K-means – AI MAT - matematikken bag magien</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-cef6446724503988638a0362fd982987.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-Y219BCPS45"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+ 
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'analytics_storage': 'denied'
+  });
+gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="floating nav-fixed slimcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo light-content">
+    <img src="../../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../undervisningsforlob/index.html"> 
+<span class="menu-text">Undervisningsforløb</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../noter/index.html"> 
+<span class="menu-text">Noter</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../srp/index.html"> 
+<span class="menu-text">SRP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../apps/index.html"> 
+<span class="menu-text">Apps</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../til_laererne.html"> 
+<span class="menu-text">Til lærerne</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> <i class="bi bi-envelope" role="img" aria-label="Om os">
+</i> 
+<span class="menu-text">Om os</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@ai-mat" target="_blank"> <i class="bi bi-youtube" role="img" aria-label="YouTube">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indhold</h2>
+   
+  <ul>
+  <li><a href="#k-means" id="toc-k-means" class="nav-link active" data-scroll-target="#k-means">K-means</a></li>
+  <li><a href="#algoritme" id="toc-algoritme" class="nav-link" data-scroll-target="#algoritme">Algoritme</a></li>
+  <li><a href="#eksempel-på-beregning-af-midterpunkter" id="toc-eksempel-på-beregning-af-midterpunkter" class="nav-link" data-scroll-target="#eksempel-på-beregning-af-midterpunkter">Eksempel på beregning af midterpunkter</a></li>
+  <li><a href="#eksempel-på-algoritmen" id="toc-eksempel-på-algoritmen" class="nav-link" data-scroll-target="#eksempel-på-algoritmen">Eksempel på algoritmen</a></li>
+  <li><a href="#fornuftigt-valg-af-midterpunkter-og-grupper" id="toc-fornuftigt-valg-af-midterpunkter-og-grupper" class="nav-link" data-scroll-target="#fornuftigt-valg-af-midterpunkter-og-grupper">Fornuftigt valg af midterpunkter og grupper</a></li>
+  <li><a href="#sec-SUMPAR_SUMMIDT" id="toc-sec-SUMPAR_SUMMIDT" class="nav-link" data-scroll-target="#sec-SUMPAR_SUMMIDT">Sammenhængen mellem SUMPAR og SUMMIDT</a></li>
+  <li><a href="#opsummeringoptimal-løsning" id="toc-opsummeringoptimal-løsning" class="nav-link" data-scroll-target="#opsummeringoptimal-løsning">Opsummering/optimal løsning</a></li>
+  <li><a href="#k-means-ikke-blot-med-punkter" id="toc-k-means-ikke-blot-med-punkter" class="nav-link" data-scroll-target="#k-means-ikke-blot-med-punkter">K-means ikke blot med punkter</a></li>
+  <li><a href="#relaterede-forløb" id="toc-relaterede-forløb" class="nav-link" data-scroll-target="#relaterede-forløb">Relaterede forløb</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Clustering med K-means</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="k-means" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="k-means">K-means</h2>
+<p>Når <span class="math inline">\(K\)</span>-means metoden bruges, er målet at inddele nogle observationer i grupper, så observationerne i hver gruppe minder meget om hinanden.</p>
+<div id="fig-kmeansbil" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-kmeansbil-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/kmeansbil.jpg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-kmeansbil-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;1: Til venstre ses en række observationer, som ønskes inddelt i <span class="math inline">\(3\)</span> grupper. Til højre ses et bud på en sådan inddeling.
+</figcaption>
+</figure>
+</div>
+<p>På <a href="#fig-kmeansbil" class="quarto-xref">figur&nbsp;1</a> til venstre ses en række punkter, hvor vi ønsker at inddele punkterne i 3 grupper. Man kan nok godt få en idé om, hvordan grupperne kan laves alene ved at se på billedet til venstre. På <a href="#fig-kmeansbil" class="quarto-xref">figur&nbsp;1</a> til højre ses et bud på en løsning, som ser fornuftig ud, men ved nogle punkter tænker man nok alligevel lidt, om de nu skulle have været i den orange eller blå gruppe. Når vi arbejder med <span class="math inline">\(K\)</span>-means, så er idéen, at vi ikke på forhånd har nogle observationer, hvor vi <em>ved</em> hvilken gruppe, de tilhører. Med andre ord har vi altså ikke et træningsdatasæt at gå ud fra her. Derfor taler man også om <strong>unsupervised learning</strong>. Det eneste, vi ved om vores punkter i <a href="#fig-kmeansbil" class="quarto-xref">figur&nbsp;1</a>, er deres <span class="math inline">\(x\)</span>- og <span class="math inline">\(y\)</span>-koordinat og ud fra det, skal vi så prøve at danne nogle grupper. Antallet af grupper ved man faktisk heller ikke nødvendigvis noget om – så her er det et valg, at vi har besluttet at prøve at inddele data i 3 grupper. Det kunne i princippet lige så godt have været 2 eller 4 grupper eller noget helt andet!</p>
+<p>Observationerne vil vi her kalde for <span class="math inline">\(\vec{x_1}, \vec{x_2},....,\vec{x_n}\)</span>, så der i alt er <span class="math inline">\(n\)</span> observationer. Hver observation er et punkt med <span class="math inline">\(d\)</span> koordinater (som dog behandles, som var det vektorer/stedvektorer), og som udgangspunkt benyttes <a href="../../noter/afstande/AfstandeMellemPunkteriPlanen.html#sec-euklidisk_afstand">euklidisk afstand</a> til at bestemme afstand mellem punkter. I eksemplet i <a href="#fig-kmeansbil" class="quarto-xref">figur&nbsp;1</a> er <span class="math inline">\(d=2\)</span>, fordi alle punkter i planen har 2 koordinater.</p>
+<p>Givet et heltal <span class="math inline">\(k\)</span>, så ønsker vi at opdele de <span class="math inline">\(n\)</span> observationer <span class="math inline">\(\vec{x_1}, \vec{x_2},....,\vec{x_n}\)</span> i <span class="math inline">\(k\)</span> grupper, som vi kalder for <span class="math inline">\(S_1,S_2,....,S_k\)</span>. Antallet af observationer i gruppen<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> <span class="math inline">\(S_i\)</span> betegnes med <span class="math inline">\(|S_i|\)</span>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;En gruppe <span class="math inline">\(S_i\)</span> er egentlig en mængde, og <span class="math inline">\(|S_i|\)</span> er kardinaliteten af denne mængde – altså antallet af elementer i mængden.</p></div></div><p>Hele idéen i <span class="math inline">\(K\)</span>-means metoden er, at det skal være sådan, at observationerne i samme gruppe ligger tæt på hinanden. Det er også sådan, at vi har farvet punkterne til højre i <a href="#fig-kmeansbil" class="quarto-xref">figur&nbsp;1</a>.</p>
+<p>Hvis man skal oversætte det til matematik, så betyder det, at vi ønsker at minimere følgende sum (som vi kalder for <span class="math inline">\(SUMPAR\)</span>)</p>
+<p><span class="math display">\[SUMPAR=\sum_{i=1}^{k}\frac{1}{|S_i|}\sum_{\vec p\in S_i}\sum_{\vec q\in S_i}\|\vec p-\vec q\|^2\]</span> Det ser måske lidt voldsomt ud, men lad os prøve at nedbryde ovenstående lidt. Vi forestiller os, at vi har de <span class="math inline">\(k\)</span> grupper <span class="math inline">\(S_1, S_2, \dots , S_k\)</span>. Vi ser først på et punkt <span class="math inline">\(\vec p \in S_i\)</span>. Den kvadrerede afstand til et andet punkt <span class="math inline">\(\vec q\)</span> i samme gruppe er givet ved udtrykket</p>
+<p><span class="math display">\[
+\|\vec p- \vec q\|^2
+\]</span></p>
+<p>Det vil sige, den <a href="../../noter/afstande/AfstandeMellemPunkteriPlanen.html#sec-euklidisk_afstand">euklidiske afstand</a> mellem <span class="math inline">\(\vec p\)</span> og <span class="math inline">\(\vec q\)</span> opløftet i anden. Den <em>gennemsnitlige</em> kvadrerede afstand til alle punkter i samme gruppe <span class="math inline">\(S_i\)</span> vil derfor være</p>
+<p><span class="math display">\[\frac{1}{|S_i|} \sum_{\vec q \in S_i} \|\vec p- \vec q\|^2 \]</span></p>
+<p>Det er altså den gennemsnitlige kvadrerede afstand fra ét punkt <span class="math inline">\(\vec p\)</span> til alle andre punkter i samme gruppe – inklusiv punktet selv. Vi vil nu lægge alle disse gennemsnitlige kvadrerede afstande sammen for <em>alle</em> punkter i <span class="math inline">\(S_i\)</span>. Gør vi det, får vi:</p>
+<p><span class="math display">\[ \sum_{\vec p\in S_i}\frac{1}{|S_i|}\sum_{\vec q\in S_i}\|\vec p-\vec q\|^2 \]</span></p>
+<p>Da størrelsen <span class="math inline">\(\frac{1}{|S_i|}\)</span> indgår i alle led i den yderste sum, kan vi sætte <span class="math inline">\(\frac{1}{|S_i|}\)</span> uden for det yderste sumtegn<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Derfor kan vi omskrive ovenstående til</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Det svarer bare til at sætte uden for en parentes.</p></div></div><p><span class="math display">\[
+\frac{1}{|S_i|}\sum_{\vec p\in S_i}\sum_{\vec q\in S_i}\|\vec p-\vec q\|^2
+\]</span></p>
+<p>Det her vil vi gerne gøre for alle grupper, og derfor ender vi samlet set med</p>
+<p><span id="eq-SUMPAR"><span class="math display">\[
+SUMPAR=\sum_{i=1}^{k}\frac{1}{|S_i|}\sum_{\vec p\in S_i}\sum_{\vec q\in S_i}\|\vec p-\vec q\|^2
+\tag{1}\]</span></span></p>
+<p>Alt i alt får vi altså, at <span class="math inline">\(SUMPAR\)</span> giver summen af hvert punkts gennemsnitlige kvadrerede afstand til alle punkter i samme gruppe som sig selv (inklusiv sig selv).</p>
+<p>Idéen er så nu, at vi vil prøve at bestemme grupperne <span class="math inline">\(S_1, S_2, \dots, S_k\)</span> sådan, at denne sum bliver så lille som muligt. Det vil nemlig svare til, at de punkter, der ligger tæt på hinanden, kommer i samme gruppe, og punkter, som ligger langt væk fra hinanden, kommer i forskellige grupper.</p>
+<p>Det er desværre ikke lige til at finde den optimale løsning på dette problem, men her angives en metode/algoritme, som forhåbentlig finder en god løsning.</p>
+</section>
+<section id="algoritme" class="level2">
+<h2 class="anchored" data-anchor-id="algoritme">Algoritme</h2>
+<p>Vi vil nu se på en metode til at finde en god løsning til <span class="math inline">\(K\)</span>-means problemet. Vi får her brug for "midterpunktet" for hver gruppe, som vi vil kalde for <span class="math inline">\(\vec{\mu_1},\vec{\mu_2},...,\vec{\mu_k}\)</span>. Ved midterpunktet vil vi simpelthen bare forstå gennemsnittet af alle punkter i den pågældende gruppe.</p>
+<p>I algoritmen vil vi prøve at minimere følgende sum</p>
+<p><span id="eq-SUMMIDT"><span class="math display">\[
+SUMMIDT=\sum_{i=1}^{k}\sum_{\vec p\in S_i}\|\vec p-\vec{\mu_i}\|^2
+\tag{2}\]</span></span></p>
+<p>Her summeres altså den kvadrerede afstand fra hvert punkt til midterpunktet for gruppen, som punktet er i. Og det gør man så for alle grupper og lægger alle de kvadredede afstande sammen. Senere vil vi se på sammenhængen mellem summen <span class="math inline">\(SUMPAR\)</span> og summen <span class="math inline">\(SUMMIDT\)</span>.</p>
+<p>Spørgsmålet er nu, hvordan man kommer igang med at fastlægge grupper og midterpunkter, for vi kender ikke mængderne <span class="math inline">\(S_1,S_2,....,S_k\)</span> og dermed heller ikke midterpunkterne <span class="math inline">\(\vec{\mu_1},\vec{\mu_2},...,\vec{\mu_k}\)</span>.</p>
+<p>For at løse det problem vil vi bruge følgende fremgangsmåde/algoritme:</p>
+<ol type="1">
+<li><p>Start med at tage hver eneste observation og tilføj den til en tilfældig gruppe (der skal mindst være én observation i hver gruppe).</p></li>
+<li><p>Midterpunkterne bestemmes ved at lade</p></li>
+</ol>
+<p><span class="math display">\[
+\vec{\mu_i}=\frac{1}{|S_i|}\sum_{\vec p\in S_i}\vec p
+\]</span></p>
+<ol start="3" type="1">
+<li><p>For hver af de <span class="math inline">\(n\)</span> observationer findes det midterpunkt, der har den mindste afstand til punktet. Hvis det for en observation <span class="math inline">\(\vec{x_i}\)</span> er midterpunktet <span class="math inline">\(\vec{\mu_a}\)</span>, der er nærmest, skal <span class="math inline">\(\vec{x_i}\)</span> være i mængden <span class="math inline">\(S_a\)</span>.</p></li>
+<li><p>Gentag trin 2 og 3 indtil vi kommer til et tidspunkt, hvor ingen punkter kommer til at skifte til en anden gruppe.</p></li>
+</ol>
+<p>Det virker jo meget rimeligt. Så er spørgsmålet bare, om denne fremgangsmåde virkelig fungerer! Det vil vi se nærmere på i afsnittet om <a href="#sec-SUMPAR_SUMMIDT">sammenhængen mellem SUMPAR og SUMMIDT</a>. Men lad os starte med at se på et par eksempler.</p>
+</section>
+<section id="eksempel-på-beregning-af-midterpunkter" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="eksempel-på-beregning-af-midterpunkter">Eksempel på beregning af midterpunkter</h2>
+<p>Først kunne det måske være rart at få en fornemmelse af, hvorfor <span class="math inline">\(\vec{\mu_1},\vec{\mu_2},...,\vec{\mu_k}\)</span> betegnes som midterpunkter.</p>
+<div id="exm-midterpunkter" class="theorem example page-columns page-full">
+<p><span class="theorem-title"><strong>Eksempel 1</strong></span> Vi forestiller os, at vi har to grupper med følgende punkter:</p>
+<ul>
+<li><p>Gruppe 1 med punkterne <span class="math inline">\((3,9)\)</span> og <span class="math inline">\((7,11)\)</span>.</p></li>
+<li><p>Gruppe 2 med punkterne <span class="math inline">\((10,30)\)</span>, <span class="math inline">\((17,34)\)</span>, <span class="math inline">\((12,27)\)</span> og <span class="math inline">\((11,32)\)</span>.</p></li>
+</ul>
+<p>Som nævnt tidligere kan vi tænke på hvert punkt som stedvektoren til punktet.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> Vi kan nu finde midterpunktet for den første gruppe:</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Husk at et punkt og stedvektoren til punktet har samme koordinater.</p></div></div><p><span class="math display">\[\vec{\mu_1}=\frac{1}{|S_1|}\sum_{\vec p\in S_1}\vec p = \frac{\begin{pmatrix}
+3 \\ 9\end{pmatrix} + \begin{pmatrix}
+7 \\ 11\end{pmatrix}}{2}= \frac{\begin{pmatrix}
+10 \\ 20\end{pmatrix} }{2} = \begin{pmatrix}
+5 \\ 10\end{pmatrix}\]</span></p>
+<p>Midterpunktet for den første gruppe har altså koordinatsæt <span class="math inline">\((5,10)\)</span>.</p>
+<p>Midterpunktet for den anden gruppe bliver tilsvarende</p>
+<p><span class="math display">\[\vec{\mu_2}=\frac{1}{|S_2|}\sum_{\vec p\in S_2}\vec p = \frac{\begin{pmatrix}
+10 \\ 30\end{pmatrix} + \begin{pmatrix}
+17 \\ 34\end{pmatrix} + \begin{pmatrix}
+12 \\ 27\end{pmatrix} + \begin{pmatrix}
+11 \\ 32\end{pmatrix}}{4}= \frac{\begin{pmatrix}
+50 \\ 123 \end{pmatrix} }{4} = \begin{pmatrix}
+12.5 \\ 30.75 \end{pmatrix}\]</span></p>
+<p>Midterpunktet for den anden gruppe har så koordinatsæt <span class="math inline">\((12.5, 30.75)\)</span>.</p>
+<p>Dette er illustreret i <a href="#fig-midterpunkter" class="quarto-xref">figur&nbsp;2</a>.</p>
+<div id="fig-midterpunkter" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-midterpunkter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/eks_midterpunkter.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-midterpunkter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;2: To grupper af punkter (orange og blå) sammen med de tilhørende midterpunkter <span class="math inline">\(\vec{\mu_1}\)</span> og <span class="math inline">\(\vec{\mu_2}\)</span>.
+</figcaption>
+</figure>
+</div>
+<p>På <a href="#fig-midterpunkter" class="quarto-xref">figur&nbsp;2</a> bliver det tydeligt, hvorfor det er fornuftigt at vælge midterpunkterne, som det sker i trin 2 i algoritmen – midterpunkterne ligger simpelthen i "midten" af hver gruppe.</p>
+</div>
+</section>
+<section id="eksempel-på-algoritmen" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="eksempel-på-algoritmen">Eksempel på algoritmen</h2>
+<p>Lad os nu prøve at bruge algoritmen på punkterne fra <a href="#exm-midterpunkter" class="quarto-xref">eksempel&nbsp;1</a>. I <a href="#fig-punkter_to_grupper_1" class="quarto-xref">figur&nbsp;3</a> ses punkterne indtegnet, men uden angivelse af hvilken gruppe hvert enkelt punkt tilhører.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-punkter_to_grupper_1" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-punkter_to_grupper_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="kmeans_files/figure-html/fig-punkter_to_grupper_1-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-punkter_to_grupper_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;3: Illustration af punkter som ønskes inddelt i 2 grupper.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>I trin 1 skal vi tilføje hver observation i en tilfældig gruppe. Et sådant valg ses i <a href="#fig-punkter_to_grupper_2" class="quarto-xref">figur&nbsp;4</a>.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-punkter_to_grupper_2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-punkter_to_grupper_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="kmeans_files/figure-html/fig-punkter_to_grupper_2-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-punkter_to_grupper_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;4: Tilfældig inddeling af punkterne i 2 grupper.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Vi skal nu have beregnet midtpunkterne i hver af de to grupper. Gør man det fås:</p>
+<p><span class="math display">\[
+\vec{\mu_1} = \begin{pmatrix} 8.33 \\ 22.0 \end{pmatrix} \quad \textrm{og} \quad \vec{\mu_2} = \begin{pmatrix} 11.7 \\ 25.7 \end{pmatrix}
+\]</span> Disse to midtpunkter er indtegnet i <a href="#fig-punkter_to_grupper_3" class="quarto-xref">figur&nbsp;5</a> og markeret med et plus.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-punkter_to_grupper_3" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-punkter_to_grupper_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="kmeans_files/figure-html/fig-punkter_to_grupper_3-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-punkter_to_grupper_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;5: Tilfældig inddeling af punkterne i 2 grupper og med tilhørende midtpunkter, som her er markeret med et plus.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>I trin 3 skal vi have beregnet afstand fra hver af de 6 punkter til hver af de to midtpunkter. For eksempel bliver afstanden <span class="math inline">\(d\)</span> fra punktet <span class="math inline">\((3,9)\)</span> til punktet med stedvektor <span class="math inline">\(\vec{\mu_1}\)</span> være:</p>
+<p><span class="math display">\[
+d=\sqrt{(3-8.33)^2+(9-22.0)^2}=14.05
+\]</span> Resultatet af at beregne alle afstande på denne måde ses i <a href="#tbl-punkter_dist1" class="quarto-xref">tabel&nbsp;1</a>.</p>
+<div class="cell page-columns page-full">
+<div id="tbl-punkter_dist1" class="cell quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
+<div aria-describedby="tbl-punkter_dist1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell table table-sm table-striped small">
+<colgroup>
+<col style="width: 38%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Afstand til <span class="math inline">\(\vec{\mu_1}\)</span></th>
+<th style="text-align: center;">Afstand til <span class="math inline">\(\vec{\mu_2}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">14.05</td>
+<td style="text-align: center;">18.79</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">11.08</td>
+<td style="text-align: center;">15.39</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">8.172</td>
+<td style="text-align: center;">4.643</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">14.8</td>
+<td style="text-align: center;">9.894</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">6.2</td>
+<td style="text-align: center;">1.374</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">10.35</td>
+<td style="text-align: center;">6.368</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-tbl margin-caption" id="tbl-punkter_dist1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabel&nbsp;1: Afstanden fra de 6 datapunkter til hvert af midtpunkterne <span class="math inline">\(\vec{\mu_1}\)</span> og <span class="math inline">\(\vec{\mu_2}\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+<p>Vi skal nu afgøre hvilken gruppe, de enkelte punkter skal tilhøre, ved at se på hvilket midtpunkt som hvert enkelt punkt ligger tættest på. For eksempel kan vi i <a href="#tbl-punkter_dist1" class="quarto-xref">tabel&nbsp;1</a> se, at det første punkt <span class="math inline">\((3,9)\)</span> ligger tættest på <span class="math inline">\(\vec{\mu_1}\)</span>, og det punkt skal derfor (fortsat) hører til gruppe 1.</p>
+<p>I <a href="#tbl-punkter_dist2" class="quarto-xref">tabel&nbsp;2</a> ses den oprindelige gruppe samt den nye gruppe for hvert punkt.</p>
+<div class="cell page-columns page-full">
+<div id="tbl-punkter_dist2" class="cell quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
+<div aria-describedby="tbl-punkter_dist2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell table table-sm table-striped small">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Afstand til <span class="math inline">\(\vec{\mu_1}\)</span></th>
+<th style="text-align: center;">Afstand til <span class="math inline">\(\vec{\mu_2}\)</span></th>
+<th style="text-align: center;">Opr. gruppe</th>
+<th style="text-align: center;">Ny gruppe</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">14.05</td>
+<td style="text-align: center;">18.79</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">11.08</td>
+<td style="text-align: center;">15.39</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">8.172</td>
+<td style="text-align: center;">4.643</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">14.8</td>
+<td style="text-align: center;">9.894</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">6.2</td>
+<td style="text-align: center;">1.374</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">10.35</td>
+<td style="text-align: center;">6.368</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-tbl margin-caption" id="tbl-punkter_dist2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabel&nbsp;2: Afstanden fra de 6 datapunkter til hvert af midtpunkterne <span class="math inline">\(\vec{\mu_1}\)</span> og <span class="math inline">\(\vec{\mu_2}\)</span> samt en angivelse af, hvilken gruppe punktet oprindeligt tilhørte, og hvilken gruppe punktet tilhører efter trin 3.
+</figcaption>
+</figure>
+</div>
+</div>
+<p>I <a href="#fig-punkter_to_grupper_4" class="quarto-xref">figur&nbsp;6</a> ses punkterne indtegnet med en angivelse af den nye inddeling (men stadig med de først beregnede midterpunkter).</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-punkter_to_grupper_4" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-punkter_to_grupper_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="kmeans_files/figure-html/fig-punkter_to_grupper_4-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-punkter_to_grupper_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;6: Inddeling af punkterne i 2 grupper efter første gennemløb af algoritmen.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Vi skal nu i gang med det næste gennemløb af algoritmen, og vi bestemmer derfor først de nye midtpunkter. Gør man det fås:</p>
+<p><span class="math display">\[
+\vec{\mu_1} = \begin{pmatrix} 5.00 \\ 10.0 \end{pmatrix} \quad \textrm{og} \quad \vec{\mu_2} = \begin{pmatrix} 12.5 \\ 30.8 \end{pmatrix}
+\]</span></p>
+<p>De to nye midtpunkter ses indtegnet i <a href="#fig-punkter_to_grupper_5" class="quarto-xref">figur&nbsp;7</a> – igen markeret med et plus.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-punkter_to_grupper_5" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-punkter_to_grupper_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="kmeans_files/figure-html/fig-punkter_to_grupper_5-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-punkter_to_grupper_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;7: Inddeling af punkterne i 2 grupper efter første gennemløb af algoritmen og med de nye tilhørende midtpunkter indtegnet.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Vi kan nu igen udregne afstande fra alle punkter til de to nye midtpunkter og finde ud af om nogle af punkterne eventuelt skal skifte gruppe. Resultatet ses i <a href="#tbl-punkter_dist3" class="quarto-xref">tabel&nbsp;3</a></p>
+<div class="cell page-columns page-full">
+<div id="tbl-punkter_dist3" class="cell quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
+<div aria-describedby="tbl-punkter_dist3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell table table-sm table-striped small">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Afstand til <span class="math inline">\(\vec{\mu_1}\)</span></th>
+<th style="text-align: center;">Afstand til <span class="math inline">\(\vec{\mu_2}\)</span></th>
+<th style="text-align: center;">Opr. gruppe</th>
+<th style="text-align: center;">Ny gruppe</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">2.236</td>
+<td style="text-align: center;">23.73</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2.236</td>
+<td style="text-align: center;">20.5</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">20.62</td>
+<td style="text-align: center;">2.61</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">26.83</td>
+<td style="text-align: center;">5.551</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">18.38</td>
+<td style="text-align: center;">3.783</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">22.8</td>
+<td style="text-align: center;">1.953</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-tbl margin-caption" id="tbl-punkter_dist3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabel&nbsp;3: Afstanden fra de 6 datapunkter til hvert af de nye midtpunkterne <span class="math inline">\(\vec{\mu_1}\)</span> og <span class="math inline">\(\vec{\mu_2}\)</span> samt en angivelse af, hvilken gruppe punktet oprindeligt tilhørte, og hvilken gruppe punktet tilhører efter trin 3 (andet gennemløb af algoritmen).
+</figcaption>
+</figure>
+</div>
+</div>
+<p>Vi kan nu se, at ingen af punkterne har skiftet gruppe, og algoritmen stopper derfor. Den endelige inddeling i grupper bliver derfor som vist i <a href="#fig-punkter_to_grupper_5" class="quarto-xref">figur&nbsp;7</a>, hvilket nok også er den inddelingen, som vi ville have valgt bare ved at kigge på punkterne med det blotte øje.</p>
+</section>
+<section id="fornuftigt-valg-af-midterpunkter-og-grupper" class="level2">
+<h2 class="anchored" data-anchor-id="fornuftigt-valg-af-midterpunkter-og-grupper">Fornuftigt valg af midterpunkter og grupper</h2>
+<p>Vi vil nu argumentere for, hvorfor algoritmen virker. Vi starter med at se på, hvorfor det er fornuftigt at vælge midterpunkterne, som vi gør i trin 2 i algoritmen.</p>
+<p>Da vi med algoritmen ønsker, at summen i (<a href="#eq-SUMMIDT" class="quarto-xref">2</a>) kaldet <span class="math inline">\(SUMMIDT\)</span> skal minimeres, vil vi se, at valget af <span class="math inline">\(\vec{\mu_1},\vec{\mu_2},...,\vec{\mu_k}\)</span> netop minimerer denne sum, når vi tænker, at grupperne er fastlagt.</p>
+<p>Ved summen <span class="math inline">\(SUMMIDT\)</span> har <span class="math inline">\(\vec{\mu_i}\)</span> kun en effekt på delen hørende til gruppen <span class="math inline">\(S_i\)</span>, altså <span class="math display">\[\sum_{\vec p\in S_i}\|\vec p-\vec{\mu_i}\|^2\]</span></p>
+<p>For en vektor <span class="math inline">\(\vec v\)</span>, har vi følgende sammenhæng mellem længde og skalarprodukt/prikprodukt:</p>
+<p><span id="eq-skalar"><span class="math display">\[\|\vec v\|^2=\vec v\cdot \vec v \tag{3}\]</span></span></p>
+<p>Dette gør, at vi kan omskrive vores sum for gruppen <span class="math inline">\(S_i\)</span> til</p>
+<p><span class="math display">\[\sum_{\vec p\in S_i}{(\vec  p-\vec{\mu_i})\cdot (\vec p-\vec{\mu_i})}\]</span> Skalarproduktet udregnes ved at tage summen af produktet af tilsvarende koordinater for vektorerne. Hvis vi lader <span class="math inline">\(p_m\)</span> og <span class="math inline">\(\mu_{i,m}\)</span> betegne det <span class="math inline">\(m\)</span>’te koordinat af henholdsvis <span class="math inline">\(\vec p\)</span> og <span class="math inline">\(\vec{\mu_i}\)</span>, så kan ovenstående sum skrives som</p>
+<p><span class="math display">\[\sum_{\vec p\in S_{i}}\sum_{m=1}^{d}{(p_m-\mu_{i,m})\cdot (p_m-\mu_{i,m})} = \sum_{m=1}^{d} \sum_{\vec p\in S_{i}} {(p_m-\mu_{i,m})\cdot (p_m-\mu_{i,m})}\]</span> Her vil valget af <span class="math inline">\(\mu_{i,m}\)</span> kun have effekt på <span class="math display">\[\sum_{\vec  p\in S_{i}}{(p_m-\mu_{i,m})\cdot (p_m-\mu_{i,m})}\]</span> I denne sum har vi ikke længere vektorer, og vi kan derfor benytte anden kvadratsætning til at få</p>
+<p><span class="math display">\[\sum_{\vec p\in S_i}{(p_m^2-2\cdot p_m\cdot \mu_{i,m}+\mu_{i,m}^2)}\]</span> For at finde ud af hvordan <span class="math inline">\(\mu_{i,m}\)</span> skal vælges for at lave summen mindst mulig, differentieres ovenstående udtryk med hensyn til <span class="math inline">\(\mu_{i,m}\)</span> og udtrykket sættes lig med <span class="math inline">\(0\)</span>:</p>
+<p><span class="math display">\[\begin{align}
+\frac{\partial}{\partial \mu_{i,m}} \sum_{\vec p\in S_i}{(p_m^2-2\cdot p_m\cdot \mu_{i,m}+\mu_{i,m}^2)}
+&amp;= \sum_{\vec p\in S_i} \frac{\partial}{\partial \mu_{i,m}} {(p_m^2-2\cdot p_m\cdot \mu_{i,m}+\mu_{i,m}^2)}\\
+&amp;= \sum_{\vec p\in S_i}{(-2\cdot p_m+2\cdot \mu_{i,m})}=0
+\end{align}\]</span></p>
+<p>Den sidste ligning kan omskrives til <span class="math display">\[ \sum_{\vec p\in S_i}{2\cdot \mu_{i,m}} = \sum_{\vec p\in S_i}{2\cdot p_m}\]</span> Ved division med <span class="math inline">\(2\)</span> fås <span class="math display">\[ \sum_{\vec p\in S_i}{\mu_{i,m}} = \sum_{\vec p\in S_i}{p_m}\]</span></p>
+<p>Vi kan nu udnytte at hvert led i den første sum slet ikke afhænger af <span class="math inline">\(\vec p\)</span>, og da summen består af<span class="math inline">\(|S_i|\)</span> led fås <span class="math display">\[|S_i| \cdot  \mu_{i,m}= \sum_{\vec p\in S_i}{p_m}\]</span></p>
+<p>Altså er <span class="math display">\[\mu_{i,m}=\frac{1}{|S_i|} \sum_{\vec p\in S_i}p_m\]</span> Hvis dette valg tages for alle koordinater for <span class="math inline">\(\vec{\mu_i}\)</span> svarer det til <span class="math display">\[\vec{\mu_{i}}=\frac{1}{|S_i|} \sum_{\vec p\in S_i} \vec p\]</span> som netop er den måde <span class="math inline">\(\vec{\mu_i}\)</span> vælges på ved trin <span class="math inline">\(2\)</span> i algoritmen.</p>
+<p>Her glemte vi at argumentere for, at valget af <span class="math inline">\(\mu_{i,m}\)</span> rent faktisk gav et lokalt minimum, men lidt løst kan man sige, at hvis <span class="math inline">\(\mu_{i,m}\)</span> enten vælges alt for lille eller stor, vil afstanden og dermed også den kvadrerede afstand til punkterne i gruppen <span class="math inline">\(S_i\)</span> blive store. Det kan selvfølgelig også bevises helt formelt.</p>
+<p>Lad os nu se på valget af grupper ved trin <span class="math inline">\(3\)</span> i algoritmen. For en punkt <span class="math inline">\(\vec p\)</span> vælges den gruppe <span class="math inline">\(S_i\)</span>, hvor midtpunktet <span class="math inline">\(\vec{\mu_i}\)</span> er tættest på <span class="math inline">\(\vec p\)</span>. Derved er det oplagt, at denne proces minimerer summen <span class="math inline">\(SUMMIDT\)</span> i (<a href="#eq-SUMMIDT" class="quarto-xref">2</a>), når vi har fastholdt midterpunkterne <span class="math inline">\(\vec{\mu_1},\vec{\mu_2},...,\vec{\mu_k}\)</span>.</p>
+<p>Når et punkt skifter gruppe vil <span class="math inline">\(SUMMIDT\)</span> ikke længere være optimal i forhold til <span class="math inline">\(\vec{\mu_1},\vec{\mu_2},...,\vec{\mu_k}\)</span> før de bliver opdateret igen. I algoritmen bliver disse to trin netop gentaget, indtil ingen punkter skifter gruppe, hvorved <span class="math inline">\(SUMMIDT\)</span> har ramt et lokalt minimum i forhold til valg af gruppe for det enkelt punkt og valg af midterpunkt for hver gruppe.</p>
+</section>
+<section id="sec-SUMPAR_SUMMIDT" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="sec-SUMPAR_SUMMIDT">Sammenhængen mellem SUMPAR og SUMMIDT</h2>
+<p>Nu vil vi endelig se på sammenhængen mellem de to summer <span class="math inline">\(SUMMIDT\)</span> i (<a href="#eq-SUMMIDT" class="quarto-xref">2</a>) og <span class="math inline">\(SUMPAR\)</span> i (<a href="#eq-SUMPAR" class="quarto-xref">1</a>). Vi vil vise, at <span class="math display">\[SUMPAR=2\cdot SUMMIDT\]</span> når midterpunkterne er valgt på denne måde</p>
+<p><span id="eq-midtpunkt"><span class="math display">\[
+\vec{\mu_{i}}=\frac{1}{|S_i|} \sum_{\vec p\in S_i}\vec p \quad \quad \textrm{og derved} \quad \quad |S_i|\cdot \vec{\mu_{i}}=\sum_{\vec p\in S_i} \vec p
+\tag{4}\]</span></span></p>
+<p>Det betyder, at hvis vi minimerer summen <span class="math inline">\(SUMMIDT\)</span>, så har vi også minimeret summen <span class="math inline">\(SUMPAR\)</span>, som var det vi oprindeligt ønskede.</p>
+<p>Vi starter med at se på summen <span class="math inline">\(SUMPAR\)</span> i (<a href="#eq-SUMPAR" class="quarto-xref">1</a>) dog kun for en af grupperne <span class="math inline">\(S_a\)</span> og uden faktoren <span class="math inline">\(\frac{1}{|S_i|}\)</span>. Altså ser vi på summen <span id="eq-del_SUMPAR"><span class="math display">\[
+\sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\|\vec p-\vec q\|^2
+\tag{5}\]</span></span></p>
+<p>Ved at bruge sammenhængen mellem længde af vektor og skalarprodukt får vi</p>
+<p><span class="math display">\[
+\sum_{\vec p\in S_a}\sum_{\vec q\in S_a}(\vec p-\vec q)\cdot(\vec p-\vec q)
+\]</span></p>
+<p>Her bruger vi nu, hvad der svarer til anden kvadratsætning for vektorer og vi omskriver tilbage til længder ved at bruge (<a href="#eq-skalar" class="quarto-xref">3</a>)</p>
+<p><span class="math display">\[
+\sum_{\vec p\in S_a}\sum_{\vec q\in S_a}(\|\vec p\|^2+\|\vec q\|^2-2\cdot \vec p\cdot \vec q)
+\]</span></p>
+<p>Denne dobbeltsum opdeles nu i tre dobbeltsummer og <span class="math inline">\(-2\)</span> kan trækkes ud af den ene</p>
+<p><span class="math display">\[
+\sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\|\vec p\|^2+\sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\|\vec q\|^2-2\cdot \sum_{\vec p\in S_a}\sum_{\vec q\in S_a} \vec p\cdot \vec q
+\]</span></p>
+<p>De to første dobbeltsummer er faktisk ens og derfor får vi</p>
+<p><span id="eq-vilde_summer"><span class="math display">\[
+2\cdot \sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\|\vec p\|^2-2\cdot \sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\vec p\cdot \vec q
+\tag{6}\]</span></span></p>
+<p>For at komme videre med ovenstående vælger vi at se på dobbeltsummen</p>
+<p><span class="math display">\[
+\sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\vec p\cdot \vec q
+\]</span> Den inderste sum afhænger ikke af <span class="math inline">\(\vec p\)</span> og derfor kan <span class="math inline">\(\vec p\)</span> sættes uden for sumtegnet<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>:</p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Husk på at den distributive regel også gælder for vektorer: <span class="math inline">\(\vec a \cdot \vec b + \vec a \cdot \vec c = \vec a \cdot \left (\vec b + \vec c \right)\)</span></p></div></div><p><span class="math display">\[
+\sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\vec p\cdot \vec q = \sum_{\vec p\in S_a}\vec p\cdot \left (\sum_{\vec q\in S_a} \vec q \right )
+\]</span></p>
+<p>Fra valget af <span class="math inline">\(\vec{\mu_a}\)</span> ved vi fra (<a href="#eq-midtpunkt" class="quarto-xref">4</a>), at <span class="math inline">\(|S_a|\cdot \vec{\mu_{a}}=\sum_{\vec q \in S_a} \vec q\)</span>. Bruger vi det får vi</p>
+<p><span class="math display">\[
+\sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\vec p\cdot \vec q = \sum_{\vec p\in S_a}\vec p\cdot |S_a|\cdot \vec{\mu_{a}}
+\]</span> Sætter vi <span class="math inline">\(|S_a|\cdot \vec{\mu_{a}}\)</span> uden for summmen<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> og udnytter ovenstående én gang til, får vi:</p>
+<div class="no-row-height column-margin column-container"><div id="fn5"><p><sup>5</sup>&nbsp;Bemærk, at vi igen her benytter den distributive regel for vektorer.</p></div></div><p><span class="math display">\[\begin{align}
+\sum_{\vec p\in S_a}\sum_{\vec q\in S_a} \vec p\cdot \vec q &amp;= |S_a|\cdot \vec{\mu_{a}} \cdot \left ( \sum_{\vec p\in S_a}\vec p \right ) \\
+&amp;= \left ( |S_a|\cdot \vec{\mu_{a}} \right ) \cdot \left ( |S_a|\cdot \vec{\mu_{a}} \right )
+\end{align}\]</span></p>
+<p>Vi har nu et prikprodukt mellem to vektorer, som hver især er ganget med en skalar (her <span class="math inline">\(|S_a|\)</span>). Bruger vi den kommutative lov<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> for at gange med en skalar, får vi</p>
+<div class="no-row-height column-margin column-container"><div id="fn6"><p><sup>6</sup>&nbsp;Den kommutative lov siger, at <span class="math inline">\(k \cdot (\vec a \cdot \vec b) =  (k \cdot\vec a) \cdot (\vec b) =  (\vec a ) \cdot (k \cdot\vec b)\)</span></p></div></div><p><span class="math display">\[
+\sum_{\vec p\in S_a}\sum_{\vec q\in S_a} \vec p\cdot \vec q = |S_a|^2 \cdot \| \vec{\mu_{a}} \|^2
+\]</span></p>
+<p>Det må derfor betyde, at <span class="math display">\[
+|S_a|^2\cdot \|\vec{\mu_a}\|^2-\sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\vec p\cdot \vec q=0 \quad \Leftrightarrow  \quad
+2 \cdot |S_a|^2\cdot \|\vec{\mu_a}\|^2-2\cdot\sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\vec p\cdot \vec q=0
+\]</span></p>
+<p>Da dette giver <span class="math inline">\(0\)</span>, kan det tilføjes til udtrykket i (<a href="#eq-vilde_summer" class="quarto-xref">6</a>):</p>
+<p><span class="math display">\[\begin{align}
+2\cdot \sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\|\vec p\|^2&amp;-2\cdot \sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\vec p\cdot \vec q = \\
+2\cdot \sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\|\vec p\|^2-2\cdot \sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\vec p\cdot \vec q &amp;+
+2 \cdot |S_a|^2\cdot \|\vec{\mu_a}\|^2-2\cdot\sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\vec p\cdot \vec q = \\
+2\cdot \sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\|\vec p\|^2 +
+2 \cdot |S_a|^2 &amp;\cdot \|\vec{\mu_a}\|^2-4\cdot\sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\vec p\cdot \vec q
+\end{align}\]</span></p>
+<p>I den sidste dobbeltsum kan <span class="math inline">\(\vec p\)</span> igen tages ud af den inderste sum og vi kan igen udnytte at <span class="math inline">\(|S_a|\cdot \vec{\mu_{a}}=\sum_{\vec q \in S_a} \vec q\)</span>. Derved får vi</p>
+<p><span class="math display">\[
+2\cdot \sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\|\vec p\|^2 +
+2 \cdot |S_a|^2\cdot \|\vec{\mu_a}\|^2-4\cdot\sum_{\vec p\in S_a}\vec p\cdot |S_a|\cdot \vec{\mu_{a}}
+\]</span></p>
+<p>Ved den første dobbeltsum ses det, at leddene ikke afhænger af <span class="math inline">\(\vec q\)</span> og derfor er <span class="math inline">\(\sum_{\vec q\in S_a}\|\vec p\|^2 = |S_a| \cdot \|\vec p\|^2\)</span> (fordi der er <span class="math inline">\(|S_a|\)</span> led i summen). Det vil sige, at vi kan omskrive til</p>
+<p><span class="math display">\[
+2\cdot \sum_{\vec p\in S_a}|S_a| \cdot \|\vec p\|^2 +
+2 \cdot |S_a|^2\cdot \|\vec{\mu_a}\|^2-4\cdot\sum_{\vec p\in S_a}\vec p\cdot |S_a|\cdot \vec{\mu_{a}}
+\]</span></p>
+<p>Vi kan nu se, at <span class="math inline">\(2 \cdot |S_a|\)</span> indgår i alle led og vi kan derfor skrive:</p>
+<p><span class="math display">\[
+2\cdot |S_a| \cdot \left ( \sum_{\vec p\in S_a} \|\vec p\|^2  +
+|S_a|\cdot \|\vec{\mu_a}\|^2-2\cdot\sum_{\vec p\in S_a}\vec p\cdot \vec{\mu_{a}} \right )
+\]</span></p>
+<p>Her kan <span class="math inline">\(|S_a|\cdot \|\mu_a\|^2\)</span> laves om til en sum, hvor alle led er <span class="math inline">\(\|\mu_a\|^2\)</span>. Det vil sige</p>
+<p><span class="math display">\[
+2\cdot |S_a| \cdot \left ( \sum_{\vec p\in S_a} \|\vec p\|^2  +
+\sum_{\vec p\in S_a} \|\vec{\mu_a}\|^2-2\cdot\sum_{\vec p\in S_a}\vec p\cdot \vec{\mu_{a}} \right )
+\]</span></p>
+<p>Hele udtrykket kan nu samles i én sum:</p>
+<p><span class="math display">\[
+2\cdot |S_a| \sum_{\vec p\in S_a} \left (  \|\vec p\|^2  +
+\|\vec{\mu_a}\|^2-2\cdot\vec p\cdot \vec{\mu_{a}} \right )
+\]</span> Ved brug af anden kvadratsætning for vektorer kan dette omskrives til</p>
+<p><span class="math display">\[
+2\cdot |S_a| \sum_{\vec p\in S_a}   (\vec p - \vec{\mu_a}) \cdot (\vec p - \vec{\mu_a}) = 2\cdot |S_a| \sum_{\vec p\in S_a} \| \vec p - \vec{\mu_a} \|^2
+\]</span> Nu kan man jo godt have glemt, hvad det overhovedet var, vi var igang med at regne på! Men vi minder om, at det var udtrykket i (<a href="#eq-del_SUMPAR" class="quarto-xref">5</a>). Det vil sige, at vi er kommet frem til, at</p>
+<p><span class="math display">\[
+\sum_{\vec p\in S_a}\sum_{\vec q\in S_a}\|\vec p-\vec q\|^2 = 2\cdot |S_a| \sum_{\vec p\in S_a} \| \vec p - \vec{\mu_a} \|^2
+\]</span> Eller skrevet på en anden måde:</p>
+<p><span class="math display">\[
+\frac{1}{|S_i|}\sum_{\vec p\in S_i}\sum_{\vec q\in S_i}\|\vec p-\vec q\|^2 = 2 \sum_{\vec p\in S_i} \| \vec p - \vec{\mu_i} \|^2
+\]</span> Summerer vi over alle <span class="math inline">\(k\)</span> grupper får vi: <span class="math display">\[
+\sum_{i=1}^k \frac{1}{|S_i|}\sum_{\vec p\in S_i}\sum_{\vec q\in S_i}\|\vec p-\vec q\|^2 = 2 \sum_{i=1}^k \sum_{\vec p\in S_i} \| \vec p - \vec{\mu_i} \|^2
+\]</span> Sammenligner vi med (<a href="#eq-SUMPAR" class="quarto-xref">1</a>) og (<a href="#eq-SUMMIDT" class="quarto-xref">2</a>) har vi netop vist, at</p>
+<p><span class="math display">\[
+SUMPAR = 2 \cdot SUMMIDT
+\]</span></p>
+<p>Det vil altså sige, at hvis vi minimerer summen <span class="math inline">\(SUMMIDT\)</span>, så har vi også minimeret summen <span class="math inline">\(SUMPAR\)</span>, hvilket præcis var, hvad vi oprindeligt ønskede.</p>
+</section>
+<section id="opsummeringoptimal-løsning" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="opsummeringoptimal-løsning">Opsummering/optimal løsning</h2>
+<p>Nu har vi set på selve algoritmen og fundet ud af, at den finder et lokalt minimum for summen <span class="math inline">\(SUMPAR\)</span>, som man ønsker minimeret. Der er dog ingen garanti for, at man opnår et globalt minimum, eller hvor lang tid algoritmen er om at finde en løsning.</p>
+<p>Det er egentlig heller ikke noget problem at få lavet en algoritme, der finder en optimal løsning, problemet er blot, at den vil køre alt for langsomt. En sådan optimal algoritme kan laves ved blot at undersøge hver mulig inddeling i grupper og så finde den inddeling, der giver den mindste værdi af <span class="math inline">\(SUMPAR\)</span>. Dog vil det være sådan, at selv ved blot <span class="math inline">\(2\)</span> grupper og <span class="math inline">\(100\)</span> punkter vil der være <span class="math inline">\(2^{99}\)</span> muligheder<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>, der skal tjekkes. At undersøge så mange muligheder er ikke praktisk muligt – selv ikke på en computer!</p>
+<div class="no-row-height column-margin column-container"><div id="fn7"><p><sup>7</sup>&nbsp;Fordi for hvert punkt kan punktet enten være i den ene eller den anden gruppe. Det giver i første omgang <span class="math inline">\(2^{100}\)</span> grupper. Nu vil en inddeling hvor for eksempel punktet <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> er i gruppe <span class="math inline">\(1\)</span>, mens <span class="math inline">\(C\)</span> er i gruppe <span class="math inline">\(2\)</span> være den samme inddeling, som hvis <span class="math inline">\(C\)</span> er i gruppe <span class="math inline">\(1\)</span> og <span class="math inline">\(A\)</span> og <span class="math inline">\(B\)</span> er i gruppe <span class="math inline">\(2\)</span>. På grund af denne symmetri ender vi derfor samlet set med <span class="math inline">\(2^{100}/2=2^{99}\)</span> grupper.</p></div></div></section>
+<section id="k-means-ikke-blot-med-punkter" class="level2">
+<h2 class="anchored" data-anchor-id="k-means-ikke-blot-med-punkter">K-means ikke blot med punkter</h2>
+<p>Indtil videre har vi udelukkende set på data som værende punkter, hvor vi kan anvende euklidisk afstand for at måle afstanden mellem punkterne. Det kunne dog være langt mere interessant f.eks. at arbejde med mennesker og information om dem (f.eks. alder, køn, forbrug og så videre) og stadigvæk med et ønske om at inddele disse mennesker i et bestemt antal grupper, hvor der er stor ligmed mellem dem indenfor samme gruppe. Her skal man selvfølgelig have tænkt lidt over, hvordan man kommer fra mennesker til punkter og efterfølgende får noget, der svarer til euklidisk afstand. Det kan man læse meget mere om under <a href="../../noter/afstande/feature_scaling.html">feature-skalering</a>.</p>
+</section>
+<section id="relaterede-forløb" class="level2">
+<h2 class="anchored" data-anchor-id="relaterede-forløb">Relaterede forløb</h2>
+<ul>
+<li><a href="../../undervisningsforlob/musik.html" target="_blank">Inddeling af musik i grupper</a>.</li>
+</ul>
+
+
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/aimat\.dk");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p><img src="../../logo/SVG/Bomaerke_03_AIMAT_2024.svg" class="footer-logo"> aimat.dk er finansieret af Novo Nordisk Fonden</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+<script src="../../scripts/navbar-tooltips.js"></script>
+
+
+
+
+</body></html>
