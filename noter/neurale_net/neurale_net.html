@@ -429,7 +429,7 @@ Figur&nbsp;5: Eksempel på grafen for en tabsfunktion, som kun afhænger af to v
 <p>Idéen er altså, at vi vælger en værdi for hver af de <span class="math inline">\(19\)</span> vægte. Lad os bare som eksempel så på vægten <span class="math inline">\(s_1\)</span>. Så beregner vi den partielle afledede <span class="math display">\[
 \frac{\partial E}{\partial s_1}
 \]</span> og så ændrer vi værdien af <span class="math inline">\(s_1\)</span> en lille smule i retning af den negative partielle afledede. Vi viser, at vi ændrer værdien af <span class="math inline">\(s_1\)</span> til en ny værdi, ved at bruge en pil: <span id="eq-opdatering_s1"><span class="math display">\[
-s_1^{\textrm{ny}} \leftarrow s_1 - \eta  \frac{\partial E}{\partial s_1}
+s_1^{\textrm{(ny)}} \leftarrow s_1 - \eta  \frac{\partial E}{\partial s_1}
 \tag{13}\]</span></span> Lad os lige bruge lidt tid på at forstå, hvad der står her! Venstresiden er den nye værdi af vægten <span class="math inline">\(s_1\)</span>. Denne værdi beregnes ved hjælp af udtrykket på højresiden. Her angiver <span class="math inline">\(s_1\)</span> den gamle/oprindelige værdi af <span class="math inline">\(s_1\)</span>. Symbolet <span class="math inline">\(\eta\)</span> (udtales "eta") er her et lille, positivt tal (for eksempel <span class="math inline">\(0.05\)</span>) som angiver, at vi bare gerne vil ændre <span class="math inline">\(s_1\)</span> en lille smule<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Derfor må <span class="math inline">\(\eta\)</span> ikke være al for stor. Man kalder også <span class="math inline">\(\eta\)</span> for læringsraten eller på engelsk: <em>learning rate</em>. Endelig viser <span class="math inline">\(-\frac{\partial E}{\partial s_1}\)</span>, at vi ønsker, at ændre alle vægte i retning af den negative gradient. Det vil nu sige, at alle <span class="math inline">\(19\)</span> vægte opdateres vha. formler, som den i (<a href="#eq-opdatering_s1" class="quarto-xref">13</a>). Altså skal vi nu bare have fundet et udtryk for alle de <span class="math inline">\(19\)</span> partielle afledede, og vi er i mål! Dette er netop, hvad <strong>backpropagation algoritmen</strong> gør, som vi gennemgår i det følgende.</p>
 <div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Hvis vi ændrer <span class="math inline">\(s_1\)</span> for hurtigt (svarende til at <span class="math inline">\(\eta\)</span> er for stor), så kan vi risikere at "træde forbi" det søgte minimum. Omvendt, hvis vi ændrer <span class="math inline">\(s_1\)</span> for langsomt (svarende til at <span class="math inline">\(\eta\)</span> er for lille), så kommer det til at tage alt for lang tid at bestemme minimum. Man er derfor typisk nødt til at prøve sig lidt frem for at finde en passende værdi af <span class="math inline">\(\eta\)</span>.</p></div></div><section id="video-kunstige-neurale-netværk-3" class="level3">
 <h3 class="anchored" data-anchor-id="video-kunstige-neurale-netværk-3">VIDEO: Kunstige neurale netværk 3</h3>
@@ -457,16 +457,16 @@ s_1^{\textrm{ny}} \leftarrow s_1 - \eta  \frac{\partial E}{\partial s_1}
 \frac{\partial E}{\partial w_1} = \frac{d E}{d o} \cdot \frac{\partial o}{\partial w_1}
 = -(t-o) \cdot o \cdot (1-o) \cdot z_1
 \tag{15}\]</span></span> Vi kan nu udlede den første opdateringsregel for vægten <span class="math inline">\(w_1\)</span> ved at bruge idéen fra (<a href="#eq-opdatering_s1" class="quarto-xref">13</a>): <span class="math display">\[
-w_1^{\textrm{ny}} \leftarrow w_1 - \eta  \cdot \frac{\partial E}{\partial w_1}
+w_1^{\textrm{(ny)}} \leftarrow w_1 - \eta  \cdot \frac{\partial E}{\partial w_1}
 \]</span> Indsættes udtrykket fra (<a href="#eq-dEdw_1" class="quarto-xref">15</a>), får vi <span class="math display">\[
-w_1^{\textrm{ny}} \leftarrow w_1 - \eta  \cdot (-(t-o) \cdot o \cdot (1-o) \cdot z_1)
+w_1^{\textrm{(ny)}} \leftarrow w_1 - \eta  \cdot (-(t-o) \cdot o \cdot (1-o) \cdot z_1)
 \]</span> Det vil sige, at <span class="math display">\[
-w_1^{\textrm{ny}} \leftarrow w_1 + \eta  \cdot (t-o) \cdot o \cdot (1-o) \cdot z_1
+w_1^{\textrm{(ny)}} \leftarrow w_1 + \eta  \cdot (t-o) \cdot o \cdot (1-o) \cdot z_1
 \]</span> Det er værd at dvæle lidt ved opdateringsleddet <span class="math inline">\(\eta  \cdot (t-o) \cdot o \cdot (1-o) \cdot z_1\)</span> på højresiden, fordi det faktisk giver intuitiv god mening. For det første er <span class="math inline">\(\eta\)</span>, det vi som sagt kalder for vores <em>learning rate</em> - et lille positivt tal, som sørger for, at vi ikke tager for store skridt på vores vej ned i dalen (til det lokale minimum). Faktoren <span class="math inline">\(t-o\)</span> er jo netop fejlen. Nemlig forskellen mellem det vi ønsker <span class="math inline">\(t\)</span> (target), og det som netværket giver <span class="math inline">\(o\)</span> (output). Jo større fejl/forskel, desto mere må vi justere vægten. Ser vi på faktoren <span class="math inline">\(o\cdot(1-o)\)</span>, så vil det være sådan, at hvis outputværdien <span class="math inline">\(o\)</span> er tæt på enten <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span> (man siger at neuronen er "mættet"), så vil <span class="math inline">\(o\cdot(1-o)\)</span> være tæt på <span class="math inline">\(0\)</span>. Det vil sige, at hvis outputværdien er tæt på <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span>, så ændrer vi heller ikke så meget på vægten. Endelig er der faktoren <span class="math inline">\(z_1\)</span>, som er inputtet fra det foregående lag (se <a href="#fig-simple_NN_weights" class="quarto-xref">figur&nbsp;3</a>). Hvis værdien af denne er (numerisk) stor, så får det også stor betydning for opdateringsleddet (eller tænk på det omvendt: hvis <span class="math inline">\(z_1\)</span> er tæt på <span class="math inline">\(0\)</span>, så har <span class="math inline">\(z_1\)</span> alligevel ikke så stor indflydelse på outputværdien, og så giver det heller ikke mening at justere så meget på den tilhørende vægt <span class="math inline">\(w_1\)</span>).</p>
 <p>Det viser sig faktisk, at faktoren <span class="math inline">\((t-o) \cdot o \cdot (1-o)\)</span> kommer til at gå igen rigtige mange gange i det følgende. Det bliver i længden lidt tungt at slæbe rundt på. Derfor vælger vi at definere <span id="eq-delta"><span class="math display">\[
 \delta = (t-o) \cdot o \cdot (1-o)
 \tag{16}\]</span></span> og derfor kan opdateringsreglen for <span class="math inline">\(w_1\)</span> nu også skrives: <span id="eq-opdatering_w1"><span class="math display">\[
-w_1^{\textrm{ny}} \leftarrow w_1 + \eta  \cdot \delta \cdot z_1
+w_1^{\textrm{(ny)}} \leftarrow w_1 + \eta  \cdot \delta \cdot z_1
 \tag{17}\]</span></span></p>
 <p>Helt analogt med ovenstående kan man udlede opdateringsregler for <span class="math inline">\(w_2\)</span> og <span class="math inline">\(w_0\)</span>. Resultatet er samlet her.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
@@ -482,9 +482,9 @@ w_1^{\textrm{ny}} \leftarrow w_1 + \eta  \cdot \delta \cdot z_1
 <div id="callout-1" class="callout-1-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[\begin{align*}
-w_0^{\textrm{ny}} &amp;\leftarrow w_0 + \eta  \cdot \delta  \\
-w_1^{\textrm{ny}} &amp;\leftarrow w_1 + \eta  \cdot \delta \cdot z_1 \\
-w_2^{\textrm{ny}} &amp;\leftarrow w_2 + \eta  \cdot \delta \cdot z_2 \\
+w_0^{\textrm{(ny)}} &amp;\leftarrow w_0 + \eta  \cdot \delta  \\
+w_1^{\textrm{(ny)}} &amp;\leftarrow w_1 + \eta  \cdot \delta \cdot z_1 \\
+w_2^{\textrm{(ny)}} &amp;\leftarrow w_2 + \eta  \cdot \delta \cdot z_2 \\
 \end{align*}\]</span> hvor <span class="math display">\[\delta = (t-o) \cdot o \cdot (1-o)\]</span></p>
 </div>
 </div>
@@ -518,11 +518,11 @@ w_2^{\textrm{ny}} &amp;\leftarrow w_2 + \eta  \cdot \delta \cdot z_2 \\
 \]</span> og bruger vi definitionen af <span class="math inline">\(\delta\)</span> i (<a href="#eq-delta" class="quarto-xref">16</a>) får vi et lidt mere kompakt udtryk <span class="math display">\[
 \frac{\partial E}{\partial v_1} = -\delta \cdot w_1 \cdot z_1 \cdot (1-z_1) \cdot y_1
 \]</span> Opdateringsreglen for <span class="math inline">\(v_1\)</span> bliver derfor <span class="math display">\[
-v_1^{\textrm{ny}} \leftarrow v_1 - \eta \cdot \frac{\partial E}{\partial v_1}
+v_1^{\textrm{(ny)}} \leftarrow v_1 - \eta \cdot \frac{\partial E}{\partial v_1}
 \]</span> og med det netop udledte udtryk for <span class="math inline">\(\frac{\partial E}{\partial v_1}\)</span> får vi <span class="math display">\[
-v_1^{\textrm{ny}} \leftarrow v_1 - \eta \cdot (-\delta \cdot w_1 \cdot z_1 \cdot (1-z_1)\cdot y_1)
+v_1^{\textrm{(ny)}} \leftarrow v_1 - \eta \cdot (-\delta \cdot w_1 \cdot z_1 \cdot (1-z_1)\cdot y_1)
 \]</span> Det vil sige, at <span class="math display">\[
-v_1^{\textrm{ny}} \leftarrow v_1 + \eta \cdot \delta \cdot w_1 \cdot z_1 \cdot (1-z_1) \cdot y_1
+v_1^{\textrm{(ny)}} \leftarrow v_1 + \eta \cdot \delta \cdot w_1 \cdot z_1 \cdot (1-z_1) \cdot y_1
 \]</span> Læg igen mærke til, at når vi har været igennem et feedforward i netværket, så kender vi alle de størrelser, som indgår i ovenstående udtryk.</p>
 <p>På helt tilsvarende vis kan man bestemme opdateringsreglerne for <span class="math inline">\(v_0\)</span> og <span class="math inline">\(v_2\)</span>. De tre opdateringsregler for <span class="math inline">\(v\)</span>-vægtene ses her:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
@@ -538,9 +538,9 @@ v_1^{\textrm{ny}} \leftarrow v_1 + \eta \cdot \delta \cdot w_1 \cdot z_1 \cdot (
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[\begin{align}
-v_0^{\textrm{ny}} &amp;\leftarrow v_0 + \eta  \cdot \delta \cdot w_1 \cdot z_1 \cdot (1-z_1) \\
-v_1^{\textrm{ny}} &amp;\leftarrow v_1 + \eta  \cdot \delta \cdot w_1 \cdot z_1 \cdot (1-z_1) \cdot y_1 \\
-v_2^{\textrm{ny}} &amp;\leftarrow v_2 + \eta  \cdot \delta \cdot w_1 \cdot z_1 \cdot (1-z_1) \cdot y_2 \\
+v_0^{\textrm{(ny)}} &amp;\leftarrow v_0 + \eta  \cdot \delta \cdot w_1 \cdot z_1 \cdot (1-z_1) \\
+v_1^{\textrm{(ny)}} &amp;\leftarrow v_1 + \eta  \cdot \delta \cdot w_1 \cdot z_1 \cdot (1-z_1) \cdot y_1 \\
+v_2^{\textrm{(ny)}} &amp;\leftarrow v_2 + \eta  \cdot \delta \cdot w_1 \cdot z_1 \cdot (1-z_1) \cdot y_2 \\
 \end{align}\]</span> hvor <span class="math display">\[
 \delta = (t-o) \cdot o \cdot (1-o)
 \]</span></p>
@@ -563,9 +563,9 @@ v_2^{\textrm{ny}} &amp;\leftarrow v_2 + \eta  \cdot \delta \cdot w_1 \cdot z_1 \
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[\begin{align}
-u_0^{\textrm{ny}} &amp;\leftarrow u_0 + \eta  \cdot \delta \cdot w_2 \cdot z_2 \cdot (1-z_2) \\
-u_1^{\textrm{ny}} &amp;\leftarrow u_1 + \eta  \cdot \delta \cdot w_2 \cdot z_2 \cdot (1-z_2) \cdot y_1 \\
-u_2^{\textrm{ny}} &amp;\leftarrow u_2 + \eta  \cdot \delta \cdot w_2 \cdot z_2 \cdot (1-z_2) \cdot y_2 \\
+u_0^{\textrm{(ny)}} &amp;\leftarrow u_0 + \eta  \cdot \delta \cdot w_2 \cdot z_2 \cdot (1-z_2) \\
+u_1^{\textrm{(ny)}} &amp;\leftarrow u_1 + \eta  \cdot \delta \cdot w_2 \cdot z_2 \cdot (1-z_2) \cdot y_1 \\
+u_2^{\textrm{(ny)}} &amp;\leftarrow u_2 + \eta  \cdot \delta \cdot w_2 \cdot z_2 \cdot (1-z_2) \cdot y_2 \\
 \end{align}\]</span> hvor <span class="math display">\[
 \delta = (t-o) \cdot o \cdot (1-o)
 \]</span></p>
@@ -619,8 +619,8 @@ o(z_1(y_1), z_2(y_1))
 \end{align}\]</span> Og sætter vi <span class="math inline">\(o\cdot(1-o)\)</span> uden for parentesen og erstatter <span class="math inline">\((t-o)\cdot o\cdot (1-o)\)</span> med <span class="math inline">\(\delta\)</span> får vi <span class="math display">\[
 \frac{\partial E}{\partial r_1}
 =-\delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_1
-\]</span> Helt i tråd med tidligere får vi altså følgende opdateringsregel for <span class="math inline">\(r_1\)</span> <span class="math display">\[r_1^{\textrm{ny}} \leftarrow r_1 - \eta \cdot \frac{\partial E}{\partial r_1} \]</span> Det vil sige <span class="math display">\[
-r_1^{\textrm{ny}} \leftarrow r_1 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_1
+\]</span> Helt i tråd med tidligere får vi altså følgende opdateringsregel for <span class="math inline">\(r_1\)</span> <span class="math display">\[r_1^{\textrm{(ny)}} \leftarrow r_1 - \eta \cdot \frac{\partial E}{\partial r_1} \]</span> Det vil sige <span class="math display">\[
+r_1^{\textrm{(ny)}} \leftarrow r_1 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_1
 \]</span></p>
 <p>Udleder man tilsvarende opdateringsregler for <span class="math inline">\(r_2, r_3, r_4\)</span> og <span class="math inline">\(r_0\)</span> vil man se, at det eneste, som kommer til at ændre sig i ovenstående, er den sidste faktor <span class="math inline">\(x_1\)</span>, som bliver erstattet med henholdsvis <span class="math inline">\(x_2, x_3, x_4\)</span> og <span class="math inline">\(1\)</span>. Derfor får vi samlet set</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
@@ -636,11 +636,11 @@ r_1^{\textrm{ny}} \leftarrow r_1 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cd
 <div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[\begin{align}
-r_0^{\textrm{ny}} &amp;\leftarrow r_0 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \\
-r_1^{\textrm{ny}} &amp;\leftarrow r_1 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_1\\
-r_2^{\textrm{ny}} &amp;\leftarrow r_2 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_2\\
-r_3^{\textrm{ny}} &amp;\leftarrow r_3 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_3\\
-r_4^{\textrm{ny}} &amp;\leftarrow r_4 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_4\\
+r_0^{\textrm{(ny)}} &amp;\leftarrow r_0 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \\
+r_1^{\textrm{(ny)}} &amp;\leftarrow r_1 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_1\\
+r_2^{\textrm{(ny)}} &amp;\leftarrow r_2 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_2\\
+r_3^{\textrm{(ny)}} &amp;\leftarrow r_3 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_3\\
+r_4^{\textrm{(ny)}} &amp;\leftarrow r_4 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_4\\
 \end{align}\]</span> hvor <span class="math display">\[
 \delta = (t-o) \cdot o \cdot (1-o)
 \]</span></p>
@@ -678,11 +678,11 @@ s_i &amp; \rightarrow &amp; y_2 &amp; &amp; &amp; &amp; \rightarrow &amp; o \\
 <div id="callout-5" class="callout-5-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[\begin{align}
-s_0^{\textrm{ny}} &amp;\leftarrow s_0 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2) \\
-s_1^{\textrm{ny}} &amp;\leftarrow s_1 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2) \cdot x_1\\
-s_2^{\textrm{ny}} &amp;\leftarrow s_2 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2)  \cdot x_2\\
-s_3^{\textrm{ny}} &amp;\leftarrow s_3 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2)  \cdot x_3\\
-s_4^{\textrm{ny}} &amp;\leftarrow s_4 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2)  \cdot x_4\\
+s_0^{\textrm{(ny)}} &amp;\leftarrow s_0 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2) \\
+s_1^{\textrm{(ny)}} &amp;\leftarrow s_1 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2) \cdot x_1\\
+s_2^{\textrm{(ny)}} &amp;\leftarrow s_2 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2)  \cdot x_2\\
+s_3^{\textrm{(ny)}} &amp;\leftarrow s_3 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2)  \cdot x_3\\
+s_4^{\textrm{(ny)}} &amp;\leftarrow s_4 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2)  \cdot x_4\\
 \end{align}\]</span> hvor <span class="math display">\[
 \delta = (t-o) \cdot o \cdot (1-o)
 \]</span></p>
@@ -712,11 +712,11 @@ E = \frac{1}{2}(t-o)^2
 </ul>
 <p>Har en tabsfunktion disse egenskaber, så giver det mening at bestemme vægtene i netværket, så tabsfunktionen minimeres.</p>
 <p>Faktisk viser det sig, at valget af den kvadratiske tabsfunktion kombineret med sigmoid aktiveringsfunktionen har nogle ulemper. For at forstå det, skal vi se på opdateringsreglerne for vægtene tættest på outputlaget. Men den notation, som vi anvendte i <a href="#sec-backpropagation_bogstaver" class="quarto-xref">afsnit&nbsp;4</a>, fik vi for eksempel at <span class="math display">\[
-w_1^{\textrm{ny}} \leftarrow w_1 + \eta  \cdot (t-o) \cdot o \cdot (1-o) \cdot z_1
+w_1^{\textrm{(ny)}} \leftarrow w_1 + \eta  \cdot (t-o) \cdot o \cdot (1-o) \cdot z_1
 \]</span> Når vi træner netværket, ved vi jo ikke, hvilke værdier vægtene skal have - så vi starter med at vælge nogle mere eller mindre tilfældige værdier. Det betyder også, at indtil netværket er trænet, så vil den andel af træningseksemplerne, som klassificeres korrekt, ikke nødvendigvis være så stor. Det gør ikke så meget, hvis bare netværket lærer hurtigt - det vil sige, at netværket hurtigt får opdateret vægtene så andelen af træningseksemplerne, som klassificeres korrekt, bliver stor. Problemet med den kvadratiske tabsfunktion er, at man i nogle tilfælde kan komme ud for at dette ikke sker, men derimod at netværket lærer langsomt.</p>
 <p>Problemet opstår, hvis startvægtene fejlagtigt kommer til at give en outputværdi <span class="math inline">\(o\)</span>, som enten er tæt på <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span>. Hvis det sker, vil <span class="math inline">\(t-o\)</span> være "stor" (fordi outputværdien er fejlagtig), men samtidig vil faktoren <span class="math inline">\(o \cdot (1-o)\)</span> være tæt på <span class="math inline">\(0\)</span> (fordi <span class="math inline">\(o\)</span> enten er tæt på <span class="math inline">\(0\)</span> eller på <span class="math inline">\(1\)</span>). Derfor kan vi risikere, at <span class="math inline">\(w_1\)</span>-vægten ikke bliver opdateret særlig meget, fordi <span class="math inline">\(t-o\)</span> bliver ganget med et tal, som er tæt på <span class="math inline">\(0\)</span>. Sker dette kalder man det for <em>slow learning</em>.</p>
 <p>Nu kunne man måske godt tænke, at det da ikke har noget med tabsfunktionen at gøre, men det har lige præcis noget med tabsfunktionen <em>i kombination</em> med sigmoid-funktionen at gøre. For at se det må vi genkalde os, hvor ovenstående opdateringsregel kom fra. Faktisk svarede <span class="math inline">\(t-o\)</span> til <span class="math inline">\(-dE/do\)</span> og <span class="math inline">\(o \cdot (1-o)\)</span> var sigmoid-funktionen <span class="math inline">\(\sigma(w_0+w_1 \cdot z_1 + w_2 \cdot z_2)\)</span> differentieret. Det vil sige: <span id="eq-opdatering_w1_med_forklaring"><span class="math display">\[
-w_1^{\textrm{ny}} \leftarrow w_1 + \eta  \cdot \underbrace{(t-o)}_{-dE/do} \cdot \underbrace{o \cdot (1-o)}_{\sigma'(\cdots)} \cdot z_1
+w_1^{\textrm{(ny)}} \leftarrow w_1 + \eta  \cdot \underbrace{(t-o)}_{-dE/do} \cdot \underbrace{o \cdot (1-o)}_{\sigma'(\cdots)} \cdot z_1
 \tag{20}\]</span></span> Hvis man derimod kunne vælge en tabsfunktion, som passer bedre sammen med sigmoid-funktionen, på den måde at forstå at faktoren <span class="math inline">\(o \cdot (1-o)\)</span> vil forkorte ud i ovenstående udtryk, så vil man slippe af med problemet omkring langsom læring.</p>
 <p>Nok ikke helt overraskende så kan man faktisk godt diske op med en sådan tabsfunktion! Den tabsfunktion, som passer godt sammen med sigmoid-funktionen, kaldes for <em>cross-entropy</em> tabsfunktionen og er defineret sådan her <span id="eq-cross_entropy"><span class="math display">\[
 E = - \left ( t \cdot \ln(o)+(1-t) \cdot \ln(1-o) \right )
@@ -752,9 +752,9 @@ E = - \left ( \underbrace{t}_{=1} \cdot \underbrace{\ln(o)}_{\thickapprox 0}+\un
 \end{align}\]</span> Og derfor er <span class="math display">\[
 - \frac{dE}{do}=\frac{t-o}{o \cdot (1-o)}
 \]</span> som ved indsættelse i (<a href="#eq-opdatering_w1_med_forklaring" class="quarto-xref">20</a>) giver <span class="math display">\[
-w_1^{\textrm{ny}} \leftarrow w_1 + \eta  \cdot \underbrace{\frac{t-o}{o \cdot (1-o)}}_{-dE/do} \cdot \underbrace{o \cdot (1-o)}_{\sigma'(\cdots)} \cdot z_1
+w_1^{\textrm{(ny)}} \leftarrow w_1 + \eta  \cdot \underbrace{\frac{t-o}{o \cdot (1-o)}}_{-dE/do} \cdot \underbrace{o \cdot (1-o)}_{\sigma'(\cdots)} \cdot z_1
 \]</span> Vi ser nu, at udtrykket <span class="math inline">\(o \cdot (1-o)\)</span>, som var den faktor, der kunne give anledning til langsom læring, forkorter ud, og vi får i stedet <span class="math display">\[
-w_1^{\textrm{ny}} \leftarrow w_1 + \eta  \cdot (t-o) \cdot  z_1
+w_1^{\textrm{(ny)}} \leftarrow w_1 + \eta  \cdot (t-o) \cdot  z_1
 \]</span> Her ses det tydeligt, at hvis der er stor forskel på target-værdi <span class="math inline">\(t\)</span> og outputværdi <span class="math inline">\(o\)</span>, så vil det give anledning til en stor opdatering af <span class="math inline">\(w_1\)</span>-vægten<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> - også selvom <span class="math inline">\(o\)</span> er tæt på <span class="math inline">\(0\)</span> eller <span class="math inline">\(1\)</span>. På den måde passer cross-entropy tabsfunktionen bedre sammen med sigmoid aktiveringsfunktionen, end den kvadratiske tabsfunktion gør. Simpelthen fordi det potentielle problem omkring langsom læring undgås.</p>
 <div class="no-row-height column-margin column-container"><div id="fn5"><p><sup>5</sup>&nbsp;Med mindre selvfølgelig at <span class="math inline">\(z_1\)</span> er tæt på <span class="math inline">\(0\)</span>, men i det tilfælde vil <span class="math inline">\(w_1\)</span> alligevel ikke have særlig stor indflydelse på outputværdien <span class="math inline">\(o\)</span>.</p></div></div></section>
 <section id="billedgenkendelse-og-kunstige-neurale-netværk" class="level2 page-columns page-full">

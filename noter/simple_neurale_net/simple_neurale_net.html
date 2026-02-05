@@ -583,11 +583,11 @@ z = g(y) \qquad \textrm{og} \qquad y = h(x)
 <p>Så viser det sig, at gradienten peger i den retning, hvor funktionsværdien vokser mest. Derfor vil minus gradienten pege i den retning, hvor funktionsværdien aftager mest. Visuelt kan man forestille sig, at man står i et bakkelandskab, hvor man gerne vil ned i en dal. Så kan man tænke på den negative gradient, som den retning vi skal bevæge os i, hvis vi gerne vil gå allermest nedad bakke (og det er jo smart, hvis man gerne vil ende i dalen). Man udregner derfor gradienten og går et lille stykke i den negative gradients retning. Nu er det jo ikke sikkert, at man hele tiden skal gå i den samme retning, så derfor er man nødt til at udregne gradienten igen på det nye sted, man nu står og så korrigere sin retning i forhold det næste lille skridt, man tager.</p>
 <p>Det er altså idéen, hvis man gerne vil bestemme minimum. Man stiller sig simpelthen et tilfældigt sted på grafen for <span class="math inline">\(f\)</span> og udregner gradienten. Så bevæger man sig et lille stykke i den negative gradients retning. I det nye punkt udregner man gradienten igen og går et lille stykke i den nye negative gradients retning. Sådan fortsætter man, indtil funktionsværdien ikke ændrer sig ret meget, og man er landet i et minimum (eventuelt kun lokalt).</p>
 <p>Vi har lavet videoer om <a href="https://youtu.be/tlq2UYWF2Rw" target="blank">funktioner af to variable</a> og <a href="https://youtu.be/WcM8aEoPzf8" target="blank">gradientnedstigning</a>, hvis du vil vide mere.</p>
-<p>Nu hedder vores funktion ikke <span class="math inline">\(f\)</span>, men <span class="math inline">\(E\)</span> (det var tabsfunktionen). <span class="math inline">\(E\)</span> afhænger af vægtene <span class="math inline">\(r_0, r_1, \dots, r_n, v_0, v_1, w_0\)</span> og <span class="math inline">\(w_1\)</span>. Vi vælger derfor nogle tilfældige værdier af disse vægte og udregner gradienten. Så opdaterer vi alle vægtene ved at gå et lille stykke <span class="math inline">\(\eta\)</span> i den negative gradients retning. For at beregne den nye værdi af <span class="math inline">\(w_1\)</span>, som vi her vil kalde for <span class="math inline">\(w_1^{\textrm{ny}}\)</span>, vil det for eksempel se sådan her ud:</p>
+<p>Nu hedder vores funktion ikke <span class="math inline">\(f\)</span>, men <span class="math inline">\(E\)</span> (det var tabsfunktionen). <span class="math inline">\(E\)</span> afhænger af vægtene <span class="math inline">\(r_0, r_1, \dots, r_n, v_0, v_1, w_0\)</span> og <span class="math inline">\(w_1\)</span>. Vi vælger derfor nogle tilfældige værdier af disse vægte og udregner gradienten. Så opdaterer vi alle vægtene ved at gå et lille stykke <span class="math inline">\(\eta\)</span> i den negative gradients retning. For at beregne den nye værdi af <span class="math inline">\(w_1\)</span>, som vi her vil kalde for <span class="math inline">\(w_1^{\textrm{(ny)}}\)</span>, vil det for eksempel se sådan her ud:</p>
 <p><span class="math display">\[
-w_1^{\textrm{ny}} \leftarrow w_1 - \eta \cdot \frac{\partial E}{\partial w_1}
+w_1^{\textrm{(ny)}} \leftarrow w_1 - \eta \cdot \frac{\partial E}{\partial w_1}
 \]</span></p>
-<p>Det lille stykke <span class="math inline">\(\eta\)</span>, som vi går i den negative gradients retning, kaldes også for en <em>learning rate</em>. Her er <span class="math inline">\(w_1\)</span> den "nuværende" værdi af vægten, og pilen til venstre betyder, at der foretages en opdatering. Den nye værdi af vægten kaldes, som sagt, for <span class="math inline">\(w_1^{\textrm{ny}}\)</span>.</p>
+<p>Det lille stykke <span class="math inline">\(\eta\)</span>, som vi går i den negative gradients retning, kaldes også for en <em>learning rate</em>. Her er <span class="math inline">\(w_1\)</span> den "nuværende" værdi af vægten, og pilen til venstre betyder, at der foretages en opdatering. Den nye værdi af vægten kaldes, som sagt, for <span class="math inline">\(w_1^{\textrm{(ny)}}\)</span>.</p>
 <p>I backpropagation opdateres vægtene ved at bruge ovenstående opdateringsregel, men det gøres på en snedig måde. Nemlig ved at opdatere vægtene tættest på outputlaget først – det vil sige <span class="math inline">\(w_0\)</span> og <span class="math inline">\(w_1\)</span>. Dernæst går man en skidt længere tilbage i netværket i <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;2</a> og opdaterer <span class="math inline">\(v_0\)</span> og <span class="math inline">\(v_1\)</span> og endelig opdaterer man til sidst vægtene tættest på inputlaget <span class="math inline">\(r_0, r_1, \dots, r_n\)</span>. Vi skal nok forklare, hvorfor det er smart, men det er altså årsagen til, at metoden kaldes for <strong>back</strong>propagation: Fordi vægtene opdateres fra outputlaget og bagud.</p>
 <p>Inden opdateringen af vægtene går i gang sættes alle vægtene til en tilfældig værdi. Herefter tager vi alle <span class="math inline">\(M\)</span> træningsdata og sender ind i netværket. Det vil sige, at vi på baggrund af feedforward-udtrykkene i (<a href="#eq-y" class="quarto-xref">3</a>), (<a href="#eq-z" class="quarto-xref">4</a>) og (<a href="#eq-o" class="quarto-xref">5</a>) udregner følgende for det <span class="math inline">\(m\)</span>’te træningsdataeksempel:</p>
 <p><span id="eq-y_m"><span class="math display">\[
@@ -606,8 +606,8 @@ o^{(m)} = \sigma(w_0 + w_1 \cdot z^{(m)})
 <p>Ved at bruge gradientnedstigning bliver opdateringsligningerne for <span class="math inline">\(w\)</span>-vægtene følgende:</p>
 <p><span id="eq-generel_opdatering_w"><span class="math display">\[
 \begin{aligned}
-w_0^{\textrm{ny}} &amp;\leftarrow w_0 - \eta \cdot \frac{\partial E}{\partial w_0} \\
-w_1^{\textrm{ny}} &amp;\leftarrow w_1 - \eta \cdot \frac{\partial E}{\partial w_1}
+w_0^{\textrm{(ny)}} &amp;\leftarrow w_0 - \eta \cdot \frac{\partial E}{\partial w_0} \\
+w_1^{\textrm{(ny)}} &amp;\leftarrow w_1 - \eta \cdot \frac{\partial E}{\partial w_1}
 \end{aligned}
 \tag{12}\]</span></span></p>
 <p>Vi skal altså differentiere tabsfunktionen</p>
@@ -668,7 +668,7 @@ o^{(m)} = \sigma(w_0 + w_1 \cdot z^{(m)})
 \]</span></p>
 <p>Indsættes dette i (<a href="#eq-generel_opdatering_w" class="quarto-xref">12</a>) bliver opdateringsreglen for <span class="math inline">\(w_1\)</span>:</p>
 <p><span class="math display">\[
-w_1^{\textrm{ny}} \leftarrow w_1 + \eta \cdot \sum_{m=1}^M (t^{(m)}-o^{(m)}) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot z^{(m)}
+w_1^{\textrm{(ny)}} \leftarrow w_1 + \eta \cdot \sum_{m=1}^M (t^{(m)}-o^{(m)}) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot z^{(m)}
 \]</span></p>
 <p>Hvis vi lader</p>
 <p><span id="eq-delta_m"><span class="math display">\[
@@ -676,7 +676,7 @@ w_1^{\textrm{ny}} \leftarrow w_1 + \eta \cdot \sum_{m=1}^M (t^{(m)}-o^{(m)}) \cd
 \tag{17}\]</span></span></p>
 <p>kan det skrives kort som</p>
 <p><span class="math display">\[
-w_1^{\textrm{ny}} \leftarrow w_1 + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot z^{(m)}
+w_1^{\textrm{(ny)}} \leftarrow w_1 + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot z^{(m)}
 \]</span></p>
 <p>På helt tilsvarende vis kan opdateringsreglen for <span class="math inline">\(w_0\)</span> udledes, og vi ender med:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
@@ -693,8 +693,8 @@ w_1^{\textrm{ny}} \leftarrow w_1 + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot 
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[
 \begin{aligned}
-w_0^{\textrm{ny}} \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
-w_1^{\textrm{ny}} \leftarrow &amp; w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot z^{(m)}\\
+w_0^{\textrm{(ny)}} \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
+w_1^{\textrm{(ny)}} \leftarrow &amp; w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot z^{(m)}\\
 \end{aligned}
 \]</span> hvor <span class="math display">\[
 \delta_w^{(m)} = (t^{(m)}-o^{(m)} ) \cdot o^{(m)}  \cdot (1-o^{(m)})
@@ -714,8 +714,8 @@ w_1^{\textrm{ny}} \leftarrow &amp; w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)
 <p>Vi træder nu et skridt tilbage i netværket i <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;2</a> og opdaterer <span class="math inline">\(v\)</span>-vægtene. Gradientnedstigning giver helt generelt følgende opdateringsregler:</p>
 <p><span id="eq-generel_opdatering_v"><span class="math display">\[
 \begin{aligned}
-v_0^{\textrm{ny}} &amp;\leftarrow v_0 - \eta \cdot \frac{\partial E}{\partial v_0} \\
-v_1^{\textrm{ny}} &amp;\leftarrow v_1 - \eta \cdot \frac{\partial E}{\partial v_1}
+v_0^{\textrm{(ny)}} &amp;\leftarrow v_0 - \eta \cdot \frac{\partial E}{\partial v_0} \\
+v_1^{\textrm{(ny)}} &amp;\leftarrow v_1 - \eta \cdot \frac{\partial E}{\partial v_1}
 \end{aligned}
 \tag{18}\]</span></span></p>
 <p>Vi vælger at udlede den sidste regel og skal derfor finde <span class="math inline">\(\frac{\partial E}{\partial v_1}\)</span>. Det kan ses på <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;2</a>, at <span class="math inline">\(v\)</span>-vægtene påvirker tabsfunktionen <span class="math inline">\(E\)</span> først via værdien <span class="math inline">\(z\)</span> og dernæst via outputværdien <span class="math inline">\(o\)</span>. Når vi skal differentiere tabsfunktionen i (<a href="#eq-E" class="quarto-xref">6</a>) med hensyn til <span class="math inline">\(v_1\)</span> kan du derfor igen bruge kædereglen sådan her:</p>
@@ -781,8 +781,8 @@ z^{(m)} = \sigma (v_0 + v_1 \cdot y^{(m)}).
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[
 \begin{aligned}
-v_0^{\textrm{ny}} \leftarrow &amp; v_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot 1\\
-v_1^{\textrm{ny}} \leftarrow &amp; v_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot y^{(m)}\\
+v_0^{\textrm{(ny)}} \leftarrow &amp; v_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot 1\\
+v_1^{\textrm{(ny)}} \leftarrow &amp; v_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot y^{(m)}\\
 \end{aligned}
 \]</span> hvor <span class="math display">\[
 \delta_w^{(m)} = (t^{(m)}-o^{(m)} ) \cdot o^{(m)}  \cdot (1-o^{(m)})
@@ -802,10 +802,10 @@ v_1^{\textrm{ny}} \leftarrow &amp; v_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)
 <p>Vi er nu nået til det sidste lag i netværket, som er tættest på inputlaget. Her bliver de generelle opdateringsregler:</p>
 <p><span id="eq-generel_opdatering_r"><span class="math display">\[
 \begin{aligned}
-r_0^{\textrm{ny}} &amp;\leftarrow r_0 - \eta \cdot \frac{\partial E}{\partial r_0} \\
-r_1^{\textrm{ny}} &amp;\leftarrow r_1 - \eta \cdot \frac{\partial E}{\partial r_1} \\
+r_0^{\textrm{(ny)}} &amp;\leftarrow r_0 - \eta \cdot \frac{\partial E}{\partial r_0} \\
+r_1^{\textrm{(ny)}} &amp;\leftarrow r_1 - \eta \cdot \frac{\partial E}{\partial r_1} \\
 &amp; \quad \vdots \\
-r_n^{\textrm{ny}} &amp;\leftarrow r_n - \eta \cdot \frac{\partial E}{\partial r_n}
+r_n^{\textrm{(ny)}} &amp;\leftarrow r_n - \eta \cdot \frac{\partial E}{\partial r_n}
 \end{aligned}
 \tag{22}\]</span></span></p>
 <p>På <a href="#fig-long_simple_NN" class="quarto-xref">figur&nbsp;2</a> ses det, at tabsfunktionen afhænger af disse <span class="math inline">\(r\)</span>-vægte via <span class="math inline">\(o^{(m)}\)</span>, <span class="math inline">\(z^{(m)}\)</span> og <span class="math inline">\(y^{(m)}\)</span>. Der kommer derfor lidt mere fut i kædereglen nu. Den partielle afledede med hensyn til <span class="math inline">\(r_i\)</span> (hvor <span class="math inline">\(i \in \{1, 2, \dots, n\}\)</span>) bliver</p>
@@ -857,7 +857,7 @@ y^{(m)} = \sigma(r_0 + r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)} + \cdots + r_n 
 \frac{\partial E}{\partial r_i} =   - \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}
 \]</span> Opdateringsreglen for <span class="math inline">\(r_i\)</span> bliver derfor ifølge (<a href="#eq-generel_opdatering_r" class="quarto-xref">22</a>):</p>
 <p><span class="math display">\[
-r_i^{\textrm{ny}} \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}
+r_i^{\textrm{(ny)}} \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}
 \]</span> Og for samtlige <span class="math inline">\(r\)</span>-vægte ender vi med følgende:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
@@ -873,10 +873,10 @@ r_i^{\textrm{ny}} \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot 
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[
 \begin{aligned}
-r_0^{\textrm{ny}} &amp;\leftarrow r_0 + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot 1 \\
-r_1^{\textrm{ny}} &amp;\leftarrow r_1 + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_1^{(m)} \\
+r_0^{\textrm{(ny)}} &amp;\leftarrow r_0 + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot 1 \\
+r_1^{\textrm{(ny)}} &amp;\leftarrow r_1 + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_1^{(m)} \\
 &amp; \quad \vdots \\
-r_n^{\textrm{ny}} &amp;\leftarrow r_n + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_n^{(m)} \\
+r_n^{\textrm{(ny)}} &amp;\leftarrow r_n + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_n^{(m)} \\
 \end{aligned}
 \]</span></p>
 <p>hvor <span class="math display">\[
@@ -898,8 +898,8 @@ r_n^{\textrm{ny}} &amp;\leftarrow r_n + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \
 <p>Opdateringsreglerne for laget tættest på outputlaget (<span class="math inline">\(w\)</span>-vægtene) er:</p>
 <p><span class="math display">\[
 \begin{aligned}
-w_0^{\textrm{ny}} \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
-w_1^{\textrm{ny}} \leftarrow &amp; w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot z^{(m)}\\
+w_0^{\textrm{(ny)}} \leftarrow &amp; w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
+w_1^{\textrm{(ny)}} \leftarrow &amp; w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot z^{(m)}\\
 \end{aligned}
 \]</span> hvor <span class="math display">\[
 \delta_w^{(m)} = (t^{(m)}-o^{(m)} ) \cdot o^{(m)}  \cdot (1-o^{(m)})
@@ -907,8 +907,8 @@ w_1^{\textrm{ny}} \leftarrow &amp; w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)
 <p>Træder vi et skridt bagud i netværket opdateres <span class="math inline">\(v\)</span>-vægtene således:</p>
 <p><span class="math display">\[
 \begin{aligned}
-v_0^{\textrm{ny}} \leftarrow &amp; v_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot 1\\
-v_1^{\textrm{ny}} \leftarrow &amp; v_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot y^{(m)}\\
+v_0^{\textrm{(ny)}} \leftarrow &amp; v_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot 1\\
+v_1^{\textrm{(ny)}} \leftarrow &amp; v_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot y^{(m)}\\
 \end{aligned}
 \]</span></p>
 <p>Vi ser nu, at <span class="math inline">\(\delta_w^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\)</span> går igen i begge opdateringsregler. Vi sætter derfor</p>
@@ -918,24 +918,24 @@ v_1^{\textrm{ny}} \leftarrow &amp; v_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)
 <p>Opdateringen af <span class="math inline">\(v\)</span>-vægtene kan derfor skrives på denne måde:</p>
 <p><span class="math display">\[
 \begin{aligned}
-v_0^{\textrm{ny}} \leftarrow &amp; v_0 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot 1\\
-v_1^{\textrm{ny}} \leftarrow &amp; v_1 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot y^{(m)}\\
+v_0^{\textrm{(ny)}} \leftarrow &amp; v_0 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot 1\\
+v_1^{\textrm{(ny)}} \leftarrow &amp; v_1 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot y^{(m)}\\
 \end{aligned}
 \]</span></p>
 <p>De sidste opdateringsregler for <span class="math inline">\(r\)</span>-vægtene ser sådan her ud:</p>
 <p><span class="math display">\[
-r_i^{\textrm{ny}} \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}
+r_i^{\textrm{(ny)}} \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}
 \]</span></p>
 <p>Indsætter vi udtrykket i (<a href="#eq-delta_v" class="quarto-xref">26</a>) kan det forkortes til:</p>
 <p><span class="math display">\[
-r_i^{\textrm{ny}} \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta_v^{(m)} \cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}
+r_i^{\textrm{(ny)}} \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta_v^{(m)} \cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}
 \]</span> Og lader vi</p>
 <p><span class="math display">\[
 \delta_r^{(m)} = \delta_v^{(m)} \cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)})
 \]</span></p>
 <p>ender vi med</p>
 <p><span class="math display">\[
-r_i^{\textrm{ny}} \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_i^{(m)}
+r_i^{\textrm{(ny)}} \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_i^{(m)}
 \]</span></p>
 <p>Det fine er, at det nu er blevet meget tydeligt, at alle opdateringsregler faktisk minder ret meget om hinanden. Vi kan derfor sammenfatte opdateringsreglener på denne måde:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
@@ -972,20 +972,20 @@ o^{(m)} &amp;= \sigma(w_0 + w_1 \cdot z^{(m)})
 <li><p>Vægtene opdatereres:</p>
 <p><strong><span class="math inline">\(w\)</span>-vægtene:</strong> <span class="math display">\[
 \begin{aligned}
-w_0^{\textrm{ny}} &amp;\leftarrow w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
-w_1^{\textrm{ny}} &amp;\leftarrow w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot z^{(m)}\\
+w_0^{\textrm{(ny)}} &amp;\leftarrow w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
+w_1^{\textrm{(ny)}} &amp;\leftarrow w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot z^{(m)}\\
 \end{aligned}
 \]</span> <strong><span class="math inline">\(v\)</span>-vægtene:</strong> <span class="math display">\[
 \begin{aligned}
-v_0^{\textrm{ny}} &amp;\leftarrow v_0 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot 1\\
-v_1^{\textrm{ny}} &amp;\leftarrow v_1 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot y^{(m)}\\
+v_0^{\textrm{(ny)}} &amp;\leftarrow v_0 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot 1\\
+v_1^{\textrm{(ny)}} &amp;\leftarrow v_1 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot y^{(m)}\\
 \end{aligned}
 \]</span> <strong><span class="math inline">\(r\)</span>-vægtene:</strong> <span class="math display">\[
 \begin{aligned}
-r_0^{\textrm{ny}} &amp;\leftarrow r_0 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot 1 \\
-r_1^{\textrm{ny}} &amp;\leftarrow r_1 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)} \\
+r_0^{\textrm{(ny)}} &amp;\leftarrow r_0 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot 1 \\
+r_1^{\textrm{(ny)}} &amp;\leftarrow r_1 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)} \\
 &amp; \quad \vdots \\
-r_n^{\textrm{ny}} &amp;\leftarrow r_n + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_n^{(m)}
+r_n^{\textrm{(ny)}} &amp;\leftarrow r_n + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_n^{(m)}
 \end{aligned}
 \]</span></p></li>
 </ol>
