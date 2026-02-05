@@ -1,0 +1,28 @@
+---
+title: "Figur til www"
+keep-md: true
+---
+
+```{r log_reg_www, fig.width=5, fig.height=2.5}
+## Data
+datadir <- here::here("noter", "logistisk", "data")
+dat_navn <- file.path(datadir, "blodtryk.xlsx")
+dat <- readxl::read_xlsx(dat_navn)
+dat <- head(dat, n = 200)
+names(dat) <- c("x", "y")
+fit <- glm(y~x, family = binomial(), data = dat)
+a_mle <- coef(fit)[2]
+b_mle <- coef(fit)[1]
+p <- function(x,a,b){exp(a*x + b)/(1+exp(a*x+ b))}
+library(ggplot2)
+library(dplyr)
+p_dat <- tibble(x = seq(50, 300, by = .2), 
+                p = p(x, a_mle, b_mle))
+dat |> 
+  ggplot(aes(x = x)) +
+  geom_point(aes(y=y), col = "blue", size = 2, alpha = .5) + 
+  geom_line(data = p_dat, aes(y = p)) +
+  labs(x = "", y = "") +
+  theme_grey()
+```
+

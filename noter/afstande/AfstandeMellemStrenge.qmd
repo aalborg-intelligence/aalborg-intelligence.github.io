@@ -1,0 +1,71 @@
+---
+title: "Afstande mellem ord"
+image: "images/hammingafstand.png"
+description: "Hvordan måler man mon afstanden mellem ord -- altså sådan helt generelt?"
+aliases: 
+  - "/materialer/afstande/AfstandeMellemStrenge.html"
+categories:
+  - A-niveau
+---
+
+Et ord er en følge eller en *streng* af bogstaver eller tal. Det kunne for eksempel være *12DvbdN34fdg* eller *hnaikgoh* (nej, det behøver ikke give mening). Det kunne også være en [DNA-sekvens](AfstandeMellemDNA.qmd), et ord i en tekst eller noget helt andet[^1]. Man siger, at *længden* af en streng er antallet af bogstaver i strengen. 
+
+Vi vil i det følgende se på såkaldte *edit-afstande*, som basalt set tæller, hvor mange ændringer, man skal lave, for at komme fra den ene streng til den anden.
+Det kommer naturligvis til at afhænge af, hvilke typer ændringer, man tillader. Lad os her se på nogle af dem.
+
+### Hammingafstanden
+Hammingafstanden mellem to lige lange strenge er antallet af pladser, hvor de to strenge er forskellige. Afstanden fra *sne* til *sno* er derfor $1$. Afstanden fra *sne* til *neg* er $3$, fordi de to strenge er forskellige på alle pladser. Det svarer til, at man må ændre et bogstav ad gangen: 
+
+$$ sne \rightarrow nne \rightarrow nee \rightarrow neg$$
+Dette er illustreret i @fig-streng_afstande1 ved de tre blå kanter fra *sne* til *neg*.
+
+![Hver knude i figuren svarer til et ord. En kant imellem to knuder svarer til, at der findes et \"move\" mellem de to ord  enten ved hjælp af Hamming-, Levenshtein- eller Damerau-Levenshteinafstanden (angivet med henholdsvis grøn, lilla og pink).](images/streng_afstande1.png){#fig-streng_afstande1}
+
+### Levenshteinafstanden{#sec-levenshteinafstanden}
+Levenshteinafstanden har flere tilladte ændringer: Man må ændre
+bogstaver, som i Hamming, men man må også indsætte og fjerne
+bogstaver. Levenshteinafstanden er det *mindste* antal sådanne
+ændringer, man skal lave for at nå fra det ene ord til det andet.
+Ordene/strengene behøver ikke have samme længde - man kan jo
+indsætte og fjerne bogstaver.
+
+Se på @fig-streng_afstande1:
+
+- Afstanden fra *sne* til *see* er $1$, ligesom Hammingafstanden.
+
+- Afstanden fra *sne* til *sneg* er også $1$, fordi vi blot har tilføjet et *g* -- og her er Hammingafstanden slet ikke meningsfuld. Den er simpelthen ikke defineret.
+
+- Afstanden fra *sne* til *neg* er $2$ -- via disse ændringer: 
+    
+    $$sne \rightarrow sneg \rightarrow neg$$ 
+    
+    Hammingafstanden, som vi fandt ovenfor, er $3$.
+    
+Bemærk, at vi i ovenstående eksempel også kunne have valgt 
+    
+$$sne \rightarrow ne \rightarrow neg$$ 
+som også har $2$ \"moves\".
+    
+Jo flere tilladte ændringer, jo kortere afstand. Der er algoritmer,
+der finder den mindste vej mellem to ord -- det er dog ikke helt så
+klart, hvordan man regner den ud, som det er for Hammingafstanden. 
+
+### Damerau-Levenshteinafstanden
+Damerau-Levenshteinafstanden er som Levenshtein, men man tillader nu
+også ombytning af to bogstaver, som står ved siden af hinanden. Hvis
+man skriver *teskt* på en telefon eller pc, er det let at bytte om på
+den måde. Hvis man så har en liste over ord, der giver mening, kan
+man opdage, at *teskt* ikke giver mening, men at ordet *tekst* ligger
+meget tæt på - afstand $1$ i Damerau-Levenshteinafstand -- og $2$ i Hamming- eller Levenshteinafstand. Ordet *teske* har også Hammingafstand $1$ til *teskt*,
+så man kan ikke være sikker på, hvad det oprindelige var.
+
+I @fig-streng_afstande2 ses et eksempel på hvilke \"moves\", der er tilladt mellem forskellige ord ved hjælp af Hamming-, Levenshtein- eller Damerau-Levenshteinafstanden.
+
+![Hver knude i figuren svarer til et ord. En kant imellem to knuder svarer til, at der findes et \"move\" mellem de to ord  enten ved hjælp af Hamming-, Levenshtein- eller Damerau-Levenshteinafstanden (angivet med henholdsvis grøn, lilla og pink).](images/streng_afstande2.png){#fig-streng_afstande2}
+
+### Afstande mellem navne 
+Navne som Peter, Pieter, Pietro, Petrus, Peder, Per, Pelle, Pekka, Peer, Petur, Pedro, Pierre, Pjotr, Pyotr, Petar eller måske Katarina, Katharina, Katrina, Katrine, Katrin, Cathryn, Kathryn, Catherine har samme oprindelse. Der er stor forskel på, hvor hyppigt, de optræder i forskellige lande. Overvej, om *edit-afstandene* ovenfor kan bruges til for eksempel at afsløre, hvor tæt på hinanden lande med Peter som hyppigst, er på lande med Pyotr.
+
+[^1]: Ofte gør man det desuden binært, så det er en streng af $0$ og $1$
+    såsom $00110110.$ Det er fornuftigt nok, eftersom computere opererer
+    med den slags strenge.

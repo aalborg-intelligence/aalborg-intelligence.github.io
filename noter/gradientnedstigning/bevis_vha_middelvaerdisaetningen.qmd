@@ -1,0 +1,156 @@
+---
+title: "Argument for at de retningsafledede kan udregnes med et prikprodukt ved hjælp af middelværdisætningen"
+aliases: 
+  - "/materialer/gradientnedstigning/bevis_vha_middelvaerdisaetningen.html"
+---
+
+Vi vil her argumentere for formlen for, at de retningsafledede kan udregnes som et prikprodukt:
+
+$$
+D_{\vec{u}}f\left( x_{0},y_{0} \right) = \nabla f(x_{0},y_{0}) \cdot \vec{u}
+$$
+
+ved at bruge middelværdisætningen for funktioner af én variabel:
+
+::: {#thm-middelvaerdisaetningen}
+## Middelværdisætningen
+Hvis $f$ er kontinuert på $\left\lbrack a;b \right\rbrack$ og differentiabel i $\left\rbrack a;b \right\lbrack$, så findes der et tal $c$ mellem $a$ og $b$, så tangenthældningen i $c$ er lig med middelværdien af hældningen på hele intervallet $\left\lbrack a;b \right\rbrack$. Det vil sige, at $$f^{'}\left( c \right) = \frac{f\left( b \right) - f(a)}{b - a}$$
+:::
+
+Resultatet i middelværdisætningen kan omskrives til
+
+$$
+f\left( b \right) - f\left( a \right) = f^{'}\left( c \right) \cdot (b - a)
+$$ {#eq-middel_omskrevet}
+
+som er det, vi får brug for. Middelværdisætningen virker indlysende korrekt, hvis man prøver at tegne situationen, og beviset for middelværdisætningen kan findes i flere gymnasiebøger.
+
+Inden vi går til argumentet for formlen for de retningsafledede, vil vi se på et enkelt eksempel med middelværdisætningen.
+
+::: {#exm-middelvaerdisaetningen}
+Funktionen $f\left( x \right) = \sqrt{x}$ er kontinuert på $\left\lbrack 0;4 \right\rbrack$ og differentiabel i $\left\rbrack 0;4 \right\lbrack$, så betingelserne for at bruge middelværdisætningen er opfyldt.
+
+Der findes så et tal $c$ mellem 0 og 4, så $f^{'}\left( c \right) = \frac{f\left( 4 \right) - f(0)}{4 - 0}$.
+
+Vi ved, at $f^{'}\left( x \right) = \frac{1}{2\sqrt{x}}$ så ligningen ovenfor bliver
+$$
+\frac{1}{2\sqrt{c}} = \frac{\sqrt{4} - \sqrt{0}}{4 - 0}
+$$ 
+Det vil sige, at
+$$
+\frac{1}{2\sqrt{c}} = \frac{1}{2}
+$$ 
+hvilket giver $c = 1$.
+
+Tangenthældningen af grafen for $f\left( x \right) = \sqrt{x}$ i $c = 1$ er altså det samme som middelværdien af hældningen af grafen på hele intervallet $\left\lbrack a;b \right\rbrack = \left\lbrack 0;4 \right\rbrack$, det vil sige hældningen af den sekant, der forbinder startpunktet $(0,f\left( 0 \right))$ og slutpunktet $(4,f\left( 4 \right))$.
+
+På @fig-middelvaerdisaetningen illustreres dette princip.
+:::
+
+![Illustration af middelværdisætningen. Her har tangenten i $(1,f(1))$ (den grønne linje) samme hældning som sekanten gennem $(0,f(0))$ og $(4,f(4))$ (den blå linje).](images/middelvaerdisaetningen.png){#fig-middelvaerdisaetningen}
+
+Middelværdisætningen siger altså bare, at hvis man forbinder start og slutpunktet -- den blå linje -- og udregner dens hældning, så kan man altid finde mindst et punkt i det indre af intervallet, hvor tangenten i punktet -- den grønne linje -- har samme hældning. I eksemplet fandt vi et bestemt $c$, som vi ifølge middelværdisætningen vidste, at vi kunne. Når vi i det følgende skal tænke endnu mere generelt, så bliver middelværdisætningen nyttig.
+
+Vi vender nu tilbage til definitionen af de retningsafledede. Vi får i det følgende brug for at antage, at både $f_x(x,y)$ og $f_y\left( x,y \right)$ eksisterer, så vi kan bruge middelværdisætningen. Desuden får vi også brug for at antage, at $f_x(x,y)$ og $f_y\left( x,y \right)$ er kontinuerte på en omegn af $(x_{0},y_{0})$.
+
+Vi husker på, at de retningsafledede var defineret ved
+
+
+$$
+D_{\vec{u}}f\left( x_{0},y_{0} \right) = \lim_{h \rightarrow 0}\frac{f\left( x_{0} + hu_{1},y_{0} + hu_{2} \right) - f(x_{0},y_{0})}{h}
+$$ {#eq-retningsafledede}
+
+
+Vi omskriver nu tælleren i (@eq-retningsafledede) for at kunne bringe middelværdisætningen i spil 
+$$
+\begin{aligned}
+f( x_{0} + h \cdot u_{1}, y_{0} + h &\cdot u_{2}) - f(x_{0}, y_{0})  = \\
+& f\left( x_{0} + h \cdot u_{1},y_{0} +  h \cdot u_{2} \right) \\ 
+& \color{red}- f\left( x_{0},y_{0} + h \cdot u_{2} \right)  + f\left( x_{0},y_{0} + h \cdot u_{2} \right) \color{black}\\ 
+&- f(x_{0},y_{0})
+\end{aligned}
+$$ 
+Bemærk, at vi har lagt et led til og trukket det samme led fra (markeret med rødt). Det svarer til, at vi har indskudt et punkt i $xy$-planen, som illustreret i @fig-punkt_indskudt1.
+
+![Et rødt punkt er indskud i $xy$-planen.](images/punkt_indskudt1.png){#fig-punkt_indskudt1}
+
+Vi ser nu, at de to første led kun afviger på $x$-koordinaten (markeret med blåt nedenfor), og de to sidste led afviger kun på $y$-koordinaten (markeret med grønt): 
+$$
+\begin{aligned}
+f\left( x_{0} + h \cdot u_{1},y_{0} + h \cdot u_{2} \right) - f(x_{0},y_{0})   &= \\
+ \color{blue} f\left( x_{0} + h \cdot u_{1},y_{0} +  h \cdot u_{2} \right)  - & \color{blue} f\left( x_{0},y_{0} + h \cdot u_{2} \right)  \color{black} + \\  \color{green} f\left( x_{0},y_{0} + h \cdot u_{2} \right) - & \color{green} f(x_{0},y_{0})
+\end{aligned}
+$$ {#eq-funktionstilvaekst}
+
+Afvigelsen på henholdsvis $x$- og $y$-koordinaten er vist i @fig-punkt_indskudt2.
+
+![Afvigelsen på $x$-koordinaten er markeret med blåt, mens afvigelsen på $y$-koordinaten er markeret med grønt.](images/punkt_indskudt2.png){#fig-punkt_indskudt2}
+
+Ved at bruge den omskrevne middelværdisætning i (@eq-middel_omskrevet) på de to snitfunktioner $f\left( x,y_{0} + h \cdot u_{2} \right)$ som en funktion af $x$ og $f(x_{0},y)$ som en funktion af $y$, får vi nu følgende:
+
+$$
+\begin{aligned}
+\color{blue} f\left( x_{0} + h \cdot u_{1},y_{0} + h \cdot u_{2} \right) - f\left( x_{0},y_{0} + h \cdot u_{2} \right) =  \color{blue} f_x(c_{1},y_{0} + h \cdot u_{2}) \cdot h \cdot u_{1}
+\end{aligned}
+$$ 
+og 
+$$
+\color{green} f\left( x_{0},y_{0} + h \cdot u_{2} \right) - f\left( x_{0},y_{0} \right) = f_y(x_{0},c_{2}) \cdot h \cdot u_{2}
+$$
+
+Her har vi brugt, at den afledede af en snitfunktion, hvor vi kun varierer $x$ er $f_x$, og den afledede af en snitfunktion, hvor vi kun varierer $y$ er $f_y$. Tallet $c_{1}$ ligger mellem $x_{0}$ og $x_{0} + h \cdot u_{1}$, og tallet $c_{2}$ ligger mellem $y_{0}$ og $y_{0} + h \cdot u_{2}$. Dette er vist i @fig-punkt_indskudt3.
+
+![Tallet $c_{1}$ ligger mellem $x_{0}$ og $x_{0} + h \cdot u_{1}$, og tallet $c_{2}$ ligger mellem $y_{0}$ og $y_{0} + h \cdot u_{2}$.](images/punkt_indskudt3.png){#fig-punkt_indskudt3}
+
+Indsætter vi de to udtryk ovenfor på højreside i (@eq-funktionstilvaekst) får vi 
+$$
+\begin{multline}
+f\left( x_{0} + h \cdot u_{1},y_{0} + h \cdot u_{2} \right) - f(x_{0},y_{0})  = \color{blue} f_x(c_{1},y_{0} + h \cdot u_{2}) \cdot h \cdot u_{1} \color{black} + \\ \color{green} f_y(x_{0},c_{2}) \cdot h \cdot u_{2} \\
+\end{multline}
+$$
+
+Og bruges dette i definitionen for den retningsafledede i (@eq-retningsafledede) ender vi med $$
+\begin{aligned}
+D_{\vec{u}}f\left( x_{0},y_{0} \right) &= \lim_{h \rightarrow 0}\frac{f\left( x_{0} + h \cdot u_{1},y_{0} + h \cdot u_{2} \right) - f(x_{0},y_{0})}{h}
+\\
+&=
+\lim_{h \rightarrow 0}\frac{f_x\left( c_{1},y_{0} + h \cdot u_{2} \right) \cdot h \cdot u_{1} + f_y(x_{0},c_{2}) \cdot h \cdot u_{2}\ }{h}
+\end{aligned}
+$$ Vi kan nu dividere $h$ op i hvert led og får $$
+\begin{aligned}
+D_{\vec{u}}f\left( x_{0},y_{0} \right)
+&= \underset{h \rightarrow 0}{\text{lim}} f_x\left( c_{1},y_{0} + h \cdot u_{2} \right) \cdot u_{1} + f_y(x_{0},c_{2}) \cdot u_{2}\ 
+\\
+&= \lim_{h \rightarrow 0}\begin{pmatrix}
+f_x\left( c_{1},y_{0} + h \cdot u_{2} \right) \\
+f_y(x_{0},c_{2}) 
+\end{pmatrix} \cdot 
+\begin{pmatrix}
+u_{1} \\
+u_{2} 
+\end{pmatrix} 
+\end{aligned}
+$$ {#eq-limit} hvis grænsen eksisterer.
+
+Husk på, at $c_1$ ligger i intervallet $(x_0,x_0+h \cdot u_1)$ og $c_2$ ligger i intervallet $(y_0,y_0+h \cdot u_2)$. Derfor vil
+
+$$
+\lim_{h \rightarrow 0}\left( c_{1},y_{0} + h \cdot u_{2} \right) =
+(x_{0},y_{0})
+$$ og $$
+\lim_{h \rightarrow 0}\left( x_{0},c_{2} \right) = \ (x_{0},y_{0})
+$$
+
+Vi startede med at antage, at de partielle afledede er kontinuerte. Det får vi brug for nu. Det betyder nemlig, at grænseværdien i (@eq-limit) eksisterer, og vi får det ønskede resultat
+
+$$
+D_{\vec{u}}f\left( x_{0},y_{0} \right) = \begin{pmatrix}
+f_x\left( x_{0},y_{0} \right) \\
+f_y(x_{0},y_{0}) \\
+\end{pmatrix} \cdot \begin{pmatrix}
+u_{1} \\
+u_{2} \\
+\end{pmatrix} = \nabla f(x_{0},y_{0}) \cdot \vec{u}
+$$ Det var netop, hvad vi ønskede at vise[^1].
+
+[^1]: Vi startede med at antage, at de partielle afledede eksisterer og er kontinuerte på en omegn. Bemærk, at vi ud fra den antagelse nu har vist, at alle de retningsafledede også vil eksistere.
