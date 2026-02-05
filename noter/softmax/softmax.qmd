@@ -497,7 +497,7 @@ Vi har lavet videoer om [funktioner af to variable](https://youtu.be/tlq2UYWF2Rw
 Nu hedder vores funktion ikke $f$, men $E$, og $E$ afhænger af alle vægtene $w_{j,k}$. Derfor, når vægten $w_{j,k}$ skal opdateres, så gør vi følgende:
 
 $$
-w_{j,k}^{\textrm{ny}} \leftarrow w_{j,k} - \eta \cdot \frac{\partial E}{\partial w_{j,k}}.
+w_{j,k}^{\textrm{(ny)}} \leftarrow w_{j,k} - \eta \cdot \frac{\partial E}{\partial w_{j,k}}.
 $$ {#eq-w_jk-opdatering_grad}
 
 Tallet $\eta$ kaldes for en **learning rate** og er typisk et lille tal mellem $0$ og $1$. Det svarer til den skridtlængde vi bruger, når vi går i den negative gradients retning. 
@@ -757,18 +757,18 @@ Vi har nu fået udledt opdateringsreglerne for alle vægtene, og vi vil derfor p
 ::: {#tbl-prediction}
 |Elev nr.| $x_1$ (søvn) | $x_2$ (emne) | $x_3$ (eksamen) | Valg | $o_1$ | $o_2$ | $o_3$ | $o_4$ |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-|$1$ |$10$ | $10$ | $10$  | ${\color{#020873} 1}$  | $0.98$ |  $0.02$ |  $0.00$ |  $0.00$ |
-|$2$ |$8$ | $7$ | $8$  |${\color{#020873} 1}$  |  $0.50$ |  $0.50$ |  $0.00$ |  $0.00$ |
-|$3$ |$9$ | $6$ | $10$  |${\color{#020873} 1}$  |  $0.76$ |  $0.23$ |  $0.00$ |  $0.00$ |
-|$4$ |$4$ | $10$ | $10$  |${\color{#020873} 1}$  |  $0.77$ |  $0.23$ |  $0.00$ |  $0.00$ |
-|$5$ |$5$ | $8$ | $7$ | ${\color{#8086F2} 2}$ |  $0.19$ |  $0.81$ |  $0.00$ |  $0.00$ |
-|$6$ |$10$ | $7$ | $4$ | ${\color{#8086F2} 2}$ |  $0.15$ |  $0.85$ |  $0.00$ |  $0.00$ |
-|$7$ |$7$ | $7$ | $10$ | ${\color{#8086F2} 2}$ |  $0.70$ |  $0.30$ |  $0.00$ |  $0.00$ |
-|$8$ |$8$ | $3$ | $4$ | ${\color{#F2B33D} 3}$ |  $0.00$ |  $0.00$ |  $0.98$ |  $0.02$ |
-|$9$ |$6$ | $2$ | $5$ | ${\color{#F2B33D} 3}$ |  $0.00$ |  $0.00$ |  $0.99$ |  $0.01$ |
+|$1$ |$10$ | $10$ | $10$  | ${\color{#020873} 1}$  | $1.00$ |  $0.00$ |  $0.00$ |  $0.00$ |
+|$2$ |$8$ | $7$ | $8$  |${\color{#020873} 1}$  |  $0.47$ |  $0.53$ |  $0.00$ |  $0.00$ |
+|$3$ |$9$ | $6$ | $10$  |${\color{#020873} 1}$  |  $0.82$ |  $0.17$ |  $0.01$ |  $0.00$ |
+|$4$ |$4$ | $10$ | $10$  |${\color{#020873} 1}$  |  $0.89$ |  $0.11$ |  $0.00$ |  $0.00$ |
+|$5$ |$5$ | $8$ | $7$ | ${\color{#8086F2} 2}$ |  $0.02$ |  $0.98$ |  $0.00$ |  $0.00$ |
+|$6$ |$10$ | $7$ | $4$ | ${\color{#8086F2} 2}$ |  $0.19$ |  $0.81$ |  $0.01$ |  $0.00$ |
+|$7$ |$7$ | $7$ | $10$ | ${\color{#8086F2} 2}$ |  $0.63$ |  $0.37$ |  $0.00$ |  $0.00$ |
+|$8$ |$8$ | $3$ | $4$ | ${\color{#F2B33D} 3}$ |  $0.00$ |  $0.02$ |  $0.98$ |  $0.00$ |
+|$9$ |$6$ | $2$ | $5$ | ${\color{#F2B33D} 3}$ |  $0.00$ |  $0.01$ |  $0.98$ |  $0.01$ |
 |$10$ |$10$ | $2$ | $2$ | ${\color{#F2B33D} 3}$ |  $0.00$ |  $0.00$ |  $1.00$ |  $0.00$ |
-|$11$ |$1$ | $1$ | $3$ | ${\color{#F288B9} 4}$ |  $0.00$ |  $0.02$ |  $0.00$ |  $0.98$ |
-|$12$ |$5$ | $2$ | $2$ | ${\color{#F288B9} 4}$ |  $0.00$ |  $0.02$ |  $0.02$ |  $0.96$ |
+|$11$ |$1$ | $1$ | $3$ | ${\color{#F288B9} 4}$ |  $0.00$ |  $0.00$ |  $0.00$ |  $1.00$ |
+|$12$ |$5$ | $2$ | $2$ | ${\color{#F288B9} 4}$ |  $0.00$ |  $0.00$ |  $0.02$ |  $0.98$ |
 Træningsdata fra 12 elever inklusiv de beregnede outputværdier.
 :::
 
@@ -776,7 +776,7 @@ Træningsdata fra 12 elever inklusiv de beregnede outputværdier.
 
 Et netværk vil altid være forholdsvis godt til at prædiktere korrekt på de data, som netværket er trænet på. Det kan du læse mere om i noten om [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd). Med det i baghovedet kan vi alligevel se fra @tbl-prediction, at den prædikterede sandsynlighed for det valg, som hver elev træffer, er høj. For eksempel vælger elev nr. 1 også valg 1 (at blive i klassen), og den prædikterede sandsynlighed for dette valg er $o_1 = 0.98$. 
 
-For elev nr. 2 kan vi se, at vores AI assistent er i tvivl om ($o_1=o_2=0.50$), om den skal prædiktere valg 1 eller 2 (eleven har valgt 1). For elev nr. 7 vil vores AI assistent prædiktere valg 1 ($o_1 = 0.70$), men eleven træffer i virkeligheden valg 2. De resterende anbefalinger er korrekte.
+For elev nr. 2 kan vi se, at vores AI assistent vil prædiktere valg 2 ($o_2 = 0.53$). For elev nr. 7 vil vores AI assistent prædiktere valg 1 ($o_1 = 0.63$), men eleven træffer i virkeligheden valg 2. De resterende anbefalinger er korrekte.
 
 På @fig-trainingdata_prediction_wrong er elev 2 og 7 fremhævet ved, at de tilhørende punkter er tegnet større. Hvis man drejer lidt rundt på figuren, kan man se, at de to punkter ligger forholdsvis tæt på hinanden og i nærheden af andre mørkeblå punkter, så det er ikke helt så underligt, at netværket netop har svært ved at prædiktere, som det gør.
 

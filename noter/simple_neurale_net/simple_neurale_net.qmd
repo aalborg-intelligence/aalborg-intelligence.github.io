@@ -445,13 +445,13 @@ Det er altså idéen, hvis man gerne vil bestemme minimum. Man stiller sig simpe
 
 Vi har lavet videoer om [funktioner af to variable](https://youtu.be/tlq2UYWF2Rw){target="blank"} og [gradientnedstigning](https://youtu.be/WcM8aEoPzf8){target="blank"}, hvis du vil vide mere.   
 
-Nu hedder vores funktion ikke $f$, men $E$ (det var tabsfunktionen). $E$ afhænger af vægtene $r_0, r_1, \dots, r_n, v_0, v_1, w_0$ og $w_1$. Vi vælger derfor nogle tilfældige værdier af disse vægte og udregner gradienten. Så opdaterer vi alle vægtene ved at gå et lille stykke $\eta$ i den negative gradients retning. For at beregne den nye værdi af $w_1$, som vi her vil kalde for $w_1^{\textrm{ny}}$, vil det for eksempel se sådan her ud:
+Nu hedder vores funktion ikke $f$, men $E$ (det var tabsfunktionen). $E$ afhænger af vægtene $r_0, r_1, \dots, r_n, v_0, v_1, w_0$ og $w_1$. Vi vælger derfor nogle tilfældige værdier af disse vægte og udregner gradienten. Så opdaterer vi alle vægtene ved at gå et lille stykke $\eta$ i den negative gradients retning. For at beregne den nye værdi af $w_1$, som vi her vil kalde for $w_1^{\textrm{(ny)}}$, vil det for eksempel se sådan her ud:
 
 $$
-w_1^{\textrm{ny}} \leftarrow w_1 - \eta \cdot \frac{\partial E}{\partial w_1}
+w_1^{\textrm{(ny)}} \leftarrow w_1 - \eta \cdot \frac{\partial E}{\partial w_1}
 $$
 
-Det lille stykke $\eta$, som vi går i den negative gradients retning, kaldes også for en *learning rate*. Her er $w_1$ den \"nuværende\" værdi af vægten, og pilen til venstre betyder, at der foretages en opdatering. Den nye værdi af vægten kaldes, som sagt, for $w_1^{\textrm{ny}}$.
+Det lille stykke $\eta$, som vi går i den negative gradients retning, kaldes også for en *learning rate*. Her er $w_1$ den \"nuværende\" værdi af vægten, og pilen til venstre betyder, at der foretages en opdatering. Den nye værdi af vægten kaldes, som sagt, for $w_1^{\textrm{(ny)}}$.
 
 I backpropagation opdateres vægtene ved at bruge ovenstående opdateringsregel, men det gøres på en snedig måde. Nemlig ved at opdatere vægtene tættest på outputlaget først -- det vil sige $w_0$ og $w_1$. Dernæst går man en skidt længere tilbage i netværket i @fig-long_simple_NN og opdaterer $v_0$ og $v_1$ og endelig opdaterer man til sidst vægtene tættest på inputlaget $r_0, r_1, \dots, r_n$. Vi skal nok forklare, hvorfor det er smart, men det er altså årsagen til, at metoden kaldes for **back**propagation: Fordi vægtene opdateres fra outputlaget og bagud.
 
@@ -480,8 +480,8 @@ Ved at bruge gradientnedstigning bliver opdateringsligningerne for $w$-vægtene 
 
 $$
 \begin{aligned}
-w_0^{\textrm{ny}} &\leftarrow w_0 - \eta \cdot \frac{\partial E}{\partial w_0} \\
-w_1^{\textrm{ny}} &\leftarrow w_1 - \eta \cdot \frac{\partial E}{\partial w_1}
+w_0^{\textrm{(ny)}} &\leftarrow w_0 - \eta \cdot \frac{\partial E}{\partial w_0} \\
+w_1^{\textrm{(ny)}} &\leftarrow w_1 - \eta \cdot \frac{\partial E}{\partial w_1}
 \end{aligned}
 $$ {#eq-generel_opdatering_w}
 
@@ -576,7 +576,7 @@ $$
 Indsættes dette i (@eq-generel_opdatering_w) bliver opdateringsreglen for $w_1$: 
 
 $$
-w_1^{\textrm{ny}} \leftarrow w_1 + \eta \cdot \sum_{m=1}^M (t^{(m)}-o^{(m)}) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot z^{(m)}
+w_1^{\textrm{(ny)}} \leftarrow w_1 + \eta \cdot \sum_{m=1}^M (t^{(m)}-o^{(m)}) \cdot o^{(m)} \cdot (1-o^{(m)}) \cdot z^{(m)}
 $$
 
 Hvis vi lader 
@@ -588,7 +588,7 @@ $$ {#eq-delta_m}
 kan det skrives kort som
 
 $$
-w_1^{\textrm{ny}} \leftarrow w_1 + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot z^{(m)}
+w_1^{\textrm{(ny)}} \leftarrow w_1 + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot z^{(m)}
 $$
 
 På helt tilsvarende vis kan opdateringsreglen for $w_0$ udledes, og vi ender med:
@@ -597,8 +597,8 @@ På helt tilsvarende vis kan opdateringsreglen for $w_0$ udledes, og vi ender me
 ## Opdateringsregler for $w$-vægtene
 $$
 \begin{aligned}
-w_0^{\textrm{ny}} \leftarrow & w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
-w_1^{\textrm{ny}} \leftarrow & w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot z^{(m)}\\
+w_0^{\textrm{(ny)}} \leftarrow & w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
+w_1^{\textrm{(ny)}} \leftarrow & w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot z^{(m)}\\
 \end{aligned}
 $$
 hvor
@@ -625,8 +625,8 @@ Vi træder nu et skridt tilbage i netværket i @fig-long_simple_NN og opdaterer 
 
 $$
 \begin{aligned}
-v_0^{\textrm{ny}} &\leftarrow v_0 - \eta \cdot \frac{\partial E}{\partial v_0} \\
-v_1^{\textrm{ny}} &\leftarrow v_1 - \eta \cdot \frac{\partial E}{\partial v_1}
+v_0^{\textrm{(ny)}} &\leftarrow v_0 - \eta \cdot \frac{\partial E}{\partial v_0} \\
+v_1^{\textrm{(ny)}} &\leftarrow v_1 - \eta \cdot \frac{\partial E}{\partial v_1}
 \end{aligned}
 $$ {#eq-generel_opdatering_v}
 
@@ -709,8 +709,8 @@ Indsættes i (@eq-generel_opdatering_v) får vi altså disse opdateringsregler:
 ## Opdateringsregler for $v$-vægtene
 $$
 \begin{aligned}
-v_0^{\textrm{ny}} \leftarrow & v_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot 1\\
-v_1^{\textrm{ny}} \leftarrow & v_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot y^{(m)}\\
+v_0^{\textrm{(ny)}} \leftarrow & v_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot 1\\
+v_1^{\textrm{(ny)}} \leftarrow & v_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot y^{(m)}\\
 \end{aligned}
 $$
 hvor
@@ -734,10 +734,10 @@ Vi er nu nået til det sidste lag i netværket, som er tættest på inputlaget. 
 
 $$
 \begin{aligned}
-r_0^{\textrm{ny}} &\leftarrow r_0 - \eta \cdot \frac{\partial E}{\partial r_0} \\
-r_1^{\textrm{ny}} &\leftarrow r_1 - \eta \cdot \frac{\partial E}{\partial r_1} \\
+r_0^{\textrm{(ny)}} &\leftarrow r_0 - \eta \cdot \frac{\partial E}{\partial r_0} \\
+r_1^{\textrm{(ny)}} &\leftarrow r_1 - \eta \cdot \frac{\partial E}{\partial r_1} \\
 & \quad \vdots \\
-r_n^{\textrm{ny}} &\leftarrow r_n - \eta \cdot \frac{\partial E}{\partial r_n}
+r_n^{\textrm{(ny)}} &\leftarrow r_n - \eta \cdot \frac{\partial E}{\partial r_n}
 \end{aligned}
 $$ {#eq-generel_opdatering_r}
 
@@ -813,7 +813,7 @@ $$
 Opdateringsreglen for $r_i$ bliver derfor ifølge (@eq-generel_opdatering_r):
 
 $$
-r_i^{\textrm{ny}} \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}
+r_i^{\textrm{(ny)}} \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}
 $$
 Og for samtlige $r$-vægte ender vi med følgende:
 
@@ -822,10 +822,10 @@ Og for samtlige $r$-vægte ender vi med følgende:
 
 $$
 \begin{aligned}
-r_0^{\textrm{ny}} &\leftarrow r_0 + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot 1 \\
-r_1^{\textrm{ny}} &\leftarrow r_1 + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_1^{(m)} \\
+r_0^{\textrm{(ny)}} &\leftarrow r_0 + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot 1 \\
+r_1^{\textrm{(ny)}} &\leftarrow r_1 + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_1^{(m)} \\
 & \quad \vdots \\
-r_n^{\textrm{ny}} &\leftarrow r_n + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_n^{(m)} \\
+r_n^{\textrm{(ny)}} &\leftarrow r_n + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_n^{(m)} \\
 \end{aligned}
 $$
 
@@ -854,8 +854,8 @@ Opdateringsreglerne for laget tættest på outputlaget ($w$-vægtene) er:
 
 $$
 \begin{aligned}
-w_0^{\textrm{ny}} \leftarrow & w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
-w_1^{\textrm{ny}} \leftarrow & w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot z^{(m)}\\
+w_0^{\textrm{(ny)}} \leftarrow & w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
+w_1^{\textrm{(ny)}} \leftarrow & w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot z^{(m)}\\
 \end{aligned}
 $$
 hvor
@@ -868,8 +868,8 @@ Træder vi et skridt bagud i netværket opdateres $v$-vægtene således:
 
 $$
 \begin{aligned}
-v_0^{\textrm{ny}} \leftarrow & v_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot 1\\
-v_1^{\textrm{ny}} \leftarrow & v_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot y^{(m)}\\
+v_0^{\textrm{(ny)}} \leftarrow & v_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)}\cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot 1\\
+v_1^{\textrm{(ny)}} \leftarrow & v_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot y^{(m)}\\
 \end{aligned}
 $$
 
@@ -883,21 +883,21 @@ Opdateringen af $v$-vægtene kan derfor skrives på denne måde:
 
 $$
 \begin{aligned}
-v_0^{\textrm{ny}} \leftarrow & v_0 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot 1\\
-v_1^{\textrm{ny}} \leftarrow & v_1 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot y^{(m)}\\
+v_0^{\textrm{(ny)}} \leftarrow & v_0 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot 1\\
+v_1^{\textrm{(ny)}} \leftarrow & v_1 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot y^{(m)}\\
 \end{aligned}
 $$
 
 De sidste opdateringsregler for $r$-vægtene ser sådan her ud:
 
 $$
-r_i^{\textrm{ny}} \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}
+r_i^{\textrm{(ny)}} \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta_w^{(m)} \cdot w_1 \cdot z^{(m)} \cdot (1-z^{(m)})\cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}
 $$
 
 Indsætter vi udtrykket i (@eq-delta_v) kan det forkortes til:
 
 $$
-r_i^{\textrm{ny}} \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta_v^{(m)} \cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}
+r_i^{\textrm{(ny)}} \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta_v^{(m)} \cdot v_1 \cdot y^{(m)} \cdot (1-y^{(m)}) \cdot x_i^{(m)}
 $$
 Og lader vi
 
@@ -908,7 +908,7 @@ $$
 ender vi med
 
 $$
-r_i^{\textrm{ny}} \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_i^{(m)}
+r_i^{\textrm{(ny)}} \leftarrow r_i + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_i^{(m)}
 $$
 
 Det fine er, at det nu er blevet meget tydeligt, at alle opdateringsregler faktisk minder ret meget om hinanden. Vi kan derfor sammenfatte opdateringsreglener på denne måde:
@@ -947,24 +947,24 @@ Backpropagation foregår samlet set på denne måde:
    **$w$-vægtene:**
    $$
    \begin{aligned}
-   w_0^{\textrm{ny}} &\leftarrow w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
-   w_1^{\textrm{ny}} &\leftarrow w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot z^{(m)}\\
+   w_0^{\textrm{(ny)}} &\leftarrow w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
+   w_1^{\textrm{(ny)}} &\leftarrow w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot z^{(m)}\\
    \end{aligned}
    $$
    **$v$-vægtene:**
    $$
    \begin{aligned}
-   v_0^{\textrm{ny}} &\leftarrow v_0 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot 1\\
-   v_1^{\textrm{ny}} &\leftarrow v_1 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot y^{(m)}\\
+   v_0^{\textrm{(ny)}} &\leftarrow v_0 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot 1\\
+   v_1^{\textrm{(ny)}} &\leftarrow v_1 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot y^{(m)}\\
    \end{aligned}
    $$
    **$r$-vægtene:**
    $$
    \begin{aligned}
-   r_0^{\textrm{ny}} &\leftarrow r_0 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot 1 \\
-   r_1^{\textrm{ny}} &\leftarrow r_1 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)} \\
+   r_0^{\textrm{(ny)}} &\leftarrow r_0 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot 1 \\
+   r_1^{\textrm{(ny)}} &\leftarrow r_1 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)} \\
    & \quad \vdots \\
-   r_n^{\textrm{ny}} &\leftarrow r_n + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_n^{(m)}
+   r_n^{\textrm{(ny)}} &\leftarrow r_n + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_n^{(m)}
    \end{aligned}
    $$
 

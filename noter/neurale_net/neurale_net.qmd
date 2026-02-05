@@ -442,7 +442,7 @@ $$
 og så ændrer vi værdien af $s_1$ en lille smule i retning af den negative partielle afledede. Vi viser, at vi ændrer værdien af $s_1$ til en ny værdi, ved at bruge en
 pil: 
 $$
-s_1^{\textrm{ny}} \leftarrow s_1 - \eta  \frac{\partial E}{\partial s_1}
+s_1^{\textrm{(ny)}} \leftarrow s_1 - \eta  \frac{\partial E}{\partial s_1}
 $$ {#eq-opdatering_s1} 
 Lad os lige bruge lidt tid på at forstå, hvad der står her! Venstresiden er den nye
 værdi af vægten $s_1$. Denne værdi beregnes ved hjælp af udtrykket på
@@ -510,15 +510,15 @@ $$
 $$ {#eq-dEdw_1}
 Vi kan nu udlede den første opdateringsregel for vægten $w_1$ ved at bruge idéen fra (@eq-opdatering_s1):
 $$
-w_1^{\textrm{ny}} \leftarrow w_1 - \eta  \cdot \frac{\partial E}{\partial w_1}
+w_1^{\textrm{(ny)}} \leftarrow w_1 - \eta  \cdot \frac{\partial E}{\partial w_1}
 $$
 Indsættes udtrykket fra (@eq-dEdw_1), får vi
 $$
-w_1^{\textrm{ny}} \leftarrow w_1 - \eta  \cdot (-(t-o) \cdot o \cdot (1-o) \cdot z_1)
+w_1^{\textrm{(ny)}} \leftarrow w_1 - \eta  \cdot (-(t-o) \cdot o \cdot (1-o) \cdot z_1)
 $$
 Det vil sige, at
 $$
-w_1^{\textrm{ny}} \leftarrow w_1 + \eta  \cdot (t-o) \cdot o \cdot (1-o) \cdot z_1
+w_1^{\textrm{(ny)}} \leftarrow w_1 + \eta  \cdot (t-o) \cdot o \cdot (1-o) \cdot z_1
 $$ 
 Det er værd at dvæle lidt ved opdateringsleddet
 $\eta  \cdot (t-o) \cdot o \cdot (1-o) \cdot z_1$ på højresiden, fordi
@@ -548,7 +548,7 @@ $$ {#eq-delta}
 og derfor kan opdateringsreglen for
 $w_1$ nu også skrives: 
 $$
-w_1^{\textrm{ny}} \leftarrow w_1 + \eta  \cdot \delta \cdot z_1
+w_1^{\textrm{(ny)}} \leftarrow w_1 + \eta  \cdot \delta \cdot z_1
 $$ {#eq-opdatering_w1}
 
 Helt analogt med ovenstående kan man udlede opdateringsregler for $w_2$
@@ -557,9 +557,9 @@ og $w_0$. Resultatet er samlet her.
 ::: {.callout-note collapse="false" appearance="minimal"} 
 ## Opdateringsregler for $w$-vægtene
 \begin{align*}
-w_0^{\textrm{ny}} &\leftarrow w_0 + \eta  \cdot \delta  \\
-w_1^{\textrm{ny}} &\leftarrow w_1 + \eta  \cdot \delta \cdot z_1 \\
-w_2^{\textrm{ny}} &\leftarrow w_2 + \eta  \cdot \delta \cdot z_2 \\
+w_0^{\textrm{(ny)}} &\leftarrow w_0 + \eta  \cdot \delta  \\
+w_1^{\textrm{(ny)}} &\leftarrow w_1 + \eta  \cdot \delta \cdot z_1 \\
+w_2^{\textrm{(ny)}} &\leftarrow w_2 + \eta  \cdot \delta \cdot z_2 \\
 \end{align*}
 hvor $$\delta = (t-o) \cdot o \cdot (1-o)$$
 :::
@@ -623,15 +623,15 @@ $$
 $$
 Opdateringsreglen for $v_1$ bliver derfor
 $$
-v_1^{\textrm{ny}} \leftarrow v_1 - \eta \cdot \frac{\partial E}{\partial v_1}
+v_1^{\textrm{(ny)}} \leftarrow v_1 - \eta \cdot \frac{\partial E}{\partial v_1}
 $$
 og med det netop udledte udtryk for $\frac{\partial E}{\partial v_1}$ får vi
 $$
-v_1^{\textrm{ny}} \leftarrow v_1 - \eta \cdot (-\delta \cdot w_1 \cdot z_1 \cdot (1-z_1)\cdot y_1)
+v_1^{\textrm{(ny)}} \leftarrow v_1 - \eta \cdot (-\delta \cdot w_1 \cdot z_1 \cdot (1-z_1)\cdot y_1)
 $$
 Det vil sige, at
 $$
-v_1^{\textrm{ny}} \leftarrow v_1 + \eta \cdot \delta \cdot w_1 \cdot z_1 \cdot (1-z_1) \cdot y_1
+v_1^{\textrm{(ny)}} \leftarrow v_1 + \eta \cdot \delta \cdot w_1 \cdot z_1 \cdot (1-z_1) \cdot y_1
 $$
 Læg igen mærke til, at når vi har været igennem et feedforward i netværket, så kender vi alle de størrelser, som indgår i ovenstående udtryk.
 
@@ -641,9 +641,9 @@ og $v_2$. De tre opdateringsregler for $v$-vægtene ses her:
 ::: {.callout-note collapse="false" appearance="minimal"}
 ## Opdateringsregler for $v$-vægtene
 \begin{align}
-v_0^{\textrm{ny}} &\leftarrow v_0 + \eta  \cdot \delta \cdot w_1 \cdot z_1 \cdot (1-z_1) \\
-v_1^{\textrm{ny}} &\leftarrow v_1 + \eta  \cdot \delta \cdot w_1 \cdot z_1 \cdot (1-z_1) \cdot y_1 \\
-v_2^{\textrm{ny}} &\leftarrow v_2 + \eta  \cdot \delta \cdot w_1 \cdot z_1 \cdot (1-z_1) \cdot y_2 \\
+v_0^{\textrm{(ny)}} &\leftarrow v_0 + \eta  \cdot \delta \cdot w_1 \cdot z_1 \cdot (1-z_1) \\
+v_1^{\textrm{(ny)}} &\leftarrow v_1 + \eta  \cdot \delta \cdot w_1 \cdot z_1 \cdot (1-z_1) \cdot y_1 \\
+v_2^{\textrm{(ny)}} &\leftarrow v_2 + \eta  \cdot \delta \cdot w_1 \cdot z_1 \cdot (1-z_1) \cdot y_2 \\
 \end{align}
 hvor 
 $$
@@ -664,9 +664,9 @@ Udregninger svarende til det netop gennemgåede giver os
 ::: {.callout-note collapse="false" appearance="minimal"}
 ## Opdateringsregler for $u$-vægtene
 \begin{align}
-u_0^{\textrm{ny}} &\leftarrow u_0 + \eta  \cdot \delta \cdot w_2 \cdot z_2 \cdot (1-z_2) \\
-u_1^{\textrm{ny}} &\leftarrow u_1 + \eta  \cdot \delta \cdot w_2 \cdot z_2 \cdot (1-z_2) \cdot y_1 \\
-u_2^{\textrm{ny}} &\leftarrow u_2 + \eta  \cdot \delta \cdot w_2 \cdot z_2 \cdot (1-z_2) \cdot y_2 \\
+u_0^{\textrm{(ny)}} &\leftarrow u_0 + \eta  \cdot \delta \cdot w_2 \cdot z_2 \cdot (1-z_2) \\
+u_1^{\textrm{(ny)}} &\leftarrow u_1 + \eta  \cdot \delta \cdot w_2 \cdot z_2 \cdot (1-z_2) \cdot y_1 \\
+u_2^{\textrm{(ny)}} &\leftarrow u_2 + \eta  \cdot \delta \cdot w_2 \cdot z_2 \cdot (1-z_2) \cdot y_2 \\
 \end{align}
 hvor 
 $$
@@ -766,10 +766,10 @@ $$
 =-\delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_1
 $$
 Helt i tråd med tidligere får vi altså følgende opdateringsregel for $r_1$
-$$r_1^{\textrm{ny}} \leftarrow r_1 - \eta \cdot \frac{\partial E}{\partial r_1} $$
+$$r_1^{\textrm{(ny)}} \leftarrow r_1 - \eta \cdot \frac{\partial E}{\partial r_1} $$
 Det vil sige
 $$
-r_1^{\textrm{ny}} \leftarrow r_1 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_1
+r_1^{\textrm{(ny)}} \leftarrow r_1 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_1
 $$
 
 Udleder man tilsvarende opdateringsregler for $r_2, r_3, r_4$ og $r_0$
@@ -780,11 +780,11 @@ $x_2, x_3, x_4$ og $1$. Derfor får vi samlet set
 ::: {.callout-note collapse="false" appearance="minimal"}
 ## Opdateringsregler for $r$-vægtene
 \begin{align}
-r_0^{\textrm{ny}} &\leftarrow r_0 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \\
-r_1^{\textrm{ny}} &\leftarrow r_1 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_1\\
-r_2^{\textrm{ny}} &\leftarrow r_2 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_2\\
-r_3^{\textrm{ny}} &\leftarrow r_3 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_3\\
-r_4^{\textrm{ny}} &\leftarrow r_4 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_4\\
+r_0^{\textrm{(ny)}} &\leftarrow r_0 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \\
+r_1^{\textrm{(ny)}} &\leftarrow r_1 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_1\\
+r_2^{\textrm{(ny)}} &\leftarrow r_2 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_2\\
+r_3^{\textrm{(ny)}} &\leftarrow r_3 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_3\\
+r_4^{\textrm{(ny)}} &\leftarrow r_4 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_1+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_1 \Big) \cdot y_1\cdot (1-y_1) \cdot x_4\\
 \end{align}
 hvor 
 $$
@@ -825,11 +825,11 @@ og vi ender med følgende opdateringsregler for $s$-vægtene:
 ::: {.callout-note collapse="false" appearance="minimal"}
 ## Opdateringsregler for $s$-vægtene
 \begin{align}
-s_0^{\textrm{ny}} &\leftarrow s_0 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2) \\
-s_1^{\textrm{ny}} &\leftarrow s_1 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2) \cdot x_1\\
-s_2^{\textrm{ny}} &\leftarrow s_2 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2)  \cdot x_2\\
-s_3^{\textrm{ny}} &\leftarrow s_3 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2)  \cdot x_3\\
-s_4^{\textrm{ny}} &\leftarrow s_4 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2)  \cdot x_4\\
+s_0^{\textrm{(ny)}} &\leftarrow s_0 +  \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2) \\
+s_1^{\textrm{(ny)}} &\leftarrow s_1 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2) \cdot x_1\\
+s_2^{\textrm{(ny)}} &\leftarrow s_2 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2)  \cdot x_2\\
+s_3^{\textrm{(ny)}} &\leftarrow s_3 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2)  \cdot x_3\\
+s_4^{\textrm{(ny)}} &\leftarrow s_4 + \eta \cdot \delta \cdot \Big(w_1 \cdot z_1\cdot (1-z_1)\cdot v_2+w_2 \cdot z_2 \cdot (1-z_2)\cdot  u_2 \Big) \cdot y_2\cdot (1-y_2)  \cdot x_4\\
 \end{align}
 hvor 
 $$
@@ -883,7 +883,7 @@ kombineret med sigmoid aktiveringsfunktionen har nogle ulemper. For at
 forstå det, skal vi se på opdateringsreglerne for vægtene tættest på
 outputlaget. Men den notation, som vi anvendte i @sec-backpropagation_bogstaver, fik vi for eksempel at 
 $$
-w_1^{\textrm{ny}} \leftarrow w_1 + \eta  \cdot (t-o) \cdot o \cdot (1-o) \cdot z_1
+w_1^{\textrm{(ny)}} \leftarrow w_1 + \eta  \cdot (t-o) \cdot o \cdot (1-o) \cdot z_1
 $$
 Når vi træner netværket, ved vi jo ikke, hvilke værdier vægtene skal
 have - så vi starter med at vælge nogle mere eller mindre tilfældige
@@ -912,7 +912,7 @@ $t-o$ til $-dE/do$ og $o \cdot (1-o)$ var sigmoid-funktionen
 $\sigma(w_0+w_1 \cdot z_1 + w_2 \cdot z_2)$ differentieret. Det vil
 sige: 
 $$
-w_1^{\textrm{ny}} \leftarrow w_1 + \eta  \cdot \underbrace{(t-o)}_{-dE/do} \cdot \underbrace{o \cdot (1-o)}_{\sigma'(\cdots)} \cdot z_1
+w_1^{\textrm{(ny)}} \leftarrow w_1 + \eta  \cdot \underbrace{(t-o)}_{-dE/do} \cdot \underbrace{o \cdot (1-o)}_{\sigma'(\cdots)} \cdot z_1
 $$ {#eq-opdatering_w1_med_forklaring}
 Hvis man derimod kunne vælge en tabsfunktion, som passer bedre sammen
 med sigmoid-funktionen, på den måde at forstå at faktoren
@@ -987,12 +987,12 @@ $$
 $$ 
 som ved indsættelse i (@eq-opdatering_w1_med_forklaring) giver
 $$
-w_1^{\textrm{ny}} \leftarrow w_1 + \eta  \cdot \underbrace{\frac{t-o}{o \cdot (1-o)}}_{-dE/do} \cdot \underbrace{o \cdot (1-o)}_{\sigma'(\cdots)} \cdot z_1
+w_1^{\textrm{(ny)}} \leftarrow w_1 + \eta  \cdot \underbrace{\frac{t-o}{o \cdot (1-o)}}_{-dE/do} \cdot \underbrace{o \cdot (1-o)}_{\sigma'(\cdots)} \cdot z_1
 $$
 Vi ser nu, at udtrykket $o \cdot (1-o)$, som var den faktor, der kunne
 give anledning til langsom læring, forkorter ud, og vi får i stedet
 $$
-w_1^{\textrm{ny}} \leftarrow w_1 + \eta  \cdot (t-o) \cdot  z_1
+w_1^{\textrm{(ny)}} \leftarrow w_1 + \eta  \cdot (t-o) \cdot  z_1
 $$ 
 Her ses det tydeligt, at hvis der er stor forskel på target-værdi $t$ og outputværdi
 $o$, så vil det give anledning til en stor opdatering af
