@@ -1058,167 +1058,168 @@ w_{j,k}^{(\textrm{ny})} \leftarrow w_{j,k} + \eta \cdot \sum_{m=1}^M (t_j^{(m)} 
 </section>
 <section id="tilbage-til-eksemplet" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="tilbage-til-eksemplet">Tilbage til eksemplet</h2>
-<p>Vi har nu fået udledt opdateringsreglerne for alle vægtene, og vi vil derfor prøve at træne et netværk ved hjælp af træningsdata i <a href="#tbl-trainingdata" class="quarto-xref">tabel&nbsp;1</a>. Hvis vi til start sætter alle vægtene til <span class="math inline">\(0.5\)</span>, vælger en learning rate på <span class="math inline">\(0.001\)</span> og laver i alt <span class="math inline">\(100000\)</span> iterationer (det vil sige, at vægtene alt i alt opdateres <span class="math inline">\(100000\)</span> gange), så nærmer vi os et minimum for tabsfunktionen. Alle outputværdierne kan nu beregnes ved hjælp af (<a href="#eq-o_j" class="quarto-xref">5</a>). Gør vi det for alle data i træningsdatasættet, får vi følgende<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
+<p>Vi har nu fået udledt opdateringsreglerne for alle vægtene, og vi vil derfor prøve at træne et netværk ved hjælp af træningsdata i <a href="#tbl-trainingdata" class="quarto-xref">tabel&nbsp;1</a>. Hvis vi til start sætter alle vægtene til <span class="math inline">\(0\)</span>, vælger en learning rate på <span class="math inline">\(0.1\)</span> og laver i alt <span class="math inline">\(100000\)</span> iterationer (det vil sige, at vægtene alt i alt opdateres <span class="math inline">\(100000\)</span> gange), så nærmer vi os et minimum for tabsfunktionen. Du kan selv prøve <a href="https://apps01.math.aau.dk/ai/multi-neuron/">app’en her</a>.</p>
+<p>Alle outputværdierne kan nu beregnes ved hjælp af (<a href="#eq-o_j" class="quarto-xref">5</a>). Gør vi det for alle data i træningsdatasættet, får vi følgende<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
 <div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Bemærk, at hvis <span class="math inline">\(o_1+o_2+o_3+ o_4\)</span> ikke giver <span class="math inline">\(1\)</span>, så skyldes det afrunding.</p></div></div><div id="tbl-prediction" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-tbl figure page-columns page-full">
 <div aria-describedby="tbl-prediction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
 <colgroup>
-<col style="width: 11%">
-<col style="width: 11%">
-<col style="width: 11%">
-<col style="width: 11%">
-<col style="width: 11%">
-<col style="width: 11%">
-<col style="width: 11%">
-<col style="width: 11%">
-<col style="width: 11%">
+<col style="width: 17%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 12%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 7%">
+<col style="width: 7%">
 </colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: center;">Elev nr.</th>
-<th style="text-align: center;"><span class="math inline">\(x_1\)</span> (søvn)</th>
-<th style="text-align: center;"><span class="math inline">\(x_2\)</span> (emne)</th>
-<th style="text-align: center;"><span class="math inline">\(x_3\)</span> (eksamen)</th>
-<th style="text-align: center;">Valg</th>
-<th style="text-align: center;"><span class="math inline">\(o_1\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(o_2\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(o_3\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(o_4\)</span></th>
+<th style="text-align: right;">Elev nr.</th>
+<th style="text-align: right;"><span class="math inline">\(x_1\)</span> (søvn)</th>
+<th style="text-align: right;"><span class="math inline">\(x_2\)</span> (emne)</th>
+<th style="text-align: right;"><span class="math inline">\(x_3\)</span> (eksamen)</th>
+<th style="text-align: right;">Valg</th>
+<th style="text-align: right;"><span class="math inline">\(o_1\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(o_2\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(o_3\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(o_4\)</span></th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
-<td style="text-align: center;"><span class="math inline">\({\color{#020873} 1}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(1.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: right;"><span class="math inline">\({\color{#020873} 1}\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
 </tr>
 <tr class="even">
-<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(8\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(7\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(8\)</span></td>
-<td style="text-align: center;"><span class="math inline">\({\color{#020873} 1}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.47\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.53\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(8\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(7\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(8\)</span></td>
+<td style="text-align: right;"><span class="math inline">\({\color{#020873} 1}\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.354\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.646\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(9\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(6\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
-<td style="text-align: center;"><span class="math inline">\({\color{#020873} 1}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.82\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.17\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.01\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(3\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(9\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(6\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: right;"><span class="math inline">\({\color{#020873} 1}\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.996\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.004\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
 </tr>
 <tr class="even">
-<td style="text-align: center;"><span class="math inline">\(4\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(4\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
-<td style="text-align: center;"><span class="math inline">\({\color{#020873} 1}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.89\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.11\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: right;"><span class="math inline">\({\color{#020873} 1}\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.998\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.002\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(5\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(5\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(8\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(7\)</span></td>
-<td style="text-align: center;"><span class="math inline">\({\color{#8086F2} 2}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.02\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.98\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(5\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(5\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(8\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(7\)</span></td>
+<td style="text-align: right;"><span class="math inline">\({\color{#8086F2} 2}\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
 </tr>
 <tr class="even">
-<td style="text-align: center;"><span class="math inline">\(6\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(7\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(4\)</span></td>
-<td style="text-align: center;"><span class="math inline">\({\color{#8086F2} 2}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.19\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.81\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.01\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(6\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(7\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: right;"><span class="math inline">\({\color{#8086F2} 2}\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.216\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.784\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(7\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(7\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(7\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
-<td style="text-align: center;"><span class="math inline">\({\color{#8086F2} 2}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.63\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.37\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(7\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(7\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(7\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: right;"><span class="math inline">\({\color{#8086F2} 2}\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.437\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.563\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
 </tr>
 <tr class="even">
-<td style="text-align: center;"><span class="math inline">\(8\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(8\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(4\)</span></td>
-<td style="text-align: center;"><span class="math inline">\({\color{#F2B33D} 3}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.02\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.98\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(8\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(8\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(3\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(4\)</span></td>
+<td style="text-align: right;"><span class="math inline">\({\color{#F2B33D} 3}\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(9\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(6\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(5\)</span></td>
-<td style="text-align: center;"><span class="math inline">\({\color{#F2B33D} 3}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.01\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.98\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.01\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(9\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(6\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(5\)</span></td>
+<td style="text-align: right;"><span class="math inline">\({\color{#F2B33D} 3}\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
 </tr>
 <tr class="even">
-<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
-<td style="text-align: center;"><span class="math inline">\({\color{#F2B33D} 3}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(1.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(10\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: right;"><span class="math inline">\({\color{#F2B33D} 3}\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(11\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(3\)</span></td>
-<td style="text-align: center;"><span class="math inline">\({\color{#F288B9} 4}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(1.00\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(11\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(3\)</span></td>
+<td style="text-align: right;"><span class="math inline">\({\color{#F288B9} 4}\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1.000\)</span></td>
 </tr>
 <tr class="even">
-<td style="text-align: center;"><span class="math inline">\(12\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(5\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
-<td style="text-align: center;"><span class="math inline">\({\color{#F288B9} 4}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.02\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.98\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(12\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(5\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: right;"><span class="math inline">\({\color{#F288B9} 4}\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1.000\)</span></td>
 </tr>
 </tbody>
 </table>
@@ -1228,9 +1229,9 @@ Tabel&nbsp;2: Træningsdata fra 12 elever inklusiv de beregnede outputværdier.
 </figcaption>
 </figure>
 </div>
-<p>Et netværk vil altid være forholdsvis godt til at prædiktere korrekt på de data, som netværket er trænet på. Det kan du læse mere om i noten om <a href="../../noter/krydsvalidering/krydsvalidering.html">Overfitting, modeludvælgelse og krydsvalidering</a>. Med det i baghovedet kan vi alligevel se fra <a href="#tbl-prediction" class="quarto-xref">tabel&nbsp;2</a>, at den prædikterede sandsynlighed for det valg, som hver elev træffer, er høj. For eksempel vælger elev nr. 1 også valg 1 (at blive i klassen), og den prædikterede sandsynlighed for dette valg er <span class="math inline">\(o_1 = 0.98\)</span>.</p>
-<p>For elev nr. 2 kan vi se, at vores AI assistent vil prædiktere valg 2 (<span class="math inline">\(o_2 = 0.53\)</span>). For elev nr. 7 vil vores AI assistent prædiktere valg 1 (<span class="math inline">\(o_1 = 0.63\)</span>), men eleven træffer i virkeligheden valg 2. De resterende anbefalinger er korrekte.</p>
-<p>På <a href="#fig-trainingdata_prediction_wrong" class="quarto-xref">figur&nbsp;7</a> er elev 2 og 7 fremhævet ved, at de tilhørende punkter er tegnet større. Hvis man drejer lidt rundt på figuren, kan man se, at de to punkter ligger forholdsvis tæt på hinanden og i nærheden af andre mørkeblå punkter, så det er ikke helt så underligt, at netværket netop har svært ved at prædiktere, som det gør.</p>
+<p>Et netværk vil altid være forholdsvis god til at prædiktere korrekt på de data, som netværket er trænet på. Det kan du læse mere om i noten om <a href="../../noter/krydsvalidering/krydsvalidering.html">Overfitting, modeludvælgelse og krydsvalidering</a>. Med det i baghovedet kan vi alligevel se fra <a href="#tbl-prediction" class="quarto-xref">tabel&nbsp;2</a>, at den prædikterede sandsynlighed for det valg, som hver elev træffer, er høj. For eksempel vælger elev nr. 1 også valg 1 (at blive i klassen), og den prædikterede sandsynlighed for dette valg er <span class="math inline">\(o_1 = 1.000\)</span>.</p>
+<p>For elev nr. 2 kan vi se, at vores AI assistent vil prædiktere valg 2 (<span class="math inline">\(o_2 = 0.646\)</span>), selvom eleven egentlig har valgt 1. De resterende anbefalinger er korrekte.</p>
+<p>På <a href="#fig-trainingdata_prediction_wrong" class="quarto-xref">figur&nbsp;7</a> er elev nr. 2 fremhævet ved, at det tilhørende punkt er tegnet større. Hvis man drejer lidt rundt på figuren, kan man se, at lige præcis det punkt ligger lidt lavere på <span class="math inline">\(x_3\)</span>-aksen end de øvrige mørkeblå punkter, som kan forklare, hvorfor prædiktionen bliver forkert.</p>
 <div id="fig-trainingdata_prediction_wrong" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-trainingdata_prediction_wrong-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1241,7 +1242,7 @@ Tabel&nbsp;2: Træningsdata fra 12 elever inklusiv de beregnede outputværdier.
 </div>
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-trainingdata_prediction_wrong-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;7: Punktplot af træningsdata fra <a href="#tbl-prediction" class="quarto-xref">tabel&nbsp;2</a>. Punkternes farve angiver valget (mørkeblå svarer til 1, lyseblå svarer til 2, gul svarer til 3 og lyserød svarer til 4). De to punkter, som er tegnet større, svarer til elev 2 og 7, hvor netværket ikke prædikterer korrekt.
+Figur&nbsp;7: Punktplot af træningsdata fra <a href="#tbl-prediction" class="quarto-xref">tabel&nbsp;2</a>. Punkternes farve angiver valget (mørkeblå svarer til 1, lyseblå svarer til 2, gul svarer til 3 og lyserød svarer til 4). Det punkt, som er tegnet større, svarer til elev 2, hvor netværket ikke prædikterer korrekt.
 </figcaption>
 </figure>
 </div>
@@ -1253,7 +1254,7 @@ Figur&nbsp;7: Punktplot af træningsdata fra <a href="#tbl-prediction" class="qu
 <li><p>Til sidst kommer Mads – lidt for sent i øvrigt… Mads har nemlig spillet computer den halve nat (<span class="math inline">\(x_1=3\)</span>), han synes, at emnet er ret interessant (<span class="math inline">\(x_2=8\)</span>), men han er pænt ligeglad med, hvordan det går til eksamen (<span class="math inline">\(x_3=2\)</span>).</p></li>
 </ul>
 <p>Ved timens start svarer alle tre elever straks på de tre spørgsmål, som læreren indtaster i sin AI assistent. Her er, hvad der kommer ud af det:</p>
-<table class="table">
+<table class="table-bordered table">
 <colgroup>
 <col style="width: 11%">
 <col style="width: 11%">
@@ -1284,10 +1285,10 @@ Figur&nbsp;7: Punktplot af træningsdata fra <a href="#tbl-prediction" class="qu
 <td style="text-align: center;"><span class="math inline">\(10\)</span></td>
 <td style="text-align: center;"><span class="math inline">\(2\)</span></td>
 <td style="text-align: center;"><span class="math inline">\(9\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(1.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1.000\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.000\)</span></td>
 <td style="text-align: center;"><span class="math inline">\({\color{#F2B33D} 3}\)</span></td>
 </tr>
 <tr class="even">
@@ -1295,10 +1296,10 @@ Figur&nbsp;7: Punktplot af træningsdata fra <a href="#tbl-prediction" class="qu
 <td style="text-align: center;"><span class="math inline">\(4\)</span></td>
 <td style="text-align: center;"><span class="math inline">\(5\)</span></td>
 <td style="text-align: center;"><span class="math inline">\(10\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.17\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.82\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1.000\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.000\)</span></td>
 <td style="text-align: center;"><span class="math inline">\({\color{#8086F2} 2}\)</span></td>
 </tr>
 <tr class="odd">
@@ -1306,17 +1307,96 @@ Figur&nbsp;7: Punktplot af træningsdata fra <a href="#tbl-prediction" class="qu
 <td style="text-align: center;"><span class="math inline">\(3\)</span></td>
 <td style="text-align: center;"><span class="math inline">\(8\)</span></td>
 <td style="text-align: center;"><span class="math inline">\(2\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(1.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(0.00\)</span></td>
-<td style="text-align: center;"><span class="math inline">\({\color{#8086F2} 2}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.000\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1.000\)</span></td>
+<td style="text-align: center;"><span class="math inline">\({\color{#F288B9} 4}\)</span></td>
 </tr>
 </tbody>
 </table>
-<p>Det prædikteres, at Anton vil gå i kantinen (valg 3), mens Signe og Mads vil gå ud for at regne opgaver (valg 2). Læreren ved derfor nu, at hun skal være ekstra opmærksom på Anton.</p>
+<p>Vejledning til udregning af outputværdierne for Anton kan du se i boksen herunder.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Beregning af outputværdier for Anton
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Fra <a href="https://apps01.math.aau.dk/ai/multi-neuron/">app’en</a> fås følgende vægte:</p>
+<table class="table-bordered table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Feature</th>
+<th style="text-align: center;">Valg 1</th>
+<th style="text-align: center;">Valg 2</th>
+<th style="text-align: center;">Valg 3</th>
+<th style="text-align: center;">Valg 4</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(w_0\)</span> (bias)</td>
+<td style="text-align: center;"><span class="math inline">\(-135.06\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(32.151\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(35.383\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(67.531\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(w_1\)</span> (<span class="math inline">\(x_1\)</span>)</td>
+<td style="text-align: center;"><span class="math inline">\(5.7802\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(-2.1277\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.47934\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(-4.1319\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(w_2\)</span> (<span class="math inline">\(x_2\)</span>)</td>
+<td style="text-align: center;"><span class="math inline">\(9.1981\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(-0.85005\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(-6.3908\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(-1.9573\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(w_3\)</span> (<span class="math inline">\(x_3\)</span>)</td>
+<td style="text-align: center;"><span class="math inline">\(4.1583\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.031569\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.24091\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(-4.4308\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>For Anton er <span class="math inline">\(x_1=10\)</span>, <span class="math inline">\(x_2=2\)</span> og <span class="math inline">\(x_3=9\)</span>. Vi kan nu udregne <span class="math inline">\(z_1\)</span>, <span class="math inline">\(z_2\)</span>, <span class="math inline">\(z_3\)</span> og <span class="math inline">\(z_4\)</span> for Anton:</p>
+<p><span class="math display">\[
+\begin{aligned}
+z_1 &amp;= -135.06 + 5.7802 \cdot 10 + 9.1981 \cdot 2 + 4.1583 \cdot 9 \approx -21.4371 \\
+z_2 &amp;=  32.151 - 2.1277 \cdot 10 -0.85005 \cdot 2 + 0.031569 \cdot 9 \approx 9.458021 \\
+z_3 &amp;=  35.383 +  0.47934 \cdot 10 -6.3908 \cdot 2 + 0.24091 \cdot 9 \approx 29.56299 \\
+z_4 &amp;=  67.531 - 4.1319  \cdot 10 -1.9573 \cdot 2 - 4.4308 \cdot 9 \approx -17.5798
+\end{aligned}
+\]</span></p>
+<p>Disse værdier bruges som input til softmax-funktionen, og vi får:</p>
+<p><span class="math display">\[
+\begin{aligned}
+o_1 &amp; = \frac{\mathrm{e}^{-21.4371}}{\mathrm{e}^{-21.4371}+\mathrm{e}^{9.458021}+\mathrm{e}^{29.56299}+\mathrm{e}^{-17.5798}} \approx 0.000 \\
+\\
+o_2 &amp; = \frac{\mathrm{e}^{9.458021}}{\mathrm{e}^{-21.4371}+\mathrm{e}^{9.458021}+\mathrm{e}^{29.56299}+\mathrm{e}^{-17.5798}} \approx 0.000 \\
+\\
+o_3 &amp; = \frac{\mathrm{e}^{29.56299}}{\mathrm{e}^{-21.4371}+\mathrm{e}^{9.458021}+\mathrm{e}^{29.56299}+\mathrm{e}^{-17.5798}} \approx 1.000 \\
+\\
+o_4 &amp; = \frac{\mathrm{e}^{-17.5798}}{\mathrm{e}^{-21.4371}+\mathrm{e}^{9.458021}+\mathrm{e}^{29.56299}+\mathrm{e}^{-17.5798}} \approx 0.000 \\
+\end{aligned}
+\]</span></p>
+</div>
+</div>
+</div>
+<p>Det prædikteres, at Anton vil gå i kantinen (valg 3), Signe vil gå ud for at regne opgaver (valg 2), mens Mads bare vil gå hjem. Læreren ved derfor nu, at hun skal være ekstra opmærksom på Anton og sørge for at fange Mads, inden han er stukket af!</p>
 <p>Det kan godt se ud som om, at <span class="math inline">\(x_2\)</span> (interessen for emnet) er forholdsvis afgørende for den endelig anbefaling. Hvis du tager et kig på <a href="#fig-trainingdata" class="quarto-xref">figur&nbsp;1</a>, vil du også opdage, at hvis <span class="math inline">\(x_2&lt;5\)</span>, så er alle punkter lyserøde eller gule (svarende til valg 3 og 4), mens alle punkter, hvor <span class="math inline">\(x_2 \geq 5\)</span> er lyse- eller mørkeblå (valg 1 og 2). Det kunne jo få en til at tænke, om det i virkeligheden ville være nok at svare på spørgsmål 2, uden at det går udover klassifikationsnøjagtigheden. Det vil man kunne undersøge ved at lave en model med kun <span class="math inline">\(x_2\)</span> som inputvariabel og en anden model med alle tre inputvariable og så for eksempel vurdere de to modellers klassifikationsnøjagtighed ved hjælp af <a href="../../noter/krydsvalidering/krydsvalidering.html">krydsvalidering</a>, men det ligger uden for formålet med denne note.</p>
-<p>I <a href="#fig-trainingdata_tre_nye_elever" class="quarto-xref">figur&nbsp;8</a> er de tre nye elever indtegnet sammen med træningsdata. Når man ser, hvordan de tre nye elever ligger i forhold til de andre punkter i træningsdata, så giver det faktisk god mening, at Anton bliver "farvet" gul, mens Signe og Mads bliver "farvet" lyseblå.</p>
+<p>I <a href="#fig-trainingdata_tre_nye_elever" class="quarto-xref">figur&nbsp;8</a> er de tre nye elever indtegnet sammen med træningsdata. Når man ser, hvordan de tre nye elever ligger i forhold til de andre punkter i træningsdata, så giver det faktisk god mening, at Anton bliver "farvet" gul, mens Signe bliver "farvet" lyseblå. Mads bliver farvet lyserød, hvilket nok ikke virker helt så oplagt, men det skyldes Mads’ lave værdier af <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_3\)</span> (prøv for eksempel at dreje på figuren, så <span class="math inline">\(x_2\)</span>-aksen peger direkte "ud af skærmen" – fra denne vinkel giver det god mening, at Mads bliver farvet lyserød).</p>
 <div id="fig-trainingdata_tre_nye_elever" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-trainingdata_tre_nye_elever-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
