@@ -8,13 +8,12 @@ categories:
   - A-niveau
 ---
 
-RNA er strenge med bogstaverne U (uracil), G (guanin), C (cytosin), A,
-(adenin). DNA har ikke U, men i stedet T (thymin) og DNA er dobbelt. Bogstaverne U,
-G, C, A og T kaldes for nukleotider.
+RNA er strenge med bogstaverne U (uracil), G (guanin), C (cytosin) og A
+(adenin). DNA har ikke U, men i stedet T (thymin). DNA er typisk dobbeltstrenget, men afstandsberegningerne her foretages på enkeltstrenge. Bogstaverne U, G, C, A og T kaldes for nukleotider.
 
-Vi ser her på afstande mellem DNA (eller RNA), som bygger på antallet af
-mutationer for at nå fra den ene til den anden og desuden, hvor hyppige
-disse mutationer er - hvis man ved, en mutation sker ofte, er afstanden
+Vi ser her på afstande mellem to DNA-sekvenser (eller to RNA-sekvenser), som bygger på antallet af
+mutationer for at nå fra den ene sekvens til den anden sekvens og desuden, hvor hyppige
+disse mutationer er. Hvis man ved, en mutation sker ofte, er afstanden
 mellem en streng uden mutationen og en med mutationen ikke så lang, som
 hvis mutationen er meget sjælden. Udover regler for, hvilke ændringer,
 man tillader, giver man derfor en omkostning ved ændringen -- afstanden
@@ -25,15 +24,15 @@ Afstand mellem DNA bruges til at analysere slægtskab og hvilke dyr,
 herunder mennesket, der nedstammer fra hvilke andre dyr -- det kaldes for *fylogenetiske træer* -- [se mere her](http://www.biotekunderviser.dk/sites/default/files/Handout Bioinformatik workshop Vejle 2.pdf).
 
 I den sammenhæng kalder man skift mellem A og G eller mellem C og T for
-*transitioner*[^1]. De fire andre mulige skift mellem A og C, mellem A
-og T, mellem G og T, mellem G og C, kaldes for *transversioner*.
+*transitioner*[^1]. De fire andre mulige skift mellem A og C, A
+og T, G og T eller G og C kaldes for *transversioner*.
 Transitioner er hyppigere mutationer end transversioner, så afstanden
 mellem $GATTACA$ og $GATTACG$ er mindre end afstanden mellem $GATTACA$ og
-$GATTACC$. Den slags udskiftning af et bogstav (et basepar) kaldes en
+$GATTACC$. Den slags udskiftning af et bogstav (en base) kaldes en
 punktmutation.
 
-*Indel* mutationer er indsætning (\"In\") eller fjernelse (\"Del\" for
-delete\") af et eller flere basepar. Det er mindre hyppigt og svarer til
+*Indel* mutationer er indsætning (\"In\") eller fjernelse (\"del\" for
+delete) af en eller flere baser. Det er mindre hyppige hændelser end punktmutationer og tildeles derfor en
 længere afstand. I [kilden ovenfor](http://www.biotekunderviser.dk/sites/default/files/Handout Bioinformatik workshop Vejle 2.pdf) bruges følgende omkostninger og altså
 afstande mellem DNA-strenge. Bemærk, at det er et valg - der er mange andre
 muligheder:
@@ -42,9 +41,9 @@ muligheder:
 
 -   Transversion: 2
 
--   Gap åbning: 9 (indsæt eller fjern præcis en base - altså et bogstav)
+-   Gap åbning: 9 (indsæt eller fjern præcis én base - altså et bogstav)
 
--   Gap forlængelse: 4 (indsæt eller fjern en base på samme sted, som er
+-   Gap forlængelse: 4 (indsæt eller fjern yderligere en base på samme sted, som allerede er
     åbnet)
 
 Man kan samle de to sidste og sige, at det koster $5+4L$ at indsætte
@@ -80,25 +79,29 @@ hvordan man kan komme fra $AGT$ til $ATG$, altså hvordan mutationerne
 kunne have set ud. For eksempel kunne det være:
 
 $$AGT \to ATGT \to ATG$$ 
-Det vil sige, indsæt $T$ mellem $A$ og $G$ og fjern så det sidste $T$. Det koster $9+4 =13$. Altså er længden af denne vej $13$. En anden mulighed er 
+Det vil sige, indsæt $T$ mellem $A$ og $G$, hvilket koster $9$ og fjern så det sidste $T$, hvilket koster $4$. Det koster dermed samlet $9+4 =13$, så længden af denne vej er $13$. 
+
+En anden mulighed er 
 
 $$AGT\to ATT \to ATG$$ 
 
 Her er der to punktmutationer og begge er transversioner (fra $T$ til $G$ eller
 omvendt), så det koster $2+2=4$. Det er den korteste vej, så
-afstanden er $4$. At denne vej faktisk er den kortest, kræver mere eftertanke.
+afstanden er $4$. At denne vej faktisk er den korteste, kræver mere eftertanke.
 
 Havde vi brugt samme omkostning/vægt for alle tilladte ændringer, ville
 begge de to veje have samme længde.
 
-Hvad med fra $AGT$ til $TGA$? Jo, det er faktisk nemmere. Det er i
+<!--  Hvad med fra $AGT$ til $TGA$? Jo, det er faktisk nemmere. Det er i
 virkeligheden samme DNA-sekvens -- man har bare læst den fra den anden
-ende\...
+ende\... -->
 
 Med lange strenge, som er ens på lange stykker, finder man afstande ved
 først at \"aligne\". Det vil sige, at man anbringer strengene, så de passer sammen på flest
-mulige pladser. Og derefter udregner man afstande, men det er stadig ikke
-nemt -- der skal algoritmer til. Her er et eksempel.
+mulige pladser. Derefter udregner man afstande, men det er stadig ikke
+nemt, bl.a. fordi der kan være flere forskellige måder at aligne på -- så der skal algoritmer til. 
+
+Her er et eksempel.
 
 Streng 1: $TCGTAGG$ 
 
