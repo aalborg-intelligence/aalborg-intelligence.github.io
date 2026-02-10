@@ -14,7 +14,7 @@ Hvis du har læst nogle af vores andre noter om kunstige neurale netværk, så h
 Vi forestiller os helt generelt en række inputvariable eller features: $x_1, x_2, \dots, x_n$ på baggrund af hvilke vi gerne vil kunne forudsige en targetvariabel $t$, som her er salgsprisen på et hus. 
 
 
-::: {#exm-houseprices}
+::: {#exm-houseprices1}
 
 ## House Price datasættet
 
@@ -40,7 +40,7 @@ Targetvariablen $t$ står i kolonnen `price` og angiver salgsprisen målt i doll
 
 * `hotwaterheating`: om huset har fjernvarme (ja=1, nej=0) 
 
-* `airconditioning`: om huset air conditioning (ja=1, nej=0)
+* `airconditioning`: om huset har air conditioning (ja=1, nej=0)
 
 * `parking`: antal parkeringspladser
 
@@ -48,11 +48,18 @@ Targetvariablen $t$ står i kolonnen `price` og angiver salgsprisen målt i doll
 
 * `furnishingstatus`: om huset et umøbleret, delvist møbleret eller fuldt møbleret
 
+I det følgende vil vi holde det simpelt og kun se på følgende features:
+
+* $x_1$: boligens areal målt i square feet (`area`)
+* $x_2$: antal værelser (`bedrooms`)
+* $x_3$: antal badeværelser (`bathrooms`)
+* $x_4$: om huset har kælder (`basement`)
+
 :::
 
 
 
-Lad os starte simpelt og opstille en kunstig neuron til formålet. Så vil vi sige, at vores prædiktion af husprisen skal være en outputværdi $o$, som er den vægtede sum af vores inputvariable:
+Lad os starte simpelt og opstille en kunstig neuron til formålet. Så vil vi sige, at vores prædiktion af husprisen skal være en outputværdi $o$, som helt generelt er den vægtede sum af vores inputvariable:
 
 $$
 o = w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n
@@ -86,11 +93,11 @@ $$
 E = \frac{1}{2}\sum \left ( t - \left ( w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n \right ) \right )^2
 $$
 
-Størrelsen $E$ kaldes for en **tabsfunktion**. Læg mærke til, at hvis vores kunstige neuron er god til at forudsige huspriser, så får vi en lille værdi af tabsfunktionen, mens vi får en stor værdi af E, hvis modellen er dårlig til at forudsige huspriser. Vi har her valgt at gange med $\frac{1}{2}$, fordi det senere kommer til at forkorte ud, men det er faktisk ikke så afgørende.
+Størrelsen $E$ kaldes for en **tabsfunktion**. Læg mærke til, at hvis vores kunstige neuron er god til at forudsige huspriser, så får vi en lille værdi af tabsfunktionen, mens vi får en stor værdi af $E$, hvis modellen er dårlig til at forudsige huspriser. Vi har her valgt at gange med $\frac{1}{2}$, fordi det senere kommer til at forkorte ud, men det er faktisk ikke så afgørende.
 
 Idéen er så bare at bestemme værdier af vægtene $w_0, w_1, w_2, \dots, w_n$, sådan at tabsfunktionen minimeres.
 
-Inden vi forklarer, hvordan det gøres, så lad os lige blive lidt mere specifikke i forhold til notationen af vores træningsdata. Vi forestiller os, at vi har information om $M$ huspriser. Så vil vi nummerer vores træningsdata på denne måde:
+Inden vi forklarer, hvordan det gøres, så lad os lige blive lidt mere specifikke i forhold til notationen af vores træningsdata. Vi forestiller os, at vi har information om $M$ huspriser (i eksemplet er $M=545$). Så vil vi nummerer vores træningsdata på denne måde:
 
 $$
 \begin{aligned}
@@ -173,15 +180,15 @@ hvor $o^{(m)} = w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}$.
 
 :::
 
-At opstille en kunstig neuron til regression, som vi har gjort her, svarer til det man kalder for **multipel lineær regression**, som egentlig bare er en udvidelse af lineær regression, som I kender det, blot med flere inputvariable.
+At opstille en kunstig neuron til regression, som vi har gjort her, svarer til det man kalder for **multipel lineær regression**, som egentlig bare er en udvidelse af lineær regression, som I kender det, blot med flere inputvariable/features.
 
 Det gode ved at opstille en kunstig neuron til regression, som vi her har gjort det, er, at man kan give en fortolkning af vægtene. 
 
 ### Fortolkning af vægtene
 
-Lad os sige, at vi har bestemt vægtene $w_0, w_1, \dots, w_n$, så tabsfunktionen er blevet minimeret, og at $X_1$ fortsat angiver boligarealet. Vi vil her forklare, hvordan vi kan fortolke $w_1$.
+Lad os sige, at vi har bestemt vægtene $w_0, w_1, \dots, w_n$, så tabsfunktionen er blevet minimeret, og at $x_1$ fortsat angiver boligarealet. Vi vil her forklare, hvordan vi kan fortolke $w_1$.
 
-Vi forstiller os, at vi har to hus med præcis samme værdier af de $n$ inputvariable $x_1, x_2, \dots, x_n$ bortset fra, at det ene hus er pris $1$ kvadratmeter større end det andet. Så det ene hus har en størrelse på $x_1$ kvadratmeter, mens det andet har en størrelse på $x_1+1$ kvadratmeter -- de resterende inputvariable er ens.
+Vi forstiller os, at vi har to hus med præcis samme værdier af de $n$ features $x_1, x_2, \dots, x_n$ bortset fra, at det ene hus er præcis $1$ *square feet* større end det andet. Så det ene hus har en størrelse på $x_1$ *square feet*, mens det andet har en størrelse på $x_1+1$ *square feet* -- de resterende features er ens.
 
 Det giver følgende prædikterede boligpriser $o_1$ og $o_2$ for de to huse:
 
@@ -205,15 +212,28 @@ o_2 - o_1 &= w_0 + w_1 \cdot x_1 + w_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n 
 \end{aligned}
 $$
 
-Det vil sige, at hvis alt andet er holdt ens, så vil en forøgelse i boligarelet på én kvadratmeter give en forøgelse i den prædikterede boligpris på $w_1$ kroner.
+Det vil sige, at hvis alt andet er holdt ens, så vil en forøgelse i boligarealet på én *square feet* give en forøgelse i den prædikterede boligpris på $w_1$ kroner.
 
-Hvis $x_2$ angiver, om boligen har kælder eller ej (hvor $x_2=1$ svarer til at boligen har kælder og $x_2=0$ svarer til at boligen ikke har kælder), så vil $w_2$ helt tilsvarende kunne fortolkes som den størrelse den prædikterede boligpris vil stige med, hvis en bolig har kælder sammenlignet med en helt tilsvarende bolig uden kælder.
+Da $x_4$ angiver, om boligen har kælder eller ej (hvor $x_4=1$ svarer til at boligen har kælder og $x_4=0$ svarer til, at boligen ikke har kælder), så vil $w_4$ helt tilsvarende kunne fortolkes som den størrelse, den prædikterede boligpris vil stige med, hvis en bolig har kælder sammenlignet med en helt tilsvarende bolig uden kælder.
 
 Vi illustrerer dette med et eksempel:
 
-:::{exm-kunstig_neuron_regression}
+::: {#exm-houseprices2}
 
 ## Fortolkning af vægtene
+
+Træner vi en kunstig neuron på datasættet om huspriser, hvor vi sætter alle startvægte til $0$, vælger en learning rate på $0.0001$ og antal iterationer til $500$, får vi følgende værdier af vægtene
+
+|  $w_0$  <br>  <br> |  $w_1$ <br> (`area`)  |  $w_2$  <br>(`bedrooms`)  | $w_3$ <br>  (`bathrooms`)  |  $w_4$ <br>  (`basement`) |
+|:---:|:---:|:---:|:---:|:---:|
+| $-221293.3671$ | $376.4762$ | $387528.7807$ | $1355117.6023$ | $447658.8766$ | 
+: {.bordered}
+
+For eksempel kan vi se, at $w_1 = 376.4762$. Det vil sige, at ifølge modellen vil husprisen på et hus, som er præcis én *square feet* større end et andet tilsvarende[^2] hus, være cirka $376 \, \$$ højere.
+
+[^2]: Et tilsvarende hus vil her mere præcist betyde et hus med det samme antal soveværelser, badeværelser og kælder (ja/nej).
+
+Vi ser også, at $w_4=447658.8766$, som betyder, at hvis vi står med to tilsvarende huse, hvor det ene er med kælder, og det andet er uden kælder, så vil huset med kælder ifølge vores model koste $447659 \, \$$ mere end huset uden kælder.
 
 :::
 
@@ -222,13 +242,18 @@ Vi illustrerer dette med et eksempel:
 
 Der skal helst ikke være skjulte fejl og mangler, når man skal sælge sit hus. Til gengæld kan det være en super god idé med nogle skjulte lag, når man skal prædiktere huspriser!
 
-I det ovenstående kommer de prædikterede huspriser til at afhænge lineært af inputvariablene. Men verden er sjældent lineær! Og en af styrkerne ved kunstige neurale netværk er netop, at de kan prædiktere størrelse eller kategorier ved hjælp af funktioner, som ikke er lineære. Vi skal derfor nu opstille et simpelt kunstigt neuralt netværk til prædiktion af huspriser. Vi vil lave et netværk igen med $x_1, x_2, \dots, x_n$ som inputvariable, men nu med et såkaldt skjult lag, som består af to neuroner. Det kan illustreres, som vist i @fig-neuralt_net_regression:
+I det ovenstående kommer de prædikterede huspriser til at afhænge lineært af inputvariablene. Men verden er sjældent lineær! Og en af styrkerne ved kunstige neurale netværk er netop, at de kan prædiktere størrelse eller kategorier ved hjælp af funktioner, som ikke er lineære. Vi skal derfor nu opstille et simpelt kunstigt neuralt netværk til prædiktion af huspriser. Vi vil lave et netværk med fire features $x_1, x_2, x_3, x_4$, men nu med et såkaldt skjult lag, som består af to neuroner. Det kan illustreres, som vist i @fig-neuralt_net_regression:
 
-![Simpelt kunstigt neuralt netværk til prædiktion af huspriser. Netværket har inputvariable $x_1, x_2, \dots, x_n$ og ét skjult lag med to neuroner.](images/neuralt_net_regression.jpg){#fig-neuralt_net_regression width=80% fig-align='center'}
+![Simpelt kunstigt neuralt netværk til prædiktion af huspriser. Netværket har inputvariable $x_1, x_2, x_3, x_4$ og ét skjult lag med to neuroner.](images/neuralt_net_regression.png){#fig-neuralt_net_regression width=80% fig-align='center'}
 
-Hvis vi for en stund forestiller os, at vi kender alle vægtene, så udregner vi outputværdien $o$ på følgende måde:
+Som det ses i @fig-neuralt_net_regression, er der til hver pil knyttet en vægt, som skal bruges til at udregne outputværdien $o$. Hvis vi for en stund forestiller os, at vi kender alle vægtene, så udregner vi outputværdien $o$ på følgende måde:
 
 Ved hjælp af inputvariablene og $v$-vægtene beregner vi $z_1$:
+
+$$
+z_1 = \sigma (v_0 + v_1 \cdot x_1 + v_2 \cdot x_2 + v_3 \cdot x_3 + v_4 \cdot x_4)
+$$
+som selvfølgelig kan generaliseres til
 
 $$
 z_1 = \sigma (v_0 + v_1 \cdot x_1 + \cdots + v_n \cdot x_n)
@@ -249,11 +274,11 @@ Sigmoid-funktionen kaldes også for en **aktiveringsfunktion**, og det er den, d
 På tilsvarende vis udregner vi $z_2$ ved at bruge $u$-vægtene:
 
 $$
-z_2 = \sigma (u_0 + u_1 \cdot x_1 + \cdots + u_n \cdot x_n)
+z_2 = \sigma (u_0 + u_1 \cdot x_1 + u_2 \cdot x_2 + u_3 \cdot x_3 + u_4 \cdot x_4)
 $$
 
 
-Når vi nu har $z_1$ og $z_2$ beregnes outputværdien $o$ som vi gjorde det tidligere:
+Når vi nu har $z_1$ og $z_2$ beregnes outputværdien $o$, som vi gjorde det tidligere:
 
 $$
 o = w_0 + w_1 \cdot z_1 + w_2 \cdot z_2
@@ -264,18 +289,18 @@ Ovenstående udtryk for beregning af $z_1$, $z_2$ og $o$ kaldes for **feedforwar
 ::: {.callout-note collapse="false" appearance="minimal"} 
 ## Feedforward-udtryk
 
-På baggrund af inputværdierne $x_1, x_2, \dots, x_n$ beregnes outputværdien $o$ på følgende måde.
+På baggrund af inputværdierne $x_1, x_2, x_3, x_4$ beregnes outputværdien $o$ på følgende måde.
 
 Først beregnes:
 
 $$
-z_1^{(m)} = \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + \cdots + v_n \cdot x_n^{(m)} \right)
+z_1^{(m)} = \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)}+ v_3 \cdot x_3^{(m)} + v_4 \cdot x_4^{(m)} \right)
 $$ {#eq-z_1}
 
 og
 
 $$
-z_2^{(m)} = \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + \cdots + u_n \cdot x_n^{(m)} \right)
+z_2^{(m)} = \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} + u_3 \cdot x_3^{(m)} + u_4 \cdot x_4^{(m)} \right)
 $$ {#eq-z_2}
 
 Herefter beregnes outputværdien:
@@ -290,12 +315,12 @@ Tabsfunktionen definerer vi nu som før
 
 $$
 \begin{aligned}
-E(w_0, w_1, &\dots, w_n) \\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+E(v_0, v_1, \dots, v_4, u_0, u_1, \dots, u_u,w_0, w_1, w_2) \\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
 o^{(m)} \right)^2
 \end{aligned}
 $$
 
-hvor $o^{(m)}$ er givet ved udtrykket i (@eq-o).
+hvor $o^{(m)}$ er givet ved udtrykket i (@eq-o). Læg mærke til, at tabsfunktionen afhænger af alle $u$-, $v$- og $w$-vægte, men for nemheds skyld vil vi blot skrive $E$ i det følgende.
 
 Man kan nu igen bruge gradientnedstigning til at bestemme de værdier er $v$-, $u$- og $w$-vægtene, som minimerer tabsfunktionen. Det er her en vigtig beregningsfinte, at man bevæger sig \"bagud\" i netværket og først opdaterer $w$-vægtene (som er tættest på outputlaget) og dernæst $u$- og $v$-vægtene, som er tættest på inputlaget. Dette kaldes for **backpropagation**.
 
@@ -312,8 +337,8 @@ Backpropagation foregår samlet set på denne måde:
 
    $$
    \begin{aligned}
-   z_1^{(m)} &= \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + \cdots + v_n \cdot x_n^{(m)} \right ) \\
-   z_2^{(m)} &= \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + \cdots + u_n \cdot x_n^{(m)} \right ) \\
+   z_1^{(m)} &= \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} + v_3 \cdot x_3^{(m)} + \cdots + v_4 \cdot x_4^{(m)} \right ) \\
+   z_2^{(m)} &= \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} + u_3 \cdot x_3^{(m)} + u_4 \cdot x_4^{(m)} \right ) \\
    o^{(m)} &= w_0 + w_1 \cdot z_1^{(m)} + w_2 \cdot z_2^{(m)}
    \end{aligned}
 $$ 
@@ -350,7 +375,7 @@ $$
    Bemærk her, at vi kender $z_1^{(m)}$, $z_2^{(m)}$ og $o^{(m)}$ på grund af feedforward, mens alle $u$-, $v$- og $w$-værdierne er de nuværende værdier af vægtene (*inden* opdatering). 
 
 
-Alle vægtene er nu opdateret, og vi kan gentage punkt 2 til 3, hvor feedforward i 2 hver gang er baseret på de netop opdaterede vægte fra det foregående gennemløb. Opdateringen af vægtene fortsætter indtil værdien af tabsfunktionen næsten ikke ændrer sig. Håbet er nu, at vi har fundet et minimum (eventuelt kun lokalt) for tabsfunktionen.
+Alle vægtene er nu opdateret, og vi kan gentage punkt 2 til 3, hvor feedforward i 2 hver gang er baseret på de netop opdaterede vægte fra det foregående gennemløb. Opdateringen af vægtene fortsætter, indtil værdien af tabsfunktionen næsten ikke ændrer sig. Håbet er nu, at vi har fundet et minimum (eventuelt kun lokalt) for tabsfunktionen.
 
 :::
 
@@ -363,9 +388,9 @@ $$
 som er et udtryk for den fejl netværket begår med de nuværende værdier af vægtene (nemlig forskellen på den ønskede targetværdi $t^{(m)}$ og den prædikterede outputværdi $o^{(m)}$). Der er to ting, som er værd at bemærke i den forbindelse:
 
 * Hvis fejlen er stor, bliver $w$ vægtene opdateret forholdsvis meget -- og omvendt hvis fejlen er lille.
-* Når vi har opdateret $w$-vægtene, har vi allerede beregnet fejlen $t^{(m)}-o^{(m)}$. Denne \"fejlfaktor\" indgår også i opdateringsreglerne for $v$- og $u$-vægtene og den allerede beregnede fejl kan altså genbruges, når $v$- og $u$-vægtene skal opdateres.
+* Når vi har opdateret $w$-vægtene, har vi allerede beregnet fejlen $t^{(m)}-o^{(m)}$. Denne \"fejlfaktor\" indgår også i opdateringsreglerne for $v$- og $u$-vægtene, og den allerede beregnede fejl kan altså genbruges, når $v$- og $u$-vægtene skal opdateres.
 
-Det kan her virke fuldstændig ligegyldigt, om vi skal beregne fejlen et par ekstra gange eller ej, men i virkelighedens anvendelser af kunstige neurale netværk, er det lige præcis denne beregningsmæssige finte, som gør, at det overhovedet kan lade sig gøre at bruge gradientnedstigning!
+Det kan her virke fuldstændig ligegyldigt, om vi skal beregne fejlen et par ekstra gange eller ej, men i virkelighedens anvendelser af kunstige neurale netværk, er det lige præcis denne beregningsmæssige finte, som gør, at det overhovedet kan lade sig gøre at bruge gradientnedstigning. Det sparer nemlig både tid og lagringsplads på computeren, at tidligere beregnede størrelser kan genbruges i de næste opdateringer.  
 
 Hvis du gerne vil bevise ovenstående, er der lidt hjælp at hente i nedenstående boks.
 
@@ -377,43 +402,94 @@ Husk på, at vores tabsfunktion ser sådan her ud:
 
 $$
 \begin{aligned}
-E(w_0, w_1, \dots, w_n) &= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+E &= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
 o^{(m)} \right)^2 \\
-&=\frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
-(w_0 + w_1 \cdot z_1^{(m)} + w_2 \cdot z_2^{(m)}) \right)^2.
+&= \sum_{m=1}^{M} \frac{1}{2} \left (t^{(m)}-
+(w_0 + w_1 \cdot z_1^{(m)} + w_2 \cdot z_2^{(m)}) \right)^2 \\
+&= \sum_{m=1}^{M} E^{(m)},
 \end{aligned}
 $$
+
+hvor vi her har sat
+
+$$
+E^{(m)}= \frac{1}{2} \left (t^{(m)}-
+(w_0 + w_1 \cdot z_1^{(m)} + w_2 \cdot z_2^{(m)}) \right)^2
+$$ {#eq-Em}
+
+
+Vi ved fra sumreglen, at vi skal differentiere ledvist. Det vil sige, når $E$ skal differentieres med hensyn til én af vægtene, så kan vi bare differentiere $E^{(m)}$ med hensyn til den pågældende vægt og lægge alle disse partielle afledede sammen. For eksempel er
+
+$$
+\frac{\partial E}{\partial w_i} = \sum_{m=1}^M \frac{\partial E^{(m)}}{\partial w_i}
+$$
+I det følgende får du derfor hints til at differentiere $E^{(m)}$.
 
 Når du skal bestemme
 
 $$
-\frac{\partial E}{\partial w_i},
+\frac{\partial E^{(m)}}{\partial w_i}
 $$
 
-så skal du gøre fuldstændig, som vi gjorde i afsnittet [Hvad koster mit hus?](#hvad-koster-mit-hus)
+så skal du gøre fuldstændig, som vi gjorde i afsnittet [Hvad koster mit hus?](#hvad-koster-mit-hus).
 
 Når du skal finde
 
 $$
-\frac{\partial E}{\partial v_i},
+\frac{\partial E^{(m)}}{\partial v_i}
 $$
 
-Da $v_i$ kun har indflydelse på $E$ via $z_1^{(m)}$-værdierne, behøver vi heldigvis ikke kædereglen for funktioner af flere variable. Men kædereglen får vi brug for -- du kan eventuelt se [denne video om kædereglen](https://www.youtube.com/watch?v=nVaAIVXiUjs), hvis du vil forstå nedenstående notation lidt bedre. Vi får nemlig (hvor vi også lige har brugt sumreglen):
+skal man egentlig bruge kædereglen for funktioner af flere variable, fordi $E^{(m)}$ både afhænger af $z_1^{(m)}(v_i)$ og $z_2^{(m)}(v_i)$:
 
 $$
-\frac{\partial E}{\partial v_i} = \sum_{m=1}^M \frac{\partial E}{\partial z_1^{(m)}} \cdot \frac{\partial z_1^{(m)}}{\partial v_i}
+\frac{\partial E^{(m)}}{\partial v_i} = \frac{\partial E^{(m)}}{\partial z_1^{(m)}}\cdot\frac{\partial z_1^{(m)}}{\partial v_i} + \frac{\partial E^{(m)}}{\partial z_2^{(m)}}\cdot\frac{\partial z_2^{(m)}}{\partial v_i} 
 $$
 
-Når $z_1^{(m)}$ skal differentieres med hensyn til $v_i$ får vi brug for en særlig egenskab ved sigmoid-funktionen. Nemlig, at
+Men vi ved fra feedforward udtrykkene, at
+
+$$
+z_1^{(m)} = \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} + v_3 \cdot x_3^{(m)} + \cdots + v_4 \cdot x_4^{(m)} \right ) 
+$$ {#eq-z_1m}
+
+og
+
+$$
+z_2^{(m)} = \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} + u_3 \cdot x_3^{(m)} + u_4 \cdot x_4^{(m)} \right ) 
+$$ 
+
+
+og her kan vi se, at det kun er $z_1^{(m)}$, som afhænger af $v_i$. Det betyder, at
+
+$$
+\frac{\partial z_2^{(m)}}{\partial v_i} = 0 
+$$
+
+og derfor er
+
+$$
+\frac{\partial E^{(m)}}{\partial v_i} = \frac{\partial E^{(m)}}{\partial z_1^{(m)}}\cdot\frac{\partial z_1^{(m)}}{\partial v_i}
+$$
+
+Hvis du har brug for lidt mere information om kædereglen og den notation, som vi har anvendt ovenfor, kan du eventuelt se [denne video](https://www.youtube.com/watch?v=nVaAIVXiUjs).
+
+Når du skal bestemme 
+
+$$
+\frac{\partial E^{(m)}}{\partial z_1^{(m)}}
+$$
+
+skal du bruge udtrykket for $E^{(m)}$ i (@eq-Em). Og når $z_1^{(m)}$ skal differentieres med hensyn til $v_i$, skal du bruge udtrykket i (@eq-z_1m). Derudover får du brug for en særlig egenskab ved sigmoid-funktionen. Nemlig, at
 
 $$
 \sigma'(x) = \sigma(x) \cdot (1-\sigma(x)) 
 $$
-Tilsvarende er
 
-$$
-\frac{\partial E}{\partial u_i} = \sum_{m=1}^M \frac{\partial E}{\partial z_2^{(m)}} \cdot \frac{\partial z_2^{(m)}}{\partial u_i}
-$$
+På helt tilsvarende vis kan 
+
+$$\frac{\partial E^{(m)}}{\partial u_i}
+$$ 
+
+findes.
 
 
 :::
