@@ -1,18 +1,18 @@
 ---
 title: "Simple kunstige neurale netværk til multipel klassifikation"
 image: "images/netvaerk_generelt.png"
-description: "I denne note behandles et simpelt neuralt netværk uden skjulte lag, men hvor det til genæld er muligt at klassificere mere end to klasser. At kunne prædiktere en mulig klasse blandt flere bruges blandt andet i de store sprogmodeller."
+description: "I denne note behandles et simpelt neuralt netværk uden skjulte lag, men hvor det til gengæld er muligt at klassificere mere end to klasser. At kunne prædiktere en mulig klasse blandt flere bruges blandt andet i de store sprogmodeller."
 aliases: 
   - "/materialer/softmax/softmax.html"
 from: markdown+emoji
 ---
 
-Et kunstigt neuralt netværk fungerer på den måde, at man på baggrund af en række forskellige informationer gerne vil kunne forudsige en eller anden ting. Det kan være, at man på baggrund af en række forskellige blodprøveværdier vil forudsige, om en patient har en bestemt sygdom. Det kunne også være, at man baseret på svarene fra en række forskellige spørgsgmål vil udtale sig om, om en person vil stemme på rød eller blå blok. De nævnte eksempler kalder man for *binær klassifikation* -- fordi der i hvert tilfælde er to muligheder: *syg*/*ikke syg* og *rød blok*/*blå blok*. Men det er ikke svært at forestille sig scenarier, hvor der kan være mere end to klasser. For eksempel er eksemplet med rød og blå nok tvivlsomt. Her ville det måske være bedre at prøve at forudsige et bestemt parti. Denne note handler om, hvordan man udvider en simpel [kunstig neuron](../kunstige_neuroner/kunstige_neuroner.qmd), så den ikke kun kan bruges til binær klassifikation, men derimod til at forudsige hvilke blandt flere klasser et givent tilfælde befinder sig i. Lad os starte med et eksempel.
+Et kunstigt neuralt netværk fungerer på den måde, at man på baggrund af en række forskellige informationer gerne vil kunne forudsige en eller anden ting. Det kan være, at man på baggrund af en række forskellige blodprøveværdier vil forudsige, om en patient har en bestemt sygdom. Det kunne også være, at man baseret på svarene fra en række forskellige spørgsmål vil vurdere, om en person vil stemme på rød eller blå blok. De nævnte eksempler kalder man for *binær klassifikation* -- fordi der i hvert tilfælde er to muligheder: *syg*/*ikke syg* og *rød blok*/*blå blok*. Men det er ikke svært at forestille sig scenarier, hvor der kan være mere end to klasser. For eksempel er eksemplet med rød og blå nok tvivlsomt. Her ville det måske være bedre at prøve at forudsige et bestemt parti. Denne note handler om, hvordan man udvider en simpel [kunstig neuron](../kunstige_neuroner/kunstige_neuroner.qmd), så den ikke kun kan bruges til binær klassifikation, men derimod til at forudsige, hvilken af flere klasser et givent tilfælde befinder sig i. Lad os starte med et eksempel.
 
 
 ## Hvor hårdt skal du arbejde i matematiktimerne?
 
-Du kender det sikkert godt. Der er gruppearbejde i matematiktimen, og du gider egentlig ikke. Det er nemmere bare at snige sin mobiltelefon i lommen og drible i kantinen. På den anden side er du også ambitiøs og vil gerne have en god karakter til eksamen. Din lærer er også frustreret. Hun vil gerne være over de elever, som ellers ville stikke af, så de får lært noget sjovt matematik. What to do? Svaret er selvfølgelig, at vi skal have udviklet en AI assistent til din lærer, så hun får hjælp til at hjælpe jer!
+Du kender det sikkert godt. Der er gruppearbejde i matematiktimen, og du gider egentlig ikke. Det er nemmere bare at snige sin mobiltelefon ned i lommen og drible i kantinen. På den anden side er du også ambitiøs og vil gerne have en god karakter til eksamen. Din lærer er også frustreret. Hun vil gerne være over de elever, som ellers ville stikke af, så de får lært noget sjovt matematik. What to do? Svaret er selvfølgelig, at vi skal have udviklet en AI assistent til din lærer, så hun får hjælp til at hjælpe jer!
 
 ![](images/matematiktime.jpg){width=50% fig-align='center'}
 
@@ -226,7 +226,7 @@ $$
 o_j = \alpha(z_1, z_2, \dots, z_J) = \frac{\mathrm{e}^{z_j}}{\sum_{i=1}^J \mathrm{e}^{z_i}}.
 $$ {#eq-o_j_softmax}
 
-For det første kan vi se, at både tæller og nævner er positive. Derfor må $o_j>0$. For det andet er $\mathrm{e}^{z_j} < \sum_{i=1}^J \mathrm{e}^{z_i}$ og derfor er
+For det første kan vi se, at både tæller og nævner er positive. Derfor må $o_j>0$. For det andet er $\mathrm{e}^{z_j} < \sum_{i=1}^J \mathrm{e}^{z_i}$ (når $J>1$) og derfor er
 
 $$
 o_j =  \frac{\mathrm{e}^{z_j}}{\sum_{i=1}^J \mathrm{e}^{z_i}} < \frac{\sum_{i=1}^J \mathrm{e}^{z_i}}{\sum_{i=1}^J \mathrm{e}^{z_i}} = 1.
@@ -310,12 +310,12 @@ I videoen her forklarer vi om softmax og feedforward-udtrykkene.
 Vi har indtil videre skrevet, at outputværdierne kan fortolkes som sandsynligheder. Men bare fordi at en række tal ($o_1, o_2, \dots, o_J$) alle ligger mellem 0 og 1 og alle summerer til 1, så er det jo ikke sikkert, at de på en fornuftig måde angiver sandsynligheden for de fire forskellige muligheder, som de enkelte elever har. For eksempel kunne de fleste lærere nok ønske sig, at
 
 $$
-o_1 = 0.5, \quad 0_2 = 0.5, \quad o_3=0, \quad o_4=0
+o_1 = 0.5, \quad o_2 = 0.5, \quad o_3=0, \quad o_4=0
 $$
 fuldstændig uafhængig af svarene på de tre spørgsmål.
 
 
-Det svarer til, at cirka halvdelen af elever bliver i klassen og regner opgaver, mens den anden halvdel sætter sig ud og regner. Til gengæld er der *ingen*, som går i kantinen og feder den, ligsom der heller ikke er nogle, som bare går hjem. 
+Det svarer til, at cirka halvdelen af elever bliver i klassen og regner opgaver, mens den anden halvdel sætter sig ud og regner. Til gengæld er der *ingen*, som går i kantinen og feder den, ligesom der heller ikke er nogen, som bare går hjem. 
 
 For at vores nye AI assistent skal give et nogenlunde retvisende billede af virkeligheden (det vil sige elevernes valg og ikke lærerens ønsker!) skal vi have fundet nogle outputværdier, som for det første afhænger af inputværdierne (man kan jo se på @fig-trainingdata at inputværdierne har indflydelse), og som for det andet rent faktisk giver en realistisk sandsynlighed for hver af de fire muligheder. Det gør vi ved at blive ved med at \"skrue\" på alle vægtene indtil, at de beregnede outputværdier i (@eq-o_j) giver et godt bud på sandsynlighederne for de 4 muligheder.
 
@@ -382,7 +382,7 @@ $$
 E = - t_j \cdot \ln(o_j) = - \ln(o_j).
 $$
 
-I @fig-natural_ln har vi tegnet grafen for den naturlige logaritme-funktion samt grafen for minus den naturlige logartime-funktion:
+I @fig-natural_ln har vi tegnet grafen for den naturlige logaritme-funktion samt grafen for minus den naturlige logaritme-funktion:
 
 ![Grafen for $\ln(x)$ og $-\ln(x)$.](images/natural_ln.png){width=50% fig-align='center' #fig-natural_ln}
 
@@ -397,7 +397,7 @@ Det betyder, at tabsfunktionen på den måde måler \"kvaliteten\" af netværket
 
 * For et dårligt netværk (med dårlige indstillinger af vægtene) vil tabsfunktionen have en stor positiv værdi.
 
-Lad også illustrere det med det tidligere eksempel. Hvis
+Lad os illustrere det med det tidligere eksempel. Hvis
 
 $$
 \vec t = 
@@ -488,7 +488,7 @@ $$
  \end{pmatrix}.
 $$
 
-Det viser sig, at denne gradient peger i den retning, hvor funktionsværdien *vokser mest*. Omvendt vil minus gradienten $-\nabla f(x_1, x_2, \dots, x_n)$ pege i den retning, hvor funktionsværdien *aftager mest*. Hvis vi derfor står et vilkårligt sted på grafen for $f$ og går et lille skridt i den negative gradientens retning, så vil vi være på vej ned mod et minimum (eventuelt kun lokalt). Når vi har gået det lille skridt, udregner vi gradienten igen og bevæger os igen et lille skridt i den negative gradients retning[^1]. Sådan fortsætter man indstil funktionsværdien ikke ændrer sig ret meget -- det svarer forhåbentlig til, at vi har fundet et (lokalt) minimum.
+Det viser sig, at denne gradient peger i den retning, hvor funktionsværdien *vokser mest*. Omvendt vil minus gradienten $-\nabla f(x_1, x_2, \dots, x_n)$ pege i den retning, hvor funktionsværdien *aftager mest*. Hvis vi derfor står et vilkårligt sted på grafen for $f$ og går et lille skridt i den negative gradientens retning, så vil vi være på vej ned mod et minimum (eventuelt kun lokalt). Når vi har gået det lille skridt, udregner vi gradienten igen og bevæger os igen et lille skridt i den negative gradients retning[^1]. Sådan fortsætter man indtil funktionsværdien ikke ændrer sig ret meget -- det svarer forhåbentlig til, at vi har fundet et (lokalt) minimum.
 
 Vi har lavet videoer om [funktioner af to variable](https://youtu.be/tlq2UYWF2Rw){target="blank"} og [gradientnedstigning](https://youtu.be/WcM8aEoPzf8){target="blank"}, hvis du vil vide mere.   
 
@@ -629,7 +629,7 @@ $$ {#eq-partialE_partial_wjk_final}
 Bruger vi opdateringsreglen for $w_{j,k}$-vægten i (@eq-w_jk-opdatering_grad), ender vi med følgende:
 
 ::: {.callout-note collapse="false" appearance="minimal"} 
-## Opdateringsregel for $w_{i,k}$-vægten (baseret på ét træningseksempel)
+## Opdateringsregel for $w_{j,k}$-vægten (baseret på ét træningseksempel)
 
 Vægten fra det $k$'te input $x_k$ til den $j$'te outputneuron opdateres således:
 
@@ -710,7 +710,7 @@ $$
 Opdateringsreglen for $w_{j,k}$-vægten bliver i det tilfælde:
 
 ::: {.callout-note collapse="false" appearance="minimal"} 
-## Opdateringsregel for $w_{i,k}$-vægten (baseret på hele træningsdatasættet)
+## Opdateringsregel for $w_{j,k}$-vægten (baseret på hele træningsdatasættet)
 
 Vægten fra det $k$'te input $x_k$ til den $j$'te outputneuron opdateres således:
 
