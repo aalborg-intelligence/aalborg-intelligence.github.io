@@ -11,7 +11,48 @@ Hvis du har læst nogle af vores andre noter om kunstige neurale netværk, så h
 
 ## Hvad koster mit hus?
 
-Vi forestiller os helt generelt en række inputvariable eller features: $x_1, x_2, \dots, x_n$ på baggrund af hvilke vi gerne vil kunne forudsige en outputvariabel $y$. Lad os starte simpelt og opstille en kunstig neuron til formålet. Så vil vi sige, at vores outputværdi $o$ skal være den vægtede sum af vores inputvariable:
+Vi forestiller os helt generelt en række inputvariable eller features: $x_1, x_2, \dots, x_n$ på baggrund af hvilke vi gerne vil kunne forudsige en targetvariabel $t$, som her er salgsprisen på et hus. 
+
+
+::: {#exm-houseprices}
+
+## House Price datasættet
+
+På [kaggle.com](https://www.kaggle.com/) kan man downloade et utal af forskellige datasæt. Vi vil her se nærmere på datasættet [House Price Dataset for Regression Models](https://www.kaggle.com/datasets/neurocipher/house-price-for-linear-regression), som du kan downloade som [Excel fil her](data/Housing.xlsx).
+
+Datasættet indeholder oplysninger om $545$ hussalg i USA.
+
+Targetvariablen $t$ står i kolonnen `price` og angiver salgsprisen målt i dollar. Derudover indeholder datasættet en lang række features:
+
+* `area`: boligens areal målt i square feet
+
+* `bedrooms`: antal værelser
+
+* `bathrooms`: antal badeværelser
+
+* `stories`: antal etager
+
+* `mainroad`: om huset har adgang til hovedvejen (ja=1, nej=0)
+
+* `guestroom`: om huset har et gæsteværelse  (ja=1, nej=0)
+
+* `basement`: om huset har kælder (ja=1, nej=0)
+
+* `hotwaterheating`: om huset har fjernvarme (ja=1, nej=0) 
+
+* `airconditioning`: om huset air conditioning (ja=1, nej=0)
+
+* `parking`: antal parkeringspladser
+
+* `prefarea`: om huset ligger i et eftertragtet område (ja=1, nej=0)
+
+* `furnishingstatus`: om huset et umøbleret, delvist møbleret eller fuldt møbleret
+
+:::
+
+
+
+Lad os starte simpelt og opstille en kunstig neuron til formålet. Så vil vi sige, at vores prædiktion af husprisen skal være en outputværdi $o$, som er den vægtede sum af vores inputvariable:
 
 $$
 o = w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n
@@ -19,15 +60,18 @@ $$
 
 Her kaldes $w_0, w_1, w_2, \dots, w_n$ for vægte.
 
-Hvis du har læst noten om [kunstige neuroner](../kunstige_neuroner/kunstige_neuroner.qmd), så er den eneste forskel her, at vi ikke længere bruger sigmoid-funktionen som aktiveringsfunktion, fordi vi ikke her har brug for at få en outputværdi, som ligger mellem $0$ og $1$.
+Hvis du har læst noten om [kunstige neuroner](../kunstige_neuroner/kunstige_neuroner.qmd), så er den eneste forskel her, at vi ikke længere bruger sigmoid-funktionen som aktiveringsfunktion[^1], fordi vi ikke her har brug for at få en outputværdi, som ligger mellem $0$ og $1$.
 
-Vi ønsker nu, at bestemme vægtene $w_0, w_1, w_2, \dots, w_n$ sådan at vores outputværdi kommer så tæt som muligt på vores targetværdi $t$.
+[^1]: Vi bruger sådan set stadig en aktiveringsfunktion -- det bare den funktion, som kaldes for *identiteten* med forskrift $f(x)=x$.
 
-Det vil sige, at vi ønsker at forskellen:
+Vi ønsker nu, at bestemme vægtene $w_0, w_1, w_2, \dots, w_n$ sådan at vores prædikterede huspris $o$ kommer så tæt som muligt på den faktiske huspris $t$.
+
+Det vil sige, at vi ønsker, at forskellen
 
 $$
 t-o = t - \left ( w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n \right )
 $$
+
 bliver så lille som mulig.
 
 Da denne differens både kan være positiv og negativ, men vi egentlig ikke er interesseret i fortegnet -- blot om differensen er lille eller stor, så vælger vi i stedet at se på den kvadrerede forskel:
@@ -36,7 +80,7 @@ $$
 \left ( t - \left ( w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n \right ) \right )^2
 $$
 
-Vi får en sådan kvadreret differens for hvert eneste hus i vores træningsdatasæt og vi vælger derfor blot at lægge alle disse størrelser sammen:
+Vi får en sådan kvadreret differens for hvert eneste hus i vores træningsdatasæt, og vi vælger derfor blot at lægge alle disse størrelser sammen:
 
 $$
 E = \frac{1}{2}\sum \left ( t - \left ( w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n \right ) \right )^2
