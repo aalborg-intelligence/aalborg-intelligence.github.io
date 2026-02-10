@@ -216,24 +216,45 @@ window.Quarto = {
 
 
 <p>Hvis du har læst nogle af vores andre noter om kunstige neurale netværk, så har de alle handlet om <strong>klassifikation</strong>. Det kunne for eksempel være: aktiverer en kunde et tilbud i en app? (ja/nej), bliver det regnvejr i morgen? (ja/nej), har en patient en bestemt sygdom? (ja/nej), hvilket af fire valg skal jeg træffe? De tre første eksempler er eksempler på det, som man kalder for <strong>binær klassifikation</strong> (fordi der kun er to muligheder), mens det sidste eksempel er et eksempel på <strong>multipel klassifikation</strong> (fordi der er mere end to muligheder). I denne note vil vi se på, hvordan man kan bruge kunstige neurale netværk til at forudsige en såkaldt numerisk variabel – mere konkret vil vi her se på, hvordan man kan lave et kunstigt neuralt netværk, som kan bruges til at prædiktere huspriser.</p>
-<section id="hvad-koster-mit-hus" class="level2">
+<section id="hvad-koster-mit-hus" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="hvad-koster-mit-hus">Hvad koster mit hus?</h2>
-<p>Vi forestiller os helt generelt en række inputvariable eller features: <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> på baggrund af hvilke vi gerne vil kunne forudsige en outputvariabel <span class="math inline">\(y\)</span>. Lad os starte simpelt og opstille en kunstig neuron til formålet. Så vil vi sige, at vores outputværdi <span class="math inline">\(o\)</span> skal være den vægtede sum af vores inputvariable:</p>
+<p>Vi forestiller os helt generelt en række inputvariable eller features: <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> på baggrund af hvilke vi gerne vil kunne forudsige en targetvariabel <span class="math inline">\(t\)</span>, som her er salgsprisen på et hus.</p>
+<div id="exm-houseprices" class="theorem example">
+<p><span class="theorem-title"><strong>Eksempel 1 (House Price datasættet)</strong></span> På <a href="https://www.kaggle.com/">kaggle.com</a> kan man downloade et utal af forskellige datasæt. Vi vil her se nærmere på datasættet <a href="https://www.kaggle.com/datasets/neurocipher/house-price-for-linear-regression">House Price Dataset for Regression Models</a>, som du kan downloade som <a href="data/Housing.xlsx">Excel fil her</a>.</p>
+<p>Datasættet indeholder oplysninger om <span class="math inline">\(545\)</span> hussalg i USA.</p>
+<p>Targetvariablen <span class="math inline">\(t\)</span> står i kolonnen <code>price</code> og angiver salgsprisen målt i dollar. Derudover indeholder datasættet en lang række features:</p>
+<ul>
+<li><p><code>area</code>: boligens areal målt i square feet</p></li>
+<li><p><code>bedrooms</code>: antal værelser</p></li>
+<li><p><code>bathrooms</code>: antal badeværelser</p></li>
+<li><p><code>stories</code>: antal etager</p></li>
+<li><p><code>mainroad</code>: om huset har adgang til hovedvejen (ja=1, nej=0)</p></li>
+<li><p><code>guestroom</code>: om huset har et gæsteværelse (ja=1, nej=0)</p></li>
+<li><p><code>basement</code>: om huset har kælder (ja=1, nej=0)</p></li>
+<li><p><code>hotwaterheating</code>: om huset har fjernvarme (ja=1, nej=0)</p></li>
+<li><p><code>airconditioning</code>: om huset air conditioning (ja=1, nej=0)</p></li>
+<li><p><code>parking</code>: antal parkeringspladser</p></li>
+<li><p><code>prefarea</code>: om huset ligger i et eftertragtet område (ja=1, nej=0)</p></li>
+<li><p><code>furnishingstatus</code>: om huset et umøbleret, delvist møbleret eller fuldt møbleret</p></li>
+</ul>
+</div>
+<p>Lad os starte simpelt og opstille en kunstig neuron til formålet. Så vil vi sige, at vores prædiktion af husprisen skal være en outputværdi <span class="math inline">\(o\)</span>, som er den vægtede sum af vores inputvariable:</p>
 <p><span class="math display">\[
 o = w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n
 \]</span></p>
 <p>Her kaldes <span class="math inline">\(w_0, w_1, w_2, \dots, w_n\)</span> for vægte.</p>
-<p>Hvis du har læst noten om <a href="../../noter/kunstige_neuroner/kunstige_neuroner.html">kunstige neuroner</a>, så er den eneste forskel her, at vi ikke længere bruger sigmoid-funktionen som aktiveringsfunktion, fordi vi ikke her har brug for at få en outputværdi, som ligger mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>.</p>
-<p>Vi ønsker nu, at bestemme vægtene <span class="math inline">\(w_0, w_1, w_2, \dots, w_n\)</span> sådan at vores outputværdi kommer så tæt som muligt på vores targetværdi <span class="math inline">\(t\)</span>.</p>
-<p>Det vil sige, at vi ønsker at forskellen:</p>
+<p>Hvis du har læst noten om <a href="../../noter/kunstige_neuroner/kunstige_neuroner.html">kunstige neuroner</a>, så er den eneste forskel her, at vi ikke længere bruger sigmoid-funktionen som aktiveringsfunktion<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, fordi vi ikke her har brug for at få en outputværdi, som ligger mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Vi bruger sådan set stadig en aktiveringsfunktion – det bare den funktion, som kaldes for <em>identiteten</em> med forskrift <span class="math inline">\(f(x)=x\)</span>.</p></div></div><p>Vi ønsker nu, at bestemme vægtene <span class="math inline">\(w_0, w_1, w_2, \dots, w_n\)</span> sådan at vores prædikterede huspris <span class="math inline">\(o\)</span> kommer så tæt som muligt på den faktiske huspris <span class="math inline">\(t\)</span>.</p>
+<p>Det vil sige, at vi ønsker, at forskellen</p>
 <p><span class="math display">\[
 t-o = t - \left ( w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n \right )
-\]</span> bliver så lille som mulig.</p>
+\]</span></p>
+<p>bliver så lille som mulig.</p>
 <p>Da denne differens både kan være positiv og negativ, men vi egentlig ikke er interesseret i fortegnet – blot om differensen er lille eller stor, så vælger vi i stedet at se på den kvadrerede forskel:</p>
 <p><span class="math display">\[
 \left ( t - \left ( w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n \right ) \right )^2
 \]</span></p>
-<p>Vi får en sådan kvadreret differens for hvert eneste hus i vores træningsdatasæt og vi vælger derfor blot at lægge alle disse størrelser sammen:</p>
+<p>Vi får en sådan kvadreret differens for hvert eneste hus i vores træningsdatasæt, og vi vælger derfor blot at lægge alle disse størrelser sammen:</p>
 <p><span class="math display">\[
 E = \frac{1}{2}\sum \left ( t - \left ( w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n \right ) \right )^2
 \]</span></p>
@@ -533,6 +554,7 @@ o^{(m)} \right)^2 \\
 
 
 </section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
