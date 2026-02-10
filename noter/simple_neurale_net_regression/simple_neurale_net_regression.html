@@ -184,7 +184,6 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#fortolkning-af-vægtene" id="toc-fortolkning-af-vægtene" class="nav-link" data-scroll-target="#fortolkning-af-vægtene">Fortolkning af vægtene</a></li>
   </ul></li>
-  <li><a href="#fortolkning-af-vægtene-1" id="toc-fortolkning-af-vægtene-1" class="nav-link" data-scroll-target="#fortolkning-af-vægtene-1">Fortolkning af vægtene</a></li>
   <li><a href="#prædiktion-af-huspriser-nu-med-skjulte-lag" id="toc-prædiktion-af-huspriser-nu-med-skjulte-lag" class="nav-link" data-scroll-target="#prædiktion-af-huspriser-nu-med-skjulte-lag">Prædiktion af huspriser – nu med skjulte lag!</a></li>
   </ul>
 </nav>
@@ -219,7 +218,7 @@ window.Quarto = {
 <section id="hvad-koster-mit-hus" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="hvad-koster-mit-hus">Hvad koster mit hus?</h2>
 <p>Vi forestiller os helt generelt en række inputvariable eller features: <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> på baggrund af hvilke vi gerne vil kunne forudsige en targetvariabel <span class="math inline">\(t\)</span>, som her er salgsprisen på et hus.</p>
-<div id="exm-houseprices" class="theorem example">
+<div id="exm-houseprices1" class="theorem example">
 <p><span class="theorem-title"><strong>Eksempel 1 (House Price datasættet)</strong></span> På <a href="https://www.kaggle.com/">kaggle.com</a> kan man downloade et utal af forskellige datasæt. Vi vil her se nærmere på datasættet <a href="https://www.kaggle.com/datasets/neurocipher/house-price-for-linear-regression">House Price Dataset for Regression Models</a>, som du kan downloade som <a href="data/Housing.xlsx">Excel fil her</a>.</p>
 <p>Datasættet indeholder oplysninger om <span class="math inline">\(545\)</span> hussalg i USA.</p>
 <p>Targetvariablen <span class="math inline">\(t\)</span> står i kolonnen <code>price</code> og angiver salgsprisen målt i dollar. Derudover indeholder datasættet en lang række features:</p>
@@ -232,13 +231,20 @@ window.Quarto = {
 <li><p><code>guestroom</code>: om huset har et gæsteværelse (ja=1, nej=0)</p></li>
 <li><p><code>basement</code>: om huset har kælder (ja=1, nej=0)</p></li>
 <li><p><code>hotwaterheating</code>: om huset har fjernvarme (ja=1, nej=0)</p></li>
-<li><p><code>airconditioning</code>: om huset air conditioning (ja=1, nej=0)</p></li>
+<li><p><code>airconditioning</code>: om huset har air conditioning (ja=1, nej=0)</p></li>
 <li><p><code>parking</code>: antal parkeringspladser</p></li>
 <li><p><code>prefarea</code>: om huset ligger i et eftertragtet område (ja=1, nej=0)</p></li>
 <li><p><code>furnishingstatus</code>: om huset et umøbleret, delvist møbleret eller fuldt møbleret</p></li>
 </ul>
+<p>I det følgende vil vi holde det simpelt og kun se på følgende features:</p>
+<ul>
+<li><span class="math inline">\(x_1\)</span>: boligens areal målt i square feet (<code>area</code>)</li>
+<li><span class="math inline">\(x_2\)</span>: antal værelser (<code>bedrooms</code>)</li>
+<li><span class="math inline">\(x_3\)</span>: antal badeværelser (<code>bathrooms</code>)</li>
+<li><span class="math inline">\(x_4\)</span>: om huset har kælder (<code>basement</code>)</li>
+</ul>
 </div>
-<p>Lad os starte simpelt og opstille en kunstig neuron til formålet. Så vil vi sige, at vores prædiktion af husprisen skal være en outputværdi <span class="math inline">\(o\)</span>, som er den vægtede sum af vores inputvariable:</p>
+<p>Lad os starte simpelt og opstille en kunstig neuron til formålet. Så vil vi sige, at vores prædiktion af husprisen skal være en outputværdi <span class="math inline">\(o\)</span>, som helt generelt er den vægtede sum af vores inputvariable:</p>
 <p><span class="math display">\[
 o = w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n
 \]</span></p>
@@ -258,9 +264,9 @@ t-o = t - \left ( w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n \
 <p><span class="math display">\[
 E = \frac{1}{2}\sum \left ( t - \left ( w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n \right ) \right )^2
 \]</span></p>
-<p>Størrelsen <span class="math inline">\(E\)</span> kaldes for en <strong>tabsfunktion</strong>. Læg mærke til, at hvis vores kunstige neuron er god til at forudsige huspriser, så får vi en lille værdi af tabsfunktionen, mens vi får en stor værdi af E, hvis modellen er dårlig til at forudsige huspriser. Vi har her valgt at gange med <span class="math inline">\(\frac{1}{2}\)</span>, fordi det senere kommer til at forkorte ud, men det er faktisk ikke så afgørende.</p>
+<p>Størrelsen <span class="math inline">\(E\)</span> kaldes for en <strong>tabsfunktion</strong>. Læg mærke til, at hvis vores kunstige neuron er god til at forudsige huspriser, så får vi en lille værdi af tabsfunktionen, mens vi får en stor værdi af <span class="math inline">\(E\)</span>, hvis modellen er dårlig til at forudsige huspriser. Vi har her valgt at gange med <span class="math inline">\(\frac{1}{2}\)</span>, fordi det senere kommer til at forkorte ud, men det er faktisk ikke så afgørende.</p>
 <p>Idéen er så bare at bestemme værdier af vægtene <span class="math inline">\(w_0, w_1, w_2, \dots, w_n\)</span>, sådan at tabsfunktionen minimeres.</p>
-<p>Inden vi forklarer, hvordan det gøres, så lad os lige blive lidt mere specifikke i forhold til notationen af vores træningsdata. Vi forestiller os, at vi har information om <span class="math inline">\(M\)</span> huspriser. Så vil vi nummerer vores træningsdata på denne måde:</p>
+<p>Inden vi forklarer, hvordan det gøres, så lad os lige blive lidt mere specifikke i forhold til notationen af vores træningsdata. Vi forestiller os, at vi har information om <span class="math inline">\(M\)</span> huspriser (i eksemplet er <span class="math inline">\(M=545\)</span>). Så vil vi nummerer vores træningsdata på denne måde:</p>
 <p><span class="math display">\[
 \begin{aligned}
 &amp;\text{Træningseksempel 1:} \quad (x_1^{(1)}, x_2^{(1)}, \dots, x_n^{(1)}, t^{(1)}) \\
@@ -334,12 +340,12 @@ w_n^{(\textrm{ny})} \leftarrow &amp; w_n + \eta \cdot \sum_{m=1}^{M} \left (t^{(
 </div>
 </div>
 </div>
-<p>At opstille en kunstig neuron til regression, som vi har gjort her, svarer til det man kalder for <strong>multipel lineær regression</strong>, som egentlig bare er en udvidelse af lineær regression, som I kender det, blot med flere inputvariable.</p>
+<p>At opstille en kunstig neuron til regression, som vi har gjort her, svarer til det man kalder for <strong>multipel lineær regression</strong>, som egentlig bare er en udvidelse af lineær regression, som I kender det, blot med flere inputvariable/features.</p>
 <p>Det gode ved at opstille en kunstig neuron til regression, som vi her har gjort det, er, at man kan give en fortolkning af vægtene.</p>
-<section id="fortolkning-af-vægtene" class="level3">
+<section id="fortolkning-af-vægtene" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="fortolkning-af-vægtene">Fortolkning af vægtene</h3>
-<p>Lad os sige, at vi har bestemt vægtene <span class="math inline">\(w_0, w_1, \dots, w_n\)</span>, så tabsfunktionen er blevet minimeret, og at <span class="math inline">\(X_1\)</span> fortsat angiver boligarealet. Vi vil her forklare, hvordan vi kan fortolke <span class="math inline">\(w_1\)</span>.</p>
-<p>Vi forstiller os, at vi har to hus med præcis samme værdier af de <span class="math inline">\(n\)</span> inputvariable <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> bortset fra, at det ene hus er pris <span class="math inline">\(1\)</span> kvadratmeter større end det andet. Så det ene hus har en størrelse på <span class="math inline">\(x_1\)</span> kvadratmeter, mens det andet har en størrelse på <span class="math inline">\(x_1+1\)</span> kvadratmeter – de resterende inputvariable er ens.</p>
+<p>Lad os sige, at vi har bestemt vægtene <span class="math inline">\(w_0, w_1, \dots, w_n\)</span>, så tabsfunktionen er blevet minimeret, og at <span class="math inline">\(x_1\)</span> fortsat angiver boligarealet. Vi vil her forklare, hvordan vi kan fortolke <span class="math inline">\(w_1\)</span>.</p>
+<p>Vi forstiller os, at vi har to hus med præcis samme værdier af de <span class="math inline">\(n\)</span> features <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> bortset fra, at det ene hus er præcis <span class="math inline">\(1\)</span> <em>square feet</em> større end det andet. Så det ene hus har en størrelse på <span class="math inline">\(x_1\)</span> <em>square feet</em>, mens det andet har en størrelse på <span class="math inline">\(x_1+1\)</span> <em>square feet</em> – de resterende features er ens.</p>
 <p>Det giver følgende prædikterede boligpriser <span class="math inline">\(o_1\)</span> og <span class="math inline">\(o_2\)</span> for de to huse:</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -358,30 +364,62 @@ o_2 - o_1 &amp;= w_0 + w_1 \cdot x_1 + w_1 + w_2 \cdot x_2 + \cdots + w_n \cdot 
 &amp; = w_1
 \end{aligned}
 \]</span></p>
-<p>Det vil sige, at hvis alt andet er holdt ens, så vil en forøgelse i boligarelet på én kvadratmeter give en forøgelse i den prædikterede boligpris på <span class="math inline">\(w_1\)</span> kroner.</p>
-<p>Hvis <span class="math inline">\(x_2\)</span> angiver, om boligen har kælder eller ej (hvor <span class="math inline">\(x_2=1\)</span> svarer til at boligen har kælder og <span class="math inline">\(x_2=0\)</span> svarer til at boligen ikke har kælder), så vil <span class="math inline">\(w_2\)</span> helt tilsvarende kunne fortolkes som den størrelse den prædikterede boligpris vil stige med, hvis en bolig har kælder sammenlignet med en helt tilsvarende bolig uden kælder.</p>
+<p>Det vil sige, at hvis alt andet er holdt ens, så vil en forøgelse i boligarealet på én <em>square feet</em> give en forøgelse i den prædikterede boligpris på <span class="math inline">\(w_1\)</span> kroner.</p>
+<p>Da <span class="math inline">\(x_4\)</span> angiver, om boligen har kælder eller ej (hvor <span class="math inline">\(x_4=1\)</span> svarer til at boligen har kælder og <span class="math inline">\(x_4=0\)</span> svarer til, at boligen ikke har kælder), så vil <span class="math inline">\(w_4\)</span> helt tilsvarende kunne fortolkes som den størrelse, den prædikterede boligpris vil stige med, hvis en bolig har kælder sammenlignet med en helt tilsvarende bolig uden kælder.</p>
 <p>Vi illustrerer dette med et eksempel:</p>
+<div id="exm-houseprices2" class="theorem example page-columns page-full">
+<p><span class="theorem-title"><strong>Eksempel 2 (Fortolkning af vægtene)</strong></span> Træner vi en kunstig neuron på datasættet om huspriser, hvor vi sætter alle startvægte til <span class="math inline">\(0\)</span>, vælger en learning rate på <span class="math inline">\(0.0001\)</span> og antal iterationer til <span class="math inline">\(500\)</span>, får vi følgende værdier af vægtene</p>
+<table class="table-bordered table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(w_0\)</span> <br> <br></th>
+<th style="text-align: center;"><span class="math inline">\(w_1\)</span> <br> (<code>area</code>)</th>
+<th style="text-align: center;"><span class="math inline">\(w_2\)</span> <br>(<code>bedrooms</code>)</th>
+<th style="text-align: center;"><span class="math inline">\(w_3\)</span> <br> (<code>bathrooms</code>)</th>
+<th style="text-align: center;"><span class="math inline">\(w_4\)</span> <br> (<code>basement</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(-221293.3671\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(376.4762\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(387528.7807\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1355117.6023\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(447658.8766\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>For eksempel kan vi se, at <span class="math inline">\(w_1 = 376.4762\)</span>. Det vil sige, at ifølge modellen vil husprisen på et hus, som er præcis én <em>square feet</em> større end et andet tilsvarende<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> hus, være cirka <span class="math inline">\(376 \, \$\)</span> højere.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Et tilsvarende hus vil her mere præcist betyde et hus med det samme antal soveværelser, badeværelser og kælder (ja/nej).</p></div></div><p>Vi ser også, at <span class="math inline">\(w_4=447658.8766\)</span>, som betyder, at hvis vi står med to tilsvarende huse, hvor det ene er med kælder, og det andet er uden kælder, så vil huset med kælder ifølge vores model koste <span class="math inline">\(447659 \, \$\)</span> mere end huset uden kælder.</p>
+</div>
 </section>
-</section>
-<section id="fortolkning-af-vægtene-1" class="level2 {exm-kunstig_neuron_regression}">
-<h2 class="anchored" data-anchor-id="fortolkning-af-vægtene-1">Fortolkning af vægtene</h2>
 </section>
 <section id="prædiktion-af-huspriser-nu-med-skjulte-lag" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="prædiktion-af-huspriser-nu-med-skjulte-lag">Prædiktion af huspriser – nu med skjulte lag!</h2>
 <p>Der skal helst ikke være skjulte fejl og mangler, når man skal sælge sit hus. Til gengæld kan det være en super god idé med nogle skjulte lag, når man skal prædiktere huspriser!</p>
-<p>I det ovenstående kommer de prædikterede huspriser til at afhænge lineært af inputvariablene. Men verden er sjældent lineær! Og en af styrkerne ved kunstige neurale netværk er netop, at de kan prædiktere størrelse eller kategorier ved hjælp af funktioner, som ikke er lineære. Vi skal derfor nu opstille et simpelt kunstigt neuralt netværk til prædiktion af huspriser. Vi vil lave et netværk igen med <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> som inputvariable, men nu med et såkaldt skjult lag, som består af to neuroner. Det kan illustreres, som vist i <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;1</a>:</p>
+<p>I det ovenstående kommer de prædikterede huspriser til at afhænge lineært af inputvariablene. Men verden er sjældent lineær! Og en af styrkerne ved kunstige neurale netværk er netop, at de kan prædiktere størrelse eller kategorier ved hjælp af funktioner, som ikke er lineære. Vi skal derfor nu opstille et simpelt kunstigt neuralt netværk til prædiktion af huspriser. Vi vil lave et netværk med fire features <span class="math inline">\(x_1, x_2, x_3, x_4\)</span>, men nu med et såkaldt skjult lag, som består af to neuroner. Det kan illustreres, som vist i <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;1</a>:</p>
 <div id="fig-neuralt_net_regression" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-neuralt_net_regression-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/neuralt_net_regression.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+<img src="images/neuralt_net_regression.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-neuralt_net_regression-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;1: Simpelt kunstigt neuralt netværk til prædiktion af huspriser. Netværket har inputvariable <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> og ét skjult lag med to neuroner.
+Figur&nbsp;1: Simpelt kunstigt neuralt netværk til prædiktion af huspriser. Netværket har inputvariable <span class="math inline">\(x_1, x_2, x_3, x_4\)</span> og ét skjult lag med to neuroner.
 </figcaption>
 </figure>
 </div>
-<p>Hvis vi for en stund forestiller os, at vi kender alle vægtene, så udregner vi outputværdien <span class="math inline">\(o\)</span> på følgende måde:</p>
+<p>Som det ses i <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;1</a>, er der til hver pil knyttet en vægt, som skal bruges til at udregne outputværdien <span class="math inline">\(o\)</span>. Hvis vi for en stund forestiller os, at vi kender alle vægtene, så udregner vi outputværdien <span class="math inline">\(o\)</span> på følgende måde:</p>
 <p>Ved hjælp af inputvariablene og <span class="math inline">\(v\)</span>-vægtene beregner vi <span class="math inline">\(z_1\)</span>:</p>
+<p><span class="math display">\[
+z_1 = \sigma (v_0 + v_1 \cdot x_1 + v_2 \cdot x_2 + v_3 \cdot x_3 + v_4 \cdot x_4)
+\]</span> som selvfølgelig kan generaliseres til</p>
 <p><span class="math display">\[
 z_1 = \sigma (v_0 + v_1 \cdot x_1 + \cdots + v_n \cdot x_n)
 \]</span></p>
@@ -403,9 +441,9 @@ Figur&nbsp;2: Grafen for sigmoid-funktionen med forskrift <span class="math inli
 <p>Sigmoid-funktionen kaldes også for en <strong>aktiveringsfunktion</strong>, og det er den, der gør, at vi ender med at prædiktere huspriserne på en ikke-lineær måde.</p>
 <p>På tilsvarende vis udregner vi <span class="math inline">\(z_2\)</span> ved at bruge <span class="math inline">\(u\)</span>-vægtene:</p>
 <p><span class="math display">\[
-z_2 = \sigma (u_0 + u_1 \cdot x_1 + \cdots + u_n \cdot x_n)
+z_2 = \sigma (u_0 + u_1 \cdot x_1 + u_2 \cdot x_2 + u_3 \cdot x_3 + u_4 \cdot x_4)
 \]</span></p>
-<p>Når vi nu har <span class="math inline">\(z_1\)</span> og <span class="math inline">\(z_2\)</span> beregnes outputværdien <span class="math inline">\(o\)</span> som vi gjorde det tidligere:</p>
+<p>Når vi nu har <span class="math inline">\(z_1\)</span> og <span class="math inline">\(z_2\)</span> beregnes outputværdien <span class="math inline">\(o\)</span>, som vi gjorde det tidligere:</p>
 <p><span class="math display">\[
 o = w_0 + w_1 \cdot z_1 + w_2 \cdot z_2
 \]</span></p>
@@ -422,14 +460,14 @@ o = w_0 + w_1 \cdot z_1 + w_2 \cdot z_2
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>På baggrund af inputværdierne <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> beregnes outputværdien <span class="math inline">\(o\)</span> på følgende måde.</p>
+<p>På baggrund af inputværdierne <span class="math inline">\(x_1, x_2, x_3, x_4\)</span> beregnes outputværdien <span class="math inline">\(o\)</span> på følgende måde.</p>
 <p>Først beregnes:</p>
 <p><span id="eq-z_1"><span class="math display">\[
-z_1^{(m)} = \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + \cdots + v_n \cdot x_n^{(m)} \right)
+z_1^{(m)} = \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)}+ v_3 \cdot x_3^{(m)} + v_4 \cdot x_4^{(m)} \right)
 \tag{2}\]</span></span></p>
 <p>og</p>
 <p><span id="eq-z_2"><span class="math display">\[
-z_2^{(m)} = \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + \cdots + u_n \cdot x_n^{(m)} \right)
+z_2^{(m)} = \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} + u_3 \cdot x_3^{(m)} + u_4 \cdot x_4^{(m)} \right)
 \tag{3}\]</span></span></p>
 <p>Herefter beregnes outputværdien:</p>
 <p><span id="eq-o"><span class="math display">\[
@@ -441,11 +479,11 @@ o^{(m)} = w_0 + w_1 \cdot z_1^{(m)} + w_2 \cdot z_2^{(m)}
 <p>Tabsfunktionen definerer vi nu som før</p>
 <p><span class="math display">\[
 \begin{aligned}
-E(w_0, w_1, &amp;\dots, w_n) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+E(v_0, v_1, \dots, v_4, u_0, u_1, \dots, u_u,w_0, w_1, w_2) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
 o^{(m)} \right)^2
 \end{aligned}
 \]</span></p>
-<p>hvor <span class="math inline">\(o^{(m)}\)</span> er givet ved udtrykket i (<a href="#eq-o" class="quarto-xref">4</a>).</p>
+<p>hvor <span class="math inline">\(o^{(m)}\)</span> er givet ved udtrykket i (<a href="#eq-o" class="quarto-xref">4</a>). Læg mærke til, at tabsfunktionen afhænger af alle <span class="math inline">\(u\)</span>-, <span class="math inline">\(v\)</span>- og <span class="math inline">\(w\)</span>-vægte, men for nemheds skyld vil vi blot skrive <span class="math inline">\(E\)</span> i det følgende.</p>
 <p>Man kan nu igen bruge gradientnedstigning til at bestemme de værdier er <span class="math inline">\(v\)</span>-, <span class="math inline">\(u\)</span>- og <span class="math inline">\(w\)</span>-vægtene, som minimerer tabsfunktionen. Det er her en vigtig beregningsfinte, at man bevæger sig "bagud" i netværket og først opdaterer <span class="math inline">\(w\)</span>-vægtene (som er tættest på outputlaget) og dernæst <span class="math inline">\(u\)</span>- og <span class="math inline">\(v\)</span>-vægtene, som er tættest på inputlaget. Dette kaldes for <strong>backpropagation</strong>.</p>
 <p>Gør man det ender, man med følgende opdateringsregler:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
@@ -466,8 +504,8 @@ o^{(m)} \right)^2
 <li><p>For alle træningsdataeksempler udregnes <span class="math inline">\(z_1^{(m)}\)</span>, <span class="math inline">\(z_2^{(m)}\)</span> og <span class="math inline">\(o^{(m)}\)</span> ved hjælp af feedforward-udtrykkene:</p>
 <p><span class="math display">\[
 \begin{aligned}
-z_1^{(m)} &amp;= \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + \cdots + v_n \cdot x_n^{(m)} \right ) \\
-z_2^{(m)} &amp;= \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + \cdots + u_n \cdot x_n^{(m)} \right ) \\
+z_1^{(m)} &amp;= \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} + v_3 \cdot x_3^{(m)} + \cdots + v_4 \cdot x_4^{(m)} \right ) \\
+z_2^{(m)} &amp;= \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} + u_3 \cdot x_3^{(m)} + u_4 \cdot x_4^{(m)} \right ) \\
 o^{(m)} &amp;= w_0 + w_1 \cdot z_1^{(m)} + w_2 \cdot z_2^{(m)}
 \end{aligned}
 \]</span></p></li>
@@ -492,7 +530,7 @@ u_i^{\textrm{(ny)}} &amp;\leftarrow u_i + \eta \cdot \sum_{m=1}^{M} \left ( t^{(
 \]</span> for <span class="math inline">\(i \in \{1, 2, 3, 4\}\)</span>.</p>
 <p>Bemærk her, at vi kender <span class="math inline">\(z_1^{(m)}\)</span>, <span class="math inline">\(z_2^{(m)}\)</span> og <span class="math inline">\(o^{(m)}\)</span> på grund af feedforward, mens alle <span class="math inline">\(u\)</span>-, <span class="math inline">\(v\)</span>- og <span class="math inline">\(w\)</span>-værdierne er de nuværende værdier af vægtene (<em>inden</em> opdatering).</p></li>
 </ol>
-<p>Alle vægtene er nu opdateret, og vi kan gentage punkt 2 til 3, hvor feedforward i 2 hver gang er baseret på de netop opdaterede vægte fra det foregående gennemløb. Opdateringen af vægtene fortsætter indtil værdien af tabsfunktionen næsten ikke ændrer sig. Håbet er nu, at vi har fundet et minimum (eventuelt kun lokalt) for tabsfunktionen.</p>
+<p>Alle vægtene er nu opdateret, og vi kan gentage punkt 2 til 3, hvor feedforward i 2 hver gang er baseret på de netop opdaterede vægte fra det foregående gennemløb. Opdateringen af vægtene fortsætter, indtil værdien af tabsfunktionen næsten ikke ændrer sig. Håbet er nu, at vi har fundet et minimum (eventuelt kun lokalt) for tabsfunktionen.</p>
 </div>
 </div>
 </div>
@@ -503,9 +541,9 @@ u_i^{\textrm{(ny)}} &amp;\leftarrow u_i + \eta \cdot \sum_{m=1}^{M} \left ( t^{(
 <p>som er et udtryk for den fejl netværket begår med de nuværende værdier af vægtene (nemlig forskellen på den ønskede targetværdi <span class="math inline">\(t^{(m)}\)</span> og den prædikterede outputværdi <span class="math inline">\(o^{(m)}\)</span>). Der er to ting, som er værd at bemærke i den forbindelse:</p>
 <ul>
 <li>Hvis fejlen er stor, bliver <span class="math inline">\(w\)</span> vægtene opdateret forholdsvis meget – og omvendt hvis fejlen er lille.</li>
-<li>Når vi har opdateret <span class="math inline">\(w\)</span>-vægtene, har vi allerede beregnet fejlen <span class="math inline">\(t^{(m)}-o^{(m)}\)</span>. Denne "fejlfaktor" indgår også i opdateringsreglerne for <span class="math inline">\(v\)</span>- og <span class="math inline">\(u\)</span>-vægtene og den allerede beregnede fejl kan altså genbruges, når <span class="math inline">\(v\)</span>- og <span class="math inline">\(u\)</span>-vægtene skal opdateres.</li>
+<li>Når vi har opdateret <span class="math inline">\(w\)</span>-vægtene, har vi allerede beregnet fejlen <span class="math inline">\(t^{(m)}-o^{(m)}\)</span>. Denne "fejlfaktor" indgår også i opdateringsreglerne for <span class="math inline">\(v\)</span>- og <span class="math inline">\(u\)</span>-vægtene, og den allerede beregnede fejl kan altså genbruges, når <span class="math inline">\(v\)</span>- og <span class="math inline">\(u\)</span>-vægtene skal opdateres.</li>
 </ul>
-<p>Det kan her virke fuldstændig ligegyldigt, om vi skal beregne fejlen et par ekstra gange eller ej, men i virkelighedens anvendelser af kunstige neurale netværk, er det lige præcis denne beregningsmæssige finte, som gør, at det overhovedet kan lade sig gøre at bruge gradientnedstigning!</p>
+<p>Det kan her virke fuldstændig ligegyldigt, om vi skal beregne fejlen et par ekstra gange eller ej, men i virkelighedens anvendelser af kunstige neurale netværk, er det lige præcis denne beregningsmæssige finte, som gør, at det overhovedet kan lade sig gøre at bruge gradientnedstigning. Det sparer nemlig både tid og lagringsplads på computeren, at tidligere beregnede størrelser kan genbruges i de næste opdateringer.</p>
 <p>Hvis du gerne vil bevise ovenstående, er der lidt hjælp at hente i nedenstående boks.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
@@ -522,32 +560,64 @@ u_i^{\textrm{(ny)}} &amp;\leftarrow u_i + \eta \cdot \sum_{m=1}^{M} \left ( t^{(
 <p>Husk på, at vores tabsfunktion ser sådan her ud:</p>
 <p><span class="math display">\[
 \begin{aligned}
-E(w_0, w_1, \dots, w_n) &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+E &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
 o^{(m)} \right)^2 \\
-&amp;=\frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
-(w_0 + w_1 \cdot z_1^{(m)} + w_2 \cdot z_2^{(m)}) \right)^2.
+&amp;= \sum_{m=1}^{M} \frac{1}{2} \left (t^{(m)}-
+(w_0 + w_1 \cdot z_1^{(m)} + w_2 \cdot z_2^{(m)}) \right)^2 \\
+&amp;= \sum_{m=1}^{M} E^{(m)},
 \end{aligned}
 \]</span></p>
+<p>hvor vi her har sat</p>
+<p><span id="eq-Em"><span class="math display">\[
+E^{(m)}= \frac{1}{2} \left (t^{(m)}-
+(w_0 + w_1 \cdot z_1^{(m)} + w_2 \cdot z_2^{(m)}) \right)^2
+\tag{5}\]</span></span></p>
+<p>Vi ved fra sumreglen, at vi skal differentiere ledvist. Det vil sige, når <span class="math inline">\(E\)</span> skal differentieres med hensyn til én af vægtene, så kan vi bare differentiere <span class="math inline">\(E^{(m)}\)</span> med hensyn til den pågældende vægt og lægge alle disse partielle afledede sammen. For eksempel er</p>
+<p><span class="math display">\[
+\frac{\partial E}{\partial w_i} = \sum_{m=1}^M \frac{\partial E^{(m)}}{\partial w_i}
+\]</span> I det følgende får du derfor hints til at differentiere <span class="math inline">\(E^{(m)}\)</span>.</p>
 <p>Når du skal bestemme</p>
 <p><span class="math display">\[
-\frac{\partial E}{\partial w_i},
+\frac{\partial E^{(m)}}{\partial w_i}
 \]</span></p>
-<p>så skal du gøre fuldstændig, som vi gjorde i afsnittet <a href="#hvad-koster-mit-hus">Hvad koster mit hus?</a></p>
+<p>så skal du gøre fuldstændig, som vi gjorde i afsnittet <a href="#hvad-koster-mit-hus">Hvad koster mit hus?</a>.</p>
 <p>Når du skal finde</p>
 <p><span class="math display">\[
-\frac{\partial E}{\partial v_i},
+\frac{\partial E^{(m)}}{\partial v_i}
 \]</span></p>
-<p>Da <span class="math inline">\(v_i\)</span> kun har indflydelse på <span class="math inline">\(E\)</span> via <span class="math inline">\(z_1^{(m)}\)</span>-værdierne, behøver vi heldigvis ikke kædereglen for funktioner af flere variable. Men kædereglen får vi brug for – du kan eventuelt se <a href="https://www.youtube.com/watch?v=nVaAIVXiUjs">denne video om kædereglen</a>, hvis du vil forstå nedenstående notation lidt bedre. Vi får nemlig (hvor vi også lige har brugt sumreglen):</p>
+<p>skal man egentlig bruge kædereglen for funktioner af flere variable, fordi <span class="math inline">\(E^{(m)}\)</span> både afhænger af <span class="math inline">\(z_1^{(m)}(v_i)\)</span> og <span class="math inline">\(z_2^{(m)}(v_i)\)</span>:</p>
 <p><span class="math display">\[
-\frac{\partial E}{\partial v_i} = \sum_{m=1}^M \frac{\partial E}{\partial z_1^{(m)}} \cdot \frac{\partial z_1^{(m)}}{\partial v_i}
+\frac{\partial E^{(m)}}{\partial v_i} = \frac{\partial E^{(m)}}{\partial z_1^{(m)}}\cdot\frac{\partial z_1^{(m)}}{\partial v_i} + \frac{\partial E^{(m)}}{\partial z_2^{(m)}}\cdot\frac{\partial z_2^{(m)}}{\partial v_i}
 \]</span></p>
-<p>Når <span class="math inline">\(z_1^{(m)}\)</span> skal differentieres med hensyn til <span class="math inline">\(v_i\)</span> får vi brug for en særlig egenskab ved sigmoid-funktionen. Nemlig, at</p>
+<p>Men vi ved fra feedforward udtrykkene, at</p>
+<p><span id="eq-z_1m"><span class="math display">\[
+z_1^{(m)} = \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} + v_3 \cdot x_3^{(m)} + \cdots + v_4 \cdot x_4^{(m)} \right )
+\tag{6}\]</span></span></p>
+<p>og</p>
+<p><span class="math display">\[
+z_2^{(m)} = \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} + u_3 \cdot x_3^{(m)} + u_4 \cdot x_4^{(m)} \right )
+\]</span></p>
+<p>og her kan vi se, at det kun er <span class="math inline">\(z_1^{(m)}\)</span>, som afhænger af <span class="math inline">\(v_i\)</span>. Det betyder, at</p>
+<p><span class="math display">\[
+\frac{\partial z_2^{(m)}}{\partial v_i} = 0
+\]</span></p>
+<p>og derfor er</p>
+<p><span class="math display">\[
+\frac{\partial E^{(m)}}{\partial v_i} = \frac{\partial E^{(m)}}{\partial z_1^{(m)}}\cdot\frac{\partial z_1^{(m)}}{\partial v_i}
+\]</span></p>
+<p>Hvis du har brug for lidt mere information om kædereglen og den notation, som vi har anvendt ovenfor, kan du eventuelt se <a href="https://www.youtube.com/watch?v=nVaAIVXiUjs">denne video</a>.</p>
+<p>Når du skal bestemme</p>
+<p><span class="math display">\[
+\frac{\partial E^{(m)}}{\partial z_1^{(m)}}
+\]</span></p>
+<p>skal du bruge udtrykket for <span class="math inline">\(E^{(m)}\)</span> i (<a href="#eq-Em" class="quarto-xref">5</a>). Og når <span class="math inline">\(z_1^{(m)}\)</span> skal differentieres med hensyn til <span class="math inline">\(v_i\)</span>, skal du bruge udtrykket i (<a href="#eq-z_1m" class="quarto-xref">6</a>). Derudover får du brug for en særlig egenskab ved sigmoid-funktionen. Nemlig, at</p>
 <p><span class="math display">\[
 \sigma'(x) = \sigma(x) \cdot (1-\sigma(x))
-\]</span> Tilsvarende er</p>
-<p><span class="math display">\[
-\frac{\partial E}{\partial u_i} = \sum_{m=1}^M \frac{\partial E}{\partial z_2^{(m)}} \cdot \frac{\partial z_2^{(m)}}{\partial u_i}
 \]</span></p>
+<p>På helt tilsvarende vis kan</p>
+<p><span class="math display">\[\frac{\partial E^{(m)}}{\partial u_i}
+\]</span></p>
+<p>findes.</p>
 </div>
 </div>
 </div>
