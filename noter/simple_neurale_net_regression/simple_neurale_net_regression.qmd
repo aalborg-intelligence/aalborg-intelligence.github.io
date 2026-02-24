@@ -376,23 +376,22 @@ $$
    $$
    for $i \in \{1, 2, 3, 4\}$.
    
-Alle vægtene er nu opdateret, og vi kan gentage punkt 2 til 3, hvor feedforward i 2 hver gang er baseret på de netop opdaterede vægte fra det foregående gennemløb. Opdateringen af vægtene fortsætter, indtil værdien af tabsfunktionen næsten ikke ændrer sig. Håbet er nu, at vi har fundet et minimum (eventuelt kun lokalt) for tabsfunktionen.
+Alle vægtene er nu opdateret, og vi kan gentage punkt 2 og 3, hvor feedforward i 2 hver gang er baseret på de netop opdaterede vægte fra det foregående gennemløb. Opdateringen af vægtene fortsætter, indtil værdien af tabsfunktionen næsten ikke ændrer sig. Håbet er nu, at vi har fundet et minimum (eventuelt kun lokalt) for tabsfunktionen.
 
 :::
 
-   Bemærk her, at vi kender $z_1^{(m)}$, $z_2^{(m)}$ og $o^{(m)}$ på grund af feedforward, mens alle $u$-, $v$- og $w$-værdierne er de nuværende værdier af vægtene (*inden* opdatering). Læg også mærke til, at når $w$-vægtene er blevet opdateret, så har vi allerede udregnet $\delta^{(m)}$, og at denne størrelse så \"genbruges\", når $v$- og $u$-vægtene opdateres. Det er denne form for \"genbrug\", som i de store kunstige neurale netværk viser sig, at være fuldstændig afgørende for at beregningerne kan gennemføres på en .... START HER!
+   Bemærk her, at vi kender $z_1^{(m)}$, $z_2^{(m)}$ og $o^{(m)}$ på grund af feedforward, mens alle $u-$, $v-$ og $w-$værdierne er de nuværende værdier af vægtene (*inden* opdatering). 
 
-
-Ser vi på opdateringsreglerne for $w$-vægtene, kan vi se, at der i alle regler indgår en faktor 
+I alle opdateringsreglerne indgår altså faktoren 
 
 $$
-\left ( t^{(m)}-o^{(m)}\right)
+ \delta^{(m)} = t^{(m)}-o^{(m)}
 $$
 
-som er et udtryk for den fejl netværket begår med de nuværende værdier af vægtene (nemlig forskellen på den ønskede targetværdi $t^{(m)}$ og den prædikterede outputværdi $o^{(m)}$). Der er to ting, som er værd at bemærke i den forbindelse:
+Denne størrelse er et udtryk for den fejl, netværket begår med de nuværende værdier af vægtene (nemlig forskellen på den ønskede targetværdi $t^{(m)}$ og den prædikterede outputværdi $o^{(m)}$). Der er to ting, som er værd at bemærke i den forbindelse:
 
-* Hvis fejlen er stor, bliver $w$ vægtene opdateret forholdsvis meget -- og omvendt hvis fejlen er lille.
-* Når vi har opdateret $w$-vægtene, har vi allerede beregnet fejlen $t^{(m)}-o^{(m)}$. Denne \"fejlfaktor\" indgår også i opdateringsreglerne for $v$- og $u$-vægtene, og den allerede beregnede fejl kan altså genbruges, når $v$- og $u$-vægtene skal opdateres.
+* Hvis fejlen er stor, bliver vægtene opdateret forholdsvis meget -- og omvendt hvis fejlen er lille.
+* Når vi har opdateret $w$-vægtene, har vi allerede beregnet fejlen $\delta^{(m)}$. Denne \"fejlfaktor\" indgår også i opdateringsreglerne for $v$- og $u$-vægtene, og den allerede beregnede fejl kan altså genbruges, når $v$- og $u$-vægtene skal opdateres.
 
 Det kan her virke fuldstændig ligegyldigt, om vi skal beregne fejlen et par ekstra gange eller ej, men i virkelighedens anvendelser af kunstige neurale netværk, er det lige præcis denne beregningsmæssige finte, som gør, at det overhovedet kan lade sig gøre at bruge gradientnedstigning. Det sparer nemlig både tid og lagringsplads på computeren, at tidligere beregnede størrelser kan genbruges i de næste opdateringer.  
 
