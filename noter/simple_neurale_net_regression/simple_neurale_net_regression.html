@@ -40,7 +40,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-cef6446724503988638a0362fd982987.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-716f3ba543d91fbed3e5e306898a7a5b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -404,19 +404,19 @@ o_2 - o_1 &amp;= w_0 + w_1 \cdot x_1 + w_1 + w_2 \cdot x_2 + \cdots + w_n \cdot 
 <section id="prædiktion-af-huspriser-nu-med-skjulte-lag" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="prædiktion-af-huspriser-nu-med-skjulte-lag">Prædiktion af huspriser – nu med skjulte lag!</h2>
 <p>Der skal helst ikke være skjulte fejl og mangler, når man skal sælge sit hus. Til gengæld kan det være en super god idé med nogle skjulte lag, når man skal prædiktere huspriser!</p>
-<p>I det ovenstående kommer de prædikterede huspriser til at afhænge lineært af inputvariablene. Men verden er sjældent lineær! Og en af styrkerne ved kunstige neurale netværk er netop, at de kan prædiktere størrelse eller kategorier ved hjælp af funktioner, som ikke er lineære. Vi skal derfor nu opstille et simpelt kunstigt neuralt netværk til prædiktion af huspriser. Vi vil lave et netværk med fire features <span class="math inline">\(x_1, x_2, x_3, x_4\)</span>, men nu med et såkaldt skjult lag, som består af to neuroner. Det kan illustreres, som vist i <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;1</a>:</p>
+<p>I det ovenstående kommer de prædikterede huspriser til at afhænge lineært af inputvariablene. Men verden er sjældent lineær – og en af styrkerne ved kunstige neurale netværk er netop, at de kan prædiktere størrelser eller kategorier ved hjælp af funktioner, som ikke er lineære. Vi skal derfor nu opstille et simpelt kunstigt neuralt netværk til prædiktion af huspriser. Vi vil lave et netværk med fire features <span class="math inline">\(x_1, x_2, x_3, x_4\)</span>, men nu med noget, som vi vil kalde for et skjult lag, som her består af to såkaldte neuroner. Det kan illustreres, som vist i <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;1</a>:</p>
 <div id="fig-neuralt_net_regression" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-neuralt_net_regression-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/neuralt_net_regression.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-neuralt_net_regression-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;1: Simpelt kunstigt neuralt netværk til prædiktion af huspriser. Netværket har inputvariable <span class="math inline">\(x_1, x_2, x_3, x_4\)</span> og ét skjult lag med to neuroner.
+Figur&nbsp;1: Simpelt kunstigt neuralt netværk til prædiktion af huspriser. Netværket har inputvariable <span class="math inline">\(x_1, x_2, x_3, x_4\)</span> og ét skjult lag med to neuroner (her vist som de to grønne cirkler i midten).
 </figcaption>
 </figure>
 </div>
-<p>Som det ses i <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;1</a>, er der til hver pil knyttet en vægt, som skal bruges til at udregne outputværdien <span class="math inline">\(o\)</span>. Hvis vi for en stund forestiller os, at vi kender alle vægtene, så udregner vi outputværdien <span class="math inline">\(o\)</span> på følgende måde:</p>
-<p>Ved hjælp af inputvariablene og <span class="math inline">\(v\)</span>-vægtene beregner vi <span class="math inline">\(z_1\)</span>:</p>
+<p>Som det ses i <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;1</a>, er der til hver pil knyttet en vægt (for eksempel <span class="math inline">\(v_1, u_1, w_1\)</span> og så videre), som skal bruges til at udregne outputværdien <span class="math inline">\(o\)</span>. Hvis vi for en stund forestiller os, at vi kender alle vægtene, så udregner vi outputværdien <span class="math inline">\(o\)</span> på følgende måde:</p>
+<p>Ved hjælp af inputvariablene og <span class="math inline">\(v\)</span>-vægtene (de lysegrønne pile på <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;1</a>) beregner vi <span class="math inline">\(z_1\)</span>:</p>
 <p><span class="math display">\[
 z_1 = \sigma (v_0 + v_1 \cdot x_1 + v_2 \cdot x_2 + v_3 \cdot x_3 + v_4 \cdot x_4)
 \]</span> som selvfølgelig kan generaliseres til</p>
@@ -427,7 +427,7 @@ z_1 = \sigma (v_0 + v_1 \cdot x_1 + \cdots + v_n \cdot x_n)
 <p><span id="eq-sigmoid"><span class="math display">\[
 \sigma(x)=\frac{1}{1+\mathrm{e}^{-x}}
 \tag{1}\]</span></span></p>
-<p>og grafen ses i <a href="#fig-sigmoid" class="quarto-xref">figur&nbsp;2</a>.</p>
+<p>Grafen for sigmoid-funktionen ses i <a href="#fig-sigmoid" class="quarto-xref">figur&nbsp;2</a>:</p>
 <div id="fig-sigmoid" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-sigmoid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -439,11 +439,11 @@ Figur&nbsp;2: Grafen for sigmoid-funktionen med forskrift <span class="math inli
 </figure>
 </div>
 <p>Sigmoid-funktionen kaldes også for en <strong>aktiveringsfunktion</strong>, og det er den, der gør, at vi ender med at prædiktere huspriserne på en ikke-lineær måde.</p>
-<p>På tilsvarende vis udregner vi <span class="math inline">\(z_2\)</span> ved at bruge <span class="math inline">\(u\)</span>-vægtene:</p>
+<p>På tilsvarende vis udregner vi <span class="math inline">\(z_2\)</span> ved at bruge <span class="math inline">\(u\)</span>-vægtene (de mørkegrønne pile på <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;1</a>):</p>
 <p><span class="math display">\[
 z_2 = \sigma (u_0 + u_1 \cdot x_1 + u_2 \cdot x_2 + u_3 \cdot x_3 + u_4 \cdot x_4)
 \]</span></p>
-<p>Når vi nu har <span class="math inline">\(z_1\)</span> og <span class="math inline">\(z_2\)</span> beregnes outputværdien <span class="math inline">\(o\)</span>, som vi gjorde det tidligere:</p>
+<p>Når vi nu har <span class="math inline">\(z_1\)</span> og <span class="math inline">\(z_2\)</span> beregnes outputværdien <span class="math inline">\(o\)</span>, som vi gjorde det tidligere (her er <span class="math inline">\(w\)</span>-vægtene vist som de lyseblå pile på <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;1</a>):</p>
 <p><span class="math display">\[
 o = w_0 + w_1 \cdot z_1 + w_2 \cdot z_2
 \]</span></p>
@@ -479,7 +479,7 @@ o^{(m)} = w_0 + w_1 \cdot z_1^{(m)} + w_2 \cdot z_2^{(m)}
 <p>Tabsfunktionen definerer vi nu som før</p>
 <p><span class="math display">\[
 \begin{aligned}
-E(v_0, v_1, \dots, v_4, u_0, u_1, \dots, u_u,w_0, w_1, w_2) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+E(v_0, v_1, \dots, v_4, &amp; u_0, u_1, \dots, u_u,w_0, w_1, w_2) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
 o^{(m)} \right)^2
 \end{aligned}
 \]</span></p>
@@ -504,7 +504,7 @@ o^{(m)} \right)^2
 <li><p>For alle træningsdataeksempler udregnes <span class="math inline">\(z_1^{(m)}\)</span>, <span class="math inline">\(z_2^{(m)}\)</span> og <span class="math inline">\(o^{(m)}\)</span> ved hjælp af feedforward-udtrykkene:</p>
 <p><span class="math display">\[
 \begin{aligned}
-z_1^{(m)} &amp;= \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} + v_3 \cdot x_3^{(m)} + \cdots + v_4 \cdot x_4^{(m)} \right ) \\
+z_1^{(m)} &amp;= \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} + v_3 \cdot x_3^{(m)} +  v_4 \cdot x_4^{(m)} \right ) \\
 z_2^{(m)} &amp;= \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} + u_3 \cdot x_3^{(m)} + u_4 \cdot x_4^{(m)} \right ) \\
 o^{(m)} &amp;= w_0 + w_1 \cdot z_1^{(m)} + w_2 \cdot z_2^{(m)}
 \end{aligned}
@@ -512,28 +512,31 @@ o^{(m)} &amp;= w_0 + w_1 \cdot z_1^{(m)} + w_2 \cdot z_2^{(m)}
 <li><p>Vægtene opdatereres:</p>
 <p><strong><span class="math inline">\(w\)</span>-vægtene:</strong> <span class="math display">\[
 \begin{aligned}
-w_0^{\textrm{(ny)}} &amp;\leftarrow w_0 + \eta \cdot \sum_{m=1}^{M} \left ( t^{(m)}-o^{(m)}\right) \\
-w_1^{\textrm{(ny)}} &amp;\leftarrow w_1 + \eta \cdot \sum_{m=1}^{M} \left ( t^{(m)}-o^{(m)}\right) \cdot z_1^{(m)} \\
-w_2^{\textrm{(ny)}} &amp;\leftarrow w_2 + \eta \cdot \sum_{m=1}^{M} \left ( t^{(m)}-o^{(m)}\right) \cdot z_2^{(m)}
+w_0^{\textrm{(ny)}} &amp;\leftarrow w_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \\
+w_1^{\textrm{(ny)}} &amp;\leftarrow w_1 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot z_1^{(m)} \\
+w_2^{\textrm{(ny)}} &amp;\leftarrow w_2 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot z_2^{(m)}
 \end{aligned}
+\]</span> hvor</p>
+<p><span class="math display">\[
+\delta^{(m)} = t^{(m)}-o^{(m)}
 \]</span> <strong><span class="math inline">\(v\)</span>-vægtene:</strong> <span class="math display">\[
 \begin{aligned}
-v_0^{\textrm{(ny)}} &amp;\leftarrow v_0 + \eta \cdot \sum_{m=1}^{M} \left ( t^{(m)}-o^{(m)}\right) \cdot w_1 \cdot z_1^{(m)} \cdot \left ( 1- z_1^{(m)} \right) \\
-v_i^{\textrm{(ny)}} &amp;\leftarrow v_i + \eta \cdot \sum_{m=1}^{M} \left ( t^{(m)}-o^{(m)}\right) \cdot w_1 \cdot z_1^{(m)} \cdot \left ( 1- z_1^{(m)} \right) \cdot x_i^{(m)}\\
+v_0^{\textrm{(ny)}} &amp;\leftarrow v_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_1 \cdot z_1^{(m)} \cdot \left ( 1- z_1^{(m)} \right) \\
+v_i^{\textrm{(ny)}} &amp;\leftarrow v_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_1 \cdot z_1^{(m)} \cdot \left ( 1- z_1^{(m)} \right) \cdot x_i^{(m)}\\
 \end{aligned}
 \]</span> for <span class="math inline">\(i \in \{1, 2, 3, 4\}\)</span>.</p>
 <p><strong><span class="math inline">\(u\)</span>-vægtene:</strong> <span class="math display">\[
 \begin{aligned}
-u_0^{\textrm{(ny)}} &amp;\leftarrow u_0 + \eta \cdot \sum_{m=1}^{M} \left ( t^{(m)}-o^{(m)}\right) \cdot w_2 \cdot z_2^{(m)} \cdot \left ( 1- z_2^{(m)} \right) \\
-u_i^{\textrm{(ny)}} &amp;\leftarrow u_i + \eta \cdot \sum_{m=1}^{M} \left ( t^{(m)}-o^{(m)}\right) \cdot w_2 \cdot z_2^{(m)} \cdot \left ( 1- z_2^{(m)} \right) \cdot x_i^{(m)}\\
+u_0^{\textrm{(ny)}} &amp;\leftarrow u_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_2 \cdot z_2^{(m)} \cdot \left ( 1- z_2^{(m)} \right) \\
+u_i^{\textrm{(ny)}} &amp;\leftarrow u_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_2 \cdot z_2^{(m)} \cdot \left ( 1- z_2^{(m)} \right) \cdot x_i^{(m)}\\
 \end{aligned}
-\]</span> for <span class="math inline">\(i \in \{1, 2, 3, 4\}\)</span>.</p>
-<p>Bemærk her, at vi kender <span class="math inline">\(z_1^{(m)}\)</span>, <span class="math inline">\(z_2^{(m)}\)</span> og <span class="math inline">\(o^{(m)}\)</span> på grund af feedforward, mens alle <span class="math inline">\(u\)</span>-, <span class="math inline">\(v\)</span>- og <span class="math inline">\(w\)</span>-værdierne er de nuværende værdier af vægtene (<em>inden</em> opdatering).</p></li>
+\]</span> for <span class="math inline">\(i \in \{1, 2, 3, 4\}\)</span>.</p></li>
 </ol>
 <p>Alle vægtene er nu opdateret, og vi kan gentage punkt 2 til 3, hvor feedforward i 2 hver gang er baseret på de netop opdaterede vægte fra det foregående gennemløb. Opdateringen af vægtene fortsætter, indtil værdien af tabsfunktionen næsten ikke ændrer sig. Håbet er nu, at vi har fundet et minimum (eventuelt kun lokalt) for tabsfunktionen.</p>
 </div>
 </div>
 </div>
+<p>Bemærk her, at vi kender <span class="math inline">\(z_1^{(m)}\)</span>, <span class="math inline">\(z_2^{(m)}\)</span> og <span class="math inline">\(o^{(m)}\)</span> på grund af feedforward, mens alle <span class="math inline">\(u\)</span>-, <span class="math inline">\(v\)</span>- og <span class="math inline">\(w\)</span>-værdierne er de nuværende værdier af vægtene (<em>inden</em> opdatering). Læg også mærke til, at når <span class="math inline">\(w\)</span>-vægtene er blevet opdateret, så har vi allerede udregnet <span class="math inline">\(\delta^{(m)}\)</span>, og at denne størrelse så "genbruges", når <span class="math inline">\(v\)</span>- og <span class="math inline">\(u\)</span>-vægtene opdateres. Det er denne form for "genbrug", som i de store kunstige neurale netværk viser sig, at være fuldstændig afgørende for at beregningerne kan gennemføres på en …. START HER!</p>
 <p>Ser vi på opdateringsreglerne for <span class="math inline">\(w\)</span>-vægtene, kan vi se, at der i alle regler indgår en faktor</p>
 <p><span class="math display">\[
 \left ( t^{(m)}-o^{(m)}\right)
