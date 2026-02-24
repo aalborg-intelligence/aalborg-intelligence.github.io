@@ -532,19 +532,19 @@ u_i^{\textrm{(ny)}} &amp;\leftarrow u_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)}
 \end{aligned}
 \]</span> for <span class="math inline">\(i \in \{1, 2, 3, 4\}\)</span>.</p></li>
 </ol>
-<p>Alle vægtene er nu opdateret, og vi kan gentage punkt 2 til 3, hvor feedforward i 2 hver gang er baseret på de netop opdaterede vægte fra det foregående gennemløb. Opdateringen af vægtene fortsætter, indtil værdien af tabsfunktionen næsten ikke ændrer sig. Håbet er nu, at vi har fundet et minimum (eventuelt kun lokalt) for tabsfunktionen.</p>
+<p>Alle vægtene er nu opdateret, og vi kan gentage punkt 2 og 3, hvor feedforward i 2 hver gang er baseret på de netop opdaterede vægte fra det foregående gennemløb. Opdateringen af vægtene fortsætter, indtil værdien af tabsfunktionen næsten ikke ændrer sig. Håbet er nu, at vi har fundet et minimum (eventuelt kun lokalt) for tabsfunktionen.</p>
 </div>
 </div>
 </div>
-<p>Bemærk her, at vi kender <span class="math inline">\(z_1^{(m)}\)</span>, <span class="math inline">\(z_2^{(m)}\)</span> og <span class="math inline">\(o^{(m)}\)</span> på grund af feedforward, mens alle <span class="math inline">\(u\)</span>-, <span class="math inline">\(v\)</span>- og <span class="math inline">\(w\)</span>-værdierne er de nuværende værdier af vægtene (<em>inden</em> opdatering). Læg også mærke til, at når <span class="math inline">\(w\)</span>-vægtene er blevet opdateret, så har vi allerede udregnet <span class="math inline">\(\delta^{(m)}\)</span>, og at denne størrelse så "genbruges", når <span class="math inline">\(v\)</span>- og <span class="math inline">\(u\)</span>-vægtene opdateres. Det er denne form for "genbrug", som i de store kunstige neurale netværk viser sig, at være fuldstændig afgørende for at beregningerne kan gennemføres på en …. START HER!</p>
-<p>Ser vi på opdateringsreglerne for <span class="math inline">\(w\)</span>-vægtene, kan vi se, at der i alle regler indgår en faktor</p>
+<p>Bemærk her, at vi kender <span class="math inline">\(z_1^{(m)}\)</span>, <span class="math inline">\(z_2^{(m)}\)</span> og <span class="math inline">\(o^{(m)}\)</span> på grund af feedforward, mens alle <span class="math inline">\(u-\)</span>, <span class="math inline">\(v-\)</span> og <span class="math inline">\(w-\)</span>værdierne er de nuværende værdier af vægtene (<em>inden</em> opdatering).</p>
+<p>I alle opdateringsreglerne indgår altså faktoren</p>
 <p><span class="math display">\[
-\left ( t^{(m)}-o^{(m)}\right)
+\delta^{(m)} = t^{(m)}-o^{(m)}
 \]</span></p>
-<p>som er et udtryk for den fejl netværket begår med de nuværende værdier af vægtene (nemlig forskellen på den ønskede targetværdi <span class="math inline">\(t^{(m)}\)</span> og den prædikterede outputværdi <span class="math inline">\(o^{(m)}\)</span>). Der er to ting, som er værd at bemærke i den forbindelse:</p>
+<p>Denne størrelse er et udtryk for den fejl, netværket begår med de nuværende værdier af vægtene (nemlig forskellen på den ønskede targetværdi <span class="math inline">\(t^{(m)}\)</span> og den prædikterede outputværdi <span class="math inline">\(o^{(m)}\)</span>). Der er to ting, som er værd at bemærke i den forbindelse:</p>
 <ul>
-<li>Hvis fejlen er stor, bliver <span class="math inline">\(w\)</span> vægtene opdateret forholdsvis meget – og omvendt hvis fejlen er lille.</li>
-<li>Når vi har opdateret <span class="math inline">\(w\)</span>-vægtene, har vi allerede beregnet fejlen <span class="math inline">\(t^{(m)}-o^{(m)}\)</span>. Denne "fejlfaktor" indgår også i opdateringsreglerne for <span class="math inline">\(v\)</span>- og <span class="math inline">\(u\)</span>-vægtene, og den allerede beregnede fejl kan altså genbruges, når <span class="math inline">\(v\)</span>- og <span class="math inline">\(u\)</span>-vægtene skal opdateres.</li>
+<li>Hvis fejlen er stor, bliver vægtene opdateret forholdsvis meget – og omvendt hvis fejlen er lille.</li>
+<li>Når vi har opdateret <span class="math inline">\(w\)</span>-vægtene, har vi allerede beregnet fejlen <span class="math inline">\(\delta^{(m)}\)</span>. Denne "fejlfaktor" indgår også i opdateringsreglerne for <span class="math inline">\(v\)</span>- og <span class="math inline">\(u\)</span>-vægtene, og den allerede beregnede fejl kan altså genbruges, når <span class="math inline">\(v\)</span>- og <span class="math inline">\(u\)</span>-vægtene skal opdateres.</li>
 </ul>
 <p>Det kan her virke fuldstændig ligegyldigt, om vi skal beregne fejlen et par ekstra gange eller ej, men i virkelighedens anvendelser af kunstige neurale netværk, er det lige præcis denne beregningsmæssige finte, som gør, at det overhovedet kan lade sig gøre at bruge gradientnedstigning. Det sparer nemlig både tid og lagringsplads på computeren, at tidligere beregnede størrelser kan genbruges i de næste opdateringer.</p>
 <p>Hvis du gerne vil bevise ovenstående, er der lidt hjælp at hente i nedenstående boks.</p>
