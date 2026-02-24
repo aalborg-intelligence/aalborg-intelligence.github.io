@@ -242,13 +242,13 @@ Vi ser også, at $w_4=447658.8766$, som betyder, at hvis vi står med to tilsvar
 
 Der skal helst ikke være skjulte fejl og mangler, når man skal sælge sit hus. Til gengæld kan det være en super god idé med nogle skjulte lag, når man skal prædiktere huspriser!
 
-I det ovenstående kommer de prædikterede huspriser til at afhænge lineært af inputvariablene. Men verden er sjældent lineær! Og en af styrkerne ved kunstige neurale netværk er netop, at de kan prædiktere størrelse eller kategorier ved hjælp af funktioner, som ikke er lineære. Vi skal derfor nu opstille et simpelt kunstigt neuralt netværk til prædiktion af huspriser. Vi vil lave et netværk med fire features $x_1, x_2, x_3, x_4$, men nu med et såkaldt skjult lag, som består af to neuroner. Det kan illustreres, som vist i @fig-neuralt_net_regression:
+I det ovenstående kommer de prædikterede huspriser til at afhænge lineært af inputvariablene. Men verden er sjældent lineær -- og en af styrkerne ved kunstige neurale netværk er netop, at de kan prædiktere størrelser eller kategorier ved hjælp af funktioner, som ikke er lineære. Vi skal derfor nu opstille et simpelt kunstigt neuralt netværk til prædiktion af huspriser. Vi vil lave et netværk med fire features $x_1, x_2, x_3, x_4$, men nu med noget, som vi vil kalde for et skjult lag, som her består af to såkaldte neuroner. Det kan illustreres, som vist i @fig-neuralt_net_regression:
 
-![Simpelt kunstigt neuralt netværk til prædiktion af huspriser. Netværket har inputvariable $x_1, x_2, x_3, x_4$ og ét skjult lag med to neuroner.](images/neuralt_net_regression.png){#fig-neuralt_net_regression width=80% fig-align='center'}
+![Simpelt kunstigt neuralt netværk til prædiktion af huspriser. Netværket har inputvariable $x_1, x_2, x_3, x_4$ og ét skjult lag med to neuroner (her vist som de to grønne cirkler i midten).](images/neuralt_net_regression.png){#fig-neuralt_net_regression width=80% fig-align='center'}
 
-Som det ses i @fig-neuralt_net_regression, er der til hver pil knyttet en vægt, som skal bruges til at udregne outputværdien $o$. Hvis vi for en stund forestiller os, at vi kender alle vægtene, så udregner vi outputværdien $o$ på følgende måde:
+Som det ses i @fig-neuralt_net_regression, er der til hver pil knyttet en vægt (for eksempel $v_1, u_1, w_1$ og så videre), som skal bruges til at udregne outputværdien $o$. Hvis vi for en stund forestiller os, at vi kender alle vægtene, så udregner vi outputværdien $o$ på følgende måde:
 
-Ved hjælp af inputvariablene og $v$-vægtene beregner vi $z_1$:
+Ved hjælp af inputvariablene og $v$-vægtene (de lysegrønne pile på @fig-neuralt_net_regression) beregner vi $z_1$:
 
 $$
 z_1 = \sigma (v_0 + v_1 \cdot x_1 + v_2 \cdot x_2 + v_3 \cdot x_3 + v_4 \cdot x_4)
@@ -265,20 +265,20 @@ $$
 \sigma(x)=\frac{1}{1+\mathrm{e}^{-x}}
 $$ {#eq-sigmoid} 
 
-og grafen ses i @fig-sigmoid.
+Grafen for sigmoid-funktionen ses i @fig-sigmoid:
 
 ![Grafen for sigmoid-funktionen med forskrift $\sigma(x)=\frac{1}{1+\mathrm{e}^{-x}}$.](../kunstige_neuroner/images/sigmoid.png){width=75% #fig-sigmoid}
 
 Sigmoid-funktionen kaldes også for en **aktiveringsfunktion**, og det er den, der gør, at vi ender med at prædiktere huspriserne på en ikke-lineær måde.
 
-På tilsvarende vis udregner vi $z_2$ ved at bruge $u$-vægtene:
+På tilsvarende vis udregner vi $z_2$ ved at bruge $u$-vægtene (de mørkegrønne pile på @fig-neuralt_net_regression):
 
 $$
 z_2 = \sigma (u_0 + u_1 \cdot x_1 + u_2 \cdot x_2 + u_3 \cdot x_3 + u_4 \cdot x_4)
 $$
 
 
-Når vi nu har $z_1$ og $z_2$ beregnes outputværdien $o$, som vi gjorde det tidligere:
+Når vi nu har $z_1$ og $z_2$ beregnes outputværdien $o$, som vi gjorde det tidligere (her er $w$-vægtene vist som de lyseblå pile på @fig-neuralt_net_regression):
 
 $$
 o = w_0 + w_1 \cdot z_1 + w_2 \cdot z_2
@@ -315,7 +315,7 @@ Tabsfunktionen definerer vi nu som før
 
 $$
 \begin{aligned}
-E(v_0, v_1, \dots, v_4, u_0, u_1, \dots, u_u,w_0, w_1, w_2) \\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+E(v_0, v_1, \dots, v_4, & u_0, u_1, \dots, u_u,w_0, w_1, w_2) \\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
 o^{(m)} \right)^2
 \end{aligned}
 $$
@@ -337,7 +337,7 @@ Backpropagation foregår samlet set på denne måde:
 
    $$
    \begin{aligned}
-   z_1^{(m)} &= \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} + v_3 \cdot x_3^{(m)} + \cdots + v_4 \cdot x_4^{(m)} \right ) \\
+   z_1^{(m)} &= \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} + v_3 \cdot x_3^{(m)} +  v_4 \cdot x_4^{(m)} \right ) \\
    z_2^{(m)} &= \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} + u_3 \cdot x_3^{(m)} + u_4 \cdot x_4^{(m)} \right ) \\
    o^{(m)} &= w_0 + w_1 \cdot z_1^{(m)} + w_2 \cdot z_2^{(m)}
    \end{aligned}
@@ -348,16 +348,21 @@ $$
    **$w$-vægtene:**
    $$
    \begin{aligned}
-   w_0^{\textrm{(ny)}} &\leftarrow w_0 + \eta \cdot \sum_{m=1}^{M} \left ( t^{(m)}-o^{(m)}\right) \\
-   w_1^{\textrm{(ny)}} &\leftarrow w_1 + \eta \cdot \sum_{m=1}^{M} \left ( t^{(m)}-o^{(m)}\right) \cdot z_1^{(m)} \\
-   w_2^{\textrm{(ny)}} &\leftarrow w_2 + \eta \cdot \sum_{m=1}^{M} \left ( t^{(m)}-o^{(m)}\right) \cdot z_2^{(m)} 
+   w_0^{\textrm{(ny)}} &\leftarrow w_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \\
+   w_1^{\textrm{(ny)}} &\leftarrow w_1 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot z_1^{(m)} \\
+   w_2^{\textrm{(ny)}} &\leftarrow w_2 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot z_2^{(m)} 
    \end{aligned}
+   $$
+   hvor
+   
+   $$
+   \delta^{(m)} = t^{(m)}-o^{(m)}
    $$
    **$v$-vægtene:**
    $$
    \begin{aligned}
-   v_0^{\textrm{(ny)}} &\leftarrow v_0 + \eta \cdot \sum_{m=1}^{M} \left ( t^{(m)}-o^{(m)}\right) \cdot w_1 \cdot z_1^{(m)} \cdot \left ( 1- z_1^{(m)} \right) \\
-   v_i^{\textrm{(ny)}} &\leftarrow v_i + \eta \cdot \sum_{m=1}^{M} \left ( t^{(m)}-o^{(m)}\right) \cdot w_1 \cdot z_1^{(m)} \cdot \left ( 1- z_1^{(m)} \right) \cdot x_i^{(m)}\\
+   v_0^{\textrm{(ny)}} &\leftarrow v_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_1 \cdot z_1^{(m)} \cdot \left ( 1- z_1^{(m)} \right) \\
+   v_i^{\textrm{(ny)}} &\leftarrow v_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_1 \cdot z_1^{(m)} \cdot \left ( 1- z_1^{(m)} \right) \cdot x_i^{(m)}\\
    \end{aligned}
    $$
    for $i \in \{1, 2, 3, 4\}$.
@@ -365,19 +370,18 @@ $$
    **$u$-vægtene:**
    $$
    \begin{aligned}
-   u_0^{\textrm{(ny)}} &\leftarrow u_0 + \eta \cdot \sum_{m=1}^{M} \left ( t^{(m)}-o^{(m)}\right) \cdot w_2 \cdot z_2^{(m)} \cdot \left ( 1- z_2^{(m)} \right) \\
-   u_i^{\textrm{(ny)}} &\leftarrow u_i + \eta \cdot \sum_{m=1}^{M} \left ( t^{(m)}-o^{(m)}\right) \cdot w_2 \cdot z_2^{(m)} \cdot \left ( 1- z_2^{(m)} \right) \cdot x_i^{(m)}\\
+   u_0^{\textrm{(ny)}} &\leftarrow u_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_2 \cdot z_2^{(m)} \cdot \left ( 1- z_2^{(m)} \right) \\
+   u_i^{\textrm{(ny)}} &\leftarrow u_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_2 \cdot z_2^{(m)} \cdot \left ( 1- z_2^{(m)} \right) \cdot x_i^{(m)}\\
    \end{aligned}
    $$
    for $i \in \{1, 2, 3, 4\}$.
    
-
-   Bemærk her, at vi kender $z_1^{(m)}$, $z_2^{(m)}$ og $o^{(m)}$ på grund af feedforward, mens alle $u$-, $v$- og $w$-værdierne er de nuværende værdier af vægtene (*inden* opdatering). 
-
-
 Alle vægtene er nu opdateret, og vi kan gentage punkt 2 til 3, hvor feedforward i 2 hver gang er baseret på de netop opdaterede vægte fra det foregående gennemløb. Opdateringen af vægtene fortsætter, indtil værdien af tabsfunktionen næsten ikke ændrer sig. Håbet er nu, at vi har fundet et minimum (eventuelt kun lokalt) for tabsfunktionen.
 
 :::
+
+   Bemærk her, at vi kender $z_1^{(m)}$, $z_2^{(m)}$ og $o^{(m)}$ på grund af feedforward, mens alle $u$-, $v$- og $w$-værdierne er de nuværende værdier af vægtene (*inden* opdatering). Læg også mærke til, at når $w$-vægtene er blevet opdateret, så har vi allerede udregnet $\delta^{(m)}$, og at denne størrelse så \"genbruges\", når $v$- og $u$-vægtene opdateres. Det er denne form for \"genbrug\", som i de store kunstige neurale netværk viser sig, at være fuldstændig afgørende for at beregningerne kan gennemføres på en .... START HER!
+
 
 Ser vi på opdateringsreglerne for $w$-vægtene, kan vi se, at der i alle regler indgår en faktor 
 
