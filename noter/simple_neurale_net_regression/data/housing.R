@@ -16,7 +16,12 @@ sqrt(mean((pred-dat$price)^2))
 plot(dat$price,pred)
 abline(0,1)
 
-fit_lm <- lm(price ~ area + bedrooms + bathrooms, data = dat)
+fit_lm <- lm(price ~ area + bedrooms + bathrooms + basement, data = dat)
+
+pred_lm <- predict(fit_lm, dat, type = "response")
+
+sqrt(mean((pred_lm-dat$price)^2))
+
 summary(fit_lm)
 
 ## Malenes
@@ -30,7 +35,13 @@ fitNN <- nn_fun(price ~ area + bedrooms + bathrooms + basement, data = dat,
 predNN <- predict(fitNN, dat, type = "response")
 
 sum((dat$price-mean(dat$price))^2)/2
+mean((dat$price-mean(dat$price))^2)
+
+mean((dat$price)^2)
+
+
 sqrt(mean((predNN-dat$price)^2))
+
 
 plot(dat$price,predNN)
 abline(0,1)

@@ -7,53 +7,41 @@ aliases:
 from: markdown+emoji
 ---
 
-Hvis du har læst nogle af vores andre noter om kunstige neurale netværk, så har de alle handlet om **klassifikation**. Det kunne for eksempel være: aktiverer en kunde et tilbud i en app? (ja/nej), bliver det regnvejr i morgen? (ja/nej), har en patient en bestemt sygdom? (ja/nej), hvilket af fire valg skal jeg træffe? De tre første eksempler er eksempler på det, som man kalder for **binær klassifikation** (fordi der kun er to muligheder), mens det sidste eksempel er et eksempel på **multipel klassifikation** (fordi der er mere end to muligheder). I denne note vil vi se på, hvordan man kan bruge kunstige neurale netværk til at forudsige en såkaldt numerisk variabel -- mere konkret vil vi her se på, hvordan man kan lave et kunstigt neuralt netværk, som kan bruges til at prædiktere huspriser.
+Hvis du har læst nogle af vores andre noter om kunstige neurale netværk, så har de alle handlet om **klassifikation**. Det kunne for eksempel være: aktiverer en kunde et tilbud i en app? (ja/nej), bliver det regnvejr i morgen? (ja/nej), har en patient en bestemt sygdom? (ja/nej), hvilket af fire valg skal jeg træffe? De tre første eksempler er eksempler på det, som man kalder for **binær klassifikation** (fordi der kun er to muligheder), mens det sidste eksempel er et eksempel på **multipel klassifikation** (fordi der er mere end to muligheder). I denne note vil vi se på, hvordan man kan bruge kunstige neurale netværk til at forudsige en såkaldt numerisk variabel -- mere konkret vil vi her se på, hvordan man kan lave et kunstigt neuralt netværk, som kan bruges til at prædiktere antal brugere af delecykler.
 
-## Hvad koster mit hus?
+## Må jeg låne en cykel?
 
-Vi forestiller os helt generelt en række inputvariable eller features: $x_1, x_2, \dots, x_n$ på baggrund af hvilke vi gerne vil kunne forudsige en targetvariabel $t$, som her er salgsprisen på et hus. 
+Vi forestiller os helt generelt en række inputvariable eller features: $x_1, x_2, \dots, x_n$ på baggrund af hvilke vi gerne vil kunne forudsige en targetvariabel $t$, som her er antal brugere af delecykler. 
 
 
-::: {#exm-houseprices1}
+::: {#exm-cykel1}
 
-## House Price datasættet
+## Bike Sharing datasættet
 
-På [kaggle.com](https://www.kaggle.com/) kan man downloade et utal af forskellige datasæt. Vi vil her se nærmere på datasættet [House Price Dataset for Regression Models](https://www.kaggle.com/datasets/neurocipher/house-price-for-linear-regression), som du kan downloade som [Excel fil her](data/Housing.xlsx).
 
-Datasættet indeholder oplysninger om $545$ hussalg i USA.
+På [kaggle.com](https://www.kaggle.com/) kan man downloade et utal af forskellige datasæt. Vi vil her se nærmere på datasættet [Bike Sharing Dataset](https://www.kaggle.com/datasets/lakshmi25npathi/bike-sharing-dataset), som du kan downloade som [Excel fil her](data/Housing.xlsx).
+![](images/cykler.jpg){style='float:right;' width='40%'}
 
-Targetvariablen $t$ står i kolonnen `price` og angiver salgsprisen målt i dollar. Derudover indeholder datasættet en lang række features:
+Datasættet indeholder oplysninger om det daglige[^3] antal lejede cykler i årene 2011 og 2012 (i alt data fra $731$ dage). 
 
-* `area`: boligens areal målt i square feet
+[^3]: Der findes også et datasæt, hvor antallet af lejede cykler er opgjort på timebasis, men det datasæt vil vi ikke bruge her.
 
-* `bedrooms`: antal værelser
 
-* `bathrooms`: antal badeværelser
+Targetvariablen $t$ står i kolonnen `cnt` og angiver det totale antallet udlejede cykler på en given dag. Derudover indeholder datasættet en lang række features, som angiver oplysninger om blandt andet datoen, årstiden, arbejdsdag eller ej, vejrforhold, temperatur, oplevet temperatur, luftfugtighed og vindstyrke.
 
-* `stories`: antal etager
+Vi vil specielt se på følgende features:
 
-* `mainroad`: om huset har adgang til hovedvejen (ja=1, nej=0)
+* `instant`: angiver egentlig bare rækkenummeret, men fordi datasættet er sorteret efter dato, svarer `instant` til antal dage siden 31. december 2010 ($x_1$)
+* `atemp`: normaliseret oplevet temperatur i Celsius ($x_2$) 
+* `hum`: normaliseret luftfugtighed ($x_3$)
+* `windspeed`: normaliseret vindhastighed ($x_4$)
 
-* `guestroom`: om huset har et gæsteværelse  (ja=1, nej=0)
+Hvordan data helt præcist er normaliseret, kan du læse mere om [her](https://www.kaggle.com/datasets/lakshmi25npathi/bike-sharing-dataset).
 
-* `basement`: om huset har kælder (ja=1, nej=0)
+Vi vil lade targetvariablen $t$ være 
 
-* `hotwaterheating`: om huset har fjernvarme (ja=1, nej=0) 
+* $t$: det totale antallet udlejede cykler på en given dag målt i tusinder -- altså fås $t$ ved `cnt`/1000.
 
-* `airconditioning`: om huset har air conditioning (ja=1, nej=0)
-
-* `parking`: antal parkeringspladser
-
-* `prefarea`: om huset ligger i et eftertragtet område (ja=1, nej=0)
-
-* `furnishingstatus`: om huset et umøbleret, delvist møbleret eller fuldt møbleret
-
-I det følgende vil vi holde det simpelt og kun se på følgende features:
-
-* $x_1$: boligens areal målt i square feet (`area`)
-* $x_2$: antal værelser (`bedrooms`)
-* $x_3$: antal badeværelser (`bathrooms`)
-* $x_4$: om huset har kælder (`basement`)
 
 :::
 
@@ -218,7 +206,7 @@ Da $x_4$ angiver, om boligen har kælder eller ej (hvor $x_4=1$ svarer til at bo
 
 Vi illustrerer dette med et eksempel:
 
-::: {#exm-houseprices2}
+::: {#exm-cykel2}
 
 ## Fortolkning af vægtene
 
@@ -226,14 +214,72 @@ Træner vi en kunstig neuron på datasættet om huspriser, hvor vi sætter alle 
 
 |  $w_0$  <br>  <br> |  $w_1$ <br> (`area`)  |  $w_2$  <br>(`bedrooms`)  | $w_3$ <br>  (`bathrooms`)  |  $w_4$ <br>  (`basement`) |
 |:---:|:---:|:---:|:---:|:---:|
-| $-221293.3671$ | $376.4762$ | $387528.7807$ | $1355117.6023$ | $447658.8766$ | 
+| $-221293$ | $376$ | $387529$ | $1355118$ | $447659$ | 
 : {.bordered}
 
-For eksempel kan vi se, at $w_1 = 376.4762$. Det vil sige, at ifølge modellen vil husprisen på et hus, som er præcis én *square feet* større end et andet tilsvarende[^2] hus, være cirka $376 \, \$$ højere.
+For eksempel kan vi se, at $w_1 = 376$. Det vil sige, at ifølge modellen vil husprisen på et hus, som er præcis én *square feet* større end et andet tilsvarende[^2] hus, være $376 \, \$$ højere.
 
 [^2]: Et tilsvarende hus vil her mere præcist betyde et hus med det samme antal soveværelser, badeværelser og kælder (ja/nej).
 
-Vi ser også, at $w_4=447658.8766$, som betyder, at hvis vi står med to tilsvarende huse, hvor det ene er med kælder, og det andet er uden kælder, så vil huset med kælder ifølge vores model koste $447659 \, \$$ mere end huset uden kælder.
+Vi ser også, at $w_4=447659$, som betyder, at hvis vi står med to tilsvarende huse, hvor det ene er med kælder, og det andet er uden kælder, så vil huset med kælder ifølge vores model koste $447659 \, \$$ mere end huset uden kælder.
+
+```{r}
+#| echo: false
+#| fig-cap: Tekst...
+#| label: fig-pred_versus_price
+library(aimat)
+dat <- readxl::read_excel(here::here("noter/simple_neurale_net_regression/data/Housing.xlsx"))
+fit <- nn_fun(price ~ area + bedrooms + bathrooms + basement, data = dat, n_hidden = c(0, 0), iter = 500, type = "regression", lossfun = "squared", eta = .0001, weights=0)
+w <- as.vector(fit$params$W1)
+b <- as.vector(fit$params$b1)
+if(!is.null(fit$scale_val)){
+  w <- w / fit$scale_val
+  b <- b - sum(w * fit$center_val)
+}
+pred <- predict(fit, dat, type = "response")
+plot(dat$price,pred)
+abline(0,1)
+```
+
+
+:::
+
+## Vurdering af modellens anvendelighed
+
+Når man træner en kunstig neuron, har man brug for et mål for hvor god modellen er. Du kender nok allerede $R^2$-værdien fra lineær regression, som et tal mellem $0$ og $1$, hvor vi gerne vil have tallet så tæt på $1$ som muligt (og så alligevel ikke helt -- det kan du læse mere om i noten [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd){target="_blank"}). Et andet mål, som kan bruges til at sammenligne modeller, er **root mean squared error (RMSE)**. For at forstå målet starter vi med at se på alle de kvadrerede fejl:
+
+$$
+ \left (t^{(m)}-o^{(m)} \right)^2
+$$
+Det er **squared error (SE)**. Så udregner vi den gennemsnitlige værdi af alle disse kvadrerede fejl:
+
+$$
+\frac{1}{M} \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right)^2
+$$
+Det er **mean squared error (MSE)**. Endelig tager vi kvadratroden af det (for at få målet ned på samme skala, som vores targetværdi):
+
+$$
+\mathrm{RMSE} = \sqrt{\frac{1}{M} \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right)^2}
+$$
+
+Det er altså denne størrelse, som er **root mean squared error (RMSE)**.
+
+::: {#exm-cykel3}
+
+## RMSE og $R^2$
+
+Ser vi på den kunstige neuron fra @exm-cykel2 kan man udregne RMSE. Gør man det får man
+
+$$
+\mathrm{RMSE} = 1321452
+$$
+
+Uden sammenligning med andre modeller er det svært at vide, om det tal er godt eller skidt. Til gengæld kan vi udregne $R^2$-værdien, som er
+
+$$
+R^2 = 0.5
+$$
+Så den er i hvert tilfælde ikke imponerende stor!
 
 :::
 
