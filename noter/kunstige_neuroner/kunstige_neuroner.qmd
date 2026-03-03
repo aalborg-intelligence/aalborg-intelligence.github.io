@@ -51,6 +51,7 @@ mu <- -2*scale(alder) + 2*scale(forbrug)
 prob <- exp(mu)/(1+exp(mu))
 dat <- data.frame(Alder = alder, Forbrug = forbrug, prob, 
                   Aktiveret = factor(ifelse(rbinom(N, size = 1, prob = prob), "Ja", "Nej")))
+
 # summary(dat)
 fig <- ggplot(dat, aes(Alder, Forbrug, color = Aktiveret, shape = Aktiveret)) +
   theme_minimal() +
@@ -350,30 +351,33 @@ $$
 w_0 + w_1\cdot x_1 + \cdots + w_n \cdot x_n = 0.
 $$
 
+:::{#exm-good_food}
+
 I vores eksempel om Good Food app'en havde vi kun to inputværdier. Det betyder, at ovenstående kan reduceres til
 
 $$
 w_0 + w_1\cdot x_1 + w_2 \cdot x_2 = 0.
 $$
-Det er lige præcis ligningen for en ret linje i et $(x_1,x_2)$-koordinatsystem. Hvis vi i vores eksempel prøver at finde vægtene ved hjælp af gradientnedstigning, som beskrevet ovenfor, så ender vi med
+Det er lige præcis ligningen for en ret linje i et $(x_1,x_2)$-koordinatsystem. I vores eksempel kan man finde vægtene ved hjælp af gradientnedstigning ved at bruge [Kunstig neuron app'en](https://apps01.math.aau.dk/ai/neuron/). Hvis vi i app'en sætter startvægtene til $0$, vælger en learning rate på $0.001$ og sætter antal iterationer til $10000$,  så ender vi med
+
 
 $$
-w_0 = -0.298, \quad  w_1 = -0.0375 \quad \textrm{ og } \quad  w_2=0.000769 
+w_0 = -0.7376, \quad  w_1 = -0.142 \quad \textrm{ og } \quad  w_2=0.002806
 $$
 Det giver ligningen
 $$
--0.298 - 0.0375\cdot x_1 + 0.000769\cdot x_2=0
+-0.7376 - 0.142\cdot x_1 + 0.002806 \cdot x_2=0
 $$
 hvilket også kan omskrives til
 
 $$
-x_2 = 48.7 \cdot x_1 +387
+x_2 = 50.6 \cdot x_1 + 263
 $$
 
 eller måske den lidt mere velkendte skrivemåde:
 
 $$
-y = 48.7 \cdot x+387
+y = 50.6 \cdot x + 263
 $$
 
 
@@ -384,15 +388,10 @@ Indtegnes denne linje sammen med datasættet fra Good Food får vi:
 #| message: false
 #| fig-cap: Fiktivt datasæt som viser 100 Good Food kunders alder og forbrug. Hvert punkt, som repræsenterer en kunde, er farvet rødt, hvis kunden har aktiveret tilbuddet og blåt ellers. Samtidig er den linje indtegnet, som fås ved at bruge en kunstig neuron på data.
 #| label: fig-alder_vs_forbrug2
-w0 <-  -0.2975679652
-w1 <- -0.0374751270
-w2 <- 0.0007693097
+w0 <-  -0.7376
+w1 <- -0.142
+w2 <- 0.002806
 fig + geom_abline(slope=-w1/w2,intercept=-w0/w2,size=1)
-# source("adaline.R")
-# out <- adaline(Aktiveret ~ Alder + Forbrug, data = dat)
-# out$w
-#          bias         Alder       Forbrug 
-# -0.2975679652 -0.0374751270  0.0007693097 
 ```
 
 Bemærk her, at den indtegnede linje er rigtig god til at adskille de røde punkter fra de blå i træningsdatasættet. Det betyder ikke nødvendigvis, at denne linje har samme gode prædiktive egenskab for et datasæt bestående af nye kunder. Hvis man gerne vil vurdere, hvor god modellen er på ukendte data, kan man for eksempel træne sin model på en delmængde af data (kaldet **træningsdata**) og så teste modellen på den resterende del af data (kaldet **testdata**). Man kan også anvende en metode, som kaldes for **krydsvalidering**. Det kan du alt sammen læse mere om i noten om [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd). 
@@ -400,17 +399,16 @@ Bemærk her, at den indtegnede linje er rigtig god til at adskille de røde punk
 Det vil nu være sådan, at for alle punkter $(x_1,x_2)$, som ligger over linjen i @fig-alder_vs_forbrug2, vil
 
 $$
--0.298 - 0.0375\cdot x_1 + 0.000769\cdot x_2 > 0.
+-0.7376 - 0.142\cdot x_1 + 0.002806 \cdot x_2> 0.
 $$
 Det vil sige, at (se eventuelt @fig-sigmoid)
 $$
-o = \sigma (-0.298 - 0.0375\cdot x_1 + 0.000769\cdot x_2) > 0.5.
+o = \sigma (-0.7376 - 0.142\cdot x_1 + 0.002806 \cdot x_2) > 0.5.
 $$
 Ifølge (@eq-pred) betyder det, at for alle punkter, som ligger over linjen, vil vi prædiktere, at den tilhørende kunde, vil aktivere tilbuddet. Og det omvendte gælder så selvfølgelig for alle punkter, som ligger under linjen: her vil vi prædiktere, at de tilhørende kunder *ikke* aktiverer tilbuddet.
 
 Lad os se på et eksempel.
 
-:::{#exm-good_food}
 
 Sig hej til kunderne Hans og Gerda, som lige har downloadet Good Foods app. 
 
@@ -420,26 +418,26 @@ Hans er 50 år og har et forbrug på 3500 kroner. Gerda er derimod 65 år og med
 
 Vi vil nu beregne outputværdien $o$ for hver af de to kunder. Det gør vi ved at indsætte i:
 $$
-o = \sigma (-0.298 - 0.0375\cdot x_1 + 0.000769\cdot x_2).
+o = \sigma (-0.7376 - 0.142\cdot x_1 + 0.002806 \cdot x_2).
 $$
 Da får vi
 $$
 \begin{aligned}
-&\textrm{Hans:} \quad  &o=\sigma (-0.298 - 0.0375\cdot 50 + 0.000769\cdot 3500) = 0.627 \\
-&\textrm{Gerda:} \quad &o=\sigma (-0.298 - 0.0375\cdot 65 + 0.000769\cdot 2800) = 0.358
+&\textrm{Hans:} \quad  &o=\sigma (-0.7376 - 0.142\cdot 50 + 0.002806\cdot 3500) = 0.879 \\
+&\textrm{Gerda:} \quad &o=\sigma (-0.7376 - 0.142\cdot 65 + 0.002806\cdot 2800) = 0.108
 \end{aligned}
 $$
 
-Ifølge vores model er der altså en sandsynlighed på $62.7 \%$ for, at Hans vil aktivere tilbuddet, mens den tilsvarende sandsynlighed for Gerda er på $35.8 \%$. Vores bedste bud vil derfor være at prædiktere, at Hans vil aktivere tilbuddet, mens Gerda ikke vil. Vi vælger derfor at vise det pågældende tilbud til Hans, men ikke til Gerda.
+Ifølge vores model er der altså en sandsynlighed på $87.9 \%$ for, at Hans vil aktivere tilbuddet, mens den tilsvarende sandsynlighed for Gerda er på $10.8 \%$. Vores bedste bud vil derfor være at prædiktere, at Hans vil aktivere tilbuddet, mens Gerda ikke vil. Vi vælger derfor at vise det pågældende tilbud til Hans, men ikke til Gerda.
 
 ```{r}
 #| echo: false
 #| message: false
 #| fig-cap: Datasættet fra @fig-alder_vs_forbrug2. Desuden er de to punkter, som repræsenterer kunderne Hans og Gerda indtegnet.
 #| label: fig-alder_vs_forbrug_eks
-w0 <-  -0.2975679652
-w1 <- -0.0374751270
-w2 <- 0.0007693097
+w0 <-  -0.7376
+w1 <- -0.142
+w2 <- 0.002806
 fig + geom_abline(slope=-w1/w2,intercept=-w0/w2,size=1) +  geom_point(aes(x=50,y=3500),colour="black",size=2, shape=19) + geom_point(aes(x=65,y=2800),colour="black",size=2, shape=19) + geom_label(
     label="Hans", 
     x=45,
