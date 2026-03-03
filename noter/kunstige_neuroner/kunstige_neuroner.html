@@ -502,21 +502,22 @@ o = \sigma(w_0 + w_1\cdot x_1 + \cdots + w_n \cdot x_n).
 <p><span class="math display">\[
 w_0 + w_1\cdot x_1 + \cdots + w_n \cdot x_n = 0.
 \]</span></p>
-<p>I vores eksempel om Good Food app’en havde vi kun to inputværdier. Det betyder, at ovenstående kan reduceres til</p>
+<div id="exm-good_food" class="theorem example page-columns page-full">
+<p><span class="theorem-title"><strong>Eksempel 1</strong></span> I vores eksempel om Good Food app’en havde vi kun to inputværdier. Det betyder, at ovenstående kan reduceres til</p>
 <p><span class="math display">\[
 w_0 + w_1\cdot x_1 + w_2 \cdot x_2 = 0.
-\]</span> Det er lige præcis ligningen for en ret linje i et <span class="math inline">\((x_1,x_2)\)</span>-koordinatsystem. Hvis vi i vores eksempel prøver at finde vægtene ved hjælp af gradientnedstigning, som beskrevet ovenfor, så ender vi med</p>
+\]</span> Det er lige præcis ligningen for en ret linje i et <span class="math inline">\((x_1,x_2)\)</span>-koordinatsystem. I vores eksempel kan man finde vægtene ved hjælp af gradientnedstigning ved at bruge <a href="https://apps01.math.aau.dk/ai/neuron/">Kunstig neuron app’en</a>. Hvis vi i app’en sætter startvægtene til <span class="math inline">\(0\)</span>, vælger en learning rate på <span class="math inline">\(0.001\)</span> og sætter antal iterationer til <span class="math inline">\(10000\)</span>, så ender vi med</p>
 <p><span class="math display">\[
-w_0 = -0.298, \quad  w_1 = -0.0375 \quad \textrm{ og } \quad  w_2=0.000769
+w_0 = -0.7376, \quad  w_1 = -0.142 \quad \textrm{ og } \quad  w_2=0.002806
 \]</span> Det giver ligningen <span class="math display">\[
--0.298 - 0.0375\cdot x_1 + 0.000769\cdot x_2=0
+-0.7376 - 0.142\cdot x_1 + 0.002806 \cdot x_2=0
 \]</span> hvilket også kan omskrives til</p>
 <p><span class="math display">\[
-x_2 = 48.7 \cdot x_1 +387
+x_2 = 50.6 \cdot x_1 + 263
 \]</span></p>
 <p>eller måske den lidt mere velkendte skrivemåde:</p>
 <p><span class="math display">\[
-y = 48.7 \cdot x+387
+y = 50.6 \cdot x + 263
 \]</span></p>
 <p>Indtegnes denne linje sammen med datasættet fra Good Food får vi:</p>
 <div class="cell page-columns page-full">
@@ -536,13 +537,12 @@ Figur&nbsp;5: Fiktivt datasæt som viser 100 Good Food kunders alder og forbrug.
 <p>Bemærk her, at den indtegnede linje er rigtig god til at adskille de røde punkter fra de blå i træningsdatasættet. Det betyder ikke nødvendigvis, at denne linje har samme gode prædiktive egenskab for et datasæt bestående af nye kunder. Hvis man gerne vil vurdere, hvor god modellen er på ukendte data, kan man for eksempel træne sin model på en delmængde af data (kaldet <strong>træningsdata</strong>) og så teste modellen på den resterende del af data (kaldet <strong>testdata</strong>). Man kan også anvende en metode, som kaldes for <strong>krydsvalidering</strong>. Det kan du alt sammen læse mere om i noten om <a href="../../noter/krydsvalidering/krydsvalidering.html">Overfitting, modeludvælgelse og krydsvalidering</a>.</p>
 <p>Det vil nu være sådan, at for alle punkter <span class="math inline">\((x_1,x_2)\)</span>, som ligger over linjen i <a href="#fig-alder_vs_forbrug2" class="quarto-xref">figur&nbsp;5</a>, vil</p>
 <p><span class="math display">\[
--0.298 - 0.0375\cdot x_1 + 0.000769\cdot x_2 &gt; 0.
+-0.7376 - 0.142\cdot x_1 + 0.002806 \cdot x_2&gt; 0.
 \]</span> Det vil sige, at (se eventuelt <a href="#fig-sigmoid" class="quarto-xref">figur&nbsp;2</a>) <span class="math display">\[
-o = \sigma (-0.298 - 0.0375\cdot x_1 + 0.000769\cdot x_2) &gt; 0.5.
+o = \sigma (-0.7376 - 0.142\cdot x_1 + 0.002806 \cdot x_2) &gt; 0.5.
 \]</span> Ifølge (<a href="#eq-pred" class="quarto-xref">5</a>) betyder det, at for alle punkter, som ligger over linjen, vil vi prædiktere, at den tilhørende kunde, vil aktivere tilbuddet. Og det omvendte gælder så selvfølgelig for alle punkter, som ligger under linjen: her vil vi prædiktere, at de tilhørende kunder <em>ikke</em> aktiverer tilbuddet.</p>
 <p>Lad os se på et eksempel.</p>
-<div id="exm-good_food" class="theorem example page-columns page-full">
-<p><span class="theorem-title"><strong>Eksempel 1</strong></span> Sig hej til kunderne Hans og Gerda, som lige har downloadet Good Foods app.</p>
+<p>Sig hej til kunderne Hans og Gerda, som lige har downloadet Good Foods app.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/hans_og_gerda.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
@@ -550,14 +550,14 @@ o = \sigma (-0.298 - 0.0375\cdot x_1 + 0.000769\cdot x_2) &gt; 0.5.
 </div>
 <p>Hans er 50 år og har et forbrug på 3500 kroner. Gerda er derimod 65 år og med et forbrug på 2800 kroner.</p>
 <p>Vi vil nu beregne outputværdien <span class="math inline">\(o\)</span> for hver af de to kunder. Det gør vi ved at indsætte i: <span class="math display">\[
-o = \sigma (-0.298 - 0.0375\cdot x_1 + 0.000769\cdot x_2).
+o = \sigma (-0.7376 - 0.142\cdot x_1 + 0.002806 \cdot x_2).
 \]</span> Da får vi <span class="math display">\[
 \begin{aligned}
-&amp;\textrm{Hans:} \quad  &amp;o=\sigma (-0.298 - 0.0375\cdot 50 + 0.000769\cdot 3500) = 0.627 \\
-&amp;\textrm{Gerda:} \quad &amp;o=\sigma (-0.298 - 0.0375\cdot 65 + 0.000769\cdot 2800) = 0.358
+&amp;\textrm{Hans:} \quad  &amp;o=\sigma (-0.7376 - 0.142\cdot 50 + 0.002806\cdot 3500) = 0.879 \\
+&amp;\textrm{Gerda:} \quad &amp;o=\sigma (-0.7376 - 0.142\cdot 65 + 0.002806\cdot 2800) = 0.108
 \end{aligned}
 \]</span></p>
-<p>Ifølge vores model er der altså en sandsynlighed på <span class="math inline">\(62.7 \%\)</span> for, at Hans vil aktivere tilbuddet, mens den tilsvarende sandsynlighed for Gerda er på <span class="math inline">\(35.8 \%\)</span>. Vores bedste bud vil derfor være at prædiktere, at Hans vil aktivere tilbuddet, mens Gerda ikke vil. Vi vælger derfor at vise det pågældende tilbud til Hans, men ikke til Gerda.</p>
+<p>Ifølge vores model er der altså en sandsynlighed på <span class="math inline">\(87.9 \%\)</span> for, at Hans vil aktivere tilbuddet, mens den tilsvarende sandsynlighed for Gerda er på <span class="math inline">\(10.8 \%\)</span>. Vores bedste bud vil derfor være at prædiktere, at Hans vil aktivere tilbuddet, mens Gerda ikke vil. Vi vælger derfor at vise det pågældende tilbud til Hans, men ikke til Gerda.</p>
 <div class="cell page-columns page-full">
 <div class="cell-output-display page-columns page-full">
 <div id="fig-alder_vs_forbrug_eks" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
