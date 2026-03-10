@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="I denne note behandles et simpelt neuralt netværk uden skjulte lag, men hvor det til genæld er muligt at klassificere mere end to klasser. At kunne prædiktere en mulig klasse blandt flere bruges blandt andet i de store sprogmodeller.">
+<meta name="description" content="I denne note behandles et simpelt neuralt netværk uden skjulte lag, men hvor det til gengæld er muligt at klassificere mere end to klasser. At kunne prædiktere en mulig klasse blandt flere bruges blandt andet i de store sprogmodeller.">
 
 <title>Simple kunstige neurale netværk til multipel klassifikation – AI MAT - matematikken bag magien</title>
 <style>
@@ -227,10 +227,10 @@ window.Quarto = {
 </header>
 
 
-<p>Et kunstigt neuralt netværk fungerer på den måde, at man på baggrund af en række forskellige informationer gerne vil kunne forudsige en eller anden ting. Det kan være, at man på baggrund af en række forskellige blodprøveværdier vil forudsige, om en patient har en bestemt sygdom. Det kunne også være, at man baseret på svarene fra en række forskellige spørgsgmål vil udtale sig om, om en person vil stemme på rød eller blå blok. De nævnte eksempler kalder man for <em>binær klassifikation</em> – fordi der i hvert tilfælde er to muligheder: <em>syg</em>/<em>ikke syg</em> og <em>rød blok</em>/<em>blå blok</em>. Men det er ikke svært at forestille sig scenarier, hvor der kan være mere end to klasser. For eksempel er eksemplet med rød og blå nok tvivlsomt. Her ville det måske være bedre at prøve at forudsige et bestemt parti. Denne note handler om, hvordan man udvider en simpel <a href="../../noter/kunstige_neuroner/kunstige_neuroner.html">kunstig neuron</a>, så den ikke kun kan bruges til binær klassifikation, men derimod til at forudsige hvilke blandt flere klasser et givent tilfælde befinder sig i. Lad os starte med et eksempel.</p>
+<p>Et kunstigt neuralt netværk fungerer på den måde, at man på baggrund af en række forskellige informationer gerne vil kunne forudsige en eller anden ting. Det kan være, at man på baggrund af en række forskellige blodprøveværdier vil forudsige, om en patient har en bestemt sygdom. Det kunne også være, at man baseret på svarene fra en række forskellige spørgsmål vil vurdere, om en person vil stemme på rød eller blå blok. De nævnte eksempler kalder man for <em>binær klassifikation</em> – fordi der i hvert tilfælde er to muligheder: <em>syg</em>/<em>ikke syg</em> og <em>rød blok</em>/<em>blå blok</em>. Men det er ikke svært at forestille sig scenarier, hvor der kan være mere end to klasser. For eksempel er eksemplet med rød og blå nok tvivlsomt. Her ville det måske være bedre at prøve at forudsige et bestemt parti. Denne note handler om, hvordan man udvider en simpel <a href="../../noter/kunstige_neuroner/kunstige_neuroner.html">kunstig neuron</a>, så den ikke kun kan bruges til binær klassifikation, men derimod til at forudsige, hvilken af flere klasser et givent tilfælde befinder sig i. Lad os starte med et eksempel.</p>
 <section id="hvor-hårdt-skal-du-arbejde-i-matematiktimerne" class="level2">
 <h2 class="anchored" data-anchor-id="hvor-hårdt-skal-du-arbejde-i-matematiktimerne">Hvor hårdt skal du arbejde i matematiktimerne?</h2>
-<p>Du kender det sikkert godt. Der er gruppearbejde i matematiktimen, og du gider egentlig ikke. Det er nemmere bare at snige sin mobiltelefon i lommen og drible i kantinen. På den anden side er du også ambitiøs og vil gerne have en god karakter til eksamen. Din lærer er også frustreret. Hun vil gerne være over de elever, som ellers ville stikke af, så de får lært noget sjovt matematik. What to do? Svaret er selvfølgelig, at vi skal have udviklet en AI assistent til din lærer, så hun får hjælp til at hjælpe jer!</p>
+<p>Du kender det sikkert godt. Der er gruppearbejde i matematiktimen, og du gider egentlig ikke. Det er nemmere bare at snige sin mobiltelefon ned i lommen og drible i kantinen. På den anden side er du også ambitiøs og vil gerne have en god karakter til eksamen. Din lærer er også frustreret. Hun vil gerne være over de elever, som ellers ville stikke af, så de får lært noget sjovt matematik. What to do? Svaret er selvfølgelig, at vi skal have udviklet en AI assistent til din lærer, så hun får hjælp til at hjælpe jer!</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/matematiktime.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
@@ -615,7 +615,7 @@ o_j = \alpha(z_1, z_2, \dots, z_J),
 <p><span id="eq-o_j_softmax"><span class="math display">\[
 o_j = \alpha(z_1, z_2, \dots, z_J) = \frac{\mathrm{e}^{z_j}}{\sum_{i=1}^J \mathrm{e}^{z_i}}.
 \tag{3}\]</span></span></p>
-<p>For det første kan vi se, at både tæller og nævner er positive. Derfor må <span class="math inline">\(o_j&gt;0\)</span>. For det andet er <span class="math inline">\(\mathrm{e}^{z_j} &lt; \sum_{i=1}^J \mathrm{e}^{z_i}\)</span> og derfor er</p>
+<p>For det første kan vi se, at både tæller og nævner er positive. Derfor må <span class="math inline">\(o_j&gt;0\)</span>. For det andet er <span class="math inline">\(\mathrm{e}^{z_j} &lt; \sum_{i=1}^J \mathrm{e}^{z_i}\)</span> (når <span class="math inline">\(J&gt;1\)</span>) og derfor er</p>
 <p><span class="math display">\[
 o_j =  \frac{\mathrm{e}^{z_j}}{\sum_{i=1}^J \mathrm{e}^{z_i}} &lt; \frac{\sum_{i=1}^J \mathrm{e}^{z_i}}{\sum_{i=1}^J \mathrm{e}^{z_i}} = 1.
 \]</span></p>
@@ -693,9 +693,9 @@ o_J &amp;= \frac{\mathrm{e}^{z_J}}{\sum_{i=1}^J \mathrm{e}^{z_i}} \\
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/TUz5QB68mHU" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 <p>Vi har indtil videre skrevet, at outputværdierne kan fortolkes som sandsynligheder. Men bare fordi at en række tal (<span class="math inline">\(o_1, o_2, \dots, o_J\)</span>) alle ligger mellem 0 og 1 og alle summerer til 1, så er det jo ikke sikkert, at de på en fornuftig måde angiver sandsynligheden for de fire forskellige muligheder, som de enkelte elever har. For eksempel kunne de fleste lærere nok ønske sig, at</p>
 <p><span class="math display">\[
-o_1 = 0.5, \quad 0_2 = 0.5, \quad o_3=0, \quad o_4=0
+o_1 = 0.5, \quad o_2 = 0.5, \quad o_3=0, \quad o_4=0
 \]</span> fuldstændig uafhængig af svarene på de tre spørgsmål.</p>
-<p>Det svarer til, at cirka halvdelen af elever bliver i klassen og regner opgaver, mens den anden halvdel sætter sig ud og regner. Til gengæld er der <em>ingen</em>, som går i kantinen og feder den, ligsom der heller ikke er nogle, som bare går hjem.</p>
+<p>Det svarer til, at cirka halvdelen af elever bliver i klassen og regner opgaver, mens den anden halvdel sætter sig ud og regner. Til gengæld er der <em>ingen</em>, som går i kantinen og feder den, ligesom der heller ikke er nogen, som bare går hjem.</p>
 <p>For at vores nye AI assistent skal give et nogenlunde retvisende billede af virkeligheden (det vil sige elevernes valg og ikke lærerens ønsker!) skal vi have fundet nogle outputværdier, som for det første afhænger af inputværdierne (man kan jo se på <a href="#fig-trainingdata" class="quarto-xref">figur&nbsp;1</a> at inputværdierne har indflydelse), og som for det andet rent faktisk giver en realistisk sandsynlighed for hver af de fire muligheder. Det gør vi ved at blive ved med at "skrue" på alle vægtene indtil, at de beregnede outputværdier i (<a href="#eq-o_j" class="quarto-xref">5</a>) giver et godt bud på sandsynlighederne for de 4 muligheder.</p>
 <p>Hvordan, det rent faktisk lader sig gøre, kommer her.</p>
 </section>
@@ -746,7 +746,7 @@ E = - \left (t_1 \cdot \ln(o_1)  + t_2 \cdot \ln(o_2) + \cdots + t_j \cdot \ln(o
 <p><span class="math display">\[
 E = - t_j \cdot \ln(o_j) = - \ln(o_j).
 \]</span></p>
-<p>I <a href="#fig-natural_ln" class="quarto-xref">figur&nbsp;5</a> har vi tegnet grafen for den naturlige logaritme-funktion samt grafen for minus den naturlige logartime-funktion:</p>
+<p>I <a href="#fig-natural_ln" class="quarto-xref">figur&nbsp;5</a> har vi tegnet grafen for den naturlige logaritme-funktion samt grafen for minus den naturlige logaritme-funktion:</p>
 <div id="fig-natural_ln" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-natural_ln-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -764,7 +764,7 @@ Figur&nbsp;5: Grafen for <span class="math inline">\(\ln(x)\)</span> og <span cl
 <li><p>For et godt netværk (med gode indstillinger af vægtene) vil tabsfunktionen have en lille, men positiv værdi.</p></li>
 <li><p>For et dårligt netværk (med dårlige indstillinger af vægtene) vil tabsfunktionen have en stor positiv værdi.</p></li>
 </ul>
-<p>Lad også illustrere det med det tidligere eksempel. Hvis</p>
+<p>Lad os illustrere det med det tidligere eksempel. Hvis</p>
 <p><span class="math display">\[
 \vec t =
 \begin{pmatrix}
@@ -838,7 +838,7 @@ E = - \sum_{i=1}^J t_i \cdot \ln(o_i)
 \frac{\partial f}{\partial x_n}
 \end{pmatrix}.
 \]</span></p>
-<p>Det viser sig, at denne gradient peger i den retning, hvor funktionsværdien <em>vokser mest</em>. Omvendt vil minus gradienten <span class="math inline">\(-\nabla f(x_1, x_2, \dots, x_n)\)</span> pege i den retning, hvor funktionsværdien <em>aftager mest</em>. Hvis vi derfor står et vilkårligt sted på grafen for <span class="math inline">\(f\)</span> og går et lille skridt i den negative gradientens retning, så vil vi være på vej ned mod et minimum (eventuelt kun lokalt). Når vi har gået det lille skridt, udregner vi gradienten igen og bevæger os igen et lille skridt i den negative gradients retning<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Sådan fortsætter man indstil funktionsværdien ikke ændrer sig ret meget – det svarer forhåbentlig til, at vi har fundet et (lokalt) minimum.</p>
+<p>Det viser sig, at denne gradient peger i den retning, hvor funktionsværdien <em>vokser mest</em>. Omvendt vil minus gradienten <span class="math inline">\(-\nabla f(x_1, x_2, \dots, x_n)\)</span> pege i den retning, hvor funktionsværdien <em>aftager mest</em>. Hvis vi derfor står et vilkårligt sted på grafen for <span class="math inline">\(f\)</span> og går et lille skridt i den negative gradientens retning, så vil vi være på vej ned mod et minimum (eventuelt kun lokalt). Når vi har gået det lille skridt, udregner vi gradienten igen og bevæger os igen et lille skridt i den negative gradients retning<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Sådan fortsætter man indtil funktionsværdien ikke ændrer sig ret meget – det svarer forhåbentlig til, at vi har fundet et (lokalt) minimum.</p>
 <div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Du kan tænke på <em>minus</em> gradienten som et kompas, der hele tiden viser dig, hvilken vej du skal gå for at bevæge dig ned mod et minimum.</p></div></div><p>Vi har lavet videoer om <a href="https://youtu.be/tlq2UYWF2Rw" target="blank">funktioner af to variable</a> og <a href="https://youtu.be/WcM8aEoPzf8" target="blank">gradientnedstigning</a>, hvis du vil vide mere.</p>
 <p>Nu hedder vores funktion ikke <span class="math inline">\(f\)</span>, men <span class="math inline">\(E\)</span>, og <span class="math inline">\(E\)</span> afhænger af alle vægtene <span class="math inline">\(w_{j,k}\)</span>. Derfor, når vægten <span class="math inline">\(w_{j,k}\)</span> skal opdateres, så gør vi følgende:</p>
 <p><span id="eq-w_jk-opdatering_grad"><span class="math display">\[
@@ -945,7 +945,7 @@ o_i = \frac{\mathrm{e}^{z_i}}{\sum_{l=1}^J \mathrm{e}^{z_l}}.
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opdateringsregel for <span class="math inline">\(w_{i,k}\)</span>-vægten (baseret på ét træningseksempel)
+<span class="screen-reader-only">Note</span>Opdateringsregel for <span class="math inline">\(w_{j,k}\)</span>-vægten (baseret på ét træningseksempel)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -1017,7 +1017,7 @@ E = \sum_{m=1}^M E^{(m)}
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opdateringsregel for <span class="math inline">\(w_{i,k}\)</span>-vægten (baseret på hele træningsdatasættet)
+<span class="screen-reader-only">Note</span>Opdateringsregel for <span class="math inline">\(w_{j,k}\)</span>-vægten (baseret på hele træningsdatasættet)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
