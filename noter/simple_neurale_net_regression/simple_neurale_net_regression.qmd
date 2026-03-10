@@ -9,15 +9,15 @@ Hvis du har læst nogle af vores andre noter om kunstige neurale netværk, så h
 
 ## Hvad koster min lejlighed?
 
-Vi forestiller os helt generelt en række inputvariable eller features: $x_1, x_2, \dots, x_n$ på baggrund af hvilke vi gerne vil kunne forudsige en targetvariabel $t$, som her er salgsprisen på en lejlighed i Aalborg. 
+Vi forestiller os helt generelt en række inputvariable eller features: $x_1, x_2, \dots, x_n$ på baggrund af hvilke vi gerne vil kunne forudsige en såkaldt targetvariabel $t$, som her er salgsprisen på en lejlighed i Aalborg. 
 
 
 ::: {#exm-lejlighed1}
 
-## Home datasættet
+## Lejlighedspriser -- Home datasættet
 
 
-![](images/lejlighed.jpg){style='float:right;' width='40%'}
+![](images/lejlighed.jpg){style='float:right;' width='30%'}
 
 Ejendomsmæglerkæden \"Home\" har stillet information om salg af ejendomme i perioden fra 2010 til 2022 til rådighed. Vi har i dette eksempel valgt at se på salget af lejligheder beliggende i 9000 Aalborg. Du kan downloade denne del af datasættet [her](data/home_Aalborg9000_lejlighed.xlsx).
 
@@ -29,7 +29,7 @@ Vi vil specielt se på følgende features:
 * `areal`: boligens areal målt i kvadratmeter  ($x_1$)
 * `alder`: boligens alder i år  ($x_2$) 
 
-Vi vil lade targetvariablen $t$ være 
+Og vi vil lade targetvariablen $t$ være 
 
 * $t$: boligens pris i kroner
 
@@ -65,13 +65,13 @@ $$
 \left ( t - \left ( w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n \right ) \right )^2
 $$
 
-Vi får en sådan kvadreret differens for hvert eneste udlejning i vores træningsdatasæt, og vi vælger derfor blot at lægge alle disse størrelser sammen:
+Vi får en sådan kvadreret differens for hvert eneste salg i vores træningsdatasæt, og vi vælger derfor blot at lægge alle disse størrelser sammen:
 
 $$
 E = \frac{1}{2}\sum \left ( t - \left ( w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n \right ) \right )^2
 $$
 
-Størrelsen $E$ kaldes for en **tabsfunktion**. Læg mærke til, at hvis vores kunstige neuron er god til at forudsige salgspris, så får vi en lille værdi af tabsfunktionen, mens vi får en stor værdi af $E$, hvis modellen er dårlig til at forudsige salgspris. Vi har her valgt at gange med $\frac{1}{2}$, fordi det senere kommer til at forkorte ud, men det er faktisk ikke så afgørende.
+Størrelsen $E$ kaldes for en **tabsfunktion**. Læg mærke til, at hvis vores kunstige neuron er god til at forudsige salgspriser, så får vi en lille værdi af tabsfunktionen, mens vi får en stor værdi af $E$, hvis modellen er dårlig til at forudsige salgspriser. Vi har her valgt at gange med $\frac{1}{2}$, fordi det senere kommer til at forkorte ud, men det er faktisk ikke så afgørende.
 
 Idéen er så bare at bestemme værdier af vægtene $w_0, w_1, w_2, \dots, w_n$, sådan at tabsfunktionen minimeres.
 
@@ -96,7 +96,7 @@ E(w_0, w_1, &\dots, w_n) \\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
 \end{aligned}
 $$
 
-Hvis vi samtidig indfører, at vi kalder outputværdien for det $m$'te træningseksempel for $o^{(m)}$:
+Hvis vi samtidig indfører, at vi kalder outputværdien for det $m$'te lejlighedssalg for $o^{(m)}$:
 
 $$
 o^{(m)} = w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}
@@ -160,7 +160,7 @@ hvor $o^{(m)} = w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}$.
 
 At opstille en kunstig neuron til regression, som vi har gjort her, svarer til det, man kalder for **multipel lineær regression**, som egentlig bare er en udvidelse af lineær regression, som I kender det, blot med flere inputvariable/features.
 
-Det gode ved at opstille en kunstig neuron til regression, som vi her har gjort det, er, at man kan give en fortolkning af vægtene. 
+Det gode ved at opstille en kunstig neuron til regression, som vi her har gjort det, er at man kan give en fortolkning af vægtene. 
 
 ### Fortolkning af vægtene 
 
@@ -192,51 +192,55 @@ $$
 
 Det vil sige, at hvis alt andet er holdt ens, så vil en forøgelse i boligarealet på $1 \, m^2$ give en forøgelse i den prædikterede salgspris på $w_1$ kroner.
 
-Da $x_2$ angiver lejlighedens alder, så vil $w_2$ helt tilsvarende kunne fortolkes som den størrelse, den prædikterede salgspris vil stige med, hvis en lejlighed er præcis ét år ældre end .
+Da $x_2$ angiver lejlighedens alder, så vil $w_2$ helt tilsvarende kunne fortolkes som den størrelse, den prædikterede salgspris vil stige med, hvis en lejlighed er præcis ét år ældre end en anden tilsvarende lejlighed (det vil her sige en lejlighed med samme areal).
 
 Vi illustrerer dette med et eksempel:
 
 ::: {#exm-lejlighed2}
 
-## Fortolkning af vægtene (omskrives til bike rental)
+## Lejlighedspriser -- fortolkning af vægtene
 
-Træner vi en kunstig neuron på datasættet om cykeludlejning, hvor vi sætter alle startvægte til $0$, vælger en learning rate på $0.0001$ og antal iterationer til $500$, får vi følgende værdier af vægtene
+Træner vi en kunstig neuron på datasættet om lejlighedssalg, hvor vi sætter alle startvægte til $0$, vælger en learning rate på $0.0001$ og antal iterationer til $500$, får vi følgende værdier af vægtene
 
-|  $w_0$  <br>  <br> |  $w_1$ <br> (`area`)  |  $w_2$  <br>(`bedrooms`)  | $w_3$ <br>  (`bathrooms`)  |  $w_4$ <br>  (`basement`) |
-|:---:|:---:|:---:|:---:|:---:|
-| $-221293$ | $376$ | $387529$ | $1355118$ | $447659$ | 
+|  $w_0$  <br>  <br> |  $w_1$ <br> (`areal`)  |  $w_2$  <br>(`alder`)  | 
+|:---:|:---:|:---:|
+| $0.0637521$ | $0.0195118$ | $-0.0023493$ | 
 : {.bordered}
 
-For eksempel kan vi se, at $w_1 = 376$. Det vil sige, at ifølge modellen vil husprisen på et hus, som er præcis én *square feet* større end et andet tilsvarende[^2] hus, være $376 \, \$$ højere.
+For eksempel kan vi se, at $w_1 = 0.0195118$. Det vil sige, at ifølge modellen vil prisen på en lejlighed, som er præcis én kvadratmeter større end en anden tilsvarende[^2] lejlighed, være cirka $19512$ kroner højere (husk på at prisen er målt i millioner, så vi skal lige gange med en million, hvis vi skal have værdien oversat til kroner).
 
-[^2]: Et tilsvarende hus vil her mere præcist betyde et hus med det samme antal soveværelser, badeværelser og kælder (ja/nej).
+[^2]: En tilsvarende lejlighed vil her mere præcist betyde en lejlighed med den samme alder.
 
-Vi ser også, at $w_4=447659$, som betyder, at hvis vi står med to tilsvarende huse, hvor det ene er med kælder, og det andet er uden kælder, så vil huset med kælder ifølge vores model koste $447659 \, \$$ mere end huset uden kælder.
+Vi ser også, at $w_2=-0.0023493$, som betyder, at hvis vi står med to tilsvarende lejligheder, hvor den ene er præcis et år ældre end den anden, så vil salgsprisen på den ældste lejlighed ifølge modellen være $2349$ kroner lavere.
+
+I det nedenstående har vi plottet den faktiske pris (i millioner) ud af $x$-aksen og den prædikterede pris op af $y$-aksen.
 
 ```{r}
 #| echo: false
-#| fig-cap: Tekst...
+#| fig-cap: Den faktiske lejlighedspris (i millioner) ud af $x$-aksen og den prædikterede pris op af $y$-aksen.
 #| label: fig-pred_versus_price
 library(aimat)
-dat <- readxl::read_excel(here::here("noter/simple_neurale_net_regression/data/Housing.xlsx"))
-fit <- nn_fun(price ~ area + bedrooms + bathrooms + basement, data = dat, n_hidden = c(0, 0), iter = 500, type = "regression", lossfun = "squared", eta = .0001, weights=0)
-w <- as.vector(fit$params$W1)
-b <- as.vector(fit$params$b1)
-if(!is.null(fit$scale_val)){
-  w <- w / fit$scale_val
-  b <- b - sum(w * fit$center_val)
-}
-pred <- predict(fit, dat, type = "response")
-plot(dat$price,pred)
-abline(0,1)
+dat <- readxl::read_excel(here::here("noter/simple_neurale_net_regression/data/home_Aalborg9000_lejlighed.xlsx"))
+fit_lm <- lm(pris_mio ~ areal + alder, data = dat)
+#fit <- nn_fun(price ~ area + bedrooms + bathrooms + basement, data = dat, n_hidden = c(0, 0), iter = #500, type = "regression", lossfun = "squared", eta = .0001, weights=0)
+#w <- as.vector(fit$params$W1)
+#b <- as.vector(fit$params$b1)
+#if(!is.null(fit$scale_val)){
+#  w <- w / fit$scale_val
+#  b <- b - sum(w * fit$center_val)
+#}
+pred <- predict(fit_lm, dat, type = "response")
+plot(dat$pris_mio,pred, xlab="Lejlighedspris i millioner", ylab="Prædikteret pris", col="#020873", col.lab="#020873", col.axis="#020873", col.main="#020873")
+box(col="#020873")
+abline(0,1, col="#8085F2")
 ```
-
+Hvis vi har en perfekt model, så vil den prædikterede pris være lig med den faktiske pris. Det vil svare til, at alle punkterne i @fig-pred_versus_price vil ligge på linjen med ligning $y=x$ (som er indtegnet med lyseblå i figuren). På figuren kan vi derfor se, at for lejligheder, som koster under $3$ millioner er modellen ikke helt dårlig. Til gengæld er modellen ikke super god til at prædiktere salgsprisen for de dyrere lejligheder: For nogle lejligheder er den prædikterede salgspris for høj, mens det omvendte også gør sig gældende -- specielt de meget dyre lejligheder, som koster over $5$ millioner, prædikterer modellen for lavt.
 
 :::
 
 ## Vurdering af modellens anvendelighed
 
-Når man træner en kunstig neuron, har man brug for et mål for, hvor god modellen er. Du kender nok allerede $R^2$-værdien fra lineær regression, som et tal mellem $0$ og $1$, hvor vi gerne vil have tallet så tæt på $1$ som muligt (og så alligevel ikke helt -- det kan du læse mere om i noten [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd){target="_blank"}). Et andet mål, som kan bruges til at sammenligne modeller, er **root mean squared error (RMSE)**. For at forstå dette mål starter vi med at se på alle de kvadrerede fejl:
+Når man træner en kunstig neuron, har man brug for et mål for, hvor god modellen er. Du kender nok allerede $R^2$-værdien fra lineær regression, som et tal mellem $0$ og $1$, hvor vi gerne vil have tallet så tæt på $1$ som muligt (og så alligevel ikke helt -- det kommer vi tilbage til senere). Et andet mål, som kan bruges til at sammenligne modeller, er **root mean squared error (RMSE)**. For at forstå dette mål starter vi med at se på alle de kvadrerede fejl:
 
 $$
  \left (t^{(m)}-o^{(m)} \right)^2
@@ -252,65 +256,145 @@ $$
 \mathrm{RMSE} = \sqrt{\frac{1}{M} \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right)^2}
 $$
 
-Det er altså denne størrelse, som er **root mean squared error (RMSE)**.
+Det er altså denne størrelse, som er **root mean squared error (RMSE)**. Da vi ønsker så lille en fejl som muligt, vil vi gerne have, at RMSE er så tæt på $0$ som muligt.
 
 [^4]: Hvis man for eksempel har en targetværdi, som er målt i meter ($m$), så vil enheden af MSE være meter i anden ($m^2$). Tager vi derfor kvadratroden af MSE, kommer vi tilbage til en enhed i meter.
 
 ::: {#exm-lejlighed3}
 
-## RMSE og $R^2$ (omskrives til bike rental)
+## Lejlighedspriser -- RMSE og $R^2$
 
 Ser vi på den kunstige neuron fra @exm-lejlighed2 kan man udregne RMSE. Gør man det får man
 
 $$
-\mathrm{RMSE} = 1321452
+\mathrm{RMSE} = 0.497
 $$
 
 Uden sammenligning med andre modeller er det svært at vide, om det tal er godt eller skidt. Til gengæld kan vi udregne $R^2$-værdien, som er
 
 $$
-R^2 = 0.5
+R^2 = 0.596
 $$
-Så den er i hvert tilfælde ikke imponerende stor!
+Du er måske vant til at se $R^2$-værdier, som er meget større, men for en model baseret på et datasæt fra den virkelige verden er det såmen ikke helt tosset!
 
 :::
 
 
-## Prædiktion af cykeludlejning -- nu med skjulte lag!
+### Krydsvalidering
 
-I det ovenstående kommer det prædikterede antal udlejede cykler til at afhænge lineært af inputvariablene. Men verden er sjældent lineær -- og en af styrkerne ved kunstige neurale netværk er netop, at de kan prædiktere størrelser eller kategorier ved hjælp af funktioner, som ikke er lineære. Vi skal derfor nu opstille et simpelt kunstigt neuralt netværk til prædiktion af antal udlejede cykler. Vi vil lave et netværk med fire features $x_1, x_2, x_3, x_4,$ men nu med noget, som vi vil kalde for et skjult lag, som her består af to såkaldte neuroner. Det kan illustreres, som vist i @fig-neuralt_net_regression:
+Når en models anvendelighed vurderes ved hjælp af mål som RMSE og $R^2$-værdi, så vil det altid være sådan, at jo mere kompliceret en model, man bruger, desto bedre mål vil man få (det vil sige en lille værdi af RMSE og en værdi af $R^2$, som er tæt på $1$). Hvorfor det er tilfældet, kan du læse meget mere om i noten [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd){target="_blank"}). Kort fortalt går det ud på, at en meget kompliceret model kan fange tendenser i data, som i virkeligheden ikke er reelle -- det er bare støj. Et eksempel ses i @fig-overfitting:
 
-![Simpelt kunstigt neuralt netværk til prædiktion af huspriser. Netværket har inputvariable $x_1, x_2, x_3, x_4$ og ét skjult lag med to neuroner (her vist som de to grønne cirkler i midten).](images/neuralt_net_regression.png){#fig-neuralt_net_regression width=80% fig-align='center'}
+![Ti punkter hvor der er anvendt lineær regression (den lyseblå linje) og 9. grads polynomiel regression (den lyserøde kurve).](images/overfitting.png){width='80%' #fig-overfitting}
+
+Det kan her tydeligt ses, at en ret linje beskriver punkterne udmærket. Et 9. grads polynomium har til gengæld så meget fleksibilitet, at grafen for polynomiet kan gå igennem alle ti punkter. Det ses tydeligt på @fig-overfitting, at det bliver alt for mærkeligt, og vi har ingen forventninger om, at dette polynomium vil kunne bruges til at beskrive nye punkter, som ikke kommer fra datasættet. Men bruger vi for eksempel $R^2$-værdien til at sammenligne de to modeller, så får vi:
+
+| Model | $R^2$-værdi | RMSE | 
+|:---|:---:|:---:|
+| Lineær regression | $0.916$ | $0.603$ |
+| 9. grads polynomiel regression | $1.000$ |  $0.000$ |
+: {.bordered}
+
+
+Så ser vi alene på $R^2$-værdien og RMSE, kunne vi blive foranlediget til at tro, at vi skulle vælge polynomiel regression. Man skal altså være utrolig varsom med uden videre at sammenligne den type mål! Men hvad gør man så? Ét bud er at bruge noget, som kaldes for **krydsvalidering**. Princippet er illustreret i @fig-krydsvalidering.
+
+
+```{tikz}
+#| echo: false
+#| fig-cap: Illustration af idéen ved $5$-fold krydsvalidering.
+#| label: fig-krydsvalidering
+\definecolor{myblue}{HTML}{8086F2}
+\definecolor{myred}{HTML}{F288B9}
+\begin{tikzpicture}
+	\draw[fill, myred] (0,0) -- (2,0) -- (2,0.5) -- (0,0.5) -- (0,0);
+	\draw[fill, myblue] (2,0) -- (10,0) -- (10,0.5) -- (2,0.5) -- (2,0);
+	\node at (1,0.25) {test} ;
+	\node at (6,0.25) {træning} ;
+	
+	\draw[fill,myblue] (0,-1) -- (2,-1) -- (2,-0.5) -- (0,-0.5) -- (0,-1);
+	\draw[fill, myred] (2,-1) -- (4,-1) -- (4,-0.5) -- (2,-0.5) -- (2,-1);
+	\draw[fill, myblue] (4,-1) -- (10,-1) -- (10,-0.5) -- (4,-0.5) -- (4,-1);
+	\node at (3,-0.75) {test} ;
+	\node at (7,-0.75) {træning} ;
+	
+	\draw[fill,myblue] (0,-2) -- (4,-2) -- (4,-1.5) -- (0,-1.5) -- (0,-2);
+	\draw[fill, myred] (4,-2) -- (6,-2) -- (6,-1.5) -- (4,-1.5) -- (4,-2);
+	\draw[fill, myblue] (6,-2) -- (10,-2) -- (10,-1.5) -- (6,-1.5) -- (6,-2);
+	\node at (5,-1.75) {test} ;
+	\node at (8,-1.75) {træning} ;
+	
+	\draw[fill,myblue] (0,-3) -- (6,-3) -- (6,-2.5) -- (0,-2.5) -- (0,-3);
+	\draw[fill, myred] (6,-3) -- (8,-3) -- (8,-2.5) -- (6,-2.5) -- (6,-3);
+	\draw[fill, myblue] (8,-3) -- (10,-3) -- (10,-2.5) -- (8,-2.5) -- (8,-3);
+	\node at (7,-2.75) {test} ;
+	\node at (3,-2.75) {træning} ;
+	
+	\draw[fill,myblue] (0,-4) -- (8,-4) -- (8,-3.5) -- (0,-3.5) -- (0,-4);
+	\draw[fill, myred] (8,-4) -- (10,-4) -- (10,-3.5) -- (8,-3.5) -- (8,-4);
+	\node at (9,-3.75) {test} ;
+	\node at (4,-3.75) {træning} ;
+\end{tikzpicture}
+```
+
+Man starter med at inddele data tilfældigt i $5$ lige store dele: del 1, 2, 3, 4 og 5. Så træner man en model (lad os sige, at man laver lineær regression) baseret på del 2, 3, 4 og 5. Det giver en ret linje. Hefter bruger man del 1 til at udregne for eksempel RMSE baseret på den model, man lige har bestemt. 
+
+Har man for eksempel et datasæt med $500$ dataeksempler så udregnes RMSE på denne måde:
+
+$$
+\mathrm{RMSE} = \sqrt{\frac{1}{100} \sum_{m \in \textrm{del 1}}\left (t^{(m)}-o^{(m)} \right)^2}
+$$
+
+Her summerer vi altså over alle træningseksempler i del 1. Husk på, at outputværdien $o^{(m)}$ findes ved
+
+$$
+o^{(m)} = w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}
+$$
+
+Her stammer inputværdierne $x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)}$ fra del 1, men vægtene $w_0, w_1, w_2, \dots, w_n$ er fundet ved at bruge data fra del 2, 3, 4 og 5. Man undersøger altså, hvor god modellen er til at prædiktere data i del 1, hvis den kun er trænet på data fra del 2, 3, 4 og 5. Derfor kalder man del 1 for **testdata** og del 2, 3, 4 og 5 for **træningsdata**. Det er helt essentielt her, at man tester sin model på en del af data, som *ikke* har været brugt til at træne modellen på. Dette gentager man så, men næste gang er det del 2, som er testdata og del 1, 3, 4 og 5 som er træningsdata. Igen udregnes RMSE. Denne proceduren gentages i alt 5 gang. Det giver 5 forskellige RMSE værdier. Herefter tager man gennemsnittet af dem for at få et samlet mål for modellens anvendelighed. 
+
+Det viser sig, at det ikke giver så meget mening, at udregne $R^2$-værdien i forbindelse med krydsvalidering. For eksempel kan værdien gå hen og blive negativ. Vi vil derfor i det følgende nøjes med at se på RMSE.
+
+::: {#exm-lejlighed4}
+
+## Lejlighedspriser -- RMSE med krydsvalidering
+
+Vi vil nu udregne RMSE baseret på $5$-folds krydsvalidering. Det giver
+
+$$
+\mathrm{RMSE} = 0.502
+$$
+
+Bemærk, at hvis vi sammenligner med RMSE, som ikke er baseret på krydsvalidering fra @exm-lejlighed3, så er RMSE her blevet en smule højere her. Det er helt forventeligt, at modellen vil klare sig bedre, når den er testet på de data, som den også er trænet på.
+
+:::
+
+
+## Prædiktion af lejlighedspriser -- nu med skjulte lag!
+
+Når man skal sælge en lejlighed, skal der helst ikke være skjulte fejl og mangler. Det kan til gengæld være en rigtig god idé med nogle skjulte lag, når man skal prædiktere lejlighedspriser! Det vil vi se på nu.
+
+I det ovenstående kommer den prædikterede pris til at afhænge lineært af inputvariablene. Men verden er sjældent lineær -- og en af styrkerne ved kunstige neurale netværk er netop, at de kan prædiktere størrelser eller kategorier ved hjælp af funktioner, som ikke er lineære. Vi skal derfor nu opstille et simpelt kunstigt neuralt netværk til prædiktion af lejlighedspriser. Vi vil lave et netværk med to features $x_1, x_2$ men nu med noget, som vi vil kalde for et skjult lag, som her består af fem såkaldte neuroner. Det kan illustreres, som vist i @fig-neuralt_net_regression:
+
+![Simpelt kunstigt neuralt netværk til prædiktion af lejlighedspriser. Netværket har inputvariable $x_1, x_2$ og ét skjult lag med to neuroner (her vist som de to grønne cirkler i midten).](images/neuralt_net_regression.png){#fig-neuralt_net_regression width=70% fig-align='center'}
 
 Som det ses i @fig-neuralt_net_regression, er der til hver pil knyttet en vægt (for eksempel $v_1, u_1, w_1$ og så videre), som skal bruges til at udregne outputværdien $o$. Hvis vi for en stund forestiller os, at vi kender alle vægtene, så udregner vi outputværdien $o$ på følgende måde:
 
 Ved hjælp af inputvariablene og $v$-vægtene (de lysegrønne pile på @fig-neuralt_net_regression) beregner vi $z_1$:
 
 $$
-z_1 = \sigma (v_0 + v_1 \cdot x_1 + v_2 \cdot x_2 + v_3 \cdot x_3 + v_4 \cdot x_4)
+z_1 = f(v_0 + v_1 \cdot x_1 + v_2 \cdot x_2)
 $$
 som selvfølgelig kan generaliseres til
 
 $$
-z_1 = \sigma (v_0 + v_1 \cdot x_1 + \cdots + v_n \cdot x_n)
+z_1 = f(v_0 + v_1 \cdot x_1 + \cdots + v_n \cdot x_n)
 $$
 
-Her er $\sigma(x)$ **sigmoid-funktionen** med forskrift
-
-$$
-\sigma(x)=\frac{1}{1+\mathrm{e}^{-x}}
-$$ {#eq-sigmoid} 
-
-Grafen for sigmoid-funktionen ses i @fig-sigmoid:
-
-![Grafen for sigmoid-funktionen med forskrift $\sigma(x)=\frac{1}{1+\mathrm{e}^{-x}}$.](../kunstige_neuroner/images/sigmoid.png){width=75% #fig-sigmoid}
-
-Sigmoid-funktionen kaldes også for en **aktiveringsfunktion**, og det er den, der gør, at vi ender med at prædiktere antal udlejede cykler på en ikke-lineær måde.
+Her er $f$ en funktion, som kaldes for en **aktiveringsfunktion**, og det er den, der gør, at vi ender med at prædiktere lejlighedspriser på en ikke-lineær måde. Den kommer vi tilbage til lige om lidt.
 
 På tilsvarende vis udregner vi $z_2$ ved at bruge $u$-vægtene (de mørkegrønne pile på @fig-neuralt_net_regression):
 
 $$
-z_2 = \sigma (u_0 + u_1 \cdot x_1 + u_2 \cdot x_2 + u_3 \cdot x_3 + u_4 \cdot x_4)
+z_2 = f(u_0 + u_1 \cdot x_1 + u_2 \cdot x_2)
 $$
 
 
@@ -320,23 +404,57 @@ $$
 o = w_0 + w_1 \cdot z_1 + w_2 \cdot z_2
 $$ 
 
-Ovenstående udtryk for beregning af $z_1$, $z_2$ og $o$ kaldes for **feedforward** ligninger, fordi man laver beregninger \"fremad\" i netværket i @fig-neuralt_net_regression fra venstre mod højre. Hvis vi samtidig holder styr på, hvilket træningseksempel vi står med, får vi følgende:
+### ReLu aktiveringsfunktionen
+
+Lad os se nærmere på aktiveringsfunktionen $f$. Hvis du har læst nogle af vores andre noter, ved du, at en ofte anvendt aktiveringsfunktion er sigmoid-funktionen med forskrift:
+
+$$
+\sigma (x) = \frac{1}{1+\mathrm{e}^{-x}}
+$$
+Grafen for sigmoid-funktionen ses i @fig-sigmoid.
+
+![Grafen for sigmoid-funktionen.](../kunstige_neuroner/images/sigmoid.png){width=75% #fig-sigmoid}
+
+Denne aktiveringsfunktion er super god at bruge, når outputværdien skal beregnes, *hvis* man skal lave binær klassifikation, fordi funktionsværdien ligger mellem $0$ og $1$ og derfor kan fortolkes som en sandsynlighed. I alle andre sammenhænge er den faktisk ikke super anvendelig! 
+
+En aktiveringsfunktion som til gengæld ofte anvendes i de skjulte er ReLu-funktionen^[relu]. Den er defineret således:
+
+
+^[relu]: ReLU står for Rectified Linear Unit.
+
+$$
+\textrm{ReLu}(x) = 
+\begin{cases}
+0 & \textrm {hvis } x < 0 \\
+x & \textrm {hvis } x \geq 0
+\end{cases}
+$$
+
+Grafen for ReLu-funktionen ses i @fig-relu.
+
+![Grafen for ReLu-funktionen.](images/relu.png){width=75% #fig-relu}
+
+ReLu-funktionen transformerer altså alle negative inputværdier til $0$ og alle positive inputværdier forbliver uændret. Det ser jo næsten lineært ud, men det er altså nok til, at man kan modellere nogle meget ikke-lineære funktioner, hvis bare man har nok skjulte lag med nok neuroner i hver. 
+
+### Feedforward udtryk
+
+Ovenstående udtryk for beregning af $z_1$, $z_2$ og $o$, hvor $f$ nu beregner ReLu-funktionen, kaldes for **feedforward** ligninger, fordi man laver beregninger \"fremad\" i netværket i @fig-neuralt_net_regression fra venstre mod højre. Hvis vi samtidig holder styr på, hvilket træningseksempel vi står med, får vi følgende:
 
 ::: {.callout-note collapse="false" appearance="minimal"} 
 ## Feedforward-udtryk
 
-På baggrund af inputværdierne $x_1, x_2, x_3, x_4$ beregnes outputværdien $o$ på følgende måde.
+På baggrund af inputværdierne $x_1$ og $x_2$ beregnes outputværdien $o$ på følgende måde.
 
 Først beregnes:
 
 $$
-z_1^{(m)} = \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)}+ v_3 \cdot x_3^{(m)} + v_4 \cdot x_4^{(m)} \right)
+z_1^{(m)} = \textrm{ReLu} \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} \right)
 $$ {#eq-z_1}
 
 og
 
 $$
-z_2^{(m)} = \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} + u_3 \cdot x_3^{(m)} + u_4 \cdot x_4^{(m)} \right)
+z_2^{(m)} = \textrm{ReLu} \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} \right)
 $$ {#eq-z_2}
 
 Herefter beregnes outputværdien:
@@ -358,6 +476,8 @@ $$
 
 hvor $o^{(m)}$ er givet ved udtrykket i (@eq-o). Læg mærke til, at tabsfunktionen afhænger af alle $u$-, $v$- og $w$-vægte, men for nemheds skyld vil vi blot skrive $E$ i det følgende.
 
+### Backpropagation
+
 Man kan nu igen bruge gradientnedstigning til at bestemme de værdier er $v$-, $u$- og $w$-vægtene, som minimerer tabsfunktionen. Det er her en vigtig beregningsfinte, at man bevæger sig \"bagud\" i netværket i @fig-neuralt_net_regression og først opdaterer $w$-vægtene (som er tættest på outputlaget) og dernæst $u$- og $v$-vægtene, som er tættest på inputlaget. Dette kaldes for **backpropagation**.
 
 Gør man det, ender man med følgende opdateringsregler:
@@ -373,8 +493,8 @@ Backpropagation foregår samlet set på denne måde:
 
    $$
    \begin{aligned}
-   z_1^{(m)} &= \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} + v_3 \cdot x_3^{(m)} +  v_4 \cdot x_4^{(m)} \right ) \\
-   z_2^{(m)} &= \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} + u_3 \cdot x_3^{(m)} + u_4 \cdot x_4^{(m)} \right ) \\
+   z_1^{(m)} &= \textrm{ReLu} \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} \right ) \\
+   z_2^{(m)} &= \textrm{ReLu} \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} \right ) \\
    o^{(m)} &= w_0 + w_1 \cdot z_1^{(m)} + w_2 \cdot z_2^{(m)}
    \end{aligned}
 $$ 
@@ -397,20 +517,20 @@ $$
    **$v$-vægtene:**
    $$
    \begin{aligned}
-   v_0^{\textrm{(ny)}} &\leftarrow v_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_1 \cdot z_1^{(m)} \cdot \left ( 1- z_1^{(m)} \right) \\
-   v_i^{\textrm{(ny)}} &\leftarrow v_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_1 \cdot z_1^{(m)} \cdot \left ( 1- z_1^{(m)} \right) \cdot x_i^{(m)}\\
+   v_0^{\textrm{(ny)}} &\leftarrow v_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_1  \\
+   v_i^{\textrm{(ny)}} &\leftarrow v_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_1  \cdot x_i^{(m)}\\
    \end{aligned}
    $$
-   for $i \in \{1, 2, 3, 4\}$.
+   for $i \in \{1, 2\}$.
    
    **$u$-vægtene:**
    $$
    \begin{aligned}
-   u_0^{\textrm{(ny)}} &\leftarrow u_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_2 \cdot z_2^{(m)} \cdot \left ( 1- z_2^{(m)} \right) \\
-   u_i^{\textrm{(ny)}} &\leftarrow u_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_2 \cdot z_2^{(m)} \cdot \left ( 1- z_2^{(m)} \right) \cdot x_i^{(m)}\\
+   u_0^{\textrm{(ny)}} &\leftarrow u_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_2  \\
+   u_i^{\textrm{(ny)}} &\leftarrow u_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_2  \cdot x_i^{(m)}\\
    \end{aligned}
    $$
-   for $i \in \{1, 2, 3, 4\}$.
+   for $i \in \{1, 2\}$.
    
 Alle vægtene er nu opdateret, og vi kan gentage punkt 2 og 3, hvor feedforward i 2 hver gang er baseret på de netop opdaterede vægte fra det foregående gennemløb. Opdateringen af vægtene fortsætter, indtil værdien af tabsfunktionen næsten ikke ændrer sig. Håbet er nu, at vi har fundet et minimum (eventuelt kun lokalt) for tabsfunktionen.
 
@@ -470,7 +590,7 @@ $$
 \frac{\partial E^{(m)}}{\partial w_i}
 $$
 
-så skal du gøre fuldstændig, som vi gjorde i afsnittet [Må jeg låne en cykel?](#må-jeg-låne-en-cykel).
+så skal du gøre fuldstændig, som vi gjorde i afsnittet [HVad koster min lejlighed?](#hvad-koster-min-lejlighed).
 
 Når du skal finde
 
@@ -487,13 +607,13 @@ $$
 Men vi ved fra feedforward udtrykkene, at
 
 $$
-z_1^{(m)} = \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} + v_3 \cdot x_3^{(m)} + \cdots + v_4 \cdot x_4^{(m)} \right ) 
+z_1^{(m)} = \textrm{ReLu} \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} \right ) 
 $$ {#eq-z_1m}
 
 og
 
 $$
-z_2^{(m)} = \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} + u_3 \cdot x_3^{(m)} + u_4 \cdot x_4^{(m)} \right ) 
+z_2^{(m)} = \textrm{ReLu} \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} \right ) 
 $$ 
 
 
@@ -517,10 +637,22 @@ $$
 \frac{\partial E^{(m)}}{\partial z_1^{(m)}}
 $$
 
-skal du bruge udtrykket for $E^{(m)}$ i (@eq-Em). Og når $z_1^{(m)}$ skal differentieres med hensyn til $v_i$, skal du bruge udtrykket i (@eq-z_1m). Derudover får du brug for en særlig egenskab ved sigmoid-funktionen. Nemlig, at
+skal du bruge udtrykket for $E^{(m)}$ i (@eq-Em). Og når $z_1^{(m)}$ skal differentieres med hensyn til $v_i$, skal du bruge udtrykket i (@eq-z_1m). 
+
+Nu er det sådan, at ReLu-funktionen faktisk slet ikke er differentiabel i $x=0$! Til gengæld er det ikke svært at overbevise sig selv om, at
 
 $$
-\sigma'(x) = \sigma(x) \cdot (1-\sigma(x)) 
+\textrm{ReLu}'(x) =
+\begin{cases}
+0 & \textrm{hvis } x < 0 \\
+1 & \textrm{hvis } x > 0
+\end{cases}
+$$
+
+Og så definerer vi os simpelthen ud af tilfældet, hvor $x=0$:
+
+$$
+\textrm{ReLu}'(0) = 1.
 $$
 
 På helt tilsvarende vis kan 
