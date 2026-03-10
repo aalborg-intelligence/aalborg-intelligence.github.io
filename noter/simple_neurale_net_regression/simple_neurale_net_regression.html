@@ -184,8 +184,16 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#fortolkning-af-vægtene" id="toc-fortolkning-af-vægtene" class="nav-link" data-scroll-target="#fortolkning-af-vægtene">Fortolkning af vægtene</a></li>
   </ul></li>
-  <li><a href="#vurdering-af-modellens-anvendelighed" id="toc-vurdering-af-modellens-anvendelighed" class="nav-link" data-scroll-target="#vurdering-af-modellens-anvendelighed">Vurdering af modellens anvendelighed</a></li>
-  <li><a href="#prædiktion-af-cykeludlejning-nu-med-skjulte-lag" id="toc-prædiktion-af-cykeludlejning-nu-med-skjulte-lag" class="nav-link" data-scroll-target="#prædiktion-af-cykeludlejning-nu-med-skjulte-lag">Prædiktion af cykeludlejning – nu med skjulte lag!</a></li>
+  <li><a href="#vurdering-af-modellens-anvendelighed" id="toc-vurdering-af-modellens-anvendelighed" class="nav-link" data-scroll-target="#vurdering-af-modellens-anvendelighed">Vurdering af modellens anvendelighed</a>
+  <ul class="collapse">
+  <li><a href="#krydsvalidering" id="toc-krydsvalidering" class="nav-link" data-scroll-target="#krydsvalidering">Krydsvalidering</a></li>
+  </ul></li>
+  <li><a href="#prædiktion-af-lejlighedspriser-nu-med-skjulte-lag" id="toc-prædiktion-af-lejlighedspriser-nu-med-skjulte-lag" class="nav-link" data-scroll-target="#prædiktion-af-lejlighedspriser-nu-med-skjulte-lag">Prædiktion af lejlighedspriser – nu med skjulte lag!</a>
+  <ul class="collapse">
+  <li><a href="#relu-aktiveringsfunktionen" id="toc-relu-aktiveringsfunktionen" class="nav-link" data-scroll-target="#relu-aktiveringsfunktionen">ReLu aktiveringsfunktionen</a></li>
+  <li><a href="#feedforward-udtryk" id="toc-feedforward-udtryk" class="nav-link" data-scroll-target="#feedforward-udtryk">Feedforward udtryk</a></li>
+  <li><a href="#backpropagation" id="toc-backpropagation" class="nav-link" data-scroll-target="#backpropagation">Backpropagation</a></li>
+  </ul></li>
   </ul>
 </nav>
 </nav>
@@ -218,9 +226,9 @@ window.Quarto = {
 <p>Hvis du har læst nogle af vores andre noter om kunstige neurale netværk, så har de alle handlet om <strong>klassifikation</strong>. Det kunne for eksempel være: aktiverer en kunde et tilbud i en app? (ja/nej), bliver det regnvejr i morgen? (ja/nej), har en patient en bestemt sygdom? (ja/nej), hvilket af fire valg skal jeg træffe? De tre første eksempler er eksempler på det, som man kalder for <strong>binær klassifikation</strong> (fordi der kun er to muligheder), mens det sidste eksempel er et eksempel på <strong>multipel klassifikation</strong> (fordi der er mere end to muligheder). I denne note vil vi se på, hvordan man kan bruge kunstige neurale netværk til at forudsige en såkaldt numerisk variabel – mere konkret vil vi her se på, hvordan man kan lave et kunstigt neuralt netværk, som kan bruges til at prædiktere salgsprisen på en lejlighed i Aalborg.</p>
 <section id="hvad-koster-min-lejlighed" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="hvad-koster-min-lejlighed">Hvad koster min lejlighed?</h2>
-<p>Vi forestiller os helt generelt en række inputvariable eller features: <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> på baggrund af hvilke vi gerne vil kunne forudsige en targetvariabel <span class="math inline">\(t\)</span>, som her er salgsprisen på en lejlighed i Aalborg.</p>
+<p>Vi forestiller os helt generelt en række inputvariable eller features: <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> på baggrund af hvilke vi gerne vil kunne forudsige en såkaldt targetvariabel <span class="math inline">\(t\)</span>, som her er salgsprisen på en lejlighed i Aalborg.</p>
 <div id="exm-lejlighed1" class="theorem example">
-<p><span class="theorem-title"><strong>Eksempel 1 (Home datasættet)</strong></span> <img src="images/lejlighed.jpg" class="img-fluid" style="float:right;;width:40.0%"></p>
+<p><span class="theorem-title"><strong>Eksempel 1 (Lejlighedspriser – Home datasættet)</strong></span> <img src="images/lejlighed.jpg" class="img-fluid" style="float:right;;width:30.0%"></p>
 <p>Ejendomsmæglerkæden "Home" har stillet information om salg af ejendomme i perioden fra 2010 til 2022 til rådighed. Vi har i dette eksempel valgt at se på salget af lejligheder beliggende i 9000 Aalborg. Du kan downloade denne del af datasættet <a href="data/home_Aalborg9000_lejlighed.xlsx">her</a>.</p>
 <p>Targetvariablen <span class="math inline">\(t\)</span> står i kolonnen <code>pris</code> og angiver salgsprisen af en given lejlighed. Derudover indeholder det oprindelige datasættet en lang række oplysninger, men vi har her valgt kun at fokusere på en delmængde af disse.</p>
 <p>Vi vil specielt se på følgende features:</p>
@@ -228,7 +236,7 @@ window.Quarto = {
 <li><code>areal</code>: boligens areal målt i kvadratmeter (<span class="math inline">\(x_1\)</span>)</li>
 <li><code>alder</code>: boligens alder i år (<span class="math inline">\(x_2\)</span>)</li>
 </ul>
-<p>Vi vil lade targetvariablen <span class="math inline">\(t\)</span> være</p>
+<p>Og vi vil lade targetvariablen <span class="math inline">\(t\)</span> være</p>
 <ul>
 <li><span class="math inline">\(t\)</span>: boligens pris i kroner</li>
 </ul>
@@ -250,11 +258,11 @@ t-o = t - \left ( w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n \
 <p><span class="math display">\[
 \left ( t - \left ( w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n \right ) \right )^2
 \]</span></p>
-<p>Vi får en sådan kvadreret differens for hvert eneste udlejning i vores træningsdatasæt, og vi vælger derfor blot at lægge alle disse størrelser sammen:</p>
+<p>Vi får en sådan kvadreret differens for hvert eneste salg i vores træningsdatasæt, og vi vælger derfor blot at lægge alle disse størrelser sammen:</p>
 <p><span class="math display">\[
 E = \frac{1}{2}\sum \left ( t - \left ( w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n \right ) \right )^2
 \]</span></p>
-<p>Størrelsen <span class="math inline">\(E\)</span> kaldes for en <strong>tabsfunktion</strong>. Læg mærke til, at hvis vores kunstige neuron er god til at forudsige salgspris, så får vi en lille værdi af tabsfunktionen, mens vi får en stor værdi af <span class="math inline">\(E\)</span>, hvis modellen er dårlig til at forudsige salgspris. Vi har her valgt at gange med <span class="math inline">\(\frac{1}{2}\)</span>, fordi det senere kommer til at forkorte ud, men det er faktisk ikke så afgørende.</p>
+<p>Størrelsen <span class="math inline">\(E\)</span> kaldes for en <strong>tabsfunktion</strong>. Læg mærke til, at hvis vores kunstige neuron er god til at forudsige salgspriser, så får vi en lille værdi af tabsfunktionen, mens vi får en stor værdi af <span class="math inline">\(E\)</span>, hvis modellen er dårlig til at forudsige salgspriser. Vi har her valgt at gange med <span class="math inline">\(\frac{1}{2}\)</span>, fordi det senere kommer til at forkorte ud, men det er faktisk ikke så afgørende.</p>
 <p>Idéen er så bare at bestemme værdier af vægtene <span class="math inline">\(w_0, w_1, w_2, \dots, w_n\)</span>, sådan at tabsfunktionen minimeres.</p>
 <p>Inden vi forklarer, hvordan det gøres, så lad os lige blive lidt mere specifikke i forhold til notationen af vores træningsdata. Vi forestiller os, at vi har information om <span class="math inline">\(M\)</span> lejlighedssalg (i eksemplet er <span class="math inline">\(M=1136\)</span>). Så vil vi nummere vores træningsdata på denne måde:</p>
 <p><span class="math display">\[
@@ -273,7 +281,7 @@ E(w_0, w_1, &amp;\dots, w_n) \\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}
 (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2.
 \end{aligned}
 \]</span></p>
-<p>Hvis vi samtidig indfører, at vi kalder outputværdien for det <span class="math inline">\(m\)</span>’te træningseksempel for <span class="math inline">\(o^{(m)}\)</span>:</p>
+<p>Hvis vi samtidig indfører, at vi kalder outputværdien for det <span class="math inline">\(m\)</span>’te lejlighedssalg for <span class="math inline">\(o^{(m)}\)</span>:</p>
 <p><span class="math display">\[
 o^{(m)} = w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}
 \]</span> Så kan tabsfunktionen udtrykkes kort på denne måde:</p>
@@ -331,7 +339,7 @@ w_n^{(\textrm{ny})} \leftarrow &amp; w_n + \eta \cdot \sum_{m=1}^{M} \left (t^{(
 </div>
 </div>
 <p>At opstille en kunstig neuron til regression, som vi har gjort her, svarer til det, man kalder for <strong>multipel lineær regression</strong>, som egentlig bare er en udvidelse af lineær regression, som I kender det, blot med flere inputvariable/features.</p>
-<p>Det gode ved at opstille en kunstig neuron til regression, som vi her har gjort det, er, at man kan give en fortolkning af vægtene.</p>
+<p>Det gode ved at opstille en kunstig neuron til regression, som vi her har gjort det, er at man kan give en fortolkning af vægtene.</p>
 <section id="fortolkning-af-vægtene" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="fortolkning-af-vægtene">Fortolkning af vægtene</h3>
 <p>Lad os sige, at vi har bestemt vægtene <span class="math inline">\(w_0, w_1, \dots, w_n\)</span>, så tabsfunktionen er blevet minimeret, og at <span class="math inline">\(x_1\)</span> fortsat angiver boligarealet. Vi vil her forklare, hvordan vi kan fortolke <span class="math inline">\(w_1\)</span>.</p>
@@ -355,47 +363,30 @@ o_2 - o_1 &amp;= w_0 + w_1 \cdot x_1 + w_1 + w_2 \cdot x_2 + \cdots + w_n \cdot 
 \end{aligned}
 \]</span></p>
 <p>Det vil sige, at hvis alt andet er holdt ens, så vil en forøgelse i boligarealet på <span class="math inline">\(1 \, m^2\)</span> give en forøgelse i den prædikterede salgspris på <span class="math inline">\(w_1\)</span> kroner.</p>
-<p>Da <span class="math inline">\(x_2\)</span> angiver lejlighedens alder, så vil <span class="math inline">\(w_2\)</span> helt tilsvarende kunne fortolkes som den størrelse, den prædikterede salgspris vil stige med, hvis en lejlighed er præcis ét år ældre end .</p>
+<p>Da <span class="math inline">\(x_2\)</span> angiver lejlighedens alder, så vil <span class="math inline">\(w_2\)</span> helt tilsvarende kunne fortolkes som den størrelse, den prædikterede salgspris vil stige med, hvis en lejlighed er præcis ét år ældre end en anden tilsvarende lejlighed (det vil her sige en lejlighed med samme areal).</p>
 <p>Vi illustrerer dette med et eksempel:</p>
 <div id="exm-lejlighed2" class="theorem example page-columns page-full">
-<p><span class="theorem-title"><strong>Eksempel 2 (Fortolkning af vægtene (omskrives til bike rental))</strong></span> Træner vi en kunstig neuron på datasættet om cykeludlejning, hvor vi sætter alle startvægte til <span class="math inline">\(0\)</span>, vælger en learning rate på <span class="math inline">\(0.0001\)</span> og antal iterationer til <span class="math inline">\(500\)</span>, får vi følgende værdier af vægtene</p>
+<p><span class="theorem-title"><strong>Eksempel 2 (Lejlighedspriser – fortolkning af vægtene)</strong></span> Træner vi en kunstig neuron på datasættet om lejlighedssalg, hvor vi sætter alle startvægte til <span class="math inline">\(0\)</span>, vælger en learning rate på <span class="math inline">\(0.0001\)</span> og antal iterationer til <span class="math inline">\(500\)</span>, får vi følgende værdier af vægtene</p>
 <table class="table-bordered table">
-<colgroup>
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-</colgroup>
 <thead>
 <tr class="header">
 <th style="text-align: center;"><span class="math inline">\(w_0\)</span> <br> <br></th>
-<th style="text-align: center;"><span class="math inline">\(w_1\)</span> <br> (<code>area</code>)</th>
-<th style="text-align: center;"><span class="math inline">\(w_2\)</span> <br>(<code>bedrooms</code>)</th>
-<th style="text-align: center;"><span class="math inline">\(w_3\)</span> <br> (<code>bathrooms</code>)</th>
-<th style="text-align: center;"><span class="math inline">\(w_4\)</span> <br> (<code>basement</code>)</th>
+<th style="text-align: center;"><span class="math inline">\(w_1\)</span> <br> (<code>areal</code>)</th>
+<th style="text-align: center;"><span class="math inline">\(w_2\)</span> <br>(<code>alder</code>)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(-221293\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(376\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(387529\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(1355118\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(447659\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.0637521\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.0195118\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(-0.0023493\)</span></td>
 </tr>
 </tbody>
 </table>
-<p>For eksempel kan vi se, at <span class="math inline">\(w_1 = 376\)</span>. Det vil sige, at ifølge modellen vil husprisen på et hus, som er præcis én <em>square feet</em> større end et andet tilsvarende<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> hus, være <span class="math inline">\(376 \, \$\)</span> højere.</p>
-<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Et tilsvarende hus vil her mere præcist betyde et hus med det samme antal soveværelser, badeværelser og kælder (ja/nej).</p></div></div><p>Vi ser også, at <span class="math inline">\(w_4=447659\)</span>, som betyder, at hvis vi står med to tilsvarende huse, hvor det ene er med kælder, og det andet er uden kælder, så vil huset med kælder ifølge vores model koste <span class="math inline">\(447659 \, \$\)</span> mere end huset uden kælder.</p>
+<p>For eksempel kan vi se, at <span class="math inline">\(w_1 = 0.0195118\)</span>. Det vil sige, at ifølge modellen vil prisen på en lejlighed, som er præcis én kvadratmeter større end en anden tilsvarende<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> lejlighed, være cirka <span class="math inline">\(19512\)</span> kroner højere (husk på at prisen er målt i millioner, så vi skal lige gange med en million, hvis vi skal have værdien oversat til kroner).</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;En tilsvarende lejlighed vil her mere præcist betyde en lejlighed med den samme alder.</p></div></div><p>Vi ser også, at <span class="math inline">\(w_2=-0.0023493\)</span>, som betyder, at hvis vi står med to tilsvarende lejligheder, hvor den ene er præcis et år ældre end den anden, så vil salgsprisen på den ældste lejlighed ifølge modellen være <span class="math inline">\(2349\)</span> kroner lavere.</p>
+<p>I det nedenstående har vi plottet den faktiske pris (i millioner) ud af <span class="math inline">\(x\)</span>-aksen og den prædikterede pris op af <span class="math inline">\(y\)</span>-aksen.</p>
 <div class="cell page-columns page-full">
-<div class="cell-output cell-output-stdout">
-<pre><code>Iteration 100 loss: 4.759551e+14 
-Iteration 200 loss: 4.758494e+14 
-Iteration 300 loss: 4.758494e+14 
-Iteration 400 loss: 4.758494e+14 
-Iteration 500 loss: 4.758494e+14 </code></pre>
-</div>
 <div class="cell-output-display page-columns page-full">
 <div id="fig-pred_versus_price" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
@@ -403,18 +394,19 @@ Iteration 500 loss: 4.758494e+14 </code></pre>
 <img src="simple_neurale_net_regression_files/figure-html/fig-pred_versus_price-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-pred_versus_price-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;1: Tekst…
+Figur&nbsp;1: Den faktiske lejlighedspris (i millioner) ud af <span class="math inline">\(x\)</span>-aksen og den prædikterede pris op af <span class="math inline">\(y\)</span>-aksen.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
+<p>Hvis vi har en perfekt model, så vil den prædikterede pris være lig med den faktiske pris. Det vil svare til, at alle punkterne i <a href="#fig-pred_versus_price" class="quarto-xref">figur&nbsp;1</a> vil ligge på linjen med ligning <span class="math inline">\(y=x\)</span> (som er indtegnet med lyseblå i figuren). På figuren kan vi derfor se, at for lejligheder, som koster under <span class="math inline">\(3\)</span> millioner er modellen ikke helt dårlig. Til gengæld er modellen ikke super god til at prædiktere salgsprisen for de dyrere lejligheder: For nogle lejligheder er den prædikterede salgspris for høj, mens det omvendte også gør sig gældende – specielt de meget dyre lejligheder, som koster over <span class="math inline">\(5\)</span> millioner, prædikterer modellen for lavt.</p>
 </div>
 </section>
 </section>
 <section id="vurdering-af-modellens-anvendelighed" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="vurdering-af-modellens-anvendelighed">Vurdering af modellens anvendelighed</h2>
-<p>Når man træner en kunstig neuron, har man brug for et mål for, hvor god modellen er. Du kender nok allerede <span class="math inline">\(R^2\)</span>-værdien fra lineær regression, som et tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>, hvor vi gerne vil have tallet så tæt på <span class="math inline">\(1\)</span> som muligt (og så alligevel ikke helt – det kan du læse mere om i noten <a href="../../noter/krydsvalidering/krydsvalidering.html" target="_blank">Overfitting, modeludvælgelse og krydsvalidering</a>). Et andet mål, som kan bruges til at sammenligne modeller, er <strong>root mean squared error (RMSE)</strong>. For at forstå dette mål starter vi med at se på alle de kvadrerede fejl:</p>
+<p>Når man træner en kunstig neuron, har man brug for et mål for, hvor god modellen er. Du kender nok allerede <span class="math inline">\(R^2\)</span>-værdien fra lineær regression, som et tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>, hvor vi gerne vil have tallet så tæt på <span class="math inline">\(1\)</span> som muligt (og så alligevel ikke helt – det kommer vi tilbage til senere). Et andet mål, som kan bruges til at sammenligne modeller, er <strong>root mean squared error (RMSE)</strong>. For at forstå dette mål starter vi med at se på alle de kvadrerede fejl:</p>
 <p><span class="math display">\[
 \left (t^{(m)}-o^{(m)} \right)^2
 \]</span> Det er <strong>squared error (SE)</strong>. Så udregner vi den gennemsnitlige værdi af alle disse kvadrerede fejl:</p>
@@ -424,64 +416,160 @@ Figur&nbsp;1: Tekst…
 <div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Hvis man for eksempel har en targetværdi, som er målt i meter (<span class="math inline">\(m\)</span>), så vil enheden af MSE være meter i anden (<span class="math inline">\(m^2\)</span>). Tager vi derfor kvadratroden af MSE, kommer vi tilbage til en enhed i meter.</p></div></div><p><span class="math display">\[
 \mathrm{RMSE} = \sqrt{\frac{1}{M} \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right)^2}
 \]</span></p>
-<p>Det er altså denne størrelse, som er <strong>root mean squared error (RMSE)</strong>.</p>
+<p>Det er altså denne størrelse, som er <strong>root mean squared error (RMSE)</strong>. Da vi ønsker så lille en fejl som muligt, vil vi gerne have, at RMSE er så tæt på <span class="math inline">\(0\)</span> som muligt.</p>
 <div id="exm-lejlighed3" class="theorem example">
-<p><span class="theorem-title"><strong>Eksempel 3 (RMSE og <span class="math inline">\(R^2\)</span> (omskrives til bike rental))</strong></span> Ser vi på den kunstige neuron fra <a href="#exm-lejlighed2" class="quarto-xref">eksempel&nbsp;2</a> kan man udregne RMSE. Gør man det får man</p>
+<p><span class="theorem-title"><strong>Eksempel 3 (Lejlighedspriser – RMSE og <span class="math inline">\(R^2\)</span>)</strong></span> Ser vi på den kunstige neuron fra <a href="#exm-lejlighed2" class="quarto-xref">eksempel&nbsp;2</a> kan man udregne RMSE. Gør man det får man</p>
 <p><span class="math display">\[
-\mathrm{RMSE} = 1321452
+\mathrm{RMSE} = 0.497
 \]</span></p>
 <p>Uden sammenligning med andre modeller er det svært at vide, om det tal er godt eller skidt. Til gengæld kan vi udregne <span class="math inline">\(R^2\)</span>-værdien, som er</p>
 <p><span class="math display">\[
-R^2 = 0.5
-\]</span> Så den er i hvert tilfælde ikke imponerende stor!</p>
+R^2 = 0.596
+\]</span> Du er måske vant til at se <span class="math inline">\(R^2\)</span>-værdier, som er meget større, men for en model baseret på et datasæt fra den virkelige verden er det såmen ikke helt tosset!</p>
 </div>
-</section>
-<section id="prædiktion-af-cykeludlejning-nu-med-skjulte-lag" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="prædiktion-af-cykeludlejning-nu-med-skjulte-lag">Prædiktion af cykeludlejning – nu med skjulte lag!</h2>
-<p>I det ovenstående kommer det prædikterede antal udlejede cykler til at afhænge lineært af inputvariablene. Men verden er sjældent lineær – og en af styrkerne ved kunstige neurale netværk er netop, at de kan prædiktere størrelser eller kategorier ved hjælp af funktioner, som ikke er lineære. Vi skal derfor nu opstille et simpelt kunstigt neuralt netværk til prædiktion af antal udlejede cykler. Vi vil lave et netværk med fire features <span class="math inline">\(x_1, x_2, x_3, x_4,\)</span> men nu med noget, som vi vil kalde for et skjult lag, som her består af to såkaldte neuroner. Det kan illustreres, som vist i <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;2</a>:</p>
-<div id="fig-neuralt_net_regression" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
+<section id="krydsvalidering" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="krydsvalidering">Krydsvalidering</h3>
+<p>Når en models anvendelighed vurderes ved hjælp af mål som RMSE og <span class="math inline">\(R^2\)</span>-værdi, så vil det altid være sådan, at jo mere kompliceret en model, man bruger, desto bedre mål vil man få (det vil sige en lille værdi af RMSE og en værdi af <span class="math inline">\(R^2\)</span>, som er tæt på <span class="math inline">\(1\)</span>). Hvorfor det er tilfældet, kan du læse meget mere om i noten <a href="../../noter/krydsvalidering/krydsvalidering.html" target="_blank">Overfitting, modeludvælgelse og krydsvalidering</a>). Kort fortalt går det ud på, at en meget kompliceret model kan fange tendenser i data, som i virkeligheden ikke er reelle – det er bare støj. Et eksempel ses i <a href="#fig-overfitting" class="quarto-xref">figur&nbsp;2</a>:</p>
+<div id="fig-overfitting" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-neuralt_net_regression-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/neuralt_net_regression.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+<div aria-describedby="fig-overfitting-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/overfitting.png" class="img-fluid figure-img" style="width:80.0%">
 </div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-neuralt_net_regression-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;2: Simpelt kunstigt neuralt netværk til prædiktion af huspriser. Netværket har inputvariable <span class="math inline">\(x_1, x_2, x_3, x_4\)</span> og ét skjult lag med to neuroner (her vist som de to grønne cirkler i midten).
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-overfitting-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;2: Ti punkter hvor der er anvendt lineær regression (den lyseblå linje) og 9. grads polynomiel regression (den lyserøde kurve).
 </figcaption>
 </figure>
 </div>
-<p>Som det ses i <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;2</a>, er der til hver pil knyttet en vægt (for eksempel <span class="math inline">\(v_1, u_1, w_1\)</span> og så videre), som skal bruges til at udregne outputværdien <span class="math inline">\(o\)</span>. Hvis vi for en stund forestiller os, at vi kender alle vægtene, så udregner vi outputværdien <span class="math inline">\(o\)</span> på følgende måde:</p>
-<p>Ved hjælp af inputvariablene og <span class="math inline">\(v\)</span>-vægtene (de lysegrønne pile på <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;2</a>) beregner vi <span class="math inline">\(z_1\)</span>:</p>
+<p>Det kan her tydeligt ses, at en ret linje beskriver punkterne udmærket. Et 9. grads polynomium har til gengæld så meget fleksibilitet, at grafen for polynomiet kan gå igennem alle ti punkter. Det ses tydeligt på <a href="#fig-overfitting" class="quarto-xref">figur&nbsp;2</a>, at det bliver alt for mærkeligt, og vi har ingen forventninger om, at dette polynomium vil kunne bruges til at beskrive nye punkter, som ikke kommer fra datasættet. Men bruger vi for eksempel <span class="math inline">\(R^2\)</span>-værdien til at sammenligne de to modeller, så får vi:</p>
+<table class="table-bordered table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Model</th>
+<th style="text-align: center;"><span class="math inline">\(R^2\)</span>-værdi</th>
+<th style="text-align: center;">RMSE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Lineær regression</td>
+<td style="text-align: center;"><span class="math inline">\(0.916\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.603\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">9. grads polynomiel regression</td>
+<td style="text-align: center;"><span class="math inline">\(1.000\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.000\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Så ser vi alene på <span class="math inline">\(R^2\)</span>-værdien og RMSE, kunne vi blive foranlediget til at tro, at vi skulle vælge polynomiel regression. Man skal altså være utrolig varsom med uden videre at sammenligne den type mål! Men hvad gør man så? Ét bud er at bruge noget, som kaldes for <strong>krydsvalidering</strong>. Princippet er illustreret i <a href="#fig-krydsvalidering" class="quarto-xref">figur&nbsp;3</a>.</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display page-columns page-full">
+<div id="fig-krydsvalidering" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-krydsvalidering-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="simple_neurale_net_regression_files/figure-html/fig-krydsvalidering-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-krydsvalidering-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;3: Illustration af idéen ved <span class="math inline">\(5\)</span>-fold krydsvalidering.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Man starter med at inddele data tilfældigt i <span class="math inline">\(5\)</span> lige store dele: del 1, 2, 3, 4 og 5. Så træner man en model (lad os sige, at man laver lineær regression) baseret på del 2, 3, 4 og 5. Det giver en ret linje. Hefter bruger man del 1 til at udregne for eksempel RMSE baseret på den model, man lige har bestemt.</p>
+<p>Har man for eksempel et datasæt med <span class="math inline">\(500\)</span> dataeksempler så udregnes RMSE på denne måde:</p>
 <p><span class="math display">\[
-z_1 = \sigma (v_0 + v_1 \cdot x_1 + v_2 \cdot x_2 + v_3 \cdot x_3 + v_4 \cdot x_4)
+\mathrm{RMSE} = \sqrt{\frac{1}{100} \sum_{m \in \textrm{del 1}}\left (t^{(m)}-o^{(m)} \right)^2}
+\]</span></p>
+<p>Her summerer vi altså over alle træningseksempler i del 1. Husk på, at outputværdien <span class="math inline">\(o^{(m)}\)</span> findes ved</p>
+<p><span class="math display">\[
+o^{(m)} = w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}
+\]</span></p>
+<p>Her stammer inputværdierne <span class="math inline">\(x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)}\)</span> fra del 1, men vægtene <span class="math inline">\(w_0, w_1, w_2, \dots, w_n\)</span> er fundet ved at bruge data fra del 2, 3, 4 og 5. Man undersøger altså, hvor god modellen er til at prædiktere data i del 1, hvis den kun er trænet på data fra del 2, 3, 4 og 5. Derfor kalder man del 1 for <strong>testdata</strong> og del 2, 3, 4 og 5 for <strong>træningsdata</strong>. Det er helt essentielt her, at man tester sin model på en del af data, som <em>ikke</em> har været brugt til at træne modellen på. Dette gentager man så, men næste gang er det del 2, som er testdata og del 1, 3, 4 og 5 som er træningsdata. Igen udregnes RMSE. Denne proceduren gentages i alt 5 gang. Det giver 5 forskellige RMSE værdier. Herefter tager man gennemsnittet af dem for at få et samlet mål for modellens anvendelighed.</p>
+<p>Det viser sig, at det ikke giver så meget mening, at udregne <span class="math inline">\(R^2\)</span>-værdien i forbindelse med krydsvalidering. For eksempel kan værdien gå hen og blive negativ. Vi vil derfor i det følgende nøjes med at se på RMSE.</p>
+<div id="exm-lejlighed4" class="theorem example">
+<p><span class="theorem-title"><strong>Eksempel 4 (Lejlighedspriser – RMSE med krydsvalidering)</strong></span> Vi vil nu udregne RMSE baseret på <span class="math inline">\(5\)</span>-folds krydsvalidering. Det giver</p>
+<p><span class="math display">\[
+\mathrm{RMSE} = 0.502
+\]</span></p>
+<p>Bemærk, at hvis vi sammenligner med RMSE, som ikke er baseret på krydsvalidering fra <a href="#exm-lejlighed3" class="quarto-xref">eksempel&nbsp;3</a>, så er RMSE her blevet en smule højere her. Det er helt forventeligt, at modellen vil klare sig bedre, når den er testet på de data, som den også er trænet på.</p>
+</div>
+</section>
+</section>
+<section id="prædiktion-af-lejlighedspriser-nu-med-skjulte-lag" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="prædiktion-af-lejlighedspriser-nu-med-skjulte-lag">Prædiktion af lejlighedspriser – nu med skjulte lag!</h2>
+<p>Når man skal sælge en lejlighed, skal der helst ikke være skjulte fejl og mangler. Det kan til gengæld være en rigtig god idé med nogle skjulte lag, når man skal prædiktere lejlighedspriser! Det vil vi se på nu.</p>
+<p>I det ovenstående kommer den prædikterede pris til at afhænge lineært af inputvariablene. Men verden er sjældent lineær – og en af styrkerne ved kunstige neurale netværk er netop, at de kan prædiktere størrelser eller kategorier ved hjælp af funktioner, som ikke er lineære. Vi skal derfor nu opstille et simpelt kunstigt neuralt netværk til prædiktion af lejlighedspriser. Vi vil lave et netværk med to features <span class="math inline">\(x_1, x_2\)</span> men nu med noget, som vi vil kalde for et skjult lag, som her består af fem såkaldte neuroner. Det kan illustreres, som vist i <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;4</a>:</p>
+<div id="fig-neuralt_net_regression" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-neuralt_net_regression-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/neuralt_net_regression.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-neuralt_net_regression-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;4: Simpelt kunstigt neuralt netværk til prædiktion af lejlighedspriser. Netværket har inputvariable <span class="math inline">\(x_1, x_2\)</span> og ét skjult lag med to neuroner (her vist som de to grønne cirkler i midten).
+</figcaption>
+</figure>
+</div>
+<p>Som det ses i <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;4</a>, er der til hver pil knyttet en vægt (for eksempel <span class="math inline">\(v_1, u_1, w_1\)</span> og så videre), som skal bruges til at udregne outputværdien <span class="math inline">\(o\)</span>. Hvis vi for en stund forestiller os, at vi kender alle vægtene, så udregner vi outputværdien <span class="math inline">\(o\)</span> på følgende måde:</p>
+<p>Ved hjælp af inputvariablene og <span class="math inline">\(v\)</span>-vægtene (de lysegrønne pile på <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;4</a>) beregner vi <span class="math inline">\(z_1\)</span>:</p>
+<p><span class="math display">\[
+z_1 = f(v_0 + v_1 \cdot x_1 + v_2 \cdot x_2)
 \]</span> som selvfølgelig kan generaliseres til</p>
 <p><span class="math display">\[
-z_1 = \sigma (v_0 + v_1 \cdot x_1 + \cdots + v_n \cdot x_n)
+z_1 = f(v_0 + v_1 \cdot x_1 + \cdots + v_n \cdot x_n)
 \]</span></p>
-<p>Her er <span class="math inline">\(\sigma(x)\)</span> <strong>sigmoid-funktionen</strong> med forskrift</p>
-<p><span id="eq-sigmoid"><span class="math display">\[
-\sigma(x)=\frac{1}{1+\mathrm{e}^{-x}}
-\tag{1}\]</span></span></p>
-<p>Grafen for sigmoid-funktionen ses i <a href="#fig-sigmoid" class="quarto-xref">figur&nbsp;3</a>:</p>
+<p>Her er <span class="math inline">\(f\)</span> en funktion, som kaldes for en <strong>aktiveringsfunktion</strong>, og det er den, der gør, at vi ender med at prædiktere lejlighedspriser på en ikke-lineær måde. Den kommer vi tilbage til lige om lidt.</p>
+<p>På tilsvarende vis udregner vi <span class="math inline">\(z_2\)</span> ved at bruge <span class="math inline">\(u\)</span>-vægtene (de mørkegrønne pile på <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;4</a>):</p>
+<p><span class="math display">\[
+z_2 = f(u_0 + u_1 \cdot x_1 + u_2 \cdot x_2)
+\]</span></p>
+<p>Når vi nu har <span class="math inline">\(z_1\)</span> og <span class="math inline">\(z_2\)</span> beregnes outputværdien <span class="math inline">\(o\)</span>, som vi gjorde det tidligere (her er <span class="math inline">\(w\)</span>-vægtene vist som de lyseblå pile på <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;4</a>):</p>
+<p><span class="math display">\[
+o = w_0 + w_1 \cdot z_1 + w_2 \cdot z_2
+\]</span></p>
+<section id="relu-aktiveringsfunktionen" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="relu-aktiveringsfunktionen">ReLu aktiveringsfunktionen</h3>
+<p>Lad os se nærmere på aktiveringsfunktionen <span class="math inline">\(f\)</span>. Hvis du har læst nogle af vores andre noter, ved du, at en ofte anvendt aktiveringsfunktion er sigmoid-funktionen med forskrift:</p>
+<p><span class="math display">\[
+\sigma (x) = \frac{1}{1+\mathrm{e}^{-x}}
+\]</span> Grafen for sigmoid-funktionen ses i <a href="#fig-sigmoid" class="quarto-xref">figur&nbsp;5</a>.</p>
 <div id="fig-sigmoid" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-sigmoid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="../kunstige_neuroner/images/sigmoid.png" class="img-fluid figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-sigmoid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;3: Grafen for sigmoid-funktionen med forskrift <span class="math inline">\(\sigma(x)=\frac{1}{1+\mathrm{e}^{-x}}\)</span>.
+Figur&nbsp;5: Grafen for sigmoid-funktionen.
 </figcaption>
 </figure>
 </div>
-<p>Sigmoid-funktionen kaldes også for en <strong>aktiveringsfunktion</strong>, og det er den, der gør, at vi ender med at prædiktere antal udlejede cykler på en ikke-lineær måde.</p>
-<p>På tilsvarende vis udregner vi <span class="math inline">\(z_2\)</span> ved at bruge <span class="math inline">\(u\)</span>-vægtene (de mørkegrønne pile på <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;2</a>):</p>
+<p>Denne aktiveringsfunktion er super god at bruge, når outputværdien skal beregnes, <em>hvis</em> man skal lave binær klassifikation, fordi funktionsværdien ligger mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span> og derfor kan fortolkes som en sandsynlighed. I alle andre sammenhænge er den faktisk ikke super anvendelig!</p>
+<p>En aktiveringsfunktion som til gengæld ofte anvendes i de skjulte er ReLu-funktionen<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Den er defineret således:</p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;relu</p></div><div id="fn5"><p><sup>5</sup>&nbsp;relu</p></div></div><p><a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>: ReLU står for Rectified Linear Unit.</p>
 <p><span class="math display">\[
-z_2 = \sigma (u_0 + u_1 \cdot x_1 + u_2 \cdot x_2 + u_3 \cdot x_3 + u_4 \cdot x_4)
+\textrm{ReLu}(x) =
+\begin{cases}
+0 &amp; \textrm {hvis } x &lt; 0 \\
+x &amp; \textrm {hvis } x \geq 0
+\end{cases}
 \]</span></p>
-<p>Når vi nu har <span class="math inline">\(z_1\)</span> og <span class="math inline">\(z_2\)</span> beregnes outputværdien <span class="math inline">\(o\)</span>, som vi gjorde det tidligere (her er <span class="math inline">\(w\)</span>-vægtene vist som de lyseblå pile på <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;2</a>):</p>
-<p><span class="math display">\[
-o = w_0 + w_1 \cdot z_1 + w_2 \cdot z_2
-\]</span></p>
-<p>Ovenstående udtryk for beregning af <span class="math inline">\(z_1\)</span>, <span class="math inline">\(z_2\)</span> og <span class="math inline">\(o\)</span> kaldes for <strong>feedforward</strong> ligninger, fordi man laver beregninger "fremad" i netværket i <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;2</a> fra venstre mod højre. Hvis vi samtidig holder styr på, hvilket træningseksempel vi står med, får vi følgende:</p>
+<p>Grafen for ReLu-funktionen ses i <a href="#fig-relu" class="quarto-xref">figur&nbsp;6</a>.</p>
+<div id="fig-relu" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-relu-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/relu.png" class="img-fluid figure-img" style="width:75.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-relu-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;6: Grafen for ReLu-funktionen.
+</figcaption>
+</figure>
+</div>
+<p>ReLu-funktionen transformerer altså alle negative inputværdier til <span class="math inline">\(0\)</span> og alle positive inputværdier forbliver uændret. Det ser jo næsten lineært ud, men det er altså nok til, at man kan modellere nogle meget ikke-lineære funktioner, hvis bare man har nok skjulte lag med nok neuroner i hver.</p>
+</section>
+<section id="feedforward-udtryk" class="level3">
+<h3 class="anchored" data-anchor-id="feedforward-udtryk">Feedforward udtryk</h3>
+<p>Ovenstående udtryk for beregning af <span class="math inline">\(z_1\)</span>, <span class="math inline">\(z_2\)</span> og <span class="math inline">\(o\)</span>, hvor <span class="math inline">\(f\)</span> nu beregner ReLu-funktionen, kaldes for <strong>feedforward</strong> ligninger, fordi man laver beregninger "fremad" i netværket i <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;4</a> fra venstre mod højre. Hvis vi samtidig holder styr på, hvilket træningseksempel vi står med, får vi følgende:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -494,19 +582,19 @@ o = w_0 + w_1 \cdot z_1 + w_2 \cdot z_2
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>På baggrund af inputværdierne <span class="math inline">\(x_1, x_2, x_3, x_4\)</span> beregnes outputværdien <span class="math inline">\(o\)</span> på følgende måde.</p>
+<p>På baggrund af inputværdierne <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> beregnes outputværdien <span class="math inline">\(o\)</span> på følgende måde.</p>
 <p>Først beregnes:</p>
 <p><span id="eq-z_1"><span class="math display">\[
-z_1^{(m)} = \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)}+ v_3 \cdot x_3^{(m)} + v_4 \cdot x_4^{(m)} \right)
-\tag{2}\]</span></span></p>
+z_1^{(m)} = \textrm{ReLu} \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} \right)
+\tag{1}\]</span></span></p>
 <p>og</p>
 <p><span id="eq-z_2"><span class="math display">\[
-z_2^{(m)} = \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} + u_3 \cdot x_3^{(m)} + u_4 \cdot x_4^{(m)} \right)
-\tag{3}\]</span></span></p>
+z_2^{(m)} = \textrm{ReLu} \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} \right)
+\tag{2}\]</span></span></p>
 <p>Herefter beregnes outputværdien:</p>
 <p><span id="eq-o"><span class="math display">\[
 o^{(m)} = w_0 + w_1 \cdot z_1^{(m)} + w_2 \cdot z_2^{(m)}
-\tag{4}\]</span></span></p>
+\tag{3}\]</span></span></p>
 </div>
 </div>
 </div>
@@ -517,8 +605,11 @@ E(v_0, v_1, \dots, v_4, &amp; u_0, u_1, \dots, u_4,w_0, w_1, w_2) \\ &amp;= \fra
 o^{(m)} \right)^2
 \end{aligned}
 \]</span></p>
-<p>hvor <span class="math inline">\(o^{(m)}\)</span> er givet ved udtrykket i (<a href="#eq-o" class="quarto-xref">4</a>). Læg mærke til, at tabsfunktionen afhænger af alle <span class="math inline">\(u\)</span>-, <span class="math inline">\(v\)</span>- og <span class="math inline">\(w\)</span>-vægte, men for nemheds skyld vil vi blot skrive <span class="math inline">\(E\)</span> i det følgende.</p>
-<p>Man kan nu igen bruge gradientnedstigning til at bestemme de værdier er <span class="math inline">\(v\)</span>-, <span class="math inline">\(u\)</span>- og <span class="math inline">\(w\)</span>-vægtene, som minimerer tabsfunktionen. Det er her en vigtig beregningsfinte, at man bevæger sig "bagud" i netværket i <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;2</a> og først opdaterer <span class="math inline">\(w\)</span>-vægtene (som er tættest på outputlaget) og dernæst <span class="math inline">\(u\)</span>- og <span class="math inline">\(v\)</span>-vægtene, som er tættest på inputlaget. Dette kaldes for <strong>backpropagation</strong>.</p>
+<p>hvor <span class="math inline">\(o^{(m)}\)</span> er givet ved udtrykket i (<a href="#eq-o" class="quarto-xref">3</a>). Læg mærke til, at tabsfunktionen afhænger af alle <span class="math inline">\(u\)</span>-, <span class="math inline">\(v\)</span>- og <span class="math inline">\(w\)</span>-vægte, men for nemheds skyld vil vi blot skrive <span class="math inline">\(E\)</span> i det følgende.</p>
+</section>
+<section id="backpropagation" class="level3">
+<h3 class="anchored" data-anchor-id="backpropagation">Backpropagation</h3>
+<p>Man kan nu igen bruge gradientnedstigning til at bestemme de værdier er <span class="math inline">\(v\)</span>-, <span class="math inline">\(u\)</span>- og <span class="math inline">\(w\)</span>-vægtene, som minimerer tabsfunktionen. Det er her en vigtig beregningsfinte, at man bevæger sig "bagud" i netværket i <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;4</a> og først opdaterer <span class="math inline">\(w\)</span>-vægtene (som er tættest på outputlaget) og dernæst <span class="math inline">\(u\)</span>- og <span class="math inline">\(v\)</span>-vægtene, som er tættest på inputlaget. Dette kaldes for <strong>backpropagation</strong>.</p>
 <p>Gør man det, ender man med følgende opdateringsregler:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
@@ -538,8 +629,8 @@ o^{(m)} \right)^2
 <li><p>For alle træningsdataeksempler udregnes <span class="math inline">\(z_1^{(m)}\)</span>, <span class="math inline">\(z_2^{(m)}\)</span> og <span class="math inline">\(o^{(m)}\)</span> ved hjælp af feedforward-udtrykkene:</p>
 <p><span class="math display">\[
 \begin{aligned}
-z_1^{(m)} &amp;= \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} + v_3 \cdot x_3^{(m)} +  v_4 \cdot x_4^{(m)} \right ) \\
-z_2^{(m)} &amp;= \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} + u_3 \cdot x_3^{(m)} + u_4 \cdot x_4^{(m)} \right ) \\
+z_1^{(m)} &amp;= \textrm{ReLu} \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} \right ) \\
+z_2^{(m)} &amp;= \textrm{ReLu} \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} \right ) \\
 o^{(m)} &amp;= w_0 + w_1 \cdot z_1^{(m)} + w_2 \cdot z_2^{(m)}
 \end{aligned}
 \]</span></p></li>
@@ -555,16 +646,16 @@ w_2^{\textrm{(ny)}} &amp;\leftarrow w_2 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)}
 \delta^{(m)} = t^{(m)}-o^{(m)}
 \]</span> <strong><span class="math inline">\(v\)</span>-vægtene:</strong> <span class="math display">\[
 \begin{aligned}
-v_0^{\textrm{(ny)}} &amp;\leftarrow v_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_1 \cdot z_1^{(m)} \cdot \left ( 1- z_1^{(m)} \right) \\
-v_i^{\textrm{(ny)}} &amp;\leftarrow v_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_1 \cdot z_1^{(m)} \cdot \left ( 1- z_1^{(m)} \right) \cdot x_i^{(m)}\\
+v_0^{\textrm{(ny)}} &amp;\leftarrow v_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_1  \\
+v_i^{\textrm{(ny)}} &amp;\leftarrow v_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_1  \cdot x_i^{(m)}\\
 \end{aligned}
-\]</span> for <span class="math inline">\(i \in \{1, 2, 3, 4\}\)</span>.</p>
+\]</span> for <span class="math inline">\(i \in \{1, 2\}\)</span>.</p>
 <p><strong><span class="math inline">\(u\)</span>-vægtene:</strong> <span class="math display">\[
 \begin{aligned}
-u_0^{\textrm{(ny)}} &amp;\leftarrow u_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_2 \cdot z_2^{(m)} \cdot \left ( 1- z_2^{(m)} \right) \\
-u_i^{\textrm{(ny)}} &amp;\leftarrow u_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_2 \cdot z_2^{(m)} \cdot \left ( 1- z_2^{(m)} \right) \cdot x_i^{(m)}\\
+u_0^{\textrm{(ny)}} &amp;\leftarrow u_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_2  \\
+u_i^{\textrm{(ny)}} &amp;\leftarrow u_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_2  \cdot x_i^{(m)}\\
 \end{aligned}
-\]</span> for <span class="math inline">\(i \in \{1, 2, 3, 4\}\)</span>.</p></li>
+\]</span> for <span class="math inline">\(i \in \{1, 2\}\)</span>.</p></li>
 </ol>
 <p>Alle vægtene er nu opdateret, og vi kan gentage punkt 2 og 3, hvor feedforward i 2 hver gang er baseret på de netop opdaterede vægte fra det foregående gennemløb. Opdateringen af vægtene fortsætter, indtil værdien af tabsfunktionen næsten ikke ændrer sig. Håbet er nu, at vi har fundet et minimum (eventuelt kun lokalt) for tabsfunktionen.</p>
 </div>
@@ -608,7 +699,7 @@ o^{(m)} \right)^2 \\
 <p><span id="eq-Em"><span class="math display">\[
 E^{(m)}= \frac{1}{2} \left (t^{(m)}-
 (w_0 + w_1 \cdot z_1^{(m)} + w_2 \cdot z_2^{(m)}) \right)^2
-\tag{5}\]</span></span></p>
+\tag{4}\]</span></span></p>
 <p>Vi ved fra sumreglen, at vi skal differentiere ledvist. Det vil sige, når <span class="math inline">\(E\)</span> skal differentieres med hensyn til én af vægtene, så kan vi bare differentiere <span class="math inline">\(E^{(m)}\)</span> med hensyn til den pågældende vægt og lægge alle disse partielle afledede sammen. For eksempel er</p>
 <p><span class="math display">\[
 \frac{\partial E}{\partial w_i} = \sum_{m=1}^M \frac{\partial E^{(m)}}{\partial w_i}
@@ -617,7 +708,7 @@ E^{(m)}= \frac{1}{2} \left (t^{(m)}-
 <p><span class="math display">\[
 \frac{\partial E^{(m)}}{\partial w_i}
 \]</span></p>
-<p>så skal du gøre fuldstændig, som vi gjorde i afsnittet <a href="#må-jeg-låne-en-cykel">Må jeg låne en cykel?</a>.</p>
+<p>så skal du gøre fuldstændig, som vi gjorde i afsnittet <a href="#hvad-koster-min-lejlighed">HVad koster min lejlighed?</a>.</p>
 <p>Når du skal finde</p>
 <p><span class="math display">\[
 \frac{\partial E^{(m)}}{\partial v_i}
@@ -628,11 +719,11 @@ E^{(m)}= \frac{1}{2} \left (t^{(m)}-
 \]</span></p>
 <p>Men vi ved fra feedforward udtrykkene, at</p>
 <p><span id="eq-z_1m"><span class="math display">\[
-z_1^{(m)} = \sigma \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} + v_3 \cdot x_3^{(m)} + \cdots + v_4 \cdot x_4^{(m)} \right )
-\tag{6}\]</span></span></p>
+z_1^{(m)} = \textrm{ReLu} \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} \right )
+\tag{5}\]</span></span></p>
 <p>og</p>
 <p><span class="math display">\[
-z_2^{(m)} = \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} + u_3 \cdot x_3^{(m)} + u_4 \cdot x_4^{(m)} \right )
+z_2^{(m)} = \textrm{ReLu} \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} \right )
 \]</span></p>
 <p>og her kan vi se, at det kun er <span class="math inline">\(z_1^{(m)}\)</span>, som afhænger af <span class="math inline">\(v_i\)</span>. Det betyder, at</p>
 <p><span class="math display">\[
@@ -647,9 +738,18 @@ z_2^{(m)} = \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} + u_3 
 <p><span class="math display">\[
 \frac{\partial E^{(m)}}{\partial z_1^{(m)}}
 \]</span></p>
-<p>skal du bruge udtrykket for <span class="math inline">\(E^{(m)}\)</span> i (<a href="#eq-Em" class="quarto-xref">5</a>). Og når <span class="math inline">\(z_1^{(m)}\)</span> skal differentieres med hensyn til <span class="math inline">\(v_i\)</span>, skal du bruge udtrykket i (<a href="#eq-z_1m" class="quarto-xref">6</a>). Derudover får du brug for en særlig egenskab ved sigmoid-funktionen. Nemlig, at</p>
+<p>skal du bruge udtrykket for <span class="math inline">\(E^{(m)}\)</span> i (<a href="#eq-Em" class="quarto-xref">4</a>). Og når <span class="math inline">\(z_1^{(m)}\)</span> skal differentieres med hensyn til <span class="math inline">\(v_i\)</span>, skal du bruge udtrykket i (<a href="#eq-z_1m" class="quarto-xref">5</a>).</p>
+<p>Nu er det sådan, at ReLu-funktionen faktisk slet ikke er differentiabel i <span class="math inline">\(x=0\)</span>! Til gengæld er det ikke svært at overbevise sig selv om, at</p>
 <p><span class="math display">\[
-\sigma'(x) = \sigma(x) \cdot (1-\sigma(x))
+\textrm{ReLu}'(x) =
+\begin{cases}
+0 &amp; \textrm{hvis } x &lt; 0 \\
+1 &amp; \textrm{hvis } x &gt; 0
+\end{cases}
+\]</span></p>
+<p>Og så definerer vi os simpelthen ud af tilfældet, hvor <span class="math inline">\(x=0\)</span>:</p>
+<p><span class="math display">\[
+\textrm{ReLu}'(0) = 1.
 \]</span></p>
 <p>På helt tilsvarende vis kan</p>
 <p><span class="math display">\[\frac{\partial E^{(m)}}{\partial u_i}
@@ -661,6 +761,7 @@ z_2^{(m)} = \sigma \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} + u_3 
 </div>
 
 
+</section>
 </section>
 
 
