@@ -1,0 +1,127 @@
+---
+title: "De politiske partier"
+description: 'I dette forløb vil vi se på, hvordan de politiske kandidaters svar på en række spørgsmål kan bruges til at undersøge, hvor enige kandidater fra samme parti er.... lidt uklart, skal nok bearbejdes :)'
+image: ""
+categories:
+  - "01_A-niveau"
+  - "04_Kort"
+---
+
+::: {.callout-caution collapse="true" appearance="minimal"}
+### Forudsætninger og tidsforbrug
+
++ Eksponentialfunktioner, herunder $\mathrm{e}^x$.
++ Sandsynlighedsfelter.
++ Linjens ligning på formen $a \cdot x + b \cdot y + c = 0$.
+
+**Tidsforbrug:** Ca. 120 minutter. 
+
+Hvis man forinden har arbejdet med det korte forløb [Sengetester i IKEA](https://aimat.dk/undervisningsforlob/sengetester.html) vil det være en fordel, men dette er ikke en forudsætning.
+
+På tilsvarende vis vil det også gøre dette forløb lidt lettere, hvis man forinden har arbejdet med de første dele af det lange forløb om [Kunstige neuroner](https://aimat.dk/undervisningsforlob/kunstige_neuroner_langt_forlob/kunstige_neuroner_forside.html), men det er heller ikke en forudsætning.
+
+Hvis man har arbejdet med det korte forløb [Hvilken politiker er du mest enig med](https://aimat.dk/undervisningsforlob/kandidattest.html), kan konteksten være mere tydeligt, men det er heller ikke en forudsætning.
+
+:::
+
+::: {.purpose}
+
+### Formål
+
+Formålet med dette forløb er 
+
+* at undersøge, hvilket partis holdning man er mest enig med - vha. ens egne og de politiske kandidaters svar på en række velvalgte udsagn i en kandidattest.
+* at lære **Softmax** at kende, som et værktøj til **Multipel Klassifikation**.
+* at lære lidt om **Kunstige Neuroner**, samt at anvende en app med dette.
+
+:::
+
+Måske en video.
+
+<!-- {{< video https://youtu.be/FxQa1uJ_YKA?si=u9jCmyeyQ1uWOMlzW >}} -->
+
+
+
+## De politiske kandidaters svar
+Vi vil starte med et meget lille eksempel, hvor 16 politikere fordel på 4 partier alle har svaret på 2 spørgsmål.
+
+| Parti | Navn | Spørgsmål 1 | Spørgsmål 2 |
+|-------|:---------------------------|:-----------:|:-----------:|
+| Soc | Ane Halsboe-Jørgensen | $\color{green}{\textbf{Enig}}$ | $\color{green}{\textbf{Enig}}$ |
+| Soc | Flemming Møller Mortensen | $\color{red}{\textbf{Uenig}}$ | $\color{red}{\textbf{Uenig}}$ |
+| Soc | Kiki Bille Bach | $\color{green}{\textbf{Enig}}$ | $\color{green}{\textbf{Enig}}$ |
+| Soc | Morten Ryom | $\color{green}{\textbf{Enig}}$ | $\color{green}{\textbf{Enig}}$ |
+| Ven | Anita Vivi Lilholt | $\color{red}{\textbf{Meget uenig}}$ | $\color{green}{\textbf{Enig}}$ |
+| Ven | Anne Honoré Østergaard | $\color{red}{\textbf{Meget uenig}}$ | $\color{green}{\textbf{Enig}}$ |
+| Ven | Marie Bjerre | $\color{green}{\textbf{Enig}}$ | $\color{red}{\textbf{Uenig}}$ |
+| Ven | Mikkel Bisgaard | $\color{red}{\textbf{Uenig}}$ | $\color{red}{\textbf{Uenig}}$ |
+| Enh | Peder Hvelplund | $\color{green}{\textbf{Meget enig}}$ | $\color{green}{\textbf{Meget enig}}$ |
+| Enh | Runa Friis Hansen | $\color{green}{\textbf{Enig}}$ | $\color{green}{\textbf{Meget enig}}$ |
+| Enh | Lasse P. N. Olsen | $\color{green}{\textbf{Meget enig}}$ | $\color{green}{\textbf{Enig}}$ |
+| Enh | Filippa Emilie Vittrup | $\color{green}{\textbf{Meget enig}}$ | $\color{green}{\textbf{Meget enig}}$ |
+| DD | Inger Støjberg | $\color{red}{\textbf{Meget uenig}}$ | $\color{red}{\textbf{Uenig}}$ |
+| DD | Kristian Bøgsted | $\color{red}{\textbf{Uenig}}$ | $\color{red}{\textbf{Uenig}}$ |
+| DD | Kim Edberg Andersen | $\color{red}{\textbf{Meget uenig}}$ | $\color{red}{\textbf{Uenig}}$ |
+| DD | Liselotte Lynge | $\color{red}{\textbf{Meget uenig}}$ | $\color{red}{\textbf{Uenig}}$ |
+
+: {tbl-colwidths="[10, 50, 20, 20]"}
+
+De to spørgsmål er
+
+Spørgsmål 1: De boligejere, der tjener mest på prisstigninger, skal betale mere i skat.
+Spørgsmål 2: Reglerne for dyrevelfærd skal strammes, selv om det kan gøre fødevarer fra Danmark dyrere.
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 1: Udregn sandsynligherne
+* Udregn sandsynlighederne for hver af de 3 andre typer boxmadrasser.
+* Læg sandsynlighederne sammen og se, at det giver 1.
+
+:::
+
+Det fungerer jo sådan set meget godt. Der er dog nogle ting, som gør, at man ofte gør det lidt mere kompliceret:
+
+* Hvis nogle af pointene er negative, risikerer man at skulle dividere med 0.
+* Hvis nogle af pointene er negative, kan brøken give et negativt tal.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 2: Hvad sker der med negative værdier?
+* Beregn "sandsynlighederne" med samme metode, hvis de fire værdier i stedet var -1, 0, 1 og 2. 
+* Forklar, hvorfor resultaterne ikke kan være sandsynligheder.
+
+:::
+
+## Softmax
+
+Man benytter derfor nogle gange metoden Softmax, hvor man opløfter tallet $\mathrm{e}$ i hvert pointtal, og derefter regne sandsynlighederne på samme måde som før.
+
+Så bliver $$P(\mathrm{ Skotterud }) = \frac{\mathrm{e}^{3}}{\mathrm{e}^{3}+\mathrm{e}^2+\mathrm{e}^3+\mathrm{e}^{5}} \approx 10.2\%$$
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 3: Udregn sandsynligherne med Softmax
+* Udregn sandsynlighederne for hver af de 3 andre typer boxmadrasser fra opgave 1 med Softmax metoden.
+* Læg sandsynlighederne sammen og se, at det giver 1.
+
+* Udregn på samme måde sandsynlighederne ud fra pointallene fra opgave 2 med Softmax. 
+* Læg sandsynlighederne sammen og se, at det giver 1.
+
+:::
+
+Bemærk, at sandsynlighederne for de 4 typer madrasser er blevet mere forskellige med Softmax, end da du regnede i første omgang.
+
+Hvis pointene bliver store og forskellige, vil næsten al sandsynligheden samle sig omkring den største værdi med Softmax. Det kan naturligvis være ønskeligt i situationer, hvor \"the winner takes it all\", men i andre situationer kan det ses som et problem.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 4: Udregn sandsynligherne for store forskellige værdier
+* Udregn sandsynligheder både med metoden fra opgave 1 og med Softmax, hvis de fire pointtal er 2, 9, 11 og 16. 
+
+:::
+
+I mange anvendelser med Softmax er det derfor netop meningen, at hovedparten af sandsynligheder gives til tilfældet med flest point eller at der er mange tilfælde med næsten samme pointal. Det kan du måske komme til i 2.g eller 3.g. for eksempel i [Simple kunstige neurale netværk til multiple klassifikation](/noter/softmax/softmax.qmd) eller [Word2Vec](/noter/sprogmodeller/word2vec.qmd).
+
+
+## Delvis facitliste
+
+[Facitliste](sengetester/softmax_facit.qmd){target="_blank"}.
+
