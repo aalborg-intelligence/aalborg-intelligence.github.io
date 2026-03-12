@@ -200,7 +200,9 @@ Vi illustrerer dette med et eksempel:
 
 ## Lejlighedspriser -- fortolkning af vægtene
 
-Træner vi en kunstig neuron på datasættet om lejlighedssalg, hvor vi sætter alle startvægte til $0$, vælger en learning rate på $0.0001$ og antal iterationer til $500$, får vi følgende værdier af vægtene
+Man kan træne en kunstig neuron til regression ved at bruge [Kunstig neuron app til regression](https://apps01.math.aau.dk/ai/neuron_regression/).
+
+Bruger vi denne app på datasættet om lejlighedssalg, hvor vi sætter alle startvægte til $0$, vælger en learning rate på $0.0001$ og antal iterationer til $500$, får vi følgende værdier af vægtene
 
 |  $w_0$  <br>  <br> |  $w_1$ <br> (`areal`)  |  $w_2$  <br>(`alder`)  | 
 |:---:|:---:|:---:|
@@ -230,7 +232,7 @@ fit_lm <- lm(pris_mio ~ areal + alder, data = dat)
 #  b <- b - sum(w * fit$center_val)
 #}
 pred <- predict(fit_lm, dat, type = "response")
-plot(dat$pris_mio,pred, xlab="Lejlighedspris i millioner", ylab="Prædikteret pris", col="#020873", col.lab="#020873", col.axis="#020873", col.main="#020873")
+plot(dat$pris_mio,pred, xlim=c(0,7.5), ylim=c(0,7.5), xlab="Lejlighedspris i millioner", ylab="Prædikteret pris", col="#020873", col.lab="#020873", col.axis="#020873", col.main="#020873")
 box(col="#020873")
 abline(0,1, col="#8085F2")
 ```
@@ -240,7 +242,15 @@ Hvis vi har en perfekt model, så vil den prædikterede pris være lig med den f
 
 ## Vurdering af modellens anvendelighed
 
-Når man træner en kunstig neuron, har man brug for et mål for, hvor god modellen er. Du kender nok allerede $R^2$-værdien fra lineær regression, som et tal mellem $0$ og $1$, hvor vi gerne vil have tallet så tæt på $1$ som muligt (og så alligevel ikke helt -- det kommer vi tilbage til senere). Et andet mål, som kan bruges til at sammenligne modeller, er **root mean squared error (RMSE)**. For at forstå dette mål starter vi med at se på alle de kvadrerede fejl:
+Når man træner en kunstig neuron, har man brug for et mål for, hvor god modellen er. Du kender nok allerede $R^2$-værdien fra lineær regression, som et tal mellem $0$ og $1$, hvor vi gerne vil have tallet så tæt på $1$ som muligt (og så alligevel ikke helt -- det kommer vi tilbage til senere). Hvis du vil vide mere om, hvordan $R^2$-værdien rent faktisk regnes ud, kan du folde boksen nedenfor ud.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+
+## Forklaring af $R^2$-værdien
+
+:::
+
+Et andet mål, som kan bruges til at sammenligne modeller, er **root mean squared error (RMSE)**. For at forstå dette mål starter vi med at se på alle de kvadrerede fejl:
 
 $$
  \left (t^{(m)}-o^{(m)} \right)^2
@@ -368,7 +378,7 @@ Bemærk, at hvis vi sammenligner med RMSE, som ikke er baseret på krydsvalideri
 :::
 
 
-## Prædiktion af lejlighedspriser -- nu med skjulte lag!
+## Prædiktion af lejlighedspriser -- med skjulte lag!
 
 Når man skal sælge en lejlighed, skal der helst ikke være skjulte fejl og mangler. Det kan til gengæld være en rigtig god idé med nogle skjulte lag, når man skal prædiktere lejlighedspriser! Det vil vi se på nu.
 
@@ -415,18 +425,20 @@ Grafen for sigmoid-funktionen ses i @fig-sigmoid.
 
 ![Grafen for sigmoid-funktionen.](../kunstige_neuroner/images/sigmoid.png){width=75% #fig-sigmoid}
 
-Denne aktiveringsfunktion er super god at bruge, når outputværdien skal beregnes, *hvis* man skal lave binær klassifikation, fordi funktionsværdien ligger mellem $0$ og $1$ og derfor kan fortolkes som en sandsynlighed. I alle andre sammenhænge er den faktisk ikke super anvendelig! 
+Denne aktiveringsfunktion er super god at bruge, når outputværdien skal beregnes, hvis man skal lave binær klassifikation, fordi funktionsværdien ligger mellem $0$ og $1$ og derfor kan fortolkes som en sandsynlighed. I alle andre sammenhænge er den faktisk ikke super anvendelig[^sig]! 
 
-En aktiveringsfunktion som til gengæld ofte anvendes i de skjulte er ReLu-funktionen^[relu]. Den er defineret således:
+[^sig]: Omvendt har Sigmoid-funktionen den skønne egenskab, at den er differentiabel, og man kan vise, at $\sigma'(x) = \sigma(x) (1-\sigma(x))$.
+
+En aktiveringsfunktion, som til gengæld ofte anvendes i de skjulte lag, er ReLu-funktionen[^relu]. Den er defineret således:
 
 
-^[relu]: ReLU står for Rectified Linear Unit.
+[^relu]: ReLU står for **Rectified Linear Unit**.
 
 $$
 \textrm{ReLu}(x) = 
 \begin{cases}
-0 & \textrm {hvis } x < 0 \\
-x & \textrm {hvis } x \geq 0
+0 & \textrm {hvis } x \leq 0 \\
+x & \textrm {hvis } x > 0
 \end{cases}
 $$
 
@@ -434,7 +446,23 @@ Grafen for ReLu-funktionen ses i @fig-relu.
 
 ![Grafen for ReLu-funktionen.](images/relu.png){width=75% #fig-relu}
 
-ReLu-funktionen transformerer altså alle negative inputværdier til $0$ og alle positive inputværdier forbliver uændret. Det ser jo næsten lineært ud, men det er altså nok til, at man kan modellere nogle meget ikke-lineære funktioner, hvis bare man har nok skjulte lag med nok neuroner i hver. 
+ReLu-funktionen transformerer altså alle negative inputværdier til $0$ og alle positive inputværdier forbliver uændret. Det ser jo næsten lineært ud, men det er altså nok til, at man kan modellere nogle meget ikke-lineære funktioner, hvis bare man har nok skjulte lag med mange neuroner i hvert lag.  
+
+Nu er det sådan, at ReLu-funktionen faktisk ikke er differentiabel i $x=0$ -- til forskel fra Sigmoid-funktionen, som er differentiabel overalt. Til gengæld er det ikke svært at overbevise sig selv om, at
+
+$$
+\textrm{ReLu}'(x) =
+\begin{cases}
+0 & \textrm{hvis } x < 0 \\
+1 & \textrm{hvis } x > 0
+\end{cases}
+$$
+
+Det ses nemt, ved at se på tangenthældningerne i @fig-relu. Og så definerer vi os simpelthen ud af tilfældet, hvor $x=0$, og siger, at i $0$ skal differentialkvotienten også være $0$:
+
+$$
+\textrm{ReLu}'(0) = 0.
+$$
 
 ### Feedforward udtryk
 
@@ -476,6 +504,8 @@ $$
 
 hvor $o^{(m)}$ er givet ved udtrykket i (@eq-o). Læg mærke til, at tabsfunktionen afhænger af alle $u$-, $v$- og $w$-vægte, men for nemheds skyld vil vi blot skrive $E$ i det følgende.
 
+Hvis du ikke er interesseret i, hvordan man bestemmer vægtene, så spring det næste afsnit over og gå direkte videre til afsnittet [Lejlighedspriser med neuralt netværk](#lejlighedspriser-med-neuralt-netværk).
+
 ### Backpropagation
 
 Man kan nu igen bruge gradientnedstigning til at bestemme de værdier er $v$-, $u$- og $w$-vægtene, som minimerer tabsfunktionen. Det er her en vigtig beregningsfinte, at man bevæger sig \"bagud\" i netværket i @fig-neuralt_net_regression og først opdaterer $w$-vægtene (som er tættest på outputlaget) og dernæst $u$- og $v$-vægtene, som er tættest på inputlaget. Dette kaldes for **backpropagation**.
@@ -516,21 +546,21 @@ $$
    $$
    **$v$-vægtene:**
    $$
-   \begin{aligned}
-   v_0^{\textrm{(ny)}} &\leftarrow v_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_1  \\
-   v_i^{\textrm{(ny)}} &\leftarrow v_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_1  \cdot x_i^{(m)}\\
-   \end{aligned}
+   v_i^{\textrm{(ny)}} \leftarrow 
+   \begin{cases}
+   v_i & \textrm{hvis } v_0 + v_1 \cdot x_1 + v_2 \cdot x_2 \leq 0 \\
+   v_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_1  \cdot x_i^{(m)} &    \textrm{ellers} \\
+   \end{cases}
    $$
-   for $i \in \{1, 2\}$.
-   
    **$u$-vægtene:**
    $$
-   \begin{aligned}
-   u_0^{\textrm{(ny)}} &\leftarrow u_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_2  \\
-   u_i^{\textrm{(ny)}} &\leftarrow u_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_2  \cdot x_i^{(m)}\\
-   \end{aligned}
+   u_i^{\textrm{(ny)}} \leftarrow 
+  \begin{cases}
+  u_i & \textrm{hvis } u_0 + u_1 \cdot x_1 + u_2 \cdot x_2 \leq 0 \\
+   u_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_2  \cdot x_i^{(m)} &      \textrm{ellers} \\
+  \end{cases}
    $$
-   for $i \in \{1, 2\}$.
+   I alle tilfælde sætter vi $x_0^{(m)}=1$, hvis $i=0$.
    
 Alle vægtene er nu opdateret, og vi kan gentage punkt 2 og 3, hvor feedforward i 2 hver gang er baseret på de netop opdaterede vægte fra det foregående gennemløb. Opdateringen af vægtene fortsætter, indtil værdien af tabsfunktionen næsten ikke ændrer sig. Håbet er nu, at vi har fundet et minimum (eventuelt kun lokalt) for tabsfunktionen.
 
@@ -590,7 +620,7 @@ $$
 \frac{\partial E^{(m)}}{\partial w_i}
 $$
 
-så skal du gøre fuldstændig, som vi gjorde i afsnittet [HVad koster min lejlighed?](#hvad-koster-min-lejlighed).
+så skal du gøre fuldstændig, som vi gjorde i afsnittet [Hvad koster min lejlighed?](#hvad-koster-min-lejlighed).
 
 Når du skal finde
 
@@ -639,21 +669,7 @@ $$
 
 skal du bruge udtrykket for $E^{(m)}$ i (@eq-Em). Og når $z_1^{(m)}$ skal differentieres med hensyn til $v_i$, skal du bruge udtrykket i (@eq-z_1m). 
 
-Nu er det sådan, at ReLu-funktionen faktisk slet ikke er differentiabel i $x=0$! Til gengæld er det ikke svært at overbevise sig selv om, at
 
-$$
-\textrm{ReLu}'(x) =
-\begin{cases}
-0 & \textrm{hvis } x < 0 \\
-1 & \textrm{hvis } x > 0
-\end{cases}
-$$
-
-Og så definerer vi os simpelthen ud af tilfældet, hvor $x=0$:
-
-$$
-\textrm{ReLu}'(0) = 1.
-$$
 
 På helt tilsvarende vis kan 
 
@@ -667,5 +683,62 @@ Og så er der kun tilbage at ønske god arbejdslyst!
 
 :::
 
+### Lejlighedspriser med neuralt netværk
 
+Vi vender nu tilbage til eksemplet med lejlighedspriser i Aalborg. 
 
+::: {#exm-lejlighed5}
+
+## Lejlighedspriser med neuralt netværk
+
+Vi vil starte med at træne et kunstigt neuralt netværk med ét skjult lag med to neuroner, som vist i @fig-neuralt_net_regression. Det kan man gøre ved at bruge [Neuralt netværk app til regression](https://apps01.math.aau.dk/ai/nn_regression/). Vi vælger her ... **mangler**
+
+Desuden har vi prøve at træne et kunstigt neuralt netværk med ét skjult lag med ti neuroner.
+
+| Model | RMSE <br> (træningsdata) | RMSE <br> (krydsvalidering) | 
+|:---|:---:|:---:|
+| Kunstig neuron | $0.497$ | $0.502$ |
+| Neuralt netværk (2) | $0.556$ |  $0.497$ |
+| Neuralt netværk (10) | $0.446$ |  $0.463$ |
+: {.bordered}
+
+*Ovenstående er baseret på Orange - skal rettes til så det passe med vores app. Man kan falde i mange forskellige små minima som ændre RMSE en del * **mangler**
+
+Ser vi på RMSE fra krydsvalidering, kan vi se, at begge neurale netværk har en mindre RMSE sammenlignet med en kunstig neuron. 
+
+I den nedenstående figur har vi plottet den faktiske pris (i millioner) ud af $x$-aksen og den prædikterede pris op af $y$-aksen. I plottet til venstre er de prædikterede priser baseret på en kunstig neuron. I plottet til højre er de baseret på et neuralt netværk med et skjult lag med ti neuroner.
+
+```{r}
+#| cache: true
+#| echo: false
+#| fig-cap: Den faktiske lejlighedspris (i millioner) ud af $x$-aksen og den prædikterede pris op af $y$-aksen. I plottet til venstre er de prædikterede priser baseret på en kunstig neuron -- til højre er de baseret på et neuralt netværk med et skjult lag med ti neuroner.
+#| label: fig-pred_versus_priceNN10
+## Kunstige neuron
+fit_lm <- lm(pris_mio ~ areal + alder, data = dat)
+pred_lm <- predict(fit_lm, dat, type = "response")
+## Neuralt netværk - ét skjult lag med 10 neuroner
+set.seed(42)
+fit_nn10 <- nn_fun(pris_mio ~ areal + alder, data = dat, 
+              n_hidden = c(10, 0), iter = 20000, type = "regression", 
+              lossfun = "squared", eta = .00001, activation = "ReLu")
+pred_nn10 <- predict(fit_nn10, newdata = dat, type = "response")
+## Plot
+par(mfrow = c(1, 2))
+# To plots ved siden af hinanden
+oma = c(4, 4, 2, 1)
+# Kunstig neuron
+plot(dat$pris_mio,pred_lm, xlim=c(0,7.5), ylim=c(0,7.5), xlab="", ylab="", main="Kunstig neuron", col="#020873", col.lab="#020873", col.axis="#020873", col.main="#020873")
+box(col="#020873")
+abline(0,1, col="#8085F2")
+# NN 10
+plot(dat$pris_mio,pred_nn10, xlim=c(0,7.5), ylim=c(0,7.5), xlab="", ylab="", main ="Neuralt netværk", col="#020873", col.lab="#020873", col.axis="#020873", col.main="#020873")
+box(col="#020873")
+abline(0,1, col="#8085F2")
+# Fælles labels
+mtext("Lejlighedspris i millioner", side = 1, line = 2, outer = TRUE)
+mtext("Prædikteret pris", side = 2, line = 2, outer = TRUE)
+```
+
+Sammenligner vi de to plots ovenfor kan man se, at når vi bruger et neuralt netværk med et skjult lag med ti neuroner, så ligger de prædikterede priser tættere på de faktiske priser. Det svarer til, at punkterne i plottet til højre ligger tættere på linjen med ligning $y=x$ end de gør i plottet til venstre.
+
+:::
