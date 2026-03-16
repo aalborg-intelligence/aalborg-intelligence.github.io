@@ -408,31 +408,9 @@ Figur&nbsp;1: Den faktiske lejlighedspris (i millioner) ud af <span class="math 
 </section>
 <section id="vurdering-af-modellens-anvendelighed" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="vurdering-af-modellens-anvendelighed">Vurdering af modellens anvendelighed</h2>
-<p>Når man træner en kunstig neuron, har man brug for et mål for, hvor god modellen er. Du kender nok allerede <span class="math inline">\(R^2\)</span>-værdien fra lineær regression, som et tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>, hvor vi gerne vil have tallet så tæt på <span class="math inline">\(1\)</span> som muligt (og så alligevel ikke helt – det kommer vi tilbage til senere). Hvis du vil vide mere om, hvordan <span class="math inline">\(R^2\)</span>-værdien rent faktisk regnes ud, kan du folde boksen nedenfor ud.</p>
-<div class="callout callout-style-simple callout-tip no-icon callout-empty-content callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Forklaring af <span class="math inline">\(R^2\)</span>-værdien
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-
-</div>
-</div>
-</div>
-<p>Et andet mål, som kan bruges til at sammenligne modeller, er <strong>root mean squared error (RMSE)</strong>. For at forstå dette mål starter vi med at se på alle de kvadrerede fejl:</p>
+<p>Når man træner en kunstig neuron, har man brug for et mål for, hvor god modellen er. Du kender nok allerede <span class="math inline">\(R^2\)</span>-værdien fra lineær regression, som et tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>, hvor vi gerne vil have tallet så tæt på <span class="math inline">\(1\)</span> som muligt (og så alligevel ikke helt – det kommer vi tilbage til senere). Hvis du vil vide mere om, hvordan <span class="math inline">\(R^2\)</span>-værdien rent faktisk regnes ud, kan du læse mere <a href="../../noter/vurdering_model/vurdering_model.html#forklaringsgraden-r2-værdien">her</a>.</p>
+<p>Et andet mål, som kan bruges til at sammenligne modeller, er <strong>root mean squared error (RMSE)</strong>. Du kan læse en lidt længere forklaring <a href="../../noter/vurdering_model/vurdering_model.html#root-mean-squared-error-rmse">her</a>, men målet er defineret således:</p>
 <p><span class="math display">\[
-\left (t^{(m)}-o^{(m)} \right)^2
-\]</span> Det er <strong>squared error (SE)</strong>. Så udregner vi den gennemsnitlige værdi af alle disse kvadrerede fejl:</p>
-<p><span class="math display">\[
-\frac{1}{M} \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right)^2
-\]</span> På den måde får vi et mål, som ikke er afhængig af datasættets størrelse. Det er <strong>mean squared error (MSE)</strong>. Endelig tager vi kvadratroden af det (for at få målet ned på samme skala<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, som vores targetværdi):</p>
-<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Hvis man for eksempel har en targetværdi, som er målt i meter (<span class="math inline">\(m\)</span>), så vil enheden af MSE være meter i anden (<span class="math inline">\(m^2\)</span>). Tager vi derfor kvadratroden af MSE, kommer vi tilbage til en enhed i meter.</p></div></div><p><span class="math display">\[
 \mathrm{RMSE} = \sqrt{\frac{1}{M} \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right)^2}
 \]</span></p>
 <p>Det er altså denne størrelse, som er <strong>root mean squared error (RMSE)</strong>. Da vi ønsker så lille en fejl som muligt, vil vi gerne have, at RMSE er så tæt på <span class="math inline">\(0\)</span> som muligt.</p>
@@ -563,8 +541,8 @@ Figur&nbsp;5: Grafen for sigmoid-funktionen.
 </figcaption>
 </figure>
 </div>
-<p>Denne aktiveringsfunktion er super god at bruge, når outputværdien skal beregnes, hvis man skal lave binær klassifikation, fordi funktionsværdien ligger mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span> og derfor kan fortolkes som en sandsynlighed. I alle andre sammenhænge er den faktisk ikke super anvendelig<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>!</p>
-<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Omvendt har Sigmoid-funktionen den skønne egenskab, at den er differentiabel, og man kan vise, at <span class="math inline">\(\sigma'(x) = \sigma(x) (1-\sigma(x))\)</span>.</p></div><div id="fn5"><p><sup>5</sup>&nbsp;ReLU står for <strong>Rectified Linear Unit</strong>.</p></div></div><p>En aktiveringsfunktion, som til gengæld ofte anvendes i de skjulte lag, er ReLu-funktionen<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>. Den er defineret således:</p>
+<p>Denne aktiveringsfunktion er super god at bruge, når outputværdien skal beregnes, hvis man skal lave binær klassifikation, fordi funktionsværdien ligger mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span> og derfor kan fortolkes som en sandsynlighed. I alle andre sammenhænge er den faktisk ikke super anvendelig<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>!</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Omvendt har Sigmoid-funktionen den skønne egenskab, at den er differentiabel, og man kan vise, at <span class="math inline">\(\sigma'(x) = \sigma(x) (1-\sigma(x))\)</span>.</p></div><div id="fn4"><p><sup>4</sup>&nbsp;ReLU står for <strong>Rectified Linear Unit</strong>.</p></div></div><p>En aktiveringsfunktion, som til gengæld ofte anvendes i de skjulte lag, er ReLu-funktionen<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Den er defineret således:</p>
 <p><span class="math display">\[
 \textrm{ReLu}(x) =
 \begin{cases}
@@ -601,7 +579,7 @@ Figur&nbsp;6: Grafen for ReLu-funktionen.
 <h3 class="anchored" data-anchor-id="feedforward-udtryk">Feedforward udtryk</h3>
 <p>Ovenstående udtryk for beregning af <span class="math inline">\(z_1\)</span>, <span class="math inline">\(z_2\)</span> og <span class="math inline">\(o\)</span>, hvor <span class="math inline">\(f\)</span> nu beregner ReLu-funktionen, kaldes for <strong>feedforward</strong> ligninger, fordi man laver beregninger "fremad" i netværket i <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;4</a> fra venstre mod højre. Hvis vi samtidig holder styr på, hvilket træningseksempel vi står med, får vi følgende:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -610,7 +588,7 @@ Figur&nbsp;6: Grafen for ReLu-funktionen.
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>På baggrund af inputværdierne <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> beregnes outputværdien <span class="math inline">\(o\)</span> på følgende måde.</p>
 <p>Først beregnes:</p>
@@ -643,7 +621,7 @@ o^{(m)} \right)^2
 <p>Man kan nu igen bruge gradientnedstigning til at bestemme de værdier er <span class="math inline">\(v\)</span>-, <span class="math inline">\(u\)</span>- og <span class="math inline">\(w\)</span>-vægtene, som minimerer tabsfunktionen. Det er her en vigtig beregningsfinte, at man bevæger sig "bagud" i netværket i <a href="#fig-neuralt_net_regression" class="quarto-xref">figur&nbsp;4</a> og først opdaterer <span class="math inline">\(w\)</span>-vægtene (som er tættest på outputlaget) og dernæst <span class="math inline">\(u\)</span>- og <span class="math inline">\(v\)</span>-vægtene, som er tættest på inputlaget. Dette kaldes for <strong>backpropagation</strong>.</p>
 <p>Gør man det, ender man med følgende opdateringsregler:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -652,7 +630,7 @@ o^{(m)} \right)^2
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Backpropagation foregår samlet set på denne måde:</p>
 <ol type="1">
@@ -706,7 +684,7 @@ u_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_2  \cdot x_i^{(m)} &amp;   
 <p>Det kan her virke fuldstændig ligegyldigt, om vi skal beregne fejlen et par ekstra gange eller ej, men i virkelighedens anvendelser af kunstige neurale netværk, er det lige præcis denne beregningsmæssige finte, som gør, at det overhovedet kan lade sig gøre at bruge gradientnedstigning. Det sparer nemlig både tid og lagringsplads på computeren, at tidligere beregnede størrelser kan genbruges i de næste opdateringer.</p>
 <p>Hvis du gerne vil bevise ovenstående, er der lidt hjælp at hente i nedenstående boks.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -715,7 +693,7 @@ u_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_2  \cdot x_i^{(m)} &amp;   
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Husk på, at vores tabsfunktion ser sådan her ud:</p>
 <p><span class="math display">\[
