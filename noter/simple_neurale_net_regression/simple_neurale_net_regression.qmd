@@ -222,6 +222,7 @@ I det nedenstående har vi plottet den faktiske pris (i millioner) ud af $x$-aks
 #| fig-cap: Den faktiske lejlighedspris (i millioner) ud af $x$-aksen og den prædikterede pris op af $y$-aksen.
 #| label: fig-pred_versus_price
 library(aimat)
+library(ggplot2)
 dat <- readxl::read_excel(here::here("noter/simple_neurale_net_regression/data/home_Aalborg9000_lejlighed.xlsx"))
 fit_lm <- lm(pris_mio ~ areal + alder, data = dat)
 #fit <- nn_fun(price ~ area + bedrooms + bathrooms + basement, data = dat, n_hidden = c(0, 0), iter = #500, type = "regression", lossfun = "squared", eta = .0001, weights=0)
@@ -231,10 +232,14 @@ fit_lm <- lm(pris_mio ~ areal + alder, data = dat)
 #  w <- w / fit$scale_val
 #  b <- b - sum(w * fit$center_val)
 #}
-pred <- predict(fit_lm, dat, type = "response")
-plot(dat$pris_mio,pred, xlim=c(0,7.5), ylim=c(0,7.5), xlab="Lejlighedspris i millioner", ylab="Prædikteret pris", col="#020873", col.lab="#020873", col.axis="#020873", col.main="#020873")
-box(col="#020873")
-abline(0,1, col="#8085F2")
+dat$pred <- predict(fit_lm, dat, type = "response")
+dat |> 
+  ggplot(aes(pris_mio, pred)) +
+  geom_point(color="#020873", shape = 21) + 
+  geom_abline(slope = 1, intercept = 0, color = "#8085F2") +
+  theme_bw() + 
+  labs(x = "Faktisk pris (mio kr)", y = "Prædikteret pris (mio kr)") +
+  theme(strip.background = element_rect(fill = "white", color = "white"), strip.text = element_text(size = 20))
 ```
 Hvis vi har en perfekt model, så vil den prædikterede pris være lig med den faktiske pris. Det vil svare til, at alle punkterne i @fig-pred_versus_price vil ligge på linjen med ligning $y=x$ (som er indtegnet med lyseblå i figuren). På figuren kan vi derfor se, at for lejligheder, som koster under $3$ millioner er modellen ikke helt dårlig. Til gengæld er modellen ikke super god til at prædiktere salgsprisen for de dyrere lejligheder: For nogle lejligheder er den prædikterede salgspris for høj, mens det omvendte også gør sig gældende -- specielt de meget dyre lejligheder, som koster over $5$ millioner, prædikterer modellen for lavt.
 
@@ -694,34 +699,32 @@ Ser vi på RMSE fra krydsvalidering, kan vi se, at begge neurale netværk har en
 I den nedenstående figur har vi plottet den faktiske pris (i millioner) ud af $x$-aksen og den prædikterede pris op af $y$-aksen. I plottet til venstre er de prædikterede priser baseret på en kunstig neuron. I plottet til højre er de baseret på et neuralt netværk med et skjult lag med ti neuroner.
 
 ```{r}
-#| cache: true
 #| echo: false
-#| fig-cap: Den faktiske lejlighedspris (i millioner) ud af $x$-aksen og den prædikterede pris op af $y$-aksen. I plottet til venstre er de prædikterede priser baseret på en kunstig neuron -- til højre er de baseret på et neuralt netværk med et skjult lag med ti neuroner.
-#| label: fig-pred_versus_priceNN10
+#| include: false
 ## Kunstige neuron
 fit_lm <- lm(pris_mio ~ areal + alder, data = dat)
 pred_lm <- predict(fit_lm, dat, type = "response")
-## Neuralt netværk - ét skjult lag med 10 neuroner
-set.seed(42)
-fit_nn10 <- nn_fun(pris_mio ~ areal + alder, data = dat, 
-              n_hidden = c(10, 0), iter = 20000, type = "regression", 
-              lossfun = "squared", eta = .00001, activation = "ReLu")
+## Neuralt netværk - ét skjult lag med 10 neuroner (fitted i scriptet home_Aalborg9000_lejlighed_fit_nn.R)
+fit_nn10 <- readRDS(here::here("noter/simple_neurale_net_regression/data/home_Aalborg9000_lejlighed_fit_nn.rds"))
 pred_nn10 <- predict(fit_nn10, newdata = dat, type = "response")
-## Plot
-par(mfrow = c(1, 2))
-# To plots ved siden af hinanden
-oma = c(4, 4, 2, 1)
-# Kunstig neuron
-plot(dat$pris_mio,pred_lm, xlim=c(0,7.5), ylim=c(0,7.5), xlab="", ylab="", main="Kunstig neuron", col="#020873", col.lab="#020873", col.axis="#020873", col.main="#020873")
-box(col="#020873")
-abline(0,1, col="#8085F2")
-# NN 10
-plot(dat$pris_mio,pred_nn10, xlim=c(0,7.5), ylim=c(0,7.5), xlab="", ylab="", main ="Neuralt netværk", col="#020873", col.lab="#020873", col.axis="#020873", col.main="#020873")
-box(col="#020873")
-abline(0,1, col="#8085F2")
-# Fælles labels
-mtext("Lejlighedspris i millioner", side = 1, line = 2, outer = TRUE)
-mtext("Prædikteret pris", side = 2, line = 2, outer = TRUE)
+df_lm <- data.frame(pris = dat$pris_mio, pred = pred_lm, type = "Kunstig neuron")
+df_nn10 <- data.frame(pris = dat$pris_mio, pred = pred_nn10, type = "Neuralt netværk")
+```
+
+```{r}
+#| fig-cap: Den faktiske lejlighedspris (i millioner) ud af $x$-aksen og den prædikterede pris op af $y$-aksen. I plottet til venstre er de prædikterede priser baseret på en kunstig neuron -- til højre er de baseret på et neuralt netværk med et skjult lag med ti neuroner.
+#| label: fig-pred_versus_priceNN10
+library(plotly)
+p <- rbind(df_lm, df_nn10) |> 
+  ggplot(aes(pris, pred)) + 
+  geom_point(color="#020873", shape = 21) + 
+  geom_abline(slope = 1, intercept = 0, color = "#8085F2") +
+  facet_wrap(~type) + 
+  theme_bw() + 
+  labs(x = "Faktisk pris (mio kr)", y = "Prædikteret pris (mio kr)") +
+  theme(strip.background = element_rect(fill = "white", color = "white"), 
+        strip.text = element_text(size = 20))
+  plotly::ggplotly(p)
 ```
 
 Sammenligner vi de to plots ovenfor kan man se, at når vi bruger et neuralt netværk med et skjult lag med ti neuroner, så ligger de prædikterede priser tættere på de faktiske priser. Det svarer til, at punkterne i plottet til højre ligger tættere på linjen med ligning $y=x$ end de gør i plottet til venstre.
