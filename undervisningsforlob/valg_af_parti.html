@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="I dette forløb vil vi se på, hvordan de politiske kandidaters svar på en række spørgsmål kan bruges til at undersøge, hvor enige kandidater fra samme parti er…. lidt uklart, skal nok bearbejdes :)">
+
+<title>De politiske partier – AI MAT - matematikken bag magien</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-b5a8a7eab777ac90d906ac4dbf1d5b84.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-Y219BCPS45"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+ 
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'analytics_storage': 'denied'
+  });
+gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo light-content">
+    <img src="../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../undervisningsforlob/index.html"> 
+<span class="menu-text">Undervisningsforløb</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../noter/index.html"> 
+<span class="menu-text">Noter</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../srp/index.html"> 
+<span class="menu-text">SRP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../apps/index.html"> 
+<span class="menu-text">Apps</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../til_laererne.html"> 
+<span class="menu-text">Til lærerne</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> <i class="bi bi-envelope" role="img" aria-label="Om os">
+</i> 
+<span class="menu-text">Om os</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@ai-mat" target="_blank"> <i class="bi bi-youtube" role="img" aria-label="YouTube">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indhold</h2>
+   
+  <ul>
+  <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
+  <li><a href="#softmax-modellen" id="toc-softmax-modellen" class="nav-link" data-scroll-target="#softmax-modellen">Softmax modellen</a></li>
+  <li><a href="#brug-af-app-til-træning-af-kunstig-neuron" id="toc-brug-af-app-til-træning-af-kunstig-neuron" class="nav-link" data-scroll-target="#brug-af-app-til-træning-af-kunstig-neuron">Brug af app til træning af kunstig neuron</a></li>
+  <li><a href="#politiske-kandidaters-svar" id="toc-politiske-kandidaters-svar" class="nav-link" data-scroll-target="#politiske-kandidaters-svar">16 politiske kandidaters svar</a></li>
+  <li><a href="#det-helt-store-eksempel-med-732-politikere" id="toc-det-helt-store-eksempel-med-732-politikere" class="nav-link" data-scroll-target="#det-helt-store-eksempel-med-732-politikere">Det helt store eksempel med 732 politikere</a></li>
+  <li><a href="#delvis-facitliste" id="toc-delvis-facitliste" class="nav-link" data-scroll-target="#delvis-facitliste">Delvis facitliste</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">De politiske partier</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">01_A-niveau</div>
+    <div class="quarto-category">04_Kort</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Forudsætninger og tidsforbrug
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Eksponentialfunktioner, herunder <span class="math inline">\(\mathrm{e}^x\)</span>.</li>
+<li>Sandsynlighedsfelter.</li>
+<li>Linjens ligning på formen <span class="math inline">\(a \cdot x + b \cdot y + c = 0\)</span>.</li>
+</ul>
+<p><strong>Tidsforbrug:</strong> Ca. 150 minutter.</p>
+<p>Hvis man forinden har arbejdet med det korte forløb <a href="https://aimat.dk/undervisningsforlob/sengetester.html">Sengetester i IKEA</a> vil det være en fordel, men dette er ikke en forudsætning.</p>
+<p>På tilsvarende vis vil det også gøre dette forløb lidt lettere, hvis man forinden har arbejdet med de første dele af det lange forløb om <a href="https://aimat.dk/undervisningsforlob/kunstige_neuroner_langt_forlob/kunstige_neuroner_forside.html">Kunstige neuroner</a>, men det er heller ikke en forudsætning.</p>
+<p>Hvis man har arbejdet med det korte forløb <a href="https://aimat.dk/undervisningsforlob/kandidattest.html">Hvilken politiker er du mest enig med</a>, kan konteksten være mere tydeligt, men det er heller ikke en forudsætning.</p>
+</div>
+</div>
+</div>
+<section id="formål" class="level3 purpose">
+<h3 class="anchored" data-anchor-id="formål">Formål</h3>
+<p>Formålet med dette forløb er</p>
+<ul>
+<li>at lære <strong>Softmax</strong> at kende, som et værktøj til <strong>Multipel Klassifikation</strong>.</li>
+<li>at lære lidt om <strong>Kunstige Neuroner</strong>, samt at anvende en app til at træne en kunstig neuron.</li>
+<li>at undersøge, hvordan en kunstig neuron til multiple klassifikation kan bruges til at forudsige, hvilken parti man vil stemme på, ud fra svar på en række spørgsmål, f.eks. i en kandidattest.</li>
+</ul>
+</section>
+<p>Måske en video.</p>
+<!--  -->
+<section id="softmax-modellen" class="level2">
+<h2 class="anchored" data-anchor-id="softmax-modellen">Softmax modellen</h2>
+<p>Vi starter med et meget lille eksempel, hvis 4 personer, Andy, Bella, Charlie og Doresa har svaret på 2 spørgsmål samt angivet, hvilket parti de stemmer på.</p>
+<table class="table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 45%">
+<col style="width: 21%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Navn</th>
+<th style="text-align: left;">Spørgsmål 1 <span class="math inline">\((x_1)\)</span></th>
+<th style="text-align: center;">Spørgsmål 2 <span class="math inline">\((x_2)\)</span></th>
+<th style="text-align: center;">Parti (t)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Andy</td>
+<td style="text-align: left;"><span class="math inline">\(\color{red}{-2 \textbf{ Helt uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{red}{-2 \textbf{ Helt uenig}}\)</span></td>
+<td style="text-align: center;">1</td>
+</tr>
+<tr class="even">
+<td>Bella</td>
+<td style="text-align: left;"><span class="math inline">\(\color{red}{-1 \textbf{ Uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{green}{1 \textbf{ Enig}}\)</span></td>
+<td style="text-align: center;">2</td>
+</tr>
+<tr class="odd">
+<td>Charlie</td>
+<td style="text-align: left;"><span class="math inline">\(\color{red}{-1 \textbf{ Uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{red}{-1 \textbf{ Uenig}}\)</span></td>
+<td style="text-align: center;">2</td>
+</tr>
+<tr class="even">
+<td>Doresa</td>
+<td style="text-align: left;"><span class="math inline">\(\color{green}{1 \textbf{ Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{green}{2 \textbf{ Helt enig}}\)</span></td>
+<td style="text-align: center;">3</td>
+</tr>
+</tbody>
+</table>
+<p>For at kunne lave en matematisk model, står der også tilhørende værdier fra <span class="math inline">\(-2\)</span> til <span class="math inline">\(2\)</span> i tabellen, da vi har brug for talværdier for at kunne regne i modellen. Så f.eks. er <span class="math inline">\(x_1=-2\)</span> for Andy, mens <span class="math inline">\(x_1=1\)</span> for Doresa.</p>
+<p>Vi vil nu lave en model, hvor man ud fra svarene på de to spørgsmål kan forudsige, hvor sandsynligt det er, at man stemmer på hver af de 3 partier. Vi vil træne modellen, så den passer godt til svarene fra de 4 personer, og derefter håbe, at den også vil passe godt til andre personer. Naturligvis er <span class="math inline">\(2\)</span> spørgsmål og <span class="math inline">\(4\)</span> personer alt for lidt, men det gør vi noget ved senere.</p>
+<p>Vi udregner så for enhver kombination af person og parti en score: <span class="math display">\[score(person, parti) = w_0 + w_1 \cdot x_1+ w_2 \cdot x_2\]</span> hvor <span class="math inline">\(w_0\)</span> kaldes for bias og <span class="math inline">\(w_1\)</span> og <span class="math inline">\(w_2\)</span> kaldes for vægte.</p>
+<p>Vi sætter disse bias- og vægte til nogle lidt tilfældige værdier til at starte med.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: left;"><span class="math inline">\(w_0\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(w_1\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(w_2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Parti 1</td>
+<td style="text-align: left;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(-1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="even">
+<td>Parti 2</td>
+<td style="text-align: left;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="odd">
+<td>Parti 3</td>
+<td style="text-align: left;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Så bliver <span class="math display">\[score(Andy, parti 1) = 0 + (-1) \cdot (-2) + 0 \cdot (-2) = 2\]</span> <span class="math display">\[score(Andy, parti 2) = 0 + 1 \cdot (-2) + 0 \cdot (-2) = -2\]</span> <span class="math display">\[score(Andy, parti 3) = 0 + 0 \cdot (-2) + 0 \cdot (-2) = 0\]</span> Så lige nu er den højeste score for Andy for parti 1, hvilket er godt, da han faktisk stemmer på parti 1.</p>
+<p>Men modellen skulle jo ikke kun give en score, men faktisk give en procent for hvert parti. Så vi skal have fundet en metode til at få procenter i stedet for scoren. Om procenterne ved vi, at de skal være positive, at de skal være mellem 0 og 1, og endeligt, at det skal give 1 tilsammen.</p>
+<p>En simpel måde at få tallene positive på er at sige <span class="math inline">\(e\)</span> opløftet i scoren.</p>
+<p><span class="math display">\[
+\begin{aligned}
+e^2 &amp; \approx  7.39 \\
+e^{-2} &amp; \approx 0.14 \\
+e^0 &amp;=1
+\end{aligned}
+\]</span></p>
+<p>Så lægges de 3 tal sammen og hvert af tallene divideres med summen. <span class="math display">\[sum=7.39 + 1 + 0.14 = 8.53\]</span></p>
+<p>For Andy giver det følgende:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Parti</th>
+<th style="text-align: left;">Score</th>
+<th style="text-align: center;"><span class="math inline">\(e^{score}\)</span></th>
+<th style="text-align: center;">Procent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: center;">7.39</td>
+<td style="text-align: center;"><span class="math inline">\(\frac{7.39}{8.53} \approx 0.867\)</span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td style="text-align: left;">-2</td>
+<td style="text-align: center;">0.14</td>
+<td style="text-align: center;"><span class="math inline">\(\frac{0.14}{8.53} \approx 0.016\)</span></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><span class="math inline">\(\frac{1}{8.53} \approx 0.117\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Så med de valgte værdier af bias og vægte, angiver modellen 86.7% for parti 1, 1.6% for parti 2 og 11.7% for parti 3 for Andy. Da han faktisk stemte på parti 1, er det jo rigtigt fint, uden dog at være helt perfekt, da vi helst ville have endnu større sandsynlighed for parti 1.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Lav de tilsvarende udregninger for Bella, Charlie og Doresa.</li>
+<li>Overvej derefter, om de valgte vægte er fornuftige - i den betydning, at modellen giver størst sandsynlighed for hver person for det parti, som personen faktisk stammer på.</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Det var åbenlyst ikke så godt for Bella, Charlie og Doresa, hvor modellen for alle 3 peger på et forkert parti. Ideen er nu, at vi skal ændre bias og vægte, så modellen bliver bedre.</p>
+<p>Lad os første omgang se på <span class="math inline">\(w_1\)</span> og dermed <span class="math inline">\(x_1\)</span>. Bemærk, at <span class="math inline">\(x_1 = -2\)</span> for Andy, at <span class="math inline">\(x_1 = -1\)</span> for Bella og Charlie, og at <span class="math inline">\(x_1 = 1\)</span> for Doresa. Da vi gerne vil have Andy til at få en høj score, og dermed en høj sandsynlighed for parti 1, giver det mening at lade <span class="math inline">\(w_1\)</span> for parti 1 være en negativ værdi. Før havde vi sat <span class="math inline">\(w_1=-1\)</span>, men lad os forstærke effekten med <span class="math inline">\(w_1 = -3\)</span> for parti 1.</p>
+<p>Det giver Andy en positiv score <span class="math inline">\(w_1 \cdot x_1 = -3 \cdot (-2) = 6\)</span>, hvilket er godt, da vi gerne vil have, at modellen peger på parti 1 for ham.</p>
+<p>Det giver Doresa en negative score <span class="math inline">\(w_1 \cdot x_1 = -3 \cdot 1= -3\)</span>, hvilket er godt, da vi gerne vil have, at modellen ikke peger på parti 1 for hende.</p>
+<p>Det giver så desværre både Bella og Charlie en positiv score, da <span class="math inline">\(w_1 \cdot x_1 = -3 \cdot (-1) = 3\)</span>, hvilket ikke er så godt, da vi gerne vil have, at modellen ikke peger på parti 1 for dem. Det venter vi lige med at gøre noget ved.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Overvej hvilken værdi <span class="math inline">\(w_1\)</span> for parti 3 kan gives, så Doresa får en positiv score, mens de øvrige tre får en negativ score? Hint, få scoren for Doresa for parti 3 til at blive <span class="math inline">\(6\)</span>, som scoren for Andy blev for parti 1.</li>
+<li>Beregn sandsynligheden for hver af de 3 partier for Doresa med den værdi, du har valgt.</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Samlet ser det nu således ud. hvor både (score) og sandsynlighed er angivet for hvert parti.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: left;">Parti 1</th>
+<th style="text-align: center;">Parti 2</th>
+<th style="text-align: center;">Parti 3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Andy</td>
+<td style="text-align: left;">(6) 99.8%</td>
+<td style="text-align: center;">(0) 0.2%</td>
+<td style="text-align: center;">(-12) 0.0%</td>
+</tr>
+<tr class="even">
+<td>Bella</td>
+<td style="text-align: left;">(3) 95.3%</td>
+<td style="text-align: center;">(0) 4.7%</td>
+<td style="text-align: center;">(-6) 0.0%</td>
+</tr>
+<tr class="odd">
+<td>Charlie</td>
+<td style="text-align: left;">(3) 95.3%</td>
+<td style="text-align: center;">(0) 4.7%</td>
+<td style="text-align: center;">(-6) 0.0%</td>
+</tr>
+<tr class="even">
+<td>Doresa</td>
+<td style="text-align: left;">(-3) 0.0%</td>
+<td style="text-align: center;">(0) 0.3%</td>
+<td style="text-align: center;">(6) 99.7%</td>
+</tr>
+</tbody>
+</table>
+<p>Vi skal nu have modellen til at vælge parti 2 for Bella og Charlie, uden at ændre ved, at modellen vælger parti 1 til Andy og parti 3 til Doresa.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Overvej hvilken værdi biaset <span class="math inline">\(w_0\)</span> for parti 2 kan gives, så Bella og Charlie får højst score for parti 2 (scoren skal over 3, da de allerede har scoren 3 for parti 1), men uden scoren for Andy eller Doresa bliver højst for parti 2 (de har begge 6 som højst score til hhv. parti 1 og parti 3).</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Med en fornuftig værdi af bias for parti 2 kan tabellen komme til at se således ud.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: left;">Parti 1</th>
+<th style="text-align: center;">Parti 2</th>
+<th style="text-align: center;">Parti 3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Andy</td>
+<td style="text-align: left;">(6) 88.1%</td>
+<td style="text-align: center;">(4) 11.9%</td>
+<td style="text-align: center;">(-12) 0.0%</td>
+</tr>
+<tr class="even">
+<td>Bella</td>
+<td style="text-align: left;">(3) 26.9%</td>
+<td style="text-align: center;">(4) 73.1%</td>
+<td style="text-align: center;">(-6) 0.0%</td>
+</tr>
+<tr class="odd">
+<td>Charlie</td>
+<td style="text-align: left;">(3) 26.9%</td>
+<td style="text-align: center;">(4) 73.1%</td>
+<td style="text-align: center;">(-6) 0.0%</td>
+</tr>
+<tr class="even">
+<td>Doresa</td>
+<td style="text-align: left;">(-3) 0.0%</td>
+<td style="text-align: center;">(4) 11.9%</td>
+<td style="text-align: center;">(6) 88.1%</td>
+</tr>
+</tbody>
+</table>
+<p>Men det kan stadig gøres bedre, bl.a. ved også at tage <span class="math inline">\(w_2\)</span> i brug.</p>
+</section>
+<section id="brug-af-app-til-træning-af-kunstig-neuron" class="level2">
+<h2 class="anchored" data-anchor-id="brug-af-app-til-træning-af-kunstig-neuron">Brug af app til træning af kunstig neuron</h2>
+<p>Med det meget lille, simple eksempel kunne vi altså godt justere vægtene manuelt og få en nogenlunde resultat. Men hvis der bliver 100, 1000 eller millioner af vægte, så er det næppe en god ide. I stedet skal vi bruge noget mere advanceret matematik, som vi ikke vil gennemgå i dette forløb, til at optimere vægtene i modellen.</p>
+<p>Du finder appen <a href="https://apps01.math.aau.dk/ai/multi-neuron/">her</a> og datasættet som excelfil <a href="../undervisningsforlob/valg_af_parti/datasæt_4_personer.xlsx">her</a>.</p>
+<p>Her mangler en kort video, der viser brugen af appen.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 4
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Åbn appen og indlæs datasættet</li>
+<li>Vælg t som target varibel og både x1 og x2 som feature variable</li>
+<li>Sæt learning rate til 0,1 og antal iterationer til 1000</li>
+<li>Træn modellen</li>
+<li>Sammenlign de værdier til bias og vægte, som appen er nået frem til, med de værdier, som vi manuelt nåede frem til. Meget ligner, noget er lidt anderledes.</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Med appens værdier ser tabellen endeligt således ud, hvilket må siges at være meget tilfredsstillende.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: left;">Parti 1</th>
+<th style="text-align: center;">Parti 2</th>
+<th style="text-align: center;">Parti 3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Andy</td>
+<td style="text-align: left;">(6.6) 97.7%</td>
+<td style="text-align: center;">(2.8) 2.3%</td>
+<td style="text-align: center;">(-9.4) 0.0%</td>
+</tr>
+<tr class="even">
+<td>Bella</td>
+<td style="text-align: left;">(-4.1) 0.0%</td>
+<td style="text-align: center;">(4.5) 99.1%</td>
+<td style="text-align: center;">(-0.4) 0.9%</td>
+</tr>
+<tr class="odd">
+<td>Charlie</td>
+<td style="text-align: left;">(0.0) 3.2%</td>
+<td style="text-align: center;">(3.4) 96.5%</td>
+<td style="text-align: center;">(-3.4) 0. 3%</td>
+</tr>
+<tr class="even">
+<td>Doresa</td>
+<td style="text-align: left;">(-15.1) 0.0%</td>
+<td style="text-align: center;">(5.2) 0.8%</td>
+<td style="text-align: center;">(9.9) 99.2%</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="politiske-kandidaters-svar" class="level2">
+<h2 class="anchored" data-anchor-id="politiske-kandidaters-svar">16 politiske kandidaters svar</h2>
+<p>Lad os se på et lidt større eksempel, nu med autentiske data fra kandidattest til folketingsvalget i 2026.</p>
+<table class="table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 50%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Parti</th>
+<th style="text-align: left;">Navn</th>
+<th style="text-align: center;">Spørgsmål 1</th>
+<th style="text-align: center;">Spørgsmål 2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Soc</td>
+<td style="text-align: left;">Ane Halsboe-Jørgensen</td>
+<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
+</tr>
+<tr class="even">
+<td>Soc</td>
+<td style="text-align: left;">Flemming Møller Mortensen</td>
+<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
+</tr>
+<tr class="odd">
+<td>Soc</td>
+<td style="text-align: left;">Kiki Bille Bach</td>
+<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
+</tr>
+<tr class="even">
+<td>Soc</td>
+<td style="text-align: left;">Morten Ryom</td>
+<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
+</tr>
+<tr class="odd">
+<td>Ven</td>
+<td style="text-align: left;">Anita Vivi Lilholt</td>
+<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Meget uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
+</tr>
+<tr class="even">
+<td>Ven</td>
+<td style="text-align: left;">Anne Honoré Østergaard</td>
+<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Meget uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
+</tr>
+<tr class="odd">
+<td>Ven</td>
+<td style="text-align: left;">Marie Bjerre</td>
+<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
+</tr>
+<tr class="even">
+<td>Ven</td>
+<td style="text-align: left;">Mikkel Bisgaard</td>
+<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
+</tr>
+<tr class="odd">
+<td>Enh</td>
+<td style="text-align: left;">Peder Hvelplund</td>
+<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Meget enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Meget enig}}\)</span></td>
+</tr>
+<tr class="even">
+<td>Enh</td>
+<td style="text-align: left;">Runa Friis Hansen</td>
+<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Meget enig}}\)</span></td>
+</tr>
+<tr class="odd">
+<td>Enh</td>
+<td style="text-align: left;">Lasse P. N. Olsen</td>
+<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Meget enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
+</tr>
+<tr class="even">
+<td>Enh</td>
+<td style="text-align: left;">Filippa Emilie Vittrup</td>
+<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Meget enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Meget enig}}\)</span></td>
+</tr>
+<tr class="odd">
+<td>DD</td>
+<td style="text-align: left;">Inger Støjberg</td>
+<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Meget uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
+</tr>
+<tr class="even">
+<td>DD</td>
+<td style="text-align: left;">Kristian Bøgsted</td>
+<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
+</tr>
+<tr class="odd">
+<td>DD</td>
+<td style="text-align: left;">Kim Edberg Andersen</td>
+<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Meget uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
+</tr>
+<tr class="even">
+<td>DD</td>
+<td style="text-align: left;">Liselotte Lynge</td>
+<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Meget uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>De to spørgsmål er</p>
+<p>Spørgsmål 1: De boligejere, der tjener mest på prisstigninger, skal betale mere i skat. Spørgsmål 2: Reglerne for dyrevelfærd skal strammes, selv om det kan gøre fødevarer fra Danmark dyrere.</p>
+<p>Datasættet som excelfil med værdier fra -2 (helt uenig) til 2 (helt enig) <a href="../undervisningsforlob/valg_af_parti/datasæt_16_personer.xlsx">her</a>.</p>
+<p>For at skabe lidt overblik, vil et punktplot med <span class="math inline">\(x_1\)</span> på førsteaksen og <span class="math inline">\(x_2\)</span> på andenaksen, hvor punkterne har forskellige farver efter parti, være en god ide. Det er dog en udfordring, at flere punkter er ens.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 5
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Overvej, hvordan du vil håndtere de punkter, som har samme koordinater, så alle punkterne alligevel bliver synlige.</li>
+<li>Tegn punktplottet.</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Det skulle gerne være tydeligt, at de 4 partiers kandidater ligger delvist opdelt efter parti. Vi vil nu gerne bruge samme type model som tidligere i en kunstig neuron til at undersøge, hvordan vi kan inddele planen i områder til hvert parti. Først skal vi have trænet modellen på data for de 16 politikere, så vi kender bias og vægte.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 6
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Brug kunstig neuron appen på datasættet med samme indstillinger som i opgave 4.</li>
+<li>Noter værdierne for bias og vægte for hvert parti, så <span class="math inline">\(s_0, s_1, s_2\)</span> for Socialdemokratiet, <span class="math inline">\(v_0, v_1, v_2\)</span> for Venstre osv.</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Vi vil nu bruge disse vægte til at bestemme, hvor i koordinatsystemet modellen vil trække en grænse mellem Socialdemokratiet og Enhedslisten. Grænsen skal netop være der, hvor de to partier er lige sandsynlige, så</p>
+<p><span class="math display">\[e^{s_0 + s_1 \cdot x_1 + s_2 \cdot x_2} = e^{e_0 + e_1 \cdot x_1 + e_2 \cdot x_2}\]</span> Hvis vi tager den naturlige logaritme på begge sider og samlet alt på den ene side, giver det <span class="math display">\[(s_0 - e_0) + (s_1-e_1) \cdot x_1 + (s_2-e_2) \cdot x_2=0\]</span> Vi bemærker, at det faktisk er ligningen for en ret linje på formen <span class="math display">\[ a \cdot x + b \cdot y + c = 0\]</span></p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 7
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Indsæt værdierne for bias og vægte i linjens ligning.</li>
+<li>Indtegn linjen i samme koordinatsystem som punktplottet.</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Det var en opdeling mellem Socialdemokratiet og Enhedslisten.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 8
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Hvor mange andre par af partier er der, og hvor mange andre ligninger for linjer bør derfor bestemmes?</li>
+<li>Bliver alle disse linjer en grænse mellem områder, hvor forskellige partier er mest sandsynlige?</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Ufærdigt - mangler om de øvrige linjer, hvilket der er relevante og hvilke der ikke er, herunder hvor linjerne skærer hinanden og hvad det betyder.</p>
+</section>
+<section id="det-helt-store-eksempel-med-732-politikere" class="level2">
+<h2 class="anchored" data-anchor-id="det-helt-store-eksempel-med-732-politikere">Det helt store eksempel med 732 politikere</h2>
+<p>Til sidst vil vi tage et kig på et autentisk datasæt af en mere relevant størrelse. Vi har 732 politikere fordelt på 12 partier, som inden folketingsvalget i 2026 har svaret på 24 spørgsmål til TV2’s kandidattest.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 9
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Beregn hvor mange bias og vægte modellen nu har.</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Datasættet er <a href="../undervisningsforlob/valg_af_parti/datasæt_752_personer.xlsx">her</a>.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 10
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Brug appen til at træne en kunstig neuron ud fra datasættet.</li>
+<li>Kig på Confusion matrix og Klassifikationsnøjagtigheden i appen. Overvej, hvad det siger om den trænede model.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="delvis-facitliste" class="level2">
+<h2 class="anchored" data-anchor-id="delvis-facitliste">Delvis facitliste</h2>
+<p>Mangler</p>
+<p><a href="valg_af_parti/valg_af_parti_facit.qmd" target="_blank">Facitliste</a>.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/aimat\.dk");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p><img src="../logo/SVG/Bomaerke_03_AIMAT_2024.svg" class="footer-logo"> aimat.dk er finansieret af Novo Nordisk Fonden</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+<script src="../scripts/navbar-tooltips.js"></script>
+<script src="../scripts/trim-categories.js"></script>
+
+
+
+
+</body></html>
