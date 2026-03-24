@@ -68,6 +68,12 @@ writexl::write_xlsx(
 fit_lm <- lm(pris_mio ~ areal + alder, data = home_small_lejlighed)
 summary(fit_lm)
 
+fit_test_lm <- nn_fun(pris_mio ~ areal + alder, data = home_small_lejlighed, 
+              n_hidden = c(0, 0), iter = 1000, type = "regression", 
+              lossfun = "squared", eta = .00001, activation = "ReLu")
+
+fit_test_lm$params
+
 pred_lm <- predict(fit_lm, home_small_lejlighed, type = "response")
 summary(pred_lm)
 plot(home_small_lejlighed$pris_mio,pred_lm)
