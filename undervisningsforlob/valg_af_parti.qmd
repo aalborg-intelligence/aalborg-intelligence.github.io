@@ -157,7 +157,7 @@ Men det kan stadig gøres bedre, bl.a. ved også at tage $w_2$ i brug.
 ## Brug af app til træning af kunstig neuron
 Med det meget lille, simple eksempel kunne vi altså godt justere vægtene manuelt og få en nogenlunde resultat. Men hvis der bliver 100, 1000 eller millioner af vægte, så er det næppe en god ide. I stedet skal vi bruge noget mere advanceret matematik, som vi ikke vil gennemgå i dette forløb, til at optimere vægtene i modellen. 
 
-Du finder appen[her](https://apps01.math.aau.dk/ai/multi-neuron/) og datasættet som excelfil [her](/undervisningsforlob/valg_af_parti/datasæt_4_personer.xlsx).
+Du finder appen [her](https://apps01.math.aau.dk/ai/multi-neuron/) og datasættet som excelfil [her](/undervisningsforlob/valg_af_parti/datasæt_4_personer.xlsx).
 
 
 Her mangler en kort video, der viser brugen af appen.
@@ -211,7 +211,59 @@ De to spørgsmål er
 Spørgsmål 1: De boligejere, der tjener mest på prisstigninger, skal betale mere i skat.
 Spørgsmål 2: Reglerne for dyrevelfærd skal strammes, selv om det kan gøre fødevarer fra Danmark dyrere.
 
+Datasættet som excelfil med værdier fra -2 (helt uenig) til 2 (helt enig)  [her](/undervisningsforlob/valg_af_parti/datasæt_16_personer.xlsx).
 
+For at skabe lidt overblik, vil et punktplot med $x_1$ på førsteaksen og $x_2$ på andenaksen, hvor punkterne har forskellige farver efter parti, være en god ide. Det er dog en udfordring, at flere punkter er ens.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 5
+
+- Overvej, hvordan du vil håndtere de punkter, som har samme koordinater, så alle punkterne alligevel bliver synlige.
+- Tegn punktplottet.
+
+:::
+
+Det skulle gerne være tydeligt, at de 4 partiers kandidater ligger delvist opdelt efter parti. Vi vil nu gerne bruge samme type model som tidligere i en kunstig neuron til at undersøge, hvordan vi kan inddele planen i områder til hvert parti. Først skal vi have trænet modellen på data for de 16 politikere, så vi kender bias og vægte.
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 6
+
+- Brug kunstig neuron appen på datasættet med samme indstillinger som i opgave 4.
+- Noter værdierne for bias og vægte for hvert parti, så $s_0, s_1, s_2$ for Socialdemokratiet, $v_0, v_1, v_2$ for Venstre osv.
+
+:::
+
+Vi vil nu bruge disse vægte til at bestemme, hvor i koordinatsystemet modellen vil trække en grænse mellem Socialdemokratiet og Enhedslisten. Grænsen skal netop være der, hvor de to partier er lige sandsynlige, så
+
+$$e^{s_0 + s_1 \cdot x_1 + s_2 \cdot x_2} = e^{e_0 + e_1 \cdot x_1 + e_2 \cdot x_2}$$
+Hvis vi tager den naturlige logaritme på begge sider og samlet alt på den ene side, giver det
+$$(s_0 - e_0) + (s_1-e_1) \cdot x_1 + (s_2-e_2) \cdot x_2=0$$
+Vi bemærker, at det faktisk er ligningen for en ret linje på formen 
+$$ a \cdot x + b \cdot y + c = 0$$
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 7
+
+- Indsæt værdierne for bias og vægte i linjens ligning.
+- Indtegn linjen i samme koordinatsystem som punktplottet.
+
+:::
+
+Det var en opdeling mellem Socialdemokratiet og Enhedslisten.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 8
+
+- Hvor mange andre par af partier er der, og hvor mange andre ligninger for linjer bør derfor bestemmes?
+
+:::
+
+Ufærdigt - mangler om de øvrige linjer, hvilket der er relevante og hvilke der ikke er, herunder hvor linjerne skærer hinanden og hvad det betyder.
+
+## Det helt store eksempel med 500+ politikere
+Brug app, snak om, at linjer bliver til hyperplanen. Snak om, at det faktisk er temmeligt imponerende, at CAS bliver meget høj, men det er udtryk for, at politikere indenfor samme parti faktisk ligner hinanden en hel del mht svar.
 
 
 ## Delvis facitliste
