@@ -33,7 +33,7 @@ Og vi vil lade targetvariablen $t$ være
 
 * $t$: boligens pris i kroner
 
-I eksemplet her har vi information om $1140$ salg af lejligheder og i $4$ tilfælde har vi ikke information om lejlighedens alder, vi vil derfor i det følgende begrænse os til $1136$ salg.
+I eksemplet her har vi information om $1140$ salg af lejligheder og i $4$ tilfælde har vi ikke information om lejlighedens alder, vi vil derfor i det følgende begrænse os til $1136$ salg. Dette datasæt kaldes for **træningsdata**.
 
 :::
 
@@ -49,7 +49,7 @@ Hvis du har læst noten om [kunstige neuroner](../kunstige_neuroner/kunstige_neu
 
 [^1]: Vi bruger sådan set stadig en aktiveringsfunktion -- det bare den funktion, som kaldes for *identiteten* med forskrift $f(x)=x$.
 
-Vi ønsker nu, at bestemme vægtene $w_0, w_1, w_2, \dots, w_n$ sådan at vores prædikterede salgspris $o$ kommer så tæt som muligt på den faktiske salgspris $t.$
+Vi ønsker, at bestemme vægtene $w_0, w_1, w_2, \dots, w_n$ sådan at vores prædikterede salgspris $o$ kommer så tæt som muligt på den faktiske salgspris $t.$
 
 Det vil sige, at vi ønsker, at forskellen
 
@@ -71,11 +71,11 @@ $$
 E = \frac{1}{2}\sum \left ( t - \left ( w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n \right ) \right )^2
 $$
 
-Størrelsen $E$ kaldes for en **tabsfunktion**. Læg mærke til, at hvis vores kunstige neuron er god til at forudsige salgspriser, så får vi en lille værdi af tabsfunktionen, mens vi får en stor værdi af $E$, hvis modellen er dårlig til at forudsige salgspriser. Vi har her valgt at gange med $\frac{1}{2}$, fordi det senere kommer til at forkorte ud, men det er faktisk ikke så afgørende.
+Størrelsen $E$ kaldes for en **tabsfunktion**. Læg mærke til, at hvis vores kunstige neuron er god til at forudsige salgspriser, så får vi en lille værdi af tabsfunktionen, mens vi får en stor værdi af $E$, hvis den kunstige neuron er dårlig til at forudsige salgspriser. Vi har her valgt at gange med $\frac{1}{2}$, fordi det senere kommer til at forkorte ud, men det er faktisk ikke så afgørende.
 
-Idéen er så bare at bestemme værdier af vægtene $w_0, w_1, w_2, \dots, w_n$, sådan at tabsfunktionen minimeres.
+Idéen er så bare at bestemme værdier af vægtene $w_0, w_1, w_2, \dots, w_n$ sådan, at tabsfunktionen minimeres.
 
-Inden vi forklarer, hvordan det gøres, så lad os lige blive lidt mere specifikke i forhold til notationen af vores træningsdata. Vi forestiller os, at vi har information om $M$ lejlighedssalg (i eksemplet er $M=1136$). Så vil vi nummere vores træningsdata på denne måde:
+Inden vi forklarer, hvordan det gøres, så lad os blive lidt mere specifikke i forhold til notationen af vores træningsdata. Vi forestiller os, at vi har information om $M$ lejlighedssalg (i eksemplet er $M=1136$). Så vil vi nummere vores træningsdata på denne måde:
 
 $$
 \begin{aligned}
@@ -160,13 +160,13 @@ hvor $o^{(m)} = w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}$.
 
 At opstille en kunstig neuron til regression, som vi har gjort her, svarer til det, man kalder for **multipel lineær regression**, som egentlig bare er en udvidelse af lineær regression, som I kender det, blot med flere inputvariable/features.
 
-Det gode ved at opstille en kunstig neuron til regression, som vi her har gjort det, er at man kan give en fortolkning af vægtene. 
+Det gode ved at opstille en kunstig neuron til regression, som vi her har gjort det, er, at man kan give en fortolkning af vægtene. 
 
 ### Fortolkning af vægtene 
 
 Lad os sige, at vi har bestemt vægtene $w_0, w_1, \dots, w_n$, så tabsfunktionen er blevet minimeret, og at $x_1$ fortsat angiver boligarealet. Vi vil her forklare, hvordan vi kan fortolke $w_1$.
 
-Vi forstiller os, at vi har to lejligheder med præcis samme værdier af de $n$ features $x_1, x_2, \dots, x_n$ bortset fra, at den ene lejlighed er præcis $1 \, m^2$ større end den anden. Så den ene lejlighed har en størrelse på $x_1 \, m^2$, mens det andet har en størrelse på $x_1+1 \, m^2$ -- de resterende features er ens.
+Vi forstiller os, at vi har to lejligheder med præcis samme værdier af de $n$ features $x_1, x_2, \dots, x_n$ bortset fra, at den ene lejlighed er præcis $1 \, m^2$ større end den anden. Så den ene lejlighed har en størrelse på $x_1 \, m^2$, mens den anden har en størrelse på $x_1+1 \, m^2$ -- de resterende features er ens.
 
 Det giver følgende prædikterede salgspriser $o_1$ og $o_2$ for de to lejligheder:
 
@@ -202,7 +202,7 @@ Vi illustrerer dette med et eksempel:
 
 Man kan træne en kunstig neuron til regression ved at bruge [Kunstig neuron app til regression](https://apps01.math.aau.dk/ai/neuron_regression/).
 
-Bruger vi denne app på datasættet om lejlighedssalg, hvor vi sætter alle startvægte til $0$, vælger en learning rate på $0.0001$ og antal iterationer til $500$, får vi følgende værdier af vægtene
+Bruger vi denne app på datasættet om lejlighedssalg, hvor vi sætter alle startvægte til $0$, vælger en learning rate på $0.0001$ og antal iterationer til $500$, får vi følgende værdier af vægtene:
 
 |  $w_0$  <br>  <br> |  $w_1$ <br> (`areal`)  |  $w_2$  <br>(`alder`)  | 
 |:---:|:---:|:---:|
@@ -213,7 +213,7 @@ For eksempel kan vi se, at $w_1 = 0.0195118$. Det vil sige, at ifølge modellen 
 
 [^2]: En tilsvarende lejlighed vil her mere præcist betyde en lejlighed med den samme alder.
 
-Vi ser også, at $w_2=-0.0023493$, som betyder, at hvis vi står med to tilsvarende lejligheder, hvor den ene er præcis et år ældre end den anden, så vil salgsprisen på den ældste lejlighed ifølge modellen være $2349$ kroner lavere.
+Vi ser også, at $w_2=-0.0023493$, som betyder, at hvis vi står med to lige store lejligheder, hvor den ene er præcis et år ældre end den anden, så vil salgsprisen på den ældste lejlighed ifølge modellen være $2349$ kroner lavere.
 
 I det nedenstående har vi plottet den faktiske pris (i millioner) ud af $x$-aksen og den prædikterede pris op af $y$-aksen.
 
@@ -238,7 +238,7 @@ dat |>
   geom_point(color="#020873", shape = 21) + 
   geom_abline(slope = 1, intercept = 0, color = "#8085F2") +
   theme_bw() + 
-  labs(x = "Faktisk pris (mio kr)", y = "Prædikteret pris (mio kr)") +
+  labs(x = "Faktisk pris (mio. kr.)", y = "Prædikteret pris (mio. kr.)") +
   theme(strip.background = element_rect(fill = "white", color = "white"), strip.text = element_text(size = 20))
 ```
 Hvis vi har en perfekt model, så vil den prædikterede pris være lig med den faktiske pris. Det vil svare til, at alle punkterne i @fig-pred_versus_price vil ligge på linjen med ligning $y=x$ (som er indtegnet med lyseblå i figuren). På figuren kan vi derfor se, at for lejligheder, som koster under $3$ millioner er modellen ikke helt dårlig. Til gengæld er modellen ikke super god til at prædiktere salgsprisen for de dyrere lejligheder: For nogle lejligheder er den prædikterede salgspris for høj, mens det omvendte også gør sig gældende -- specielt de meget dyre lejligheder, som koster over $5$ millioner, prædikterer modellen for lavt.
@@ -247,9 +247,9 @@ Hvis vi har en perfekt model, så vil den prædikterede pris være lig med den f
 
 ## Vurdering af modellens anvendelighed
 
-Når man træner en kunstig neuron, har man brug for et mål for, hvor god modellen er. Du kender nok allerede $R^2$-værdien fra lineær regression, som et tal mellem $0$ og $1$, hvor vi gerne vil have tallet så tæt på $1$ som muligt (og så alligevel ikke helt -- det kommer vi tilbage til senere). Hvis du vil vide mere om, hvordan $R^2$-værdien rent faktisk regnes ud, kan du læse mere [her](../vurdering_model/vurdering_model.qmd#forklaringsgraden-r2-værdien).
+Når man træner en kunstig neuron, har man brug for et mål for, hvor god modellen er. Du kender nok allerede $R^2$-værdien fra lineær regression, som et tal mellem $0$ og $1$, hvor vi gerne vil have tallet så tæt på $1$ som muligt[^R2]. Hvis du vil vide mere om, hvordan $R^2$-værdien rent faktisk regnes ud, kan du læse mere [her](../vurdering_model/vurdering_model.qmd#forklaringsgraden-r2-værdien).
 
-
+[^R2]:  Og så alligevel ikke helt -- det kommer vi tilbage til senere.
 
 Et andet mål, som kan bruges til at sammenligne modeller, er **root mean squared error (RMSE)**. Du kan læse en lidt længere forklaring [her](../vurdering_model/vurdering_model.qmd#root-mean-squared-error-rmse), men målet er defineret således:
 
@@ -257,7 +257,7 @@ $$
 \mathrm{RMSE} = \sqrt{\frac{1}{M} \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right)^2}
 $$
 
-Det er altså denne størrelse, som er **root mean squared error (RMSE)**. Da vi ønsker så lille en fejl som muligt, vil vi gerne have, at RMSE er så tæt på $0$ som muligt.
+Da vi ønsker så lille en fejl ($t^{(m)}-o^{(m)}$) som muligt, vil vi gerne have, at RMSE er så tæt på $0$ som muligt.
 
 
 ::: {#exm-lejlighed3}
@@ -282,11 +282,11 @@ Du er måske vant til at se $R^2$-værdier, som er meget større, men for en mod
 
 ### Krydsvalidering
 
-Når en models anvendelighed vurderes ved hjælp af mål som RMSE og $R^2$-værdi, så vil det altid være sådan, at jo mere kompliceret en model, man bruger, desto bedre mål vil man få (det vil sige en lille værdi af RMSE og en værdi af $R^2$, som er tæt på $1$). Hvorfor det er tilfældet, kan du læse meget mere om i noten [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd){target="_blank"}). Kort fortalt går det ud på, at en meget kompliceret model kan fange tendenser i data, som i virkeligheden ikke er reelle -- det er bare støj. Et eksempel ses i @fig-overfitting:
+Når en models anvendelighed vurderes ved hjælp af mål som RMSE og $R^2$-værdi, så vil det altid være sådan, at jo mere kompliceret en model, man bruger, desto bedre mål vil man få (det vil sige en lille værdi af RMSE og en værdi af $R^2$, som er tæt på $1$). Hvorfor det er tilfældet, kan du læse meget mere om i noten [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd){target="_blank"}). Men kort fortalt går det ud på, at en meget kompliceret model kan fange tendenser i data, som i virkeligheden ikke er reelle -- det er bare støj. Et eksempel ses i @fig-overfitting. Her er ti punkter indtegnet, hvor der er anvendt lineær regression (den lyseblå linje) og 9. grads polynomiel regression (den lyserøde kurve).
 
 ![Ti punkter hvor der er anvendt lineær regression (den lyseblå linje) og 9. grads polynomiel regression (den lyserøde kurve).](images/overfitting.png){width='80%' #fig-overfitting}
 
-Det kan her tydeligt ses, at en ret linje beskriver punkterne udmærket. Et 9. grads polynomium har til gengæld så meget fleksibilitet, at grafen for polynomiet kan gå igennem alle ti punkter. Det ses tydeligt på @fig-overfitting, at det bliver alt for mærkeligt, og vi har ingen forventninger om, at dette polynomium vil kunne bruges til at beskrive nye punkter, som ikke kommer fra datasættet. Men bruger vi for eksempel $R^2$-værdien til at sammenligne de to modeller, så får vi:
+Det kan her ses, at en ret linje beskriver punkterne udmærket. Et 9. grads polynomium har til gengæld så meget fleksibilitet, at grafen for polynomiet kan gå igennem alle ti punkter. Det ses tydeligt på @fig-overfitting, at det bliver alt for mærkeligt, og vi har ingen forventninger om, at dette polynomium vil kunne bruges til at beskrive nye punkter, som ikke kommer fra datasættet. Men bruger vi for eksempel $R^2$-værdien til at sammenligne de to modeller, så får vi:
 
 | Model | $R^2$-værdi | RMSE | 
 |:---|:---:|:---:|
@@ -295,7 +295,7 @@ Det kan her tydeligt ses, at en ret linje beskriver punkterne udmærket. Et 9. g
 : {.bordered}
 
 
-Så ser vi alene på $R^2$-værdien og RMSE, kunne vi blive foranlediget til at tro, at vi skulle vælge polynomiel regression. Man skal altså være utrolig varsom med uden videre at sammenligne den type mål! Men hvad gør man så? Ét bud er at bruge noget, som kaldes for **krydsvalidering**. Princippet er illustreret i @fig-krydsvalidering.
+Så ser vi alene på $R^2$-værdien og RMSE, kunne vi blive foranlediget til at tro, at vi skulle vælge polynomiel regression. Man skal altså være utrolig varsom med uden videre at sammenligne den type af mål! Men hvad gør man så? Ét bud er at bruge noget, som kaldes for **krydsvalidering**. Princippet er illustreret i @fig-krydsvalidering.
 
 
 ```{tikz}
@@ -343,13 +343,13 @@ $$
 \mathrm{RMSE} = \sqrt{\frac{1}{100} \sum_{m \in \textrm{del 1}}\left (t^{(m)}-o^{(m)} \right)^2}
 $$
 
-Her summerer vi altså over alle træningseksempler i del 1. Husk på, at outputværdien $o^{(m)}$ findes ved
+Her summerer vi altså over alle $100$ træningseksempler i del 1. Husk på, at outputværdien $o^{(m)}$ findes ved
 
 $$
 o^{(m)} = w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}
 $$
 
-Her stammer inputværdierne $x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)}$ fra del 1, men vægtene $w_0, w_1, w_2, \dots, w_n$ er fundet ved at bruge data fra del 2, 3, 4 og 5. Man undersøger altså, hvor god modellen er til at prædiktere data i del 1, hvis den kun er trænet på data fra del 2, 3, 4 og 5. Derfor kalder man del 1 for **testdata** og del 2, 3, 4 og 5 for **træningsdata**. Det er helt essentielt her, at man tester sin model på en del af data, som *ikke* har været brugt til at træne modellen på. Dette gentager man så, men næste gang er det del 2, som er testdata og del 1, 3, 4 og 5 som er træningsdata. Igen udregnes RMSE. Denne proceduren gentages i alt 5 gang. Det giver 5 forskellige RMSE værdier. Herefter tager man gennemsnittet af dem for at få et samlet mål for modellens anvendelighed. 
+Her stammer inputværdierne $x_1^{(m)}, x_2^{(m)}, \dots, x_n^{(m)}$ fra del 1, men vægtene $w_0, w_1, w_2, \dots, w_n$ er fundet ved at bruge data fra del 2, 3, 4 og 5. Man undersøger altså, hvor god modellen er til at prædiktere data i del 1, hvis den kun er trænet på data fra del 2, 3, 4 og 5. Derfor kalder man del 1 for **testdata** og del 2, 3, 4 og 5 for **træningsdata**. Det er helt essentielt her, at man tester sin model på en del af data, som *ikke* har været brugt til at træne modellen på. Dette gentager man så, men næste gang er det del 2, som er testdata, og del 1, 3, 4 og 5, som er træningsdata. Igen udregnes RMSE. Denne proceduren gentages i alt 5 gang. Det giver 5 forskellige RMSE værdier. Herefter tager man gennemsnittet af dem for at få et samlet mål for modellens anvendelighed. 
 
 Det viser sig, at det ikke giver så meget mening, at udregne $R^2$-værdien i forbindelse med krydsvalidering. For eksempel kan værdien gå hen og blive negativ. Vi vil derfor i det følgende nøjes med at se på RMSE.
 
@@ -363,7 +363,7 @@ $$
 \mathrm{RMSE} = 0.502
 $$
 
-Bemærk, at hvis vi sammenligner med RMSE, som ikke er baseret på krydsvalidering fra @exm-lejlighed3, så er RMSE her blevet en smule højere her. Det er helt forventeligt, at modellen vil klare sig bedre, når den er testet på de data, som den også er trænet på.
+Bemærk, at hvis vi sammenligner med RMSE, som ikke er baseret på krydsvalidering fra @exm-lejlighed3, så er RMSE blevet en smule højere her. Det er helt forventeligt, at modellen vil klare sig bedre, når den er testet på de data, som den også er trænet på.
 
 :::
 
@@ -372,7 +372,7 @@ Bemærk, at hvis vi sammenligner med RMSE, som ikke er baseret på krydsvalideri
 
 Når man skal sælge en lejlighed, skal der helst ikke være skjulte fejl og mangler. Det kan til gengæld være en rigtig god idé med nogle skjulte lag, når man skal prædiktere lejlighedspriser! Det vil vi se på nu.
 
-I det ovenstående kommer den prædikterede pris til at afhænge lineært af inputvariablene. Men verden er sjældent lineær -- og en af styrkerne ved kunstige neurale netværk er netop, at de kan prædiktere størrelser eller kategorier ved hjælp af funktioner, som ikke er lineære. Vi skal derfor nu opstille et simpelt kunstigt neuralt netværk til prædiktion af lejlighedspriser. Vi vil lave et netværk med to features $x_1, x_2$ men nu med noget, som vi vil kalde for et skjult lag, som her består af fem såkaldte neuroner. Det kan illustreres, som vist i @fig-neuralt_net_regression:
+I det ovenstående kommer den prædikterede pris til at afhænge lineært af inputvariablene. Men verden er sjældent lineær -- og en af styrkerne ved kunstige neurale netværk er netop, at de kan prædiktere størrelser eller kategorier ved hjælp af funktioner, som ikke er lineære. Vi skal derfor nu opstille et simpelt kunstigt neuralt netværk til prædiktion af lejlighedspriser. Vi vil lave et netværk med to features $x_1, x_2$ men nu med noget, som vi vil kalde for et skjult lag, som her består af et antal neuroner. Det kan illustreres, som vist i @fig-neuralt_net_regression:
 
 ![Simpelt kunstigt neuralt netværk til prædiktion af lejlighedspriser. Netværket har inputvariable $x_1, x_2$ og ét skjult lag med to neuroner (her vist som de to grønne cirkler i midten).](images/neuralt_net_regression.png){#fig-neuralt_net_regression width=70% fig-align='center'}
 
@@ -389,7 +389,7 @@ $$
 z_1 = f(v_0 + v_1 \cdot x_1 + \cdots + v_n \cdot x_n)
 $$
 
-Her er $f$ en funktion, som kaldes for en **aktiveringsfunktion**, og det er den, der gør, at vi ender med at prædiktere lejlighedspriser på en ikke-lineær måde. Den kommer vi tilbage til lige om lidt.
+Her er $f$ en funktion, som kaldes for en **aktiveringsfunktion**, og det er den, der gør, at vi ender med at prædiktere lejlighedspriser på en ikke-lineær måde. Den kommer vi tilbage til om lidt.
 
 På tilsvarende vis udregner vi $z_2$ ved at bruge $u$-vægtene (de mørkegrønne pile på @fig-neuralt_net_regression):
 
@@ -417,7 +417,7 @@ Grafen for sigmoid-funktionen ses i @fig-sigmoid.
 
 Denne aktiveringsfunktion er super god at bruge, når outputværdien skal beregnes, hvis man skal lave binær klassifikation, fordi funktionsværdien ligger mellem $0$ og $1$ og derfor kan fortolkes som en sandsynlighed. I alle andre sammenhænge er den faktisk ikke super anvendelig[^sig]! 
 
-[^sig]: Omvendt har Sigmoid-funktionen den skønne egenskab, at den er differentiabel, og man kan vise, at $\sigma'(x) = \sigma(x) (1-\sigma(x))$.
+[^sig]: Omvendt har Sigmoid-funktionen den (for en matematiker) fantastiske egenskab, at den er differentiabel, og man kan vise, at $\sigma'(x) = \sigma(x) (1-\sigma(x))$.
 
 En aktiveringsfunktion, som til gengæld ofte anvendes i de skjulte lag, er ReLu-funktionen[^relu]. Den er defineret således:
 
@@ -434,7 +434,7 @@ $$
 
 Grafen for ReLu-funktionen ses i @fig-relu.
 
-![Grafen for ReLu-funktionen.](images/relu.png){width=75% #fig-relu}
+![Grafen for ReLu-funktionen.](images/ReLu.png){width=75% #fig-relu}
 
 ReLu-funktionen transformerer altså alle negative inputværdier til $0$ og alle positive inputværdier forbliver uændret. Det ser jo næsten lineært ud, men det er altså nok til, at man kan modellere nogle meget ikke-lineære funktioner, hvis bare man har nok skjulte lag med mange neuroner i hvert lag.  
 
@@ -550,7 +550,7 @@ $$
    u_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_2  \cdot x_i^{(m)} &      \textrm{ellers} \\
   \end{cases}
    $$
-   I alle tilfælde sætter vi $x_0^{(m)}=1$, hvis $i=0$.
+   I alle tilfælde sætter vi $x_0^{(m)}=1$.
    
 Alle vægtene er nu opdateret, og vi kan gentage punkt 2 og 3, hvor feedforward i 2 hver gang er baseret på de netop opdaterede vægte fra det foregående gennemløb. Opdateringen af vægtene fortsætter, indtil værdien af tabsfunktionen næsten ikke ændrer sig. Håbet er nu, at vi har fundet et minimum (eventuelt kun lokalt) for tabsfunktionen.
 
@@ -681,9 +681,9 @@ Vi vender nu tilbage til eksemplet med lejlighedspriser i Aalborg.
 
 ## Lejlighedspriser med neuralt netværk
 
-Vi vil starte med at træne et kunstigt neuralt netværk med ét skjult lag med to neuroner, som vist i @fig-neuralt_net_regression. Det kan man gøre ved at bruge [Neuralt netværk app til regression](https://apps01.math.aau.dk/ai/nn_regression/). Vi vælger her ... **mangler**
+Vi har trænet et kunstigt neuralt netværk med ét skjult lag med henholdsvis to og ti neuroner. Det kan man gøre ved at bruge [Neuralt netværk app til regression](https://apps01.math.aau.dk/ai/nn_regression/). Vi har her valgt... **mangler**
 
-Desuden har vi prøve at træne et kunstigt neuralt netværk med ét skjult lag med ti neuroner.
+Til sammenligning har vi igen også trænet en kunstig neuron. I alle tre tilfælde har vi beregnet RMSE baseret på træningsdata og på fem folds krydsvalidering.
 
 | Model | RMSE <br> (træningsdata) | RMSE <br> (krydsvalidering) | 
 |:---|:---:|:---:|
@@ -692,11 +692,11 @@ Desuden har vi prøve at træne et kunstigt neuralt netværk med ét skjult lag 
 | Neuralt netværk (10) | $0.446$ |  $0.463$ |
 : {.bordered}
 
-*Ovenstående er baseret på Orange - skal rettes til så det passe med vores app. Man kan falde i mange forskellige små minima som ændre RMSE en del * **mangler**
+*Ovenstående er baseret på Orange - skal rettes til så det passe med vores app. Man kan falde i mange forskellige små minima som ændrer RMSE en del * **mangler**
 
-Ser vi på RMSE fra krydsvalidering, kan vi se, at begge neurale netværk har en mindre RMSE sammenlignet med en kunstig neuron. 
+Ser vi på RMSE fra krydsvalidering, kan vi se, at begge neurale netværk har en mindre RMSE sammenlignet med en kunstig neuron. Det betyder, at et neuralt netværk med skjulte lag i dette eksempel er bedre til at forudsige lejlighedspriser end end hvis vi blot bruger en simpel kunstig neuron (som jo svarer til multipel lineær regression). Det er fordi vi med de skjulte lag kan fange nogle ikke-lineære tendenser i data. 
 
-I den nedenstående figur har vi plottet den faktiske pris (i millioner) ud af $x$-aksen og den prædikterede pris op af $y$-aksen. I plottet til venstre er de prædikterede priser baseret på en kunstig neuron. I plottet til højre er de baseret på et neuralt netværk med et skjult lag med ti neuroner.
+I den nedenstående figur har vi igen plottet den faktiske pris (i millioner) ud af $x$-aksen og den prædikterede pris op af $y$-aksen. I plottet til venstre er de prædikterede priser baseret på en kunstig neuron. I plottet til højre er de baseret på et neuralt netværk med ét skjult lag med ti neuroner.
 
 ```{r}
 #| echo: false
@@ -721,12 +721,14 @@ p <- rbind(df_lm, df_nn10) |>
   geom_abline(slope = 1, intercept = 0, color = "#8085F2") +
   facet_wrap(~type) + 
   theme_bw() + 
-  labs(x = "Faktisk pris (mio kr)", y = "Prædikteret pris (mio kr)") +
+  labs(x = "Faktisk pris (mio. kr.)", y = "Prædikteret pris (mio. kr.)") +
   theme(strip.background = element_rect(fill = "white", color = "white"), 
         strip.text = element_text(size = 20))
   plotly::ggplotly(p)
 ```
 
-Sammenligner vi de to plots ovenfor kan man se, at når vi bruger et neuralt netværk med et skjult lag med ti neuroner, så ligger de prædikterede priser tættere på de faktiske priser. Det svarer til, at punkterne i plottet til højre ligger tættere på linjen med ligning $y=x$ end de gør i plottet til venstre.
+Sammenligner vi de to plots ovenfor kan man se, at når vi bruger et neuralt netværk med ét skjult lag med ti neuroner, så ligger de prædikterede priser tættere på de faktiske priser. Det svarer til, at punkterne i plottet til højre ligger tættere på linjen med ligning $y=x$, end de gør i plottet til venstre. Det er altså igen en illustration af, at et neuralt netværk med skjulte lag i eksemplet her er bedre til at forudsige lejlighedspriser end en kunstig neuron.
+
+**Mangler**: 3d-plot af (areal, alder, prædikteret pris) og evt. også træningsdata både for den kunstige neuron og for det neurale netværk. Skal bruges til at illustrere, hvordan man kan lave ikke-linæere sammenhænge. 
 
 :::

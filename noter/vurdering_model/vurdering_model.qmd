@@ -2,7 +2,16 @@
 title: "Mål for en models nøjagtighed"
 ---
 
+Når man bruger en model (det kan være en kunstig neuron, et neuralt netværk, logistisk regression eller noget helt fjerde) til at forudsige en størrelse, så vil man altid være interesseret i at sige noget om, hvor god modellen er. Denne note handler om præcis det: Forskellige mål som kan bruges til at vurdere en models nøjagtighed.
+
+Der er forskel på om den model, man har trænet, skal bruges til klassifikation eller til prædiktion af numeriske værdier. Med klassifikation mener vi modeller, som for eksempel kan bruges til at prædiktere, om en patient har en bestemt sygdom eller ej (binær klassifikation), eller hvilket parti en borger stemmer på (multipel klassifikation). Når vi taler om modeller til pærdiktion af numeriske værdier, kunne det for eksempel være modeller som kan forudsige huspriser.
+
+For alle mål gælder det, at man skal være opmærksom på overfitting, og det vil ofte give mening at udregne målene baseret på krydsvalidering. Det kan du læse meget mere om i noten [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd){target="_blank"}).
+
+
 ## Modeller til klassifikation
+
+I forbindelse med modeller til klassifikation vil man ofte opstille en såkaldt confusion matrix og på den baggrund udregne en klassifikationsnøjagtighed:
 
 ### Klassifikationsnøjagtighed
 
@@ -11,7 +20,7 @@ Begrebet **klassifikationsnøjagtighed** -- eller på engelsk classification acc
 Lad os illustrere det med et eksempel. Vi forestiller os, at vi har en model, som for en given person kan skelne mellem, om personen tilhører en af to klasser A eller B baseret på en række features, vi har fået oplyst om personen. På baggrund af denne model har vi følgende:
 
 
-|  | Klassificeret som A  | Klassificeret som B | I alt |
+|  | Forudsagt A  | Forudsagt B | I alt |
 |:---:|:---:|:---:|:---:|
 | **Faktisk A** | $84$ | $16$ | $100$ |
 | **Faktisk B** | $20$ | $80$ | $100$ |
@@ -52,6 +61,8 @@ Altså det samme som før. Så kunne man jo tænke -- fedt! Denne model er lige 
 
 ## Modeller til prædiktion af numeriske værdier
 
+Har man trænet modeller til prædiktion af numeriske værdier, kan det for eksempel give mening af udregne forklaringsgraden og root mean squared error:
+
 ### Forklaringsgraden ($R^2$-værdien)
 
 Vi forestiller os, at vi har målt sammenhørende værdier af en uafhængig variabel $x$ og en afhængig variabel $y$, og vi ønsker ud fra en given $x$-værdi, at kunne prædiktere en tilhørende $y$-værdi. Vi antager, at vi har målt følgende sammenhørende værdier:
@@ -60,11 +71,11 @@ $$
 (x_1, y_1), (x_2,y_2), \cdots, (x_n,y_n)
 $$
 
-Et eksempel kunne være:
+Et eksempel ses her:
 
 ![Sammenhørende værdier mellem $x$ og $y$.](images/R2_data.png){#fig-data width='80%'}
 
-Et helt naivt bud på sammenhængen mellem $x$ og $y$ kunne være, at der ikke er nogen sammenhæng! Den naive model vil derfor være, at vores bedste bud på en $y$-værdi bare er gennemsnittet af alle $y$-værdierne:
+Et helt naivt bud på sammenhængen mellem $x$ og $y$ kunne være, at der ikke er nogen sammenhæng! Den naive model vil derfor være, at vores bedste bud på en $y$-værdi bare er gennemsnittet af alle $y$-værdierne. Et sådant gennemsnit betegner man ofte med $\bar y$:
 
 $$
 \bar{y} = \frac{y_1+y_2+\cdots+y_n}{n}=\frac{1}{n} \sum_{i=1}^n y_i
@@ -113,7 +124,7 @@ $$
 \hat y_i = a \cdot x_i + b
 $$
 
-Afgivelserne
+Forskellen mellem de faktiske $y$-værdier og de prædikterede $y$-værdier
 
 $$
 y_i- \hat y_i = y_i -(a \cdot x_i + b)
@@ -129,21 +140,28 @@ De kvadrerede fejl bliver derfor nu
 $$
 (y_i- \hat y_i)^2 = (y_i -(a \cdot x_i + b))^2
 $$
-og summen:
+og summen af disse er:
 
 $$
 \sum_{i=1}^n (y_i- \hat y_i)^2
 $$
 
-Sammenligner vi @fig-R2_1 og @fig-R2_2 ses det tydeligt, at i vores eksempel er den samlede kvadrerede fejl langt større for den naive model end for modellen baseret på lineær regression. 
+Vi sammenligner @fig-R2_1 og @fig-R2_2 her:
 
-$R^2$-værdien er hvor stor en procentdel af data, der bliver forklaret af en given model -- målt som summen af de kvadrerede fejl -- sammenlignet med den naive model $y= \bar y$. Det vil sige, at
+![Sammenhørende værdier mellem $x$ og $y$, linjen med ligning $y = \bar y$ til venstre og linjen med ligning $y=a \cdot x + b$ til højre. Desuden er forskellene mellem de observerede værdier og de forudsagte værdier indtegnet i begge tilfælde.](images/R2_sammenligning.png){#fig-R2_sammenligning width='100%'}
+
+Det ses tydeligt i @fig-R2_sammenligning, at i vores eksempel er den samlede kvadrerede fejl langt større for den naive model end for modellen baseret på lineær regression. 
+
+$R^2$-værdien er hvor stor en procentdel af data, der bliver forklaret af en given model -- målt som summen af de kvadrerede fejl -- sammenlignet med den naive model $y= \bar y$. **EGE: Hvordan skal det her forklares?**
+
+
+Det vil sige, at
 
 $$
 R^2 = \frac{\sum_{i=1}^n (y_i - \bar y)^2 - \sum_{i=1}^n (y_i- \hat y_i)^2}{\sum_{i=1}^n (y_i - \bar y)^2}
 $$
 
-Læg her mærke til, at hvis modellen er lige så dårlig, som den naive model $y=\bar y$, så summen af de kvadrerede fejl er lige store:
+Læg her mærke til, at hvis modellen er lige så dårlig, som den naive model ($y=\bar y$), så summen af de kvadrerede fejl er lige store:
 
 $$\sum_{i=1}^n (y_i - \bar y)^2 = \sum_{i=1}^n (y_i- \hat y_i)^2$$ 
 
@@ -176,7 +194,7 @@ kaldes for **squared error (SE)**. Udregner vi den gennemsnitlige værdi af alle
 $$
 \frac{1}{n} \sum_{i=1}^{n} \left ( y_i - \hat y_i \right)^2
 $$
-får vi et mål, som ikke er afhængig af datasættets størrelse. Det er **mean squared error (MSE)**. Endelig tager vi kvadratroden af det (for at få målet ned på samme skala, som vores $y$-værdier er på):
+får vi et mål, som ikke er afhængig af datasættets størrelse. Det er **mean squared error (MSE)**. Endelig tager vi kvadratroden af MSE (for at få målet ned på samme skala, som vores $y$-værdier er på):
 
 $$
 \mathrm{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} \left ( y_i - \hat y_i \right)^2}
