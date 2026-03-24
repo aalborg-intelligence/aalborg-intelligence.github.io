@@ -220,8 +220,12 @@ window.Quarto = {
 </header>
 
 
+<p>Når man bruger en model (det kan være en kunstig neuron, et neuralt netværk, logistisk regression eller noget helt fjerde) til at forudsige en størrelse, så vil man altid være interesseret i at sige noget om, hvor god modellen er. Denne note handler om præcis det: Forskellige mål som kan bruges til at vurdere en models nøjagtighed.</p>
+<p>Der er forskel på om den model, man har trænet, skal bruges til klassifikation eller til prædiktion af numeriske værdier. Med klassifikation mener vi modeller, som for eksempel kan bruges til at prædiktere, om en patient har en bestemt sygdom eller ej (binær klassifikation), eller hvilket parti en borger stemmer på (multipel klassifikation). Når vi taler om modeller til pærdiktion af numeriske værdier, kunne det for eksempel være modeller som kan forudsige huspriser.</p>
+<p>For alle mål gælder det, at man skal være opmærksom på overfitting, og det vil ofte give mening at udregne målene baseret på krydsvalidering. Det kan du læse meget mere om i noten <a href="../../noter/krydsvalidering/krydsvalidering.html" target="_blank">Overfitting, modeludvælgelse og krydsvalidering</a>).</p>
 <section id="modeller-til-klassifikation" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="modeller-til-klassifikation">Modeller til klassifikation</h2>
+<p>I forbindelse med modeller til klassifikation vil man ofte opstille en såkaldt confusion matrix og på den baggrund udregne en klassifikationsnøjagtighed:</p>
 <section id="klassifikationsnøjagtighed" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="klassifikationsnøjagtighed">Klassifikationsnøjagtighed</h3>
 <p>Begrebet <strong>klassifikationsnøjagtighed</strong> – eller på engelsk classification accuracy (CA) – dækker over hvor stor en andel af data, som på baggrund af en given model klassificeres korrekt.</p>
@@ -233,8 +237,8 @@ window.Quarto = {
 <thead>
 <tr class="header">
 <th style="text-align: center;"></th>
-<th style="text-align: center;">Klassificeret som A</th>
-<th style="text-align: center;">Klassificeret som B</th>
+<th style="text-align: center;">Forudsagt A</th>
+<th style="text-align: center;">Forudsagt B</th>
 <th style="text-align: center;">I alt</th>
 </tr>
 </thead>
@@ -318,17 +322,19 @@ Tabel&nbsp;2: Confusion matrix i et tænkt eksempel, hvor <span class="math inli
 \frac{132+32}{200}= 82 \%
 \]</span></p>
 <p>Altså det samme som før. Så kunne man jo tænke – fedt! Denne model er lige så god som den, der ligger til grund for <a href="#tbl-cm1" class="quarto-xref">tabel&nbsp;1</a>. Men det faktisk ikke helt tilfældet. Hvis vi her laver en naiv model, hvor vi altid gætter på, at en person tilhører klasse A, så vil vi gætte rigtigt i <span class="math inline">\(164\)</span> ud af <span class="math inline">\(200\)</span> tilfælde. Altså igen i <span class="math inline">\(82 \%\)</span> af tilfældene. Modellen, som ligger til grund for <a href="#tbl-cm2" class="quarto-xref">tabel&nbsp;2</a>, er altså ikke bedre end et naivt gæt. Det betyder, at det er vigtigt, at vurdere en models klassifikationsnøjagtighed i forhold til hvordan klasserne fordeler sig i data.</p>
+<p>Men generelt vil en god model have en klassifikationsnøjagtighed tæt på <span class="math inline">\(100 \%\)</span>.</p>
 </section>
 </section>
 <section id="modeller-til-prædiktion-af-numeriske-værdier" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="modeller-til-prædiktion-af-numeriske-værdier">Modeller til prædiktion af numeriske værdier</h2>
+<p>Har man trænet modeller til prædiktion af numeriske værdier, kan det for eksempel give mening af udregne forklaringsgraden og root mean squared error:</p>
 <section id="forklaringsgraden-r2-værdien" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="forklaringsgraden-r2-værdien">Forklaringsgraden (<span class="math inline">\(R^2\)</span>-værdien)</h3>
 <p>Vi forestiller os, at vi har målt sammenhørende værdier af en uafhængig variabel <span class="math inline">\(x\)</span> og en afhængig variabel <span class="math inline">\(y\)</span>, og vi ønsker ud fra en given <span class="math inline">\(x\)</span>-værdi, at kunne prædiktere en tilhørende <span class="math inline">\(y\)</span>-værdi. Vi antager, at vi har målt følgende sammenhørende værdier:</p>
 <p><span class="math display">\[
 (x_1, y_1), (x_2,y_2), \cdots, (x_n,y_n)
 \]</span></p>
-<p>Et eksempel kunne være:</p>
+<p>Et eksempel ses her:</p>
 <div id="fig-data" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -339,7 +345,7 @@ Figur&nbsp;1: Sammenhørende værdier mellem <span class="math inline">\(x\)</sp
 </figcaption>
 </figure>
 </div>
-<p>Et helt naivt bud på sammenhængen mellem <span class="math inline">\(x\)</span> og <span class="math inline">\(y\)</span> kunne være, at der ikke er nogen sammenhæng! Den naive model vil derfor være, at vores bedste bud på en <span class="math inline">\(y\)</span>-værdi bare er gennemsnittet af alle <span class="math inline">\(y\)</span>-værdierne:</p>
+<p>Et helt naivt bud på sammenhængen mellem <span class="math inline">\(x\)</span> og <span class="math inline">\(y\)</span> kunne være, at der ikke er nogen sammenhæng! Den naive model vil derfor være, at vores bedste bud på en <span class="math inline">\(y\)</span>-værdi bare er gennemsnittet af alle <span class="math inline">\(y\)</span>-værdierne. Et sådant gennemsnit betegner man ofte med <span class="math inline">\(\bar y\)</span>:</p>
 <p><span class="math display">\[
 \bar{y} = \frac{y_1+y_2+\cdots+y_n}{n}=\frac{1}{n} \sum_{i=1}^n y_i
 \]</span></p>
@@ -395,7 +401,7 @@ Figur&nbsp;4: Sammenhørende værdier mellem <span class="math inline">\(x\)</sp
 <p><span class="math display">\[
 \hat y_i = a \cdot x_i + b
 \]</span></p>
-<p>Afgivelserne</p>
+<p>Forskellen mellem de faktiske <span class="math inline">\(y\)</span>-værdier og de prædikterede <span class="math inline">\(y\)</span>-værdier</p>
 <p><span class="math display">\[
 y_i- \hat y_i = y_i -(a \cdot x_i + b)
 \]</span></p>
@@ -413,16 +419,28 @@ Figur&nbsp;5: Sammenhørende værdier mellem <span class="math inline">\(x\)</sp
 <p>De kvadrerede fejl bliver derfor nu</p>
 <p><span class="math display">\[
 (y_i- \hat y_i)^2 = (y_i -(a \cdot x_i + b))^2
-\]</span> og summen:</p>
+\]</span> og summen af disse er:</p>
 <p><span class="math display">\[
 \sum_{i=1}^n (y_i- \hat y_i)^2
 \]</span></p>
-<p>Sammenligner vi <a href="#fig-R2_1" class="quarto-xref">figur&nbsp;3</a> og <a href="#fig-R2_2" class="quarto-xref">figur&nbsp;5</a> ses det tydeligt, at i vores eksempel er den samlede kvadrerede fejl langt større for den naive model end for modellen baseret på lineær regression.</p>
-<p><span class="math inline">\(R^2\)</span>-værdien er hvor stor en procentdel af data, der bliver forklaret af en given model – målt som summen af de kvadrerede fejl – sammenlignet med den naive model <span class="math inline">\(y= \bar y\)</span>. Det vil sige, at</p>
+<p>Vi sammenligner <a href="#fig-R2_1" class="quarto-xref">figur&nbsp;3</a> og <a href="#fig-R2_2" class="quarto-xref">figur&nbsp;5</a> her:</p>
+<div id="fig-R2_sammenligning" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-R2_sammenligning-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/R2_sammenligning.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-R2_sammenligning-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figur&nbsp;6: Sammenhørende værdier mellem <span class="math inline">\(x\)</span> og <span class="math inline">\(y\)</span>, linjen med ligning <span class="math inline">\(y = \bar y\)</span> til venstre og linjen med ligning <span class="math inline">\(y=a \cdot x + b\)</span> til højre. Desuden er forskellene mellem de observerede værdier og de forudsagte værdier indtegnet i begge tilfælde.
+</figcaption>
+</figure>
+</div>
+<p>Det ses tydeligt i <a href="#fig-R2_sammenligning" class="quarto-xref">figur&nbsp;6</a>, at i vores eksempel er den samlede kvadrerede fejl langt større for den naive model end for modellen baseret på lineær regression.</p>
+<p><span class="math inline">\(R^2\)</span>-værdien er hvor stor en procentdel af data, der bliver forklaret af en given model – målt som summen af de kvadrerede fejl – sammenlignet med den naive model <span class="math inline">\(y= \bar y\)</span>. <strong>EGE: Hvordan skal det her forklares?</strong></p>
+<p>Det vil sige, at</p>
 <p><span class="math display">\[
 R^2 = \frac{\sum_{i=1}^n (y_i - \bar y)^2 - \sum_{i=1}^n (y_i- \hat y_i)^2}{\sum_{i=1}^n (y_i - \bar y)^2}
 \]</span></p>
-<p>Læg her mærke til, at hvis modellen er lige så dårlig, som den naive model <span class="math inline">\(y=\bar y\)</span>, så summen af de kvadrerede fejl er lige store:</p>
+<p>Læg her mærke til, at hvis modellen er lige så dårlig, som den naive model (<span class="math inline">\(y=\bar y\)</span>), så summen af de kvadrerede fejl er lige store:</p>
 <p><span class="math display">\[\sum_{i=1}^n (y_i - \bar y)^2 = \sum_{i=1}^n (y_i- \hat y_i)^2\]</span></p>
 <p>Da er</p>
 <p><span class="math display">\[
@@ -443,7 +461,7 @@ R^2 = \frac{\sum_{i=1}^n (y_i - \bar y)^2 - 0}{\sum_{i=1}^n (y_i - \bar y)^2} = 
 \]</span> kaldes for <strong>squared error (SE)</strong>. Udregner vi den gennemsnitlige værdi af alle disse kvadrerede fejl:</p>
 <p><span class="math display">\[
 \frac{1}{n} \sum_{i=1}^{n} \left ( y_i - \hat y_i \right)^2
-\]</span> får vi et mål, som ikke er afhængig af datasættets størrelse. Det er <strong>mean squared error (MSE)</strong>. Endelig tager vi kvadratroden af det (for at få målet ned på samme skala, som vores <span class="math inline">\(y\)</span>-værdier er på):</p>
+\]</span> får vi et mål, som ikke er afhængig af datasættets størrelse. Det er <strong>mean squared error (MSE)</strong>. Endelig tager vi kvadratroden af MSE (for at få målet ned på samme skala, som vores <span class="math inline">\(y\)</span>-værdier er på):</p>
 <p><span class="math display">\[
 \mathrm{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} \left ( y_i - \hat y_i \right)^2}
 \]</span></p>
