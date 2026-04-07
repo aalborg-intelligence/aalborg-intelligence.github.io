@@ -220,8 +220,8 @@ window.Quarto = {
 </header>
 
 
-<p>Når man bruger en model (det kan være en kunstig neuron, et neuralt netværk, logistisk regression eller noget helt fjerde) til at forudsige en størrelse, så vil man altid være interesseret i at sige noget om, hvor god modellen er. Denne note handler om præcis det: Forskellige mål som kan bruges til at vurdere en models nøjagtighed.</p>
-<p>Der er forskel på om den model, man har trænet, skal bruges til klassifikation eller til prædiktion af numeriske værdier. Med klassifikation mener vi modeller, som for eksempel kan bruges til at prædiktere, om en patient har en bestemt sygdom eller ej (binær klassifikation), eller hvilket parti en borger stemmer på (multipel klassifikation). Når vi taler om modeller til pærdiktion af numeriske værdier, kunne det for eksempel være modeller som kan forudsige huspriser.</p>
+<p>Når man bruger en model (det kan være en kunstig neuron, et neuralt netværk, logistisk regression eller noget helt fjerde), så vil man altid være interesseret i at sige noget om, hvor god modellen er. Denne note handler om præcis det: Forskellige mål som kan bruges til at vurdere en models nøjagtighed.</p>
+<p>Der er forskel på om den model, man har trænet, skal bruges til klassifikation eller til prædiktion af numeriske værdier. Med klassifikation mener vi modeller, som for eksempel kan bruges til at prædiktere, om en patient har en bestemt sygdom eller ej (binær klassifikation), eller hvilket parti en borger stemmer på (multipel klassifikation). Når vi taler om modeller til prædiktion af numeriske værdier, kunne det for eksempel være modeller, som kan forudsige huspriser.</p>
 <p>For alle mål gælder det, at man skal være opmærksom på overfitting, og det vil ofte give mening at udregne målene baseret på krydsvalidering. Det kan du læse meget mere om i noten <a href="../../noter/krydsvalidering/krydsvalidering.html" target="_blank">Overfitting, modeludvælgelse og krydsvalidering</a>).</p>
 <section id="modeller-til-klassifikation" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="modeller-til-klassifikation">Modeller til klassifikation</h2>
@@ -437,9 +437,9 @@ Figur&nbsp;6: Sammenhørende værdier mellem <span class="math inline">\(x\)</sp
 <p>Det ses tydeligt i <a href="#fig-R2_sammenligning" class="quarto-xref">figur&nbsp;6</a>, at i vores eksempel er den samlede kvadrerede fejl langt større for den naive model end for modellen baseret på lineær regression.</p>
 <p><span class="math inline">\(R^2\)</span>-værdien er hvor stor en procentdel af data, der bliver forklaret af en given model – målt som summen af de kvadrerede fejl – sammenlignet med den naive model <span class="math inline">\(y= \bar y\)</span>. <strong>EGE: Hvordan skal det her forklares?</strong></p>
 <p>Det vil sige, at</p>
-<p><span class="math display">\[
+<p><span id="eq-R2"><span class="math display">\[
 R^2 = \frac{\sum_{i=1}^n (y_i - \bar y)^2 - \sum_{i=1}^n (y_i- \hat y_i)^2}{\sum_{i=1}^n (y_i - \bar y)^2}
-\]</span></p>
+\tag{1}\]</span></span></p>
 <p>Læg her mærke til, at hvis modellen er lige så dårlig, som den naive model (<span class="math inline">\(y=\bar y\)</span>), så summen af de kvadrerede fejl er lige store:</p>
 <p><span class="math display">\[\sum_{i=1}^n (y_i - \bar y)^2 = \sum_{i=1}^n (y_i- \hat y_i)^2\]</span></p>
 <p>Da er</p>
@@ -452,6 +452,7 @@ R^2 = \frac{\sum_{i=1}^n (y_i - \bar y)^2 - 0}{\sum_{i=1}^n (y_i - \bar y)^2} = 
 \]</span></p>
 <p><span class="math inline">\(R^2\)</span>-værdien kaldes derfor også nogle gange for forklaringsgraden. Hvis <span class="math inline">\(R^2\)</span> er tæt på <span class="math inline">\(0\)</span> betyder det, at vi har fittet en model, som ikke er meget bedre end den naive model <span class="math inline">\(y = \bar y\)</span>. Er <span class="math inline">\(R^2\)</span> derimod tæt på <span class="math inline">\(1\)</span> betyder det, at vi har fittet en model, som beskriver data langt bedre end den naive model.</p>
 <p>En god model har altså en <span class="math inline">\(R^2\)</span>-værdi tæt på <span class="math inline">\(1\)</span>.</p>
+<p>Bemærk for øvrigt her, at hvis alle <span class="math inline">\(y_i\)</span>-værdierne er ens, så vil <span class="math inline">\(y_i=\bar y\)</span>, og derfor vil nævneren i (<a href="#eq-R2" class="quarto-xref">1</a>) være <span class="math inline">\(0\)</span>. I det tilfælde er <span class="math inline">\(R^2\)</span>-værdien ikke veldefineret.</p>
 </section>
 <section id="root-mean-squared-error-rmse" class="level3">
 <h3 class="anchored" data-anchor-id="root-mean-squared-error-rmse">Root Mean Squared Error (RMSE)</h3>
@@ -461,12 +462,12 @@ R^2 = \frac{\sum_{i=1}^n (y_i - \bar y)^2 - 0}{\sum_{i=1}^n (y_i - \bar y)^2} = 
 \]</span> kaldes for <strong>squared error (SE)</strong>. Udregner vi den gennemsnitlige værdi af alle disse kvadrerede fejl:</p>
 <p><span class="math display">\[
 \frac{1}{n} \sum_{i=1}^{n} \left ( y_i - \hat y_i \right)^2
-\]</span> får vi et mål, som ikke er afhængig af datasættets størrelse. Det er <strong>mean squared error (MSE)</strong>. Endelig tager vi kvadratroden af MSE (for at få målet ned på samme skala, som vores <span class="math inline">\(y\)</span>-værdier er på):</p>
+\]</span> får vi et mål, som ikke er afhængig af datasættets størrelse. Det er <strong>mean squared error (MSE)</strong>. Bemærk, at hvis for eksempel alle <span class="math inline">\(y\)</span>-værdierne er målt i centimeter (<span class="math inline">\(\mathrm{cm}\)</span>), da vil måleenheden for MSE være kvadratcentimeter (<span class="math inline">\(\mathrm{cm}^2\)</span>). Derfor tager man kvadratroden af MSE for at få målet ned på samme skala, som vores <span class="math inline">\(y\)</span>-værdier er på:</p>
 <p><span class="math display">\[
 \mathrm{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} \left ( y_i - \hat y_i \right)^2}
 \]</span></p>
 <p>Det er altså denne størrelse, som er <strong>root mean squared error (RMSE)</strong>. Da vi ønsker så lille en fejl som muligt, vil vi gerne have, at RMSE er så tæt på <span class="math inline">\(0\)</span> som muligt.</p>
-<p>En god model har altså en RMSE tæt på <span class="math inline">\(0\)</span>.</p>
+<p>Værdien af RMSE har ikke en generel fortolkning, men RMSE for forskellige modeller for samme data kan med fordel sammenlignes. Her vil den mindste værdi af RMSE som udgangspunkt indikere den bedste model (se også noten om <a href="../../noter/krydsvalidering/krydsvalidering.html" target="_blank">Overfitting, modeludvælgelse og krydsvalidering</a>)).</p>
 
 
 </section>
