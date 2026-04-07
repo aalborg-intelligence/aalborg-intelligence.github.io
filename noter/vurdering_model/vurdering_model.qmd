@@ -2,9 +2,9 @@
 title: "Mål for en models nøjagtighed"
 ---
 
-Når man bruger en model (det kan være en kunstig neuron, et neuralt netværk, logistisk regression eller noget helt fjerde) til at forudsige en størrelse, så vil man altid være interesseret i at sige noget om, hvor god modellen er. Denne note handler om præcis det: Forskellige mål som kan bruges til at vurdere en models nøjagtighed.
+Når man bruger en model (det kan være en kunstig neuron, et neuralt netværk, logistisk regression eller noget helt fjerde), så vil man altid være interesseret i at sige noget om, hvor god modellen er. Denne note handler om præcis det: Forskellige mål som kan bruges til at vurdere en models nøjagtighed. 
 
-Der er forskel på om den model, man har trænet, skal bruges til klassifikation eller til prædiktion af numeriske værdier. Med klassifikation mener vi modeller, som for eksempel kan bruges til at prædiktere, om en patient har en bestemt sygdom eller ej (binær klassifikation), eller hvilket parti en borger stemmer på (multipel klassifikation). Når vi taler om modeller til pærdiktion af numeriske værdier, kunne det for eksempel være modeller som kan forudsige huspriser.
+Der er forskel på om den model, man har trænet, skal bruges til klassifikation eller til prædiktion af numeriske værdier. Med klassifikation mener vi modeller, som for eksempel kan bruges til at prædiktere, om en patient har en bestemt sygdom eller ej (binær klassifikation), eller hvilket parti en borger stemmer på (multipel klassifikation). Når vi taler om modeller til prædiktion af numeriske værdier, kunne det for eksempel være modeller, som kan forudsige huspriser.
 
 For alle mål gælder det, at man skal være opmærksom på overfitting, og det vil ofte give mening at udregne målene baseret på krydsvalidering. Det kan du læse meget mere om i noten [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd){target="_blank"}).
 
@@ -161,7 +161,7 @@ Det vil sige, at
 
 $$
 R^2 = \frac{\sum_{i=1}^n (y_i - \bar y)^2 - \sum_{i=1}^n (y_i- \hat y_i)^2}{\sum_{i=1}^n (y_i - \bar y)^2}
-$$
+$$ {#eq-R2}
 
 Læg her mærke til, at hvis modellen er lige så dårlig, som den naive model ($y=\bar y$), så summen af de kvadrerede fejl er lige store:
 
@@ -183,6 +183,7 @@ $R^2$-værdien kaldes derfor også nogle gange for forklaringsgraden. Hvis $R^2$
 
 En god model har altså en $R^2$-værdi tæt på $1$.
 
+Bemærk for øvrigt her, at hvis alle $y_i$-værdierne er ens, så vil $y_i=\bar y$, og derfor vil nævneren i (@eq-R2) være $0$. I det tilfælde er $R^2$-værdien ikke veldefineret.
 
 ### Root Mean Squared Error (RMSE)
 
@@ -196,7 +197,7 @@ kaldes for **squared error (SE)**. Udregner vi den gennemsnitlige værdi af alle
 $$
 \frac{1}{n} \sum_{i=1}^{n} \left ( y_i - \hat y_i \right)^2
 $$
-får vi et mål, som ikke er afhængig af datasættets størrelse. Det er **mean squared error (MSE)**. Endelig tager vi kvadratroden af MSE (for at få målet ned på samme skala, som vores $y$-værdier er på):
+får vi et mål, som ikke er afhængig af datasættets størrelse. Det er **mean squared error (MSE)**. Bemærk, at hvis for eksempel alle $y$-værdierne er målt i centimeter ($\mathrm{cm}$), da vil måleenheden for MSE være kvadratcentimeter ($\mathrm{cm}^2$). Derfor tager man kvadratroden af MSE for at få målet ned på samme skala, som vores $y$-værdier er på:
 
 $$
 \mathrm{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} \left ( y_i - \hat y_i \right)^2}
@@ -204,4 +205,4 @@ $$
 
 Det er altså denne størrelse, som er **root mean squared error (RMSE)**. Da vi ønsker så lille en fejl som muligt, vil vi gerne have, at RMSE er så tæt på $0$ som muligt.
 
-En god model har altså en RMSE tæt på $0$.
+Værdien af RMSE har ikke en generel fortolkning, men RMSE for forskellige modeller for samme data kan med fordel sammenlignes. Her vil den mindste værdi af RMSE som udgangspunkt indikere den bedste model (se også noten om [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd){target="_blank"})).
