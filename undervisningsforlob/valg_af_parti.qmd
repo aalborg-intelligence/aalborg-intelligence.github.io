@@ -1,6 +1,6 @@
 ---
 title: "De politiske partier"
-description: 'I dette forløb vil vi se på, hvordan de politiske kandidaters svar på en række spørgsmål kan bruges til at undersøge, hvor enige kandidater fra samme parti er.... lidt uklart, skal nok bearbejdes :)'
+description: 'I dette forløb vil vi se på en metode til at forudsige, hvilket parti man vil stemme på ud fra svar på en række spørgsmål.'
 image: ""
 categories:
   - "01_A-niveau"
@@ -16,11 +16,11 @@ categories:
 
 **Tidsforbrug:** Ca. 150 minutter. 
 
-Hvis man forinden har arbejdet med det korte forløb [Sengetester i IKEA](https://aimat.dk/undervisningsforlob/sengetester.html) vil det være en fordel, men dette er ikke en forudsætning.
+Hvis man forinden har arbejdet med det korte forløb [Sengetester i IKEA](https://aimat.dk/undervisningsforlob/sengetester.html), vil det være en fordel, men dette er ikke en forudsætning.
 
 På tilsvarende vis vil det også gøre dette forløb lidt lettere, hvis man forinden har arbejdet med de første dele af det lange forløb om [Kunstige neuroner](https://aimat.dk/undervisningsforlob/kunstige_neuroner_langt_forlob/kunstige_neuroner_forside.html), men det er heller ikke en forudsætning.
 
-Hvis man har arbejdet med det korte forløb [Hvilken politiker er du mest enig med](https://aimat.dk/undervisningsforlob/kandidattest.html), kan konteksten være mere tydeligt, men det er heller ikke en forudsætning.
+Hvis man har arbejdet med det korte forløb [Hvilken politiker er du mest enig med](https://aimat.dk/undervisningsforlob/kandidattest.html), kan konteksten være mere tydelig, men det er heller ikke en forudsætning.
 
 :::
 
@@ -30,51 +30,53 @@ Hvis man har arbejdet med det korte forløb [Hvilken politiker er du mest enig m
 
 Formålet med dette forløb er 
 
-* at lære **Softmax** at kende, som et værktøj til **Multipel Klassifikation**.
+* at lære **Softmax** at kende som et værktøj til **Multipel Klassifikation**.
 * at lære lidt om **Kunstige Neuroner**, samt at anvende en app til at træne en kunstig neuron.
-* at undersøge, hvordan en kunstig neuron til multiple klassifikation kan bruges til at forudsige, hvilken parti man vil stemme på, ud fra svar på en række spørgsmål, f.eks. i en kandidattest.
+* at undersøge, hvordan en kunstig neuron til multipel klassifikation kan bruges til at forudsige, hvilket parti man vil stemme på, ud fra svar på en række spørgsmål, f.eks. i en kandidattest.
 
 :::
 
-Måske en video.
-
-<!-- {{< video https://youtu.be/FxQa1uJ_YKA?si=u9jCmyeyQ1uWOMlzW >}} -->
-
 ## Softmax modellen
-Vi starter med et meget lille eksempel, hvor 4 personer, Andy, Bella, Charlie og Doresa har svaret på 2 spørgsmål samt angivet, hvilket parti de stemmer på.
+Vi vil gerne lave en model, som kan forudsige, hvilket parti man vil stemme på, ud fra ens svar på en række spørgsmål.
+
+Vi starter med et meget lille fiktivt eksempel, hvor 4 personer, Andy, Bella, Charlie og Doresa, har svaret på 2 spørgsmål samt angivet, hvilket parti de stemmer på. 
+
+Vi lader som om partierne er S (Socialdemokratiet), E (Enhedslisten) og V (Venstre).
 
 | Navn | Spørgsmål 1 $(x_1)$ | Spørgsmål 2 $(x_2)$ | Parti (t) |
 |-------|:---------------------------|:-----------:|:-----------:|
-| Andy | $\color{red}{\textbf{ Helt uenig } (-2)}$ |  $\color{red}{\textbf{ Helt uenig } (-2)}$ | 1 |
-| Bella | $\color{red}{\textbf{Uenig } (-1)}$ | $\color{green}{\textbf{Enig } (1)}$ | 2 |
-| Charlie | $\color{red}{\textbf{Uenig } (-1)}$ |  $\color{red}{\textbf{Uenig } (-1)}$ | 2 |
-| Doresa | $\color{green}{\textbf{Enig } (1)}$ |  $\color{green}{\textbf{Helt enig } (2)}$ | 3 |
+| Andy | $\color{red}{\textrm{Helt uenig } (-2)}$ |  $\color{red}{\textrm{ Helt uenig } (-2)}$ | S |
+| Bella | $\color{red}{\textrm{Uenig } (-1)}$ | $\color{green}{\textrm{Enig } (1)}$ | E |
+| Charlie | $\color{red}{\textrm{Uenig } (-1)}$ |  $\color{red}{\textrm{Uenig } (-1)}$ | E |
+| Doresa | $\color{green}{\textrm{Enig } (1)}$ |  $\color{green}{\textrm{Helt enig } (2)}$ | V |
 
-For at kunne lave en matematisk model, står der også tilhørende værdier fra $-2$ til $2$ i tabellen, da vi har brug for talværdier for at kunne regne i modellen. Så f.eks. er $x_1=-2$ for Andy, mens $x_1=1$ for Doresa.
+For at kunne lave en matematisk model, står der også tilhørende værdier fra $-2$ til $2$ i tabellen, da vi har brug for talværdier for at kunne regne i modellen. Så $-2$ svarer til Helt Uenig, $-1$ til Uenig, $1$ til Enig og $2$ til Helt Enig.
 
-Vi vil nu lave en model, hvor man ud fra svarene på de to spørgsmål kan forudsige, hvor sandsynligt det er, at man stemmer på hver af de 3 partier. Vi vil træne modellen, så den passer godt til svarene fra de 4 personer, og derefter håbe, at den også vil passe godt til andre personer. Naturligvis er $2$ spørgsmål og $4$ personer alt for lidt, men det gør vi noget ved senere.
+Vi vil nu lave en model, hvor man ud fra de svar, mange giver på de to spørgsmål, kan forudsige, hvor sandsynligt det er, at man stemmer på hver af de 3 partier. Vi vil træne modellen, så den passer godt til svarene fra de 4 personer, og derefter håbe, at den også vil passe godt til andre personer. Naturligvis er $2$ spørgsmål og $4$ personer alt for lidt, men det gør vi noget ved senere.
 
 Vi udregner så for enhver kombination af person og parti en score:
 $$score(person, parti) = w_0 + w_1 \cdot x_1+ w_2 \cdot x_2$$
 hvor $w_0$ kaldes for bias og $w_1$ og $w_2$ kaldes for vægte.
 
-Vi sætter disse bias- og vægte til nogle lidt tilfældige værdier til at starte med.
+Bias og vægte kan være forskellige for hvert parti, så vi kalder dem for $s_0, s_1, s_2$ (Socialdemokratiet), $e_0, e_1, e_2$ (Enhedslisten) og $v_0, v_1, v_2$ (Venstre). 
 
-| | $w_0$ | $w_1$ | $w_2$ |
+Vi sætter disse bias og vægte til nogle lidt tilfældige værdier til at starte med.
+
+| Parti | $w_0$ | $w_1$ | $w_2$ |
 |-------|:---------------------------|:-----------:|:-----------:|
-| Parti 1 | $0$ | $-1$ | $0$ | 
-| Parti 2 | $0$ | $1$ | $0$ |
-| Parti 3 | $0$ | $0$ | $0$ |  
+| S | $s_0 = 0$ | $s_1 = -1$ | $s_2 = 0$ | 
+| E | $e_0 = 0$ | $e_1 = 1$ | $e_2 = 0$ |
+| V | $v_0 = 0$ | $v_1 = 0$ | $v_2 = 0$ |  
 
-Så bliver
-$$score(Andy, parti 1) = 0 + (-1) \cdot (-2) + 0 \cdot (-2) = 2$$
-$$score(Andy, parti 2) = 0 + 1 \cdot (-2) + 0 \cdot (-2) = -2$$
-$$score(Andy, parti 3) = 0 + 0 \cdot (-2) + 0 \cdot (-2) = 0$$
-Så lige nu er den højeste score for Andy for parti 1, hvilket er godt, da han faktisk stemmer på parti 1. 
+For Andy bliver det:
+$$\mathrm{score(Andy, S)} = 0 + (-1) \cdot (-2) + 0 \cdot (-2) = 2$$
+$$\mathrm{score(Andy, E)} = 0 + 1 \cdot (-2) + 0 \cdot (-2) = -2$$
+$$\mathrm{score(Andy, V)} = 0 + 0 \cdot (-2) + 0 \cdot (-2) = 0$$
+Så lige nu er den højeste score for Andy for S, hvilket er godt, da han faktisk stemmer på Socialdemokratiet. 
 
-Men modellen skulle jo ikke kun give en score, men faktisk give en procent for hvert parti. Så vi skal have fundet en metode til at få procenter i stedet for scores. Om procenterne ved vi, at de skal være positive, at de skal være mellem 0 og 1, og endeligt, at det skal give 1 tilsammen.
+Men modellen skulle jo ikke kun give en score, men faktisk give en sandsynlighed for hvert parti. Så vi skal have fundet en metode til at få sandsynlighed i stedet for scores. Om sandsynlighederne ved vi, at de skal være positive, ligge mellem 0 og 1 og tilsammen give 1.
 
-En simpel måde at få tallene positive på er at tage $e$ opløftet i scoren. 
+En simpel måde at få tallene positive på er at opløfte $e$ i scoren. 
 
 $$
 \begin{aligned}
@@ -84,69 +86,70 @@ e^0 &=1
 \end{aligned}
 $$
 
-Så lægges de 3 tal sammen og hvert af tallene divideres med summen.
-$$sum=7.39 + 1 + 0.14 = 8.53$$
+Så lægges de tre tal sammen og hvert af tallene divideres med summen.
+$$\mathrm{sum}=7.39 + 1 + 0.14 = 8.53$$
 
 For Andy giver det følgende:
 
-| Parti | Score | $e^{score}$ | Procent |
+| Parti | Score | $e^\mathrm{score}$ | Sandsynlighed |
 |-------|:---------------------------|:-----------:|:-----------:|
-| 1 | 2 | 7.39 | $\frac{7.39}{8.53} \approx 0.867$ |
-| 2 | -2 | 0.14 | $\frac{0.14}{8.53} \approx 0.016$ |
-| 3 | 0 | 1 | $\frac{1}{8.53} \approx 0.117$ |
+| S | 2 | 7.39 | $\frac{7.39}{8.53} \approx 0.867$ |
+| E | -2 | 0.14 | $\frac{0.14}{8.53} \approx 0.016$ |
+| V | 0 | 1 | $\frac{1}{8.53} \approx 0.117$ |
 
 
-Så med de valgte værdier af bias og vægte, angiver modellen 86.7% for parti 1, 1.6% for parti 2 og 11.7% for parti 3 for Andy. Da han faktisk stemte på parti 1, er det jo rigtigt fint, uden dog at være helt perfekt, da vi helst ville have endnu større sandsynlighed for parti 1.
+Så med de valgte værdier af bias og vægte, angiver modellen 86.7% for S, 1.6% for E og 11.7% for V for Andy. Da han faktisk stemte på S, er det jo rigtigt fint, uden dog at være helt perfekt, da vi helst ville have endnu større sandsynlighed for Socialdemokratiet for Andy.
 
-Denne metode til at omregne fra score to procent kaldes for **Softmax**.
+Denne metode til at omregne fra score til sandsynligheder kaldes for **Softmax**.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 1
 
 - Lav de tilsvarende udregninger for Bella, Charlie og Doresa.
-- Overvej derefter, om de valgte vægte er fornuftige - i den betydning, at modellen giver størst sandsynlighed for hver person for det parti, som personen faktisk stammer på.
+- Overvej derefter, om de valgte vægte er fornuftige - i den betydning, at modellen giver størst sandsynlighed for det parti, som personen faktisk stemmer på.
 
 :::
 
-Det var åbenlyst ikke så godt for Bella, Charlie og Doresa, hvor modellen for alle 3 peger på et forkert parti. Ideen er nu, at vi skal ændre bias og vægte, så modellen bliver bedre. 
+Det var åbenlyst ikke så godt for Bella, Charlie og Doresa, da modellen for alle tre peger på et forkert parti. Ideen er nu, at vi skal ændre bias og vægte, så modellen bliver bedre. 
 
-Lad os første omgang se på $w_1$ og dermed $x_1$. Bemærk, at $x_1 = -2$ for Andy, at $x_1 = -1$ for Bella og Charlie, og at $x_1 = 1$ for Doresa. Da vi gerne vil have Andy til at få en høj score, og dermed en høj sandsynlighed for parti 1, giver det mening at lade $w_1$ for parti 1 være en negativ værdi, så $w_1 \cdot w_2$ bliver postiv. Før havde vi sat $w_1=-1$, men lad os forstærke effekten med $w_1 = -3$ for parti 1, så scoren for Andy bliver højere. 
+Lad os i første omgang se på $w_1$ og dermed $x_1$. Bemærk, at $x_1 = -2$ for Andy, at $x_1 = -1$ for Bella og Charlie, og at $x_1 = 1$ for Doresa. Da vi gerne vil have Andy til at få en høj score, og dermed en høj sandsynlighed for Socialdemokratiet, giver det mening at lade $s_1$ være en negativ værdi, så $s_1 \cdot x_1$ bliver positiv. Før havde vi sat $s_1=-1$, men lad os forstærke effekten med $s_1 = -3$, så scoren for Andy bliver højere. 
 
-Det giver Andy en positiv score $w_1 \cdot x_1 = -3 \cdot (-2) = 6$, hvilket er godt, da vi gerne vil have, at modellen peger på parti 1 for ham.
+Det giver Andy en positiv score $s_1 \cdot x_1 = -3 \cdot (-2) = 6$ for Socialdemokratiet, hvilket er godt, da vi gerne vil have, at modellen peger på dem for ham.
 
-Det giver Doresa en negative score $w_1 \cdot x_1 = -3 \cdot 1= -3$, hvilket er godt, da vi gerne vil have, at modellen ikke peger på parti 1 for hende.
+Det giver Doresa en negativ score $s_1 \cdot x_1 = -3 \cdot 1= -3$, hvilket også er godt, da vi gerne vil have, at modellen ikke peger på Socialdemokratiet for hende.
 
-Det giver så desværre både Bella og Charlie en positiv score, da $w_1 \cdot x_1 = -3 \cdot (-1) = 3$, hvilket ikke er så godt, da vi gerne vil have, at modellen ikke peger på parti 1 for dem. Det venter vi lige med at gøre noget ved, da vi starter med at få modellen til at pege på parti 3 for Doresa.
+Det giver så desværre både Bella og Charlie en positiv score, da $s_1 \cdot x_1 = -3 \cdot (-1) = 3$, hvilket ikke er så godt, da vi gerne vil have, at modellen ikke peger på Socialdemokratiet for dem. Det venter vi lige med at gøre noget ved, da vi starter med at få modellen til at pege på Venstre for Doresa.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 2
 
-- Overvej hvilken værdi $w_1$ for parti 3 kan gives, så Doresa får en positiv score, mens de øvrige tre får en negativ score? Vælg vægten, så scoren for Doresa for parti 3 til at blive $6$, som scoren for Andy blev for parti 1.
-- Beregn sandsynligheden for hver af de 3 partier for Doresa med den værdi, du har valgt.
+- Overvej hvilken værdi $v_1$ kan gives, så Doresa får en positiv score for Venstre, mens de øvrige tre får en negativ score? 
+- Vælg vægten, så scoren for Doresa for Venstre bliver $6$, som scoren for Andy blev for Socialdemokratiet.
+- Beregn score og sandsynlighed for hver af de 3 partier for Doresa med den værdi, du har valgt.
 
 :::
 
-Samlet ser det nu således ud. hvor både (score) og sandsynlighed er angivet for hvert parti.
+Samlet ser det nu således ud, hvor både (score) og sandsynlighed er angivet for hvert parti.
 
-|  | Parti 1 | Parti 2 | Parti 3 |
+|  | Socialdemokratiet | Enhedslisten | Venstre |
 |-------|:---------------------------|:-----------:|:-----------:|
 | Andy | (6) 99.8% | (0) 0.2% | (-12) 0.0% |
 | Bella | (3) 95.3% | (0) 4.7% | (-6) 0.0% |
 | Charlie | (3) 95.3% | (0) 4.7% | (-6) 0.0% |
 | Doresa | (-3) 0.0% | (0) 0.3% | (6) 99.7% |
 
-Vi skal nu have modellen til at vælge parti 2 for Bella og Charlie, men uden at ødelægge, at modellen vælger parti 1 til Andy og parti 3 til Doresa. 
+Vi skal nu have modellen til at vælge Enhedslisten for Bella og Charlie, men uden at ødelægge, at modellen vælger Socialdemokratiet til Andy og Venstre til Doresa. 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 3
 
-- Overvej hvilken værdi biaset $w_0$ for parti 2 kan gives, så Bella og Charlie får scorer højst for parti 2 (scoren skal over 3, da de allerede har scoren 3 for parti 1), men uden scoren for Andy eller Doresa bliver højst for parti 2 (de har begge 6 som højst score til hhv. parti 1 og parti 3).
+- Overvej hvilken værdi biaset $e_0$ kan gives, så Bella og Charlie scorer højst for Enhedslisten (scoren skal over 3, da de allerede har scoren 3 for parti 1), men uden at scoren for Andy eller Doresa bliver højst for Enhedslisten (de har begge 6 som højst score til hhv. Socialdemokratiet og Venstre).
 
 :::
 
-Med en fornuftig værdi af bias for parti 2 kan tabellen komme til at se således ud.
+Med en fornuftig værdi af bias for Enhedslisten kan tabellen komme til at se således ud.
 
-|  | Parti 1 | Parti 2 | Parti 3 |
+|  | Socialdemokratiet | Enhedslisten | Venstre |
 |-------|:---------------------------|:-----------:|:-----------:|
 | Andy | (6)  88.1% | (4) 11.9% | (-12) 0.0% |
 | Bella | (3) 26.9% | (4) 73.1% | (-6) 0.0% |
@@ -157,9 +160,9 @@ Men det kan stadig gøres bedre, bl.a. ved også at tage $w_2$ i brug.
 
 
 ## Brug af app til træning af kunstig neuron
-Med det meget lille, simple eksempel kunne vi altså godt justere vægtene manuelt og få et nogenlunde resultat. Men hvis der bliver 100, 1000 eller millioner af vægte, så er det næppe en god ide. Det kræver noget lidt mere advanceret matematik, som vi ikke vil gennemgå i dette forløb. Du kan læse mere om dette i denne note om [Kunstige neurale netværk til multipel klassifikation]{https://aimat.dk/noter/softmax/softmax.html}
+Med det meget lille, simple eksempel kunne vi altså godt justere vægtene manuelt og få et nogenlunde resultat. Men hvis der bliver 100, 1000 eller millioner af vægte, så er det næppe en god idé. Det kræver noget lidt mere avanceret matematik, som vi ikke vil gennemgå i dette forløb. Du kan læse mere om dette i denne note om [Kunstige neurale netværk til multipel klassifikation](https://aimat.dk/noter/softmax/softmax.html).
 
-I stedet vil vi bruge en app til formålet. Du finder appen [her](https://apps01.math.aau.dk/ai/multi-neuron/) og datasættet som excelfil [her](/undervisningsforlob/valg_af_parti/datasæt_4_personer.xlsx).
+I stedet vil vi bruge en app til formålet. Du finder appen [her](https://apps01.math.aau.dk/ai/multi-neuron/) og datasættet som Excel fil [her](/undervisningsforlob/valg_af_parti/datasæt_4_personer.xlsx).
 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
@@ -169,21 +172,21 @@ I stedet vil vi bruge en app til formålet. Du finder appen [her](https://apps01
 - Vælg $t$ som target varibel og både $x_1$ og $x_2$ som feature variable
 - Sæt learning rate til $0.1$ og antal iterationer til $1000$
 - Træn modellen
-- Sammenlign de værdier til bias og vægte, som appen er nået frem til, med de værdier, som vi manuelt nåede frem til. Meget ligner, noget er lidt anderledes.
+- Sammenlign de værdier til bias og vægte, som appen er nået frem til, med de værdier, som vi manuelt nåede frem til. Meget ligner det, vi fandt manuelt, men noget er også lidt anderledes.
 
 :::
 
-Med appens værdier ser tabellen endeligt således ud, hvilket må siges at være meget tilfredsstillende.
+Med appens værdier ser tabellen endelig således ud, hvilket må siges at være meget tilfredsstillende.
 
-|  | Parti 1 | Parti 2 | Parti 3 |
+|  | Socialdemokratiet | Enhedslisten | Venstre |
 |-------|:---------------------------|:-----------:|:-----------:|
 | Andy | (6.6)  97.7% | (2.8) 2.3% | (-9.4) 0.0% |
 | Bella | (-4.1) 0.0% | (4.5) 99.1% | (-0.4) 0.9% |
-| Charlie | (0.0) 3.2% | (3.4) 96.5% | (-3.4) 0.  3% |
+| Charlie | (0.0) 3.2% | (3.4) 96.5% | (-3.4) 0.3% |
 | Doresa | (-15.1) 0.0% | (5.2) 0.8% | (9.9) 99.2% |
 
 ## 16 politiske kandidaters svar
-Lad os se på et lidt større eksempel, nu med autentiske data fra kandidattest til folketingsvalget i 2026. Vi ser på 16 kandidater og deres svar på 2 spørgsmål.
+Lad os se på et lidt større eksempel, nu med autentiske data fra en kandidattest til folketingsvalget i 2026. Vi ser på 16 kandidater og deres svar på 2 spørgsmål.
 
 | Parti | Navn | Spørgsmål 1 | Spørgsmål 2 |
 |-------|:---------------------------|:-----------:|:-----------:|
@@ -211,7 +214,7 @@ De to spørgsmål er
 Spørgsmål 1: De boligejere, der tjener mest på prisstigninger, skal betale mere i skat. \
 Spørgsmål 2: Reglerne for dyrevelfærd skal strammes, selv om det kan gøre fødevarer fra Danmark dyrere.
 
-Datasættet som excelfil med værdier fra -2 (helt uenig) til 2 (helt enig)  [her](/undervisningsforlob/valg_af_parti/datasæt_16_personer.xlsx).
+Datasættet som Excelfil med værdier fra -2 (helt uenig) til 2 (helt enig) er   [her](/undervisningsforlob/valg_af_parti/datasæt_16_personer.xlsx).
 
 For at skabe lidt overblik, vil et punktplot med $x_1$ på førsteaksen og $x_2$ på andenaksen, hvor punkterne har forskellige farver efter parti, være en god ide. Det er dog en udfordring, at flere punkter er ens.
 
@@ -223,7 +226,7 @@ For at skabe lidt overblik, vil et punktplot med $x_1$ på førsteaksen og $x_2$
 
 :::
 
-Det skulle gerne være tydeligt, at de 4 partiers kandidater ligger delvist opdelt efter parti. Vi vil nu gerne bruge samme type model som tidligere i en kunstig neuron til at undersøge, hvordan vi kan inddele planen i områder til hvert parti. Først skal vi have trænet modellen på data for de 16 politikere, så vi kender bias og vægte.
+Det skulle gerne være tydeligt, at de 4 partiers kandidater ligger delvist opdelt efter parti. Vi vil nu gerne bruge samme type model som tidligere i en kunstig neuron til at undersøge, hvordan vi kan inddele xy-planen i områder til hvert parti. Først skal vi have trænet modellen på data for de 16 politikere, så vi kender bias og vægte.
 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
@@ -234,12 +237,12 @@ Det skulle gerne være tydeligt, at de 4 partiers kandidater ligger delvist opde
 
 :::
 
-Vi vil nu bruge disse vægte til at bestemme, hvor i koordinatsystemet modellen vil trække en grænse mellem Socialdemokratiet og Enhedslisten. Grænsen skal netop være der, hvor de to partier er lige sandsynlige, så
+Vi vil nu bruge disse vægte til at bestemme, hvor i koordinatsystemet modellen vil trække en grænse mellem Socialdemokratiet og Enhedslisten. Grænsen skal netop være der, hvor de to partier har ens score og derfor er lige sandsynlige, så
 
 $$e^{s_0 + s_1 \cdot x_1 + s_2 \cdot x_2} = e^{e_0 + e_1 \cdot x_1 + e_2 \cdot x_2}$$
-Hvis vi tager den naturlige logaritme på begge sider og samlet alt på den ene side, giver det
+Hvis vi tager den naturlige logaritme på begge sider og samler alt på den ene side, giver det
 $$(s_0 - e_0) + (s_1-e_1) \cdot x_1 + (s_2-e_2) \cdot x_2=0$$
-Vi bemærker, at det faktisk er ligningen for en ret linje på formen 
+Vi bemærker, at det svarer til ligningen for en ret linje på formen 
 $$ a \cdot x + b \cdot y + c = 0$$
 
 
@@ -251,7 +254,7 @@ $$ a \cdot x + b \cdot y + c = 0$$
 
 :::
 
-Det var en opdeling mellem Socialdemokratiet og Enhedslisten.
+Det var en opdeling mellem Socialdemokratiet og Enhedslisten. Lad os se på de øvrige par af partier også.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 8
@@ -261,7 +264,7 @@ Det var en opdeling mellem Socialdemokratiet og Enhedslisten.
 
 :::
 
-Hvis du vil, kan du også beregne ligningerne for de øvrige 5 linjer - ellers er alle ligningerne angivet i denne tabel.
+Hvis du vil, kan du selv beregne ligningerne for de øvrige linjer - ellers er alle ligningerne angivet i denne tabel.
 
 | Partier | Ligning |
 |-------|:---------------------------|
@@ -270,28 +273,30 @@ Hvis du vil, kan du også beregne ligningerne for de øvrige 5 linjer - ellers e
 | S og D | $5.40031 x + 4.88754 y + 9.2446 = 0$ |
 | E og V | $-6.40693 x - 6.54083 y + 13.9409 = 0$ |
 | E og D | $10.8001 x + 10.8416 y - 4.8415 = 0$ |
-| V og D | $4,39317 x + 4,30077 y + 9,0994 = 0$ |
+| V og D | $4.39317 x + 4.30077 y + 9.0994 = 0$ |
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 9
 
 - Indtegn alle 6 linjer på punktplottet.
-- Overvej hvilke af linjerne, der giver en grænse mellem 2 partier som mest sandsynlige, og hvilke linjer, der blot er mellem to lige sandsynlige partier, hvor et 3. parti er mere sandsynligt.
+- Overvej hvilke af linjerne, der giver en grænse mellem to partier som mest sandsynlige, og hvilke linjer, der blot er mellem to lige sandsynlige partier, hvor et tredje parti er mere sandsynligt.
 
 :::
+
+De tre linjer for Socialdemokratiet & Venstre, Socialdemokratiet & Danmarksdemokraterne og Venstre & Danmarksdemokraterne skærer hinanden i samme punkt (evt. ikke helt perfekt pga. afrunding).
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 10
 
-- De 3 linjer for S & V, S & D og V & D skærer hinanden (cirka) i samme punkt. Bestem koordinaterne til dette punkt
-- Beregn derefter sandsynligheden for hver af de 4 partier (brug vægtene fra appen) i punktet.
+- Bestem koordinaterne til dette punkt.
+- Beregn derefter sandsynligheden for hvert af de 4 partier (brug vægtene fra appen) i punktet.
 - Forklar, hvad det fortæller om modellen.
 
 :::
 
 
-## Det helt store eksempel med 732 politikere
-Til sidst vil vi tage et kig på et autentisk datasæt af en mere relevant størrelse. Vi har 732 politikere fordelt på 12 partier, som inden folketingsvalget i 2026 har svaret på 24 spørgsmål til TV2's kandidattest.
+## Det helt store eksempel med 877 politikere
+Til sidst vil vi tage et kig på et autentisk datasæt af en mere relevant størrelse. Vi har $877$ politikere fordelt på $12$ partier, som inden folketingsvalget i 2026 har svaret på $24$ spørgsmål til TV2's kandidattest.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 11
@@ -300,13 +305,24 @@ Til sidst vil vi tage et kig på et autentisk datasæt af en mere relevant stør
 
 :::
 
-Datasættet er [her](/undervisningsforlob/valg_af_parti/datasæt_752_personer.xlsx).
+Datasættet er [her](/undervisningsforlob/valg_af_parti/datasæt_877_personer.xlsx).
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 12
 
-- Brug appen til at træne en kunstig neuron ud fra datasættet.
+- Brug appen til at træne en kunstig neuron ud fra datasættet. Vælg partibogstav som target og alle 24 spørgsmål som features. 
 - Kig på Confusion matrix og Klassifikationsnøjagtigheden i appen. Overvej, hvad det siger om den trænede model.
+- Prøv at ændre på antal iterationer og på learning rate. Vi vil gerne have klassifikationsnøjagtigheden så høj som mulig.
+
+:::
+
+Hvis du har haft om [krydsvalidering](https://aimat.dk/noter/krydsvalidering/krydsvalidering.html), kan du desuden lave opgave 13.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 13
+
+- Træn modellen med krydsvalidering med 5 fold i appen.
+- Tag en snak om, hvordan resultatet bliver sammenlignet med svarene i opgave 12, og hvorfor det er tilfældet.
 
 :::
 
