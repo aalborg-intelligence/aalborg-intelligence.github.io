@@ -41,14 +41,14 @@ Måske en video.
 <!-- {{< video https://youtu.be/FxQa1uJ_YKA?si=u9jCmyeyQ1uWOMlzW >}} -->
 
 ## Softmax modellen
-Vi starter med et meget lille eksempel, hvis 4 personer, Andy, Bella, Charlie og Doresa har svaret på 2 spørgsmål samt angivet, hvilket parti de stemmer på.
+Vi starter med et meget lille eksempel, hvor 4 personer, Andy, Bella, Charlie og Doresa har svaret på 2 spørgsmål samt angivet, hvilket parti de stemmer på.
 
 | Navn | Spørgsmål 1 $(x_1)$ | Spørgsmål 2 $(x_2)$ | Parti (t) |
 |-------|:---------------------------|:-----------:|:-----------:|
-| Andy | $\color{red}{-2 \textbf{ Helt uenig}}$ |  $\color{red}{-2 \textbf{ Helt uenig}}$ | 1 |
-| Bella | $\color{red}{-1 \textbf{ Uenig}}$ | $\color{green}{1 \textbf{ Enig}}$ | 2 |
-| Charlie | $\color{red}{-1 \textbf{ Uenig}}$ |  $\color{red}{-1 \textbf{ Uenig}}$ | 2 |
-| Doresa | $\color{green}{1 \textbf{ Enig}}$ |  $\color{green}{2 \textbf{ Helt enig}}$ | 3 |
+| Andy | $\color{red}{\textbf{ Helt uenig } (-2)}$ |  $\color{red}{\textbf{ Helt uenig } (-2)}$ | 1 |
+| Bella | $\color{red}{\textbf{Uenig } (-1)}$ | $\color{green}{\textbf{Enig } (1)}$ | 2 |
+| Charlie | $\color{red}{\textbf{Uenig } (-1)}$ |  $\color{red}{\textbf{Uenig } (-1)}$ | 2 |
+| Doresa | $\color{green}{\textbf{Enig } (1)}$ |  $\color{green}{\textbf{Helt enig } (2)}$ | 3 |
 
 For at kunne lave en matematisk model, står der også tilhørende værdier fra $-2$ til $2$ i tabellen, da vi har brug for talværdier for at kunne regne i modellen. Så f.eks. er $x_1=-2$ for Andy, mens $x_1=1$ for Doresa.
 
@@ -72,9 +72,9 @@ $$score(Andy, parti 2) = 0 + 1 \cdot (-2) + 0 \cdot (-2) = -2$$
 $$score(Andy, parti 3) = 0 + 0 \cdot (-2) + 0 \cdot (-2) = 0$$
 Så lige nu er den højeste score for Andy for parti 1, hvilket er godt, da han faktisk stemmer på parti 1. 
 
-Men modellen skulle jo ikke kun give en score, men faktisk give en procent for hvert parti. Så vi skal have fundet en metode til at få procenter i stedet for scoren. Om procenterne ved vi, at de skal være positive, at de skal være mellem 0 og 1, og endeligt, at det skal give 1 tilsammen.
+Men modellen skulle jo ikke kun give en score, men faktisk give en procent for hvert parti. Så vi skal have fundet en metode til at få procenter i stedet for scores. Om procenterne ved vi, at de skal være positive, at de skal være mellem 0 og 1, og endeligt, at det skal give 1 tilsammen.
 
-En simpel måde at få tallene positive på er at sige $e$ opløftet i scoren. 
+En simpel måde at få tallene positive på er at tage $e$ opløftet i scoren. 
 
 $$
 \begin{aligned}
@@ -98,6 +98,8 @@ For Andy giver det følgende:
 
 Så med de valgte værdier af bias og vægte, angiver modellen 86.7% for parti 1, 1.6% for parti 2 og 11.7% for parti 3 for Andy. Da han faktisk stemte på parti 1, er det jo rigtigt fint, uden dog at være helt perfekt, da vi helst ville have endnu større sandsynlighed for parti 1.
 
+Denne metode til at omregne fra score to procent kaldes for **Softmax**.
+
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 1
 
@@ -108,18 +110,18 @@ Så med de valgte værdier af bias og vægte, angiver modellen 86.7% for parti 1
 
 Det var åbenlyst ikke så godt for Bella, Charlie og Doresa, hvor modellen for alle 3 peger på et forkert parti. Ideen er nu, at vi skal ændre bias og vægte, så modellen bliver bedre. 
 
-Lad os første omgang se på $w_1$ og dermed $x_1$. Bemærk, at $x_1 = -2$ for Andy, at $x_1 = -1$ for Bella og Charlie, og at $x_1 = 1$ for Doresa. Da vi gerne vil have Andy til at få en høj score, og dermed en høj sandsynlighed for parti 1, giver det mening at lade $w_1$ for parti 1 være en negativ værdi. Før havde vi sat $w_1=-1$, men lad os forstærke effekten med $w_1 = -3$ for parti 1. 
+Lad os første omgang se på $w_1$ og dermed $x_1$. Bemærk, at $x_1 = -2$ for Andy, at $x_1 = -1$ for Bella og Charlie, og at $x_1 = 1$ for Doresa. Da vi gerne vil have Andy til at få en høj score, og dermed en høj sandsynlighed for parti 1, giver det mening at lade $w_1$ for parti 1 være en negativ værdi, så $w_1 \cdot w_2$ bliver postiv. Før havde vi sat $w_1=-1$, men lad os forstærke effekten med $w_1 = -3$ for parti 1, så scoren for Andy bliver højere. 
 
 Det giver Andy en positiv score $w_1 \cdot x_1 = -3 \cdot (-2) = 6$, hvilket er godt, da vi gerne vil have, at modellen peger på parti 1 for ham.
 
 Det giver Doresa en negative score $w_1 \cdot x_1 = -3 \cdot 1= -3$, hvilket er godt, da vi gerne vil have, at modellen ikke peger på parti 1 for hende.
 
-Det giver så desværre både Bella og Charlie en positiv score, da $w_1 \cdot x_1 = -3 \cdot (-1) = 3$, hvilket ikke er så godt, da vi gerne vil have, at modellen ikke peger på parti 1 for dem. Det venter vi lige med at gøre noget ved.
+Det giver så desværre både Bella og Charlie en positiv score, da $w_1 \cdot x_1 = -3 \cdot (-1) = 3$, hvilket ikke er så godt, da vi gerne vil have, at modellen ikke peger på parti 1 for dem. Det venter vi lige med at gøre noget ved, da vi starter med at få modellen til at pege på parti 3 for Doresa.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 2
 
-- Overvej hvilken værdi $w_1$ for parti 3 kan gives, så Doresa får en positiv score, mens de øvrige tre får en negativ score? Hint, få scoren for Doresa for parti 3 til at blive $6$, som scoren for Andy blev for parti 1.
+- Overvej hvilken værdi $w_1$ for parti 3 kan gives, så Doresa får en positiv score, mens de øvrige tre får en negativ score? Vælg vægten, så scoren for Doresa for parti 3 til at blive $6$, som scoren for Andy blev for parti 1.
 - Beregn sandsynligheden for hver af de 3 partier for Doresa med den værdi, du har valgt.
 
 :::
@@ -133,12 +135,12 @@ Samlet ser det nu således ud. hvor både (score) og sandsynlighed er angivet fo
 | Charlie | (3) 95.3% | (0) 4.7% | (-6) 0.0% |
 | Doresa | (-3) 0.0% | (0) 0.3% | (6) 99.7% |
 
-Vi skal nu have modellen til at vælge parti 2 for Bella og Charlie, uden at ændre ved, at modellen vælger parti 1 til Andy og parti 3 til Doresa. 
+Vi skal nu have modellen til at vælge parti 2 for Bella og Charlie, men uden at ødelægge, at modellen vælger parti 1 til Andy og parti 3 til Doresa. 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 3
 
-- Overvej hvilken værdi biaset $w_0$ for parti 2 kan gives, så Bella og Charlie får højst score for parti 2 (scoren skal over 3, da de allerede har scoren 3 for parti 1), men uden scoren for Andy eller Doresa bliver højst for parti 2 (de har begge 6 som højst score til hhv. parti 1 og parti 3).
+- Overvej hvilken værdi biaset $w_0$ for parti 2 kan gives, så Bella og Charlie får scorer højst for parti 2 (scoren skal over 3, da de allerede har scoren 3 for parti 1), men uden scoren for Andy eller Doresa bliver højst for parti 2 (de har begge 6 som højst score til hhv. parti 1 og parti 3).
 
 :::
 
@@ -155,19 +157,17 @@ Men det kan stadig gøres bedre, bl.a. ved også at tage $w_2$ i brug.
 
 
 ## Brug af app til træning af kunstig neuron
-Med det meget lille, simple eksempel kunne vi altså godt justere vægtene manuelt og få en nogenlunde resultat. Men hvis der bliver 100, 1000 eller millioner af vægte, så er det næppe en god ide. I stedet skal vi bruge noget mere advanceret matematik, som vi ikke vil gennemgå i dette forløb, til at optimere vægtene i modellen. 
+Med det meget lille, simple eksempel kunne vi altså godt justere vægtene manuelt og få et nogenlunde resultat. Men hvis der bliver 100, 1000 eller millioner af vægte, så er det næppe en god ide. Det kræver noget lidt mere advanceret matematik, som vi ikke vil gennemgå i dette forløb. Du kan læse mere om dette i denne note om [Kunstige neurale netværk til multipel klassifikation]{https://aimat.dk/noter/softmax/softmax.html}
 
-Du finder appen [her](https://apps01.math.aau.dk/ai/multi-neuron/) og datasættet som excelfil [her](/undervisningsforlob/valg_af_parti/datasæt_4_personer.xlsx).
+I stedet vil vi bruge en app til formålet. Du finder appen [her](https://apps01.math.aau.dk/ai/multi-neuron/) og datasættet som excelfil [her](/undervisningsforlob/valg_af_parti/datasæt_4_personer.xlsx).
 
-
-Her mangler en kort video, der viser brugen af appen.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 4
 
 - Åbn appen og indlæs datasættet
-- Vælg t som target varibel og både x1 og x2 som feature variable
-- Sæt learning rate til 0,1 og antal iterationer til 1000
+- Vælg $t$ som target varibel og både $x_1$ og $x_2$ som feature variable
+- Sæt learning rate til $0.1$ og antal iterationer til $1000$
 - Træn modellen
 - Sammenlign de værdier til bias og vægte, som appen er nået frem til, med de værdier, som vi manuelt nåede frem til. Meget ligner, noget er lidt anderledes.
 
@@ -183,7 +183,7 @@ Med appens værdier ser tabellen endeligt således ud, hvilket må siges at vær
 | Doresa | (-15.1) 0.0% | (5.2) 0.8% | (9.9) 99.2% |
 
 ## 16 politiske kandidaters svar
-Lad os se på et lidt større eksempel, nu med autentiske data fra kandidattest til folketingsvalget i 2026.
+Lad os se på et lidt større eksempel, nu med autentiske data fra kandidattest til folketingsvalget i 2026. Vi ser på 16 kandidater og deres svar på 2 spørgsmål.
 
 | Parti | Navn | Spørgsmål 1 | Spørgsmål 2 |
 |-------|:---------------------------|:-----------:|:-----------:|
@@ -208,7 +208,7 @@ Lad os se på et lidt større eksempel, nu med autentiske data fra kandidattest 
 
 De to spørgsmål er
 
-Spørgsmål 1: De boligejere, der tjener mest på prisstigninger, skal betale mere i skat.
+Spørgsmål 1: De boligejere, der tjener mest på prisstigninger, skal betale mere i skat. \
 Spørgsmål 2: Reglerne for dyrevelfærd skal strammes, selv om det kan gøre fødevarer fra Danmark dyrere.
 
 Datasættet som excelfil med værdier fra -2 (helt uenig) til 2 (helt enig)  [her](/undervisningsforlob/valg_af_parti/datasæt_16_personer.xlsx).
