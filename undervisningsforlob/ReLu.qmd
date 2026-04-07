@@ -13,6 +13,7 @@ Forløbet kræver kendskab til:
 
 + Lineære funktioner.
 + Differentialregning herunder differentiation af sammensatte funktioner.
++ Integralregning (fra opgave 13 og frem).
 
 **Tidsforbrug:** Ca. 1-2 x 90 minutter.
 
@@ -23,27 +24,27 @@ Forløbet kræver kendskab til:
 
 ### Formål
 
-I opbygningen af kunstige neurale netværk er aktiveringsfunktioner helt centrale. Hvis ikke man bruger aktiveringsfunktioner i et kunstigt neuralt netværk, vil man faktisk bare bygge en stor lineær funktion af inputværdierne. Og lineære funktioner kan man ikke prædiktere ret meget med!
+I opbygningen af kunstige neurale netværk er aktiveringsfunktioner helt centrale. Hvis ikke man bruger aktiveringsfunktioner i et kunstigt neuralt netværk, vil man faktisk bare bygge en stor lineær funktion af inputværdierne. Og verden er sjældent lineær -- derfor har man brug for aktiveringsfunktioner.
 
-En ofte anvendt aktiveringsfunktion i de skjulte lag er ReLu-funktionen. Den er *næsten* lineær og så alligevel slet ikke. Det skal vi se nærmere på i dette forløb.
+En ofte anvendt aktiveringsfunktion i de skjulte lag er ReLu-funktionen. Den er *næsten* lineær og så alligevel slet ikke. I dette forløb skal vi se på, hvordan man kan sammensætte ReLu-funktioner og på den måde modellere ikke-lineære funktioner.
 
 :::
 
 ## Introduktion
 
-Start med at se denne video, hvor vi kort forklarer, hvad det der kunstig intelligens egentlig handler om:
+Start med at se denne video, hvor vi kort forklarer, hvad kunstig intelligens handler om:
 
 {{< video https://youtu.be/ivrBEopralQ >}}
 
-Når man træner kunstig intelligens opbygger man lidt forsimplet sagt bare en kæmpe stor sammensat funktion. Når man sætter funktioner sammen, bruger man en klasse af funktioner, som kaldes for aktiveringsfunktioner. 
+Når man træner kunstig intelligens opbygger man lidt forsimplet bare en kæmpe stor sammensat funktion! Når funktioner sammensættes i neurale netværk, bruger man en klasse af funktioner, som kaldes for aktiveringsfunktioner. 
 
-Vi vil illustrere det med et eksempel med det, som man kalder for et kunstigt neuralt netværk med et skjult lag:
+Vi vil illustrere det med et simpelt eksempel, som kaldes for et kunstigt neuralt netværk med ét skjult lag. Det kan tegnes sådan her:
 
 ![Simpelt kunstigt neuralt netværk. Netværket har inputvariable $x_1, x_2$ og ét skjult lag med to neuroner (her vist som de to grønne cirkler i midten).](../noter/simple_neurale_net_regression/images/neuralt_net_regression.png){#fig-neuralt_net width=70% fig-align='center'}
 
-Alle pilene i @fig-neuralt_net kaldes for vægte.
+Alle pilene i @fig-neuralt_net kaldes for vægte. I netværket her, er der overordnet set $v$-, $u$- og $w$-vægte.
 
-Idéen er, at man beregner en outputværdi $o$ baseret på to inputvariable (eller features) $x_1$ og $x_2$. Det foregår på følgende måde.
+Idéen er, at man beregner en outputværdi $o$ baseret på to inputvariable (eller features) kaldet for $x_1$ og $x_2$. Det foregår på følgende måde:
 
 Ved hjælp af inputvariablene og $v$-vægtene (de lysegrønne pile på @fig-neuralt_net) beregner vi $z_1$:
 
@@ -51,7 +52,7 @@ $$
 z_1 = f(v_0 + v_1 \cdot x_1 + v_2 \cdot x_2)
 $$ {#eq-z1}
 
-Her er $f$ en funktion, som kaldes for en **aktiveringsfunktion**, og det er den, vi skal se nærmere på i det følgende.
+Her er $f$ et eksempel på en **aktiveringsfunktion**, og det er den, vi skal se nærmere på i det følgende.
 
 På tilsvarende vis udregner vi $z_2$ ved at bruge $u$-vægtene (de mørkegrønne pile på @fig-neuralt_net):
 
@@ -66,8 +67,9 @@ $$
 o = w_0 + w_1 \cdot z_1 + w_2 \cdot z_2
 $$ 
 
+Nogle gange bruger man også en aktiveringsfunktion, når outputværdien $o$ skal beregnes. Det vender vi kort tilbage til i opgave 2.
 
-Den første opgave handler om, at hvis man bare sammensætter lineære funktioner, så får man bare nye lineære funktioner. Opgaven kan eventuelt springes over.
+Den første opgave handler om, at hvis man kun sammensætter lineære funktioner, så får man bare nye lineære funktioner. Opgaven kan eventuelt springes over -- spørg din lærer.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
@@ -79,12 +81,12 @@ $$
 f(x)=x
 $$
 
-Denne funktion kalder man også for *identiteten*.
+Denne funktion kalder man også for *identiteten*, og den svarer reelt til ikke at bruge nogen aktiveringsfunktion.
 
 * Vis, at outputværdien $o$ kommer til at afhænge lineært af $x_1$ og $x_2$. Det vil sige, at $o$ kan skrives på formen
 
    $$
-   o = a + b \cdot x_1 + c \cdot x_2
+   o = a \cdot x_1 + b \cdot x_2 + c
    $$
 :::
 
@@ -95,6 +97,12 @@ En anden aktiveringsfunktion, som ofte bruges, hvis outputværdien $o$ skal kunn
 $$
 \sigma (x) = \frac{1}{1+\textrm{e}^{-x}}
 $$
+
+hvor ouputværdien $o$, så beregnes på denne måde:
+
+$$
+o = \sigma(w_0 + w_1 \cdot z_1 + w_2 \cdot z_2)
+$$ 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
@@ -146,7 +154,7 @@ Skriv i input-feltet: `ReLu(x) = Hvis(x < 0, 0, x)`
 :::
 
 
-Du har lige opdaget, at ReLu-funktionen ikke er differentiabel i $x=0$. Men det definerer os ud af og beslutter, at tangenthældningen i $0$ er $0$. Det vil sige, at vi sætter simpelthen $\textrm{ReLu}'(0)=0$. Altså siger vi
+Du har lige opdaget, at ReLu-funktionen ikke er differentiabel i $x=0$. Det vælger vi at definere os ud af og beslutter simpelthen, at tangenthældningen i $0$ skal være $0$! Det vil sige, at vi sætter $\textrm{ReLu}'(0)=0$. Samlet set får vi derfor:
 
 $$
 \textrm{ReLu}'(x) =
@@ -158,7 +166,9 @@ $$ {#eq-diffReLu}
 
 Bemærk for øvrigt, at den afledede ReLu-funktion ikke er kontinuert i $0$. Det møder du ikke så tit!
 
-Vi prøver nu, at sætte ReLu-funktioner sammen med lineære funktioner. For at holde tingene simple ser vi på det tilfælde, hvor vi har én inputvariabel, som vi bare vil kalde for $x$
+Vi prøver nu, at sætte ReLu-funktioner sammen med lineære funktioner. Hvad det har at gøre med kunstige neurale netværk kommer vil tilbage til i det næste afsnit.
+
+For at holde tingene simple ser vi på det tilfælde, hvor vi har én inputvariabel, som vi bare vil kalde for $x$.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
@@ -170,7 +180,7 @@ $$
 f(x)=w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x)
 $$
 
-+ Tegn grafen for $f$ (du kan bruge den definitionn af ReLu, som du lavede i opgave 3). Indtast forskriften, som den står ovenfor, og når GeoGebra spørger om du vil oprette skydere for $w_0$, $w_1$ og $v_0$, vælger du ja.
++ Tegn grafen for $f$ (du kan bruge den definition af ReLu, som du lavede i opgave 3). Indtast forskriften, som den står ovenfor, og når GeoGebra spørger, om du vil oprette skydere for $w_0$, $w_1$ og $v_0$, vælger du ja.
 
 + Hvad er betydning af $w_0$?
 
@@ -180,9 +190,11 @@ $$
 
 Lad os regne lidt:
 
++ Beregn den $x$-værdi, hvor grafen knækker. Hint: Det sker, når inputtet til ReLu-funktionen er $0$.
+
 + Brug (@eq-diffReLu) til at bestemme $f'$. Stemmer det med det, du fandt ovenfor?
 
-+ Beregn den $x$-værdi, hvor grafen knækker. Hint: Det sker, når inputtet til ReLu-funktionen er $0$.
+
 
 :::
 
@@ -196,15 +208,15 @@ f(x)=w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x)
 $$
 
 + Brug din viden fra opgave 4 og bestem $w_0$, $w_1$ og $v_0$ så grafen for 
-  - den vandrette del af $f$ har ligning $y=3$
-  - den ikke vandrette del har en hældning på $1.5$
+  - den vandrette del af $f$ har ligning $y=3$.
+  - den ikke vandrette del har en hældning på $1.5$.
   - $f$ knækker i  $x=3$. 
   
 + Tegn grafen, så du kan kontrollere dit resultat.
 
 + Bestem $w_0$, $w_1$ og $v_0$ så grafen for 
-  - den vandrette del af $f$ har ligning $y=5.6$
-  - den ikke vandrette del har en hældning på $-2$
+  - den vandrette del af $f$ har ligning $y=5.6$.
+  - den ikke vandrette del har en hældning på $-2$.
   - $f$ knækker i  $x=-5$. 
   
 + Tegn grafen, så du kan kontrollere dit resultat.
@@ -216,7 +228,7 @@ $$
 
 Vi kan nu passende spørge os selv, hvad ReLu-funktionen i opgave 4 og 5 har at gøre med et kunstigt neuralt netværk. En hel del faktisk!
 
-Betragt følgende netværk:
+Betragt følgende netværk, hvor det skjlute lag kun består af én neuron:
 
 
 ![Simpelt kunstigt neuralt netværk. Netværket har inputvariable $x_1, x_2$ og ét skjult lag med én neuron.](ReLu/simpelt_NN.png){#fig-simpelt_NN width=70% fig-align='center'}
@@ -234,9 +246,7 @@ $$
 
 som præcis svarer til den funktion, som vi har set på i opgave 4 og 5.
 
-I den næste opgave, vil vi se på tilfældet, som svarer til @fig-neuralt_net.
-
-**SPG: Men først er $x=v_1 \cdot x_1 + v_2 \cdot x_2$ og dernæst er $x=u_1 \cdot x_1 + u_2 \cdot x_2$, så $x$ har ikke helt samme betydning. Hvordan forklarer vi lige det...?**
+I de næste opgaver skal vi se på, hvad der sker, hvis vi sætter flere ReLu-funktioner sammen.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
@@ -248,15 +258,16 @@ $$
 f(x)=w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x) + w_2 \cdot \textrm{ReLu}(u_0 + x)
 $$
 
-+ Tegn grafen for $f$ (du kan bruge den definitionn af ReLu, som du lavede i opgave 3). Igen opretter du skydere for $w_0$, $w_1$, $w_2$, $v_0$ og $u_0$.
++ Tegn grafen for $f$ (du kan bruge den definition af ReLu, som du lavede i opgave 3). Igen opretter du skydere for $w_0$, $w_1$, $w_2$, $v_0$ og $u_0$.
 
 + Hvad er betydning af $w_0$?
 
-Det er nemmest at forstå, hvad der sker, hvis vi sørger for, at den første ReLu-funktionen definerer det første knæk, mens den anden ReLu-funktion definerer det andet knæk. Det kan vi opnå, hvis vi sørger for, at
+Det er nemmest at forstå, hvad der sker, hvis vi sørger for, at den første ReLu-funktion definerer det første knæk, mens den anden ReLu-funktion definerer det andet knæk. Det kan vi opnå, hvis vi sørger for, at
 
 $$
 - v_0 < - u_0
 $$
+(Det kan du jo lige overveje!)
 
 Det vil sige, at
 
@@ -270,25 +281,34 @@ Derfor:
 
 + I hvilke to $x$-værdier knækker grafen?
 
-+ Hvad hældningen af den *første* ikke vandrette del af grafen?
++ Hvad er hældningen af den *første* ikke vandrette del af grafen?
 
-+ Hvad hældningen af den *anden* ikke vandrette del af grafen? Tænk dig om her! 
++ Hvad er hældningen af den *anden* ikke vandrette del af grafen? Tænk dig om her! 
 
 
 :::
 
+Funktionen $f$ fra ovenstående opgave svarer *næsten* til det netværk, som vi har illustreret i @fig-neuralt_net. Men vi har lavet en forsimpling i opgaven. Skulle vi modellere netværket i @fig-neuralt_net, skulle vi have set på funktionen
+
+$$
+\begin{aligned}
+f(x_1,x_2)=w_0 &+ w_1 \cdot \textrm{ReLu}(v_0 + \underbrace{v_1 \cdot x_1 + v_2 \cdot x_2}_{x}) \\ &+ w_2 \cdot \textrm{ReLu}(u_0 + \underbrace{u_1 \cdot x_1 + u_2 \cdot x_2}_{\textrm{noget andet end } x})
+\end{aligned}
+$$
+
+Som det fremgår af ovenstående kan vi ikke bare tænke på $f$, som en funktion af én variabel $x$, men den forsimplede funktion fra opgave 6 er glimrende til at forstå, hvordan sammensætninger af ReLu-funktioner kan bruges til at modellere ikke-lineære funktioner.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
 ### Opgave 7: Endnu mere sammensat ReLu
 
-Vi ser på funktionen
+Vi ser igen på funktionen
 
 $$
 f(x)=w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x) + w_2 \cdot \textrm{ReLu}(u_0 + x)
 $$
 
-+ Bestem $w_0$, $w_1$, $v_0$, $w_2$ og $u_0$ så grafen for 
++ Bestem $w_0$, $w_1$, $w_2$, $v_0$ og $u_0$ så grafen for 
   - den vandrette del af $f$ har ligning $y=-1$
   - den første ikke vandrette del har en hældning på $3$
   - den anden ikke vandrette del har en hældning på $4$
@@ -297,7 +317,7 @@ $$
 + Tegn grafen, så du kan kontrollere dit resultat.
 
 
-+ Bestem $w_0$, $w_1$, $v_0$, $w_2$ og $u_0$ så grafen for 
++ Bestem $w_0$, $w_1$, $w_2$, $v_0$ og $u_0$ så grafen for 
   - den vandrette del af $f$ har ligning $y=7$
   - den første ikke vandrette del har en hældning på $-2$
   - den anden ikke vandrette del har en hældning på $0$
@@ -332,7 +352,7 @@ som en approksimation (det vil sige en tilnærmelse) til $g$.
 
 * Tegn grafen for $g$ i GeoGebra.
 
-* Tegn grafen for $f$ ved at indsætte skydere for vægtene $w_0$, $w_1$, $v_0$, $w_2$ og $u_0$.
+* Tegn grafen for $f$ ved at indsætte skydere for vægtene $w_0$, $w_1$, $w_2$, $v_0$ og $u_0$.
 
 * Prøv dig frem. Kan du finde nogle værdier af vægtene, så grafen for $f$ er tæt på grafen for $g$?
 
@@ -356,13 +376,152 @@ Den overordnede idé er, at vi vil approksimere $g$ med en aftagende lineær fun
 
 * Opstil et udtryk for forskriften for $f$, som kun afhænger af $w_1$. 
 
-Bemærk, at hvis vi skal have en rimelig approksimation, så må vi kræve, at $w_1<0$.
+Bemærk, at hvis den første lineære funktion skal være aftagende, så må vi kræve, at $w_1<0$.
 
-* Tegn i GeoGebra grafen for $g$ og $f$, hvor $f$ nu kun afhænger af $w_1$-vægten (som du repræsenterer ved hjælp af en skyder). Juster på din skyder for $w_1$. Hvad er en rimelig værdi af $w_1$, hvis $f$ skal være en god approksimation til $g$?
+* Tegn i GeoGebra grafen for $g$ og $f$, hvor $f$ nu kun afhænger af $w_1$-vægten (som du repræsenterer ved hjælp af en skyder, som kun har negative værdier). Juster på din skyder for $w_1$. Hvad er en rimelig værdi af $w_1$, hvis $f$ skal være en god approksimation til $g$?
 
 :::
 
-I opgave 9 kan du se, at grafen for $f$ og $g$ skærer hinanden i intervallet $[-4,0]$.
+Da grafen for både $f$ og $g$ er symmetriske omkring $y$-aksen i intervallet $[-4,4]$ vil vi i det følgende nøjes med at se på de to grafer i intervallet $[-4,0]$.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 10: Forsimplet udtryk for $f$ i $[-4,0]$
+
+Da grafen for $f$ kun knækker i $x=-4$ og i $x=0$, så er grafen for $f$ i intervallet $[-4,0]$ en ret linje.
+
+* Bestem en ligning for den rette linje, som grafen for $f$ er sammenfaldende med i intervallet $[-4,0]$.
+
+:::
+
+I opgave 9 kan du se, at grafen for $f$ og $g$ skærer hinanden én gang i intervallet $]-4,0[$.  Og ændrer du på værdien af $w_1$, så flytter skæringspunktet sig. 
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 11: Skæringspunkt
+
++ Beregn førstekoordinaten til skæringspunktet mellem grafen for $f$ og $g$ i intervallet $]-4,0[$.
+
+*OBS! Førstekoordinaten kommer til at afhænge af $w_1$*.
+
+:::
+
+En idé til at bestemme den værdi af $w_1$, som giver en god approksimation, vil være at bestemme den værdi, som minimerer arealet af det område, som grafen for $f$ og $g$ afgrænser i $[-4,0]$. Dette er illustreres i figuren herunder:
+
+![Grafen for $f$ og $g$ fra opgave 8.](ReLu/areal_mellem.png){#fig-areal_mellem width=50% fig-align='center'}
+
+Hvis vi kalder skæringspunktet $P$'s førstekoordinat for $x_1$, kan vi se, at i intervallet $[-4,x_1]$ ligger grafen for $g$ over grafen for $f$. Det vil sige, at arealet $A_1$ af det område, som de to grafer afgrænser i dette interval, er:
+
+$$
+A_1 =  \int_{-4}^{x_1} g(x)-f(x) \, dx
+$$
+Omvendt ligger grafen for $f$ over grafen for $g$ i intervallet $[x_1,0]$ og arealet $A_2$ af det område, som de to grafer afgrænser her, er:
+
+$$
+A_2 =  \int_{x_1}^{0} f(x)-g(x) \, dx
+$$
+
+En idé kunne derfor være, at bestemme $w_1$ så det samlede areal
+
+$$
+A_1 + A_2 = \int_{-4}^{x_1} g(x)-f(x) \, dx + \int_{x_1}^{0} f(x)-g(x) \, dx
+$$
+
+bliver så lille som mulig. 
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 12: Minimer areal (eksperimentér!)
+
+Tag udgangspunkt i den GeoGebra figur, som du lavede i opgave 9.
+
++ Bestem ved hjælp af skæringsværktøjet skæringen mellem grafen for $f$ og $g$ i intervallet $]-4,0[$ og kald dette skæringspunkt for $P$.
+
++ Beregn ved hjælp af GeoGebra arealet $A_1$. Skriv sådan her i GeoGebra: 
+
+   `IntegralMellem(g, f, -4, x(P))`.
+   
+   *Forklaring! Når man skriver  `x(P)` får man punktet $P$'s $x$-koordinat*. 
+
++ Beregn på tilsvarende vis arealet $A_2$.
+
++ Beregn i GeoGebra summen af $A_1 + A_2$. Kald for eksempel denne sum for `sum`.
+
++ Justér på skyderen for $w_1$. Hvilken værdi skal $w_1$ have, så $A_1+A_2$ bliver mindst?
+
+:::
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 13: Minimer areal (regn!)
+
++ Beregn ved hjælp af dit CAS værktøj den værdi af $w_1$, som minimerer $A_1+A_2$. Husk at kontrollere, at det er et minimumssted, du har fundet!
+
++ Stemmer dit resultat med det du fandt i opgave 12?
+
+:::
+
+Det sidste afsnit her er valgfrit -- spørg din lærer, om du skal springe det over!
+
+### Andre muligheder
+
+I opgave 13 fandt du den værdi af $w_1$, som minimerer arealet
+
+$$
+A_1 + A_2 = \int_{-4}^{x_1} g(x)-f(x) \, dx + \int_{x_1}^{0} f(x)-g(x) \, dx
+$$ {#eq-A1A2}
+
+Vi minder lige om, at den numeriske værdi af et tal fjerner eventuelle negative fortegn. For eksempel er
+
+$$
+|7| = 7 \quad \quad \textrm{og} \quad \quad |-7| = 7.
+$$
+
+Det betyder, at vi kan omskrive udtrykket i (@eq-A1A2) til
+
+$$
+A_1 + A_2 = \int_{-4}^{x_1} |f(x)-g(x)| \, dx + \int_{x_1}^{0} |f(x)-g(x)| \, dx
+$$
+
+og bruger vi indskudsreglen for bestemte integraler ser, vi at
+
+$$
+A_1 + A_2 = \int_{-4}^{0} |f(x)-g(x)| \, dx
+$$
+Husk på, at enhver kontinuert funktion har en stamfunktion, så selvom integraden $|f(x)-g(x)|$ måske ikke er differentiabel, så er det altså nok, at den er kontinuert. 
+
+I opgaven 13 fandt du så faktisk den værdi af $w_1$, som minimerer
+
+$$
+ \int_{-4}^{0} |f(x)-g(x)| \, dx
+$$
+
+En anden måde at fjerne negative fortegn er ved at opløfte i anden. Så en anden idé kunne være, at bestemme $w_1$ så
+
+$$
+ \int_{-4}^{0} \left (f(x)-g(x) \right )^2 \, dx
+$$
+
+minimeres. 
+
+::: {.callout-note collapse="false" appearance="minimal"}
+
+### Opgave 14: Et andet mål
+
++ Beregn ved hjælp af dit CAS værktøj den værdi af $w_1$, som minimerer 
+
+   $$
+    \int_{-4}^{0} \left (f(x)-g(x) \right )^2 \, dx
+   $$
+
+   Husk at kontrollere, at det er et minimumssted, du har fundet!
+
++ Er der stor forskel på den værdi af $w_1$, som du finder her, sammenlignet med den værdi, som du fandt i opgave 13?
+
+:::
 
 
 ## Delvis facitliste
