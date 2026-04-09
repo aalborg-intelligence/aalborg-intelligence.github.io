@@ -118,7 +118,7 @@ window.Quarto = {
 
 </head>
 
-<body class="floating nav-fixed quarto-light">
+<body class="floating nav-fixed slimcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -197,7 +197,7 @@ window.Quarto = {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -239,10 +239,10 @@ window.Quarto = {
 <li>Sandsynlighedsfelter.</li>
 <li>Linjens ligning på formen <span class="math inline">\(a \cdot x + b \cdot y + c = 0\)</span>.</li>
 </ul>
-<p><strong>Tidsforbrug:</strong> Ca. 150 minutter.</p>
-<p>Hvis man forinden har arbejdet med det korte forløb <a href="https://aimat.dk/undervisningsforlob/sengetester.html">Sengetester i IKEA</a>, vil det være en fordel, men dette er ikke en forudsætning.</p>
+<p>Hvis man forinden har arbejdet med det korte forløb <a href="https://aimat.dk/undervisningsforlob/sengetester.html">Sengetester i IKEA</a>, vil det være en fordel, men det er ikke en forudsætning.</p>
 <p>På tilsvarende vis vil det også gøre dette forløb lidt lettere, hvis man forinden har arbejdet med de første dele af det lange forløb om <a href="https://aimat.dk/undervisningsforlob/kunstige_neuroner_langt_forlob/kunstige_neuroner_forside.html">Kunstige neuroner</a>, men det er heller ikke en forudsætning.</p>
-<p>Hvis man har arbejdet med det korte forløb <a href="https://aimat.dk/undervisningsforlob/kandidattest.html">Hvilken politiker er du mest enig med</a>, kan konteksten være mere tydelig, men det er heller ikke en forudsætning.</p>
+<p>Hvis man har arbejdet med det korte forløb <a href="https://aimat.dk/undervisningsforlob/kandidattest.html">Hvilken politiker er du mest enig med</a>, kan konteksten være mere tydelig, men det er igen heller ikke en forudsætning.</p>
+<p><strong>Tidsforbrug:</strong> Ca. 150 minutter.</p>
 </div>
 </div>
 </div>
@@ -250,137 +250,182 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="formål">Formål</h3>
 <p>Formålet med dette forløb er</p>
 <ul>
-<li>at lære <strong>Softmax</strong> at kende som et værktøj til <strong>Multipel Klassifikation</strong>.</li>
-<li>at lære lidt om <strong>Kunstige Neuroner</strong>, samt at anvende en app til at træne en kunstig neuron.</li>
-<li>at undersøge, hvordan en kunstig neuron til multipel klassifikation kan bruges til at forudsige, hvilket parti man vil stemme på, ud fra svar på en række spørgsmål, f.eks. i en kandidattest.</li>
+<li>at lære <strong>softmax</strong> at kende som et værktøj til <strong>multipel klassifikation</strong>.</li>
+<li>at lære lidt om <strong>kunstige neuroner</strong>, samt at anvende en app til at træne en kunstig neuron.</li>
+<li>at undersøge, hvordan en kunstig neuron til multipel klassifikation kan bruges til at forudsige, hvilket parti man vil stemme på ud fra svar på en række spørgsmål, som det for eksempel gøres i kandidattests.</li>
 </ul>
 </section>
-<section id="softmax-modellen" class="level2">
+<section id="softmax-modellen" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="softmax-modellen">Softmax modellen</h2>
-<p>Vi vil gerne lave en model, som kan forudsige, hvilket parti man vil stemme på, ud fra ens svar på en række spørgsmål.</p>
-<p>Vi starter med et meget lille fiktivt eksempel, hvor 4 personer, Andy, Bella, Charlie og Doresa, har svaret på 2 spørgsmål samt angivet, hvilket parti de stemmer på.</p>
-<p>Vi lader som om partierne er S (Socialdemokratiet), E (Enhedslisten) og V (Venstre).</p>
-<table class="table">
+<p>Vi vil gerne lave en model, som kan forudsige, hvilket parti man vil stemme på, baseret på svarene fra en række spørgsmål. Det er for eksempel det, der sker, når diverse medier laver kandidattests i forbindelse med valg. Testene fungerer som regel på den måde, at man bliver stillet en række forskellige spørgsmål, og så skal man svare på en skala fra "helt uenig" til "helt enig". Disse kategorier af svar kan for eksempel oversættes til matematik<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> på denne måde:</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;I nogle kandidattests kan man ikke vælge "Hverken/eller", men de resterende kategorier oversættes stadig til negative og positive værdier, som det er eksemplificeret i tabellen.</p></div></div><table class="table-bordered table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Helt uenig</th>
+<th style="text-align: center;">Uenig</th>
+<th style="text-align: center;">Hverken/eller</th>
+<th style="text-align: center;">Enig</th>
+<th style="text-align: center;">Helt enig</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(-2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(-1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Vi starter med et meget lille fiktivt eksempel, hvor fire personer: Andy, Bella, Charlie og Doresa, har svaret på to spørgsmål samt angivet, hvilket parti de stemmer på.</p>
+<p>Vi forestiller os, at de to spørgsmål er:</p>
+<ul>
+<li><p>Spørgsmål 1: Topskatten skal sættes op.</p></li>
+<li><p>Spørgsmål 2: Danske virksomheder skal pålægges en CO2-afgift.</p></li>
+</ul>
+<p>Vi vil så indføre to variable <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span>, hvor</p>
+<ul>
+<li><p><span class="math inline">\(x_1\)</span>: svaret på "Topskatten skal sættes op" angivet på en skala fra <span class="math inline">\(-2\)</span> til <span class="math inline">\(2\)</span>.</p></li>
+<li><p><span class="math inline">\(x_2\)</span>: svaret på "Danske virksomheder skal pålægges en CO2-afgift" angivet på en skala fra <span class="math inline">\(-2\)</span> til <span class="math inline">\(2\)</span>.</p></li>
+</ul>
+<p>Vi lader som om, at partierne er <strong>S</strong> (Socialdemokratiet), <strong>E</strong>(Enhedslisten) og <strong>V</strong> (Venstre). Det parti, som en given person vil stemme på, vil vi kalde for <span class="math inline">\(t\)</span> (som står for <strong>targetværdi</strong>). Andy, Bella, Charlie og Doresa har nu svaret følgende:</p>
+<table class="table-bordered table">
 <colgroup>
-<col style="width: 11%">
-<col style="width: 45%">
-<col style="width: 21%">
-<col style="width: 21%">
+<col style="width: 15%">
+<col style="width: 27%">
+<col style="width: 27%">
+<col style="width: 29%">
 </colgroup>
 <thead>
 <tr class="header">
 <th>Navn</th>
 <th style="text-align: left;">Spørgsmål 1 <span class="math inline">\((x_1)\)</span></th>
-<th style="text-align: center;">Spørgsmål 2 <span class="math inline">\((x_2)\)</span></th>
-<th style="text-align: center;">Parti (t)</th>
+<th style="text-align: left;">Spørgsmål 2 <span class="math inline">\((x_2)\)</span></th>
+<th style="text-align: center;">Parti (<span class="math inline">\(t\)</span>)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>Andy</td>
-<td style="text-align: left;"><span class="math inline">\(\color{red}{\textrm{Helt uenig } (-2)}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{red}{\textrm{ Helt uenig } (-2)}\)</span></td>
-<td style="text-align: center;">S</td>
+<td style="text-align: left;"><span class="math inline">\(\color{#F288B9}{\textrm{Helt uenig } (-2)}\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(\color{#F288B9}{\textrm{ Helt uenig } (-2)}\)</span></td>
+<td style="text-align: center;"><strong>V</strong></td>
 </tr>
 <tr class="even">
 <td>Bella</td>
-<td style="text-align: left;"><span class="math inline">\(\color{red}{\textrm{Uenig } (-1)}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{green}{\textrm{Enig } (1)}\)</span></td>
-<td style="text-align: center;">E</td>
+<td style="text-align: left;"><span class="math inline">\(\color{#F288B9}{\textrm{Uenig } (-1)}\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(\color{#8086F2}{\textrm{Enig } (1)}\)</span></td>
+<td style="text-align: center;"><strong>S</strong></td>
 </tr>
 <tr class="odd">
 <td>Charlie</td>
-<td style="text-align: left;"><span class="math inline">\(\color{red}{\textrm{Uenig } (-1)}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{red}{\textrm{Uenig } (-1)}\)</span></td>
-<td style="text-align: center;">E</td>
+<td style="text-align: left;"><span class="math inline">\(\color{#F288B9}{\textrm{Uenig } (-1)}\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(\color{#F288B9}{\textrm{Uenig } (-1)}\)</span></td>
+<td style="text-align: center;"><strong>S</strong></td>
 </tr>
 <tr class="even">
 <td>Doresa</td>
-<td style="text-align: left;"><span class="math inline">\(\color{green}{\textrm{Enig } (1)}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{green}{\textrm{Helt enig } (2)}\)</span></td>
-<td style="text-align: center;">V</td>
+<td style="text-align: left;"><span class="math inline">\(\color{#8086F2}{\textrm{Enig } (1)}\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(\color{#8086F2}{\textrm{Helt enig } (2)}\)</span></td>
+<td style="text-align: center;"><strong>E</strong></td>
 </tr>
 </tbody>
 </table>
-<p>For at kunne lave en matematisk model, står der også tilhørende værdier fra <span class="math inline">\(-2\)</span> til <span class="math inline">\(2\)</span> i tabellen, da vi har brug for talværdier for at kunne regne i modellen. Så <span class="math inline">\(-2\)</span> svarer til Helt Uenig, <span class="math inline">\(-1\)</span> til Uenig, <span class="math inline">\(1\)</span> til Enig og <span class="math inline">\(2\)</span> til Helt Enig.</p>
-<p>Vi vil nu lave en model, hvor man ud fra de svar, mange giver på de to spørgsmål, kan forudsige, hvor sandsynligt det er, at man stemmer på hver af de 3 partier. Vi vil træne modellen, så den passer godt til svarene fra de 4 personer, og derefter håbe, at den også vil passe godt til andre personer. Naturligvis er <span class="math inline">\(2\)</span> spørgsmål og <span class="math inline">\(4\)</span> personer alt for lidt, men det gør vi noget ved senere.</p>
-<p>Vi udregner så for enhver kombination af person og parti en score: <span class="math display">\[score(person, parti) = w_0 + w_1 \cdot x_1+ w_2 \cdot x_2\]</span> hvor <span class="math inline">\(w_0\)</span> kaldes for bias og <span class="math inline">\(w_1\)</span> og <span class="math inline">\(w_2\)</span> kaldes for vægte.</p>
+<p>Bemærk her, at svarene "Helt uenig" og "Uenig" er farvet lyserøde, mens "Helt enig" og "Enig" er farvet lyseblå.</p>
+<p>Vi vil nu lave en model, hvor man ud fra de svar, man giver på de to spørgsmål, kan forudsige, hvor sandsynligt det er, at man stemmer på hvert af de tre partier. Vi vil træne modellen, så den passer godt til svarene fra de fire personer og derefter håbe, at den også vil passe godt til andre personer. Naturligvis er to spørgsmål og fire personer alt for lidt, men det gør vi noget ved senere.</p>
+<p>Vi udregner så for enhver kombination af person og parti en score:</p>
+<p><span class="math display">\[
+\textrm{score}(\textrm{person, parti}) = w_0 + w_1 \cdot x_1+ w_2 \cdot x_2
+\]</span></p>
+<p>hvor <span class="math inline">\(w_0\)</span> kaldes for bias og <span class="math inline">\(w_1\)</span> og <span class="math inline">\(w_2\)</span> kaldes for vægte.</p>
 <p>Bias og vægte kan være forskellige for hvert parti, så vi kalder dem for <span class="math inline">\(s_0, s_1, s_2\)</span> (Socialdemokratiet), <span class="math inline">\(e_0, e_1, e_2\)</span> (Enhedslisten) og <span class="math inline">\(v_0, v_1, v_2\)</span> (Venstre).</p>
 <p>Vi sætter disse bias og vægte til nogle lidt tilfældige værdier til at starte med.</p>
-<table class="table">
+<table class="table-bordered table">
 <thead>
 <tr class="header">
-<th>Parti</th>
-<th style="text-align: left;"><span class="math inline">\(w_0\)</span></th>
+<th style="text-align: center;">Parti</th>
+<th style="text-align: center;"><span class="math inline">\(w_0\)</span></th>
 <th style="text-align: center;"><span class="math inline">\(w_1\)</span></th>
 <th style="text-align: center;"><span class="math inline">\(w_2\)</span></th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>S</td>
-<td style="text-align: left;"><span class="math inline">\(s_0 = 0\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(s_1 = -1\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(s_2 = 0\)</span></td>
+<td style="text-align: center;"><strong>V</strong></td>
+<td style="text-align: center;"><span class="math inline">\(v_0 = 0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(v_1 = -1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(v_2 = 0\)</span></td>
 </tr>
 <tr class="even">
-<td>E</td>
-<td style="text-align: left;"><span class="math inline">\(e_0 = 0\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(e_1 = 1\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(e_2 = 0\)</span></td>
+<td style="text-align: center;"><strong>S</strong></td>
+<td style="text-align: center;"><span class="math inline">\(s_0 = 0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(s_1 = 1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(s_2 = 0\)</span></td>
 </tr>
 <tr class="odd">
-<td>V</td>
-<td style="text-align: left;"><span class="math inline">\(v_0 = 0\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(v_1 = 0\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(v_2 = 0\)</span></td>
+<td style="text-align: center;"><strong>E</strong></td>
+<td style="text-align: center;"><span class="math inline">\(e_0 = 0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(e_1 = 0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(e_2 = 0\)</span></td>
 </tr>
 </tbody>
 </table>
-<p>For Andy bliver det: <span class="math display">\[\mathrm{score(Andy, S)} = 0 + (-1) \cdot (-2) + 0 \cdot (-2) = 2\]</span> <span class="math display">\[\mathrm{score(Andy, E)} = 0 + 1 \cdot (-2) + 0 \cdot (-2) = -2\]</span> <span class="math display">\[\mathrm{score(Andy, V)} = 0 + 0 \cdot (-2) + 0 \cdot (-2) = 0\]</span> Så lige nu er den højeste score for Andy for S, hvilket er godt, da han faktisk stemmer på Socialdemokratiet.</p>
-<p>Men modellen skulle jo ikke kun give en score, men faktisk give en sandsynlighed for hvert parti. Så vi skal have fundet en metode til at få sandsynlighed i stedet for scores. Om sandsynlighederne ved vi, at de skal være positive, ligge mellem 0 og 1 og tilsammen give 1.</p>
-<p>En simpel måde at få tallene positive på er at opløfte <span class="math inline">\(e\)</span> i scoren.</p>
+<p>For Andy kan vi så udregne:</p>
 <p><span class="math display">\[
 \begin{aligned}
-e^2 &amp; \approx  7.39 \\
-e^{-2} &amp; \approx 0.14 \\
-e^0 &amp;=1
+&amp;\textrm{score}(\textrm{Andy, V}) = 0 + (-1) \cdot (-2) + 0 \cdot (-2) = 2 \\
+&amp;\textrm{score}(\textrm{Andy, S}) = 0 + 1 \cdot (-2) + 0 \cdot (-2) = -2 \\
+&amp;\textrm{score}(\textrm{Andy, E}) = 0 + 0 \cdot (-2) + 0 \cdot (-2) = 0
 \end{aligned}
 \]</span></p>
-<p>Så lægges de tre tal sammen og hvert af tallene divideres med summen. <span class="math display">\[\mathrm{sum}=7.39 + 1 + 0.14 = 8.53\]</span></p>
+<p>Så lige nu er den højeste score for Andy for <strong>V</strong>, hvilket er godt, da han faktisk stemmer på Venstre.</p>
+<p>Men modellen skulle jo ikke kun give en score, men faktisk give en sandsynlighed for hvert parti. Så vi skal have fundet en metode til at få sandsynlighed i stedet for scores. Om sandsynlighederne ved vi, at de skal være positive, ligge mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span> og tilsammen give <span class="math inline">\(1\)</span>.</p>
+<p>En simpel måde at få tallene positive på er at opløfte <span class="math inline">\(\mathrm{e}\)</span> i scoren.</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathrm{e}^2 &amp; \approx  7.389 \\
+\mathrm{e}^{-2} &amp; \approx 0.135 \\
+\mathrm{e}^0 &amp;=1
+\end{aligned}
+\]</span></p>
+<p>Så lægges de tre tal sammen og hvert af tallene divideres med summen:</p>
+<p><span class="math display">\[
+\textrm{sum}=7.389 + 0.135 + 1 = 8.524
+\]</span></p>
 <p>For Andy giver det følgende:</p>
-<table class="table">
+<table class="table-bordered table">
 <thead>
 <tr class="header">
-<th>Parti</th>
-<th style="text-align: left;">Score</th>
-<th style="text-align: center;"><span class="math inline">\(e^\mathrm{score}\)</span></th>
+<th style="text-align: center;">Parti</th>
+<th style="text-align: center;">Score</th>
+<th style="text-align: center;"><span class="math inline">\(\mathrm{e}^{\textrm{score}}\)</span></th>
 <th style="text-align: center;">Sandsynlighed</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>S</td>
-<td style="text-align: left;">2</td>
-<td style="text-align: center;">7.39</td>
-<td style="text-align: center;"><span class="math inline">\(\frac{7.39}{8.53} \approx 0.867\)</span></td>
+<td style="text-align: center;"><strong>V</strong></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(7.389\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{7.389}{8.524} \approx 86.68 \%\)</span></td>
 </tr>
 <tr class="even">
-<td>E</td>
-<td style="text-align: left;">-2</td>
-<td style="text-align: center;">0.14</td>
-<td style="text-align: center;"><span class="math inline">\(\frac{0.14}{8.53} \approx 0.016\)</span></td>
+<td style="text-align: center;"><strong>S</strong></td>
+<td style="text-align: center;"><span class="math inline">\(-2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.135\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{0.135}{8.524} \approx 1.59 \%\)</span></td>
 </tr>
 <tr class="odd">
-<td>V</td>
-<td style="text-align: left;">0</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;"><span class="math inline">\(\frac{1}{8.53} \approx 0.117\)</span></td>
+<td style="text-align: center;"><strong>E</strong></td>
+<td style="text-align: center;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{1}{8.524} \approx 11.73 \%\)</span></td>
 </tr>
 </tbody>
 </table>
-<p>Så med de valgte værdier af bias og vægte, angiver modellen 86.7% for S, 1.6% for E og 11.7% for V for Andy. Da han faktisk stemte på S, er det jo rigtigt fint, uden dog at være helt perfekt, da vi helst ville have endnu større sandsynlighed for Socialdemokratiet for Andy.</p>
-<p>Denne metode til at omregne fra score til sandsynligheder kaldes for <strong>Softmax</strong>.</p>
+<p>Så med de valgte værdier af bias og vægte, angiver modellen en sandsynlighed på <span class="math inline">\(86.68 \%\)</span> for <strong>V</strong>, <span class="math inline">\(1.59 \%\)</span> for <strong>S</strong> og <span class="math inline">\(11.73 \%\)</span> for <strong>E</strong> for Andy. Da han faktisk stemte på <strong>V</strong>, er det jo rigtigt fint, uden dog at være helt perfekt, da vi helst ville have endnu større sandsynlighed for Venstre for Andy.</p>
+<p>Denne metode til at omregne fra score til sandsynligheder kaldes for <strong>softmax</strong>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -395,16 +440,16 @@ e^0 &amp;=1
 <div class="callout-body-container callout-body">
 <ul>
 <li>Lav de tilsvarende udregninger for Bella, Charlie og Doresa.</li>
-<li>Overvej derefter, om de valgte vægte er fornuftige - i den betydning, at modellen giver størst sandsynlighed for det parti, som personen faktisk stemmer på.</li>
+<li>Overvej derefter, om de valgte vægte er fornuftige – i den betydning, at modellen giver størst sandsynlighed for det parti, som personen faktisk stemmer på.</li>
 </ul>
 </div>
 </div>
 </div>
-<p>Det var åbenlyst ikke så godt for Bella, Charlie og Doresa, da modellen for alle tre peger på et forkert parti. Ideen er nu, at vi skal ændre bias og vægte, så modellen bliver bedre.</p>
-<p>Lad os i første omgang se på <span class="math inline">\(w_1\)</span> og dermed <span class="math inline">\(x_1\)</span>. Bemærk, at <span class="math inline">\(x_1 = -2\)</span> for Andy, at <span class="math inline">\(x_1 = -1\)</span> for Bella og Charlie, og at <span class="math inline">\(x_1 = 1\)</span> for Doresa. Da vi gerne vil have Andy til at få en høj score, og dermed en høj sandsynlighed for Socialdemokratiet, giver det mening at lade <span class="math inline">\(s_1\)</span> være en negativ værdi, så <span class="math inline">\(s_1 \cdot x_1\)</span> bliver positiv. Før havde vi sat <span class="math inline">\(s_1=-1\)</span>, men lad os forstærke effekten med <span class="math inline">\(s_1 = -3\)</span>, så scoren for Andy bliver højere.</p>
-<p>Det giver Andy en positiv score <span class="math inline">\(s_1 \cdot x_1 = -3 \cdot (-2) = 6\)</span> for Socialdemokratiet, hvilket er godt, da vi gerne vil have, at modellen peger på dem for ham.</p>
-<p>Det giver Doresa en negativ score <span class="math inline">\(s_1 \cdot x_1 = -3 \cdot 1= -3\)</span>, hvilket også er godt, da vi gerne vil have, at modellen ikke peger på Socialdemokratiet for hende.</p>
-<p>Det giver så desværre både Bella og Charlie en positiv score, da <span class="math inline">\(s_1 \cdot x_1 = -3 \cdot (-1) = 3\)</span>, hvilket ikke er så godt, da vi gerne vil have, at modellen ikke peger på Socialdemokratiet for dem. Det venter vi lige med at gøre noget ved, da vi starter med at få modellen til at pege på Venstre for Doresa.</p>
+<p>Det var åbenlyst ikke så godt for Bella, Charlie og Doresa, da modellen for alle tre peger på et forkert parti. Idéen er nu, at vi skal ændre bias og vægte, så modellen bliver bedre.</p>
+<p>Lad os i første omgang se på <span class="math inline">\(w_1\)</span> og dermed <span class="math inline">\(x_1\)</span>. Bemærk, at <span class="math inline">\(x_1 = -2\)</span> for Andy, at <span class="math inline">\(x_1 = -1\)</span> for Bella og Charlie, og at <span class="math inline">\(x_1 = 1\)</span> for Doresa. Da vi gerne vil have Andy til at få en høj score, og dermed en høj sandsynlighed for Venstre, giver det mening at lade <span class="math inline">\(v_1\)</span> være en negativ værdi, så <span class="math inline">\(v_1 \cdot x_1\)</span> bliver positiv. Før havde vi sat <span class="math inline">\(v_1=-1\)</span>, men lad os forstærke effekten med <span class="math inline">\(v_1 = -3\)</span>, så scoren for Andy bliver højere.</p>
+<p>Det giver Andy en positiv score <span class="math inline">\(v_1 \cdot x_1 = -3 \cdot (-2) = 6\)</span> for Venstre, hvilket er godt, da vi gerne vil have, at modellen peger på Venstre for ham.</p>
+<p>Det giver Doresa en negativ score <span class="math inline">\(v_1 \cdot x_1 = -3 \cdot 1= -3\)</span>, hvilket også er godt, da vi gerne vil have, at modellen ikke peger på Venstre for hende.</p>
+<p>Det giver så desværre både Bella og Charlie en positiv score, da <span class="math inline">\(v_1 \cdot x_1 = -3 \cdot (-1) = 3\)</span>, hvilket ikke er så godt, da vi gerne vil have, at modellen ikke peger på Venstre for dem. Det venter vi lige med at gøre noget ved, da vi starter med at få modellen til at pege på Enhedslisten for Doresa.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -418,51 +463,51 @@ e^0 &amp;=1
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Overvej hvilken værdi <span class="math inline">\(v_1\)</span> kan gives, så Doresa får en positiv score for Venstre, mens de øvrige tre får en negativ score?</li>
-<li>Vælg vægten, så scoren for Doresa for Venstre bliver <span class="math inline">\(6\)</span>, som scoren for Andy blev for Socialdemokratiet.</li>
-<li>Beregn score og sandsynlighed for hver af de 3 partier for Doresa med den værdi, du har valgt.</li>
+<li>Overvej hvilken værdi <span class="math inline">\(e_1\)</span> kan gives, så Doresa får en positiv score for Enhedslisten, mens de øvrige tre får en negativ score?</li>
+<li>Vælg vægten, så scoren for Doresa for Enhedslisten bliver <span class="math inline">\(6\)</span>, som scoren for Andy blev for Venstre.</li>
+<li>Beregn score og sandsynlighed for hver af de tre partier for Doresa med den værdi, du har valgt (husk, at vi har sat <span class="math inline">\(v_1=-3\)</span>).</li>
 </ul>
 </div>
 </div>
 </div>
 <p>Samlet ser det nu således ud, hvor både (score) og sandsynlighed er angivet for hvert parti.</p>
-<table class="table">
+<table class="table-bordered table">
 <thead>
 <tr class="header">
-<th></th>
-<th style="text-align: left;">Socialdemokratiet</th>
-<th style="text-align: center;">Enhedslisten</th>
+<th style="text-align: center;">Person</th>
 <th style="text-align: center;">Venstre</th>
+<th style="text-align: center;">Socialdemokratiet</th>
+<th style="text-align: center;">Enhedslisten</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Andy</td>
-<td style="text-align: left;">(6) 99.8%</td>
-<td style="text-align: center;">(0) 0.2%</td>
-<td style="text-align: center;">(-12) 0.0%</td>
+<td style="text-align: center;">Andy</td>
+<td style="text-align: center;">(<span class="math inline">\(6\)</span>) <span class="math inline">\(99.97 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-2\)</span>) <span class="math inline">\(0.03 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-12\)</span>) <span class="math inline">\(0.00 \%\)</span></td>
 </tr>
 <tr class="even">
-<td>Bella</td>
-<td style="text-align: left;">(3) 95.3%</td>
-<td style="text-align: center;">(0) 4.7%</td>
-<td style="text-align: center;">(-6) 0.0%</td>
+<td style="text-align: center;">Bella</td>
+<td style="text-align: center;">(<span class="math inline">\(3\)</span>) <span class="math inline">\(98.19 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-1\)</span>) <span class="math inline">\(1.80 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-6\)</span>) <span class="math inline">\(0.01 \%\)</span></td>
 </tr>
 <tr class="odd">
-<td>Charlie</td>
-<td style="text-align: left;">(3) 95.3%</td>
-<td style="text-align: center;">(0) 4.7%</td>
-<td style="text-align: center;">(-6) 0.0%</td>
+<td style="text-align: center;">Charlie</td>
+<td style="text-align: center;">(<span class="math inline">\(3\)</span>) <span class="math inline">\(98.19 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-1\)</span>) <span class="math inline">\(1.80 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-6\)</span>) <span class="math inline">\(0.01 \%\)</span></td>
 </tr>
 <tr class="even">
-<td>Doresa</td>
-<td style="text-align: left;">(-3) 0.0%</td>
-<td style="text-align: center;">(0) 0.3%</td>
-<td style="text-align: center;">(6) 99.7%</td>
+<td style="text-align: center;">Doresa</td>
+<td style="text-align: center;">(<span class="math inline">\(-3\)</span>) <span class="math inline">\(0.01 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(1\)</span>) <span class="math inline">\(0.67 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(6\)</span>) <span class="math inline">\(99.32 \%\)</span></td>
 </tr>
 </tbody>
 </table>
-<p>Vi skal nu have modellen til at vælge Enhedslisten for Bella og Charlie, men uden at ødelægge, at modellen vælger Socialdemokratiet til Andy og Venstre til Doresa.</p>
+<p>Vi skal nu have modellen til at vælge Socialdemokratiet for Bella og Charlie, men uden at ødelægge, at modellen vælger Venstre til Andy og Enhedslisten til Doresa.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -476,54 +521,54 @@ e^0 &amp;=1
 <div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Overvej hvilken værdi biaset <span class="math inline">\(e_0\)</span> kan gives, så Bella og Charlie scorer højst for Enhedslisten (scoren skal over 3, da de allerede har scoren 3 for parti 1), men uden at scoren for Andy eller Doresa bliver højst for Enhedslisten (de har begge 6 som højst score til hhv. Socialdemokratiet og Venstre).</li>
+<li>Overvej, hvilken værdi biaset <span class="math inline">\(s_0\)</span> kan gives, så Bella og Charlie scorer højst for Socialdemokratiet (scoren skal over <span class="math inline">\(3\)</span>, da de allerede har scoren <span class="math inline">\(3\)</span> for parti Venstre), men uden at scoren for Andy eller Doresa bliver højst for Socialdemokratiet (de har begge <span class="math inline">\(6\)</span> som højst score til henholdsvis Venstre og Enhedslisten).</li>
 </ul>
 </div>
 </div>
 </div>
-<p>Med en fornuftig værdi af bias for Enhedslisten kan tabellen komme til at se således ud.</p>
-<table class="table">
+<p>Med en fornuftig værdi af bias for Socialdemokratiet (for eksempel på <span class="math inline">\(4.5\)</span>) kan tabellen komme til at se således ud:</p>
+<table class="table-bordered table">
 <thead>
 <tr class="header">
-<th></th>
-<th style="text-align: left;">Socialdemokratiet</th>
-<th style="text-align: center;">Enhedslisten</th>
+<th style="text-align: center;">Person</th>
 <th style="text-align: center;">Venstre</th>
+<th style="text-align: center;">Socialdemokratiet</th>
+<th style="text-align: center;">Enhedslisten</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Andy</td>
-<td style="text-align: left;">(6) 88.1%</td>
-<td style="text-align: center;">(4) 11.9%</td>
-<td style="text-align: center;">(-12) 0.0%</td>
+<td style="text-align: center;">Andy</td>
+<td style="text-align: center;">(<span class="math inline">\(6\)</span>) <span class="math inline">\(97.07 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(2.5\)</span>) <span class="math inline">\(2.93 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-12\)</span>) <span class="math inline">\(0.00 \%\)</span></td>
 </tr>
 <tr class="even">
-<td>Bella</td>
-<td style="text-align: left;">(3) 26.9%</td>
-<td style="text-align: center;">(4) 73.1%</td>
-<td style="text-align: center;">(-6) 0.0%</td>
+<td style="text-align: center;">Bella</td>
+<td style="text-align: center;">(<span class="math inline">\(3\)</span>) <span class="math inline">\(37.75 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(3.5\)</span>) <span class="math inline">\(62.24 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-6\)</span>) <span class="math inline">\(0.00 \%\)</span></td>
 </tr>
 <tr class="odd">
-<td>Charlie</td>
-<td style="text-align: left;">(3) 26.9%</td>
-<td style="text-align: center;">(4) 73.1%</td>
-<td style="text-align: center;">(-6) 0.0%</td>
+<td style="text-align: center;">Charlie</td>
+<td style="text-align: center;">(<span class="math inline">\(3\)</span>) <span class="math inline">\(37.75 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(3.5\)</span>) <span class="math inline">\(62.24 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-6\)</span>) <span class="math inline">\(0.00 \%\)</span></td>
 </tr>
 <tr class="even">
-<td>Doresa</td>
-<td style="text-align: left;">(-3) 0.0%</td>
-<td style="text-align: center;">(4) 11.9%</td>
-<td style="text-align: center;">(6) 88.1%</td>
+<td style="text-align: center;">Doresa</td>
+<td style="text-align: center;">(<span class="math inline">\(-3\)</span>) <span class="math inline">\(0.01 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(5.5\)</span>) <span class="math inline">\(37.75 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(6\)</span>) <span class="math inline">\(62.24 \%\)</span></td>
 </tr>
 </tbody>
 </table>
-<p>Men det kan stadig gøres bedre, bl.a. ved også at tage <span class="math inline">\(w_2\)</span> i brug.</p>
+<p>Men det kan stadig gøres bedre, blandt andet ved også at tage <span class="math inline">\(w_2\)</span> i brug.</p>
 </section>
 <section id="brug-af-app-til-træning-af-kunstig-neuron" class="level2">
 <h2 class="anchored" data-anchor-id="brug-af-app-til-træning-af-kunstig-neuron">Brug af app til træning af kunstig neuron</h2>
-<p>Med det meget lille, simple eksempel kunne vi altså godt justere vægtene manuelt og få et nogenlunde resultat. Men hvis der bliver 100, 1000 eller millioner af vægte, så er det næppe en god idé. Det kræver noget lidt mere avanceret matematik, som vi ikke vil gennemgå i dette forløb. Du kan læse mere om dette i denne note om <a href="https://aimat.dk/noter/softmax/softmax.html">Kunstige neurale netværk til multipel klassifikation</a>.</p>
-<p>I stedet vil vi bruge en app til formålet. Du finder appen <a href="https://apps01.math.aau.dk/ai/multi-neuron/">her</a> og datasættet som Excel fil <a href="../undervisningsforlob/valg_af_parti/datasæt_4_personer.xlsx">her</a>.</p>
+<p>Med det meget lille, simple eksempel kunne vi altså godt justere vægtene manuelt og få et nogenlunde resultat. Men hvis der bliver <span class="math inline">\(100\)</span>, <span class="math inline">\(1000\)</span> eller millioner af vægte, så er det næppe en god idé. Det kræver noget lidt mere avanceret matematik, som vi ikke vil gennemgå i dette forløb. Du kan læse mere om dette i noten om <a href="https://aimat.dk/noter/softmax/softmax.html">Kunstige neurale netværk til multipel klassifikation</a>.</p>
+<p>I stedet vil vi bruge en app til formålet. Du finder appen <a href="https://apps01.math.aau.dk/ai/multi-neuron/">her</a> og datasættet som Excel fil <a href="valg_af_parti/datasæt_4_personer.xlsx">her</a>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -537,49 +582,55 @@ e^0 &amp;=1
 <div id="callout-5" class="callout-5-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Åbn appen og indlæs datasættet</li>
-<li>Vælg <span class="math inline">\(t\)</span> som target varibel og både <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> som feature variable</li>
-<li>Sæt learning rate til <span class="math inline">\(0.1\)</span> og antal iterationer til <span class="math inline">\(1000\)</span></li>
-<li>Træn modellen</li>
-<li>Sammenlign de værdier til bias og vægte, som appen er nået frem til, med de værdier, som vi manuelt nåede frem til. Meget ligner det, vi fandt manuelt, men noget er også lidt anderledes.</li>
+<li>Åbn app’en og indlæs datasættet.</li>
+<li>Vælg <span class="math inline">\(t\)</span> som target-variabel og både <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> som feature-variable.</li>
+<li>Sæt learning rate til <span class="math inline">\(0.1\)</span> og antal iterationer til <span class="math inline">\(1000\)</span>.</li>
+<li>Træn modellen.</li>
+<li>Sammenlign de værdier til bias og vægte, som app’en er nået frem til, med de værdier, som vi manuelt nåede frem til. Meget ligner det, vi fandt manuelt, men noget er også lidt anderledes.</li>
 </ul>
 </div>
 </div>
 </div>
-<p>Med appens værdier ser tabellen endelig således ud, hvilket må siges at være meget tilfredsstillende.</p>
-<table class="table">
+<p>Med app’ens værdier ser tabellen endelig således ud, hvilket må siges at være meget tilfredsstillende.</p>
+<table class="table-bordered table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
 <thead>
 <tr class="header">
-<th></th>
-<th style="text-align: left;">Socialdemokratiet</th>
-<th style="text-align: center;">Enhedslisten</th>
+<th style="text-align: center;">Person</th>
 <th style="text-align: center;">Venstre</th>
+<th style="text-align: center;">Socialdemokratiet</th>
+<th style="text-align: center;">Enhedslisten</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Andy</td>
-<td style="text-align: left;">(6.6) 97.7%</td>
-<td style="text-align: center;">(2.8) 2.3%</td>
-<td style="text-align: center;">(-9.4) 0.0%</td>
+<td style="text-align: center;">Andy</td>
+<td style="text-align: center;">(<span class="math inline">\(6.56\)</span>) <span class="math inline">\(97.72 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(2.80\)</span>) <span class="math inline">\(2.28 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-9.36\)</span>) <span class="math inline">\(0.0 \%\)</span></td>
 </tr>
 <tr class="even">
-<td>Bella</td>
-<td style="text-align: left;">(-4.1) 0.0%</td>
-<td style="text-align: center;">(4.5) 99.1%</td>
-<td style="text-align: center;">(-0.4) 0.9%</td>
+<td style="text-align: center;">Bella</td>
+<td style="text-align: center;">(<span class="math inline">\(-4.06\)</span>) <span class="math inline">\(0.02 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(4.48\)</span>) <span class="math inline">\(99.23 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-0.41\)</span>) <span class="math inline">\(0.75 \%\)</span></td>
 </tr>
 <tr class="odd">
-<td>Charlie</td>
-<td style="text-align: left;">(0.0) 3.2%</td>
-<td style="text-align: center;">(3.4) 96.5%</td>
-<td style="text-align: center;">(-3.4) 0.3%</td>
+<td style="text-align: center;">Charlie</td>
+<td style="text-align: center;">(<span class="math inline">\(0.01\)</span>) <span class="math inline">\(3.21 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(3.42\)</span>) <span class="math inline">\(96.68 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-3.43\)</span>) <span class="math inline">\(0.10 \%\)</span></td>
 </tr>
 <tr class="even">
-<td>Doresa</td>
-<td style="text-align: left;">(-15.1) 0.0%</td>
-<td style="text-align: center;">(5.2) 0.8%</td>
-<td style="text-align: center;">(9.9) 99.2%</td>
+<td style="text-align: center;">Doresa</td>
+<td style="text-align: center;">(<span class="math inline">\(-15.12\)</span>) <span class="math inline">\(0.00 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(5.18\)</span>) <span class="math inline">\(0.85 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(9.94\)</span>) <span class="math inline">\(99.15 \%\)</span></td>
 </tr>
 </tbody>
 </table>
@@ -587,7 +638,7 @@ e^0 &amp;=1
 <section id="politiske-kandidaters-svar" class="level2">
 <h2 class="anchored" data-anchor-id="politiske-kandidaters-svar">16 politiske kandidaters svar</h2>
 <p>Lad os se på et lidt større eksempel, nu med autentiske data fra en kandidattest til folketingsvalget i 2026. Vi ser på 16 kandidater og deres svar på 2 spørgsmål.</p>
-<table class="table">
+<table class="table-bordered table">
 <colgroup>
 <col style="width: 10%">
 <col style="width: 50%">
@@ -606,106 +657,108 @@ e^0 &amp;=1
 <tr class="odd">
 <td>Soc</td>
 <td style="text-align: left;">Ane Halsboe-Jørgensen</td>
-<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Enig}}\)</span></td>
 </tr>
 <tr class="even">
 <td>Soc</td>
 <td style="text-align: left;">Flemming Møller Mortensen</td>
-<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Uenig}}\)</span></td>
 </tr>
 <tr class="odd">
 <td>Soc</td>
 <td style="text-align: left;">Kiki Bille Bach</td>
-<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Enig}}\)</span></td>
 </tr>
 <tr class="even">
 <td>Soc</td>
 <td style="text-align: left;">Morten Ryom</td>
-<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Enig}}\)</span></td>
 </tr>
 <tr class="odd">
 <td>Ven</td>
 <td style="text-align: left;">Anita Vivi Lilholt</td>
-<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Meget uenig}}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Meget uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Enig}}\)</span></td>
 </tr>
 <tr class="even">
 <td>Ven</td>
 <td style="text-align: left;">Anne Honoré Østergaard</td>
-<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Meget uenig}}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Meget uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Enig}}\)</span></td>
 </tr>
 <tr class="odd">
 <td>Ven</td>
 <td style="text-align: left;">Marie Bjerre</td>
-<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Uenig}}\)</span></td>
 </tr>
 <tr class="even">
 <td>Ven</td>
 <td style="text-align: left;">Mikkel Bisgaard</td>
-<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Uenig}}\)</span></td>
 </tr>
 <tr class="odd">
 <td>Enh</td>
 <td style="text-align: left;">Peder Hvelplund</td>
-<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Meget enig}}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Meget enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Meget enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Meget enig}}\)</span></td>
 </tr>
 <tr class="even">
 <td>Enh</td>
 <td style="text-align: left;">Runa Friis Hansen</td>
-<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Meget enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Meget enig}}\)</span></td>
 </tr>
 <tr class="odd">
 <td>Enh</td>
 <td style="text-align: left;">Lasse P. N. Olsen</td>
-<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Meget enig}}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Meget enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Enig}}\)</span></td>
 </tr>
 <tr class="even">
 <td>Enh</td>
 <td style="text-align: left;">Filippa Emilie Vittrup</td>
-<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Meget enig}}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{green}{\textbf{Meget enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Meget enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Meget enig}}\)</span></td>
 </tr>
 <tr class="odd">
 <td>DD</td>
 <td style="text-align: left;">Inger Støjberg</td>
-<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Meget uenig}}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Meget uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Uenig}}\)</span></td>
 </tr>
 <tr class="even">
 <td>DD</td>
 <td style="text-align: left;">Kristian Bøgsted</td>
-<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Uenig}}\)</span></td>
 </tr>
 <tr class="odd">
 <td>DD</td>
 <td style="text-align: left;">Kim Edberg Andersen</td>
-<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Meget uenig}}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Meget uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Uenig}}\)</span></td>
 </tr>
 <tr class="even">
 <td>DD</td>
 <td style="text-align: left;">Liselotte Lynge</td>
-<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Meget uenig}}\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\color{red}{\textbf{Uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Meget uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Uenig}}\)</span></td>
 </tr>
 </tbody>
 </table>
 <p>De to spørgsmål er</p>
-<p>Spørgsmål 1: De boligejere, der tjener mest på prisstigninger, skal betale mere i skat.<br>
-Spørgsmål 2: Reglerne for dyrevelfærd skal strammes, selv om det kan gøre fødevarer fra Danmark dyrere.</p>
-<p>Datasættet som Excelfil med værdier fra -2 (helt uenig) til 2 (helt enig) er <a href="../undervisningsforlob/valg_af_parti/datasæt_16_personer.xlsx">her</a>.</p>
-<p>For at skabe lidt overblik, vil et punktplot med <span class="math inline">\(x_1\)</span> på førsteaksen og <span class="math inline">\(x_2\)</span> på andenaksen, hvor punkterne har forskellige farver efter parti, være en god ide. Det er dog en udfordring, at flere punkter er ens.</p>
+<ul>
+<li><p>Spørgsmål 1: De boligejere, der tjener mest på prisstigninger, skal betale mere i skat.</p></li>
+<li><p>Spørgsmål 2: Reglerne for dyrevelfærd skal strammes, selv om det kan gøre fødevarer fra Danmark dyrere.</p></li>
+</ul>
+<p>Datasættet som Excelfil med værdier fra <span class="math inline">\(-2\)</span> (helt uenig) til <span class="math inline">\(2\)</span> (helt enig) er <a href="../undervisningsforlob/valg_af_parti/datasæt_16_personer.xlsx">her</a>.</p>
+<p>For at skabe lidt overblik, vil et punktplot med <span class="math inline">\(x_1\)</span> på førsteaksen og <span class="math inline">\(x_2\)</span> på andenaksen, hvor punkterne har forskellige farver efter parti, være en god idé. Det er dog en udfordring, at flere punkter er ens.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -725,7 +778,7 @@ Spørgsmål 2: Reglerne for dyrevelfærd skal strammes, selv om det kan gøre f�
 </div>
 </div>
 </div>
-<p>Det skulle gerne være tydeligt, at de 4 partiers kandidater ligger delvist opdelt efter parti. Vi vil nu gerne bruge samme type model som tidligere i en kunstig neuron til at undersøge, hvordan vi kan inddele xy-planen i områder til hvert parti. Først skal vi have trænet modellen på data for de 16 politikere, så vi kender bias og vægte.</p>
+<p>Det skulle gerne være tydeligt, at de fire partiers kandidater ligger delvist opdelt efter parti. Vi vil nu gerne bruge samme type model som tidligere i en kunstig neuron til at undersøge, hvordan vi kan inddele <span class="math inline">\(xy\)</span>-planen i områder til hvert parti. Først skal vi have trænet modellen på data for de 16 politikere, så vi kender bias og vægte.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -740,13 +793,23 @@ Spørgsmål 2: Reglerne for dyrevelfærd skal strammes, selv om det kan gøre f�
 <div class="callout-body-container callout-body">
 <ul>
 <li>Brug kunstig neuron appen på datasættet med samme indstillinger som i opgave 4.</li>
-<li>Noter værdierne for bias og vægte for hvert parti, så <span class="math inline">\(s_0, s_1, s_2\)</span> for Socialdemokratiet, <span class="math inline">\(v_0, v_1, v_2\)</span> for Venstre osv.</li>
+<li>Noter værdierne for bias og vægte for hvert parti, så <span class="math inline">\(s_0, s_1, s_2\)</span> for Socialdemokratiet, <span class="math inline">\(v_0, v_1, v_2\)</span> for Venstre og så videre.</li>
 </ul>
 </div>
 </div>
 </div>
 <p>Vi vil nu bruge disse vægte til at bestemme, hvor i koordinatsystemet modellen vil trække en grænse mellem Socialdemokratiet og Enhedslisten. Grænsen skal netop være der, hvor de to partier har ens score og derfor er lige sandsynlige, så</p>
-<p><span class="math display">\[e^{s_0 + s_1 \cdot x_1 + s_2 \cdot x_2} = e^{e_0 + e_1 \cdot x_1 + e_2 \cdot x_2}\]</span> Hvis vi tager den naturlige logaritme på begge sider og samler alt på den ene side, giver det <span class="math display">\[(s_0 - e_0) + (s_1-e_1) \cdot x_1 + (s_2-e_2) \cdot x_2=0\]</span> Vi bemærker, at det svarer til ligningen for en ret linje på formen <span class="math display">\[ a \cdot x + b \cdot y + c = 0\]</span></p>
+<p><span class="math display">\[
+\mathrm{e}^{s_0 + s_1 \cdot x_1 + s_2 \cdot x_2} = \mathrm{e}^{e_0 + e_1 \cdot x_1 + e_2 \cdot x_2}
+\]</span></p>
+<p>Hvis vi tager den naturlige logaritme på begge sider og samler alt på den ene side, giver det</p>
+<p><span class="math display">\[
+(s_0 - e_0) + (s_1-e_1) \cdot x_1 + (s_2-e_2) \cdot x_2=0
+\]</span></p>
+<p>Vi bemærker, at det svarer til ligningen for en ret linje på formen</p>
+<p><span class="math display">\[
+a \cdot x + b \cdot y + c = 0
+\]</span></p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -786,8 +849,8 @@ Spørgsmål 2: Reglerne for dyrevelfærd skal strammes, selv om det kan gøre f�
 </div>
 </div>
 </div>
-<p>Hvis du vil, kan du selv beregne ligningerne for de øvrige linjer - ellers er alle ligningerne angivet i denne tabel.</p>
-<table class="table">
+<p>Hvis du vil, kan du selv beregne ligningerne for de øvrige linjer – ellers er alle ligningerne angivet i denne tabel.</p>
+<table class="table-bordered table">
 <thead>
 <tr class="header">
 <th>Partier</th>
@@ -796,28 +859,28 @@ Spørgsmål 2: Reglerne for dyrevelfærd skal strammes, selv om det kan gøre f�
 </thead>
 <tbody>
 <tr class="odd">
-<td>S og E</td>
-<td style="text-align: left;"><span class="math inline">\(-5.39979 x - 5.95406y + 14.0861 = 0\)</span></td>
+<td><strong>S</strong> og <strong>E</strong></td>
+<td style="text-align: left;"><span class="math inline">\(-5.39979 \cdot x - 5.95406 \cdot y + 14.0861 = 0\)</span></td>
 </tr>
 <tr class="even">
-<td>S og V</td>
-<td style="text-align: left;"><span class="math inline">\(1.00714 x + 0.58677 y + 0.1452 = 0\)</span></td>
+<td><strong>S</strong> og <strong>V</strong></td>
+<td style="text-align: left;"><span class="math inline">\(1.00714 \cdot x + 0.58677 \cdot y + 0.1452 = 0\)</span></td>
 </tr>
 <tr class="odd">
-<td>S og D</td>
-<td style="text-align: left;"><span class="math inline">\(5.40031 x + 4.88754 y + 9.2446 = 0\)</span></td>
+<td><strong>S</strong> og <strong>D</strong></td>
+<td style="text-align: left;"><span class="math inline">\(5.40031 \cdot x + 4.88754 \cdot y + 9.2446 = 0\)</span></td>
 </tr>
 <tr class="even">
-<td>E og V</td>
-<td style="text-align: left;"><span class="math inline">\(-6.40693 x - 6.54083 y + 13.9409 = 0\)</span></td>
+<td><strong>E</strong>og <strong>V</strong></td>
+<td style="text-align: left;"><span class="math inline">\(-6.40693 \cdot x - 6.54083 \cdot y + 13.9409 = 0\)</span></td>
 </tr>
 <tr class="odd">
-<td>E og D</td>
-<td style="text-align: left;"><span class="math inline">\(10.8001 x + 10.8416 y - 4.8415 = 0\)</span></td>
+<td><strong>E</strong>og <strong>D</strong></td>
+<td style="text-align: left;"><span class="math inline">\(10.8001 \cdot x + 10.8416 \cdot y - 4.8415 = 0\)</span></td>
 </tr>
 <tr class="even">
-<td>V og D</td>
-<td style="text-align: left;"><span class="math inline">\(4.39317 x + 4.30077 y + 9.0994 = 0\)</span></td>
+<td><strong>V</strong> og <strong>D</strong></td>
+<td style="text-align: left;"><span class="math inline">\(4.39317 \cdot x + 4.30077 \cdot y + 9.0994 = 0\)</span></td>
 </tr>
 </tbody>
 </table>
@@ -834,13 +897,13 @@ Spørgsmål 2: Reglerne for dyrevelfærd skal strammes, selv om det kan gøre f�
 <div id="callout-10" class="callout-10-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Indtegn alle 6 linjer på punktplottet.</li>
+<li>Indtegn alle seks linjer i punktplottet.</li>
 <li>Overvej hvilke af linjerne, der giver en grænse mellem to partier som mest sandsynlige, og hvilke linjer, der blot er mellem to lige sandsynlige partier, hvor et tredje parti er mere sandsynligt.</li>
 </ul>
 </div>
 </div>
 </div>
-<p>De tre linjer for Socialdemokratiet &amp; Venstre, Socialdemokratiet &amp; Danmarksdemokraterne og Venstre &amp; Danmarksdemokraterne skærer hinanden i samme punkt (evt. ikke helt perfekt pga. afrunding).</p>
+<p>De tre linjer for Socialdemokratiet &amp; Venstre, Socialdemokratiet &amp; Danmarksdemokraterne og Venstre &amp; Danmarksdemokraterne skærer hinanden i samme punkt (eventuelt ikke helt perfekt på grund af afrunding).</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -855,7 +918,7 @@ Spørgsmål 2: Reglerne for dyrevelfærd skal strammes, selv om det kan gøre f�
 <div class="callout-body-container callout-body">
 <ul>
 <li>Bestem koordinaterne til dette punkt.</li>
-<li>Beregn derefter sandsynligheden for hvert af de 4 partier (brug vægtene fra appen) i punktet.</li>
+<li>Beregn derefter sandsynligheden for hvert af de fire partier (brug vægtene fra app’en) i punktet.</li>
 <li>Forklar, hvad det fortæller om modellen.</li>
 </ul>
 </div>
@@ -883,7 +946,7 @@ Spørgsmål 2: Reglerne for dyrevelfærd skal strammes, selv om det kan gøre f�
 </div>
 </div>
 </div>
-<p>Datasættet er <a href="../undervisningsforlob/valg_af_parti/datasæt_877_personer.xlsx">her</a>.</p>
+<p>Datasættet kan downloades <a href="../undervisningsforlob/valg_af_parti/datasæt_877_personer.xlsx">her</a>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -897,8 +960,8 @@ Spørgsmål 2: Reglerne for dyrevelfærd skal strammes, selv om det kan gøre f�
 <div id="callout-13" class="callout-13-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Brug appen til at træne en kunstig neuron ud fra datasættet. Vælg partibogstav som target og alle 24 spørgsmål som features.</li>
-<li>Kig på Confusion matrix og Klassifikationsnøjagtigheden i appen. Overvej, hvad det siger om den trænede model.</li>
+<li>Brug app’en til at træne en kunstig neuron ud fra datasættet. Vælg partibogstav som target-variabel og alle 24 spørgsmål som feature-variable.</li>
+<li>Se på "Confusion matrix" og "Klassifikationsnøjagtigheden" i app’en. Overvej, hvad det siger om den trænede model.</li>
 <li>Prøv at ændre på antal iterationer og på learning rate. Vi vil gerne have klassifikationsnøjagtigheden så høj som mulig.</li>
 </ul>
 </div>
@@ -918,7 +981,7 @@ Spørgsmål 2: Reglerne for dyrevelfærd skal strammes, selv om det kan gøre f�
 <div id="callout-14" class="callout-14-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Træn modellen med krydsvalidering med 5 fold i appen.</li>
+<li>Træn modellen med krydsvalidering med 5 fold i app’en.</li>
 <li>Tag en snak om, hvordan resultatet bliver sammenlignet med svarene i opgave 12, og hvorfor det er tilfældet.</li>
 </ul>
 </div>
@@ -927,11 +990,11 @@ Spørgsmål 2: Reglerne for dyrevelfærd skal strammes, selv om det kan gøre f�
 </section>
 <section id="delvis-facitliste" class="level2">
 <h2 class="anchored" data-anchor-id="delvis-facitliste">Delvis facitliste</h2>
-<p>Mangler</p>
-<p><a href="../undervisningsforlob/valg_af_parti/valg af parti_facit.html" target="_blank">Facitliste</a>.</p>
+<p><a href="../undervisningsforlob/valg_af_parti/valg_af_parti_facit.html" target="_blank">Facitliste</a>.</p>
 
 
 </section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
