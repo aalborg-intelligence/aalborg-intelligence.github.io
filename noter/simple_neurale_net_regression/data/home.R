@@ -127,37 +127,3 @@ summary(pred)
 plot(dat$pris_mio,pred, xlab="Lejlighedspris i millioner", ylab="Prædikteret pris", col="#020873")
 abline(0,1)
 summary(fit_lm)
-
-
-
-
-### Surface
-areal_grid <- seq(30,370,length.out=100)
-alder_grid <- seq(0, 200, length.out = 100)
-
-newdata <- expand.grid(areal = areal_grid, alder = alder_grid)
-newdata$pris_mio <- 0
-newdata$pris_mio <- predict(fit, newdata, type = "response")[,1]
-
-library(plotly)
-hovertemplate <- paste0(
-  'alder: %{y:.2f}<br>',
-  'areal: %{x:.2f}<br>',
-  'pris: %{z:.2f}<br>',
-  '<extra></extra>')
-par(mar=c(4,4,0,1))
-z <- matrix(newdata$pris_mio, 100, 100)
-tabs_data2 <- list(alder=alder_grid,areal=areal_grid,pris_mio = z)
-# contour(llik$a, llik$b, llik$vals, xlab = "a", ylab = "b", levels = c(-1028, -1030, -1034, -1038, -1046, -1052, -1084), labels = "")
-ax_x <- list(title = "areal")
-ax_y <- list(title = "alder")
-ax_z <- list(title = "Pris i millioner")
-plot_ly(showscale = FALSE) |>
-  #add_surface(x = tabs_data$areal, y = tabs_data$alder, z = tabs_data$pris_mio, hovertemplate = hovertemplate) |> 
-  add_surface(x = tabs_data2$areal, y = tabs_data2$alder, z = tabs_data2$pris_mio, hovertemplate = hovertemplate)
-
-
-|>
-  add_markers(x = tabs_data$areal, y = tabs_data$alder, z = tabs_data$pris_mio,
-              marker = list(size = 5, color = "red"), name = NULL, hovertemplate = hovertemplate) |>
-  layout(scene = list(xaxis = ax_x, yaxis = ax_y, zaxis = ax_z), showlegend = FALSE)

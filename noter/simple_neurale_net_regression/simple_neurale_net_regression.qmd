@@ -728,11 +728,96 @@ p <- rbind(df_lm, df_nn10) |>
   labs(x = "Faktisk pris (mio. kr.)", y = "Prædikteret pris (mio. kr.)") +
   theme(strip.background = element_rect(fill = "white", color = "white"), 
         strip.text = element_text(size = 20))
-  plotly::ggplotly(p)
+  ggplotly(p)
 ```
 
 Sammenligner vi de to plots ovenfor kan man se, at når vi bruger et neuralt netværk med ét skjult lag med ti neuroner, så ligger de prædikterede priser tættere på de faktiske priser. Det svarer til, at punkterne i plottet til højre ligger tættere på linjen med ligning $y=x$, end de gør i plottet til venstre. Det er altså igen en illustration af, at et neuralt netværk med skjulte lag i eksemplet her er bedre til at forudsige lejlighedspriser end en kunstig neuron.
 
 **Mangler**: 3d-plot af (areal, alder, prædikteret pris) og evt. også træningsdata både for den kunstige neuron og for det neurale netværk. Skal bruges til at illustrere, hvordan man kan lave ikke-linæere sammenhænge. 
+
+```{r}
+n_grid <- 100
+areal_grid <- seq(30, 370, length.out = n_grid)
+alder_grid <- seq(200, 0, length.out = n_grid)
+newdata <- expand.grid(areal = areal_grid, alder = alder_grid, pris_mio = 0)
+newdata$pris_mio_lm <- predict(fit_lm, newdata, type = "response")
+newdata$pris_mio_nn10 <- predict(fit_nn10, newdata, type = "response")[,1]
+
+z_lm <- matrix(newdata$pris_mio_lm, nrow = n_grid, ncol = n_grid, byrow = TRUE)
+z_nn10 <- matrix(newdata$pris_mio_nn10, nrow = n_grid, ncol = n_grid, byrow = TRUE)
+
+hovertemplate <- paste0(
+  'alder: %{y:.2f}<br>',
+  'areal: %{x:.2f}<br>',
+  'pris: %{z:.2f}<br>',
+  '<extra></extra>'
+)
+
+pp <- plot_ly(showscale = FALSE, hovertemplate = hovertemplate) |>
+  add_trace(
+    x = dat$areal,
+    y = dat$alder,
+    z = dat$pris_mio,
+    type = "scatter3d",
+    mode = "markers",
+    name = "Data",
+    showlegend = TRUE,
+    marker = list(
+      size = 4,
+      color = "rgba(242, 136, 185, 0.65)"
+    )
+  ) |>
+  layout(
+    # Move legend to top left corner:
+    legend = list(
+      x = 0.02,
+      y = 0.98
+    ),
+    margin = list(
+      l = 10, r = 10,
+      t = 40, b = 10
+    ),
+    scene = list(
+      camera = list(
+        eye = list(x = -1.8, y = -1.8, z = 1.2),
+        up  = list(x = 0, y = 0, z = 1)
+      ),
+      xaxis = list(title = "Areal"),
+      yaxis = list(title = "Alder"),
+      zaxis = list(title = "Pris i millioner")
+    )
+  )
+```
+
+```{r}
+#| fig-height: 7
+#| fig-width: 12
+#| out-width: 95%
+
+pp |> 
+  add_surface(
+    x = areal_grid,
+    y = alder_grid,
+    z = z_nn10,
+    name = "Prædiktionsflade",
+    showlegend = TRUE,
+    # hoverinfo = "skip",
+    opacity = 1
+  )
+```
+
+```{r}
+#| out-width: 95%
+pp |> 
+  add_surface(
+    x = areal_grid,
+    y = alder_grid,
+    z = z_lm,
+    name = "Prædiktionsflade",
+    showlegend = TRUE,
+    # hoverinfo = "skip",
+    opacity = 1
+  )
+```
 
 :::
