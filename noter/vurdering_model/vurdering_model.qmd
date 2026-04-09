@@ -8,12 +8,13 @@ Der er forskel på om den model, man har trænet, skal bruges til klassifikation
 
 For alle mål gælder det, at man skal være opmærksom på overfitting, og det vil ofte give mening at udregne målene baseret på krydsvalidering. Det kan du læse meget mere om i noten [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd){target="_blank"}).
 
+\
 
 ## Modeller til klassifikation
 
 I forbindelse med modeller til klassifikation vil man ofte opstille en såkaldt confusion matrix og på den baggrund udregne en klassifikationsnøjagtighed:
 
-### Klassifikationsnøjagtighed
+### Klassifikationsnøjagtighed og confusion matrix
 
 Begrebet **klassifikationsnøjagtighed** -- eller på engelsk classification accuracy (CA) -- dækker over hvor stor en andel af data, som på baggrund af en given model klassificeres korrekt. 
 
@@ -108,9 +109,9 @@ Summerer vi nu over alle de observerede $y$-værdier:
 $$
 \sum_{i=1}^n (y_i - \bar y)^2
 $$
-får vi et samlet mål for, hvor stor en fejl vi begår med den naive model ($y= \bar y$).
+får vi et samlet mål for, hvor stor en fejl vi begår med den naive model ($y_i = \bar y$).
 
-I stedet for den naive model $y= \bar y$ kunne vi også fitte den bedste rette linje til data -- altså lave lineær regression. Det giver os en linje med ligning
+I stedet for den naive model $y_i= \bar y$ kunne vi også fitte den bedste rette linje til data -- altså lave lineær regression. Det giver os en linje med ligning
 
 $$
 y = a \cdot x + b
@@ -154,8 +155,7 @@ Vi sammenligner @fig-R2_1 og @fig-R2_2 her:
 
 Det ses tydeligt i @fig-R2_sammenligning, at i vores eksempel er den samlede kvadrerede fejl langt større for den naive model end for modellen baseret på lineær regression. 
 
-$R^2$-værdien er hvor stor en procentdel af data, der bliver forklaret af en given model -- målt som summen af de kvadrerede fejl -- sammenlignet med den naive model $y= \bar y$. **EGE: Hvordan skal det her forklares?**
-
+$R^2$-værdien er hvor stor en procentdel af variationen i data (målt som summen af de kvadrerede fejl), der bliver forklaret af en given model sammenlignet med den naive model $y_i= \bar y$. 
 
 Det vil sige, at
 
@@ -163,7 +163,7 @@ $$
 R^2 = \frac{\sum_{i=1}^n (y_i - \bar y)^2 - \sum_{i=1}^n (y_i- \hat y_i)^2}{\sum_{i=1}^n (y_i - \bar y)^2}
 $$ {#eq-R2}
 
-Læg her mærke til, at hvis modellen er lige så dårlig, som den naive model ($y=\bar y$), så summen af de kvadrerede fejl er lige store:
+Læg her mærke til, at hvis modellen er lige så dårlig, som den naive model ($y_i=\bar y$), så summen af de kvadrerede fejl er lige store:
 
 $$\sum_{i=1}^n (y_i - \bar y)^2 = \sum_{i=1}^n (y_i- \hat y_i)^2$$ 
 
@@ -179,7 +179,7 @@ $$
 R^2 = \frac{\sum_{i=1}^n (y_i - \bar y)^2 - 0}{\sum_{i=1}^n (y_i - \bar y)^2} = 1
 $$
 
-$R^2$-værdien kaldes derfor også nogle gange for forklaringsgraden. Hvis $R^2$ er tæt på $0$ betyder det, at vi har fittet en model, som ikke er meget bedre end den naive model $y = \bar y$. Er $R^2$ derimod tæt på $1$ betyder det, at vi har fittet en model, som beskriver data langt bedre end den naive model.
+$R^2$-værdien kaldes derfor også nogle gange for forklaringsgraden. Hvis $R^2$ er tæt på $0$ betyder det, at vi har fittet en model, som ikke er meget bedre end den naive model $y_i = \bar y$. Er $R^2$ derimod tæt på $1$ betyder det, at vi har fittet en model, som beskriver data langt bedre end den naive model.
 
 En god model har altså en $R^2$-værdi tæt på $1$.
 
