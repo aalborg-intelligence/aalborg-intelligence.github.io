@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Evnen til at skelne mellem forskellige kategorier er helt central for os som mennesker. Men hvordan får man en computer til at gøre det? Og hvordan finder en computer ud af, hvor enig eller uenig man er med en given politiker?">
+<meta name="description" content="I dette forløb vil vi se på en metode til at forudsige, hvilket parti man vil stemme på ud fra svar på en række spørgsmål.">
 
-<title>Hvilken politiker er du mest enig med? – AI MAT - matematikken bag magien</title>
+<title>Kandidattest – AI MAT - matematikken bag magien</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -184,14 +184,10 @@ window.Quarto = {
    
   <ul>
   <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
-  <li><a href="#introduktion" id="toc-introduktion" class="nav-link" data-scroll-target="#introduktion">Introduktion</a></li>
-  <li><a href="#video-hvem-ligner-du-mest" id="toc-video-hvem-ligner-du-mest" class="nav-link" data-scroll-target="#video-hvem-ligner-du-mest">VIDEO: Hvem ligner du mest?</a></li>
-  <li><a href="#afstand-mellem-to-punkter" id="toc-afstand-mellem-to-punkter" class="nav-link" data-scroll-target="#afstand-mellem-to-punkter">Afstand mellem to punkter</a>
-  <ul class="collapse">
-  <li><a href="#opsamling" id="toc-opsamling" class="nav-link" data-scroll-target="#opsamling">Opsamling</a></li>
-  </ul></li>
-  <li><a href="#manhattan-afstand" id="toc-manhattan-afstand" class="nav-link" data-scroll-target="#manhattan-afstand">Manhattan-afstand</a></li>
-  <li><a href="#hvilken-politiker-er-du-mest-enig-med" id="toc-hvilken-politiker-er-du-mest-enig-med" class="nav-link" data-scroll-target="#hvilken-politiker-er-du-mest-enig-med">Hvilken politiker er du mest enig med?</a></li>
+  <li><a href="#softmax-modellen" id="toc-softmax-modellen" class="nav-link" data-scroll-target="#softmax-modellen">Softmax modellen</a></li>
+  <li><a href="#brug-af-app-til-træning-af-kunstig-neuron" id="toc-brug-af-app-til-træning-af-kunstig-neuron" class="nav-link" data-scroll-target="#brug-af-app-til-træning-af-kunstig-neuron">Brug af app til træning af kunstig neuron</a></li>
+  <li><a href="#politiske-kandidaters-svar" id="toc-politiske-kandidaters-svar" class="nav-link" data-scroll-target="#politiske-kandidaters-svar">16 politiske kandidaters svar</a></li>
+  <li><a href="#det-helt-store-eksempel-med-877-politikere" id="toc-det-helt-store-eksempel-med-877-politikere" class="nav-link" data-scroll-target="#det-helt-store-eksempel-med-877-politikere">Det helt store eksempel med 877 politikere</a></li>
   <li><a href="#delvis-facitliste" id="toc-delvis-facitliste" class="nav-link" data-scroll-target="#delvis-facitliste">Delvis facitliste</a></li>
   </ul>
 </nav>
@@ -205,9 +201,9 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Hvilken politiker er du mest enig med?</h1>
+<h1 class="title">Kandidattest</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">03_C-niveau</div>
+    <div class="quarto-category">01_A-niveau</div>
     <div class="quarto-category">04_Kort</div>
     <div class="quarto-category">Samfundsfag</div>
   </div>
@@ -239,32 +235,197 @@ window.Quarto = {
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Forløbet kræver kendskab til:</p>
 <ul>
-<li>Afstand mellem to punkter.</li>
+<li>Eksponentialfunktioner, herunder <span class="math inline">\(\mathrm{e}^x\)</span>.</li>
+<li>Sandsynlighedsfelter.</li>
+<li>Linjens ligning i planen på formen <span class="math inline">\(a \cdot x + b \cdot y + c = 0\)</span>.</li>
+<li>Planens ligning i rummet på formen <span class="math inline">\(a \cdot x + b \cdot y + c \cdot z+d= 0\)</span>.</li>
 </ul>
-<p><strong>Tidsforbrug:</strong> 2-3 timer.</p>
+<p>Hvis man forinden har arbejdet med det korte forløb <a href="https://aimat.dk/undervisningsforlob/sengetester.html">Sengetester i IKEA</a>, de første dele af det lange forløb om <a href="https://aimat.dk/undervisningsforlob/kunstige_neuroner_langt_forlob/kunstige_neuroner_forside.html">Kunstige neuroner</a> eller det korte forløb <a href="https://aimat.dk/undervisningsforlob/hvem_ligner_du_mest.html">Hvilken politiker er du mest enig med</a>, kan konteksten være mere tydelig, men det er ikke en forudsætning.</p>
+<p><strong>Tidsforbrug:</strong> Ca. 150 minutter.</p>
 </div>
 </div>
 </div>
 <section id="formål" class="level3 purpose">
 <h3 class="anchored" data-anchor-id="formål">Formål</h3>
-<p>Evnen til at skelne mellem forskellige kategorier er helt central for os som mennesker. Vi kan langt oftest kende forskel på et æble og en pære, på en cykel og en knallert eller på om en person er en kvinde eller en mand. Men hvordan får man en computer til at gøre det samme?</p>
-<p>Formålet med dette forløb er at lære lidt om nogle af de metoder, som ligger bag, når en computer skal lære at kende forskel på forskellige ting. Forløbet slutter med at undersøge, hvordan en computer kan afgøre, hvor enig eller uenig man er med de politikere, der stillede op til kommunalvalg i ens kommune.</p>
+<p>Formålet med dette forløb er</p>
+<ul>
+<li>at lære <strong>softmax</strong> at kende som et værktøj til <strong>multipel klassifikation</strong>.</li>
+<li>at lære lidt om <strong>kunstige neuroner</strong>, samt at anvende en app til at træne en kunstig neuron.</li>
+<li>at undersøge, hvordan en kunstig neuron til multipel klassifikation kan bruges til at forudsige, hvilket parti man vil stemme på ud fra svar på en række spørgsmål, som det for eksempel gøres i kandidattests.</li>
+</ul>
 </section>
-<section id="introduktion" class="level2">
-<h2 class="anchored" data-anchor-id="introduktion">Introduktion</h2>
-<p>Vi har apps på vores telefoner eller computere, som ud fra et billede kan genkende personer eller fra nogle få strofer kan genkende en sang. Der er scannere i lufthavne og andre steder, som kan genkende farlige ting, og biler har autopiloter, der selv holder afstanden til forankørende. Vi har også apps, som går den anden vej, og forvrænger et billede af en person, så personen bliver svær at genkende, men ofte alligevel kan genkendes, selvom ansigtet er fordrejet.</p>
-<p>Så alle steder og hele tiden foregår der bevist eller ubevist en skelnen mellem forskellige kategorier, men hvordan foregår denne skelnen i grunden? Hvis vi skulle svare fyldestgørende på dette spørgsmål, om overhovedet muligt, ville det nok betyde et langt studie på universitetet og sikkert mere end dette, men lad os starte med et meget simpelt eksempel, og tage den derfra.</p>
-<p>Vi får brug for din viden om afstande mellem punkter, men kommer også til at se på en anden form for afstand. Det er en fordel af lave opgaverne i grupper, da der kan blive en del af diskutere.</p>
-</section>
-<section id="video-hvem-ligner-du-mest" class="level2">
-<h2 class="anchored" data-anchor-id="video-hvem-ligner-du-mest">VIDEO: Hvem ligner du mest?</h2>
-<p>I denne video gives en kort introduktion til forløbet.</p>
-<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/Oa_Wu3Mjv9I" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
-</section>
-<section id="afstand-mellem-to-punkter" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="afstand-mellem-to-punkter">Afstand mellem to punkter</h2>
+<section id="softmax-modellen" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="softmax-modellen">Softmax modellen</h2>
+<p>Vi vil gerne lave en model, som kan forudsige, hvilket parti man vil stemme på, baseret på svarene fra en række spørgsmål. Det er for eksempel det, der sker, når diverse medier laver kandidattests i forbindelse med valg. Testene fungerer som regel på den måde, at man bliver stillet en række forskellige spørgsmål, og så skal man svare på en skala fra "helt uenig" til "helt enig". Disse kategorier af svar kan for eksempel oversættes til matematik<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> på denne måde:</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;I nogle kandidattests kan man ikke vælge "Hverken/eller", men de resterende kategorier oversættes stadig til negative og positive værdier, som det er eksemplificeret i tabellen.</p></div></div><table class="table-bordered table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Helt uenig</th>
+<th style="text-align: center;">Uenig</th>
+<th style="text-align: center;">Hverken/eller</th>
+<th style="text-align: center;">Enig</th>
+<th style="text-align: center;">Helt enig</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(-2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(-1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Vi starter med et meget lille fiktivt eksempel, hvor fire personer: Andy, Bella, Charlie og Doresa, har svaret på to spørgsmål samt angivet, hvilket parti de stemmer på.</p>
+<p>Vi forestiller os, at de to spørgsmål er:</p>
+<ul>
+<li><p>Spørgsmål 1: Topskatten skal sættes op.</p></li>
+<li><p>Spørgsmål 2: Danske virksomheder skal pålægges en CO2-afgift.</p></li>
+</ul>
+<p>Vi vil så indføre to variable <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span>, hvor</p>
+<ul>
+<li><p><span class="math inline">\(x_1\)</span>: svaret på "Topskatten skal sættes op" angivet på en skala fra <span class="math inline">\(-2\)</span> til <span class="math inline">\(2\)</span>.</p></li>
+<li><p><span class="math inline">\(x_2\)</span>: svaret på "Danske virksomheder skal pålægges en CO2-afgift" angivet på en skala fra <span class="math inline">\(-2\)</span> til <span class="math inline">\(2\)</span>.</p></li>
+</ul>
+<p>Vi lader som om, at partierne er <strong>S</strong> (Socialdemokratiet), <strong>E</strong>(Enhedslisten) og <strong>V</strong> (Venstre). Det parti, som en given person vil stemme på, vil vi kalde for <span class="math inline">\(t\)</span> (som står for <strong>targetværdi</strong>). Andy, Bella, Charlie og Doresa har nu svaret følgende:</p>
+<table class="table-bordered table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 24%">
+<col style="width: 24%">
+<col style="width: 24%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Navn</th>
+<th style="text-align: center;">Spørgsmål 1 <span class="math inline">\((x_1)\)</span></th>
+<th style="text-align: center;">Spørgsmål 2 <span class="math inline">\((x_2)\)</span></th>
+<th style="text-align: center;">Parti (<span class="math inline">\(t\)</span>)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Andy</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textrm{Helt uenig } (-2)}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textrm{ Helt uenig } (-2)}\)</span></td>
+<td style="text-align: center;"><strong>V</strong></td>
+</tr>
+<tr class="even">
+<td>Bella</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textrm{Uenig } (-1)}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textrm{Enig } (1)}\)</span></td>
+<td style="text-align: center;"><strong>S</strong></td>
+</tr>
+<tr class="odd">
+<td>Charlie</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textrm{Uenig } (-1)}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textrm{Uenig } (-1)}\)</span></td>
+<td style="text-align: center;"><strong>S</strong></td>
+</tr>
+<tr class="even">
+<td>Doresa</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textrm{Enig } (1)}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textrm{Helt enig } (2)}\)</span></td>
+<td style="text-align: center;"><strong>E</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Bemærk her, at svarene "Helt uenig" og "Uenig" er farvet lyseblå, mens "Helt enig" og "Enig" er farvet lyserøde.</p>
+<p>Vi vil nu lave en model, hvor man ud fra de svar, man giver på de to spørgsmål, kan forudsige, hvor sandsynligt det er, at man stemmer på hvert af de tre partier. Vi vil træne modellen, så den passer godt til svarene fra de fire personer og derefter håbe, at den også vil passe godt til andre personer. Naturligvis er to spørgsmål og fire personer alt for lidt, men det gør vi noget ved senere.</p>
+<p>Vi udregner så for enhver kombination af person og parti en score:</p>
+<p><span class="math display">\[
+\textrm{score}(\textrm{person, parti}) = w_0 + w_1 \cdot x_1+ w_2 \cdot x_2
+\]</span></p>
+<p>hvor <span class="math inline">\(w_0\)</span> kaldes for bias og <span class="math inline">\(w_1\)</span> og <span class="math inline">\(w_2\)</span> kaldes for vægte.</p>
+<p>Bias og vægte kan være forskellige for hvert parti, så vi kalder dem for <span class="math inline">\(s_0, s_1, s_2\)</span> (Socialdemokratiet), <span class="math inline">\(e_0, e_1, e_2\)</span> (Enhedslisten) og <span class="math inline">\(v_0, v_1, v_2\)</span> (Venstre).</p>
+<p>Vi sætter disse bias og vægte til nogle lidt tilfældige værdier til at starte med.</p>
+<table class="table-bordered table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Parti</th>
+<th style="text-align: center;"><span class="math inline">\(w_0\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(w_1\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(w_2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><strong>V</strong></td>
+<td style="text-align: center;"><span class="math inline">\(v_0 = 0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(v_1 = -1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(v_2 = 0\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>S</strong></td>
+<td style="text-align: center;"><span class="math inline">\(s_0 = 0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(s_1 = 1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(s_2 = 0\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><strong>E</strong></td>
+<td style="text-align: center;"><span class="math inline">\(e_0 = 0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(e_1 = 0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(e_2 = 0\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>For Andy kan vi så udregne:</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\textrm{score}(\textrm{Andy, V}) = 0 + (-1) \cdot (-2) + 0 \cdot (-2) = 2 \\
+&amp;\textrm{score}(\textrm{Andy, S}) = 0 + 1 \cdot (-2) + 0 \cdot (-2) = -2 \\
+&amp;\textrm{score}(\textrm{Andy, E}) = 0 + 0 \cdot (-2) + 0 \cdot (-2) = 0
+\end{aligned}
+\]</span></p>
+<p>Så lige nu er den højeste score for Andy for <strong>V</strong>, hvilket er godt, da han faktisk stemmer på Venstre.</p>
+<p>Men modellen skulle jo ikke kun give en score, men faktisk give en sandsynlighed for hvert parti. Så vi skal have fundet en metode til at få sandsynligheder i stedet for scores. Om sandsynlighederne ved vi, at de skal være positive, ligge mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span> og tilsammen give <span class="math inline">\(1.\)</span></p>
+<p>En simpel måde at få tallene positive på er at opløfte <span class="math inline">\(\mathrm{e}\)</span> i scoren:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathrm{e}^2 &amp; \approx  7.389 \\
+\mathrm{e}^{-2} &amp; \approx 0.135 \\
+\mathrm{e}^0 &amp;=1
+\end{aligned}
+\]</span></p>
+<p>Så lægges de tre tal sammen og hvert af tallene divideres med summen:</p>
+<p><span class="math display">\[
+\textrm{sum}=7.389 + 0.135 + 1 = 8.524
+\]</span></p>
+<p>For Andy giver det følgende:</p>
+<table class="table-bordered table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Parti</th>
+<th style="text-align: center;">Score</th>
+<th style="text-align: center;"><span class="math inline">\(\mathrm{e}^{\textrm{score}}\)</span></th>
+<th style="text-align: center;">Sandsynlighed</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><strong>V</strong></td>
+<td style="text-align: center;"><span class="math inline">\(2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(7.389\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{7.389}{8.524} \approx 86.68 \%\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>S</strong></td>
+<td style="text-align: center;"><span class="math inline">\(-2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.135\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{0.135}{8.524} \approx 1.59 \%\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><strong>E</strong></td>
+<td style="text-align: center;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{1}{8.524} \approx 11.73 \%\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Så med de valgte værdier af bias og vægte, angiver modellen en sandsynlighed på <span class="math inline">\(86.68 \%\)</span> for <strong>V</strong>, <span class="math inline">\(1.59 \%\)</span> for <strong>S</strong> og <span class="math inline">\(11.73 \%\)</span> for <strong>E</strong> for Andy. Da han faktisk stemte på <strong>V</strong>, er det jo rigtigt fint, uden dog at være helt perfekt, da vi helst ville have endnu større sandsynlighed for Venstre for Andy.</p>
+<p>Denne metode til at omregne fra scores til sandsynligheder kaldes for <strong>softmax</strong>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -277,23 +438,18 @@ window.Quarto = {
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>På <a href="#fig-opg1" class="quarto-xref">figur&nbsp;1</a> nedenfor er der <span class="math inline">\(10\)</span> røde punkter, <span class="math inline">\(10\)</span> blå punkter og <span class="math inline">\(10\)</span> grønne punkter – samt et enkelt gråt punkt <span class="math inline">\(P\)</span> i midten. Et af de blå punkter er særligt markeret, men da det ligger ret langt fra <span class="math inline">\(P\)</span> bør det nok ikke betyde så meget for, hvilket farve <span class="math inline">\(P\)</span> skal have, som de punkter, der ligger tættere på <span class="math inline">\(P\)</span>.</p>
 <ul>
-<li>Vurdér ud fra de øvrige punkter i nærheden af <span class="math inline">\(P\)</span>, om du synes, at <span class="math inline">\(P\)</span> bør være rødt, blåt eller grønt, så det ligner sine naboer mest.</li>
+<li>Lav de tilsvarende udregninger for Bella, Charlie og Doresa.</li>
+<li>Overvej derefter, om de valgte vægte er fornuftige – i den betydning, at modellen giver størst sandsynlighed for det parti, som personen faktisk stemmer på.</li>
 </ul>
 </div>
 </div>
 </div>
-<div id="fig-opg1" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-opg1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="hvem_ligner_du_mest_filer/image1.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-opg1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;1: Koordinatsystem med <span class="math inline">\(10\)</span> røde punkter, <span class="math inline">\(10\)</span> blå punkter og <span class="math inline">\(10\)</span> grønne punkter – samt et enkelt gråt punkt <span class="math inline">\(P\)</span>.
-</figcaption>
-</figure>
-</div>
+<p>Det var åbenlyst ikke så godt for Bella, Charlie og Doresa, da modellen for alle tre peger på et forkert parti. Idéen er nu, at vi skal ændre bias og vægte, så modellen bliver bedre.</p>
+<p>Lad os i første omgang se på <span class="math inline">\(w_1\)</span> og dermed <span class="math inline">\(x_1\)</span>. Bemærk, at <span class="math inline">\(x_1 = -2\)</span> for Andy, at <span class="math inline">\(x_1 = -1\)</span> for Bella og Charlie, og at <span class="math inline">\(x_1 = 1\)</span> for Doresa. Da vi gerne vil have Andy til at få en høj score, og dermed en høj sandsynlighed for Venstre, giver det mening at lade <span class="math inline">\(v_1\)</span> være en negativ værdi, så <span class="math inline">\(v_1 \cdot x_1\)</span> bliver positiv. Før havde vi sat <span class="math inline">\(v_1=-1\)</span>, men lad os forstærke effekten med <span class="math inline">\(v_1 = -3\)</span>, så scoren for Andy bliver højere.</p>
+<p>Det giver Andy en positiv score <span class="math inline">\(v_1 \cdot x_1 = -3 \cdot (-2) = 6\)</span> for Venstre, hvilket er godt, da vi gerne vil have, at modellen peger på Venstre for ham.</p>
+<p>Det giver Doresa en negativ score <span class="math inline">\(v_1 \cdot x_1 = -3 \cdot 1= -3\)</span>, hvilket også er godt, da vi gerne vil have, at modellen ikke peger på Venstre for hende.</p>
+<p>Det giver så desværre både Bella og Charlie en positiv score, da <span class="math inline">\(v_1 \cdot x_1 = -3 \cdot (-1) = 3\)</span>, hvilket ikke er så godt, da vi gerne vil have, at modellen ikke peger på Venstre for dem. Det venter vi lige med at gøre noget ved, da vi starter med at få modellen til at pege på Enhedslisten for Doresa.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -306,24 +462,52 @@ Figur&nbsp;1: Koordinatsystem med <span class="math inline">\(10\)</span> røde 
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>På <a href="#fig-opg2" class="quarto-xref">figur&nbsp;2</a> er der andre <span class="math inline">\(31\)</span> punkter, samt en cirkel med radius <span class="math inline">\(10\)</span> omkring det grå punkt <span class="math inline">\(P(15,15)\)</span>.</p>
 <ul>
-<li>Tæl hvor mange røde, blå og grønne punkter, der ligger inde i cirklen.</li>
-<li>Kan det bruges til at beslutte, hvilken farve det grå punkt bør have?</li>
+<li>Overvej hvilken værdi <span class="math inline">\(e_1\)</span> kan gives, så Doresa får en positiv score for Enhedslisten, mens de øvrige tre får en negativ score?</li>
+<li>Vælg vægten, så scoren for Doresa for Enhedslisten bliver <span class="math inline">\(6\)</span>, som scoren for Andy blev for Venstre.</li>
+<li>Beregn score og sandsynlighed for hver af de tre partier for Doresa med den værdi, du har valgt (husk, at vi har sat <span class="math inline">\(v_1=-3\)</span>).</li>
 </ul>
 </div>
 </div>
 </div>
-<div id="fig-opg2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-opg2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="hvem_ligner_du_mest_filer/image2.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-opg2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;2: Koordinatsystem med <span class="math inline">\(31\)</span> punkter, samt en cirkel med radius <span class="math inline">\(10\)</span> omkring det grå punkt <span class="math inline">\(P(15,15)\)</span>
-</figcaption>
-</figure>
-</div>
+<p>Samlet ser det nu således ud, hvor både (score) og sandsynlighed er angivet for hvert parti.</p>
+<table class="table-bordered table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Person</th>
+<th style="text-align: center;">Venstre</th>
+<th style="text-align: center;">Socialdemokratiet</th>
+<th style="text-align: center;">Enhedslisten</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Andy</td>
+<td style="text-align: center;">(<span class="math inline">\(6\)</span>) <span class="math inline">\(99.97 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-2\)</span>) <span class="math inline">\(0.03 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-12\)</span>) <span class="math inline">\(0.00 \%\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Bella</td>
+<td style="text-align: center;">(<span class="math inline">\(3\)</span>) <span class="math inline">\(98.19 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-1\)</span>) <span class="math inline">\(1.80 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-6\)</span>) <span class="math inline">\(0.01 \%\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Charlie</td>
+<td style="text-align: center;">(<span class="math inline">\(3\)</span>) <span class="math inline">\(98.19 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-1\)</span>) <span class="math inline">\(1.80 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-6\)</span>) <span class="math inline">\(0.01 \%\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Doresa</td>
+<td style="text-align: center;">(<span class="math inline">\(-3\)</span>) <span class="math inline">\(0.01 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(1\)</span>) <span class="math inline">\(0.67 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(6\)</span>) <span class="math inline">\(99.32 \%\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Vi skal nu have modellen til at vælge Socialdemokratiet for Bella og Charlie, men uden at ødelægge, at modellen vælger Venstre til Andy og Enhedslisten til Doresa.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -336,111 +520,55 @@ Figur&nbsp;2: Koordinatsystem med <span class="math inline">\(31\)</span> punkte
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Vi arbejder videre med punkterne fra opgave 2. Brug den interaktive figur nedenfor.</p>
 <ul>
-<li>Hvilket resultat giver det, hvis cirklens radius kun var halvt så stor?</li>
+<li>Overvej, hvilken værdi biaset <span class="math inline">\(s_0\)</span> kan gives, så Bella og Charlie scorer højst for Socialdemokratiet (scoren skal over <span class="math inline">\(3\)</span>, da de allerede har scoren <span class="math inline">\(3\)</span> for parti Venstre), men uden at scoren for Andy eller Doresa bliver højst for Socialdemokratiet (de har begge <span class="math inline">\(6\)</span> som højst score til henholdsvis Venstre og Enhedslisten).</li>
 </ul>
 </div>
 </div>
 </div>
-
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta charset="utf-8">
-<script src="https://cdn.geogebra.org/apps/deployggb.js"></script>
-
-<script>
-var parameters1 = {
-"id": "ggbApplet",
-"scaleContainerClass": "ggbContainer",
-"showMenuBar":false,
-"showAlgebraInput":false,
-"showToolBar":false,
-"perspective": "G",
-"showToolBarHelp":false,
-"showResetIcon":false,
-"enableLabelDrags":false,
-"enableShiftDragZoom":false,
-"enableRightClick":false,
-"errorDialogsActive":false,
-"useBrowserForJS":false,
-"allowStyleBar":false,
-"preventFocus":false,
-"showZoomButtons":false,
-"capturingThreshold":3,
-// add code here to run when the applet starts
-"appletOnLoad":function(api){ /* api.evalCommand('Segment((1,2),(3,4))');*/ },
-"showFullscreenButton":true,
-"scale":1,
-"disableAutoScale":false,
-"allowUpscale":false,
-"clickToLoad":false,
-"appName":"classic",
-"buttonRounding":0.7,
-"buttonShadows":false,
-"language":"da",
-// use this instead of ggbBase64 to load a material from geogebra.org
-// "material_id":"RHYH3UQ8",
-// use this instead of ggbBase64 to load a .ggb file
-"filename":"_geogebra/opgave2.ggb",
-};
-// is3D=is 3D applet using 3D view, AV=Algebra View, SV=Spreadsheet View, CV=CAS View, EV2=Graphics View 2, CP=Construction Protocol, PC=Probability Calculator DA=Data Analysis, FI=Function Inspector, macro=Macros
-var views1 = {'is3D': 0,'AV': 0,'SV': 0,'CV': 0,'EV2': 0,'CP': 0,'PC': 0,'DA': 0,'FI': 0,'macro': 0};
-var applet1 = new GGBApplet(parameters1, '5.0', views1);
-</script>
-<script>
-var parameters2 = {
-"id": "ggbApplet2",
-"scaleContainerClass": "ggbContainer",
-"showMenuBar":false,
-"showAlgebraInput":false,
-"showToolBar":false,
-"perspective": "G",
-"showToolBarHelp":false,
-"showResetIcon":false,
-"enableLabelDrags":false,
-"enableShiftDragZoom":false,
-"enableRightClick":false,
-"errorDialogsActive":false,
-"useBrowserForJS":false,
-"allowStyleBar":false,
-"preventFocus":false,
-"showZoomButtons":false,
-"capturingThreshold":3,
-// add code here to run when the applet starts
-"appletOnLoad":function(api){ /* api.evalCommand('Segment((1,2),(3,4))');*/ },
-"showFullscreenButton":true,
-"scale":1,
-"disableAutoScale":false,
-"allowUpscale":false,
-"clickToLoad":false,
-"appName":"classic",
-"buttonRounding":0.7,
-"buttonShadows":false,
-"language":"da",
-// use this instead of ggbBase64 to load a material from geogebra.org
-// "material_id":"RHYH3UQ8",
-// use this instead of ggbBase64 to load a .ggb file
-"filename":"_geogebra/opgave5.ggb",
-};
-// is3D=is 3D applet using 3D view, AV=Algebra View, SV=Spreadsheet View, CV=CAS View, EV2=Graphics View 2, CP=Construction Protocol, PC=Probability Calculator DA=Data Analysis, FI=Function Inspector, macro=Macros
-var views2 = {'is3D': 0,'AV': 0,'SV': 0,'CV': 0,'EV2': 0,'CP': 0,'PC': 0,'DA': 0,'FI': 0,'macro': 0};
-var applet2 = new GGBApplet(parameters2, '5.0', views2);
-window.onload = function() {
-  applet1.inject('ggbApplet1');
-  applet2.inject('ggbApplet2');
-  }
-</script>
-<script>
-window.onload = function() {
-  applet1.inject('ggbApplet1');
-  applet2.inject('ggbApplet2');
-  }
-</script>
-<div class="ggbContainer" style="width:100%; margin: auto">
-<div id="ggbApplet1">
-
-</div>
-</div>
+<p>Med en fornuftig værdi af bias for Socialdemokratiet (for eksempel på <span class="math inline">\(4.5\)</span>) kan tabellen komme til at se således ud:</p>
+<table class="table-bordered table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Person</th>
+<th style="text-align: center;">Venstre</th>
+<th style="text-align: center;">Socialdemokratiet</th>
+<th style="text-align: center;">Enhedslisten</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Andy</td>
+<td style="text-align: center;">(<span class="math inline">\(6\)</span>) <span class="math inline">\(97.07 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(2.5\)</span>) <span class="math inline">\(2.93 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-12\)</span>) <span class="math inline">\(0.00 \%\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Bella</td>
+<td style="text-align: center;">(<span class="math inline">\(3\)</span>) <span class="math inline">\(37.75 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(3.5\)</span>) <span class="math inline">\(62.24 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-6\)</span>) <span class="math inline">\(0.00 \%\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Charlie</td>
+<td style="text-align: center;">(<span class="math inline">\(3\)</span>) <span class="math inline">\(37.75 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(3.5\)</span>) <span class="math inline">\(62.24 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-6\)</span>) <span class="math inline">\(0.00 \%\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Doresa</td>
+<td style="text-align: center;">(<span class="math inline">\(-3\)</span>) <span class="math inline">\(0.01 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(5.5\)</span>) <span class="math inline">\(37.75 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(6\)</span>) <span class="math inline">\(62.24 \%\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Men det kan stadig gøres bedre, blandt andet ved også at tage <span class="math inline">\(w_2\)</span> i brug.</p>
+</section>
+<section id="brug-af-app-til-træning-af-kunstig-neuron" class="level2">
+<h2 class="anchored" data-anchor-id="brug-af-app-til-træning-af-kunstig-neuron">Brug af app til træning af kunstig neuron</h2>
+<p>Med det meget lille og simple eksempel kunne vi altså godt justere vægtene manuelt og få et nogenlunde resultat. Men hvis der bliver <span class="math inline">\(100\)</span>, <span class="math inline">\(1000\)</span> eller millioner af vægte, så er det næppe en god idé. Det kræver noget lidt mere avanceret matematik, som vi ikke vil gennemgå i dette forløb. Du kan læse mere om dette i noten om <a href="https://aimat.dk/noter/softmax/softmax.html">Kunstige neurale netværk til multipel klassifikation</a>.</p>
+<p>I stedet vil vi bruge en app til formålet. Du finder app’en <a href="https://apps01.math.aau.dk/ai/multi-neuron/">her</a> og datasættet som Excel fil <a href="kandidattest/datasæt_4_personer.xlsx">her</a>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -453,107 +581,184 @@ window.onload = function() {
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Det går nok ikke i længden blot at ville vurdere på øjemål, så du må til at regne lidt. I tabellen herunder er koordinater og farver på de <span class="math inline">\(10\)</span> punkter, der ligger tættest på det grå punkt i opgave 2 og 3.</p>
 <ul>
-<li><p>Udregn afstanden fra det grå punkt <span class="math inline">\(P(15,15)\)</span> til hver af de <span class="math inline">\(4\)</span> blå punkter. Hvis du er hurtig, kan du også regne afstanden til de øvrige <span class="math inline">\(6\)</span> punkter.</p></li>
-<li><p>Afgør så, hvor mange af hver farve, der ligger indenfor en cirkel med radius <span class="math inline">\(5\)</span> omkring det grå punkt. Det er nok specielt det blå punkt lige på kanten af cirklen, hvor beregningen er vigtig, men hvis en computer skal lave arbejdet automatisk, vil den jo beregne alle afstandene, da den ikke bare kan "kigge på figuren", som et menneske kan.</p></li>
-<li><p>Hvilken farve tyder det på, at det grå punkt bør have?</p></li>
+<li>Åbn app’en og indlæs datasættet.</li>
+<li>Vælg <span class="math inline">\(t\)</span> som target-variabel og både <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> som feature-variable.</li>
+<li>Sæt learning rate til <span class="math inline">\(0.1\)</span> og antal iterationer til <span class="math inline">\(1000\)</span>.</li>
+<li>Træn modellen.</li>
+<li>Sammenlign de værdier til bias og vægte, som app’en er nået frem til, med de værdier, som vi manuelt nåede frem til. Meget ligner det, vi fandt manuelt, men noget er også lidt anderledes.</li>
 </ul>
 </div>
 </div>
 </div>
+<p>Med app’ens værdier ser tabellen således ud, hvilket må siges at være meget tilfredsstillende:</p>
 <table class="table-bordered table">
 <colgroup>
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Person</th>
+<th style="text-align: center;">Venstre</th>
+<th style="text-align: center;">Socialdemokratiet</th>
+<th style="text-align: center;">Enhedslisten</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Andy</td>
+<td style="text-align: center;">(<span class="math inline">\(6.56\)</span>) <span class="math inline">\(97.72 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(2.80\)</span>) <span class="math inline">\(2.28 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-9.36\)</span>) <span class="math inline">\(0.0 \%\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Bella</td>
+<td style="text-align: center;">(<span class="math inline">\(-4.06\)</span>) <span class="math inline">\(0.02 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(4.48\)</span>) <span class="math inline">\(99.23 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-0.41\)</span>) <span class="math inline">\(0.75 \%\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Charlie</td>
+<td style="text-align: center;">(<span class="math inline">\(0.01\)</span>) <span class="math inline">\(3.21 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(3.42\)</span>) <span class="math inline">\(96.68 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(-3.43\)</span>) <span class="math inline">\(0.10 \%\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Doresa</td>
+<td style="text-align: center;">(<span class="math inline">\(-15.12\)</span>) <span class="math inline">\(0.00 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(5.18\)</span>) <span class="math inline">\(0.85 \%\)</span></td>
+<td style="text-align: center;">(<span class="math inline">\(9.94\)</span>) <span class="math inline">\(99.15 \%\)</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="politiske-kandidaters-svar" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="politiske-kandidaters-svar">16 politiske kandidaters svar</h2>
+<p>Lad os se på et lidt større eksempel, nu med autentiske data fra en kandidattest til folketingsvalget i 2026. Vi ser på 16 kandidater og deres svar på to spørgsmål.</p>
+<table class="table-bordered table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 50%">
 <col style="width: 20%">
 <col style="width: 20%">
 </colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: center;">Farve</th>
-<th style="text-align: center;"></th>
-<th style="text-align: center;"></th>
-<th style="text-align: center;"></th>
-<th style="text-align: center;"></th>
+<th>Parti</th>
+<th style="text-align: left;">Navn</th>
+<th style="text-align: center;">Spørgsmål 1</th>
+<th style="text-align: center;">Spørgsmål 2</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;">Blå</td>
-<td style="text-align: center;"><span class="math inline">\((13.8, 19.9)\)</span></td>
-<td style="text-align: center;"><span class="math inline">\((8.2, 14.9)\)</span></td>
-<td style="text-align: center;"><span class="math inline">\((16.4, 14.1)\)</span></td>
-<td style="text-align: center;"><span class="math inline">\((15.5, 13.1)\)</span></td>
+<td>Soc</td>
+<td style="text-align: left;">Ane Halsboe-Jørgensen</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Enig}}\)</span></td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">Rød</td>
-<td style="text-align: center;"><span class="math inline">\((10.6, 16.0)\)</span></td>
-<td style="text-align: center;"><span class="math inline">\((16.3, 15.2)\)</span></td>
-<td style="text-align: center;"><span class="math inline">\((15.6, 11.3)\)</span></td>
-<td style="text-align: center;"></td>
+<td>Soc</td>
+<td style="text-align: left;">Flemming Møller Mortensen</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Uenig}}\)</span></td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">Grøn</td>
-<td style="text-align: center;"><span class="math inline">\((11.1, 18.6)\)</span></td>
-<td style="text-align: center;"><span class="math inline">\((16.4, 17.5)\)</span></td>
-<td style="text-align: center;"><span class="math inline">\((21.7, 13.4)\)</span></td>
-<td style="text-align: center;"></td>
+<td>Soc</td>
+<td style="text-align: left;">Kiki Bille Bach</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Enig}}\)</span></td>
+</tr>
+<tr class="even">
+<td>Soc</td>
+<td style="text-align: left;">Morten Ryom</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Enig}}\)</span></td>
+</tr>
+<tr class="odd">
+<td>Ven</td>
+<td style="text-align: left;">Anita Vivi Lilholt</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Meget uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Enig}}\)</span></td>
+</tr>
+<tr class="even">
+<td>Ven</td>
+<td style="text-align: left;">Anne Honoré Østergaard</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Meget uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Enig}}\)</span></td>
+</tr>
+<tr class="odd">
+<td>Ven</td>
+<td style="text-align: left;">Marie Bjerre</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Uenig}}\)</span></td>
+</tr>
+<tr class="even">
+<td>Ven</td>
+<td style="text-align: left;">Mikkel Bisgaard</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Uenig}}\)</span></td>
+</tr>
+<tr class="odd">
+<td>Enh</td>
+<td style="text-align: left;">Peder Hvelplund</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Meget enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Meget enig}}\)</span></td>
+</tr>
+<tr class="even">
+<td>Enh</td>
+<td style="text-align: left;">Runa Friis Hansen</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Meget enig}}\)</span></td>
+</tr>
+<tr class="odd">
+<td>Enh</td>
+<td style="text-align: left;">Lasse P. N. Olsen</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Meget enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Enig}}\)</span></td>
+</tr>
+<tr class="even">
+<td>Enh</td>
+<td style="text-align: left;">Filippa Emilie Vittrup</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Meget enig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#F288B9}{\textbf{Meget enig}}\)</span></td>
+</tr>
+<tr class="odd">
+<td>DD</td>
+<td style="text-align: left;">Inger Støjberg</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Meget uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Uenig}}\)</span></td>
+</tr>
+<tr class="even">
+<td>DD</td>
+<td style="text-align: left;">Kristian Bøgsted</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Uenig}}\)</span></td>
+</tr>
+<tr class="odd">
+<td>DD</td>
+<td style="text-align: left;">Kim Edberg Andersen</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Meget uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Uenig}}\)</span></td>
+</tr>
+<tr class="even">
+<td>DD</td>
+<td style="text-align: left;">Liselotte Lynge</td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Meget uenig}}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\color{#8086F2}{\textbf{Uenig}}\)</span></td>
 </tr>
 </tbody>
 </table>
-<!--
-
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 5
-
-- Overvej, hvad der sker, hvis cirklens radius vælges som en meget lille værdi eller som en meget stor værdi i forhold til at bruge metoden til at bestemme, hvilken farve det grå punkt bør have. Kan det give problemer?
-:::
-
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 6
-
-Jans oprindelige opgave: Lav et punktplot i dit CAS-værktøj med disse punkter.
-| Farve | 1 | 2 | 3 | 4| 5| 6| 7| 8| 9| 
-|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-  | Blå  |  $(15,25)$ |   $(10,20)$ |  $(15,30)$ |  $(8,16)$ |   $(6,10)$  |  $(17,15)$  | $(23,17)$  | $(15,14)$ |  $(14,4)$ | 
-  | Rød |   $(30, 5)$  | $(18,18)$ |  $(21,9)$ |    $(6,24)$ |   $(25,25)$ |  $(18,16)$  | $(12,11)$ |   $(8,10)$  |  $(16,13)$  | 
-  | Grøn  | $(8,28)$  |   $(12,20)$ |  $(16,20)$  |  $(21,14)$  | $(13,10)$ |  $(12,13)$  | $(20,18)$ |   $(14,16)$ |  $(18,10)$  |
-Jans: Indtegn en cirkel omkring det grå punkt $P(15,15)$ og brug cirklen til at
-vurdere, hvilken farve punktet bør have. 
-
-I den interaktive figur herunder er $27$ andre punkter indsat i et koordinatsystem, og der er tegnet en cirkel med centrum i det grå punkt $P(15,15)$. 
-
-- Undersøg, hivlken farve $P$ skal have ved forskellig valg af radius.
-
-:::
-
-::: {.ggbContainer style='width:100%; margin: auto'}
-::: {#ggbApplet2}
-:::
-:::
-
--->
-<section id="opsamling" class="level3">
-<h3 class="anchored" data-anchor-id="opsamling">Opsamling</h3>
-<p>Det bliver nok klart, at der er brug for en metode til at beslutte, hvor stor radius skal være for at få det bedste resultat. Kort og lidt simpelt forklaret, involverer det noget, som man kalder <strong>træningsdata</strong> og <strong>testdata</strong>. Man har for eksempel 1000 punkter, som man kender farven på. Man lader så som om, at man ikke kender farven på for eksempel 200 af punkterne (som man så kalder testdata). Så bruger man de øvrige 800 punkter (træningsdata) til at forudsige farven af hver af de 200 punkter i testdata. Dette gør man for forskellige værdier af radius, hvorefter man vælger den radius, der forudsiger flest af de 200 punkters farve korrekt. Hvis for eksempel radius 5 forudsiger 121 punkters farve korrekt, radius 10 forudsiger 135 punkters farve korrekt, og radius 20 kun forudsiger 87 punkters farve korrekt, så har radius 10 jo klaret sig bedst.</p>
-</section>
-</section>
-<section id="manhattan-afstand" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="manhattan-afstand">Manhattan-afstand</h2>
-<p>I nogle situationer giver den almindelige afstand mellem punkter ikke så god mening. For eksempel er de fleste veje på Manhattan i New York enten nord-syd eller øst-vest, så man kan ikke bare gå eller køre "på skrå", men kun lodret eller vandret.</p>
-<p>Hvis vi ser på punkterne <span class="math inline">\(P(2,3)\)</span> og <span class="math inline">\(Q(5,7)\)</span>, så er den almindelige afstand <span class="math inline">\(5\)</span> ved hjælp af Pythagoras, mens Manhattan-afstanden er <span class="math inline">\(3+4=7\)</span>. Dette er illustreret på <a href="#fig-case2" class="quarto-xref">figur&nbsp;3</a>.</p>
-<div id="fig-case2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-case2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="hvem_ligner_du_mest_filer/image3.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-case2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;3: Den almindelige afstand mellem punkterne <span class="math inline">\(P(2,3)\)</span> og <span class="math inline">\(Q(5,7)\)</span> er <span class="math inline">\(5\)</span>, mens Manhattan-afstanden er <span class="math inline">\(7\)</span>.
-</figcaption>
-</figure>
-</div>
+<p>De to spørgsmål er</p>
+<ul>
+<li><p>Spørgsmål 1: De boligejere, der tjener mest på prisstigninger, skal betale mere i skat.</p></li>
+<li><p>Spørgsmål 2: Reglerne for dyrevelfærd skal strammes, selv om det kan gøre fødevarer fra Danmark dyrere.</p></li>
+</ul>
+<p>Datasættet som Excelfil med værdier fra <span class="math inline">\(-2\)</span> (helt uenig) til <span class="math inline">\(2\)</span> (helt enig) er <a href="../undervisningsforlob/kandidattest/datasæt_16_personer.xlsx">her</a>.</p>
+<p>For at skabe lidt overblik, vil et punktplot med <span class="math inline">\(x_1\)</span> på førsteaksen og <span class="math inline">\(x_2\)</span> på andenaksen, hvor punkterne har forskellige farver efter parti, være en god idé. Det er dog en udfordring, at flere punkter er ens.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -567,12 +772,27 @@ Figur&nbsp;3: Den almindelige afstand mellem punkterne <span class="math inline"
 <div id="callout-6" class="callout-6-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li><p>Indtegn punkterne <span class="math inline">\(A(1,7)\)</span>, <span class="math inline">\(B(3,4)\)</span> og <span class="math inline">\(C(5,6)\)</span> i et koordinatsystem.</p></li>
-<li><p>Udregn både almindelig afstand og Manhattan-afstand mellem hvert par af punkter.</p></li>
+<li>Overvej, hvordan du vil håndtere de punkter, som har samme koordinater, så alle punkterne alligevel bliver synlige.</li>
+<li>Tegn punktplottet (farv punkterne for Socialdemokratiet røde, Venstre blå, Enhedslisten grønne og Danmarksdemokraterne orange).</li>
 </ul>
+<details>
+<summary>
+Sådan gør du i GeoGebra
+</summary>
+<p><br>
+Åbn datasættet i Excel og kopiere det hele over i et "Regneark" i GeoGebra (tryk på "Vis" <span class="math inline">\(\rightarrow\)</span> "Regneark").</p>
+<ul>
+<li>Du laver et punkt i regnearket ved at skrive <code>=(B2,C2)</code> (hvis punktets førstekoordinat står i celle <code>B2</code> og andenkoordinaten står i <code>C2</code>).</li>
+<li>Markér cellen. Tag ved den lille firkant nederst til højre og træk ned, så du får punkter for alle 16 kandidater.</li>
+<li>Markér alle punkterne. Højreklik og vælg "Egenskaber". Sæt flueben ved "Fast objekt" (det sikrer, at du ikke ved en fejl kan flytte på punkterne). <em>Hvis</em> der er vist et navn ved punkterne i tegneblokken, fjerner du også fluebenet ved "Vis navn".</li>
+<li>Markér de fire punkter i regnearket, som kører til Socialdemokratiet. Højreklik og vælg "Egenskaber". Under fanen "Farve" vælger du rød.</li>
+<li>Farv på tilsvarende måde de andre punkter.</li>
+</ul>
+</details>
 </div>
 </div>
 </div>
+<p>Det skulle gerne være tydeligt, at de fire partiers kandidater ligger delvist opdelt efter parti. Vi vil nu gerne bruge samme type model som tidligere i en kunstig neuron til at undersøge, hvordan vi kan inddele <span class="math inline">\(xy\)</span>-planen i områder til hvert parti. Først skal vi have trænet modellen på data for de 16 politikere, så vi kender bias og vægte.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -585,10 +805,26 @@ Figur&nbsp;3: Den almindelige afstand mellem punkterne <span class="math inline"
 </div>
 <div id="callout-7" class="callout-7-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>I eksemplet og i opgave 7 var Manhattan-afstanden større end den almindelige afstand, men kan Manhattan-afstanden være mindre end den almindelige afstand eller kan de to afstande være ens?</p>
+<ul>
+<li>Brug kunstig neuron app’en på datasættet med samme indstillinger som i opgave 4.</li>
+<li>Noter værdierne for bias og vægte for hvert parti, så <span class="math inline">\(s_0, s_1, s_2\)</span> er for Socialdemokratiet, <span class="math inline">\(v_0, v_1, v_2\)</span> er for Venstre og så videre. Det er en fordel, hvis du med det samme definerer værdierne i GeoGebra. Skriv for eksempel i inputfeltet: <code>s0=5.869</code> for at definere <span class="math inline">\(s_0\)</span>.</li>
+</ul>
 </div>
 </div>
 </div>
+<p>Vi vil i det følgende lave en visualisering, som viser betydningen af de <span class="math inline">\(12\)</span> vægte, som du lige har fundet i opgave 6.</p>
+<p>Husk på, at hvis man for en given værdi af <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> skal udregne scoren for Socialdemokratiet, så gør vi det på denne måde:</p>
+<p><span class="math display">\[
+s_0 + s_1  \cdot x_1 + s_2 \cdot x_2
+\]</span> Hvis vi omdøber svaret på spørgsmål 1 (<span class="math inline">\(x_1\)</span>) til <span class="math inline">\(x\)</span>, svaret på spørgsmål 2 (<span class="math inline">\(x_2\)</span>) til <span class="math inline">\(y\)</span> og kalder den beregnede score for <span class="math inline">\(z\)</span>, så får vi ligningen:</p>
+<p><span class="math display">\[
+z = s_0 + s_1  \cdot x + s_2 \cdot y
+\]</span></p>
+<p>hvilket kan omskrives til</p>
+<p><span class="math display">\[
+s_0 + s_1  \cdot x + s_2 \cdot y -z =0
+\]</span> Sammenholder vi det med planens ligning <span class="math inline">\(a \cdot x + b \cdot y + c \cdot z + d=0\)</span>, kan vi se, at scoren for Socialdemokratiet udgør en plan i rummet. Noget helt tilsvarende gør sig selvfølgelig gældende for de øvrige tre partier.</p>
+<p>Vi vil nu tegne de fire planer:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -601,41 +837,43 @@ Figur&nbsp;3: Den almindelige afstand mellem punkterne <span class="math inline"
 </div>
 <div id="callout-8" class="callout-8-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Se på <a href="#fig-opg8" class="quarto-xref">figur&nbsp;4</a> herunder fra opgave 2 igen.</p>
-<p>Punkterne inde i cirklen har en almindelig afstand på under <span class="math inline">\(10\)</span> til det grå punkt, men hvilke af punkterne har mon en Manhattan-afstand på under <span class="math inline">\(10\)</span> til det grå punkt?</p>
 <ul>
-<li><p>Overvej, hvordan punkter med en Manhattan-afstand på præcis <span class="math inline">\(10\)</span> til det grå punkt ligger (måske er du nødt til at tegne lidt)?</p></li>
-<li><p>Den almindelige afstand giver en cirkel med det grå punkt i centrum, men hvilken figur giver Manhattan-afstanden omkring det grå punkt?</p></li>
-<li><p>Hvilken farve bør det grå punkt derfor have, hvis Manhattan-afstanden benyttes? Giver det samme resultatet, som du fik i opgave 2?</p></li>
+<li>Tegn de fire planer hørende til hver af de fire partier samtidig med, at du begrænser både <span class="math inline">\(x\)</span> og <span class="math inline">\(y\)</span> til at ligge mellem <span class="math inline">\(-2\)</span> og <span class="math inline">\(2\)</span>.</li>
+<li>Farv planen for Socialdemokratiet rød, Venstre blå, Enhedslisten grøn og Danmarksdemokraterne orange.</li>
+</ul>
+<details>
+<summary>
+Sådan gør du i GeoGebra
+</summary>
+<ul>
+<li>For bare at tegne planen for Socialdemokratiet i GeoGebra uden begræsninger på <span class="math inline">\(x\)</span> og <span class="math inline">\(y\)</span>, kan man i inputfeltet blot skrive: <code>z=s0+s1*x+s2*y</code>. Sørg for at vælge "Vis" <span class="math inline">\(\rightarrow\)</span> "3D Grafik" for at få planen vist i et 3-dimensionelt koordinatsystem.</li>
+<li>Hvis man skal have begrænsning med, definerer man scoren for Socialdemokratiet som en funktion af to variable: <code>soc(x,y)=s0+s1*x+s2*y,-2&lt;=x&lt;=2,-2&lt;=y&lt;=2</code>.</li>
+<li>For at farve planen skal man højreklikke på definitionen af planen i "Algebra vindue" og vælge "Egenskaber". Her vælger man fanen "Farve". Sæt eventuelt "Opaliseret" til <span class="math inline">\(100\)</span> (det betyder, at planen ikke bliver gennemsigtig).</li>
+</ul>
+</details>
+<p>Vi har i de tidligere opgaver set, at for et givent svar på hvert af de to spørgsmål så vil det parti med den højeste score også give den højeste sandsynlighed.</p>
+<p>I ethvert punkt i <span class="math inline">\(xy\)</span>-planen (svarende til konkrete svar på de to spørgsmål), er vi derfor nu interesseret i at finde ud af, hvilket parti, der har den største score (og dermed også den største sandsynlighed).</p>
+<ul>
+<li><p>Drej rundt i dit 3D-plot og prøv blandt andet at se "ned på" planerne (på den måde at <span class="math inline">\(z\)</span>-aksen peger direkte op i dine øjne – det svarer til, at du kigger direkte ned på <span class="math inline">\(xy\)</span>-planen). Her kan du se, at <span class="math inline">\(xy\)</span>-planen bliver inddelt i fire områder svarende til hver af de fire partier. Det parti med den højeste score svarer til den farve, som du kan se. t</p></li>
+<li><p>Hvilke partier støder op til hinanden, når du ser ned på de fire områder, som <span class="math inline">\(xy\)</span>-planen bliver inddelt i? Notér de tre kombinationer af partier ned.</p></li>
 </ul>
 </div>
 </div>
 </div>
-<div id="fig-opg8" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-opg8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="hvem_ligner_du_mest_filer/image2.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-opg8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;4: Koordinatsystem med <span class="math inline">\(31\)</span> punkter, samt en cirkel med radius <span class="math inline">\(10\)</span> omkring det grå punkt <span class="math inline">\(P(15,15)\)</span>
-</figcaption>
-</figure>
-</div>
-<!--
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 10
-
-Opstil en formel for den almindelige afstand mellem to punkter med koordinaterne $(x_1, y_1)$ og $(x_2, y_2)$. Det er en formel, du kender i forvejen.
-
-Opstil tilsvarende en formel for Manhattan-afstanden. Det er nok ikke en formel, du har set før. 
-
--->
-<p>Du kan læse mere om <a href="../noter/afstande/AfstandeMellemPunkteriPlanen.html#sec-manhattan_afstand">Manhattan-afstanden her</a>.</p>
-</section>
-<section id="hvilken-politiker-er-du-mest-enig-med" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="hvilken-politiker-er-du-mest-enig-med">Hvilken politiker er du mest enig med?</h2>
-<p>Op til både folketings-, kommunal- og regionalvalg kan man svare på en række spørgsmål, hvorefter ens svar bliver sammenlignet med politikernes svar på de samme spørgsmål. Herefter kan man så se, hvem man er mest enig med.</p>
-<p>Du skal enten bruge <a href="https://www.altinget.dk/kandidattest">Altinget</a>, som har flest forklaringer og muligheder, men ikke altid er tilgængelig, eller <a href="https://www.dr.dk/nyheder/politik/kandidattest">DR.DK</a>.</p>
+<p>Vi skal nu have fundet de linjer, som giver den inddeling af <span class="math inline">\(xy\)</span>-planen, som du har fundet i opgaven ovenfor. Du har blandt andet set, at Socialdemokratiet og Enhedslisten støder op til hinanden. Grænsen mellem de to partier opstår præcist, når de to partier har samme score. Det vil sige, når</p>
+<p><span class="math display">\[
+s_0 + s_1 \cdot x + s_2 \cdot y = e_0 + e_1 \cdot x + e_2 \cdot y
+\]</span></p>
+<p>hvor <span class="math inline">\(x=x_1\)</span> og <span class="math inline">\(y=y_1\)</span>.</p>
+<p>Hvis vi samler alt på venstre side, giver det</p>
+<p><span id="eq-sammenlignSE"><span class="math display">\[
+(s_0 - e_0) + (s_1-e_1) \cdot x + (s_2-e_2) \cdot y=0
+\tag{1}\]</span></span></p>
+<p>Læg mærke til, at det svarer til ligningen for en ret linje i planen på formen</p>
+<p><span class="math display">\[
+a \cdot x + b \cdot y + c = 0
+\]</span></p>
+<p>Vi vil nu tegne de tre linjer, som giver inddelingen af <span class="math inline">\(xy\)</span>-planen.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -649,37 +887,19 @@ Opstil tilsvarende en formel for Manhattan-afstanden. Det er nok ikke en formel,
 <div id="callout-9" class="callout-9-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Klik på linket ovenfor, vælg f.eks. det seneste kommunal- eller folketingsvalg, vælg din egen kommune i testen og besvar spørgsmålene. Se derefter, hvem du ifølge kandidattesten er mest enige med, og hvor mange procent enige I er. Klik også på "Sammenlign svar", hvor du i detaljer kan se, hvor I er enig eller uenige.</li>
+<li><p>Bestem ved hjælp af (<a href="#eq-sammenlignSE" class="quarto-xref">1</a>) ligningen for hver af de tre linjer, som giver inddelingen af <span class="math inline">\(xy\)</span>-planen, som du fandt i opgave 7.</p></li>
+<li><p>Indtegn de tre linjer i samme koordinatsystem som punktplottet, du lavede i opgave 5.</p></li>
 </ul>
 </div>
 </div>
 </div>
-<p>Men hvordan virker det mon? Hvordan vurderes, hvilken kandidat du er mest enig med, og hvordan udregnes, hvor mange procent enige I er?</p>
-<p>Til hvert spørgsmål kan der svares "helt uenig", "uenig", "enig" eller "helt enig", men desuden er der en skjult "neutral" mulighed i midten, som man ikke kan vælge:</p>
-<table class="table">
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Helt uenig</td>
-<td style="text-align: left;">Uenig</td>
-<td style="text-align: left;">Neutral</td>
-<td style="text-align: left;">Enig</td>
-<td style="text-align: left;">Helt enig</td>
-</tr>
-</tbody>
-</table>
-<p>Afstanden mellem to svar regnes som antal "felter" i tabellen, så afstanden mellem "Uenig" og "Enig" er <span class="math inline">\(2\)</span>, mens afstanden mellem "Enig" og "Helt enig" er <span class="math inline">\(1\)</span>, og den største afstand er <span class="math inline">\(4\)</span>.</p>
-<p>I <a href="#fig-kommunalvalg" class="quarto-xref">figur&nbsp;5</a> ses en persons svar og et partis kandidaters svar på <span class="math inline">\(23\)</span> spørgsmål. Opstillingen på figuren er lidt anderledes end på DRs side for at gøre det mere overskueligt, men indholdet er tilsvarende. Bemærk, at antallet af spørgsmål kan variere fra kommune til kommune, så du har måske færre eller flere spørgsmål.</p>
-<div id="fig-kommunalvalg" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-kommunalvalg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="hvem_ligner_du_mest_filer/image5.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-kommunalvalg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;5: En persons svar (sort) og et partis kandidaters svar (rød) på <span class="math inline">\(23\)</span> spørgsmål.
-</figcaption>
+<p>Når man svarer på de to spørgsmål, har man egentlig kun følgende svarmuligheder: <span class="math inline">\(-2\)</span> (helt uenig), <span class="math inline">\(-1\)</span> (uenig), <span class="math inline">\(0\)</span> (hverken/eller), <span class="math inline">\(1\)</span> (enig) eller <span class="math inline">\(2\)</span> (helt enig). Vi forestiller os nu, at man kan vælge en vilkårlig værdi i intervallet <span class="math inline">\([-2,2]\)</span>. Det kunne for eksempel ske, hvis man skulle angive sit svar på hvert spørgsmål ved hjælp af en skyder, som illustreret her:</p>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="kandidattest/skyder.png" class="img-fluid figure-img"></p>
+<figcaption class="margin-caption">Skyder som bruges til at angive, hvor enig man er i et spørgsmål på en kontinuert skala fra <span class="math inline">\(-2\)</span> til <span class="math inline">\(2\)</span>.</figcaption>
 </figure>
 </div>
-<p>Afstanden i det første spørgsmål er <span class="math inline">\(1\)</span>, afstanden i det andet spørgsmål også <span class="math inline">\(1\)</span> og afstanden i det tredje spørgsmål er <span class="math inline">\(2\)</span> på grund af den skjulte "neutral" mulighed i midten.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -692,9 +912,10 @@ Figur&nbsp;5: En persons svar (sort) og et partis kandidaters svar (rød) på <s
 </div>
 <div id="callout-10" class="callout-10-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
+<p>Antag, at en person har svaret <span class="math inline">\(x=1\)</span> på det første spørgsmål.</p>
 <ul>
-<li><p>De 3 første afstande er altså <span class="math inline">\(1\)</span>, <span class="math inline">\(1\)</span> og <span class="math inline">\(2\)</span>. Udregn afstanden for hver af de øvrige <span class="math inline">\(20\)</span> spørgsmål.</p></li>
-<li><p>Læg så afstandene sammen, hvilket svarer til en form for Manhattan-afstand, da afstanden regnes for hvert enkelt spørgsmål for sig. Hvilken samlet afstand giver det?</p></li>
+<li><p>Hvad skal værdien af <span class="math inline">\(y\)</span> (det vil sige svaret på det andet spørgsmål) være, så scoren for Socialdemokratiet og Enhedslisten bliver lige store (brug de linjer, som du fandt i opgave 8).</p></li>
+<li><p>Brug <span class="math inline">\(x=1\)</span> og den <span class="math inline">\(y\)</span>-værdi, som du lige har bestemt til først at finde scoren og dernæst sandsynligheden for hvert af de fire partier.</p></li>
 </ul>
 </div>
 </div>
@@ -705,37 +926,35 @@ Figur&nbsp;5: En persons svar (sort) og et partis kandidaters svar (rød) på <s
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 10
+<span class="screen-reader-only">Note</span>Opgave 10 - valgfri
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-11" class="callout-11-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
+<p>I opgave 7 tegnede du planer, som for ethvert punkt <span class="math inline">\((x,y)\)</span> viser scoren for hvert af de fire partier.</p>
 <ul>
-<li><p>Hvad er den mindst mulig samlede afstand for de <span class="math inline">\(23\)</span> spørgsmål? Hvordan skal svarene for partiet og for vælgeren se ud fra at få denne afstand?</p></li>
-<li><p>Hvad er den størst mulige afstand, og hvordan skal svarene så se ud?</p></li>
+<li>Lav et plot tilsvarende det, du lavede i opgave 7, men som i stedet for scoren viser sandsynlighedsfladen for hvert af de fire partier.</li>
+</ul>
+<details>
+<summary>
+Sådan gør du i GeoGebra
+</summary>
+<p>For at tegne sandsynlighedsfladen for Socialdemokratiet skriver man i inputfeltet:</p>
+<p><code>exp(soc(x,y))/(exp(soc(x,y))+exp(enh(x,y))+exp(ven(x,y))+exp(dd(x,y)))</code></p>
+<p>hvor <code>enh(x,y)</code> beregner scoren for Enhedslisten og så videre.</p>
+</details>
+<ul>
+<li><p>Drej rundt i dit 3D-plot og prøv igen at se direkte ned på <span class="math inline">\(xy\)</span>-planen. Får du samme inddeling af <span class="math inline">\(xy\)</span>-planen, som du fik i opgave 7? Hvorfor/hvorfor ikke?</p></li>
+<li><p>Betragt de fire inddelinger af <span class="math inline">\(xy\)</span>-planen svarende til hvert af de fire partier. Hvor i hver inddeling er sandsynligheden for det pågældende parti størst? Og hvorfor giver det god mening?</p></li>
 </ul>
 </div>
 </div>
 </div>
-<!--
-
-Delene om enighed med parti er fjernet, da det ikke er tilgængeligt for KV25, som det var for KV21.
-
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 1#
-
-På @fig-enighed ses det, at siden angiver, at enigheden med Socialdemokratiet er på $79 \%$.
-
-Overvej, hvordan den afstand du udregnede i opgave 15 og den største
-mulige afstand, som du fandt i opgave 16, kan betyde, at enigheden er
-$79 \%$.
-
-:::
-
-![På siden angives det, at enigheden med Socialdemokratiet er på $79 \%$.](hvem_ligner_du_mest_filer/image7.png){#fig-enighed}
-
--->
+</section>
+<section id="det-helt-store-eksempel-med-877-politikere" class="level2">
+<h2 class="anchored" data-anchor-id="det-helt-store-eksempel-med-877-politikere">Det helt store eksempel med 877 politikere</h2>
+<p>Til sidst vil vi tage et kig på et autentisk datasæt af en mere relevant størrelse. Vi har <span class="math inline">\(877\)</span> politikere fordelt på <span class="math inline">\(12\)</span> partier, som inden folketingsvalget i 2026 har svaret på <span class="math inline">\(24\)</span> spørgsmål til TV2’s kandidattest.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -748,66 +967,61 @@ $79 \%$.
 </div>
 <div id="callout-12" class="callout-12-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Vend tilbage til dine egne svar på testen.</p>
 <ul>
-<li><p>Beregn afstand i forhold til den kandidat, du var mest enig med.</p></li>
-<li><p>For hver kandidat viser siden, hvor mange procent I er enige. Overvej, hvordan denne procent er regnet ud - tænk på afstanden som "hvor uenige I er" - og brug det til at regne en procent for "enighed".</p></li>
-<li><p>Passer dine udregninger med sidens procenter?</p></li>
+<li>Beregn hvor mange bias og vægte modellen nu har.</li>
 </ul>
 </div>
 </div>
 </div>
+<p>Datasættet kan downloades <a href="../undervisningsforlob/kandidattest/datasæt_877_personer.xlsx">her</a>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 12 (ekstra)
+<span class="screen-reader-only">Note</span>Opgave 12
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-13" class="callout-13-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Kandidattesten angiver, hvilken kandidat, du er mest enig med. Man kunne også ønske at vide, hvilket parti, man er mest enig med.</p>
 <ul>
-<li><p>Overvej, hvordan du ville beregne, hvilket parti du er mest enig med. Diskutér gerne forskellige muligheder, og deres evt. fordele og ulemper.</p></li>
-<li><p>Hvis I ikke allerede har overvejet det, så overvej den mulighed, at “enighed med parti” beregnes som et gennemsnit af, hvor enig med er med hver af partiets kandidater. Hvilke fordele og ulemper har denne metode?</p></li>
-<li><p>Hvis I ikke allerede har overvejet det, så overvej den mulighed, at “enighed med parti” beregnes i forhold til det mest typiske svar fra partiets kandidater (som typetal i deskriptiv statistik, blot er det her type-svar). Hvike fordele og ulemper har denne metode?</p></li>
-<li><p>I metoden med typesvar kan man være mere enig med partiets end med den kandidat, man er mest enig med. Hvorfor er det tilfældet?</p></li>
+<li>Brug app’en til at træne en kunstig neuron ud fra datasættet. Vælg partibogstav som target-variabel og alle 24 spørgsmål som feature-variable.</li>
+<li>Se på "Confusion matrix" og "Klassifikationsnøjagtigheden" i app’en. Overvej, hvad det siger om den trænede model.</li>
+<li>Prøv at ændre på antal iterationer og på learning rate. Vi vil gerne have klassifikationsnøjagtigheden så høj som mulig.</li>
 </ul>
 </div>
 </div>
 </div>
-<!--
-
-Beregn desuden afstand og procent til det parti, du var mest enig med,
-og til det parti, du var mest uenig med.
-
-
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 19 (svær)
-
-Den kandidat, som svarene i opgave 15 var mest enig med, giver en
-procent på $76 \%$, så procenten for samtlige kandidater fra
-Socialdemokratiet er altså lavere end procenten for selve partiet.
-
-Det virker måske umiddelbart underligt. Overvej, hvorfor det faktisk er
-korrekt ud fra den metode, som siden anvender til beregningerne.
-
-Diskutér derefter, om procenten for partiet kunne være beregnet
-anderledes.
-
-:::
-
--->
+<p>Hvis du har haft om <a href="https://aimat.dk/noter/krydsvalidering/krydsvalidering.html" target="_blank">krydsvalidering</a>, kan du desuden lave opgave 13.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 13
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Evaluer modellen med 5-folds krydsvalidering i app’en.</li>
+<li>Tag en snak om, hvordan resultatet bliver sammenlignet med svarene i opgave 12, og hvorfor det er tilfældet.</li>
+</ul>
+</div>
+</div>
+</div>
 </section>
 <section id="delvis-facitliste" class="level2">
 <h2 class="anchored" data-anchor-id="delvis-facitliste">Delvis facitliste</h2>
-<p><a href="../undervisningsforlob/hvem_ligner_du_mest_filer/kandidattest_facit.html" target="_blank">Facitliste</a>.</p>
+<p><a href="kandidattest/kandidattest_facit.qmd" target="_blank">Facitliste</a>.</p>
 
 
 </section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
