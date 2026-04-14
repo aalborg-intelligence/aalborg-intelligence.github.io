@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="I opbygningen af kunstige neurale netværk er aktiveringsfunktioner helt centrale. En ofte anvendt aktiveringsfunktion i de skjulte lag er ReLu-funktionen. Den dykker vi dybere ned i her.">
+<meta name="description" content="I opbygningen af kunstige neurale netværk er aktiveringsfunktioner helt centrale. En ofte anvendt aktiveringsfunktion i de skjulte lag er ReLU-funktionen. Den dykker vi dybere ned i her.">
 
-<title>Kan du bygge funktioner med ReLu? – AI MAT - matematikken bag magien</title>
+<title>Kan du bygge funktioner med ReLU? – AI MAT - matematikken bag magien</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -186,7 +186,7 @@ window.Quarto = {
   <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
   <li><a href="#introduktion" id="toc-introduktion" class="nav-link" data-scroll-target="#introduktion">Introduktion</a></li>
   <li><a href="#sigmoid" id="toc-sigmoid" class="nav-link" data-scroll-target="#sigmoid">Sigmoid</a></li>
-  <li><a href="#relu" id="toc-relu" class="nav-link" data-scroll-target="#relu">ReLu</a>
+  <li><a href="#relu" id="toc-relu" class="nav-link" data-scroll-target="#relu">ReLU</a>
   <ul class="collapse">
   <li><a href="#sammenhæng-med-kunstigt-neuralt-netværk" id="toc-sammenhæng-med-kunstigt-neuralt-netværk" class="nav-link" data-scroll-target="#sammenhæng-med-kunstigt-neuralt-netværk">Sammenhæng med kunstigt neuralt netværk</a></li>
   <li><a href="#modellering-af-ikke-lineære-sammenhænge" id="toc-modellering-af-ikke-lineære-sammenhænge" class="nav-link" data-scroll-target="#modellering-af-ikke-lineære-sammenhænge">Modellering af ikke-lineære sammenhænge</a></li>
@@ -205,7 +205,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Kan du bygge funktioner med ReLu?</h1>
+<h1 class="title">Kan du bygge funktioner med ReLU?</h1>
   <div class="quarto-categories">
     <div class="quarto-category">01_A-niveau</div>
     <div class="quarto-category">04_Kort</div>
@@ -251,14 +251,14 @@ window.Quarto = {
 </div>
 <section id="formål" class="level3 purpose">
 <h3 class="anchored" data-anchor-id="formål">Formål</h3>
-<p>I opbygningen af kunstige neurale netværk er aktiveringsfunktioner helt centrale. Hvis ikke man bruger aktiveringsfunktioner i et kunstigt neuralt netværk, vil man faktisk bare bygge en stor lineær funktion af inputværdierne. Og verden er sjældent lineær – derfor har man brug for aktiveringsfunktioner.</p>
-<p>En ofte anvendt aktiveringsfunktion i de skjulte lag er ReLu-funktionen. Den er <em>næsten</em> lineær og så alligevel slet ikke. I dette forløb skal vi se på, hvordan man kan sammensætte ReLu-funktioner og på den måde modellere ikke-lineære funktioner.</p>
+<p>I opbygningen af kunstige neurale netværk er aktiveringsfunktioner helt centrale. Hvis ikke man bruger aktiveringsfunktioner i et kunstigt neuralt netværk, ender man i praksis med blot at bygge en stor lineær funktion af inputværdierne. Og verden er sjældent lineær – derfor har man brug for aktiveringsfunktioner.</p>
+<p>En ofte anvendt aktiveringsfunktion i de skjulte lag er ReLU-funktionen. Den er <em>næsten</em> lineær, men alligevel slet ikke. I dette forløb skal vi se på, hvordan man kan sammensætte ReLU-funktioner og på den måde modellere ikke-lineære funktioner.</p>
 </section>
 <section id="introduktion" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="introduktion">Introduktion</h2>
 <p>Start med at se denne video, hvor vi kort forklarer, hvad kunstig intelligens handler om:</p>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/ivrBEopralQ" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
-<p>Når man træner kunstig intelligens opbygger man lidt forsimplet bare en kæmpe stor sammensat funktion! Når funktioner sammensættes i neurale netværk, bruger man en klasse af funktioner, som kaldes for aktiveringsfunktioner.</p>
+<p>Når man træner kunstig intelligens opbygger man, lidt forsimplet, bare en kæmpestor sammensat funktion! Når funktioner sammensættes i neurale netværk, bruger man en klasse af funktioner, som kaldes for aktiveringsfunktioner.</p>
 <p>Vi vil illustrere det med et simpelt eksempel, som kaldes for et kunstigt neuralt netværk med ét skjult lag. Det kan tegnes sådan her:</p>
 <div id="fig-neuralt_net" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
@@ -286,7 +286,7 @@ z_2 = f(u_0 + u_1 \cdot x_1 + u_2 \cdot x_2)
 o = w_0 + w_1 \cdot z_1 + w_2 \cdot z_2
 \]</span></p>
 <p>Nogle gange bruger man også en aktiveringsfunktion, når outputværdien <span class="math inline">\(o\)</span> skal beregnes. Det vender vi kort tilbage til i opgave 2.</p>
-<p>Den første opgave handler om, at hvis man kun sammensætter lineære funktioner, så får man bare nye lineære funktioner. Opgaven kan eventuelt springes over – spørg din lærer.</p>
+<p>Den første opgave handler om, at hvis man kun sammensætter lineære funktioner, så får man kun nye lineære funktioner. Opgaven kan eventuelt springes over – spørg din lærer.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -320,7 +320,7 @@ o = a \cdot x_1 + b \cdot x_2 + c
 <p><span class="math display">\[
 \sigma (x) = \frac{1}{1+\textrm{e}^{-x}}
 \]</span></p>
-<p>hvor ouputværdien <span class="math inline">\(o\)</span> så beregnes på denne måde:</p>
+<p>hvor outputværdien <span class="math inline">\(o\)</span> så beregnes på denne måde:</p>
 <p><span class="math display">\[
 o = \sigma(w_0 + w_1 \cdot z_1 + w_2 \cdot z_2)
 \]</span></p>
@@ -344,11 +344,11 @@ o = \sigma(w_0 + w_1 \cdot z_1 + w_2 \cdot z_2)
 </div>
 </section>
 <section id="relu" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="relu">ReLu</h2>
-<p>I de skjulte lag i et neuralt netværk, kan man godt bruge sigmoid-funktionen som aktiveringsfunktion. Det har bare vist sig, at den ikke altid er super god! Det er til gengæld ReLu-funktionen, som er opdrejningspunktet for resten af opgaverne.</p>
-<p>ReLu-funktionen<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> er defineret således:</p>
+<h2 class="anchored" data-anchor-id="relu">ReLU</h2>
+<p>I de skjulte lag i et neuralt netværk kan man godt bruge sigmoid-funktionen som aktiveringsfunktion. Det har bare vist sig, at den ikke altid er super god! Det er til gengæld ReLU-funktionen, som er omdrejningspunktet for resten af opgaverne.</p>
+<p>ReLU-funktionen<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> er defineret således:</p>
 <div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;ReLU står for <strong>Rectified Linear Unit</strong>.</p></div></div><p><span class="math display">\[
-\textrm{ReLu}(x) =
+\textrm{ReLU}(x) =
 \begin{cases}
 0 &amp; \textrm {hvis } x \leq 0 \\
 x &amp; \textrm {hvis } x &gt; 0
@@ -360,40 +360,40 @@ x &amp; \textrm {hvis } x &gt; 0
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 3: Graf for ReLu-funktionen
+<span class="screen-reader-only">Note</span>Opgave 3: Graf for ReLU-funktionen
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Tegn grafen for ReLu-funktionen.</li>
+<li>Tegn grafen for ReLU-funktionen.</li>
 </ul>
 <details>
 <summary>
 Sådan gør du i GeoGebra
 </summary>
-<p>Skriv i input-feltet: <code>ReLu(x) = Hvis(x &lt; 0, 0, x)</code></p>
+<p>Skriv i input-feltet: <code>ReLU(x) = Hvis(x &lt; 0, 0, x)</code></p>
 </details>
 <ul>
 <li><p>Grafen har et knæk – hvor er det?</p></li>
 <li><p>Grafen består af to rette linjer. Hvad er hældningen af de to linjer?</p></li>
-<li><p>Er ReLu-funktionen kontinuert?</p></li>
-<li><p>Er ReLu-funktionen differentiabel i alle <span class="math inline">\(x\)</span>-værdier?</p></li>
+<li><p>Er ReLU-funktionen kontinuert?</p></li>
+<li><p>Er ReLU-funktionen differentiabel i alle <span class="math inline">\(x\)</span>-værdier?</p></li>
 </ul>
 </div>
 </div>
 </div>
-<p>Du har lige opdaget, at ReLu-funktionen ikke er differentiabel i <span class="math inline">\(x=0\)</span>. Når man skal træne kunstige neurale netværk, har man dog brug for at kunne regne med den afledede funktion i alle værdier. Derfor vælger vi at definere os ud af problemet med at ReLu-funktionen ikke er differentiabel i <span class="math inline">\(0\)</span>, og vi beslutter simpelthen at sætte tangenthældningen i <span class="math inline">\(0\)</span> til at være <span class="math inline">\(0\)</span>. Det vil sige, at vi vælger, at <span class="math inline">\(\textrm{ReLu}'(0)=0\)</span>. Samlet set får vi derfor:</p>
-<p><span id="eq-diffReLu"><span class="math display">\[
-\textrm{ReLu}'(x) =
+<p>Du har lige opdaget, at ReLU-funktionen ikke er differentiabel i <span class="math inline">\(x=0\)</span>. Når man skal træne kunstige neurale netværk, har man dog brug for at kunne regne med den afledede funktion i alle værdier. Derfor vælger vi at definere os ud af problemet med, at ReLU-funktionen ikke er differentiabel i <span class="math inline">\(0\)</span>, og vi beslutter simpelthen at sætte tangenthældningen i <span class="math inline">\(0\)</span> til at være <span class="math inline">\(0\)</span>. Det vil sige, at vi vælger, at <span class="math inline">\(\textrm{ReLU}'(0)=0\)</span>. Samlet set får vi derfor:</p>
+<p><span id="eq-diffReLU"><span class="math display">\[
+\textrm{ReLU}'(x) =
 \begin{cases}
 0 &amp; \textrm{hvis } x \leq 0 \\
 1 &amp; \textrm{hvis } x &gt; 0
 \end{cases}
 \tag{3}\]</span></span></p>
-<p>Bemærk for øvrigt, at den afledede ReLu-funktion ikke er kontinuert i <span class="math inline">\(0\)</span>. Det møder du ikke så tit!</p>
-<p>Vi prøver nu at sætte ReLu-funktioner sammen med lineære funktioner. Hvad det har at gøre med kunstige neurale netværk kommer vil tilbage til i det næste afsnit.</p>
+<p>Bemærk for øvrigt, at den afledede ReLU-funktion ikke er kontinuert i <span class="math inline">\(0\)</span>. Det møder du ikke så tit!</p>
+<p>Vi prøver nu at sætte ReLU-funktioner sammen med lineære funktioner. Hvad det har at gøre med kunstige neurale netværk kommer vi tilbage til i det næste afsnit.</p>
 <p>For at holde tingene simple ser vi på det tilfælde, hvor vi har én inputvariabel, som vi bare vil kalde for <span class="math inline">\(x\)</span>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
@@ -401,7 +401,7 @@ Sådan gør du i GeoGebra
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 4: Sammensat ReLu
+<span class="screen-reader-only">Note</span>Opgave 4: Sammensat ReLU
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -409,18 +409,18 @@ Sådan gør du i GeoGebra
 <div class="callout-body-container callout-body">
 <p>Vi ser på funktionen</p>
 <p><span class="math display">\[
-f(x)=w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x)
+f(x)=w_0 + w_1 \cdot \textrm{ReLU}(v_0 + x)
 \]</span></p>
 <ul>
-<li><p>Tegn grafen for <span class="math inline">\(f\)</span> (du kan bruge den definition af ReLu, som du lavede i opgave 3). Indtast forskriften, som den står ovenfor, og når GeoGebra spørger, om du vil oprette skydere for <span class="math inline">\(w_0\)</span>, <span class="math inline">\(w_1\)</span> og <span class="math inline">\(v_0\)</span>, vælger du ja.</p></li>
-<li><p>Hvad er betydning af <span class="math inline">\(w_0\)</span>?</p></li>
-<li><p>Hvad hældningen af den ikke vandrette del af grafen?</p></li>
+<li><p>Tegn grafen for <span class="math inline">\(f\)</span> (du kan bruge den definition af ReLU, som du lavede i opgave 3). Indtast forskriften, som den står ovenfor, og når GeoGebra spørger, om du vil oprette skydere for <span class="math inline">\(w_0\)</span>, <span class="math inline">\(w_1\)</span> og <span class="math inline">\(v_0\)</span>, vælger du ja.</p></li>
+<li><p>Hvad er betydningen af <span class="math inline">\(w_0\)</span>?</p></li>
+<li><p>Hvad er hældningen af den ikke vandrette del af grafen?</p></li>
 <li><p>I hvilken <span class="math inline">\(x\)</span>-værdi knækker grafen?</p></li>
 </ul>
 <p>Lad os regne lidt:</p>
 <ul>
-<li><p>Beregn den <span class="math inline">\(x\)</span>-værdi, hvor grafen knækker. Hint: Det sker, når inputtet til ReLu-funktionen er <span class="math inline">\(0\)</span>.</p></li>
-<li><p>Brug (<a href="#eq-diffReLu" class="quarto-xref">3</a>) til at bestemme <span class="math inline">\(f'\)</span>. Stemmer det med det, du fandt ovenfor?</p></li>
+<li><p>Beregn den <span class="math inline">\(x\)</span>-værdi, hvor grafen knækker. Hint: Det sker, når inputtet til ReLU-funktionen er <span class="math inline">\(0\)</span>.</p></li>
+<li><p>Brug (<a href="#eq-diffReLU" class="quarto-xref">3</a>) til at bestemme <span class="math inline">\(f'\)</span>. Stemmer det med det, du fandt ovenfor?</p></li>
 </ul>
 </div>
 </div>
@@ -431,14 +431,14 @@ f(x)=w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x)
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 5: Byg selv ReLu
+<span class="screen-reader-only">Note</span>Opgave 5: Byg selv ReLU
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Vi ser fortsat på funktioner med en forskrift på formen <span class="math display">\[
-f(x)=w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x)
+f(x)=w_0 + w_1 \cdot \textrm{ReLU}(v_0 + x)
 \]</span></p>
 <ul>
 <li><p>Brug din viden fra opgave 4 og bestem <span class="math inline">\(w_0\)</span>, <span class="math inline">\(w_1\)</span> og <span class="math inline">\(v_0\)</span> så grafen for</p>
@@ -461,8 +461,8 @@ f(x)=w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x)
 </div>
 <section id="sammenhæng-med-kunstigt-neuralt-netværk" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="sammenhæng-med-kunstigt-neuralt-netværk">Sammenhæng med kunstigt neuralt netværk</h3>
-<p>Vi kan nu passende spørge os selv, hvad ReLu-funktionen i opgave 4 og 5 har at gøre med et kunstigt neuralt netværk. En hel del faktisk!</p>
-<p>Betragt følgende netværk, hvor det skjlute lag kun består af én neuron:</p>
+<p>Vi kan nu passende spørge os selv, hvad ReLU-funktionen i opgave 4 og 5 har at gøre med et kunstigt neuralt netværk. En hel del faktisk!</p>
+<p>Betragt følgende netværk, hvor det skjute lag kun består af én neuron:</p>
 <div id="fig-simpelt_NN" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-simpelt_NN-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -473,22 +473,22 @@ Figur&nbsp;2: Simpelt kunstigt neuralt netværk. Netværket har inputvariable <s
 </figcaption>
 </figure>
 </div>
-<p>Beregner vi <span class="math inline">\(z_1\)</span> ved at bruge ReLu-funktionen som aktiveringsfunktion, får vi</p>
+<p>Beregner vi <span class="math inline">\(z_1\)</span> ved at bruge ReLU-funktionen som aktiveringsfunktion, får vi</p>
 <p><span class="math display">\[
-z_1 = \textrm{ReLu}(v_0 + \underbrace{v_1 \cdot x_1 + v_2 \cdot x_2}_{x}) = \textrm{ReLu}(v_0 + x),
-\]</span> hvor vi har sagt, at <span class="math inline">\(x\)</span> bare er linear kombinationen af de to features: <span class="math inline">\(x=v_1 \cdot x_1 + v_2 \cdot x_2\)</span>. Så er outputværdien <span class="math inline">\(o\)</span>:</p>
+z_1 = \textrm{ReLU}(v_0 + \underbrace{v_1 \cdot x_1 + v_2 \cdot x_2}_{x}) = \textrm{ReLU}(v_0 + x),
+\]</span> hvor vi har sagt, at <span class="math inline">\(x\)</span> bare er en linear kombinationen af de to features: <span class="math inline">\(x=v_1 \cdot x_1 + v_2 \cdot x_2\)</span>. Så er outputværdien <span class="math inline">\(o\)</span>:</p>
 <p><span class="math display">\[
-o = w_0 + w_1 \cdot z_1 = w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x),
+o = w_0 + w_1 \cdot z_1 = w_0 + w_1 \cdot \textrm{ReLU}(v_0 + x),
 \]</span></p>
 <p>som præcis svarer til den funktion, som vi har set på i opgave 4 og 5.</p>
-<p>I de næste opgaver skal vi se på, hvad der sker, hvis vi sætter flere ReLu-funktioner sammen.</p>
+<p>I de næste opgaver skal vi se på, hvad der sker, hvis vi sætter flere ReLU-funktioner sammen.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 6: Endnu mere sammensat ReLu
+<span class="screen-reader-only">Note</span>Opgave 6: Endnu mere sammensat ReLU
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -496,13 +496,13 @@ o = w_0 + w_1 \cdot z_1 = w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x),
 <div class="callout-body-container callout-body">
 <p>Vi ser på funktionen</p>
 <p><span class="math display">\[
-f(x)=w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x) + w_2 \cdot \textrm{ReLu}(u_0 + x)
+f(x)=w_0 + w_1 \cdot \textrm{ReLU}(v_0 + x) + w_2 \cdot \textrm{ReLU}(u_0 + x)
 \]</span></p>
 <ul>
-<li><p>Tegn grafen for <span class="math inline">\(f\)</span> (du kan bruge den definition af ReLu, som du lavede i opgave 3). Igen opretter du skydere for <span class="math inline">\(w_0\)</span>, <span class="math inline">\(w_1\)</span>, <span class="math inline">\(w_2\)</span>, <span class="math inline">\(v_0\)</span> og <span class="math inline">\(u_0\)</span>.</p></li>
-<li><p>Hvad er betydning af <span class="math inline">\(w_0\)</span>?</p></li>
+<li><p>Tegn grafen for <span class="math inline">\(f\)</span> (du kan bruge den definition af ReLU, som du lavede i opgave 3). Igen opretter du skydere for <span class="math inline">\(w_0\)</span>, <span class="math inline">\(w_1\)</span>, <span class="math inline">\(w_2\)</span>, <span class="math inline">\(v_0\)</span> og <span class="math inline">\(u_0\)</span>.</p></li>
+<li><p>Hvad er betydningen af <span class="math inline">\(w_0\)</span>?</p></li>
 </ul>
-<p>Det er nemmest at forstå, hvad der sker, hvis vi sørger for, at den første ReLu-funktion definerer det første knæk, mens den anden ReLu-funktion definerer det andet knæk. Det kan vi opnå, hvis vi sørger for, at</p>
+<p>Det er nemmest at forstå, hvad der sker, hvis vi sørger for, at den første ReLU-funktion definerer det første knæk, mens den anden ReLU-funktion definerer det andet knæk. Det kan vi opnå, hvis vi sørger for, at</p>
 <p><span class="math display">\[
 - v_0 &lt; - u_0
 \]</span> (Det kan du jo lige overveje!)</p>
@@ -523,17 +523,17 @@ u_0 &lt; v_0
 <p>Funktionen <span class="math inline">\(f\)</span> fra ovenstående opgave svarer <em>næsten</em> til det netværk, som vi har illustreret i <a href="#fig-neuralt_net" class="quarto-xref">figur&nbsp;1</a>. Men vi har lavet en forsimpling i opgaven. Skulle vi modellere netværket i <a href="#fig-neuralt_net" class="quarto-xref">figur&nbsp;1</a>, skulle vi have set på funktionen</p>
 <p><span class="math display">\[
 \begin{aligned}
-f(x_1,x_2)=w_0 &amp;+ w_1 \cdot \textrm{ReLu}(v_0 + \underbrace{v_1 \cdot x_1 + v_2 \cdot x_2}_{x}) \\ &amp;+ w_2 \cdot \textrm{ReLu}(u_0 + \underbrace{u_1 \cdot x_1 + u_2 \cdot x_2}_{\textrm{noget andet end } x})
+f(x_1,x_2)=w_0 &amp;+ w_1 \cdot \textrm{ReLU}(v_0 + \underbrace{v_1 \cdot x_1 + v_2 \cdot x_2}_{x}) \\ &amp;+ w_2 \cdot \textrm{ReLU}(u_0 + \underbrace{u_1 \cdot x_1 + u_2 \cdot x_2}_{\textrm{noget andet end } x})
 \end{aligned}
 \]</span></p>
-<p>Som det fremgår af ovenstående kan vi ikke bare tænke på <span class="math inline">\(f\)</span>, som en funktion af én variabel <span class="math inline">\(x\)</span>, men den forsimplede funktion fra opgave 6 er glimrende til at forstå, hvordan sammensætninger af ReLu-funktioner kan bruges til at modellere ikke-lineære funktioner.</p>
+<p>Som det fremgår af ovenstående, kan vi ikke bare tænke på <span class="math inline">\(f\)</span> som en funktion af én variabel <span class="math inline">\(x\)</span>, men den forsimplede funktion fra opgave 6 er glimrende til at forstå, hvordan sammensætninger af ReLU-funktioner kan bruges til at modellere ikke-lineære funktioner.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 7: Stadig sammensat ReLu
+<span class="screen-reader-only">Note</span>Opgave 7: Stadig sammensat ReLU
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -541,7 +541,7 @@ f(x_1,x_2)=w_0 &amp;+ w_1 \cdot \textrm{ReLu}(v_0 + \underbrace{v_1 \cdot x_1 + 
 <div class="callout-body-container callout-body">
 <p>Vi ser igen på funktionen</p>
 <p><span class="math display">\[
-f(x)=w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x) + w_2 \cdot \textrm{ReLu}(u_0 + x)
+f(x)=w_0 + w_1 \cdot \textrm{ReLU}(v_0 + x) + w_2 \cdot \textrm{ReLU}(u_0 + x)
 \]</span></p>
 <ul>
 <li><p>Bestem <span class="math inline">\(w_0\)</span>, <span class="math inline">\(w_1\)</span>, <span class="math inline">\(w_2\)</span>, <span class="math inline">\(v_0\)</span> og <span class="math inline">\(u_0\)</span> så grafen for</p>
@@ -567,26 +567,26 @@ f(x)=w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x) + w_2 \cdot \textrm{ReLu}(u_0 + x)
 </section>
 <section id="modellering-af-ikke-lineære-sammenhænge" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="modellering-af-ikke-lineære-sammenhænge">Modellering af ikke-lineære sammenhænge</h3>
-<p>Pointen med at sammensætte ReLu-funktioner er, at vi gerne vil kunne modellere ikke-lineære sammenhænge i data. De næste opgaver går ud på at bestemme en sammensat ReLu-funktion, som kan bruges til at modellere en parabel.</p>
+<p>Pointen med at sammensætte ReLU-funktioner er, at vi gerne vil kunne modellere ikke-lineære sammenhænge i data. De næste opgaver går ud på at bestemme en sammensat ReLU-funktion, som kan bruges til at modellere en parabel.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 8: Sammensat ReLu og parabel (eksperimentér!)
+<span class="screen-reader-only">Note</span>Opgave 8: Sammensat ReLU og parabel (eksperimentér!)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-9" class="callout-9-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Vi vil se på andengradspolyomiet</p>
+<p>Vi vil se på andengradspolynomiet</p>
 <p><span class="math display">\[
 g(x)=\frac{3}{4}x^2+2, \quad -4 \leq x \leq 4
 \]</span></p>
-<p>og undersøge, om vi kan bestemme en sammensat ReLu-funktion på formen</p>
+<p>og undersøge, om vi kan bestemme en sammensat ReLU-funktion på formen</p>
 <p><span class="math display">\[
-f(x)=w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x) + w_2 \cdot \textrm{ReLu}(u_0 + x)
+f(x)=w_0 + w_1 \cdot \textrm{ReLU}(v_0 + x) + w_2 \cdot \textrm{ReLU}(u_0 + x)
 \]</span></p>
 <p>som en approksimation (det vil sige en tilnærmelse) til <span class="math inline">\(g\)</span>.</p>
 <ul>
@@ -603,7 +603,7 @@ f(x)=w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x) + w_2 \cdot \textrm{ReLu}(u_0 + x)
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 9: Sammensat ReLu og parabel (regn!)
+<span class="screen-reader-only">Note</span>Opgave 9: Sammensat ReLU og parabel (regn!)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -658,17 +658,17 @@ f(x)=w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x) + w_2 \cdot \textrm{ReLu}(u_0 + x)
 <div id="callout-12" class="callout-12-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Beregn førstekoordinaten til skæringspunktet mellem grafen for <span class="math inline">\(f\)</span> og <span class="math inline">\(g\)</span> i intervallet <span class="math inline">\(]-4,0[\)</span>.</li>
+<li>Beregn førstekoordinaten til skæringspunktet mellem graferne for <span class="math inline">\(f\)</span> og <span class="math inline">\(g\)</span> i intervallet <span class="math inline">\(]-4,0[\)</span>.</li>
 </ul>
 <p><em>OBS! Førstekoordinaten kommer til at afhænge af <span class="math inline">\(w_1\)</span></em>.</p>
 </div>
 </div>
 </div>
-<p>En idé til at bestemme den værdi af <span class="math inline">\(w_1\)</span>, som giver en god approksimation, vil være at bestemme den værdi, som minimerer arealet af det område, som grafen for <span class="math inline">\(f\)</span> og <span class="math inline">\(g\)</span> afgrænser i <span class="math inline">\([-4,0]\)</span>. Dette er illustreres i figuren herunder:</p>
+<p>En idé til at bestemme den værdi af <span class="math inline">\(w_1\)</span>, som giver en god approksimation, vil være at bestemme den værdi, som minimerer arealet af det område, som grafen for <span class="math inline">\(f\)</span> og <span class="math inline">\(g\)</span> afgrænser i <span class="math inline">\([-4,0]\)</span>. Dette er illustreret i figuren herunder:</p>
 <div id="fig-areal_mellem" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-areal_mellem-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="ReLu/areal_mellem.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%">
+<img src="ReLU/areal_mellem.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-areal_mellem-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figur&nbsp;3: Grafen for <span class="math inline">\(f\)</span> og <span class="math inline">\(g\)</span> fra opgave 8.
@@ -747,7 +747,7 @@ A_1 + A_2 = \int_{-4}^{x_1} g(x)-f(x) \, dx + \int_{x_1}^{0} f(x)-g(x) \, dx
 <p><span class="math display">\[
 A_1 + A_2 = \int_{-4}^{x_1} |f(x)-g(x)| \, dx + \int_{x_1}^{0} |f(x)-g(x)| \, dx
 \]</span></p>
-<p>og bruger vi indskudsreglen for bestemte integraler ser, vi at</p>
+<p>og bruger vi indskudsreglen for bestemte integraler, ser vi, at</p>
 <p><span class="math display">\[
 A_1 + A_2 = \int_{-4}^{0} |f(x)-g(x)| \, dx
 \]</span> Husk på, at enhver kontinuert funktion har en stamfunktion, så selvom integraden <span class="math inline">\(|f(x)-g(x)|\)</span> måske ikke er differentiabel, så er det altså nok, at den er kontinuert.</p>
