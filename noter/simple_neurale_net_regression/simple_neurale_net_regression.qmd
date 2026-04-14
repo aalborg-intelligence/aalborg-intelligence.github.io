@@ -408,7 +408,7 @@ $$
 o = w_0 + w_1 \cdot z_1 + w_2 \cdot z_2
 $$ 
 
-### ReLu aktiveringsfunktionen
+### ReLU aktiveringsfunktionen
 
 Lad os se nærmere på aktiveringsfunktionen $f$. Hvis du har læst nogle af vores andre noter, ved du, at en ofte anvendt aktiveringsfunktion er sigmoid-funktionen med forskrift:
 
@@ -423,29 +423,29 @@ Denne aktiveringsfunktion er super god at bruge, når outputværdien skal beregn
 
 [^sig]: Omvendt har Sigmoid-funktionen den (for en matematiker) fantastiske egenskab, at den er differentiabel, og man kan vise, at $\sigma'(x) = \sigma(x) (1-\sigma(x))$.
 
-En aktiveringsfunktion, som til gengæld ofte anvendes i de skjulte lag, er ReLu-funktionen[^relu]. Den er defineret således:
+En aktiveringsfunktion, som til gengæld ofte anvendes i de skjulte lag, er ReLU-funktionen[^relu]. Den er defineret således:
 
 
 [^relu]: ReLU står for **Rectified Linear Unit**.
 
 $$
-\textrm{ReLu}(x) = 
+\textrm{ReLU}(x) = 
 \begin{cases}
 0 & \textrm {hvis } x \leq 0 \\
 x & \textrm {hvis } x > 0
 \end{cases}
 $$
 
-Grafen for ReLu-funktionen ses i @fig-relu.
+Grafen for ReLU-funktionen ses i @fig-relu.
 
-![Grafen for ReLu-funktionen.](images/ReLu.png){width=75% #fig-relu}
+![Grafen for ReLU-funktionen.](images/ReLu.png){width=75% #fig-relu}
 
-ReLu-funktionen transformerer altså alle negative inputværdier til $0$ og alle positive inputværdier forbliver uændret. Det ser jo næsten lineært ud, men det er altså nok til, at man kan modellere nogle meget ikke-lineære funktioner, hvis bare man har nok skjulte lag med mange neuroner i hvert lag.  
+ReLU-funktionen transformerer altså alle negative inputværdier til $0$ og alle positive inputværdier forbliver uændret. Det ser jo næsten lineært ud, men det er altså nok til, at man kan modellere nogle meget ikke-lineære funktioner, hvis bare man har nok skjulte lag med mange neuroner i hvert lag.  
 
-Nu er det sådan, at ReLu-funktionen faktisk ikke er differentiabel i $x=0$ -- til forskel fra Sigmoid-funktionen, som er differentiabel overalt. Til gengæld er det ikke svært at overbevise sig selv om, at
+Nu er det sådan, at ReLU-funktionen faktisk ikke er differentiabel i $x=0$ -- til forskel fra Sigmoid-funktionen, som er differentiabel overalt. Til gengæld er det ikke svært at overbevise sig selv om, at
 
 $$
-\textrm{ReLu}'(x) =
+\textrm{ReLU}'(x) =
 \begin{cases}
 0 & \textrm{hvis } x < 0 \\
 1 & \textrm{hvis } x > 0
@@ -455,12 +455,12 @@ $$
 Det ses nemt, ved at se på tangenthældningerne i @fig-relu. Og så definerer vi os simpelthen ud af tilfældet, hvor $x=0$, og siger, at i $0$ skal differentialkvotienten også være $0$:
 
 $$
-\textrm{ReLu}'(0) = 0.
+\textrm{ReLU}'(0) = 0.
 $$
 
 ### Feedforward udtryk
 
-Ovenstående udtryk for beregning af $z_1$, $z_2$ og $o$, hvor $f$ nu beregner ReLu-funktionen, kaldes for **feedforward** ligninger, fordi man laver beregninger \"fremad\" i netværket i @fig-neuralt_net_regression fra venstre mod højre. Hvis vi samtidig holder styr på, hvilket træningseksempel vi står med, får vi følgende:
+Ovenstående udtryk for beregning af $z_1$, $z_2$ og $o$, hvor $f$ nu beregner ReLU-funktionen, kaldes for **feedforward** ligninger, fordi man laver beregninger \"fremad\" i netværket i @fig-neuralt_net_regression fra venstre mod højre. Hvis vi samtidig holder styr på, hvilket træningseksempel vi står med, får vi følgende:
 
 ::: {.callout-note collapse="false" appearance="minimal"} 
 ## Feedforward-udtryk
@@ -470,13 +470,13 @@ På baggrund af inputværdierne $x_1$ og $x_2$ beregnes outputværdien $o$ på f
 Først beregnes:
 
 $$
-z_1^{(m)} = \textrm{ReLu} \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} \right)
+z_1^{(m)} = \textrm{ReLU} \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} \right)
 $$ {#eq-z_1}
 
 og
 
 $$
-z_2^{(m)} = \textrm{ReLu} \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} \right)
+z_2^{(m)} = \textrm{ReLU} \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} \right)
 $$ {#eq-z_2}
 
 Herefter beregnes outputværdien:
@@ -517,8 +517,8 @@ Backpropagation foregår samlet set på denne måde:
 
    $$
    \begin{aligned}
-   z_1^{(m)} &= \textrm{ReLu} \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} \right ) \\
-   z_2^{(m)} &= \textrm{ReLu} \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} \right ) \\
+   z_1^{(m)} &= \textrm{ReLU} \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} \right ) \\
+   z_2^{(m)} &= \textrm{ReLU} \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} \right ) \\
    o^{(m)} &= w_0 + w_1 \cdot z_1^{(m)} + w_2 \cdot z_2^{(m)}
    \end{aligned}
 $$ 
@@ -631,13 +631,13 @@ $$
 Men vi ved fra feedforward udtrykkene, at
 
 $$
-z_1^{(m)} = \textrm{ReLu} \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} \right ) 
+z_1^{(m)} = \textrm{ReLU} \left (v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} \right ) 
 $$ {#eq-z_1m}
 
 og
 
 $$
-z_2^{(m)} = \textrm{ReLu} \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} \right ) 
+z_2^{(m)} = \textrm{ReLU} \left (u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} \right ) 
 $$ 
 
 
