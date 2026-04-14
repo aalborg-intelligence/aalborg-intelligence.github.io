@@ -1,7 +1,7 @@
 ---
-title: "Kan du bygge funktioner med ReLu?"
+title: "Kan du bygge funktioner med ReLU?"
 image: "ReLu/bygselv.jpg"
-description: "I opbygningen af kunstige neurale netværk er aktiveringsfunktioner helt centrale. En ofte anvendt aktiveringsfunktion i de skjulte lag er ReLu-funktionen. Den dykker vi dybere ned i her."
+description: "I opbygningen af kunstige neurale netværk er aktiveringsfunktioner helt centrale. En ofte anvendt aktiveringsfunktion i de skjulte lag er ReLU-funktionen. Den dykker vi dybere ned i her."
 categories:
   - "01_A-niveau"
   - "04_Kort"
@@ -26,9 +26,9 @@ Man behøver ikke at lade alle elever arbejde med opgave 1, 13 og 14. Disse opga
 
 ### Formål
 
-I opbygningen af kunstige neurale netværk er aktiveringsfunktioner helt centrale. Hvis ikke man bruger aktiveringsfunktioner i et kunstigt neuralt netværk, vil man faktisk bare bygge en stor lineær funktion af inputværdierne. Og verden er sjældent lineær -- derfor har man brug for aktiveringsfunktioner.
+I opbygningen af kunstige neurale netværk er aktiveringsfunktioner helt centrale. Hvis ikke man bruger aktiveringsfunktioner i et kunstigt neuralt netværk, ender man i praksis med blot at bygge en stor lineær funktion af inputværdierne. Og verden er sjældent lineær -- derfor har man brug for aktiveringsfunktioner.
 
-En ofte anvendt aktiveringsfunktion i de skjulte lag er ReLu-funktionen. Den er *næsten* lineær og så alligevel slet ikke. I dette forløb skal vi se på, hvordan man kan sammensætte ReLu-funktioner og på den måde modellere ikke-lineære funktioner.
+En ofte anvendt aktiveringsfunktion i de skjulte lag er ReLU-funktionen. Den er *næsten* lineær, men alligevel slet ikke. I dette forløb skal vi se på, hvordan man kan sammensætte ReLU-funktioner og på den måde modellere ikke-lineære funktioner.
 
 :::
 
@@ -38,7 +38,7 @@ Start med at se denne video, hvor vi kort forklarer, hvad kunstig intelligens ha
 
 {{< video https://youtu.be/ivrBEopralQ >}}
 
-Når man træner kunstig intelligens opbygger man lidt forsimplet bare en kæmpe stor sammensat funktion! Når funktioner sammensættes i neurale netværk, bruger man en klasse af funktioner, som kaldes for aktiveringsfunktioner. 
+Når man træner kunstig intelligens opbygger man, lidt forsimplet, bare en kæmpestor sammensat funktion! Når funktioner sammensættes i neurale netværk, bruger man en klasse af funktioner, som kaldes for aktiveringsfunktioner. 
 
 Vi vil illustrere det med et simpelt eksempel, som kaldes for et kunstigt neuralt netværk med ét skjult lag. Det kan tegnes sådan her:
 
@@ -71,7 +71,7 @@ $$
 
 Nogle gange bruger man også en aktiveringsfunktion, når outputværdien $o$ skal beregnes. Det vender vi kort tilbage til i opgave 2.
 
-Den første opgave handler om, at hvis man kun sammensætter lineære funktioner, så får man bare nye lineære funktioner. Opgaven kan eventuelt springes over -- spørg din lærer.
+Den første opgave handler om, at hvis man kun sammensætter lineære funktioner, så får man kun nye lineære funktioner. Opgaven kan eventuelt springes over -- spørg din lærer.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
@@ -100,7 +100,7 @@ $$
 \sigma (x) = \frac{1}{1+\textrm{e}^{-x}}
 $$
 
-hvor ouputværdien $o$ så beregnes på denne måde:
+hvor outputværdien $o$ så beregnes på denne måde:
 
 $$
 o = \sigma(w_0 + w_1 \cdot z_1 + w_2 \cdot z_2)
@@ -115,17 +115,17 @@ $$
 :::
 
 
-## ReLu
+## ReLU
 
-I de skjulte lag i et neuralt netværk, kan man godt bruge sigmoid-funktionen som aktiveringsfunktion. Det har bare vist sig, at den ikke altid er super god! Det er til gengæld ReLu-funktionen, som er opdrejningspunktet for resten af opgaverne.
+I de skjulte lag i et neuralt netværk kan man godt bruge sigmoid-funktionen som aktiveringsfunktion. Det har bare vist sig, at den ikke altid er super god! Det er til gengæld ReLU-funktionen, som er omdrejningspunktet for resten af opgaverne.
 
-ReLu-funktionen[^relu] er defineret således:
+ReLU-funktionen[^relu] er defineret således:
 
 
 [^relu]: ReLU står for **Rectified Linear Unit**.
 
 $$
-\textrm{ReLu}(x) = 
+\textrm{ReLU}(x) = 
 \begin{cases}
 0 & \textrm {hvis } x \leq 0 \\
 x & \textrm {hvis } x > 0
@@ -134,14 +134,14 @@ $$
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 3: Graf for ReLu-funktionen
+### Opgave 3: Graf for ReLU-funktionen
 
-+ Tegn grafen for ReLu-funktionen.
++ Tegn grafen for ReLU-funktionen.
 
 <details>
 <summary> Sådan gør du i GeoGebra </summary>
 
-Skriv i input-feltet: `ReLu(x) = Hvis(x < 0, 0, x)`
+Skriv i input-feltet: `ReLU(x) = Hvis(x < 0, 0, x)`
 
 </details>
 
@@ -149,52 +149,52 @@ Skriv i input-feltet: `ReLu(x) = Hvis(x < 0, 0, x)`
 
 + Grafen består af to rette linjer. Hvad er hældningen af de to linjer?
 
-+ Er ReLu-funktionen kontinuert?
++ Er ReLU-funktionen kontinuert?
 
-+ Er ReLu-funktionen differentiabel i alle $x$-værdier?
++ Er ReLU-funktionen differentiabel i alle $x$-værdier?
 
 :::
 
 
-Du har lige opdaget, at ReLu-funktionen ikke er differentiabel i $x=0$. Når man skal træne kunstige neurale netværk, har man dog brug for at kunne regne med den afledede funktion i alle værdier. Derfor vælger vi at definere os ud af problemet med at ReLu-funktionen ikke er differentiabel i $0$, og vi beslutter simpelthen at sætte tangenthældningen i $0$ til at være $0$. Det vil sige, at vi vælger, at  $\textrm{ReLu}'(0)=0$. Samlet set får vi derfor:
+Du har lige opdaget, at ReLU-funktionen ikke er differentiabel i $x=0$. Når man skal træne kunstige neurale netværk, har man dog brug for at kunne regne med den afledede funktion i alle værdier. Derfor vælger vi at definere os ud af problemet med, at ReLU-funktionen ikke er differentiabel i $0$, og vi beslutter simpelthen at sætte tangenthældningen i $0$ til at være $0$. Det vil sige, at vi vælger, at  $\textrm{ReLU}'(0)=0$. Samlet set får vi derfor:
 
 $$
-\textrm{ReLu}'(x) =
+\textrm{ReLU}'(x) =
 \begin{cases}
 0 & \textrm{hvis } x \leq 0 \\
 1 & \textrm{hvis } x > 0
 \end{cases}
-$$ {#eq-diffReLu}
+$$ {#eq-diffReLU}
 
-Bemærk for øvrigt, at den afledede ReLu-funktion ikke er kontinuert i $0$. Det møder du ikke så tit!
+Bemærk for øvrigt, at den afledede ReLU-funktion ikke er kontinuert i $0$. Det møder du ikke så tit!
 
-Vi prøver nu at sætte ReLu-funktioner sammen med lineære funktioner. Hvad det har at gøre med kunstige neurale netværk kommer vil tilbage til i det næste afsnit.
+Vi prøver nu at sætte ReLU-funktioner sammen med lineære funktioner. Hvad det har at gøre med kunstige neurale netværk kommer vi tilbage til i det næste afsnit.
 
 For at holde tingene simple ser vi på det tilfælde, hvor vi har én inputvariabel, som vi bare vil kalde for $x$.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 4: Sammensat ReLu
+### Opgave 4: Sammensat ReLU
 
 Vi ser på funktionen
 
 $$
-f(x)=w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x)
+f(x)=w_0 + w_1 \cdot \textrm{ReLU}(v_0 + x)
 $$
 
-+ Tegn grafen for $f$ (du kan bruge den definition af ReLu, som du lavede i opgave 3). Indtast forskriften, som den står ovenfor, og når GeoGebra spørger, om du vil oprette skydere for $w_0$, $w_1$ og $v_0$, vælger du ja.
++ Tegn grafen for $f$ (du kan bruge den definition af ReLU, som du lavede i opgave 3). Indtast forskriften, som den står ovenfor, og når GeoGebra spørger, om du vil oprette skydere for $w_0$, $w_1$ og $v_0$, vælger du ja.
 
-+ Hvad er betydning af $w_0$?
++ Hvad er betydningen af $w_0$?
 
-+ Hvad hældningen af den ikke vandrette del af grafen?
++ Hvad er hældningen af den ikke vandrette del af grafen?
 
 + I hvilken $x$-værdi knækker grafen?
 
 Lad os regne lidt:
 
-+ Beregn den $x$-værdi, hvor grafen knækker. Hint: Det sker, når inputtet til ReLu-funktionen er $0$.
++ Beregn den $x$-værdi, hvor grafen knækker. Hint: Det sker, når inputtet til ReLU-funktionen er $0$.
 
-+ Brug (@eq-diffReLu) til at bestemme $f'$. Stemmer det med det, du fandt ovenfor?
++ Brug (@eq-diffReLU) til at bestemme $f'$. Stemmer det med det, du fandt ovenfor?
 
 
 
@@ -202,11 +202,11 @@ Lad os regne lidt:
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 5: Byg selv ReLu
+### Opgave 5: Byg selv ReLU
 
 Vi ser fortsat på funktioner med en forskrift på formen
 $$
-f(x)=w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x)
+f(x)=w_0 + w_1 \cdot \textrm{ReLU}(v_0 + x)
 $$
 
 + Brug din viden fra opgave 4 og bestem $w_0$, $w_1$ og $v_0$ så grafen for 
@@ -228,43 +228,43 @@ $$
 
 ### Sammenhæng med kunstigt neuralt netværk
 
-Vi kan nu passende spørge os selv, hvad ReLu-funktionen i opgave 4 og 5 har at gøre med et kunstigt neuralt netværk. En hel del faktisk!
+Vi kan nu passende spørge os selv, hvad ReLU-funktionen i opgave 4 og 5 har at gøre med et kunstigt neuralt netværk. En hel del faktisk!
 
-Betragt følgende netværk, hvor det skjlute lag kun består af én neuron:
+Betragt følgende netværk, hvor det skjute lag kun består af én neuron:
 
 
 ![Simpelt kunstigt neuralt netværk. Netværket har inputvariable $x_1, x_2$ og ét skjult lag med én neuron.](ReLu/simpelt_NN.png){#fig-simpelt_NN width=70% fig-align='center'}
 
-Beregner vi $z_1$ ved at bruge ReLu-funktionen som aktiveringsfunktion, får vi
+Beregner vi $z_1$ ved at bruge ReLU-funktionen som aktiveringsfunktion, får vi
 
 $$
-z_1 = \textrm{ReLu}(v_0 + \underbrace{v_1 \cdot x_1 + v_2 \cdot x_2}_{x}) = \textrm{ReLu}(v_0 + x),
+z_1 = \textrm{ReLU}(v_0 + \underbrace{v_1 \cdot x_1 + v_2 \cdot x_2}_{x}) = \textrm{ReLU}(v_0 + x),
 $$
-hvor vi har sagt, at $x$ bare er linear kombinationen af de to features: $x=v_1 \cdot x_1 + v_2 \cdot x_2$. Så er outputværdien $o$:
+hvor vi har sagt, at $x$ bare er en linear kombinationen af de to features: $x=v_1 \cdot x_1 + v_2 \cdot x_2$. Så er outputværdien $o$:
 
 $$
-o = w_0 + w_1 \cdot z_1 = w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x),
+o = w_0 + w_1 \cdot z_1 = w_0 + w_1 \cdot \textrm{ReLU}(v_0 + x),
 $$
 
 som præcis svarer til den funktion, som vi har set på i opgave 4 og 5.
 
-I de næste opgaver skal vi se på, hvad der sker, hvis vi sætter flere ReLu-funktioner sammen.
+I de næste opgaver skal vi se på, hvad der sker, hvis vi sætter flere ReLU-funktioner sammen.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 6: Endnu mere sammensat ReLu
+### Opgave 6: Endnu mere sammensat ReLU
 
 Vi ser på funktionen
 
 $$
-f(x)=w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x) + w_2 \cdot \textrm{ReLu}(u_0 + x)
+f(x)=w_0 + w_1 \cdot \textrm{ReLU}(v_0 + x) + w_2 \cdot \textrm{ReLU}(u_0 + x)
 $$
 
-+ Tegn grafen for $f$ (du kan bruge den definition af ReLu, som du lavede i opgave 3). Igen opretter du skydere for $w_0$, $w_1$, $w_2$, $v_0$ og $u_0$.
++ Tegn grafen for $f$ (du kan bruge den definition af ReLU, som du lavede i opgave 3). Igen opretter du skydere for $w_0$, $w_1$, $w_2$, $v_0$ og $u_0$.
 
-+ Hvad er betydning af $w_0$?
++ Hvad er betydningen af $w_0$?
 
-Det er nemmest at forstå, hvad der sker, hvis vi sørger for, at den første ReLu-funktion definerer det første knæk, mens den anden ReLu-funktion definerer det andet knæk. Det kan vi opnå, hvis vi sørger for, at
+Det er nemmest at forstå, hvad der sker, hvis vi sørger for, at den første ReLU-funktion definerer det første knæk, mens den anden ReLU-funktion definerer det andet knæk. Det kan vi opnå, hvis vi sørger for, at
 
 $$
 - v_0 < - u_0
@@ -294,20 +294,20 @@ Funktionen $f$ fra ovenstående opgave svarer *næsten* til det netværk, som vi
 
 $$
 \begin{aligned}
-f(x_1,x_2)=w_0 &+ w_1 \cdot \textrm{ReLu}(v_0 + \underbrace{v_1 \cdot x_1 + v_2 \cdot x_2}_{x}) \\ &+ w_2 \cdot \textrm{ReLu}(u_0 + \underbrace{u_1 \cdot x_1 + u_2 \cdot x_2}_{\textrm{noget andet end } x})
+f(x_1,x_2)=w_0 &+ w_1 \cdot \textrm{ReLU}(v_0 + \underbrace{v_1 \cdot x_1 + v_2 \cdot x_2}_{x}) \\ &+ w_2 \cdot \textrm{ReLU}(u_0 + \underbrace{u_1 \cdot x_1 + u_2 \cdot x_2}_{\textrm{noget andet end } x})
 \end{aligned}
 $$
 
-Som det fremgår af ovenstående kan vi ikke bare tænke på $f$, som en funktion af én variabel $x$, men den forsimplede funktion fra opgave 6 er glimrende til at forstå, hvordan sammensætninger af ReLu-funktioner kan bruges til at modellere ikke-lineære funktioner.
+Som det fremgår af ovenstående, kan vi ikke bare tænke på $f$ som en funktion af én variabel $x$, men den forsimplede funktion fra opgave 6 er glimrende til at forstå, hvordan sammensætninger af ReLU-funktioner kan bruges til at modellere ikke-lineære funktioner.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 7: Stadig sammensat ReLu
+### Opgave 7: Stadig sammensat ReLU
 
 Vi ser igen på funktionen
 
 $$
-f(x)=w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x) + w_2 \cdot \textrm{ReLu}(u_0 + x)
+f(x)=w_0 + w_1 \cdot \textrm{ReLU}(v_0 + x) + w_2 \cdot \textrm{ReLU}(u_0 + x)
 $$
 
 + Bestem $w_0$, $w_1$, $w_2$, $v_0$ og $u_0$ så grafen for 
@@ -332,22 +332,22 @@ $$
 
 ### Modellering af ikke-lineære sammenhænge
 
-Pointen med at sammensætte ReLu-funktioner er, at vi gerne vil kunne modellere ikke-lineære sammenhænge i data. De næste opgaver går ud på at bestemme en sammensat ReLu-funktion, som kan bruges til at modellere en parabel.
+Pointen med at sammensætte ReLU-funktioner er, at vi gerne vil kunne modellere ikke-lineære sammenhænge i data. De næste opgaver går ud på at bestemme en sammensat ReLU-funktion, som kan bruges til at modellere en parabel.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 8: Sammensat ReLu og parabel (eksperimentér!)
+### Opgave 8: Sammensat ReLU og parabel (eksperimentér!)
 
-Vi vil se på andengradspolyomiet
+Vi vil se på andengradspolynomiet
 
 $$
 g(x)=\frac{3}{4}x^2+2, \quad -4 \leq x \leq 4
 $$
 
-og undersøge, om vi kan bestemme en sammensat ReLu-funktion på formen
+og undersøge, om vi kan bestemme en sammensat ReLU-funktion på formen
 
 $$
-f(x)=w_0 + w_1 \cdot \textrm{ReLu}(v_0 + x) + w_2 \cdot \textrm{ReLu}(u_0 + x)
+f(x)=w_0 + w_1 \cdot \textrm{ReLU}(v_0 + x) + w_2 \cdot \textrm{ReLU}(u_0 + x)
 $$
 
 som en approksimation (det vil sige en tilnærmelse) til $g$.
@@ -364,7 +364,7 @@ som en approksimation (det vil sige en tilnærmelse) til $g$.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 
-### Opgave 9: Sammensat ReLu og parabel (regn!)
+### Opgave 9: Sammensat ReLU og parabel (regn!)
 
 Vi ser fortsat på funktionerne $f$ og $g$ fra opgave 8. Vi vil opstille nogle kriterier for $f$ og på den måde beregne værdien af vægtene.
 
@@ -403,15 +403,15 @@ I opgave 9 kan du se, at grafen for $f$ og $g$ skærer hinanden én gang i inter
 
 ### Opgave 11: Skæringspunkt
 
-+ Beregn førstekoordinaten til skæringspunktet mellem grafen for $f$ og $g$ i intervallet $]-4,0[$.
++ Beregn førstekoordinaten til skæringspunktet mellem graferne for $f$ og $g$ i intervallet $]-4,0[$.
 
 *OBS! Førstekoordinaten kommer til at afhænge af $w_1$*.
 
 :::
 
-En idé til at bestemme den værdi af $w_1$, som giver en god approksimation, vil være at bestemme den værdi, som minimerer arealet af det område, som grafen for $f$ og $g$ afgrænser i $[-4,0]$. Dette er illustreres i figuren herunder:
+En idé til at bestemme den værdi af $w_1$, som giver en god approksimation, vil være at bestemme den værdi, som minimerer arealet af det område, som grafen for $f$ og $g$ afgrænser i $[-4,0]$. Dette er illustreret i figuren herunder:
 
-![Grafen for $f$ og $g$ fra opgave 8.](ReLu/areal_mellem.png){#fig-areal_mellem width=50% fig-align='center'}
+![Grafen for $f$ og $g$ fra opgave 8.](ReLU/areal_mellem.png){#fig-areal_mellem width=50% fig-align='center'}
 
 Hvis vi kalder skæringspunktet $P$'s førstekoordinat for $x_1$, kan vi se, at i intervallet $[-4,x_1]$ ligger grafen for $g$ over grafen for $f$. Det vil sige, at arealet $A_1$ af det område, som de to grafer afgrænser i dette interval, er:
 
@@ -488,7 +488,7 @@ $$
 A_1 + A_2 = \int_{-4}^{x_1} |f(x)-g(x)| \, dx + \int_{x_1}^{0} |f(x)-g(x)| \, dx
 $$
 
-og bruger vi indskudsreglen for bestemte integraler ser, vi at
+og bruger vi indskudsreglen for bestemte integraler, ser vi, at
 
 $$
 A_1 + A_2 = \int_{-4}^{0} |f(x)-g(x)| \, dx
