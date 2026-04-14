@@ -667,7 +667,8 @@ skal du bruge udtrykket for $E^{(m)}$ i (@eq-Em). Og når $z_1^{(m)}$ skal diffe
 
 På helt tilsvarende vis kan 
 
-$$\frac{\partial E^{(m)}}{\partial u_i}
+$$
+\frac{\partial E^{(m)}}{\partial u_i}
 $$ 
 
 findes.
@@ -733,8 +734,8 @@ p <- rbind(df_lm, df_nn10) |>
 
 Sammenligner vi de to plots ovenfor kan man se, at når vi bruger et neuralt netværk med ét skjult lag med ti neuroner, så ligger de prædikterede priser tættere på de faktiske priser. Det svarer til, at punkterne i plottet til højre ligger tættere på linjen med ligning $y=x$, end de gør i plottet til venstre. Det er altså igen en illustration af, at et neuralt netværk med skjulte lag i eksemplet her er bedre til at forudsige lejlighedspriser end en kunstig neuron.
 
-**Mangler**: 3d-plot af (areal, alder, prædikteret pris) og evt. også træningsdata både for den kunstige neuron og for det neurale netværk. Skal bruges til at illustrere, hvordan man kan lave ikke-linæere sammenhænge. 
-
+En anden måde at vise det på er illustreret i @fig-pred_neuron og @fig-pred_NN10. I begge figurer er datapunkterne vist sammen med den prædikterede lejlighedspris (i millioner), som funktion af lejlighedens areal ($x_1$) og alder ($x_2$). I @fig-pred_neuron er den prædikterede pris baseret på en kunstig neuron, mens den prædikterede pris i @fig-pred_NN10 er baseret på et neuralt netværk med et skjult lag med ti neuroner. Det ses tydeligt, at det neurale netværk er bedre til at prædiktere lejlighedspriserne for de nyeste lejligheder sammenlignet med den kunstige neuron.
+ 
 ```{r}
 n_grid <- 100
 areal_grid <- seq(30, 370, length.out = n_grid)
@@ -789,24 +790,11 @@ pp <- plot_ly(showscale = FALSE, hovertemplate = hovertemplate) |>
   )
 ```
 
+
 ```{r}
-#| fig-height: 7
+#| fig-cap: Den prædikterede lejlighedspris (i millioner), som funktion af lejlighedens areal ($x_1$) og alder ($x_2$). Den prædikterede pris er her baseret på en kunstig neuron.
+#| label: fig-pred_neuron
 #| fig-width: 12
-#| out-width: 95%
-
-pp |> 
-  add_surface(
-    x = areal_grid,
-    y = alder_grid,
-    z = z_nn10,
-    name = "Prædiktionsflade",
-    showlegend = TRUE,
-    # hoverinfo = "skip",
-    opacity = 1
-  )
-```
-
-```{r}
 #| out-width: 95%
 pp |> 
   add_surface(
@@ -820,4 +808,27 @@ pp |>
   )
 ```
 
+```{r}
+#| fig-cap: Den prædikterede lejlighedspris (i millioner), som funktion af lejlighedens areal ($x_1$) og alder ($x_2$). Den prædikterede pris er her baseret på et neuralt netværk med et skjult lag med ti neuroner.
+#| label: fig-pred_NN10
+#| out-width: 95%
+#| fig-height: 7
+pp |> 
+  add_surface(
+    x = areal_grid,
+    y = alder_grid,
+    z = z_nn10,
+    name = "Prædiktionsflade",
+    showlegend = TRUE,
+    # hoverinfo = "skip",
+    opacity = 1
+  )
+```
+
+
+
 :::
+
+## Relaterede forløb
+
+* [Kan du bygge funktioner med ReLU?](../../undervisningsforlob/ReLu.qmd){target="_blank"}
