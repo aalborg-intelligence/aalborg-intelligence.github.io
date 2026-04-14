@@ -1,5 +1,5 @@
 ---
-title: "Valg af parti"
+title: "Kandidattest"
 description: 'I dette forløb vil vi se på en metode til at forudsige, hvilket parti man vil stemme på ud fra svar på en række spørgsmål.'
 image: ""
 categories:
@@ -12,13 +12,10 @@ categories:
 
 + Eksponentialfunktioner, herunder $\mathrm{e}^x$.
 + Sandsynlighedsfelter.
-+ Linjens ligning på formen $a \cdot x + b \cdot y + c = 0$.
++ Linjens ligning i planen på formen $a \cdot x + b \cdot y + c = 0$.
++ Planens ligning i rummet på formen $a \cdot x + b \cdot y + c \cdot z+d= 0$.
 
-Hvis man forinden har arbejdet med det korte forløb [Sengetester i IKEA](https://aimat.dk/undervisningsforlob/sengetester.html), vil det være en fordel, men det er ikke en forudsætning.
-
-På tilsvarende vis vil det også gøre dette forløb lidt lettere, hvis man forinden har arbejdet med de første dele af det lange forløb om [Kunstige neuroner](https://aimat.dk/undervisningsforlob/kunstige_neuroner_langt_forlob/kunstige_neuroner_forside.html), men det er heller ikke en forudsætning.
-
-Hvis man har arbejdet med det korte forløb [Hvilken politiker er du mest enig med](https://aimat.dk/undervisningsforlob/kandidattest.html), kan konteksten være mere tydelig, men det er igen heller ikke en forudsætning.
+Hvis man forinden har arbejdet med det korte forløb [Sengetester i IKEA](https://aimat.dk/undervisningsforlob/sengetester.html), de første dele af det lange forløb om [Kunstige neuroner](https://aimat.dk/undervisningsforlob/kunstige_neuroner_langt_forlob/kunstige_neuroner_forside.html) eller det korte forløb [Hvilken politiker er du mest enig med](https://aimat.dk/undervisningsforlob/kandidattest.html), kan konteksten være mere tydelig, men det er ikke en forudsætning.
 
 **Tidsforbrug:** Ca. 150 minutter.
 
@@ -68,14 +65,14 @@ på en skala fra $-2$ til $2$.
 Vi lader som om, at partierne er **S** (Socialdemokratiet), **E**(Enhedslisten) og **V** (Venstre). Det parti, som en given person vil stemme på, vil vi kalde for $t$ (som står for **targetværdi**). Andy, Bella, Charlie og Doresa har nu svaret følgende:
 
 | Navn | Spørgsmål 1 $(x_1)$ | Spørgsmål 2 $(x_2)$ | Parti ($t$) |
-|-------|:-----------|:-----------|:-----------:|
-| Andy | $\color{#F288B9}{\textrm{Helt uenig } (-2)}$ |  $\color{#F288B9}{\textrm{ Helt uenig } (-2)}$ | **V** |
-| Bella | $\color{#F288B9}{\textrm{Uenig } (-1)}$ | $\color{#8086F2}{\textrm{Enig } (1)}$ | **S** |
-| Charlie | $\color{#F288B9}{\textrm{Uenig } (-1)}$ |  $\color{#F288B9}{\textrm{Uenig } (-1)}$ | **S** |
-| Doresa | $\color{#8086F2}{\textrm{Enig } (1)}$ |  $\color{#8086F2}{\textrm{Helt enig } (2)}$ | **E**|
+|-------|:----:|:----:|:----:|
+| Andy | $\color{#8086F2}{\textrm{Helt uenig } (-2)}$ |  $\color{#8086F2}{\textrm{ Helt uenig } (-2)}$ | **V** |
+| Bella | $\color{#8086F2}{\textrm{Uenig } (-1)}$ | $\color{#F288B9}{\textrm{Enig } (1)}$ | **S** |
+| Charlie | $\color{#8086F2}{\textrm{Uenig } (-1)}$ |  $\color{#8086F2}{\textrm{Uenig } (-1)}$ | **S** |
+| Doresa | $\color{#F288B9}{\textrm{Enig } (1)}$ |  $\color{#F288B9}{\textrm{Helt enig } (2)}$ | **E**|
 : {.bordered}
 
-Bemærk her, at svarene \"Helt uenig\" og \"Uenig\" er farvet lyserøde, mens \"Helt enig\" og \"Enig\" er farvet lyseblå.
+Bemærk her, at svarene \"Helt uenig\" og \"Uenig\" er farvet lyseblå, mens \"Helt enig\" og \"Enig\" er farvet lyserøde.
 
 Vi vil nu lave en model, hvor man ud fra de svar, man giver på de to spørgsmål, kan forudsige, hvor sandsynligt det er, at man stemmer på hvert af de tre partier. Vi vil træne modellen, så den passer godt til svarene fra de fire personer og derefter håbe, at den også vil passe godt til andre personer. Naturligvis er to spørgsmål og fire personer alt for lidt, men det gør vi noget ved senere.
 
@@ -110,9 +107,9 @@ $$
 
 Så lige nu er den højeste score for Andy for **V**, hvilket er godt, da han faktisk stemmer på Venstre. 
 
-Men modellen skulle jo ikke kun give en score, men faktisk give en sandsynlighed for hvert parti. Så vi skal have fundet en metode til at få sandsynlighed i stedet for scores. Om sandsynlighederne ved vi, at de skal være positive, ligge mellem $0$ og $1$ og tilsammen give $1$.
+Men modellen skulle jo ikke kun give en score, men faktisk give en sandsynlighed for hvert parti. Så vi skal have fundet en metode til at få sandsynlighed i stedet for scores. Om sandsynlighederne ved vi, at de skal være positive, ligge mellem $0$ og $1$ og tilsammen give $1.$
 
-En simpel måde at få tallene positive på er at opløfte $\mathrm{e}$ i scoren. 
+En simpel måde at få tallene positive på er at opløfte $\mathrm{e}$ i scoren: 
 
 $$
 \begin{aligned}
@@ -139,7 +136,7 @@ For Andy giver det følgende:
 
 Så med de valgte værdier af bias og vægte, angiver modellen en sandsynlighed på $86.68 \%$ for **V**, $1.59 \%$ for **S** og $11.73 \%$ for **E** for Andy. Da han faktisk stemte på **V**, er det jo rigtigt fint, uden dog at være helt perfekt, da vi helst ville have endnu større sandsynlighed for Venstre for Andy.
 
-Denne metode til at omregne fra score til sandsynligheder kaldes for **softmax**.
+Denne metode til at omregne fra scores til sandsynligheder kaldes for **softmax**.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 1
@@ -201,9 +198,9 @@ Men det kan stadig gøres bedre, blandt andet ved også at tage $w_2$ i brug.
 
 
 ## Brug af app til træning af kunstig neuron
-Med det meget lille, simple eksempel kunne vi altså godt justere vægtene manuelt og få et nogenlunde resultat. Men hvis der bliver $100$, $1000$ eller millioner af vægte, så er det næppe en god idé. Det kræver noget lidt mere avanceret matematik, som vi ikke vil gennemgå i dette forløb. Du kan læse mere om dette i noten om [Kunstige neurale netværk til multipel klassifikation](https://aimat.dk/noter/softmax/softmax.html).
+Med det meget lille og simple eksempel kunne vi altså godt justere vægtene manuelt og få et nogenlunde resultat. Men hvis der bliver $100$, $1000$ eller millioner af vægte, så er det næppe en god idé. Det kræver noget lidt mere avanceret matematik, som vi ikke vil gennemgå i dette forløb. Du kan læse mere om dette i noten om [Kunstige neurale netværk til multipel klassifikation](https://aimat.dk/noter/softmax/softmax.html).
 
-I stedet vil vi bruge en app til formålet. Du finder appen [her](https://apps01.math.aau.dk/ai/multi-neuron/) og datasættet som Excel fil [her](valg_af_parti/datasæt_4_personer.xlsx).
+I stedet vil vi bruge en app til formålet. Du finder app'en [her](https://apps01.math.aau.dk/ai/multi-neuron/) og datasættet som Excel fil [her](valg_af_parti/datasæt_4_personer.xlsx).
 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
@@ -217,7 +214,7 @@ I stedet vil vi bruge en app til formålet. Du finder appen [her](https://apps01
 
 :::
 
-Med app'ens værdier ser tabellen endelig således ud, hvilket må siges at være meget tilfredsstillende.
+Med app'ens værdier ser tabellen således ud, hvilket må siges at være meget tilfredsstillende:
 
 | Person  | Venstre | Socialdemokratiet | Enhedslisten |
 |:-:|:-:|:-:|:-:|
@@ -228,26 +225,26 @@ Med app'ens værdier ser tabellen endelig således ud, hvilket må siges at vær
 : {.bordered}
 
 ## 16 politiske kandidaters svar
-Lad os se på et lidt større eksempel, nu med autentiske data fra en kandidattest til folketingsvalget i 2026. Vi ser på 16 kandidater og deres svar på 2 spørgsmål.
+Lad os se på et lidt større eksempel, nu med autentiske data fra en kandidattest til folketingsvalget i 2026. Vi ser på 16 kandidater og deres svar på to spørgsmål.
 
 | Parti | Navn | Spørgsmål 1 | Spørgsmål 2 |
 |-------|:---------------------------|:-----------:|:-----------:|
-| Soc | Ane Halsboe-Jørgensen | $\color{#8086F2}{\textbf{Enig}}$ | $\color{#8086F2}{\textbf{Enig}}$ |
-| Soc | Flemming Møller Mortensen | $\color{#F288B9}{\textbf{Uenig}}$ | $\color{#F288B9}{\textbf{Uenig}}$ |
-| Soc | Kiki Bille Bach | $\color{#8086F2}{\textbf{Enig}}$ | $\color{#8086F2}{\textbf{Enig}}$ |
-| Soc | Morten Ryom | $\color{#8086F2}{\textbf{Enig}}$ | $\color{#8086F2}{\textbf{Enig}}$ |
-| Ven | Anita Vivi Lilholt | $\color{#F288B9}{\textbf{Meget uenig}}$ | $\color{#8086F2}{\textbf{Enig}}$ |
-| Ven | Anne Honoré Østergaard | $\color{#F288B9}{\textbf{Meget uenig}}$ | $\color{#8086F2}{\textbf{Enig}}$ |
-| Ven | Marie Bjerre | $\color{#8086F2}{\textbf{Enig}}$ | $\color{#F288B9}{\textbf{Uenig}}$ |
-| Ven | Mikkel Bisgaard | $\color{#F288B9}{\textbf{Uenig}}$ | $\color{#F288B9}{\textbf{Uenig}}$ |
-| Enh | Peder Hvelplund | $\color{#8086F2}{\textbf{Meget enig}}$ | $\color{#8086F2}{\textbf{Meget enig}}$ |
-| Enh | Runa Friis Hansen | $\color{#8086F2}{\textbf{Enig}}$ | $\color{#8086F2}{\textbf{Meget enig}}$ |
-| Enh | Lasse P. N. Olsen | $\color{#8086F2}{\textbf{Meget enig}}$ | $\color{#8086F2}{\textbf{Enig}}$ |
-| Enh | Filippa Emilie Vittrup | $\color{#8086F2}{\textbf{Meget enig}}$ | $\color{#8086F2}{\textbf{Meget enig}}$ |
-| DD | Inger Støjberg | $\color{#F288B9}{\textbf{Meget uenig}}$ | $\color{#F288B9}{\textbf{Uenig}}$ |
-| DD | Kristian Bøgsted | $\color{#F288B9}{\textbf{Uenig}}$ | $\color{#F288B9}{\textbf{Uenig}}$ |
-| DD | Kim Edberg Andersen | $\color{#F288B9}{\textbf{Meget uenig}}$ | $\color{#F288B9}{\textbf{Uenig}}$ |
-| DD | Liselotte Lynge | $\color{#F288B9}{\textbf{Meget uenig}}$ | $\color{#F288B9}{\textbf{Uenig}}$ |
+| Soc | Ane Halsboe-Jørgensen | $\color{#F288B9}{\textbf{Enig}}$ | $\color{#F288B9}{\textbf{Enig}}$ |
+| Soc | Flemming Møller Mortensen | $\color{#8086F2}{\textbf{Uenig}}$ | $\color{#8086F2}{\textbf{Uenig}}$ |
+| Soc | Kiki Bille Bach | $\color{#F288B9}{\textbf{Enig}}$ | $\color{#F288B9}{\textbf{Enig}}$ |
+| Soc | Morten Ryom | $\color{#F288B9}{\textbf{Enig}}$ | $\color{#F288B9}{\textbf{Enig}}$ |
+| Ven | Anita Vivi Lilholt | $\color{#8086F2}{\textbf{Meget uenig}}$ | $\color{#F288B9}{\textbf{Enig}}$ |
+| Ven | Anne Honoré Østergaard | $\color{#8086F2}{\textbf{Meget uenig}}$ | $\color{#F288B9}{\textbf{Enig}}$ |
+| Ven | Marie Bjerre | $\color{#F288B9}{\textbf{Enig}}$ | $\color{#8086F2}{\textbf{Uenig}}$ |
+| Ven | Mikkel Bisgaard | $\color{#8086F2}{\textbf{Uenig}}$ | $\color{#8086F2}{\textbf{Uenig}}$ |
+| Enh | Peder Hvelplund | $\color{#F288B9}{\textbf{Meget enig}}$ | $\color{#F288B9}{\textbf{Meget enig}}$ |
+| Enh | Runa Friis Hansen | $\color{#F288B9}{\textbf{Enig}}$ | $\color{#F288B9}{\textbf{Meget enig}}$ |
+| Enh | Lasse P. N. Olsen | $\color{#F288B9}{\textbf{Meget enig}}$ | $\color{#F288B9}{\textbf{Enig}}$ |
+| Enh | Filippa Emilie Vittrup | $\color{#F288B9}{\textbf{Meget enig}}$ | $\color{#F288B9}{\textbf{Meget enig}}$ |
+| DD | Inger Støjberg | $\color{#8086F2}{\textbf{Meget uenig}}$ | $\color{#8086F2}{\textbf{Uenig}}$ |
+| DD | Kristian Bøgsted | $\color{#8086F2}{\textbf{Uenig}}$ | $\color{#8086F2}{\textbf{Uenig}}$ |
+| DD | Kim Edberg Andersen | $\color{#8086F2}{\textbf{Meget uenig}}$ | $\color{#8086F2}{\textbf{Uenig}}$ |
+| DD | Liselotte Lynge | $\color{#8086F2}{\textbf{Meget uenig}}$ | $\color{#8086F2}{\textbf{Uenig}}$ |
 
 : {tbl-colwidths="[10, 50, 20, 20]" .bordered}
 
@@ -265,7 +262,20 @@ For at skabe lidt overblik, vil et punktplot med $x_1$ på førsteaksen og $x_2$
 ### Opgave 5
 
 - Overvej, hvordan du vil håndtere de punkter, som har samme koordinater, så alle punkterne alligevel bliver synlige.
-- Tegn punktplottet.
+- Tegn punktplottet (farv punkterne for Socialdemokratiet røde, Venstre blå, Enhedslisten grønne og Danmarksdemokraterne orange).
+
+<details>
+<summary> Sådan gør du i GeoGebra </summary>
+\
+Åbn datasættet i Excel og kopiere det hele over i et \"Regneark\" i GeoGebra (tryk på \"Vis\" $\rightarrow$ \"Regneark\").
+
++ Du laver et punkt i regnearket ved at skrive `=(B2,C2)` (hvis punktets førstekoordinat står i celle `B2` og andenkoordinaten står i `C2`).
++ Markér cellen. Tag ved den lille firkant nederst til højre og træk ned, så du får punkter for alle 16 kandidater.
++ Markér alle punkterne. Højreklik og vælg \"Egenskaber\". Sæt flueben ved \"Fast objekt\" (det sikrer, at du ikke ved en fejl kan flytte på punkterne). *Hvis* der er vist et navn ved punkterne i tegneblokken,  fjerner du også fluebenet ved \"Vis navn\".
++ Markér de fire punkter i regnearket, som kører til Socialdemokratiet. Højreklik og vælg \"Egenskaber\". Under fanen \"Farve\" vælger du rød.
++ Farv på tilsvarende måde de andre punkter.
+
+</details>
 
 :::
 
@@ -275,79 +285,130 @@ Det skulle gerne være tydeligt, at de fire partiers kandidater ligger delvist o
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 6
 
-- Brug kunstig neuron appen på datasættet med samme indstillinger som i opgave 4.
-- Noter værdierne for bias og vægte for hvert parti, så $s_0, s_1, s_2$ for Socialdemokratiet, $v_0, v_1, v_2$ for Venstre og så videre.
+- Brug kunstig neuron app'en på datasættet med samme indstillinger som i opgave 4.
+- Noter værdierne for bias og vægte for hvert parti, så $s_0, s_1, s_2$ er for Socialdemokratiet, $v_0, v_1, v_2$ er for Venstre og så videre. Det er en fordel, hvis du med det samme definerer værdierne i GeoGebra. Skriv for eksempel i inputfeltet: `s0=5.869` for at definere $s_0$.	
 
 :::
 
-Vi vil nu bruge disse vægte til at bestemme, hvor i koordinatsystemet modellen vil trække en grænse mellem Socialdemokratiet og Enhedslisten. Grænsen skal netop være der, hvor de to partier har ens score og derfor er lige sandsynlige, så
+Vi vil i det følgende lave en visualisering, som viser, betydningen af de $12$ vægte, som du lige har fundet i opgave 6.
+
+Husk på, at hvis man for en given værdi af $x_1$ og $x_2$ skal udregne scoren for Socialdemokratiet, så gør vi det på denne måde:
 
 $$
-\mathrm{e}^{s_0 + s_1 \cdot x_1 + s_2 \cdot x_2} = \mathrm{e}^{e_0 + e_1 \cdot x_1 + e_2 \cdot x_2}
+s_0 + s_1  \cdot x_1 + s_2 \cdot x_2
+$$
+Hvis vi omdøber svaret på spørgsmål 1 ($x_1$) til $x$, svaret på spørgsmål 2 ($x_2$) til $y$ og kalder den beregnede score for $z$, så får vi ligningen:
+
+$$
+z = s_0 + s_1  \cdot x + s_2 \cdot y
 $$
 
-Hvis vi tager den naturlige logaritme på begge sider og samler alt på den ene side, giver det
+hvilket kan omskrives til
 
 $$
-(s_0 - e_0) + (s_1-e_1) \cdot x_1 + (s_2-e_2) \cdot x_2=0
+s_0 + s_1  \cdot x + s_2 \cdot y -z =0
 $$
+Sammenholder vi det med planens ligning $a \cdot x + b \cdot y + c \cdot z + d=0$, kan vi se, at scoren for Socialdemokratiet udgør en plan i rummet. Noget helt tilsvarende gør sig selvfølgelig gældende for de øvrige tre partier.
 
-Vi bemærker, at det svarer til ligningen for en ret linje på formen 
+Vi vil nu tegne de fire planer:
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 7
+
++ Tegn de fire planer hørende til hver af de fire partier samtidig med, at du begrænser både $x$ og $y$ til at ligge mellem $-2$ og $2$. 
++ Farv planen for Socialdemokratiet rød, Venstre blå, Enhedslisten grøn og Danmarksdemokraterne orange. 
+
+<details>
+<summary> Sådan gør du i GeoGebra </summary>
+
++ For bare at tegne planen for Socialdemokratiet i GeoGebra uden begræsninger på $x$ og $y$, kan man i inputfeltet blot skrive: `z=s0+s1*x+s2*y`. Sørg for at vælge \"Vis\" $\rightarrow$ \"3D Grafik\" for at få planen vist i et 3-dimentionelt koordinatsystem.
++ Hvis man skal have begrænsning med, definerer man scoren for Socialdemokratiet som en funktion af to variable: `soc(x,y)=s0+s1*x+s2*y,-2<=x<=2,-2<=y<=2`.
++ For at farve planen skal man højreklikke på definitionen af planen i \"Algebra vindue\" og vælge \"Egenskaber\". Her vælger man fanen \"Farve\". Sæt eventuelt \"Opaliseret\" til $100$ (det betyder, at planen ikke bliver gennemsigtig).
+</details>
+
+Vi har i de tidligere opgaver set, at for et givent svar på hvert af de to spørgsmål så vil det parti med den højeste score også give den højeste sandsynlighed. 
+
+I ethvert punkt i $xy$-planen (svarende til konkrete svar på de to spørgsmål), er vi derfor nu interesseret i at finde ud af, hvilket parti, der har den største score (og dermed også den største sandsynlighed). 
+
++ Drej rundt i dit 3D-plot og prøv blandt andet at se \"ned på\" planerne (på den måde at $z$-aksen peger direkte op i dine øjne -- det svarer til, at du kigger direkte ned på $xy$-planen). Her kan du se, at $xy$-planen bliver inddelt i fire områder svarende til hver af de fire partier. Det parti med den højeste score svarer til den farve, som du kan se. t
+
++ Hvilke partier støder op til hinanden, når du ser ned på de fire områder, som $xy$-planen bliver inddelt i? Notér de tre kombinationer af partier ned.
+
+
+:::
+
+
+Vi skal nu have fundet de linjer, som giver den inddeling af $xy$-planen, som du har fundet i opgaven ovenfor. Du har blandt andet set, at Socialdemokratiet og Enhedslisten støder op til hinanden. Grænsen mellem de to partier opstår præcist, når de to partier har samme score. Det vil sige, når
+
+$$
+s_0 + s_1 \cdot x + s_2 \cdot y = e_0 + e_1 \cdot x + e_2 \cdot y
+$$ 
+
+hvor $x=x_1$ og $y=y_1$.
+
+Hvis vi samler alt på venstre side, giver det
+
+$$
+(s_0 - e_0) + (s_1-e_1) \cdot x + (s_2-e_2) \cdot y=0
+$$ {#eq-sammenlignSE}
+
+Læg mærke til, at det svarer til ligningen for en ret linje i planen på formen 
 
 $$ 
 a \cdot x + b \cdot y + c = 0
 $$
 
+Vi vil nu tegne de tre linjer, som giver inddelingen af $xy$-planen.
 
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 7
-
-- Indsæt værdierne for bias og vægte i linjens ligning.
-- Indtegn linjen i samme koordinatsystem som punktplottet.
-
-:::
-
-Det var en opdeling mellem Socialdemokratiet og Enhedslisten. Lad os se på de øvrige par af partier også.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 8
 
-- Hvor mange forskellige par af partier er der, og hvor mange andre ligninger for linjer bør derfor bestemmes?
-- Bliver alle disse linjer en grænse mellem områder, hvor de to partier er de mest sandsynlige?
+- Bestem ved hjælp af (@eq-sammenlignSE) ligningen for hver af de tre linjer, som giver inddelingen af $xy$-planen, som du fandt i opgave 7. 
+
+- Indtegn de tre linjer i samme koordinatsystem som punktplottet, du lavede i opgave 5.
 
 :::
 
-Hvis du vil, kan du selv beregne ligningerne for de øvrige linjer -- ellers er alle ligningerne angivet i denne tabel.
+Når man svarer på de to spørgsmål, har man egentlig kun følgende svarmuligheder: $-2$ (helt uenig), $-1$ (uenig), $0$ (hverken/eller), $1$ (enig) eller $2$ (helt enig). Vi forestiller os nu, at man kan vælge en vilkårlig værdi i intervallet $[-2,2]$. Det kunne for eksempel ske, hvis man skulle angive sit svar på hvert spørgsmål ved hjælp af en skyder, som illustreret her:
 
-| Partier | Ligning |
-|-------|:---------------------------|
-| **S** og **E**| $-5.39979 \cdot x - 5.95406 \cdot y + 14.0861 = 0$ |
-| **S** og **V** | $1.00714 \cdot x + 0.58677 \cdot y + 0.1452 = 0$ |
-| **S** og **D**| $5.40031 \cdot x + 4.88754 \cdot y + 9.2446 = 0$ |
-| **E**og **V** | $-6.40693 \cdot x - 6.54083 \cdot y + 13.9409 = 0$ |
-| **E**og **D**| $10.8001 \cdot x + 10.8416 \cdot y - 4.8415 = 0$ |
-| **V** og **D**| $4.39317 \cdot x + 4.30077 \cdot y + 9.0994 = 0$ |
-: {.bordered}
+![Skyder som bruges til at angive, hvor enig man er i et spørgsmål på en kontinuert skala fra $-2$ til $2$.](valg_af_parti/skyder.png)
+
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 9
 
-- Indtegn alle seks linjer i punktplottet.
-- Overvej hvilke af linjerne, der giver en grænse mellem to partier som mest sandsynlige, og hvilke linjer, der blot er mellem to lige sandsynlige partier, hvor et tredje parti er mere sandsynligt.
+Antag, at en person har svaret $x=1$ på det første spørgsmål.
+
++ Hvad skal værdien af $y$ (det vil sige svaret på det andet spørgsmål) være, så scoren for Socialdemokratiet og Enhedslisten bliver lige store (brug de linjer, som du fandt i opgave 8).
+
++ Brug $x=1$ og den $y$-værdi, som du lige har bestemt til først at finde scoren og dernæst sandsynligheden for hvert af de fire partier. 
 
 :::
-
-De tre linjer for Socialdemokratiet & Venstre, Socialdemokratiet & Danmarksdemokraterne og Venstre & Danmarksdemokraterne skærer hinanden i samme punkt (eventuelt ikke helt perfekt på grund af afrunding).
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 10
+### Opgave 10 - valgfri
 
-- Bestem koordinaterne til dette punkt.
-- Beregn derefter sandsynligheden for hvert af de fire partier (brug vægtene fra app'en) i punktet.
-- Forklar, hvad det fortæller om modellen.
+I opgave 7 tegnede du planer, som for ethvert punkt $(x,y)$ viser scoren for hvert af de fire partier. 
+
+- Lav et plot tilsvarende det, du lavede i opgave 7, men som i stedet for scoren viser sandsynlighedsfladen for hvert af de fire partier. 
+
+<details>
+<summary> Sådan gør du i GeoGebra </summary>
+
+For at tegne sandsynlighedsfladen for Socialdemokratiet skriver man i inputfeltet:
+
+`exp(soc(x,y))/(exp(soc(x,y))+exp(enh(x,y))+exp(ven(x,y))+exp(dd(x,y)))`
+
+hvor `enh(x,y)` beregner scoren for Enhedslisten og så videre.
+
+</details>
+
+- Drej rundt i dit 3D-plot og prøv igen at se direkte ned på $xy$-planen. Får du samme inddeling af $xy$-planen, som du fik i opgave 7? Hvorfor/hvorfor ikke?
+
+- Betragt de fire inddelinger af $xy$-planen svarende til hvert af de fire partier. Hvor i hver inddeling er sandsynligheden for det pågældende parti størst? Og hvorfor giver det god mening?
 
 :::
-
 
 ## Det helt store eksempel med 877 politikere
 
@@ -371,12 +432,12 @@ Datasættet kan downloades [her](/undervisningsforlob/valg_af_parti/datasæt_877
 
 :::
 
-Hvis du har haft om [krydsvalidering](https://aimat.dk/noter/krydsvalidering/krydsvalidering.html), kan du desuden lave opgave 13.
+Hvis du har haft om [krydsvalidering](https://aimat.dk/noter/krydsvalidering/krydsvalidering.html){target="_blank"}, kan du desuden lave opgave 13.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 13
 
-- Træn modellen med krydsvalidering med 5 fold i app'en.
+- Evaluer modellen med 5-folds krydsvalidering i app'en.
 - Tag en snak om, hvordan resultatet bliver sammenlignet med svarene i opgave 12, og hvorfor det er tilfældet.
 
 :::
