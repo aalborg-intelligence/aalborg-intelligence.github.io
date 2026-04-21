@@ -216,32 +216,28 @@ Værdien af RMSE har ikke en generel fortolkning, men RMSE for forskellige model
 
 ### Mean Absolute Error (MAE)
 
-Når man udregner RMSE, vil eventuelle outliers i datasættet give anledning til store afvigelser mellem $y_i$ og $\hat y_i$. Hvis for eksempel $y_i=10$ er en outlier og $\hat y_i=100$, så er
+Når man udregner RMSE, indgår de kvadrede fejl:
 
 $$
-\left (y_i - \hat y_i \right)^2 = \left (10 - 100 \right)^2 = \left ( - 90 \right)^2 = 8100
+\left (y_i - \hat y_i \right)^2 
 $$
-hvilket vil få forholdsvis stor indflydelse på RMSE, fordi fejlen bliver kvadreret. Et mål hvor outliers ikke blive tillagt helt så stor betydning er **Mean Absolute Error (MAE)**. I stedet for de kvadrerede fejl bruges de numeriske (eller absolutte) fejl:
+I stedet for de kvadrerede fejl kunne man i stedet bruge de numeriske (eller absolutte) fejl:
 
 $$
 | y_i - \hat y_i |
 $$
 
-I eksemplet vil
-
-$$
-| y_i - \hat y_i | = |10-100| = |-90| = 90. 
-$$
-Man summerer så over alle de numeriske fejl og tager gennemsnittet:
+Summerer man over alle de numeriske fejl og tager gennemsnittet, får man **Mean Absolute Error (MAE)**.:
 
 $$
 \mathrm{MAE} = \frac{1}{n} \sum_{i=1}^{n} | y_i - \hat y_i |
 $$
 
-Dette er **Mean Absolute Error (MAE)**.
-
-Når man laver lineær regression minimerer man RMSE. Det er helt uproblematisk, fordi RMSE er en differentiabel funktion. Omvendt er MAE ikke differentiabel, og derfor er det ikke MAE, som minimeres, når man laver lineær regression (selvom målet i sig selv i virkeligheden giver bedre intuitiv mening).
-
-
 Hvis MAE udregnes for forskellige modeller for samme data, vil det igen være sådan, at den mindste værdi af MAE som udgangspunkt vil indikere den bedste model. 
+
+Når man laver lineær regression, minimerer man MSE. Det er helt uproblematisk, fordi MSE er en differentiabel funktion. Omvendt er MAE ikke differentiabel, og derfor er det ikke MAE, som minimeres i lineær regression[^mae] (selvom målet i sig selv i virkeligheden giver bedre intuitiv mening).
+
+[^mae]: I lineær regression finder man den værdi af hældningen $a$ og skæringen med $y$-aksen $b$, som minimerer MSE. Det betyder, at eventuelle outliers, hvor forskellen mellem $y_i$ og $\hat y_i$ er stor, får stor betydning. Det skyldes, at i MSE kvadreres forskellen -- det vil sige, at hvis forskellen er stor, så bliver forskellen i anden endnu større. Havde vi derimod minimeret MAE ville store forskelle ikke have fået så stor betydning, fordi vi blot fjerner eventuelle fortegn fra forskellen. 
+
+
 
