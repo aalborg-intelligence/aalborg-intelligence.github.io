@@ -328,8 +328,8 @@ Tabel&nbsp;2: Confusion matrix i et tænkt eksempel, hvor <span class="math inli
 <p><span class="math display">\[
 \frac{132+32}{200}= 82 \%
 \]</span></p>
-<p>Altså det samme som før. Så kunne man jo tænke – fedt! Denne model er lige så god som den, der ligger til grund for <a href="#tbl-cm1" class="quarto-xref">tabel&nbsp;1</a>. Men det faktisk ikke helt tilfældet. Hvis vi her laver en naiv model, hvor vi altid gætter på, at en person tilhører klasse A, så vil vi gætte rigtigt i <span class="math inline">\(164\)</span> ud af <span class="math inline">\(200\)</span> tilfælde. Altså igen i <span class="math inline">\(82 \%\)</span> af tilfældene. Modellen, som ligger til grund for <a href="#tbl-cm2" class="quarto-xref">tabel&nbsp;2</a>, er altså ikke bedre end et naivt gæt. Det betyder, at det er vigtigt, at vurdere en models klassifikationsnøjagtighed i forhold til hvordan klasserne fordeler sig i data.</p>
-<p>I det sidste tilfælde her – hvor den ene klasse er langt mere hyppig end den anden – vil mål som <a href="../../noter/ROC/ROC.html" target="_blank">sensitivitet og specificitet</a> være bedre til at sige noget om, hvor godt hver enkel klasse bliver prædikteret.</p>
+<p>Altså det samme som før. Men hvis vi her laver en naiv model, hvor vi altid gætter på, at en person tilhører klasse A, så vil vi gætte rigtigt i <span class="math inline">\(164\)</span> ud af <span class="math inline">\(200\)</span> tilfælde. Altså igen i <span class="math inline">\(82 \%\)</span> af tilfældene. Modellen, som ligger til grund for <a href="#tbl-cm2" class="quarto-xref">tabel&nbsp;2</a>, er altså ikke bedre end et naivt gæt. Det betyder, at det er vigtigt, at vurdere en models klassifikationsnøjagtighed i forhold til hvordan klasserne fordeler sig i data.</p>
+<p>I det sidste tilfælde her – hvor den ene klasse er langt mere hyppig end den anden – er klassifikationsnøjagtigheden ikke et godt mål for, hvor godt vi prædikterer den sjældne klasse. Her vil mål som <a href="../../noter/ROC/ROC.html" target="_blank">sensitivitet og specificitet</a> være bedre til at sige noget om, hvor godt hver enkel klasse bliver prædikteret.</p>
 <p>Men generelt vil en god model have en klassifikationsnøjagtighed tæt på <span class="math inline">\(100 \%\)</span>.</p>
 </section>
 </section>
@@ -389,8 +389,8 @@ Figur&nbsp;3: Sammenhørende værdier mellem <span class="math inline">\(x\)</sp
 \]</span> Summerer vi nu over alle de observerede <span class="math inline">\(y\)</span>-værdier:</p>
 <p><span class="math display">\[
 \sum_{i=1}^n (y_i - \bar y)^2
-\]</span> får vi et samlet mål for, hvor stor en fejl vi begår med den naive model (<span class="math inline">\(y_i = \bar y\)</span>).</p>
-<p>I stedet for den naive model <span class="math inline">\(y_i= \bar y\)</span> kunne vi også fitte den bedste rette linje til data – altså lave lineær regression. Det giver os en linje med ligning</p>
+\]</span> får vi et samlet mål for, hvor stor en fejl vi begår med den naive model.</p>
+<p>I stedet for den naive model kunne vi også fitte den bedste rette linje til data – altså lave lineær regression. Det giver os en linje med ligning</p>
 <p><span class="math display">\[
 y = a \cdot x + b
 \]</span></p>
@@ -443,12 +443,12 @@ Figur&nbsp;6: Sammenhørende værdier mellem <span class="math inline">\(x\)</sp
 </figure>
 </div>
 <p>Det ses tydeligt i <a href="#fig-R2_sammenligning" class="quarto-xref">figur&nbsp;6</a>, at i vores eksempel er den samlede kvadrerede fejl langt større for den naive model end for modellen baseret på lineær regression.</p>
-<p><span class="math inline">\(R^2\)</span>-værdien er hvor stor en procentdel af variationen i data (målt som summen af de kvadrerede fejl), der bliver forklaret af en given model sammenlignet med den naive model <span class="math inline">\(y_i= \bar y\)</span>.</p>
+<p><span class="math inline">\(R^2\)</span>-værdien er hvor stor en procentdel af variationen i data (målt som summen af de kvadrerede fejl), der bliver forklaret af en given model sammenlignet med den naive model.</p>
 <p>Det vil sige, at</p>
 <p><span id="eq-R2"><span class="math display">\[
 R^2 = \frac{\sum_{i=1}^n (y_i - \bar y)^2 - \sum_{i=1}^n (y_i- \hat y_i)^2}{\sum_{i=1}^n (y_i - \bar y)^2}
 \tag{1}\]</span></span></p>
-<p>Læg her mærke til, at hvis modellen er lige så dårlig, som den naive model (<span class="math inline">\(y_i=\bar y\)</span>), så summen af de kvadrerede fejl er lige store:</p>
+<p>Læg her mærke til, at hvis modellen er lige så dårlig, som den naive model, så summen af de kvadrerede fejl er lige store:</p>
 <p><span class="math display">\[\sum_{i=1}^n (y_i - \bar y)^2 = \sum_{i=1}^n (y_i- \hat y_i)^2\]</span></p>
 <p>Da er</p>
 <p><span class="math display">\[
@@ -458,7 +458,7 @@ R^2 = \frac{0}{\sum_{i=1}^n (y_i - \bar y)^2} = 0
 <p><span class="math display">\[
 R^2 = \frac{\sum_{i=1}^n (y_i - \bar y)^2 - 0}{\sum_{i=1}^n (y_i - \bar y)^2} = 1
 \]</span></p>
-<p><span class="math inline">\(R^2\)</span>-værdien kaldes derfor også nogle gange for forklaringsgraden. Hvis <span class="math inline">\(R^2\)</span> er tæt på <span class="math inline">\(0\)</span> betyder det, at vi har fittet en model, som ikke er meget bedre end den naive model <span class="math inline">\(y_i = \bar y\)</span>. Er <span class="math inline">\(R^2\)</span> derimod tæt på <span class="math inline">\(1\)</span> betyder det, at vi har fittet en model, som beskriver data langt bedre end den naive model.</p>
+<p><span class="math inline">\(R^2\)</span>-værdien kaldes derfor også nogle gange for forklaringsgraden. Hvis <span class="math inline">\(R^2\)</span> er tæt på <span class="math inline">\(0\)</span> betyder det, at vi har fittet en model, som ikke er meget bedre end den naive model. Er <span class="math inline">\(R^2\)</span> derimod tæt på <span class="math inline">\(1\)</span> betyder det, at vi har fittet en model, som beskriver data langt bedre end den naive model.</p>
 <p>En god model har altså en <span class="math inline">\(R^2\)</span>-værdi tæt på <span class="math inline">\(1\)</span>.</p>
 <p>Bemærk for øvrigt her, at hvis alle <span class="math inline">\(y_i\)</span>-værdierne er ens, så vil <span class="math inline">\(y_i=\bar y\)</span>, og derfor vil nævneren i (<a href="#eq-R2" class="quarto-xref">1</a>) være <span class="math inline">\(0\)</span>. I det tilfælde er <span class="math inline">\(R^2\)</span>-værdien ikke veldefineret.</p>
 </section>
