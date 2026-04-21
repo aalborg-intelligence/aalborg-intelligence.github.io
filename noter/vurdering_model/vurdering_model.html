@@ -184,7 +184,8 @@ window.Quarto = {
   <ul>
   <li><a href="#modeller-til-klassifikation" id="toc-modeller-til-klassifikation" class="nav-link active" data-scroll-target="#modeller-til-klassifikation">Modeller til klassifikation</a>
   <ul class="collapse">
-  <li><a href="#klassifikationsnøjagtighed-og-confusion-matrix" id="toc-klassifikationsnøjagtighed-og-confusion-matrix" class="nav-link" data-scroll-target="#klassifikationsnøjagtighed-og-confusion-matrix">Klassifikationsnøjagtighed og confusion matrix</a></li>
+  <li><a href="#confusion-matrix" id="toc-confusion-matrix" class="nav-link" data-scroll-target="#confusion-matrix">Confusion matrix</a></li>
+  <li><a href="#klassifikationsnøjagtighed" id="toc-klassifikationsnøjagtighed" class="nav-link" data-scroll-target="#klassifikationsnøjagtighed">Klassifikationsnøjagtighed</a></li>
   </ul></li>
   <li><a href="#modeller-til-prædiktion-af-numeriske-værdier" id="toc-modeller-til-prædiktion-af-numeriske-værdier" class="nav-link" data-scroll-target="#modeller-til-prædiktion-af-numeriske-værdier">Modeller til prædiktion af numeriske værdier</a>
   <ul class="collapse">
@@ -228,11 +229,10 @@ window.Quarto = {
 </p>
 <section id="modeller-til-klassifikation" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="modeller-til-klassifikation">Modeller til klassifikation</h2>
-<p>I forbindelse med modeller til klassifikation vil man ofte opstille en såkaldt confusion matrix og på den baggrund udregne en klassifikationsnøjagtighed:</p>
-<section id="klassifikationsnøjagtighed-og-confusion-matrix" class="level3 page-columns page-full">
-<h3 class="anchored" data-anchor-id="klassifikationsnøjagtighed-og-confusion-matrix">Klassifikationsnøjagtighed og confusion matrix</h3>
-<p>Begrebet <strong>klassifikationsnøjagtighed</strong> – eller på engelsk classification accuracy (CA) – dækker over hvor stor en andel af data, som på baggrund af en given model klassificeres korrekt.</p>
-<p>Lad os illustrere det med et eksempel. Vi forestiller os, at vi har en model, som for en given person kan skelne mellem, om personen tilhører en af to klasser A eller B baseret på en række features, vi har fået oplyst om personen. På baggrund af denne model har vi følgende:</p>
+<p>I forbindelse med modeller til klassifikation vil man ofte opstille en såkaldt confusion matrix og på den baggrund udregne en klassifikationsnøjagtighed.</p>
+<section id="confusion-matrix" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="confusion-matrix">Confusion matrix</h3>
+<p>Vi vil illustrere begrebet <strong>confusion matrix</strong> med et eksempel. Vi forestiller os, at vi har en model, som for en given person kan skelne mellem, om personen tilhører en af to klasser A eller B baseret på en række features, vi har fået oplyst om personen. På baggrund af denne model har vi følgende:</p>
 <div id="tbl-cm1" class="bordered quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-tbl figure page-columns page-full">
 <div aria-describedby="tbl-cm1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -273,13 +273,17 @@ Tabel&nbsp;1: Confusion matrix i et tænkt eksempel, hvor <span class="math inli
 </figure>
 </div>
 <p>Denne tabel kaldes for en <strong>confusion matrix</strong>.</p>
-<p>Vi kan her se, at <span class="math inline">\(100\)</span> personer faktisk tilhører klasse A, og at vores model kan forudsige, at <span class="math inline">\(84\)</span> af disse personer tilhører denne klasse. Desuden ser vi, at <span class="math inline">\(100\)</span> personer faktisk tilhører klasse B, hvilket, modellen forudsiger, er tilfældet for <span class="math inline">\(80\)</span> af disse personer. Det betyder, at modellen klassificerer</p>
+</section>
+<section id="klassifikationsnøjagtighed" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="klassifikationsnøjagtighed">Klassifikationsnøjagtighed</h3>
+<p>Begrebet <strong>klassifikationsnøjagtighed</strong> – eller på engelsk classification accuracy (CA) – dækker over hvor stor en andel af data, som på baggrund af en given model klassificeres korrekt.</p>
+<p>I <a href="#tbl-cm1" class="quarto-xref">tabel&nbsp;1</a> kan vi se, at <span class="math inline">\(100\)</span> personer faktisk tilhører klasse A, og at vores model kan forudsige, at <span class="math inline">\(84\)</span> af disse personer tilhører denne klasse. Desuden ser vi, at <span class="math inline">\(100\)</span> personer faktisk tilhører klasse B, hvilket, modellen forudsiger, er tilfældet for <span class="math inline">\(80\)</span> af disse personer. Det betyder, at modellen klassificerer</p>
 <p><span class="math display">\[
 84+80 = 164
 \]</span> personer korrekt. Det svarer til, at</p>
 <p><span class="math display">\[
 \frac{164}{200} = 82 \%
-\]</span> af personerne klassificeres korrekt. Det er denne størrelse, som kaldes for klassifikationsnøjagtigheden. I <a href="#tbl-cm1" class="quarto-xref">tabel&nbsp;1</a> kan vi se, at <span class="math inline">\(50 \%\)</span> af personerne faktisk tilhører klasse A. Hvis vi havde valgt en naiv model, som altid vil gætte på, at en person tilhører klasse A, så vil vi få en klassifikationsnøjagtighed på <span class="math inline">\(50 \%\)</span>. Med en klassifikationsnøjagtighed på <span class="math inline">\(82 \%\)</span> er den forhåndenværende model altså bedre end et naivt gæt.</p>
+\]</span> af personerne klassificeres korrekt. Det er denne størrelse, som kaldes for klassifikationsnøjagtigheden. I <a href="#tbl-cm1" class="quarto-xref">tabel&nbsp;1</a> ser vi også, at <span class="math inline">\(50 \%\)</span> af personerne faktisk tilhører klasse A. Hvis vi havde valgt en naiv model, som altid vil gætte på, at en person tilhører klasse A, så vil vi få en klassifikationsnøjagtighed på <span class="math inline">\(50 \%\)</span>. Med en klassifikationsnøjagtighed på <span class="math inline">\(82 \%\)</span> er den forhåndenværende model altså bedre end et naivt gæt.</p>
 <p>Lad os se på et nyt eksempel med følgende confusion matrix:</p>
 <div id="tbl-cm2" class="bordered quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-tbl figure page-columns page-full">
