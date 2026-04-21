@@ -190,6 +190,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#forklaringsgraden-r2-værdien" id="toc-forklaringsgraden-r2-værdien" class="nav-link" data-scroll-target="#forklaringsgraden-r2-værdien">Forklaringsgraden (<span class="math inline">\(R^2\)</span>-værdien)</a></li>
   <li><a href="#root-mean-squared-error-rmse" id="toc-root-mean-squared-error-rmse" class="nav-link" data-scroll-target="#root-mean-squared-error-rmse">Root Mean Squared Error (RMSE)</a></li>
+  <li><a href="#mean-absolute-error-mae" id="toc-mean-absolute-error-mae" class="nav-link" data-scroll-target="#mean-absolute-error-mae">Mean Absolute Error (MAE)</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -471,6 +472,26 @@ R^2 = \frac{\sum_{i=1}^n (y_i - \bar y)^2 - 0}{\sum_{i=1}^n (y_i - \bar y)^2} = 
 \]</span></p>
 <p>Det er altså denne størrelse, som er <strong>root mean squared error (RMSE)</strong>. Da vi ønsker så lille en fejl som muligt, vil vi gerne have, at RMSE er så tæt på <span class="math inline">\(0\)</span> som muligt.</p>
 <p>Værdien af RMSE har ikke en generel fortolkning, men RMSE for forskellige modeller for samme data kan med fordel sammenlignes. Her vil den mindste værdi af RMSE som udgangspunkt indikere den bedste model (se også noten om <a href="../../noter/krydsvalidering/krydsvalidering.html" target="_blank">Overfitting, modeludvælgelse og krydsvalidering</a>)).</p>
+</section>
+<section id="mean-absolute-error-mae" class="level3">
+<h3 class="anchored" data-anchor-id="mean-absolute-error-mae">Mean Absolute Error (MAE)</h3>
+<p>Når man udregner RMSE, vil eventuelle outliers i datasættet give anledning til store afvigelser mellem <span class="math inline">\(y_i\)</span> og <span class="math inline">\(\hat y_i\)</span>. Hvis for eksempel <span class="math inline">\(y_i=10\)</span> er en outlier og <span class="math inline">\(\hat y_i=100\)</span>, så er</p>
+<p><span class="math display">\[
+\left (y_i - \hat y_i \right)^2 = \left (10 - 100 \right)^2 = \left ( - 90 \right)^2 = 8100
+\]</span> hvilket vil få forholdsvis stor indflydelse på RMSE, fordi fejlen bliver kvadreret. Et mål hvor outliers ikke blive tillagt helt så stor betydning er <strong>Mean Absolute Error (MAE)</strong>. I stedet for de kvadrerede fejl bruges de numeriske (eller absolutte) fejl:</p>
+<p><span class="math display">\[
+| y_i - \hat y_i |
+\]</span></p>
+<p>I eksemplet vil</p>
+<p><span class="math display">\[
+| y_i - \hat y_i | = |10-100| = |-90| = 90.
+\]</span> Man summerer så over alle de numeriske fejl og tager gennemsnittet:</p>
+<p><span class="math display">\[
+\mathrm{MAE} = \frac{1}{n} \sum_{i=1}^{n} | y_i - \hat y_i |
+\]</span></p>
+<p>Dette er <strong>Mean Absolute Error (MAE)</strong>.</p>
+<p>Når man laver lineær regression minimerer man RMSE. Det er helt uproblematisk, fordi RMSE er en differentiabel funktion. Omvendt er MAE ikke differentiabel, og derfor er det ikke MAE, som minimeres, når man laver lineær regression (selvom målet i sig selv i virkeligheden giver bedre intuitiv mening).</p>
+<p>Hvis MAE udregnes for forskellige modeller for samme data, vil det igen være sådan, at den mindste værdi af MAE som udgangspunkt vil indikere den bedste model.</p>
 
 
 </section>
