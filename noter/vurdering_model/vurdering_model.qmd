@@ -210,3 +210,36 @@ $$
 Det er altså denne størrelse, som er **root mean squared error (RMSE)**. Da vi ønsker så lille en fejl som muligt, vil vi gerne have, at RMSE er så tæt på $0$ som muligt.
 
 Værdien af RMSE har ikke en generel fortolkning, men RMSE for forskellige modeller for samme data kan med fordel sammenlignes. Her vil den mindste værdi af RMSE som udgangspunkt indikere den bedste model (se også noten om [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd){target="_blank"})).
+
+
+### Mean Absolute Error (MAE)
+
+Når man udregner RMSE, vil eventuelle outliers i datasættet give anledning til store afvigelser mellem $y_i$ og $\hat y_i$. Hvis for eksempel $y_i=10$ er en outlier og $\hat y_i=100$, så er
+
+$$
+\left (y_i - \hat y_i \right)^2 = \left (10 - 100 \right)^2 = \left ( - 90 \right)^2 = 8100
+$$
+hvilket vil få forholdsvis stor indflydelse på RMSE, fordi fejlen bliver kvadreret. Et mål hvor outliers ikke blive tillagt helt så stor betydning er **Mean Absolute Error (MAE)**. I stedet for de kvadrerede fejl bruges de numeriske (eller absolutte) fejl:
+
+$$
+| y_i - \hat y_i |
+$$
+
+I eksemplet vil
+
+$$
+| y_i - \hat y_i | = |10-100| = |-90| = 90. 
+$$
+Man summerer så over alle de numeriske fejl og tager gennemsnittet:
+
+$$
+\mathrm{MAE} = \frac{1}{n} \sum_{i=1}^{n} | y_i - \hat y_i |
+$$
+
+Dette er **Mean Absolute Error (MAE)**.
+
+Når man laver lineær regression minimerer man RMSE. Det er helt uproblematisk, fordi RMSE er en differentiabel funktion. Omvendt er MAE ikke differentiabel, og derfor er det ikke MAE, som minimeres, når man laver lineær regression (selvom målet i sig selv i virkeligheden giver bedre intuitiv mening).
+
+
+Hvis MAE udregnes for forskellige modeller for samme data, vil det igen være sådan, at den mindste værdi af MAE som udgangspunkt vil indikere den bedste model. 
+
