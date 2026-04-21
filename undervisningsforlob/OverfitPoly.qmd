@@ -35,7 +35,7 @@ I dette forløb skal du lære om begreberne overfitting og krydsvalidering ved a
 
 Man vil ofte gerne ud fra kendte observationer i en stikprøve kunne forudsige værdier af fremtidige observationer fra den population, som stikprøven er fra. Dette kaldes prædiktion. I virkeligheden vil man ofte have en stikprøve med 100 eller flere observationer, men for at undgå alt for mange beregninger, nøjes vi her med 8, selvom det i praksis er alt for lidt.
 
-I dette eksempel vil vi se på populationen \"danske gymnasieelever\", hvor vi -- indrømmet fjollet -- vil undersøge, om der en sammenhæng mellem den uafhængige variabel \"antal biografbesøg det seneste år\" og den afhængige variabel \"antal venner på de sociale medier\". Vi lader som om, vi har indsamlet en stikprøve med 8 gymnasieelever med følgende resultat:
+I dette eksempel vil vi se på populationen \"danske gymnasieelever\", hvor vi -- indrømmet fjollet -- vil undersøge, om der er en sammenhæng mellem den uafhængige variabel \"antal biografbesøg det seneste år\" og den afhængige variabel \"antal venner på de sociale medier\". Vi lader som om, vi har indsamlet en stikprøve med 8 gymnasieelever med følgende resultat:
 
 | Antal biografbesøg det seneste år | Antal venner på de sociale medier |
 |:------:|:------:|
@@ -54,7 +54,7 @@ I dette eksempel vil vi se på populationen \"danske gymnasieelever\", hvor vi -
 
 Vi ønsker ud fra disse data at opstille en model, som for nye observationer kan forudsige, hvor mange venner på de sociale medier en gymnasieelev har, hvis man kender antal biografbesøg.
 
-Når man opstiller en model, kan man nogle gange bygge på en forventning eller fysisk model, men andre gange har man som udgangspunkt ikke nogen bestemt idé, hvilket er tilfældet her. Vi vil derfor forsøge at modellere data ved hjælp af et polynomium, hvor vi så skal undersøge, hvilken grad af polynomiet, der ser ud til at kunne klare opgaven bedst. Her ses for eksempel resultatet af regression med et 3. gradspolynomium.
+Når man opstiller en model, kan man nogle gange bygge på en forventning eller fysisk model, men andre gange har man som udgangspunkt ikke nogen bestemt idé, hvilket er tilfældet her. Vi vil derfor forsøge at modellere data ved hjælp af et polynomium, hvor vi så skal undersøge, hvilken grad af polynomiet der ser ud til at kunne klare opgaven bedst. Her ses for eksempel resultatet af regression med et 3. gradspolynomium.
 
 <!-- ![3. gradsregression på alle 8 datapunkter.](OverfitPoly_filer/3gradsregression.png){#fig-3grads} -->
 
@@ -91,13 +91,13 @@ fig
 
 :::
 
-Svaret på opgave 2 bør ikke være overraskende. Desto højere grad af polynomium, desto bedre kan grafen tilpasse sig punkterne. Når graden bliver antallet af punkter minus 1, altså her graden 7, passer grafen perfekt til alle punkterne. Men betyder det så også, at det fundne 7. gradspolynomium passer godt til fremtidige observationer og dermed til at prædiktere, hvor mange venner på de sociale medier andre elever har ud fra antal biografbesøg? Det vil vi undersøge nærmere i resten af forløbet.
+Svaret på opgave 2 bør ikke være overraskende. Jo højere grad af polynomium, desto bedre kan grafen tilpasse sig punkterne. Når graden er antallet af punkter minus 1, altså her graden 7, passer grafen perfekt til alle punkterne. Men betyder det så også, at det fundne 7. gradspolynomium passer godt til fremtidige observationer og dermed til at prædiktere, hvor mange venner på de sociale medier andre elever har ud fra antal biografbesøg? Det vil vi undersøge nærmere i resten af forløbet.
 
 ## Krydsvalidering
 
 Den metode, vi vil anvende, kaldes for krydsvalidering. Vi vil lave regressionen ud fra 6 af de 8 punkter og beregne, hvor godt resultatet heraf passer med de sidste 2 punkter – vi lader så at sige som om, at vi skal prædiktere værdien for de 2 sidste punkter. Det vil vi gøre 4 gange – første gang anvendes punkt 1 og 2 ikke i regressionen, anden gang anvendes punkt 3 og 4 ikke, så anvendes 5 og 6 ikke og til sidst anvendes 7 og 8 ikke. 
 
-Her er vist et eksempel i GeoGebra. I eksemplet laves 3. gradsregression, hvor punkterne 3 og 4 fjernet. Desuden er den lodrette afstand fra hver af de to fjernede punktet til grafen vist. 
+Her er vist et eksempel i GeoGebra. I eksemplet laves 3. gradsregression, hvor punkterne 3 og 4 er fjernet. Desuden er den lodrette afstand fra hver af de to fjernede punkter til grafen vist. 
 
 ![3. gradsregression på 6 af de 8  datapunkter.](OverfitPoly_filer/3grads6af8GeoGebra.png){#fig-3grads6af8}
 
@@ -115,20 +115,20 @@ Som det ses af figuren, ligger det 3. punkt ca. $24.32$ under grafen fra regress
 ## Opgave 3
 I skal nu på samme måde undersøge de øvrige muligheder, hvor man anvender 6 af de 8 punkter til at bestemme et 3. gradspolynomium.
 
-*	Lav 3. gradsregression ud fra 6 af punkter, idet I ikke medtager de to første punkter.
+*	Lav 3. gradsregression ud fra 6 af punkterne, idet I ikke medtager de to første punkter.
 *	Tegn grafen fra regressionen og alle 8 punkter i samme koordinatsystem for visuelt at illustrere, hvor godt eller skidt de 2 punkter er prædikteret af regressionen, som vist i eksemplet.
-*	Beregn den lodrette afstand mellem grafen og hver af de 2 punkter, som ikke var med i regression. Disse kaldes for residualer, så lad os kalde dem for $r_1$ og $r_2$. Skriv værdierne i en tabel som den nedenfor. Residualerne regnes med fortegn, så hvis punktet ligger under grafen, er residualet negativt.
+*	Beregn den lodrette afstand mellem grafen og hver af de 2 punkter, som ikke var med i regressionen. Disse kaldes for residualer, så lad os kalde dem for $r_1$ og $r_2$. Skriv værdierne i en tabel som den nedenfor. Residualerne regnes med fortegn, så hvis punktet ligger under grafen, er residualet negativt.
 
     | Residual	| $r_1$ |	$r_2$ |	$r_3$ |	$r_4$ |	$r_5$ |	$r_6$ |	$r_7$ |	$r_8$ |
     |:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
     | Værdi | | | | | | | | |
     : {.bordered}
 
-*	Gentag regression og beregninger for samme grad, hvor det blot er de to næste punkter, der ikke er med i regression, så de to næste og endeligt de to sidste.
+*	Gentag regression og beregninger for samme grad, hvor det nu er de to næste punkter, der ikke er med i regression, så de to næste og endeligt de to sidste.
 *	Til sidst skal der beregnes en samlet afstand for alle 8 punkter. Det gøres ved at kvadrere hver enkelt værdi og beregne summen. Altså ${r_1}^2+{r_2}^2+ {r_3}^2+{r_4}^2+{r_5}^2+{r_6}^2+{r_7}^2+{r_8}^2$. 
 :::
 
-Tabellen nedenfor viser den tilsvarende samlede afstand for hver af graderne 1, 2, 4, og 5.
+Tabellen nedenfor viser den tilsvarende samlede afstand for hver af graderne 1, 2, 4 og 5.
 
 | Grad | Samlet afstand |
 |:---:|:---:|
@@ -145,7 +145,7 @@ Tabellen nedenfor viser den tilsvarende samlede afstand for hver af graderne 1, 
 
 ## Overfitting
 
-Det fænomen, som dette forløb illustrerer, kaldes for overfitting. Ved at tilpasse modellen for godt til observationerne, får man ikke lavet en passende generel model, men derimod en model til netop disse punkter. Så selvom et 7. gradspolynomium passer perfekt til de 8 punkter, så viste det sig, at den bedste løsning var en noget mindre grad af polynomiet.
+Det fænomen, som dette forløb illustrerer, kaldes for overfitting. Ved at tilpasse modellen for godt til observationerne, får man ikke lavet en passende generel model, men derimod en model til netop disse punkter. Så selvom et 7. gradspolynomium passer perfekt til de 8 punkter, så viser det sig, at den bedste løsning var en noget mindre grad af polynomiet.
 
 ## Afsluttende
 Når man til sidst har bestemt sig for en grad, laver man naturligvis den endelige model vha. alle punkterne, ikke med udeladelse af nogle af dem.
