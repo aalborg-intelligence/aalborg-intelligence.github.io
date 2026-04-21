@@ -324,6 +324,7 @@ Tabel&nbsp;2: Confusion matrix i et tænkt eksempel, hvor <span class="math inli
 \frac{132+32}{200}= 82 \%
 \]</span></p>
 <p>Altså det samme som før. Så kunne man jo tænke – fedt! Denne model er lige så god som den, der ligger til grund for <a href="#tbl-cm1" class="quarto-xref">tabel&nbsp;1</a>. Men det faktisk ikke helt tilfældet. Hvis vi her laver en naiv model, hvor vi altid gætter på, at en person tilhører klasse A, så vil vi gætte rigtigt i <span class="math inline">\(164\)</span> ud af <span class="math inline">\(200\)</span> tilfælde. Altså igen i <span class="math inline">\(82 \%\)</span> af tilfældene. Modellen, som ligger til grund for <a href="#tbl-cm2" class="quarto-xref">tabel&nbsp;2</a>, er altså ikke bedre end et naivt gæt. Det betyder, at det er vigtigt, at vurdere en models klassifikationsnøjagtighed i forhold til hvordan klasserne fordeler sig i data.</p>
+<p>I det sidste tilfælde her – hvor den ene klasse er langt mere hyppig end den anden – vil mål som <a href="../../noter/ROC/ROC.html" target="_blank">sensitivitet og specificitet</a> være bedre til at sige noget om, hvor godt hver enkel klasse bliver prædikteret.</p>
 <p>Men generelt vil en god model have en klassifikationsnøjagtighed tæt på <span class="math inline">\(100 \%\)</span>.</p>
 </section>
 </section>
@@ -456,7 +457,7 @@ R^2 = \frac{\sum_{i=1}^n (y_i - \bar y)^2 - 0}{\sum_{i=1}^n (y_i - \bar y)^2} = 
 <p>En god model har altså en <span class="math inline">\(R^2\)</span>-værdi tæt på <span class="math inline">\(1\)</span>.</p>
 <p>Bemærk for øvrigt her, at hvis alle <span class="math inline">\(y_i\)</span>-værdierne er ens, så vil <span class="math inline">\(y_i=\bar y\)</span>, og derfor vil nævneren i (<a href="#eq-R2" class="quarto-xref">1</a>) være <span class="math inline">\(0\)</span>. I det tilfælde er <span class="math inline">\(R^2\)</span>-værdien ikke veldefineret.</p>
 </section>
-<section id="root-mean-squared-error-rmse" class="level3">
+<section id="root-mean-squared-error-rmse" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="root-mean-squared-error-rmse">Root Mean Squared Error (RMSE)</h3>
 <p>Et andet mål, som kan bruges til at sammenligne modeller, er <strong>root mean squared error (RMSE)</strong>. Vi ser igen på de observerede <span class="math inline">\(y\)</span>-værdier (<span class="math inline">\(y_i\)</span>) og nogle prædikterede <span class="math inline">\(y\)</span>-værdier <span class="math inline">\(\hat y_i\)</span>, som er baseret på en eller anden model. De kvadrerede fejl:</p>
 <p><span class="math display">\[
@@ -464,8 +465,8 @@ R^2 = \frac{\sum_{i=1}^n (y_i - \bar y)^2 - 0}{\sum_{i=1}^n (y_i - \bar y)^2} = 
 \]</span> kaldes for <strong>squared error (SE)</strong>. Udregner vi den gennemsnitlige værdi af alle disse kvadrerede fejl:</p>
 <p><span class="math display">\[
 \frac{1}{n} \sum_{i=1}^{n} \left ( y_i - \hat y_i \right)^2
-\]</span> får vi et mål, som ikke er afhængig af datasættets størrelse. Det er <strong>mean squared error (MSE)</strong>. Bemærk, at hvis for eksempel alle <span class="math inline">\(y\)</span>-værdierne er målt i centimeter (<span class="math inline">\(\mathrm{cm}\)</span>), da vil måleenheden for MSE være kvadratcentimeter (<span class="math inline">\(\mathrm{cm}^2\)</span>). Derfor tager man kvadratroden af MSE for at få målet ned på samme skala, som vores <span class="math inline">\(y\)</span>-værdier er på:</p>
-<p><span class="math display">\[
+\]</span> får vi et mål, som ikke er afhængig af datasættets størrelse. Det er <strong>mean squared error (MSE)</strong><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Bemærk, at hvis for eksempel alle <span class="math inline">\(y\)</span>-værdierne er målt i centimeter (<span class="math inline">\(\mathrm{cm}\)</span>), da vil måleenheden for MSE være kvadratcentimeter (<span class="math inline">\(\mathrm{cm}^2\)</span>). Derfor tager man kvadratroden af MSE for at få målet ned på samme skala, som vores <span class="math inline">\(y\)</span>-værdier er på:</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Når man for eksempel laver lineær regression, finder man den værdi af hældningen <span class="math inline">\(a\)</span> og skæringen med <span class="math inline">\(y\)</span>-aksen <span class="math inline">\(b\)</span>, som minimerer MSE. Man kan vise, at det er ækvivalent med at finde den værdi af <span class="math inline">\(a\)</span> og <span class="math inline">\(b\)</span>, som maksimerer <span class="math inline">\(R^2\)</span>-værdien.</p></div></div><p><span class="math display">\[
 \mathrm{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} \left ( y_i - \hat y_i \right)^2}
 \]</span></p>
 <p>Det er altså denne størrelse, som er <strong>root mean squared error (RMSE)</strong>. Da vi ønsker så lille en fejl som muligt, vil vi gerne have, at RMSE er så tæt på <span class="math inline">\(0\)</span> som muligt.</p>
@@ -474,6 +475,7 @@ R^2 = \frac{\sum_{i=1}^n (y_i - \bar y)^2 - 0}{\sum_{i=1}^n (y_i - \bar y)^2} = 
 
 </section>
 </section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
