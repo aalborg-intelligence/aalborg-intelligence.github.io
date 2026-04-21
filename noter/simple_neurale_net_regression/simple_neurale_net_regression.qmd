@@ -200,22 +200,20 @@ Vi illustrerer dette med et eksempel:
 
 ## Lejlighedspriser -- fortolkning af vægtene
 
-Man kan træne en kunstig neuron til regression ved at bruge [Kunstig neuron app til regression](https://apps01.math.aau.dk/ai/neuron_regression/).
+Man kan træne en kunstig neuron til regression ved at bruge [Kunstig neuron til regression app](https://apps01.math.aau.dk/ai/regressionsneuron/).
 
-Bruger vi denne app på datasættet om lejlighedssalg, hvor vi sætter alle startvægte til $0$, vælger en learning rate på $0.0001$ og antal iterationer til $500$, får vi følgende værdier af vægtene:
-
-** MANGLER: Tjek på indstillinger **
+Bruger vi denne app på datasættet om lejlighedssalg, hvor vi sætter alle startvægte til $0$, vælger en learning rate på $0.001$ og antal iterationer til $1000$, får vi følgende værdier af vægtene:
 
 |  $w_0$  <br>  <br> |  $w_1$ <br> (`areal`)  |  $w_2$  <br>(`alder`)  | 
 |:---:|:---:|:---:|
-| $0.0637521$ | $0.0195118$ | $-0.0023493$ | 
+| $0.06375$ | $0.01951$ | $-0.002349$ | 
 : {.bordered}
 
-For eksempel kan vi se, at $w_1 = 0.0195118$. Det vil sige, at ifølge modellen vil prisen på en lejlighed, som er præcis én kvadratmeter større end en anden tilsvarende[^2] lejlighed, være cirka $19512$ kroner højere (husk på at prisen er målt i millioner, så vi skal lige gange med en million, hvis vi skal have værdien oversat til kroner).
+For eksempel kan vi se, at $w_1 = 0.01951$. Det vil sige, at ifølge modellen vil prisen på en lejlighed, som er præcis én kvadratmeter større end en anden tilsvarende[^2] lejlighed, være cirka $19510$ kroner højere (husk på at prisen er målt i millioner, så vi skal lige gange med en million, hvis vi skal have værdien oversat til kroner).
 
 [^2]: En tilsvarende lejlighed vil her mere præcist betyde en lejlighed med den samme alder.
 
-Vi ser også, at $w_2=-0.0023493$, som betyder, at hvis vi står med to lige store lejligheder, hvor den ene er præcis et år ældre end den anden, så vil salgsprisen på den ældste lejlighed ifølge modellen være $2349$ kroner lavere.
+Vi ser også, at $w_2=-0.002349$, som betyder, at hvis vi står med to lige store lejligheder, hvor den ene er præcis et år ældre end den anden, så vil salgsprisen på den ældste lejlighed ifølge modellen være $2349$ kroner lavere.
 
 I det nedenstående har vi plottet den faktiske pris (i millioner) ud af $x$-aksen og den prædikterede pris op af $y$-aksen.
 
@@ -271,7 +269,7 @@ Da vi ønsker så lille en fejl ($t^{(m)}-o^{(m)}$) som muligt, vil vi gerne hav
 Ser vi på den kunstige neuron fra @exm-lejlighed2 kan man udregne RMSE. Gør man det får man
 
 $$
-\mathrm{RMSE} = 0.497
+\mathrm{RMSE} = 0.4972
 $$
 
 Uden sammenligning med andre modeller er det svært at vide, om det tal er godt eller skidt. Til gengæld kan vi udregne $R^2$-værdien, som er
@@ -279,6 +277,8 @@ Uden sammenligning med andre modeller er det svært at vide, om det tal er godt 
 $$
 R^2 = 0.596
 $$
+** $R^2$ mangler tjek med app!**
+
 Du er måske vant til at se $R^2$-værdier, som er meget større, men for en model baseret på et datasæt fra den virkelige verden er det såmen ikke helt tosset!
 
 :::
@@ -364,7 +364,7 @@ Det viser sig, at det ikke giver så meget mening, at udregne $R^2$-værdien i f
 Vi vil nu udregne RMSE baseret på $5$-folds krydsvalidering. Det giver
 
 $$
-\mathrm{RMSE} = 0.502
+\mathrm{RMSE} = 0.4987
 $$
 
 Bemærk, at hvis vi sammenligner med RMSE, som ikke er baseret på krydsvalidering fra @exm-lejlighed3, så er RMSE blevet en smule højere her. Det er helt forventeligt, at modellen vil klare sig bedre, når den er testet på de data, som den også er trænet på.
@@ -692,14 +692,14 @@ Til sammenligning har vi igen også trænet en kunstig neuron. I alle tre tilfæ
 
 | Model | RMSE <br> (træningsdata) | RMSE <br> (krydsvalidering) | 
 |:---|:---:|:---:|
-| Kunstig neuron | $0.497$ | $0.502$ |
+| Kunstig neuron | $0.4972$ | $0.4987$ |
 | Neuralt netværk (2) | $0.556$ |  $0.497$ |
 | Neuralt netværk (10) | $0.446$ |  $0.463$ |
 : {.bordered}
 
 *Ovenstående er baseret på Orange - skal rettes til så det passe med vores app. Man kan falde i mange forskellige små minima som ændrer RMSE en del * **mangler**
 
-Ser vi på RMSE fra krydsvalidering, kan vi se, at begge neurale netværk har en mindre RMSE sammenlignet med en kunstig neuron. Det betyder, at et neuralt netværk med skjulte lag i dette eksempel er bedre til at forudsige lejlighedspriser end end hvis vi blot bruger en simpel kunstig neuron (som jo svarer til multipel lineær regression). Det er fordi vi med de skjulte lag kan fange nogle ikke-lineære tendenser i data. 
+Ser vi på RMSE fra krydsvalidering, kan vi se, at begge neurale netværk har en mindre RMSE sammenlignet med en kunstig neuron. Det betyder, at et neuralt netværk med skjulte lag i dette eksempel er bedre til at forudsige lejlighedspriser end, hvis vi blot bruger en simpel kunstig neuron (som jo svarer til multipel lineær regression). Det er fordi, at vi med de skjulte lag kan fange nogle ikke-lineære tendenser i data. 
 
 I den nedenstående figur har vi igen plottet den faktiske pris (i millioner) ud af $x$-aksen og den prædikterede pris op af $y$-aksen. I plottet til venstre er de prædikterede priser baseret på en kunstig neuron. I plottet til højre er de baseret på et neuralt netværk med ét skjult lag med ti neuroner.
 
@@ -734,7 +734,7 @@ p <- rbind(df_lm, df_nn10) |>
 
 Sammenligner vi de to plots ovenfor kan man se, at når vi bruger et neuralt netværk med ét skjult lag med ti neuroner, så ligger de prædikterede priser tættere på de faktiske priser. Det svarer til, at punkterne i plottet til højre ligger tættere på linjen med ligning $y=x$, end de gør i plottet til venstre. Det er altså igen en illustration af, at et neuralt netværk med skjulte lag i eksemplet her er bedre til at forudsige lejlighedspriser end en kunstig neuron.
 
-En anden måde at sammenligne de to modeller på er illustreret i @fig-pred_neuron og @fig-pred_NN10. I begge figurer er datapunkterne vist sammen med den prædikterede lejlighedspris (i millioner), som funktion af lejlighedens areal ($x_1$) og alder ($x_2$). I @fig-pred_neuron her er den prædikterede pris baseret på en kunstig neuron:
+En anden måde at sammenligne de to modeller på er illustreret i @fig-pred_neuron og @fig-pred_NN10. I begge figurer er datapunkterne vist sammen med den prædikterede lejlighedspris (her kaldt for prædiktionsfladen), som funktion af lejlighedens areal ($x_1$) og alder ($x_2$). I @fig-pred_neuron herunder er den prædikterede pris baseret på en kunstig neuron:
  
 ```{r}
 n_grid <- 100
@@ -792,7 +792,7 @@ pp <- plot_ly(showscale = FALSE, hovertemplate = hovertemplate) |>
 
 
 ```{r}
-#| fig-cap: Den prædikterede lejlighedspris (i millioner), som funktion af lejlighedens areal ($x_1$) og alder ($x_2$). Den prædikterede pris er her baseret på en kunstig neuron.
+#| fig-cap: Den prædikterede lejlighedspris (prædiktionsfladen), som funktion af lejlighedens areal ($x_1$) og alder ($x_2$). Den prædikterede pris er her baseret på en kunstig neuron.
 #| label: fig-pred_neuron
 #| out-width: 95%
 #| fig-height: 7
@@ -808,10 +808,10 @@ pp |>
   )
 ```
 
-I @fig-pred_NN10 herunder er den prædikterede pris baseret på et neuralt netværk med et skjult lag med ti neuroner. 
+I @fig-pred_NN10 er den prædikterede pris baseret på et neuralt netværk med et skjult lag med ti neuroner: 
 
 ```{r}
-#| fig-cap: Den prædikterede lejlighedspris (i millioner), som funktion af lejlighedens areal ($x_1$) og alder ($x_2$). Den prædikterede pris er her baseret på et neuralt netværk med et skjult lag med ti neuroner.
+#| fig-cap: Den prædikterede lejlighedspris (prædiktionsfladen), som funktion af lejlighedens areal ($x_1$) og alder ($x_2$). Den prædikterede pris er her baseret på et neuralt netværk med et skjult lag med ti neuroner.
 #| label: fig-pred_NN10
 #| out-width: 95%
 #| fig-height: 7
@@ -827,7 +827,7 @@ pp |>
   )
 ```
 
-Det ses tydeligt, at det neurale netværk er bedre til at prædiktere lejlighedspriserne for de nyeste lejligheder med et forholdsvis stort areal sammenlignet med den kunstige neuron.
+Det ses tydeligt, at det neurale netværk er bedre til at prædiktere lejlighedspriserne for de nyeste lejligheder med et forholdsvis stort areal sammenlignet med den kunstige neuron. Læg også mærke til, hvordan prædiktionsfladen baseret på det neurale netværk kan \"knække\" og på den måde modellere ikke lineære sammenhænge i data.
 
 :::
 
