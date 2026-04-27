@@ -1,0 +1,609 @@
+---
+title: "Support Vector Machines"
+format: html
+---
+
+```{r include=FALSE}
+rgl::setupKnitr(autoprint = TRUE)
+```
+
+Som motiverende eksempel ser vi på et af de steder, hvor kunstig intelligens forventes at have stort potentiale, nemlig inden for personlig medicin. Når en læge behandler en patient med et lægemiddel, er det ikke altid, at lægemidlet har en effekt. Det formodes at skyldes biologiske forhold i kroppen så som patientens gener. Da de fleste lægemidler har bivirkninger, er det som regel være bedst at spare patienten for behandling, hvis der alligevel ikke forventes en effekt. Lægen vil derfor gerne kunne forudsige på forhånd, om en patient har gavn af lægemidlet eller ej. Til at hjælpe sig, måler lægen nogle biologiske markører hos patienten. Det kunne for eksempel være kroppens indhold af bestemte stoffer, der siger noget om patientens genetik eller overordnede helbred.
+
+Ovenstående er et eksempel på et *klassifikationsproblem*. Lægen vil gerne kunne inddele patienterne i to grupper, nemlig "effekt" og "ikke effekt". Grupperne kalder vi også for *klasser*, og for nemheds skyld vil vi bare betegne de to klasser med $1$ og $-1$. Vi lader $y$ være en variabel, der angiver klassen, det vil sige $y\in \{-1,1\}$. Vi forestiller os desuden, at lægen måler to biologiske markører hos patienterne, som vi vil kalde $x_1$ og $x_2$.
+
+Vi ønsker at finde en klassifikationsalgoritme, der kan *prædiktere* (altså forudsige) klassen ud fra målinger af $x_1$ og $x_2$. For at hjælpe os med det, tager vi udgangspunkt i et *træningsdatasæt* bestående af $n$ patienter, der er blevet behandlet med lægemidlet og har fået målt deres to biomarkører $x_1$ og $x_2$. Desuden har vi observeret, om lægemidlet havde en effekt. Vi har altså et datasæt på formen vist i nedenstående tabel REF, hvor hver række svarer til en patient:
+
+| Patient |  $X_1$   |  $X_2$   |   $Y$    |
+|:-------:|:--------:|:--------:|:--------:|
+|    1    | $x_{11}$ | $x_{12}$ |  $y_1$   |
+|    2    | $x_{21}$ | $x_{22}$ |  $y_2$   |
+|         | $\vdots$ | $\vdots$ | $\vdots$ |
+|   $n$   | $x_{n1}$ | $x_{n2}$ |  $y_n$   |
+
+På @fig-data betragter vi et fiktivt datasæt. Vi har indtegnet punkterne $(x_{i1},x_{i2})$ i et koordinatsystem for syv patienter $i=1,\ldots,7$. Hvert punkt er farvet rødt hvis $y_i=1$ (lægemidlet har en effekt) og blåt hvis $y_i=-1$ (ingen effekt).
+
+```{tikz fig.width=4, fig.height=4}
+%| echo: false
+%| label: fig-data
+%| fig-cap: Eksempel på et datasæt
+\begin{tikzpicture}
+    \draw[->] (-1,-1) -- (2,-1);
+    \node at (2,-1.35) {$x_1$};
+    \draw[->] (-1,-1) -- (-1,2);
+    \node at (-1.35,1.9) {$x_2$};
+   
+    
+    \draw[fill,blue] (0.2,0.2) circle (0.05);
+    \draw[fill,blue] (0.2,-0.5) circle (0.05);
+    \draw[fill,blue] (-0.8,1) circle (0.05);
+    \draw[fill,blue] (- 0.2,-0.2) circle (0.05);
+    \draw[fill,red] (0.8,0.8) circle (0.05);
+    \draw[fill,red] (0.9,1.5) circle (0.05);
+    \draw[fill,red] (1.5,0.7) circle (0.05);
+    
+\end{tikzpicture}
+```
+
+Hvis vi nu kommer med en ny patient, som har fået målt $x_1$ og $x_2$, vil vi gerne kunne klassificere den. Hvis den nye observation er placeret ved det hvide punkt på @fig-nydata, vil det være naturligt at klassificere den som blå. Er den placeret ved det grønne punkt, vil det være oplagt at klassificere den som rød. Men hvis den er placeret ved det sorte punkt, er det ikke helt så klart, hvad vi skal vælge.
+
+```{tikz fig.width=4, fig.height=4}
+%| echo: false
+%| label: fig-nydata
+%| fig-cap: Det sorte, hvide og grønne punkt er nye patienter, som vi gerne vil klassificere som enten røde eller blå.
+
+    \begin{tikzpicture}
+        \draw[->] (-1,-1) -- (2,-1);
+        \node at (2,-1.35) {$x_1$};
+        \draw[->] (-1,-1) -- (-1,2);
+        \node at (-1.35,1.9) {$x_2$};
+        
+        \draw[fill,blue] (0.2,0.2) circle (0.05);
+        \draw[fill,blue] (0.2,-0.5) circle (0.05);
+        \draw[fill,blue] (-0.8,1) circle (0.05);
+        \draw[fill,blue] (- 0.2,-0.2) circle (0.05);
+        \draw[fill,red] (0.8,0.8) circle (0.05);
+        \draw[fill,red] (0.9,1.5) circle (0.05);
+        \draw[fill,red] (1.5,0.7) circle (0.05);
+        
+        \draw[] (-0.5,0.3) circle (0.05);
+    \draw[fill] (0.2,1) circle (0.05);
+ \draw[fill,green] (1.5,1.7) circle (0.05);
+        
+    \end{tikzpicture}
+```
+
+Idéen med support vector machines er at tegne en linje, der adskiller de to klasser. Et nyt punkt klassificeres som blåt, hvis det ligger på den ene side, og som rødt, hvis det ligger på den anden side. Det deler planen op i to klassifikationsområder som indikeret på @fig-regioner.
+
+```{tikz fig.width=4, fig.height=4}
+%| echo: false
+%| label: fig-regioner
+%| fig-cap: Linjen deler planen op i et rødt og et blåt klassifikationsområde.
+\begin{tikzpicture}
+        \draw[fill,red!20] (-1,2) -- (2,2)-- (2,-1) -- (-1,2);
+        \draw[fill, blue!20] (-1,2) -- (-1,-1) -- (2,-1) -- (-1,2);
+        \draw(-1,2) -- (2,-1);
+    \draw[->] (-1,-1) -- (2.1,-1);
+    \node at (2,-1.35) {$x_1$};
+    \draw[->] (-1,-1) -- (-1,2.1);
+    \node at (-1.35,1.9) {$x_2$};
+    
+    \draw[fill,blue] (0.2,0.2) circle (0.05);
+    \draw[fill,blue] (0.2,-0.5) circle (0.05);
+    \draw[fill,blue] (-0.8,1) circle (0.05);
+    \draw[fill,blue] (- 0.2,-0.2) circle (0.05);
+    \draw[fill,red] (0.8,0.8) circle (0.05);
+    \draw[fill,red] (0.9,1.5) circle (0.05);
+    \draw[fill,red] (1.5,0.7) circle (0.05);
+    
+\end{tikzpicture}
+```
+
+Som vist på @fig-linjer er der mange måder at tegne sådan en skillelinje på. Klassifikationen af det sorte punkt afhænger af, hvor man placerer linjen.
+
+```{tikz fig.width=4, fig.height=4}
+%| echo: false
+%| label: fig-linjer
+%| fig-cap: Der er flere forskellige linjer, der adskiller de to klasser.
+\begin{tikzpicture}
+    \draw[->] (-1,-1) -- (2.1,-1);
+    \draw[->] (-1,-1) -- (-1,2.1);
+      \node at (2,-1.35) {$x_1$};
+    \node at (-1.35,1.7) {$x_2$};
+    \draw[dashed] (-1,2) -- (2,-1);
+    \draw[dashed] (-1.4,2) -- (2.4,-1); 
+    \draw[dashed] (-0.6,2) -- (1.8,-1);
+    \draw[fill,blue] (0.2,0.2) circle (0.05);
+    \draw[fill,blue] (0.2,-0.5) circle (0.05);
+    \draw[fill,blue] (-0.8,1) circle (0.05);
+    \draw[fill,blue] (- 0.2,-0.2) circle (0.05);
+    \draw[fill,red] (0.8,0.8) circle (0.05);
+    \draw[fill,red] (0.9,1.5) circle (0.05);
+    \draw[fill,red] (1.5,0.7) circle (0.05);
+        \draw[fill]  (-0.25,1.4) circle (0.05); 
+\end{tikzpicture}
+```
+
+Så hvordan vælger vi, hvor vi skal tegne linjen? Support vector machines vælger den linje, der har størst mulig afstand til den nærmeste observation. Afstanden fra en skillelinje til det nærmeste observerede punkt betegnes $M$. I et bånd af bredde $M$ på begge sider af linjen vil der altså ikke ligge nogen punkter. Dette bånd kalder vi linjens *margin*. Det er illustreret på @fig-margin.
+
+```{tikz fig.width=4, fig.height=4}
+%| echo: false
+%| label: fig-margin
+%| fig-cap: Figuren viser linjen med størst mulig margin. Linjens margin er båndet mellem de stiplede linjer. Afstanden fra linjen til kanten af marginen er $M$.
+\begin{tikzpicture}
+    \draw[->] (-1,-1) -- (2.1,-1);
+    \draw[->] (-1,-1) -- (-1,2.1); 
+    \node at (2,-1.35) {$x_1$};
+    \node at (-1.35,1.9) {$x_2$};
+    \draw (-1,2) -- (2,-1);
+    \draw[dashed] (-1.3,1.7) -- (1.7,-1.3); 
+    \draw[dashed] (-0.7,2.3) -- (2.3,-0.7);
+    \draw[fill,blue] (0.2,0.2) circle (0.05);
+    \draw[fill,blue] (0.2,-0.5) circle (0.05);
+    \draw[fill,blue] (-0.8,1) circle (0.05);
+    \draw[fill,blue] (- 0.2,-0.2) circle (0.05);
+    \draw[fill,red] (0.8,0.8) circle (0.05);
+    \draw[fill,red] (0.9,1.5) circle (0.05);
+    \draw[fill,red] (1.5,0.7) circle (0.05);
+    \draw[dashed] (0.2,0.2) -- (0.8,0.8);
+    \draw[orange] (-0.5,1.5 ) -- (-0.8,1.2); 
+    \node[orange] at (-0.4, 1.2) {$M$};
+\end{tikzpicture}
+```
+
+Hvordan finder vi så linjen med bredest mulig margin? Først får vi brug for lidt teori om afstanden fra et punkt til en linje. Husk på at vi kan skrive ligningen for linjen $l$ som $$l: ax_1 + bx_2 + c = 0$$ hvor $a$, $b$ og $c$ er konstanter, som skal fastlægges for at kende linjen. Vektoren $$\overrightarrow{n} = \begin{pmatrix} a\\ b \end{pmatrix}$$ {#eq-normal} er en normalvektor til linjen. I ved fra gymnasieundervisningen, at hvis $P = (z_1,z_2)$ er et punkt i planen, så er afstanden fra $P$ til linjen $l$ givet ved $$d(P,l)=\frac{|az_1 + bz_2 + c|}{\sqrt{a^2+b^2}}$$ Følgende sætning viser, at fortegnet på $az_1 + bz_2 + c$ fortæller, hvilken side af linjen $P$ ligger på.
+
+**Sætning.** Hvis $az_1 + bz_2 + c>0$, så ligger punktet $P = (z_1,z_2)$ på den side af linjen, som $\overrightarrow{n}$ peger mod, og hvis $az_1 + bz_2 + c<0$, så ligger punktet på modsat side.
+
+På @fig-fortegn er det illustreret, at $ax_1 + bx_2 +c$ er positiv på den røde side af linjen, som også er den side $\overrightarrow{n}$ peger mod, mens $ax_1 + bx_2 +c$ er negativ på den blå side.
+
+```{tikz fig.width=4, fig.height=4}
+%| echo: false
+%| label: fig-fortegn
+%| fig-cap: Fortegnet på $ax_1+bx_2 +c$ afhænger af, hvilken side af linjen punktet $(x_1,x_2)$ ligger på. 
+    \begin{tikzpicture}[scale=1]
+        \draw[fill,red!20] (-1,2) -- (2,2)-- (2,-1) -- (-1,2);
+        \draw[fill, blue!20] (-1,2) -- (-1,-1) -- (2,-1) -- (-1,2);
+        \draw(-1,2) -- (2,-1);
+        \draw[->] (-1,-1) -- (2.1,-1);
+        \node at (2,-1.35) {$x_1$};
+        \draw[->] (-1,-1) -- (-1,2.1);
+        \node at (-1.35,1.9) {$x_2$};
+        
+        \node[] at (-1,-0.5) {$ax_1+bx_2 +c<0$};
+    %\node[] at (2.8,-0.7) {$ax_1 + bx_2 +c=0$};
+    \node[] at (1.5,1.8) {$ax_1 + bx_2 +c>0$};
+    \draw[->] (0.5,0.5) -- (1.5,1.5);
+    \node at (1.3,0.8) {$\overrightarrow{n}$};
+        
+    \end{tikzpicture}
+```
+
+Beviset minder om beviset for afstandsformlen, blot holder vi bedre øje med fortegn.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+**Bevis.** Lad $P_0=(w_1,w_2)$ være et punkt på linjen. Så opfylder $P_0$ linjens ligning, det vil sige $$0=aw_1 + bw_2 + c$$ Det betyder at, $$ az_1 + bz_2 + c = az_1 + bz_2 +c -(  aw_1 + bw_2 - c ) = a(z_1-w_1) + b(z_2-w_2) $$ Vi genkender højresiden som prikproduktet mellem $\overrightarrow{n}= \begin{pmatrix} a\\ b \end{pmatrix}$ og vektoren $\overrightarrow{P_0P}= \begin{pmatrix} z_1-w_1 \\ z_2-w_2 \end{pmatrix}.$ Vi får altså $$  az_1 + bz_2 + c=\overrightarrow{n} \cdot \overrightarrow{P_0P}$$ På den anden side har vi formlen for vinklen $v$ mellem $\overrightarrow{n}$ og $\overrightarrow{P_0P}$ $$ \overrightarrow{n} \cdot \overrightarrow{P_0P} =|\overrightarrow{n}| \cdot |\overrightarrow{P_0P}|\cdot \cos(v)$$ Vektorerne $\overrightarrow{n}$ og $\overrightarrow{P_0P}$ og vinklen mellem dem er illustreret på @fig-vinkel.
+
+```{tikz fig.width=4, fig.height=4}
+%| echo: false
+%| label: fig-vinkel
+%| fig-cap: Vektorerne $\overrightarrow{n}$ og $\overrightarrow{P_0P}$ og vinklen $v$ mellem dem.
+  \begin{tikzpicture}[scale=1.5]
+
+            \draw(-0.5,1.5) -- (1.5,-0.5);
+            \draw[->] (-0.5,0) -- (2.1,0);
+            \node at (2,-0.35) {$x_1$};
+            \draw[->] (0,-0.5) -- (0,2.1);
+            \node at (-0.35,1.9) {$x_2$};
+            \draw[fill] (0.5,0.5) circle (0.05);
+            \node[] at (0.3,0.3) {$P_0$};
+            
+            %\draw[fill] (1.5,0.5) circle (0.05);
+            \node[] at (2,0.3) {$P$};
+
+\draw[->] (0.5,0.5) -- (2,0.5); 
+\node at (1.3,0.3) {$\overrightarrow{P_0P}$};
+        
+
+            \draw[->] (0.5,0.5) -- (1.5,1.5);
+            \node at (1,1.5) {$\overrightarrow{n}$};
+            
+            \draw (1,0.5) arc (0:45:0.5);
+            \node at (1.1,0.7) {$v$};
+        \end{tikzpicture}
+```
+
+Antag at $az_1 + bz_2 +c>0$. Så har vi altså, at $$0<az_1 + bz_2 +c =\overrightarrow{n} \cdot \overrightarrow{P_0P}=|\overrightarrow{n}| \cdot |\overrightarrow{P_0P}|\cdot \cos(v)$$ Da højresiden skal være positiv, og længden af en vektor ikke kan være negativ, må $\cos(v)>0$. Det svarer til, at vinklen $v$ må ligge i intervallet $]0^\circ,90^\circ[$. Det betyder, at vektorerne $\overrightarrow{n}$ og $\overrightarrow{P_0P}$ ligger på samme side af planen.
+
+Hvis omvendt $az_1 + bz_2 +c<0$, så er $$0>az_1 + bz_2 +c =|\overrightarrow{n}| \cdot |\overrightarrow{P_0P}|\cdot \cos(v)$$ Vi må derfor have, at $\cos v <0$ svarende til, at vinklen $v$ må ligge i intervallet $]90^\circ,180^\circ[$. Det følger, at $P$ ligger på modsatte side af linjen i forhold til $\overrightarrow{n}$.
+:::
+
+Vi kan benytte sætningen til at lave vores klassifikationsalgoritme. Lad os lægge os fast på, at vi ønsker en ligning for linjen på formen $ax_1 + bx_2 +c = 0$, hvor normalvektoren peger i retning af den røde klasse ($y=1$).
+
+Vi ser nu på data $(x_{i1},x_{i2},y_i)$ for den $i$te patient. Hvis $y_i=1$, så skal punktet $(x_{i1},x_{i2})$ ligge på samme side af linjen som normalvektoren. Vi vil derfor gerne have at $0< ax_{i1} + bx_{i2 } + c$. Hvis derimod $y_i=-1$, skal $0> ax_{i1} + bx_{i2 } + c$. Hvis patienten er klassificeret rigtigt, skal $y_i$ og $ax_{i1} + bx_{i2 } + c$ altså have samme fortegn. Det kan vi skrive kort som $$0<y_i(ax_{i1} + bx_{i2 } + c)$$ idet produktet $ab$ af to tal $a$ og $b$ er positivt hvis og kun hvis $a$ og $b$ har samme fortegn.
+
+Da et positivt tal er lig sin numeriske værdi, og $y_i$ er enten $1$ eller $-1$, har vi desuden $$0<y_i(ax_{i1} + bx_{i2 } + c)=|y_i(ax_{i1} + bx_{i2 } + c)| = |ax_{i1} + bx_{i2 } + c|.$$ Vi kan derfor skrive afstanden fra $(x_{i1},x_{i2})$ til linjen som $$d((x_{i1},x_{i2}),l) = \frac{|ax_{i1} + bx_{i2 } + c|}{\sqrt{a^2+b^2}} =\frac{y_i(ax_{i1} + bx_{i2 } + c)}{\sqrt{a^2+b^2}}$$ Hvis vores linje skal have en margin på $M>0$, skal denne afstand være mindst $M$, det vil sige $$d((x_{i1},x_{i2}),l) =\frac{y_i(ax_{i1} + bx_{i2 } + c)}{\sqrt{a^2+b^2}}\geq M>0.$$ {#eq-ul} Bemærk at denne ulighed både sikrer at punktet ligger på den rigtige side af linjen (da $y_i(ax_{i1} + bx_{i2 } + c)$ er nødt til at være positiv) og at afstanden til linjen er mindst $M$.
+
+For at finde en linje, der klassificerer alle vores punkter korrekt med en margin af bredde $M$, skal @eq-ul være opfyldt for alle punkter. For at finde linjen med maksimal margin, skal vi derfor løse følgende optimeringsproblem:
+
+-   Find $a,b,c\in \mathbb{R}$ og $M>0$, der maksimerer $M$ under betingelserne $$\frac{y_i(ax_{i1} + bx_{i2 } + c)}{\sqrt{a^2+b^2}}\geq  M\qquad \text{ for alle } i=1,\ldots,n$$ {#eq-ulig}
+
+Dette er et såkaldt betinget optimeringsproblem. Man kan tænke på det som en funktion $f(a,b,c,M)=M$, der skal maksimeres. Ulighederne i @eq-ulig lægger nogle begrænsninger på definitionsmængden for $f$. Der er altså tale om optimering af en funktion på en begrænset definitionsmængde. Her afhænger funktionen dog ikke bare af en enkelt variabel, som I kender det fra gymnasieundervisningen, men af hele fire variable $a,b,c,M$, hvilket gør definitionsmængden kompliceret. Denne type problemer må derfor normalt løses numerisk. Nedenfor viser vi, hvordan de gøres i Excel.
+
+## Løsning med Excel
+
+Som vi har formuleret vores optimeringsproblem ind til videre, har det mere end én løsning. Vi ville derfor få en fejlmeddelelse fra Excel, hvis vi prøvede at løse det direkte. For at se hvorfor, kan vi prøve at gange $a,b$ og $c$ med et $t>0$. Da bliver tælleren i @eq-ulig til $$y_i(tax_{i1} + tbx_{i2 } + tc) = ty_i(ax_{i1} + bx_{i2 } + c)$$ Nævneren bliver $$\sqrt{(ta)^2 + (tb)^2}=\sqrt{t^2a^2 + t^2b^2}=\sqrt{t^2(a^2+b^2)}= \sqrt{t^2}\sqrt{a^2+b^2}=t\sqrt{a^2+b^2}$$ Hele brøken bliver $$\frac{y_i(tax_{i1} + tbx_{i2 } + tc)}{\sqrt{(ta)^2+(tb)^2}}=\frac{ty_i(ax_{i1} + tbx_{i2 } + c)}{t\sqrt{a^2+b^2}}=\frac{y_i(ax_{i1} + tbx_{i2 } + c)}{\sqrt{a^2+b^2}}$$ Vores betingelser er derfor uændrede, når vi skalerer $a,b$ og $c$. Det betyder, at hvis $a,b,c$ er en løsning til vores problem, så er $ta,tb,tc$ det også. For at undgå problemet med flere løsninger, vil vi fastlægge skaleringen således at $a^2+b^2=1$. Så bliver nævneren i @eq-ulig $\sqrt{a^2+b^2}=\sqrt{1}=1$. Vi kan derfor omformulere vores optimeringsproblem til:
+
+-   Find $a,b,c\in \mathbb{R}$ og $M>0$, der maksimerer $M$ under betingelserne $${y_i(ax_{i1} + bx_{i2 } + c)}\geq  M$$ {#eq-c} og $$a^2+b^2=1$$ {#eq-ab}
+
+Dette problem kan løses i Excel. Videoen nedenfor viser, hvordan det gøres.
+
+VIDEO!
+
+## Problemer med algoritmen
+
+I praksis er linjens placering bestemt af de punkter, der ligger lige på kanten af linjens margin. Disse punkter kaldes *supportvektorer* --- deraf navnet *support vector machines*. Flytter man bare en lille smule på supportvektorerne, kan det ændre meget på linjens placering, se @fig-support, hvor supportvektorerne er markeret med en ring omkring. De øvrige punkter kan man godt flytte lidt, uden at det ændrer på linjen.
+
+```{tikz fig.width=4, fig.height=4}
+%| echo: false
+%| label: fig-support
+%| fig-cap: Linjens supportvektorer er markeret med ring om. Til højre er supportvektorerne flyttet en smule, hvilket ændrer meget på linjen.
+\begin{tikzpicture}
+    \draw[->] (-1,0) -- (2,0);
+        \draw[->] (0,-1) -- (0,2);
+        \draw (-1,2) -- (2,-1);
+        \draw[dashed] (-1.3,1.7) -- (1.7,-1.3); 
+        \draw[dashed] (-0.7,2.3) -- (2.3,-0.7);
+        \draw[fill,blue] (0.2,0.2) circle (0.05);
+        \draw[] (0.2,0.2) circle (0.1);
+        \draw[fill,blue] (0.2,-0.5) circle (0.05);
+        \draw[fill,blue] (-0.8,1) circle (0.05);
+        \draw[fill,blue] (- 0.2,-0.2) circle (0.05);
+        \draw[fill,red] (0.8,0.8) circle (0.05);
+        \draw[] (0.8,0.8) circle (0.1);
+        \draw[fill,red] (0.9,1.5) circle (0.05);
+        \draw[fill,red] (1.5,0.7) circle (0.05);
+        \draw[dashed] (0.2,0.2) -- (0.8,0.8);
+
+        \draw[->] (3,0) -- (6,0);
+        \draw[->] (4,-1) -- (4,2);
+        \draw (3.5,2) -- (5.5,-1);
+        \draw[dashed] (3.2,1.8) -- (5.2,-1.2); 
+        \draw[dashed] (3.8,2.2) -- (5.8,-0.8);
+        \draw[fill,blue] (4.2,0.3) circle (0.05);
+        \draw[] (4.2,0.3) circle (0.1);
+        \draw[fill,blue] (4.2,-0.5) circle (0.05);
+        \draw[fill,blue] (3.2,1) circle (0.05);
+        \draw[fill,blue] (3.8,-0.2) circle (0.05);
+        \draw[fill,red] (4.8,0.7) circle (0.05);
+        \draw[] (4.8,0.7) circle (0.1);
+        \draw[fill,red] (4.9,1.5) circle (0.05);
+        \draw[fill,red] (5.5,0.7) circle (0.05);
+        \draw[dashed] (4.2,0.3) -- (4.8,0.7);
+        %   \draw[orange] (-0.5,1.5 ) -- (-0.8,1.2); 
+        %   \node[orange] at (-0.4, 1.2) {$M$};
+    \end{tikzpicture}
+```
+
+Ind til videre har vi antaget, at det er muligt at adskille klasserne med en linje. Det er dog langt fra altid muligt at finde sådan en linje, se for eksemplet datasættet på @fig-slack. Hvordan man kan løse det problem, ser vi nærmere på i næste afsnit.
+
+```{tikz fig.width=4, fig.height=4}
+%| echo: false
+%| label: fig-slack
+%| fig-cap: To klasser, der ikke kan adskilles af en linje.
+    \begin{tikzpicture}
+        \draw[->] (-1,0) -- (2,0);
+        \draw[->] (0,-1) -- (0,2);
+        %\draw[] (-1,2) -- (2,-1);
+        
+        \draw[fill,blue] (0.2,0.2) circle (0.05);
+        \draw[fill, red] (-0.6, 0.3) circle (0.05);
+        \draw[fill,blue] (0.2,-0.5) circle (0.05);
+        \draw[fill,blue] (-0.8,1) circle (0.05);
+        \draw[fill,blue] (- 0.2,-0.2) circle (0.05);
+        \draw[fill,red] (0.8,0.8) circle (0.05);
+        \draw[fill,red] (0.9,1.5) circle (0.05);
+        \draw[fill,red] (1.5,0.7) circle (0.05);
+        \draw[fill,blue] (1.4,1.2) circle (0.05);
+    \end{tikzpicture}
+```
+
+Endelig er algoritmen baseret på afstande fra punkt til linje. Det betyder, at det ikke er lige meget, hvilke enheder variablene er målt i. Det kan du læse mere om her LINK TIL NOTE OM FEATURE-SKALERING.
+
+## Opgave 1
+
+-   Indtegn linjen $2x_1-x_2 +1=0$ i et koordinatsystem.
+
+-   Find en normalvektor til linjen ved at bruge @eq-normal og indtegn den i koordinatsystemet.
+
+-   På hvilken side af linjen er $2x_1-x_2 +1>0$ og på hvilken side er $2x_1-x_2 +1<0$?
+
+## Opgave 2
+
+Betragt følgende datasæt med seks patienter.
+
+| Patient | $x_1$ | $x_2$ | $y$  |
+|:-------:|:-----:|:-----:|:----:|
+|    1    |  $0$  |  $3$  | $-1$ |
+|    2    |  $0$  |  $2$  | $1$  |
+|    3    |  $1$  |  $1$  | $1$  |
+|    4    |  $3$  | $0.5$ | $1$  |
+|    5    |  $2$  |  $3$  | $-1$ |
+|    6    |  $3$  | $1.5$ | $-1$ |
+
+-   Indtegn punkterne $(x_{i1},x_{i2})$ for $i=1,\ldots,6$ i et koordinatsystem, og farv dem alt efter, hvilken klasse de tilhører.
+
+-   Find ved at kigge på din tegning den linje, der adskiller de to klasser med størst margin. Bestem en ligning for linjen på formen $ax_1+bx_2 +c=0$.
+
+-   Indtegn linjen i dit koordinatsystem.
+
+-   På hvilken side er $ax_1+bx_2+c>0$ og på hvilken side er $ax_1+bx_2+c<0$?
+
+-   Hvilke punkter er supportvektorer?
+
+-   En ny patient har fået målt $(x_1,x_2)=(1,3)$. Kan lægemidlet forventes at have en effekt på patienten?
+
+## Opgave 3
+
+Betragt datasættet fra Opgave 2.
+
+-   Find den optimale skillelinje ved hjælp af Excel og opskriv linjens ligning.
+
+-   Indtegn linjen fra Excel i samme koordinatsystem som linjen fra Opgave 2. Havde du gættet rigtigt?
+
+-   Sammenlign linjens ligning med resultatet fra Opgave 2 (Det er en god ide at gange med $\sqrt{5}$ på begge sider i ligningen fra Excel).
+
+## Opgave 4
+
+Prøv at finde den optimale linje for følgende datasæt fra @fig-slack ved hjælp af Excel. Hvad tror du der går galt?
+
+| Observation | $x_1$  | $x_2$  | $y$  |
+|:-----------:|:------:|:------:|:----:|
+|      1      | $-0.6$ | $0.3$  | $1$  |
+|      2      | $0.2$  | $-0.5$ | $-1$ |
+|      3      | $-0.8$ |  $1$   | $-1$ |
+|      4      | $-0.2$ | $-0.2$ | $-1$ |
+|      5      | $0.8$  | $0.8$  | $1$  |
+|      6      | $0.9$  | $1.5$  | $1$  |
+|      7      | $1.5$  | $0.7$  | $1$  |
+|      8      | $1.4$  | $1.2$  | $-1$ |
+|      9      | $0.2$  | $0.2$  | $-1$ |
+
+# Skillelinje med blød margin
+
+På @fig-slack så vi et eksempel på et datasæt, hvor klasserne ikke kan adskilles af en linje. Vil man stadig gerne have en skillelinje, der adskiller klasserne bedst muligt, kan man tillade enkelte punkter at ligge lidt inden for margin --- vi laver en *blød margin*. Det gør man ved for hvert punkt $i$ at indføre en *slækkevariabel* $\varepsilon_i\geq 0$, der måler, hvor meget vi slækker på kravet om, at punkterne skal ligge uden for en margin med bredde $M$. Vi erstatter så kravet $$
+\frac{y_i(ax_{i1} + bx_{i2 } + c)}{\sqrt{a^2+b^2}} \geq M 
+$$ {#eq-M} med $$\frac{y_i(ax_{i1} + bx_{i2 } + c)}{\sqrt{a^2 + b^2}} \geq M(1-\varepsilon_i) $$ Vi har følgende fortolkning af slækkevariablene:
+
+-   Hvis $\varepsilon_i=0$, genfinder vi kravet @eq-M om at punktet ligger på den rigtige side af linjen med afstand mindst $M$ til linjen.
+
+-   Hvis $0<\varepsilon_i <1$, så er $0<M(1-\varepsilon_i)$. Det betyder, at vi stadig kræver, at punktet ligger på den rigtige side af linjen, men afstanden til linjen er nu $M(1-\varepsilon_i)<M$, så punktet ligger nu inden for margin.
+
+-   Hvis $\varepsilon_i>1$, så er $M(1-\varepsilon_i)<0$. Her er $y_i(ax_{i1} + bx_{i2 } + c)<0$ svarende til, at punktet ligger på den forkerte side af linjen. Afstanden til linjen er $|M(1-\varepsilon_i)|$.
+
+Fortolkningen er illustreret på @fig-fortolk. Supportvektorerne er nu alle punkter, der ligger inden for eller på kanten af margin.
+
+```{tikz fig.width=4, fig.height=4}
+%| echo: false
+%| label: fig-fortolk
+    \begin{tikzpicture}[scale=2]
+        \draw[->] (-1,0) -- (2,0);
+        \draw[->] (0,-1) -- (0,2);
+        \draw (-1,2) -- (2,-1);
+        \draw[dashed] (-1.3,1.7) -- (1.7,-1.3); 
+        \draw[dashed] (-0.7,2.3) -- (2.3,-0.7);
+        \draw[fill,blue] (0.2,0.2) circle (0.05);
+      \draw[] (0.2,0.2) circle (0.1);
+        \draw[fill,blue] (0.2,-0.5) circle (0.05);
+        \draw[fill,blue] (-0.8,1) circle (0.05);
+        \draw[fill,blue] (- 0.2,-0.2) circle (0.05);
+        \draw[fill,red] (0.8,0.8) circle (0.05);
+       \draw[] (0.8,0.8) circle (0.1);
+        \draw[fill,red] (0.9,1.5) circle (0.05);
+       % \draw[] (0.9,1.5) circle (0.1);
+        \node at (1.2,1.7) {$\varepsilon_i=0$};
+        \draw[fill,red] (1.5,0.7) circle (0.05);
+    %   \draw[dashed] (0.2,0.2) -- (0.8,0.8);
+        \draw[fill,red] (-0.5,1.9) circle (0.05);
+        \node at (-0.55,2.1) {$0<\varepsilon_i<1$};
+        \draw[] (-0.5,1.9) circle (0.1);
+        \draw[fill,red] (1.2,-0.5) circle (0.05);
+        \draw[] (1.2,-0.5) circle (0.1);
+        \node at (1.2,-0.75) {$\varepsilon_i>1$};
+        \draw[dashed] (-0.7,1.1) -- (-0.4,1.4);
+        \node at (-0.4,1.1) {$M$};
+    \end{tikzpicture}
+```
+
+For at styre, hvor meget vi tillader punktene at overskride linjens margin, tilføjer vi en begrænsning på summen af slækkevariablene $$\varepsilon_1+\dotsm + \varepsilon_n \leq K$$ Her er $K$ en konstant, som vi vælger alt efter, hvor blød vi ønsker, at marginen skal være. Jo større $K$ er, desto blødere margin. Hvis $K$ vælges for lille, er det ikke sikkert, at det er muligt at finde en linje, der opfylder kravet. Hvis $K$ vælges for stor, kan punkterne overskride marginen meget. I praksis er det svært at vide, hvordan $K$ vælges bedst. Normalt vil man prøve sig frem med forskellige værdier og så bruge krydsvalidering (LINK) til at vælge den bedste.
+
+For at finde den optimale linje med blød margin, skal vi altså løse følgende optimeringsproblem med rigtig mange ubekendte variable.
+
+-   Find $a,b,c\in \mathbb{R}$, $M>0$ og $\varepsilon_1,\ldots,\varepsilon_n\geq 0$, der maksimerer $M$ under betingelserne $$\frac{y_i(ax_{i1} + bx_{i2 } + c)}{\sqrt{a^2+b^2}}\geq  M(1-\varepsilon_i)\qquad \text{ for alle } i=1,\ldots,n$$ og $$ \varepsilon_1+\dotsm + \varepsilon_n \leq K $$
+
+Beregningerne kan i princippet laves som i tilfældet med hård margin, men der bliver rigtig mange ukendte variable, både $a,b,c,M$ og alle $\varepsilon_1,\ldots,\varepsilon_n$. Vi vil derfor ikke selv gøre det i Excel.
+
+## Opgave 5
+
+Betragt følgende datasæt.
+
+| Observation | $x_1$  | $x_2$  | $y$  |
+|:-----------:|:------:|:------:|:----:|
+|      1      |  $1$   | $2.5$  | $1$  |
+|      2      |  $-1$  | $0.3$  | $-1$ |
+|      3      |  $3$   |  $0$   | $-1$ |
+|      4      | $1.5$  | $-0.4$ | $-1$ |
+|      5      | $1.8$  | $0.7$  | $1$  |
+|      6      | $-0.5$ |  $2$   | $1$  |
+|      7      | $2.5$  |  $3$   | $1$  |
+
+Lad os sige, at vi vil lave en skillelinje mellem klasserne med ligningen $x_2-1=0$ og en blød margin med $M=1$.
+
+-   Tegn punkterne, skillelinjen og dens margin ind i et koordinatsystem.
+
+-   Hvilke punkter er supportvektorer?
+
+-   Find for hvert punkt $i$ afstanden fra punktet til linjen.
+
+-   Beregn værdien af $\varepsilon_i$ for hvert punkt.
+
+# Ikke-lineære support vector machines
+
+Det er ikke altid, at en ret linje er det bedste til at adskille to klasser. På @fig-kurve er vist et eksempel, hvor det ville give mere mening at adskille klasserne med en blød kurve.
+
+```{tikz fig.width=4, fig.height=4}
+%| echo: false
+%| label: fig-kurve
+\begin{tikzpicture}
+    \draw[->] (-2,0) -- (2,0);
+    \node at (2,-0.35) {$x_1$};
+    \draw[->] (0,-1) -- (0,2);
+    \node at (-0.35,1.9) {$x_2$};
+    %\draw[] (-1,2) -- (2,-1);
+    
+    \draw[fill,blue] (-1.5,0.5) circle (0.05);
+    \draw[fill,blue] (-1,1.25) circle (0.05);
+    \draw[fill,blue] (1.5,0) circle (0.05);
+    \draw[fill,blue] (1,-0.75) circle (0.05);
+    \draw[fill,blue] (2,1.25) circle (0.05);
+    \draw[fill,blue] (0,-0.75) circle (0.05);
+\draw[fill,blue] (-1.4,1.5) circle (0.05);
+    \draw[fill,blue] (-0.8,0.2) circle (0.05);
+    \draw[fill,red] (0.5,2) circle (0.05);
+    \draw[fill,red] (-0.5,1.5) circle (0.05);
+    \draw[fill,red] (1.5,1.5) circle (0.05);
+        \draw[fill,red] (0.1,0.7) circle (0.05);
+            \draw[fill,red] (0.3,1.7) circle (0.05);
+    \draw[fill,red] (0.5,0.5) circle (0.05);
+\draw[fill,red] (0.9,1.2) circle (0.05);
+
+
+
+\end{tikzpicture} 
+```
+
+Hvis man ønsker en ikke-lineær adskillelse af klasserne, kan man indlejre punkterne i et højeredimensionalt rum og håbe på, at de bliver nemmer at adskille der. Betragt for eksempel funktionen af to variable $f(x_1,x_2)=x_1^2$. Vi kan bruge den til at indlejre det todimensionale punkt $(x_1,x_2)$ i et tredimensionalt koordinatsystem som det tilsvarende punkt på grafen for $f$, altså punktet $(x_1,x_2,f(x_1,x_2))=(x_1,x_2,x_1^2)$. Det er vist på @fig-flade.
+
+```{r fig.width=4, fig.height=4}
+#| echo: false
+#| label: fig-flade
+library(rgl)
+x1<-c(-1.5,-1,1.5,1,2,0,-1.4,-0.8,0.5,-0.5,1.5,0.1,0.3,0.5,0.9)
+x2<-c(0.5,1.25,0,-0.75,1.25,-0.75,1.5,0.2,2,1.5,1.5,0.7,1.7,0.5,1.2)
+y<-c(rep(4,8),rep(2,7))
+f<-function(x,y){x^2}
+
+plot3d( f,
+  col = "orange", 
+  type = 's', 
+  radius = .1,
+  xlim=c(-2,2), ylim = c(-1,2),
+  xlab=expression(X[1]), ylab=expression(X[2]), zlab=expression(X[1]^2),aspect=c(1,1,1))
+
+plot3d( 
+  x=x1, y=x2, z=x1^2, 
+  col = y, 
+  type = 's', 
+  radius = .1,add=T)
+```
+
+Vi kan nu prøve at finde en plan i $\mathbb{R}^3$, der adskiller punkterne. I vores eksempel kunne punkterne ikke adskilles af en linje i to dimensioner, men som det ses på @fig-plan, er det muligt at finde en plan, der adskiller punkterne helt i tre dimensioner.
+
+```{r fig.width=4, fig.height=4}
+#| echo: false
+#| label: fig-plan
+g<-function(x,y){x+y}
+
+plot3d( g,
+        col = "orange", 
+        type = 's', 
+        radius = .1,
+        xlim=c(-2,2), ylim = c(-1,2),
+        xlab=expression(X[1]), ylab=expression(X[2]), zlab=expression(X[1]^2),aspect=c(1,1,1))
+
+plot3d( 
+  x=x1, y=x2, z=x1^2, 
+  col = y, 
+  type = 's', 
+  radius = .1,add=T)
+```
+
+Husk på, at en plan i $\mathbb{R}^3$ består af de punkter $(x_1,x_2,x_3)\in \mathbb{R}^3$, der opfylder ligningen $$ax_1+bx_2+cx_3 +d=0$$ Som i to dimensioner kan man vise, at en plan inddeler $\mathbb{R}^3$ i to halvrum, et hvor $ax_1+bx_2+cx_3 +d>0$ og et hvor $ax_1+bx_2+cx_3 +d<0$. Planens normalvektor $$\overrightarrow{n}=\begin{pmatrix} a\\b\\c \end{pmatrix}$$ peger i den retning hvor $ax_1+bx_2+cx_3 +d>0$. Desuden kan man vise, at afstanden fra et punkt $P=(z_1,z_2,z_3)$ til planen er givet ved $$\frac{|az_1+bz_2+cz_3 +d|}{\sqrt{a^2+b^2+c^2}}$$ Man kan derfor regne helt som i det todimensionale tilfælde og finde den plan, der adskiller klasserne med størst mulig afstand til det nærmeste punkt. Hvis man ønsker en hård margin, skal man løse optimeringsproblemet:
+
+-   Find $a,b,c,d\in \mathbb{R}$ og $M>0$, der maksimerer $M$ under betingelserne $${y_i(ax_{i1} + bx_{i2 } +cx_{i1}^2 + c)}\geq  M\qquad \text{ for alle } i=1,\ldots,n$$ {#eq-d} og $$a^2+b^2+c^2=1$$ {#eq-abc}
+
+Da vores punkter er på formen $(x_1,x_2,x_3)=(x_1,x_2,x_1^2)$, klassificerer vi dem efter fortegnet på $ax_1 + bx_2 + cx_1^2 +d$. Skellet mellem klasserne bliver de punkter, hvor $ax_1 + bx_2 + cx_1^2 +d=0$. Hvis $b\neq 0$, kan vi isolere $x_2$ og få $$x_2 = -\frac{c}{b}x_1^2 -\frac{a}{b}x_1 - \frac{d}{b}$$ Vi genkender dette som ligningen for en parabel. Hvis $ax_1 + bx_2 + cx_1^2 +d>0$ får vi tilsvarende at $$x_2 > -\frac{c}{b}x_1^2 -\frac{a}{b}x_1 - \frac{d}{b}$$ Det svarer til punkter, der ligger over parablen. På samme måde svarer ligningen $ax_1 + bx_2 + cx_1^2 +d<0$ til punkter, der ligger under parablen.
+
+Hvis vi i dataeksemplet fra @fig-kurve indlejrer punkterne i $\mathbb{R}^3$ og adskiller dem med en plan, som vist på @fig-flade og @fig-plan, så svarer det altså til, at vi adskiller de oprindelige punkter i $\mathbb{R}^2$ med en parabel som vist på @fig-parabel.
+
+```{tikz fig.width=4, fig.height=4}
+%| echo: false
+%| label: fig-parabel
+\begin{tikzpicture}
+
+
+\draw[->] (3,0) -- (7,0);
+\node at (7,-0.35) {$X_1$};
+\draw[->] (5,-1) -- (5,2);
+\node at (4.65,1.9) {$X_2$};
+%\draw[] (-1,2) -- (2,-1);
+
+\draw[fill,blue] (3.5,0.5) circle (0.05);
+\draw[fill,blue] (4,1.25) circle (0.05);
+\draw[fill,blue] (6.5,0) circle (0.05);
+\draw[fill,blue] (6,-0.75) circle (0.05);
+\draw[fill,blue] (7,1.25) circle (0.05);
+\draw[fill,blue] (5,-0.75) circle (0.05);
+\draw[fill,blue] (3.6,1.5) circle (0.05);
+\draw[fill,blue] (4.2,0.2) circle (0.05);
+\draw[fill,red] (5.5,2) circle (0.05);
+\draw[fill,red] (4.5,1.5) circle (0.05);
+\draw[fill,red] (6.5,1.5) circle (0.05);
+\draw[fill,red] (5.1,0.7) circle (0.05);
+\draw[fill,red] (5.3,1.7) circle (0.05);
+\draw[fill,red] (5.5,0.5) circle (0.05);
+\draw[fill,red] (5.9,1.2) circle (0.05);
+\draw[color=orange,samples=100,domain=4:7] 
+plot(\x,{(\x-5)^2-\x+5});
+
+\end{tikzpicture} 
+```
+
+Der er mange måder at vælge funktionen $f$, der indlejrer punkterne i $\mathbb{R}^3$. Det er muligt at opnå kurver der bugter sig meget efter datapunkterne. Det indebærer desværre en risiko for *overfitting*, hvor algoritmen kommer til at tilpasse sig for godt til lige præcis de datapunkter, der var med i vores træningsdatasæt, men ikke nødvendigvis egner sig til at forudsige nyt data. Derfor bør man bruge *krydsvalidering* til at hjælpe med at vælge en god model. Det kan du læse mere om her LINK.
+
+OPGAVERNE HER ER NOK LIDT MERE UDFORDRENDE:
+
+## Opgave 6
+
+Antag at vi indlejrer punkterne $(x_1,x_2)$ i $\mathbb{R}^3$ som punkterne $(x_1,x_2,x_1^2 + x_2^2)$. Vi adskiller punkterne i $\mathbb{R}^3$ med den vandrette plan $x_3-4=0$.
+
+-   Redegør for, at det svarer til at adskille de oprindelige punkter i $\mathbb{R}^2$ med en cirkel (Hint: indsæt punktet $(x_1,x_2,x_1^2 + x_2^2)$ i planens ligning).
+
+-   Hvad er centrum og radius for cirklen?
+
+-   Hvilken af klasserne $1$ og $-1$ ligger inden for cirklen?
+
+## Opgave 7
+
+Nedenstående datasæt blev brugt til at lave @fig-kurve.
+
+| Observation | $x_1$  |  $x_2$  | $y$  |
+|:-----------:|:------:|:-------:|:----:|
+|      1      | $-1.5$ |  $0.5$  | $-1$ |
+|      2      |  $-1$  | $1.25$  | $-1$ |
+|      3      | $1.5$  |   $0$   | $-1$ |
+|      4      |  $1$   | $-0.75$ | $-1$ |
+|      5      |  $2$   | $1.25$  | $-1$ |
+|      6      |  $0$   | $-0.75$ | $-1$ |
+|      7      | $-1.4$ |  $1.5$  | $-1$ |
+|      8      | $-0.8$ |  $0.2$  | $-1$ |
+|      9      | $0.5$  |   $2$   | $1$  |
+|     10      | $-0.5$ |  $1.5$  | $1$  |
+|     11      | $1.5$  |  $1.5$  | $1$  |
+|     12      | $0.1$  |  $0.7$  | $1$  |
+|     13      | $0.3$  |  $1.7$  | $1$  |
+|     14      | $0.5$  |  $0.5$  | $1$  |
+|     15      | $0.9$  |  $1.2$  | $1$  |
+
+-   Løs optimeringsproblemet for at finde den bedste plan med hård margin i Excel. Det kan gøres lige som i videoen ved at tilføje en ekstra søjle indeholdende værdierne af $x_3=x_1^2$ og tilføje en ekstra celle for den ukendte variabel $d$. Formlerne @eq-c og @eq-ab skal så erstattes af @eq-d og @eq-abc.
+
+-   Brug resultatet til at finde en ligning for parablen i @fig-parabel
