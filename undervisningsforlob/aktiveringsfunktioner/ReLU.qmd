@@ -1,4 +1,4 @@
-Aktiveringsfunktionen **ReLU** som står for **Reflected Linear Unit** har forskrift
+Aktiveringsfunktionen **ReLU** som står for **Rectified Linear Unit** har forskrift
 
 $$
 f(x) = 
@@ -13,15 +13,16 @@ og grafen for ReLU-funktionen ses i @fig-ReLU.
 
 Værdimængden for ReLU-funktionen er $[0, \infty)$.
 
-Det er ret tydeligt, at ReLU-funktionen ikke er differentiabel i $0$. Men hvis vi definerer, at 
-$f'(0)$ skal være $0$ så ses det nemt, at
+Det er ret tydeligt, at ReLU-funktionen ikke er differentiabel i $0$, fordi grafen har et knæk her. Til gengæld er
 
 $$
 f'(x) = 
 \begin{cases}
 1 & \textrm{hvis } x > 0 \\ 
-0 & \textrm{hvis } x \leq 0 \\ 
-\end{cases}.
+0 & \textrm{hvis } x < 0 \\ 
+\end{cases}
 $$
+
+Det er selvfølgelig uheldigt, at ReLU-funktionen ikke er differentiabel i $0$, når man skal implementere et kunstigt neuralt netværk. Heldigvis vil det utrolig sjældent ske, at inputværdien til ReLU er præcis $0$, og hvis det alligevel sker, så vil vi vælge at sætte tangenthældningen i $0$ til at være $0$.
 
 ReLU-funktionen adskiller sig fra de andre aktiveringsfunktioner ved, at værdimængden er ubegrænset. Hvis man ønsker at bruge aktiveringsfunktionen til at modellere en sandsynlighed, som beskrevet tidligere, så dur det selvfølgelig ikke. Men i praksis viser ReLU-funktionen sig at være utrolig anvendelig som aktiveringsfunktion i de skjulte lag i kunstige neurale netværk. For det første kan nogle af de andre aktiveringsfunktioner resultere i det, vi i afsnittet om [valg af tabsfunktion](../noter/neurale_net/neurale_net.qmd#valg-af-tabsfunktion) i noten om kunstige neurale netværk, kalder for *slow learning*. Det betyder kort sagt, at det går for langsomt med at finde minimum for tabsfunktionen. Dét problem har ReLU-funktionen ikke. For det andet er det meget hurtigt og nemt at udregne både ReLU-funktionen selv og også dens afledede. Det er for eksempel til sammenligning beregningsmæssigt tungere at udregne sigmoid-funktionen og dennes afledede. Hvis man har et netværk med millioner af neuroner, så er denne beregningsmæssige forskel ikke uvæsentlig.
