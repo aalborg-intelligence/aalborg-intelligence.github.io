@@ -190,7 +190,7 @@ window.Quarto = {
 
 
 
-<p>Aktiveringsfunktionen <strong>ReLU</strong> som står for <strong>Reflected Linear Unit</strong> har forskrift</p>
+<p>Aktiveringsfunktionen <strong>ReLU</strong> som står for <strong>Rectified Linear Unit</strong> har forskrift</p>
 <p><span class="math display">\[
 f(x) =
 \begin{cases}
@@ -209,14 +209,15 @@ Figur&nbsp;1: Grafen for ReLU-funktionen.
 </figure>
 </div>
 <p>Værdimængden for ReLU-funktionen er <span class="math inline">\([0, \infty)\)</span>.</p>
-<p>Det er ret tydeligt, at ReLU-funktionen ikke er differentiabel i <span class="math inline">\(0\)</span>. Men hvis vi definerer, at <span class="math inline">\(f'(0)\)</span> skal være <span class="math inline">\(0\)</span> så ses det nemt, at</p>
+<p>Det er ret tydeligt, at ReLU-funktionen ikke er differentiabel i <span class="math inline">\(0\)</span>, fordi grafen har et knæk her. Til gengæld er</p>
 <p><span class="math display">\[
 f'(x) =
 \begin{cases}
 1 &amp; \textrm{hvis } x &gt; 0 \\
-0 &amp; \textrm{hvis } x \leq 0 \\
-\end{cases}.
+0 &amp; \textrm{hvis } x &lt; 0 \\
+\end{cases}
 \]</span></p>
+<p>Det er selvfølgelig uheldigt, at ReLU-funktionen ikke er differentiabel i <span class="math inline">\(0\)</span>, når man skal implementere et kunstigt neuralt netværk. Heldigvis vil det utrolig sjældent ske, at inputværdien til ReLU er præcis <span class="math inline">\(0\)</span>, og hvis det alligevel sker, så vil vi vælge at sætte tangenthældningen i <span class="math inline">\(0\)</span> til at være <span class="math inline">\(0\)</span>.</p>
 <p>ReLU-funktionen adskiller sig fra de andre aktiveringsfunktioner ved, at værdimængden er ubegrænset. Hvis man ønsker at bruge aktiveringsfunktionen til at modellere en sandsynlighed, som beskrevet tidligere, så dur det selvfølgelig ikke. Men i praksis viser ReLU-funktionen sig at være utrolig anvendelig som aktiveringsfunktion i de skjulte lag i kunstige neurale netværk. For det første kan nogle af de andre aktiveringsfunktioner resultere i det, vi i afsnittet om <a href="../noter/neurale_net/neurale_net.qmd#valg-af-tabsfunktion">valg af tabsfunktion</a> i noten om kunstige neurale netværk, kalder for <em>slow learning</em>. Det betyder kort sagt, at det går for langsomt med at finde minimum for tabsfunktionen. Dét problem har ReLU-funktionen ikke. For det andet er det meget hurtigt og nemt at udregne både ReLU-funktionen selv og også dens afledede. Det er for eksempel til sammenligning beregningsmæssigt tungere at udregne sigmoid-funktionen og dennes afledede. Hvis man har et netværk med millioner af neuroner, så er denne beregningsmæssige forskel ikke uvæsentlig.</p>
 
 

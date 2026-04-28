@@ -384,15 +384,15 @@ Sådan gør du i GeoGebra
 </div>
 </div>
 </div>
-<p>Du har lige opdaget, at ReLU-funktionen ikke er differentiabel i <span class="math inline">\(x=0\)</span>. Når man skal træne kunstige neurale netværk, har man dog brug for at kunne regne med den afledede funktion i alle værdier. Derfor vælger vi at definere os ud af problemet med, at ReLU-funktionen ikke er differentiabel i <span class="math inline">\(0\)</span>, og vi beslutter simpelthen at sætte tangenthældningen i <span class="math inline">\(0\)</span> til at være <span class="math inline">\(0\)</span>. Det vil sige, at vi vælger, at <span class="math inline">\(\textrm{ReLU}'(0)=0\)</span>. Samlet set får vi derfor:</p>
+<p>Vi har lige set, at</p>
 <p><span id="eq-diffReLU"><span class="math display">\[
 \textrm{ReLU}'(x) =
 \begin{cases}
-0 &amp; \textrm{hvis } x \leq 0 \\
+0 &amp; \textrm{hvis } x &lt; 0 \\
 1 &amp; \textrm{hvis } x &gt; 0
 \end{cases}
 \tag{3}\]</span></span></p>
-<p>Bemærk for øvrigt, at den afledede ReLU-funktion ikke er kontinuert i <span class="math inline">\(0\)</span>. Det møder du ikke så tit!</p>
+<p>Og vi har opdaget, at ReLU-funktionen ikke er differentiabel i <span class="math inline">\(x=0\)</span>, fordi grafen har et knæk her. Det er selvfølgelig uheldigt, når man skal implementere et kunstigt neuralt netværk. Heldigvis vil det utrolig sjældent ske, at inputværdien til ReLU er præcis <span class="math inline">\(0\)</span>, og hvis det alligevel sker, så vil vi vælge at sætte tangenthældningen i <span class="math inline">\(0\)</span> til at være <span class="math inline">\(0\)</span>.</p>
 <p>Vi prøver nu at sætte ReLU-funktioner sammen med lineære funktioner. Hvad det har at gøre med kunstige neurale netværk kommer vi tilbage til i det næste afsnit.</p>
 <p>For at holde tingene simple ser vi på det tilfælde, hvor vi har én inputvariabel, som vi bare vil kalde for <span class="math inline">\(x\)</span>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
@@ -668,7 +668,7 @@ f(x)=w_0 + w_1 \cdot \textrm{ReLU}(v_0 + x) + w_2 \cdot \textrm{ReLU}(u_0 + x)
 <div id="fig-areal_mellem" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-areal_mellem-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="ReLU/areal_mellem.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%">
+<img src="ReLu/areal_mellem.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%">
 </div>
 <figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-areal_mellem-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figur&nbsp;3: Grafen for <span class="math inline">\(f\)</span> og <span class="math inline">\(g\)</span> fra opgave 8.
@@ -783,6 +783,7 @@ A_1 + A_2 = \int_{-4}^{0} |f(x)-g(x)| \, dx
 </div>
 </div>
 </div>
+<p>Faktisk kan man vise, at man kan approksimere enhver kontinuert funktion defineret på et begrænset interval med et neuralt netværk med ét skjult lag inden for en vilkårlig lille fejlmargin.</p>
 </section>
 </section>
 <section id="delvis-facitliste" class="level2">
