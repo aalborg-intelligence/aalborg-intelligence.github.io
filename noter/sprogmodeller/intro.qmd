@@ -1,0 +1,118 @@
+---
+title: "Introduktion til sprogmodeller"
+image: "images/sprog.jpg"
+description: "Sprogmodeller skal kunne håndtere sprog. I denne note giver vi en kort introduktion til, hvordan det fungerer på et helt overordnet plan."
+aliases: 
+  - "/materialer/sprogmodeller/intro.html"
+from: markdown+emoji
+---
+
+Mange former for kunstig intelligens skal kunne håndtere sprog. Det
+gælder selvfølgelig ChatGPT, franske Le Chat og andre chat-bots og
+generative AI-programmer. Men I kender det også fra for eksempel
+oversættelsesprogrammer, tekstbehandlingsprogrammer, der retter
+grammatik, mobiltelefonens forslag til næste ord i en besked og
+mailprogrammer, der klassificerer emails som spam ud fra indholdet.
+
+Sprog er komplekst. Der er flere hundrede tusinde ord i det danske
+sprog, afhængigt af hvordan man tæller. Disse ord kan sættes sammen til
+sætninger på et utal af måder. Men et sprog har samtidig struktur. Det
+har en *syntaks*, som er regler for, hvilke ord man må bruge, og hvordan
+sætninger er sat sammen. Noget vanskeligere så har det også en
+*semantik*, der handler om betydningen af sætninger. Mens syntaksen
+langt hen ad vejen følger regler, som man ville kunne programmere en
+computer til at kende, så er semantikken meget mindre regelret. Hvordan
+kan en computer for eksempel vide, om \"en god kost\" refererer til mad eller en
+fejekost? Vi mennesker afgør det normalt ud fra sammenhængen. Vi skal
+se, at man kan lære en computer at gøre det samme ved hjælp af en
+*sprogmodel*. Eftersom denne model skal indgå i et computerprogram, er
+der naturligvis tale om en matematisk model.
+
+## Prædiktion af næste ord
+
+
+Fælles for mange sprogmodeller er, at de virker ved at gætte
+(*prædiktere*) det næste ord i en sætning ud fra de foregående.
+Generativ AI virker for eksempel ved at bygge sætninger op et ord ad gangen, hvor
+hvert ord vælges på baggrund af de foregående ord. Hvis en sætning
+starter med
+
+::: {.llm_saetninger}
+\"Jeg går en tur i ---\"
+:::
+
+så skal sprogmodellen
+kunne komme med et gæt på det næste ord. Det kunne være ordet
+\"skoven\".
+
+Hvordan kommer sprogmodellen så med et godt gæt? Jo, først skal modellen
+*trænes* på store mængder af tilgængelig tekst, et *tekstkorpus*. På
+baggrund af dette tekstkorpus skal sprogmodellen så lære, hvilket ord,
+der sandsynligvis kommer efter \"Jeg går en tur i\". Det gør den konkret
+ved at bygge en funktion, der som input tager starten på en sætning og
+som output giver næste ord. Mere præcist giver funktionen for hvert ord
+i dens ordforråd sandsynligheden for, at netop dette ord er det næste.
+Sprogmodellen gætter så på et af de mest sandsynlige ord som det næste. Et eksempel kan ses i @tbl-pred. Her kan man se, at \"skoven\" og \"byen\" er gode bud på det næste ord i sætningen \"Jeg går en tur i\".
+
+
+::: {#tbl-pred .bordered}
+| Næste ord | Sandsynlighed |
+|:---:|:---:|
+| skoven | $0.385$ |
+| byen | $0.326$ |
+| $\vdots$ | $\vdots$ |
+| guitar | $0.001$ |
+Sandsynligheden for det næste ord i sætningen \"Jeg går en tur i\".
+:::
+
+
+I noten om [Simple sprogmodeller](simple.qmd) ser vi på, hvordan man lidt
+naivt kunne gøre det ved at tælle, hvor hyppigt forskellige
+ordkombinationer forekommer, og hvorfor det ikke er en god idé.
+
+## Store sprogmodeller
+
+I stedet må man have fat i en mere avanceret sprogmodel, en såkaldt
+*stor sprogmodel* (large language model, LLM). Enhver sprogmodel bygger
+på viden og hypoteser om, hvordan sprog fungerer. En helt grundlæggende
+hypotese er, at betydningen af ord kan forstås ved at se på, hvilke
+sammenhænge, også kaldet *kontekst*, et ord optræder i. Det er en idé,
+der blandt andet skyldes den danske sprogforsker [Louis
+Hjelmslev](https://lex.dk/Louis_Hjelmslev) (1899-1965). Vi vil gerne
+have en model, som har indbygget information om, at
+
+-   ordet \"mus\" kan være et lille pattedyr eller en computermus alt
+    efter sammenhængen,
+
+-   ordene \"søvn\", \"sove\", \"seng\", \"senge\" er relaterede, fordi
+    de ofte indgår i de samme sammenhænge,
+
+-   \"op\" og \"ned\" er relaterede ord, selvom de er hinandens
+    modsætninger.
+
+I noten [Word2Vec](word2vec.qmd) ser vi på en matematisk model for sproget, hvor alle ord bliver repræsenteret som vektorer, der inkorporerer netop denne slags
+information. Fordelen ved disse vektorer er, at en computer kan regne
+med dem, samtidig med at de indeholder information om betydning af
+ordene.
+
+For at kunne bruge disse vektorer til at gætte næste ord, skal der
+stadig bygges en funktion, der tager vektorerne som input og giver
+sandsynligheder for næste ord som output. Da det kræver en meget
+kompliceret funktion, benyttes der, som i så mange andre avancerede
+AI-algoritmer, et *neuralt netværk*. Det er emnet i noten om
+[Tekstgenerering med neurale netværk](tekstgenerering.qmd). 
+
+Den form for neuralt netværk, som benyttes i Chat-GPT og andre generative AI-programmer kaldes **transformeren**. Transformeren kombinerer idéerne fra [Word2Vec](word2vec.qmd) og neurale netværk. Du kan læse om de væsentligste principper bag [transformeren i denne note](transformeren.qmd).
+
+## VIDEO: Introduktion 
+
+I videoen her giver vi en introduktion til store sprogmodeller.
+
+{{< video https://www.youtube.com/embed/zbtxV5DNqV4 >}}
+
+## Relaterede forløb
+
+* [Sprogmodeller](../../undervisningsforlob/sprogmodeller_langt_forlob/sprogmodeller_forside.qmd){target="_blank"} (langt forløb).
+
+
+

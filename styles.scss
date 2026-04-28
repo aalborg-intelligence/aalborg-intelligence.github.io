@@ -11,6 +11,10 @@ $color-lysblaa: #8086F2; // rgb: 128/134/242
 $color-pink: #F288B9; // rgb: 242/136/185
 
 
+
+
+
+
 // *-- Navigation bar colors --*/
 $navbar-bg: $color-lysblaa;
 $navbar-fg: $color-morkblaa;
@@ -48,6 +52,35 @@ $callout-color-caution: $color-lysblaa;
 $callout-color-important: $color-gul;
 
  
+// Styling af knapper til pagination;
+
+
+
+/* --- Bootstrap farve- og pagination-variabler --- */
+/* Primære farver */
+$primary: $color-lysblaa;
+
+/* Pagination-variabler (udpluk af de mest nyttige) */
+$pagination-color:                 $color-lysblaa;
+$pagination-bg:                    #ffffff;
+$pagination-border-color:          #d0d7de;
+
+$pagination-hover-color:           $color-lysblaa;
+$pagination-hover-bg:              #f3f2fe; // lysblå blandet med hvis 90/10 
+$pagination-hover-border-color:    #b9c6d8;
+
+$pagination-active-color:          #ffffff;
+$pagination-active-bg:             $color-lysblaa;
+$pagination-active-border-color:   #d0d7de;
+
+$pagination-disabled-color:        #9aa1a9;
+$pagination-disabled-bg:           #f6f8fa;
+$pagination-disabled-border-color: #e5e7eb;
+
+$pagination-border-radius: .5rem;
+$pagination-padding-y: .4rem;
+$pagination-padding-x: .75rem;
+
 
 
 // Font
@@ -64,15 +97,118 @@ $callout-color-important: $color-gul;
   background-image: linear-gradient(to bottom right, $color-pink, $color-lysblaa);
 }*/
 
+
+
+/* Tillad at footeren må komme op, hvis der er plads */
+main {
+  min-height: auto !important;
+}
+
+strong, b {
+  color: $color-morkblaa !important;   /* styling af fed skrift */
+}
+
+
+
+.streg {
+   height: 2px;
+   background-color: $color-morkblaa;
+}
+
+/* Ram ALLE relevante lag i footeren */
+footer.quarto-page-footer,
+.quarto-page-footer,
+.quarto-page-footer .nav-footer {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Quarto giver ofte padding på .nav-footer – nulstil den specifikt */
+.nav-footer {
+  padding-top: 0 !important;
+  padding-bottom: 0.5rem; /* justér efter behov */
+}
+
+
+table thead th {
+  color: $color-morkblaa !important;
+}
+
+
+/* 1) Grundlayout: fast tabel, ingen “ekstra” bredde fra borders/padding */
+.forlob-table table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;             /* så borders ikke lægger ekstra bredde til */
+}
+
+/* 2) Sikre, at indhold ikke sprænger kolonnebredderne */
+.forlob-table table th,
+.forlob-table table td {
+  box-sizing: border-box;                /* padding tælles inden i cellens bredde */
+  overflow-wrap: anywhere;               /* bryd lange ord/links */
+  word-break: break-word;                /* ekstra sikkerhed */
+  white-space: normal;                   /* tillad linjebrud */
+  /* valgfrit: gør teksten lidt mere kompakt */
+  /* padding: .5rem .6rem; */
+}
+
+/* 3) Hvis dit tema genererer <colgroup>, så kan du styre bredder hér */
+.forlob-table table colgroup col:nth-child(1) { width: 15%; }
+.forlob-table table colgroup col:nth-child(2) { width: 15%; }
+.forlob-table table colgroup col:nth-child(3) { width: 35%; }
+.forlob-table table colgroup col:nth-child(4) { width: 35%; }
+
+/* 4) Hvis der IKKE er <colgroup>, så sæt bredder på th/td (fallback) */
+.forlob-table table thead th:nth-child(1),
+.forlob-table table tbody td:nth-child(1) { width: 15%; }
+
+.forlob-table table thead th:nth-child(2),
+.forlob-table table tbody td:nth-child(2) { width: 15%; }
+
+.forlob-table table thead th:nth-child(3),
+.forlob-table table tbody td:nth-child(3) { width: 35%; }
+
+.forlob-table table thead th:nth-child(4),
+.forlob-table table tbody td:nth-child(4) { width: 35%; }
+
+
+
 h1, h2, h3, h4, h5 {
   color: $color-morkblaa;
 }
 
+
 h2.aimat {
-  background-image: $icon-lyseblaa;
-  background-repeat: no-repeat;
-  padding-left: 3em;
+  display: flex;                // gør overskriften til flex-container
+  align-items: center;          // ikon og tekst på samme linje
+  gap: 0.5rem;                  // afstand mellem ikon og tekst
+  width: 100%;                  // fyld hele linjen
+  justify-content: flex-start;  // venstrejusteret
 }
+
+h2.aimat::before {
+  content: "";
+  display: inline-block;
+  height: 1.8em;
+  width: 1.8em;
+  background: $icon-lyseblaa no-repeat center / contain;
+  flex: 0 0 auto;               // ikon skal ikke strækkes
+  border-top-left-radius: 3px; 
+}
+
+/* Sørg for at teksten kan bryde korrekt */
+h2.aimat {
+  flex-wrap: nowrap;            // ingen wrap mellem ikon og tekst
+}
+
+h2.aimat span {
+  flex: 1 1 auto;
+  min-width: 0;                 // tillader ord at bryde
+  white-space: normal;          // bryd som normalt
+}
+
+
 
 .callout {
   background-size: 2.7rem 2.7rem;
@@ -111,8 +247,30 @@ h2.aimat {
   font-weight: bolder;  
 }
 
-.example {
-  font-style: italic;
+
+/* Styling af sætninger */
+
+
+/* Containeren for teoremer */
+.theorem {
+  border: 1.5px;
+  border-style: solid;
+  border-radius: 10px;
+  padding: 15px;
+  border-color: $color-pink;
+  color: $color-morkblaa;
+  margin-bottom: 1em;
+}
+
+/* Titelteksten (vises ofte som “Sætning”, “Lemma” osv.) */
+.theorem .theorem-title {
+  font-weight: 700;
+  color: $color-pink;
+  margin-bottom: .25rem;
+}
+
+/* Brødteksten */
+.theorem .theorem-body {
   color: $color-morkblaa;
 }
 
@@ -121,6 +279,49 @@ h2.aimat {
   display:block;
 }
 
+
+/* Styling af eksempler */
+
+.example {
+  border-style: none;
+  color: $color-morkblaa;
+  margin-bottom: 1em;
+  padding: 0px;
+}
+
+/* Titelteksten (vises ofte som “Sætning”, “Lemma” osv.) */
+.example .theorem-title {
+  font-weight: 700;
+  color: $color-morkblaa;
+  margin-bottom: .25rem;
+}
+
+/* Styling af beviser */
+
+.bevis {
+  color: $color-morkblaa;
+  margin-bottom: 1em;
+}
+
+
+/* Bevisblok – placer QED helt til højre efter sidste p */
+.bevis p:last-child {
+  position: relative;              /* gør det muligt at absolut-positionere ::after */
+  /* valgfrit: lidt ekstra højremargen så teksten ikke rammer QED */
+  padding-right: 1.2em;
+}
+
+.bevis p:last-child::after {
+  content: " □";                   /* brug "■" hvis du vil have sort udfyldt firkant */
+  font-size: 2em;
+  color: $color-morkblaa;
+  position: absolute;
+  right: 0;                        /* helt i højre kant af afsnittet */
+  bottom: 0;                       /* læg den ved tekstens bundlinje */
+  line-height: 1;                  /* så den ikke “hopper” vertikalt */
+}
+
+
 .estimeret_tid {
   color: $color-lysblaa;
 }
@@ -128,6 +329,12 @@ h2.aimat {
 .fremhaev {
   color: $color-morkblaa;
   font-weight: bolder;  
+}
+
+.fremhaev_underline {
+  color: $color-morkblaa;
+  font-weight: bold;  
+  text-decoration: underline;
 }
 
 .fremhaev2 {
@@ -153,22 +360,35 @@ h2.aimat {
   border-radius: 10px;
   padding: 15px;
   border-color: $color-lysblaa;
+  margin-bottom: 1em;
 }
+
+
+/* Centrerer indholdet både horisontalt og vertikalt */
 
 .centertext {
-  text-align:center;
+  display: grid;
+  place-items: center;    // centrerer H+V i én linje
+  text-align: center;
+  min-height: 5rem;
+  width: 100%;
 }
 
-.test{
-  border: 1px;
-  border-color: black;
+.centertext > * {
+  margin: 0;              // fjern default margen på <p>
 }
+
+
 
 .highlight {
   border: 0px;
   border-radius: 10px;
   padding: 15px;
   background-color: $color-pink;
+  color: $color-morkblaa;
+}
+
+.morkblaa{
   color: $color-morkblaa;
 }
 
@@ -328,6 +548,10 @@ h2.aimat {
   border-radius: 10px;
   padding: 15px;
   border-color: $color-morkblaa;
+  /* Indeholder floats (billedet) */
+  display: flow-root;
+  /* Klip indhold til afrundede hjørner */
+  overflow: hidden;
 }
 
 .boxed_inline {
@@ -352,3 +576,112 @@ details li {
 hr {
     background-color: $color-morkblaa;
 }
+
+.lyseblaa_boks {
+  background-color: #C0C3F9;
+  border-radius: 0.3rem;
+  padding: 2rem;
+  color: $color-morkblaa;
+}
+
+.kilde {
+  color: $color-morkblaa;
+  font-size: 0.75rem;
+}
+
+// Styling af footer
+
+.nav-footer {
+  color: $color-morkblaa;
+}
+
+.footer-logo {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 1.5rem;
+  object-fit: cover;
+}
+
+/* CoPilot */
+
+
+/* Ens layout og centrering for alle nav-links */
+.navbar .navbar-nav a.nav-link {
+  display: inline-flex;
+  align-items: center;     /* lodret centrering */
+  justify-content: center; /* vandret centrering */
+  line-height: 1;          /* undgå baseline-forskudt */
+  padding: 0.4rem 0.5rem;  /* ens klikflade */
+}
+
+/* Ens ikonstørrelse og line-height */
+.navbar .navbar-nav .bi {
+  font-size: 1.25rem;
+  line-height: 1;          /* vigtig for baseline */
+  vertical-align: middle;  /* ekstra sikkerhed */
+}
+
+
+/* Mikrojustér kun YouTube-ikonet */
+.navbar .navbar-nav .bi.bi-youtube {
+  position: relative;
+  top: 1px;   /* prøv 1px, 2px eller -1px afhængigt af retningen */
+}
+
+
+
+/* Skjul tekst ved envelope-linket */
+.navbar a.nav-link[href$="about.html"] .menu-text {
+  display: none !important;
+}
+
+/* Skjul tekst ved YouTube-linket */
+.navbar a.nav-link[href*="youtube"] .menu-text {
+  display: none !important;
+}
+
+/* Skjul tekst ved search-knappen */
+.navbar .quarto-search-button .menu-text {
+  display: none !important;
+}
+
+/* Til "Om os" */ 
+
+.about-grid {
+  margin-top: 2rem;
+  gap: 0.1rem; 
+}
+
+.person {
+  text-align: center;
+  padding: 1rem;
+}
+
+
+.about-img {
+  width: 150px;
+  height: 200px;      /* samme højde */
+  object-fit: cover;  /* beskær pænt, undgå stræk */
+  margin-bottom: 0.5rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tabel-kanter {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.tabel-kanter td {
+  border: 1px solid black;
+  padding: 8px;
+  vertical-align: middle;
+}
+
+.tabel-venstre {
+  text-align: left;
+}
+
+
+

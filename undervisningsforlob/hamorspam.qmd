@@ -1,0 +1,190 @@
+---
+title: "Ham or Spam?"
+description: "I dette forløb skal vi se på, hvordan man kan lave et simpelt spamfilter ved hjælp af metoden Naiv Bayes klassifier."
+image: "hamorspam_filer/spam.png"
+categories:
+  - "01_A-niveau"
+  - "04_Kort"
+---
+
+::: {.callout-caution collapse="true" appearance="minimal"}
+### Forudsætninger og tidsforbrug
+Forløbet kræver kendskab til:
+
++ Sandsynlighedsregning (se eventuelt noten [Sandsynlighedsregning og mængdeteori](../noter/sandsynlighed/sandsynlighed.qmd){target="_blank"}).
++ Den naturlige logaritmefunktion.
+
+
+**Tidsforbrug:** Ca. 2 x 90 minutter.
+
+:::
+
+
+::: {.purpose}
+
+### Formål
+
+Formålet med dette forløb er at forstå, hvordan man kan lave et simpelt spamfilter ved hjælp af metoden, som kaldes for **Naiv Bayes klassifier**.
+
+:::
+
+
+I dette forløb skal vi se på, hvordan man kan lave et simpelt spamfilter. Vi har et datasæt med $35000$ mails, som fordeler sig mellem spam (det vil sige, at mailen ikke skal vises i mail-boxen) og ham (non-spam) på denne måde:
+
+
+| | Antal|
+|-|-|
+Spam | $11150$ |
+Ham | $23850$|
+Samlet antal mails | $35000$ |
+: {.bordered}
+
+
+Desuden har vi oplysninger om emailens oprindelse (Danmark, Europa uden Danmark, USA og anden oprindelse), afsenders mailadresse (firma, Google, Hotmail og anden) samt indhold (dating, spil og andet). Målet er automatisk at kunne afgøre, om en mail er spam eller ham ud fra disse oplysninger.. 
+
+Træningsdata består af
+
+| | Oprindelse | | | | 
+|-|-|-|-|-|
+| |DK|Europa|	USA |	Andet |
+Spam | $20 \%$ |$30 \%$ |	$35 \%$| $55 \%$ |
+Ham |	$80 \%$ |	$70 \%$|$65 \%$|$45\%$ |
+Antal |	$10000$|$12000$|$8000$|$5000$|
+: {.bordered}
+
+og
+
+| | Mail | | |	| Indhold | |
+|-|-|-|-|-|-|-|-|
+| |Firma |	Google |Hotmail |	Andet |	Dating|	Spil |Andet |
+Spam |$10 \%$ |$20 \%$ | $60 \%$ |$80 \%$ |$80 \%$ |$90 \%$|$12.5 \%$ |
+Ham  |$90 \%$|$80 \%$|$40 \%$|$20 \%$|$20\%$|$10\%$|$87.5\%$|
+Antal |$17000$|$6450$|$5400$|$6150$|$4325$|$4975$|$25700$|
+: {.bordered}
+
+
+## Introduktion
+
+Læs afsnittet [Introduktion](../noter/naivbayes/NaivBayes.qmd#introduktion){target="_blank"} i noten om **Naiv Bayes klassifier**.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 1
+
+* Hvis man skal vurdere en mail fra en Hotmail-konto, vil man da tænke, at det er spam eller ham?
+
+* Hvis man skal vurdere en tilfældig af de mails, man har modtaget, vil man da tænke, at det er spam eller ham?
+
+* Forklar hvorfor det kan være svært at afgøre, om det er spam, hvis man modtager en mail fra Danmark, som er sendt fra en firma-mail, og hvor indholdet er relateret til dating.
+
+:::
+
+## Notation
+
+Læs afsnittet [Notation](../noter/naivbayes/NaivBayes.qmd#notation){target="_blank"} i noten om **Naiv Bayes klassifier**.
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 2
+
+* Indfør selv stokastiske variable $X_1$, $X_2$, $X_3$ og $Y$ og angiv udfaldsrummet for hver af dem.
+
+:::
+
+
+## Binær Bayes klassifier
+
+Læs afsnittet [Binær Bayes klassifier](../noter/naivbayes/NaivBayes.qmd#binær-bayes-klassifier){target="_blank"} i noten om **Binær Bayes klassifier**.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 3
+
+* Opstil posterior forholdet 
+
+   $$ \frac{P(Y = \textrm{spam} \mid X_1=x_1, X_2=x_2, X_3=x_3)}{P(Y = \textrm{ham} \mid X_1=x_1, X_2=x_2, X_3=x_3)}$$
+
+   og forklar det smarte, der er sket ved at bruge Bayes formel. 
+
+* Redegør for betydningen af forholdet, og forklar hvorfor man ser på, om det er over eller under $1$.
+
+:::
+
+
+
+## Naiv Bayes klassifier
+
+Læs afsnittet [Naiv Bayes klassifier](../noter/naivbayes/NaivBayes.qmd#naiv-bayes-klassifier){target="_blank"} i noten om **Naiv Bayes klassifier**.
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 4
+
+Angiv den antagelse (modelforudsætning), som anvendes ved Naiv Bayes klassifikation, og forklar hvad det gør for beregningen af sandsynlighederne fra opgave 3. 
+
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 5 
+
+Bestem prior forholdet 
+
+$$\frac{P(Y=\textrm{spam})}{P(Y=\textrm{ham})}$$
+
+og beregn på den baggrund vægten 
+
+$$w_0 = \ln \left ( \frac{P(Y=\textrm{spam})}{P(Y=\textrm{ham})} \right )$$
+
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 6
+
+Bestem alle betingede sandsynligheder 
+
+$$P(X_i=x_i \mid Y=\textrm{spam}) \quad \textrm{og} \quad P(X_i=x_i \mid Y=\textrm{ham})$$
+
+for hver enkelt information givet, at det er henholdsvis spam og ham (i alt 22 sandsynligheder), og forklar idéen bag én af disse udregninger.
+
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 7
+For hver af de 11 informationer bestemmes forholdet mellem sandsynlighederne
+
+$$ \frac{P(X_i=x_i \mid Y=\textrm{spam})}{P(X_i=x_i \mid Y=\textrm{ham})}$$
+
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 8
+
+Forklar, hvordan man kommer fra resultaterne i opgave 7 til vægte og udregn vægtene hørende til hver af informationerne (i alt 11).
+
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 9
+
+Forklar, hvad der sker ved at benytte logaritmen på udtrykket fra opgave 3 og 4, hvor man ellers ganger faktorer sammen. 
+
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 10
+
+Afgør ud fra de vægte, som du har beregnet i opgave 8, hvilke informationer der taler for spam, og hvilke der taler for ham.
+
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 11
+
+Afgør ved at beregne scoren $S$, om man vil tænke, at en mail er ham eller spam i følgende to situationer:
+
+* Mailens oprindelse er andet, den er sendt fra en hotmail-konto og omhandler ikke dating eller spil.
+* Mailen er en firma-mail fra Danmark med indhold relateret til dating.
+
+:::
+
+## Delvis facitliste
+
+[Facitliste](hamorspam_filer/hamorspam_facit.qmd){target="_blank"}.

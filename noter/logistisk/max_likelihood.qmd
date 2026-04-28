@@ -1,0 +1,81 @@
+---
+title: "Maksimering af log-likelihoodfunktionen ved brug af partielt afledte"
+aliases: 
+  - "/materialer/logistisk/max_likelihood.html"
+---
+
+
+Når $l(a,b)$ skal maksimeres, kan det gøres ved hjælp af partielt afledede. Husk på, at i et maksimumspunkt, vil begge de partielt afledte være lig 0, dvs.
+\begin{align*}
+\frac{\partial l(a,b)}{\partial a} &=0 \\
+\frac{\partial l(a,b)}{\partial b} &=0.
+\end{align*}
+Vi finder derfor først et mere eksplicit udtryk for $l(a,b)$ som funktion af $a$ og $b$.
+
+
+### Eksplicit udtryk for $l(a,b)$
+Vi ved, at log-likelihoodfunktionen er givet ved
+$$
+\begin{aligned}
+l(a,b) &=\sum_{i=1}^n \ln(p_i(a,b)) \\  
+&= \sum_{i=1}^n\big( {y_i}\cdot \ln(p(x_i))+(1-y_i)\cdot \ln(1-p(x_i)) \big).
+\end{aligned}
+$${#eq-lab}
+
+Ved at ophæve parentesen $(1-y_i)$ i (@eq-lab) fås
+$$ l(a,b)=\sum_{i=1}^n \big({y_i}\cdot \ln(p(x_i))+\ln(1-p(x_i))- y_i\cdot \ln(1-p(x_i))\big).$$
+I to af leddene inden for sumtegnet har vi $y_i$ som en faktor. Vi kan derfor sætte $y_i$ uden for parentes
+$$ l(a,b)=\sum_{i=1}^n \big(\ln(1-p(x_i))+{y_i}\cdot (\ln(p(x_i))-\ln(1-p(x_i)))\big).$$
+Ved hjælp af logaritmeregnereglen $ln(a/b)=ln(a)-ln(b)$ får vi
+$$ l(a,b)=\sum_{i=1}^n \left(\ln(1-p(x_i))+y_i\cdot \ln\left(\frac{p(x_i)}{1-p(x_i)}\right)\right).$$
+Her opsplitter vi til to summer, hvor den ene ikke afhænger af $y_i$.
+$$ l(a,b)=\sum_{i=1}^n \ln(1-p(x_i))+\sum_{i=1}^n y_i\cdot \ln\left(\frac{p(x_i)}{1-p(x_i)}\right).$${#eq-lab2}
+Nu har vi fået styr på udtrykket for $l(a,b)$, som dog afhænger af $p(x_i)$. Vi udnytter nu, at vi havde udtrykket $$p(x_i) = \frac{1}{1+\mathrm{e}^{-(a\cdot x_i+b)}}$$
+og
+$$\ln\left(\frac{p(x_i)}{1-p(x_i)}\right)=ax_i + b.$$
+Indsættes dette i (@eq-lab2), får vi
+$$l(a,b)=\sum_{i=1}^n \ln\left(1-\frac{1}{1+\mathrm{e}^{-(a\cdot x_i+b)}}\right)+\sum_{i=1}^n y_i\cdot (ax_i+b).$$
+Udtrykket i logaritmen sættes på fælles brøkstreg, og brøken forlænges med $\mathrm{e}^{a\cdot x_i+b}$
+
+$$
+\begin{aligned}
+l(a,b)&=\sum_{i=1}^n \ln\left(\frac{\mathrm{e}^{-(a\cdot x_i+b)}}{1+\mathrm{e}^{-(a\cdot x_i+b)}}\right)+\sum_{i=1}^n y_i\cdot (ax_i+b) \\ &=\sum_{i=1}^n \ln\left(\frac{1}{1+\mathrm{e}^{a\cdot x_i+b}}\right)+\sum_{i=1}^n y_i\cdot (ax_i+b)
+\end{aligned}
+$$
+Her benytter vi igen regnereglen $\ln(a/b)=\ln(a)-\ln(b)$.
+$$ l(a,b)=\sum_{i=1}^n\big(\ln(1)-\ln(1+\mathrm{e}^{a\cdot x_i+b})\big)+\sum_{i=1}^n y_i\cdot (ax_i+b).$$
+Da $\ln(1)=0$, har vi endelig 
+$$
+l(a,b)=\sum_{i=1}^n \big(-\ln(1+\mathrm{e}^{a\cdot x_i+b})\big)+\sum_{i=1}^n y_i\cdot (ax_i+b).
+$${#eq-l-simpel}
+
+
+### Partielt afledede
+Vi finder nu de partielt afledte af $l(a,b)$ ved at differentiere (@eq-l-simpel).
+Lad os først se på $\frac{\partial l(a,b)}{\partial b}$. I den første sum i (@eq-l-simpel) skal vi se hvert led som en sammensat funktion, hvor den indre funktion har et led, som også er en sammensat funktion. Så får vi
+$$\frac{\partial l(a,b)}{\partial b}= \sum_{i=1}^n -\frac{1}{1+\mathrm{e}^{a\cdot x_i+b}}\cdot (0+\mathrm{e}^{a\cdot x_i+b})\cdot(0+1) +\sum_{i=1}^n y_i\cdot (0+1).$$
+Ved at reducere fås
+$$\frac{\partial l(a,b)}{\partial b}= \sum_{i=1}^n -\frac{\mathrm{e}^{a\cdot x_i+b}}{1+\mathrm{e}^{a\cdot x_i+b}} +\sum_{i=1}^n y_i$$
+Ved at bruge at
+$$
+p(x) = \frac{1}{1+\mathrm{e}^{-(ax+b)}}= \frac{\mathrm{e}^{(ax+b)}}{1+\mathrm{e}^{(ax+b)}}
+$${#eq-p-logistisk}
+i forbindelse med den første sum og efterfølgende samle leddene i en sum, fås
+$$\frac{\partial l(a,b)}{\partial b}= \sum_{i=1}^n -p(x_i) +\sum_{i=1}^n y_i=\sum_{i=1}^n (y_i-p(x_i)).$$
+
+Nu ser vi på $\frac{\partial l(a,b)}{\partial a}$ på tilsvarende måde.
+$$\frac{\partial l(a,b)}{\partial a}= \sum_{i=1}^n -\frac{1}{1+\mathrm{e}^{a\cdot x_i+b}}\cdot (0+\mathrm{e}^{a\cdot x_i+b})\cdot(1\cdot x_i+0) +\sum_{i=1}^n y_i\cdot (1\cdot x_i+0)$$
+Der reduceres
+$$\frac{\partial l(a,b)}{\partial a}= \sum_{i=1}^n -\frac{\mathrm{e}^{a\cdot x_i+b}}{1+\mathrm{e}^{a\cdot x_i+b}}\cdot x_i +\sum_{i=1}^n y_i\cdot x_i.$$
+Igen bruges (@eq-p-logistisk) til at få
+$$\frac{\partial l(a,b)}{\partial a}= \sum_{i=1}^n -p(x_i)\cdot x_i +\sum_{i=1}^n y_i\cdot x_i=\sum_{i=1}^n (y_i\cdot x_i-p(x_i)\cdot x_i).$$
+
+Endelig kan $x_i$ sættes udenfor parentes, hvorved vi har
+$$\frac{\partial l(a,b)}{\partial a}=\sum_{i=1}^n (y_i-p(x_i))\cdot x_i.$$
+
+For at lave optimering og finde maksimum, skal vi undersøger, hvornår de partielt afledte er nul. Vi skal således løse følgende to ligninger med to ubekendte
+\begin{align*}
+0=\frac{\partial l(a,b)}{\partial a}=\sum_{i=0}^n (y_i-p(x_i))\cdot x_i \quad \text{og} \quad 0=\frac{\partial l(a,b)}{\partial b}=\sum_{i=1}^n (y_i-p(x_i)) .
+\end{align*}
+Dette ligningssystem er dog ikke bare lige til at løse, så her bliver man nødt til at benytte sig af  numeriske metoder til løsning af ligningssytemer.
+

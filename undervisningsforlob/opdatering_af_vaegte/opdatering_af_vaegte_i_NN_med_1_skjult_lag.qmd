@@ -1,6 +1,6 @@
 ---
 title: "Opdatering af vægte i et simpelt neuralt netværk med ét skjult lag (med *cross-entropy* som tabsfunktion)"
-description-meta: 'I dette forløb arbejdes der med at opdatere vægtene i et neuralt netværk med ét skjult lag med brug af sigmoid aktiveringsfunktionen og gradientnedstigning med *cross-entropy* som tabsfunktion.'
+description: 'I dette forløb arbejdes der med at opdatere vægtene i et neuralt netværk med ét skjult lag med brug af sigmoid aktiveringsfunktionen og gradientnedstigning med *cross-entropy* som tabsfunktion.'
 image: "images/simpelt_netvaerk.png"
 categories:
   - A-niveau
@@ -15,7 +15,7 @@ categories:
 + Gradientnedstigning.
 + *Cross-entropy* tabsfunktion.
 
-Forudsætningerne kan med fordel dækkes ved hjælp af [noten om simple neurale netværk](../../materialer/simple_neurale_net/simple_neurale_net.qmd){target="_blank"}, da notationen derfra vil blive anvendt i dette forløb, samt [noten om tabsfunktioner](../../materialer/tabsfunktioner/tabsfunktioner.html){target="_blank"}.
+Forudsætningerne kan med fordel dækkes ved hjælp af [noten om simple neurale netværk](../../noter/simple_neurale_net/simple_neurale_net.qmd){target="_blank"}, da notationen derfra vil blive anvendt i dette forløb, samt [noten om tabsfunktioner](../../noter/tabsfunktioner/tabsfunktioner.html){target="_blank"}.
 
 Dette forløb ligner [forløbet om opdatering af vægte i neuralt netværk med to skjulte lag](opdatering_af_vaegte_i_NN_med_2_skjulte_lag.qmd){target="_blank"}, men er lidt sværere, da man desuden skal modificere nogle elementer i forhold til noten om simple neurale netværk.
 
@@ -35,14 +35,14 @@ Dette kan ses som et skridt på vejen til at forstå, hvordan vægtene opdateres
 
 ## Et meget lille datasæt
 
-I neurale netværk er der ofte rigtige mange inputvariable (features), rigtigt mange vægte og rigtig mange træningsdata. 
+I neurale netværk er der ofte rigtig mange inputvariable (features), rigtigt mange vægte og rigtig mange træningsdata. 
 
-For bedre at forstå, hvor vægtene opdateres i et neuralt netværk, vil vi her se på et meget lille eksempel, så det manuelt er muligt at lave opdateringen af vægtene.
+For bedre at forstå, hvordan vægtene opdateres i et neuralt netværk, vil vi her se på et meget lille eksempel, så det er muligt manuelt at lave opdateringen af vægtene.
 
 
 Vi vil lave et netværk med 2 inputvariable ($x_1$ og $x_2$), 1 neuron i det skjulte lag ($y$) og 1 neuron i outputlaget ($o$). Netværket er illustreret i @fig-simple_NN2.
 
-![Grafisk illustration af et neuralt netværk med 2 inputvariable og ét skjulte lag, som består af én neuron.](images/simple_NN2.png){width=75% #fig-simple_NN2}
+![Grafisk illustration af et neuralt netværk med 2 inputvariable og ét skjult lag, som består af én neuron.](images/simple_NN2.png){width=75% #fig-simple_NN2}
 
 
 Konkret vil vi se på to features $x_1$ og $x_2$ og en targetværdi $t$ ud fra følgende træningsdatasæt:
@@ -82,9 +82,9 @@ $$
 
 Planen er nu følgende:
 
-- Lav feedforward fra $x$ laget til $y$ laget.
+- Lav feedforward fra $x$-laget til $y$-laget.
 
-- Lav feedforward fra $y$ laget til $o$ laget.
+- Lav feedforward fra $y$-laget til $o$-laget.
 
 - Opskriv opdateringsregler for $w$-vægtene.
 
@@ -145,7 +145,7 @@ Planen er nu følgende:
 
 * Opdatér $w_0$-vægten
 
-   $$w_0^{ny} \leftarrow w_0 + \eta \cdot \sum_{m=1}^{3} \delta_w^{(m)}$$
+   $$w_0^{(ny)} \leftarrow w_0 + \eta \cdot \sum_{m=1}^{3} \delta_w^{(m)}$$
 
 * Udregn 
 
@@ -153,7 +153,7 @@ Planen er nu følgende:
 
 * Opdatér $w_1$-vægten 
 
-   $$w_1^{ny} \leftarrow w_1 + \eta \cdot \sum_{m=1}^3 \delta_w^{(m)} \cdot y^{(m)}$$
+   $$w_1^{(ny)} \leftarrow w_1 + \eta \cdot \sum_{m=1}^3 \delta_w^{(m)} \cdot y^{(m)}$$
 
 :::
 
@@ -165,7 +165,7 @@ Planen er nu følgende:
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 6: Opdatér $r$-vægtene
-* Lav udregninger tilsvarende dem i opgave 4 og opdatér af $r$-vægtene.
+* Lav udregninger tilsvarende dem i opgave 4 og opdatér $r$-vægtene.
 
 :::
 
@@ -181,7 +181,7 @@ Værdien skulle meget gerne være blevet mindre med opdateringen.
 :::
 
 ## Anden opdatering af vægtene
-Overvej, om du kan strømline dine beregninger, eventuelt i Excel eller i dit CAS værktøj, så det bliver hurtigere at opdatere vægtene en gang mere på samme måde.
+Overvej, om du kan strømline dine beregninger, eventuelt i Excel eller i dit CAS-værktøj, så det bliver hurtigere at opdatere vægtene en gang mere på samme måde.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 8: Opdater vægtene anden gang
@@ -192,7 +192,7 @@ Overvej, om du kan strømline dine beregninger, eventuelt i Excel eller i dit CA
 
 :::
 
-Bemærk, at værdien af tabsfunktionen er blevet lidt mindre. Formålet er jo netop at minimere den gennem gradientnedstigning, så som regel bør værdien bliver mindre, hver gang vægtene opdateres.
+Bemærk, at værdien af tabsfunktionen er blevet lidt mindre. Formålet er jo netop at minimere den gennem gradientnedstigning, så som regel bør værdien blive mindre, hver gang vægtene opdateres.
 
 
 <!--## App til simple neurale netværk

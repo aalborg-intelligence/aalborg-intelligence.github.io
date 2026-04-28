@@ -1,8 +1,98 @@
 ---
 title: "Cambridge Analytica skandalen - matematik"
 description: ""
-image: "images/"
-categories:
-  - A-niveau
-  - Informatik
+image: "images/ca_mat.png"
 ---
+
+I denne del er formålet at lave en model, som på baggrund af data fra sociale medier, kan bruges til at prædiktere ens personlighed.
+
+## Træningsdata
+
+Vi skal starte med at forstå, hvordan man kan lave en model, som kan prædiktere menneskers personlighed på baggrund af data fra sociale medier:
+
+::: {.lyseblaa_boks}
+
+*Kogan sold Cambridge Analytica access to 270,000 personality tests completed by Facebook users through an online app he had created for research purposes. Providing the data to Cambridge Analytica was, it seems, against Facebook’s internal code of conduct, but only now in March 2018 has Kogan been banned by Facebook from the platform. In addition, Kogan’s data also came with a bonus: he had reportedly collected Facebook data from the test-takers’ friends – and, at an average of 200 friends per person, that added up to some 50m people.*
+
+*While not all of these people had provided personality test responses, it is possible to reverse-engineer a personality profile from Facebook activity. Decades of psychological research has formed around the lexical hypothesis, that personality traits can be inferred by studying the subject’s use of language. Facebook patented a process to do just this in 2012, as part of its commercial aims to provide more targeted advertising, by mapping the contents of posts and likes against the “Big Five” model of psychological traits, sometimes known as OCEAN (openness, conscientiousness, extroversion, agreeableness, neuroticism). Whether you choose to like pictures of sunsets, puppies or people apparently says a lot about your personality: a 2015 study by other academics from the Cambridge psychology lab found that the model of predicting personality traits using Facebook data could generate a personality profile with the same accuracy as a spouse with just 300 likes.*
+
+:::
+[Kilde: [Psychographics: the behavioural analysis that helped Cambridge Analytica know voters’ minds](https://theconversation.com/psychographics-the-behavioural-analysis-that-helped-cambridge-analytica-know-voters-minds-93675).]{.kilde}
+
+Det betyder med andre ord, at man har haft adgang til $270000$ menneskers Facebook data *samtidig* med, at disse mennesker frivilligt har taget en personlighedstest (som vi gør det i [informatik-delen](ca_informatik.qmd) af dette forløb). Altså kender man disse menneskers OCEAN scores. Det er alle disse data, som udgør det, man kalder for et **træningsdatasæt**.
+
+Vi forestiller os nu et tænkt eksempel med et træningsdatasæt[^copilot] bestående af $300$ personer. Hver person i træningsdatasættet har taget en OCEAN test, og om hver person har vi registreret det gennemsnitlige antal likes per uge, som personen -- på eksempelvis Facebook --  har givet til opslag, som handler om:
+
+[^copilot]: Data er 100% fiktive og genereret ved hjælp af CoPilot.
+
+* `likes_art_culture`: kunst og kultur ($x_1$)
+* `likes_science_tech`: videnskab og teknologi ($x_2$)
+* `likes_travel_nature`: rejser og natur ($x_3$)
+* `likes_entertainment`: underholdning  ($x_4$)
+* `likes_sports`: sport  ($x_5$)
+* `likes_political_social`: politik og samfund  ($x_6$)
+
+Ovenstående kaldes for **features** eller **inputvariable**.
+
+Vi forestiller os -- for at holde tingene simple -- at vi kun er interesseret i at forudsige personens grad af **O**penness. Da alle personer i træningsdatasættet har taget en OCEAN personlighedstest, kender vi også:
+
+* `O_openness`: personens grad af openness på en skala fra $0$ til $1$ ($t$).
+
+Her kaldes $t$ for **target**, fordi det er den værdi, vil gerne vil prøve at \"ramme\".
+
+Idéen er nu, at vi ud fra de seks features $x_1, x_2, \dots, x_6$ skal kunne forudsige targetværdien $t$ så godt som muligt. Det gør vi ved først at udregne en vægtet sum af de seks features:
+
+$$
+w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6
+$$ {#eq-vaegtet_sum}
+
+Her er kaldes $w_0, w_1, \dots, w_6$ for vægte, og det er i sidste ende dem vi skal finde \"gode\" værdier for, så vi får en god model. Det kommer vi tilbage til.
+
+Nu vil ovenstående udtryk give et reelt tal, som kan antage en hvilken som helst værdi og som kan være negativ eller positiv. Til gengæld er hver persons grad af openness målt på en skala fra $0$ til $1$. Det råder vi bod på ved at bruge en såkaldt **aktiveringsfunktion**. Vi bruger her en aktiveringsfunktion, som kaldes for **sigmoid**. 
+
+### Sigmoid-aktiveringsfunktion
+
+{{< include ../aktiveringsfunktioner/sigmoid.qmd >}}
+
+
+### Tilbage til OCEAN
+
+Vi bruger nu sigmoid-funktionen på den vægtede sum i (@eq-vaegtet_sum):
+
+$$
+o = \sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6)
+$$
+
+Her står $o$ for **outputværdi** (og ikke for openness, selvom det også vil give mening her). Opgaven er nu \"blot\" at bestemmer værdier af vægtende $w_0, w_1, \dots, w_6$, så vores beregnede outputværdi $o$ kommer så tæt på vores målte targetværdi $t$ som muligt.
+
+Det gør vi ved for hvert træningseksempel at se på den kvadrerede forskel mellem $t$ og $o$:
+
+$$
+(t-o)^2  = (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6))^2
+$$
+
+Bemærk, at hvis vores model er god, så er denne forskel tæt på $0$ (svarende til at $o \approx t$). Hvis vores model er dårlig -- for eksempel hvis $t$ er tæt på $1$, mens $o$ er tæt på $0$ -- så vil $(t-o)^2$ være tæt på $1$. 
+
+Nu har vi $300$ personer i vores træningsdata. For hver af dem kan vi beregne en kvadreret forskel mellem $t$ og $o$ og lægger vi dem alle sammen (og ganger med $1/2$, men det er ikke så afgørende) får vi:
+
+$$
+E = \frac{1}{2} \sum (t-o)^2 
+$$
+Ovenstående kaldes for en **tabsfunktion**, fordi den måler hvor god vores model er. En lille værdi af tabsfunktionen $E$ svarer til en god model (mange af de kvadrerede afvigelser er små, som ønsket) og omvendt vil en stor værdi af $E$ svarer til en dårlig model.
+
+Tabsfunktionen $E$ afhænger i virkeligheden af alle vægtene, fordi outputværdien $o$ afhænger af alle vægtene:
+
+$$
+E(w_0, w_1, \dots, w_6) = \frac{1}{2} \sum (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6))^2 
+$$
+
+Opgave hvor man skal differentiere med hensyn til $w_1$. Evt. uden sumtegn og så kan sumtegnet være en ekstra opgave.
+
+Husk at indsætte delvis facitliste.
+
+
+
+
+
+
+

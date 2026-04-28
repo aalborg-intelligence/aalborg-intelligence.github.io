@@ -1,7 +1,7 @@
 ---
 title: "Opdatering af vægte i et simpelt neuralt netværk med to skjulte lag"
-description-meta: 'I dette forløb arbejdes der med at opdatere vægtene i et simpelt neuralt netværk med to skjulte lag med brug af sigmoid som aktiveringsfunktion og gradientnedstigning med *squared error* som tabsfunktion.'
-image: "../../materialer/simple_neurale_net/images/long_simple_NN.png"
+description: 'I dette forløb arbejdes der med at opdatere vægtene i et simpelt neuralt netværk med to skjulte lag med brug af sigmoid som aktiveringsfunktion og gradientnedstigning med *squared error* som tabsfunktion.'
+image: "../../noter/simple_neurale_net/images/long_simple_NN.png"
 categories:
   - A-niveau
   - Kort
@@ -14,9 +14,9 @@ categories:
 + Sigmoid aktiveringsfunktion.
 + Gradientnedstigning.
 
-Forudsætningerne kan med fordel dækkes ved hjælp af [noten om simple neurale netværk](../../materialer/simple_neurale_net/simple_neurale_net.qmd){target="_blank"}, da notationen derfra vil blive anvendt i dette forløb.
+Forudsætningerne kan med fordel dækkes ved hjælp af [noten om simple neurale netværk](../../noter/simple_neurale_net/simple_neurale_net.qmd){target="_blank"}, da notationen derfra vil blive anvendt i dette forløb.
 
-**Tidsforbrug:** Ca. 90 minutter for den teoretiske del med manuellen beregninger. Yderligere 30-60 minutter for den mere eksperimentelle del med brug af app til at træne netværket.
+**Tidsforbrug:** Ca. 90 minutter for den teoretiske del med manuelle beregninger. Yderligere 30-60 minutter for den mere eksperimentelle del med brug af app til at træne netværket.
 
 :::
 
@@ -32,13 +32,13 @@ Dette kan ses som et skridt på vejen til at forstå, hvordan vægtene opdateres
 
 ## Et meget lille datasæt
 
-I neurale netværk er der ofte rigtige mange inputvariable (features), rigtigt mange vægte og rigtig mange træningsdata. 
+I neurale netværk er der ofte rigtigt mange inputvariable (features), rigtigt mange vægte og rigtig mange træningsdata. 
 
-For bedre at forstå, hvordan vægtene opdateres i et neuralt netværk, vil vi her se på et meget lille eksempel, så det manuelt er muligt at lave opdateringen af vægtene.
+For bedre at forstå, hvordan vægtene opdateres i et neuralt netværk, vil vi her se på et meget lille eksempel, så det er muligt manuelt at lave opdateringen af vægtene.
 
 Vi vil lave et netværk med 2 inputvariable ($x_1$ og $x_2$), 1 neuron i det første skjulte lag ($y$), 1 neuron i det andet skjulte lag ($z$) og 1 neuron i outputlaget ($o$). Netværket er illustreret i @fig-long_simple_NN.
 
-![Grafisk illustration af et neuralt netværk med 2 inputvariable og to skjulte lag, som hver består af én neuron.](../../materialer/simple_neurale_net/images/long_simple_NN_input2.png){width=75% #fig-long_simple_NN}
+![Grafisk illustration af et neuralt netværk med 2 inputvariable og to skjulte lag, som hver består af én neuron.](../../noter/simple_neurale_net/images/long_simple_NN_input2.png){width=75% #fig-long_simple_NN}
 
 
 
@@ -51,7 +51,7 @@ Konkret vil vi se på to features $x_1$ og $x_2$ og en targetværdi $t$ ud fra f
 | 3 | 5 | 0 |
 : {.bordered}
 
-Vi vælger en learning rate på 
+Vi vælger en learning-rate på 
 
 $$\eta = 0.1,$$
 
@@ -76,7 +76,7 @@ $$
 
 ## Opdateringsregler
 
-Fra [noten om simple neurale netværk](../../materialer/simple_neurale_net/simple_neurale_net.qmd#opsummering-af-backpropagation){target="_blank"} har vi opdateringsreglerne, som vi nu skal til at anvende på det konkrete træningsdatasæt.
+Fra [noten om simple neurale netværk](../../noter/simple_neurale_net/simple_neurale_net.qmd#opsummering-af-backpropagation){target="_blank"} har vi opdateringsreglerne, som vi nu skal til at anvende på det konkrete træningsdatasæt.
    
    **Først udregnes feedforward-udtrykkene:**
    $$ 
@@ -100,33 +100,33 @@ Fra [noten om simple neurale netværk](../../materialer/simple_neurale_net/simpl
   **$w$-vægtene:**
    $$
    \begin{aligned}
-   w_0^{\textrm{ny}} & \leftarrow w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
-   w_1^{\textrm{ny}} & \leftarrow w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot z^{(m)}\\
+   w_0^{\textrm{(ny)}} & \leftarrow w_0 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot 1\\
+   w_1^{\textrm{(ny)}} & \leftarrow w_1 + \eta \cdot \sum_{m=1}^{M} \delta_w^{(m)} \cdot z^{(m)}\\
    \end{aligned}
    $$
    
    **$v$-vægtene:**
    $$
    \begin{aligned}
-   v_0^{\textrm{ny}} & \leftarrow v_0 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot 1\\
-   v_1^{\textrm{ny}} & \leftarrow v_1 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot y^{(m)}\\
+   v_0^{\textrm{(ny)}} & \leftarrow v_0 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot 1\\
+   v_1^{\textrm{(ny)}} & \leftarrow v_1 + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)}\cdot y^{(m)}\\
    \end{aligned}
    $$
    
    **$r$-vægtene:**
    $$
    \begin{aligned}
-   r_0^{\textrm{ny}} & \leftarrow  r_0 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot 1 \\
-   r_1^{\textrm{ny}} & \leftarrow  r_1 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)} \\
+   r_0^{\textrm{(ny)}} & \leftarrow  r_0 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot 1 \\
+   r_1^{\textrm{(ny)}} & \leftarrow  r_1 + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_1^{(m)} \\
      & \ \ \vdots & \\
-   r_n^{\textrm{ny}} & \leftarrow  r_n + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_n^{(m)}
+   r_n^{\textrm{(ny)}} & \leftarrow  r_n + \eta \cdot \sum_{m=1}^M \delta_r^{(m)} \cdot x_n^{(m)}
    \end{aligned}
    $$
 
 ## Beregninger
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 1: Feedforward fra $x$ til $y$ lag
+### Opgave 1: Feedforward fra $x$- til $y$-lag
 * Udregn 
    $$r_0 + r_1 \cdot x_1^{(m)} + r_2 \cdot x_2^{(m)}$$ 
    for hver af de 3 træningseksempler.
@@ -138,13 +138,13 @@ Fra [noten om simple neurale netværk](../../materialer/simple_neurale_net/simpl
 :::
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 2: Feedforward fra $y$ til $z$ lag
+### Opgave 2: Feedforward fra $y$- til $z$-lag
 * Udregn på tilsvarende vis $z^{(m)}$ for hver af de 3 træningseksempler.
 
 :::
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 3: Feedforward fra $z$ til $o$ lag
+### Opgave 3: Feedforward fra $z$- til $o$-lag
 * Udregn på tilsvarende vis $o^{(m)}$ for hver af de 3 træningseksempler.
 
 :::
@@ -159,25 +159,25 @@ Fra [noten om simple neurale netværk](../../materialer/simple_neurale_net/simpl
    $$\sum_{m=1}^{3} \delta_w^{(m)}$$ 
    
 * Opdatér $w_0$-vægten 
-   $$w_0^{ny} \leftarrow w_0 + \eta \cdot \sum_{m=1}^{3} \delta_w^{(m)}$$
+   $$w_0^{(ny)} \leftarrow w_0 + \eta \cdot \sum_{m=1}^{3} \delta_w^{(m)}$$
 
 * Udregn 
    $$\sum_{m=1}^{3} \delta_w^{(m)} \cdot z^{(m)}$$ 
    
 * Opdatér $w_1$-vægten
-  $$w_1^{ny} \leftarrow w_1 + \eta \cdot \sum_{m=1}^3 \delta_w^{(m)} \cdot z^{(m)}$$
+  $$w_1^{(ny)} \leftarrow w_1 + \eta \cdot \sum_{m=1}^3 \delta_w^{(m)} \cdot z^{(m)}$$
 
 :::
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 5: Opdatering af $v$-vægtene
-* Lav tilsvarende udregninger og opdatering af $v$-vægtene.
+* Lav tilsvarende udregninger og opdater $v$-vægtene.
 
 :::
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 6: Opdatering af $r$-vægtene
-* Lav tilsvarende udregninger og opdatering af $r$-vægtene.
+* Lav tilsvarende udregninger og opdater $r$-vægtene.
 
 :::
 
@@ -191,9 +191,9 @@ Det giver naturligvis ikke så meget mening med så lille et datasæt, og da sle
 
 Lad os se, om vi kan få et neuralt netværk til at \"opdage\" følgende sammenhæng ud fra en lidt større mængde træningsdata. 
 
-Hvis $4 < x_1 + x_2 < 7$ er targetværdien er $1$, ellers er targetværdien $0$. Det stemmer med det meget lille datasæt, vi indtil nu har anvendt. 
+Hvis $4 < x_1 + x_2 < 7$ er targetværdien $1$, ellers er targetværdien $0$. Det stemmer med det meget lille datasæt, vi indtil nu har anvendt. 
 
-I denne [Excel-fil](data/traeningsdata200punkter.xlsx) er der 200 linjer med træningsdata, som vi vil bruge til at træne et neutralt netværk med 2 skjulte lag. Men vi vil helt sikkert ikke selv lave opdateringerne af vægtene manuelt. I stedet vil vi bruge [denne  app](https://apps01.math.aau.dk/ai/dyi_net/){target="_blank"}.
+I denne [Excel-fil](data/traeningsdata200punkter.xlsx) er der 200 linjer med træningsdata, som vi vil bruge til at træne et neuralt netværk med 2 skjulte lag. Men vi vil helt sikkert ikke selv lave opdateringerne af vægtene manuelt. I stedet vil vi bruge [denne app](https://apps01.math.aau.dk/ai/dyi_net/){target="_blank"}.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 7: Træn netværket
@@ -202,7 +202,7 @@ I denne [Excel-fil](data/traeningsdata200punkter.xlsx) er der 200 linjer med tr�
 * Vælg \"t\" som target-variabel og \"x1\" og \"x2\" som feature-variable.
 * Vælg 2 lag med hver 1 neuron.
 * Sæt startvægtene til 0,1.
-* Sæt learning rate til 0,01.
+* Sæt learning-rate til 0,01.
 * Sæt antal iterationer til 5000. 
 * Vælg \"sigmoid\" som aktiveringsfunktion og \"squared error\" som tabsfunktion.
 * Træn netværket.

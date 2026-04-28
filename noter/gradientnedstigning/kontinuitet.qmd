@@ -1,0 +1,130 @@
+---
+title: "Kontinuitet for funktioner af to variable"
+aliases: 
+  - "/materialer/gradientnedstigning/kontinuitet.html"
+---
+
+Vi har lige påstået, at en funktion $f$ af to variable siges at være kontinuert i $(x_0,y_0)$, hvis følgende gælder
+
+$$
+\lim_{(x,y) \rightarrow (x_{0},y_{0})}{f\left( x,y \right) = f(x_{0},y_{0})}
+$$
+
+Men der er faktisk grund til at dvæle lidt ved denne definition, for hvad vil det overhovedet sige, at $(x,y) \rightarrow (x_{0},y_{0})$? Forestil dig at du har været i byen, og at $(x_0,y_0)$ er dit hjem. Så kan man jo gå hjem på rigtig mange måder. Det kan være, at man går langs en ret linje, det kan være, at man går i zig-zag hjem eller noget helt tredje. Ovenstående definition på kontinuitet giver kun mening, hvis $f(x,y)$ nærmer sig $f(x_0,y_0)$ *uanset* på hvilken måde $(x,y)$ nærmer sig $(x_0,y_0)$.
+
+Vi skal nu se på et eksempel, hvor en funktion $f$ ikke er kontinuert i $(0,0)$, fordi man kan "gå hjem" på nogle måder, så $f(x,y)$ ikke altid nærmer sig $f(0,0)$! Det kan godt være lidt svært at forestille sig, men her kommer eksemplet.
+
+## Skiferien
+
+Vi forestiller os, at grafen for funktionen $f(x,y)$ beskriver et landskab. Står vi på en flad mark er $f(x,y)$ bare $0$ for alle værdier af $(x,y)$, og det er jo ærlig talt lidt kedeligt. Men nu er din klasse taget på skiferie i et spændende land, hvor skibakkerne kan beskrives som grafen for funktionen $f$ med følgende forskrift:
+
+$$
+f(x,y)= 
+\begin{cases}
+\frac{y \cdot x^2}{y^2+x^4} \quad \textrm{hvis } (x,y) \neq (0,0) \\
+0 \quad \textrm{hvis } (x,y) = (0,0)
+\end{cases}
+$$
+Jeres hotel ligger i origo -- det vil sige i punktet $(0,0,0)$. I kan se skibakken i den interaktive figur herunder.
+
+{{< include _geogebra/_geogebra_kontinuitet.qmd >}}
+
+::: {.ggbContainer style='width:90%; margin: auto'}
+::: {#ggbApplet1}
+:::
+:::
+
+I skal nu i gang med at undersøge, om denne funktion er kontinuert i $(0,0)$. I gør det ved at stille jer forskellige steder på skibakken og gå af forskellige ruter hjem. De fleste af jer går langs rette linjer (i $xy$-planen) og rapporterer, at funktionen er kontinuert (og faktisk også differentiabel) i $(0,0)$. I kan se nogle af de forskellige ruter herunder:
+
+::: {.ggbContainer style='width:90%; margin: auto'}
+::: {#ggbApplet2}
+:::
+:::
+
+Nu er der et par elever, der rapporterer, at de kom vandrende ind mod origo på grafen og hele tiden var i højde $1/2$ lige indtil, de faldt i et hul, da de nåede origo. Hvis det er rigtigt betyder det, at funktionen *ikke* er kontinuert i origo. De elever, der faldt i et hul, er kendt for ikke at gå den lige vej hjem. Denne gang afslører de, at de gik på grafen, mens de i $xy$-planen fulgte parablen med ligning $y=x^2$. Du kan se disse elevers rute i den interaktive figur herunder.
+
+::: {.ggbContainer style='width:90%; margin: auto'}
+::: {#ggbApplet3}
+:::
+:::
+
+Men kan alle eleverne mon have ret? Vi prøver at regne på det.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 1: Gå langs $y=x$
+
++ Find forskriften for snitfunktionen langs linjen med ligning $y=x$. Det vil sige bestem $f(x,x)$.
+
++ Hvilken værdi går denne snitfunktion imod, når $x$ går mod $0$?
+
+:::
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 2: Gå langs $y=ax$
+
++ Find forskriften for snitfunktionen langs linjen med ligning $y=ax$. Det vil sige bestem $f(x,ax)$.
+
++ Hvilken værdi går denne snitfunktion imod, når $x$ går mod $0$?
+
+:::
+
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 3: Gå langs $y$-aksen
+
++ Find forskriften for snitfunktionen langs $y$-aksen. 
+
++ Hvilken værdi går denne snitfunktion imod, når $x$ går mod $0$?
+
+:::
+
+I de tre foregående opgaver skulle du gerne komme frem til at $f(x,y) \rightarrow f(0,0)=0$, når $(x,y) \rightarrow (0,0)$, så længe vi går langs rette linjer. Vi skal nu undersøge, hvad der sker, hvis vi går langs parabler.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 4: Gå langs parablen med ligning $y=x^2$
+
++ Find forskriften for snitfunktionen langs parablen med ligning $y=x^2$. Det vil sige bestem $f(x,x^2)$.
+
++ Hvilken værdi går denne snitfunktion imod, når $x$ går mod $0$?
+
+:::
+
+Hvis du har regnet rigtigt i ovenstående opgave, så har du fået, at 
+
+$$
+\lim_{(x,y) \rightarrow (0,0)}{f\left( x,y \right)} = 1/2 
+$$ 
+
+når $(x,y) \rightarrow (0,0)$ langs parablen med ligning $y=x^2$. Da $f(0,0)=0$ har vi altså fundet en måde at nærme os $(0,0)$ så
+
+$$
+\lim_{(x,y) \rightarrow (0,0)}{f\left( x,y \right) \neq f(0,0)}
+$$
+
+og derfor er $f$ ikke kontinuert i $(0,0)$, selvom det i første omgang så sådan ud (da vi gik langs rette linjer)! 
+
+For sjov skyld kan vi jo prøve at undersøge, om det gælder langs alle parabler.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 5: Gå langs parablen med ligning $y=ax^2$
+
++ Find forskriften for snitfunktionen langs parablen med ligning $y=ax^2$, hvor $a \neq 0$. Det vil sige bestem $f(x,ax^2)$.
+
++ Hvilken værdi går denne snitfunktion imod, når $x$ går mod $0$?
+
+:::
+
+Hvis du har regnes rigtig i ovenstående, har du fået, at
+$$
+\lim_{(x,y) \rightarrow (0,0)}{f\left( x,y \right)} = \frac{a}{a^2+1} \neq 0
+$$
+når $a \neq 0$. Igen har vi altså set, at$f$ ikke kontinuert i $(0,0)$. 
+
+
+
+
+
+
+
+
