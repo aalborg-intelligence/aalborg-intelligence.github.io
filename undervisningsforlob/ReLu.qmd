@@ -155,18 +155,17 @@ Skriv i input-feltet: `ReLU(x) = Hvis(x < 0, 0, x)`
 
 :::
 
-
-Du har lige opdaget, at ReLU-funktionen ikke er differentiabel i $x=0$. Når man skal træne kunstige neurale netværk, har man dog brug for at kunne regne med den afledede funktion i alle værdier. Derfor vælger vi at definere os ud af problemet med, at ReLU-funktionen ikke er differentiabel i $0$, og vi beslutter simpelthen at sætte tangenthældningen i $0$ til at være $0$. Det vil sige, at vi vælger, at  $\textrm{ReLU}'(0)=0$. Samlet set får vi derfor:
+Vi har lige set, at
 
 $$
 \textrm{ReLU}'(x) =
 \begin{cases}
-0 & \textrm{hvis } x \leq 0 \\
+0 & \textrm{hvis } x < 0 \\
 1 & \textrm{hvis } x > 0
 \end{cases}
 $$ {#eq-diffReLU}
 
-Bemærk for øvrigt, at den afledede ReLU-funktion ikke er kontinuert i $0$. Det møder du ikke så tit!
+Og vi har opdaget, at ReLU-funktionen ikke er differentiabel i $x=0$, fordi grafen har et knæk her. Det er selvfølgelig uheldigt, når man skal implementere et kunstigt neuralt netværk. Heldigvis vil det utrolig sjældent ske, at inputværdien til ReLU er præcis $0$, og hvis det alligevel sker, så vil vi vælge at sætte tangenthældningen i $0$ til at være $0$. 
 
 Vi prøver nu at sætte ReLU-funktioner sammen med lineære funktioner. Hvad det har at gøre med kunstige neurale netværk kommer vi tilbage til i det næste afsnit.
 
@@ -411,7 +410,7 @@ I opgave 9 kan du se, at grafen for $f$ og $g$ skærer hinanden én gang i inter
 
 En idé til at bestemme den værdi af $w_1$, som giver en god approksimation, vil være at bestemme den værdi, som minimerer arealet af det område, som grafen for $f$ og $g$ afgrænser i $[-4,0]$. Dette er illustreret i figuren herunder:
 
-![Grafen for $f$ og $g$ fra opgave 8.](ReLU/areal_mellem.png){#fig-areal_mellem width=50% fig-align='center'}
+![Grafen for $f$ og $g$ fra opgave 8.](ReLu/areal_mellem.png){#fig-areal_mellem width=50% fig-align='center'}
 
 Hvis vi kalder skæringspunktet $P$'s førstekoordinat for $x_1$, kan vi se, at i intervallet $[-4,x_1]$ ligger grafen for $g$ over grafen for $f$. Det vil sige, at arealet $A_1$ af det område, som de to grafer afgrænser i dette interval, er:
 
@@ -524,6 +523,8 @@ minimeres.
 + Er der stor forskel på den værdi af $w_1$, som du finder her, sammenlignet med den værdi, som du fandt i opgave 13?
 
 :::
+
+Faktisk kan man vise, at man kan approksimere enhver kontinuert funktion defineret på et begrænset interval med et neuralt netværk med ét skjult lag inden for en vilkårlig lille fejlmargin.
 
 
 ## Delvis facitliste

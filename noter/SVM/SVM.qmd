@@ -5,6 +5,7 @@ format: html
 
 ```{r include=FALSE}
 rgl::setupKnitr(autoprint = TRUE)
+options(rgl.useNULL = TRUE)
 ```
 
 Som motiverende eksempel ser vi på et af de steder, hvor kunstig intelligens forventes at have stort potentiale, nemlig inden for personlig medicin. Når en læge behandler en patient med et lægemiddel, er det ikke altid, at lægemidlet har en effekt. Det formodes at skyldes biologiske forhold i kroppen så som patientens gener. Da de fleste lægemidler har bivirkninger, er det som regel være bedst at spare patienten for behandling, hvis der alligevel ikke forventes en effekt. Lægen vil derfor gerne kunne forudsige på forhånd, om en patient har gavn af lægemidlet eller ej. Til at hjælpe sig, måler lægen nogle biologiske markører hos patienten. Det kunne for eksempel være kroppens indhold af bestemte stoffer, der siger noget om patientens genetik eller overordnede helbred.
@@ -23,9 +24,9 @@ Vi ønsker at finde en klassifikationsalgoritme, der kan *prædiktere* (altså f
 På @fig-data betragter vi et fiktivt datasæt. Vi har indtegnet punkterne $(x_{i1},x_{i2})$ i et koordinatsystem for syv patienter $i=1,\ldots,7$. Hvert punkt er farvet rødt hvis $y_i=1$ (lægemidlet har en effekt) og blåt hvis $y_i=-1$ (ingen effekt).
 
 ```{tikz fig.width=4, fig.height=4}
-%| echo: false
-%| label: fig-data
-%| fig-cap: Eksempel på et datasæt
+#| echo: false
+#| label: fig-data
+#| fig-cap: Eksempel på et datasæt
 \begin{tikzpicture}
     \draw[->] (-1,-1) -- (2,-1);
     \node at (2,-1.35) {$x_1$};
@@ -47,9 +48,9 @@ På @fig-data betragter vi et fiktivt datasæt. Vi har indtegnet punkterne $(x_{
 Hvis vi nu kommer med en ny patient, som har fået målt $x_1$ og $x_2$, vil vi gerne kunne klassificere den. Hvis den nye observation er placeret ved det hvide punkt på @fig-nydata, vil det være naturligt at klassificere den som blå. Er den placeret ved det grønne punkt, vil det være oplagt at klassificere den som rød. Men hvis den er placeret ved det sorte punkt, er det ikke helt så klart, hvad vi skal vælge.
 
 ```{tikz fig.width=4, fig.height=4}
-%| echo: false
-%| label: fig-nydata
-%| fig-cap: Det sorte, hvide og grønne punkt er nye patienter, som vi gerne vil klassificere som enten røde eller blå.
+#| echo: false
+#| label: fig-nydata
+#| fig-cap: Det sorte, hvide og grønne punkt er nye patienter, som vi gerne vil klassificere som enten røde eller blå.
 
     \begin{tikzpicture}
         \draw[->] (-1,-1) -- (2,-1);
@@ -75,9 +76,9 @@ Hvis vi nu kommer med en ny patient, som har fået målt $x_1$ og $x_2$, vil vi 
 Idéen med support vector machines er at tegne en linje, der adskiller de to klasser. Et nyt punkt klassificeres som blåt, hvis det ligger på den ene side, og som rødt, hvis det ligger på den anden side. Det deler planen op i to klassifikationsområder som indikeret på @fig-regioner.
 
 ```{tikz fig.width=4, fig.height=4}
-%| echo: false
-%| label: fig-regioner
-%| fig-cap: Linjen deler planen op i et rødt og et blåt klassifikationsområde.
+#| echo: false
+#| label: fig-regioner
+#| fig-cap: Linjen deler planen op i et rødt og et blåt klassifikationsområde.
 \begin{tikzpicture}
         \draw[fill,red!20] (-1,2) -- (2,2)-- (2,-1) -- (-1,2);
         \draw[fill, blue!20] (-1,2) -- (-1,-1) -- (2,-1) -- (-1,2);
@@ -101,9 +102,9 @@ Idéen med support vector machines er at tegne en linje, der adskiller de to kla
 Som vist på @fig-linjer er der mange måder at tegne sådan en skillelinje på. Klassifikationen af det sorte punkt afhænger af, hvor man placerer linjen.
 
 ```{tikz fig.width=4, fig.height=4}
-%| echo: false
-%| label: fig-linjer
-%| fig-cap: Der er flere forskellige linjer, der adskiller de to klasser.
+#| echo: false
+#| label: fig-linjer
+#| fig-cap: Der er flere forskellige linjer, der adskiller de to klasser.
 \begin{tikzpicture}
     \draw[->] (-1,-1) -- (2.1,-1);
     \draw[->] (-1,-1) -- (-1,2.1);
@@ -126,9 +127,9 @@ Som vist på @fig-linjer er der mange måder at tegne sådan en skillelinje på.
 Så hvordan vælger vi, hvor vi skal tegne linjen? Support vector machines vælger den linje, der har størst mulig afstand til den nærmeste observation. Afstanden fra en skillelinje til det nærmeste observerede punkt betegnes $M$. I et bånd af bredde $M$ på begge sider af linjen vil der altså ikke ligge nogen punkter. Dette bånd kalder vi linjens *margin*. Det er illustreret på @fig-margin.
 
 ```{tikz fig.width=4, fig.height=4}
-%| echo: false
-%| label: fig-margin
-%| fig-cap: Figuren viser linjen med størst mulig margin. Linjens margin er båndet mellem de stiplede linjer. Afstanden fra linjen til kanten af marginen er $M$.
+#| echo: false
+#| label: fig-margin
+#| fig-cap: Figuren viser linjen med størst mulig margin. Linjens margin er båndet mellem de stiplede linjer. Afstanden fra linjen til kanten af marginen er $M$.
 \begin{tikzpicture}
     \draw[->] (-1,-1) -- (2.1,-1);
     \draw[->] (-1,-1) -- (-1,2.1); 
@@ -157,9 +158,9 @@ Hvordan finder vi så linjen med bredest mulig margin? Først får vi brug for l
 På @fig-fortegn er det illustreret, at $ax_1 + bx_2 +c$ er positiv på den røde side af linjen, som også er den side $\overrightarrow{n}$ peger mod, mens $ax_1 + bx_2 +c$ er negativ på den blå side.
 
 ```{tikz fig.width=4, fig.height=4}
-%| echo: false
-%| label: fig-fortegn
-%| fig-cap: Fortegnet på $ax_1+bx_2 +c$ afhænger af, hvilken side af linjen punktet $(x_1,x_2)$ ligger på. 
+#| echo: false
+#| label: fig-fortegn
+#| fig-cap: Fortegnet på $ax_1+bx_2 +c$ afhænger af, hvilken side af linjen punktet $(x_1,x_2)$ ligger på. 
     \begin{tikzpicture}[scale=1]
         \draw[fill,red!20] (-1,2) -- (2,2)-- (2,-1) -- (-1,2);
         \draw[fill, blue!20] (-1,2) -- (-1,-1) -- (2,-1) -- (-1,2);
@@ -184,9 +185,9 @@ Beviset minder om beviset for afstandsformlen, blot holder vi bedre øje med for
 **Bevis.** Lad $P_0=(w_1,w_2)$ være et punkt på linjen. Så opfylder $P_0$ linjens ligning, det vil sige $$0=aw_1 + bw_2 + c$$ Det betyder at, $$ az_1 + bz_2 + c = az_1 + bz_2 +c -(  aw_1 + bw_2 - c ) = a(z_1-w_1) + b(z_2-w_2) $$ Vi genkender højresiden som prikproduktet mellem $\overrightarrow{n}= \begin{pmatrix} a\\ b \end{pmatrix}$ og vektoren $\overrightarrow{P_0P}= \begin{pmatrix} z_1-w_1 \\ z_2-w_2 \end{pmatrix}.$ Vi får altså $$  az_1 + bz_2 + c=\overrightarrow{n} \cdot \overrightarrow{P_0P}$$ På den anden side har vi formlen for vinklen $v$ mellem $\overrightarrow{n}$ og $\overrightarrow{P_0P}$ $$ \overrightarrow{n} \cdot \overrightarrow{P_0P} =|\overrightarrow{n}| \cdot |\overrightarrow{P_0P}|\cdot \cos(v)$$ Vektorerne $\overrightarrow{n}$ og $\overrightarrow{P_0P}$ og vinklen mellem dem er illustreret på @fig-vinkel.
 
 ```{tikz fig.width=4, fig.height=4}
-%| echo: false
-%| label: fig-vinkel
-%| fig-cap: Vektorerne $\overrightarrow{n}$ og $\overrightarrow{P_0P}$ og vinklen $v$ mellem dem.
+#| echo: false
+#| label: fig-vinkel
+#| fig-cap: Vektorerne $\overrightarrow{n}$ og $\overrightarrow{P_0P}$ og vinklen $v$ mellem dem.
   \begin{tikzpicture}[scale=1.5]
 
             \draw(-0.5,1.5) -- (1.5,-0.5);
@@ -244,9 +245,9 @@ VIDEO!
 I praksis er linjens placering bestemt af de punkter, der ligger lige på kanten af linjens margin. Disse punkter kaldes *supportvektorer* --- deraf navnet *support vector machines*. Flytter man bare en lille smule på supportvektorerne, kan det ændre meget på linjens placering, se @fig-support, hvor supportvektorerne er markeret med en ring omkring. De øvrige punkter kan man godt flytte lidt, uden at det ændrer på linjen.
 
 ```{tikz fig.width=4, fig.height=4}
-%| echo: false
-%| label: fig-support
-%| fig-cap: Linjens supportvektorer er markeret med ring om. Til højre er supportvektorerne flyttet en smule, hvilket ændrer meget på linjen.
+#| echo: false
+#| label: fig-support
+#| fig-cap: Linjens supportvektorer er markeret med ring om. Til højre er supportvektorerne flyttet en smule, hvilket ændrer meget på linjen.
 \begin{tikzpicture}
     \draw[->] (-1,0) -- (2,0);
         \draw[->] (0,-1) -- (0,2);
@@ -287,9 +288,9 @@ I praksis er linjens placering bestemt af de punkter, der ligger lige på kanten
 Ind til videre har vi antaget, at det er muligt at adskille klasserne med en linje. Det er dog langt fra altid muligt at finde sådan en linje, se for eksemplet datasættet på @fig-slack. Hvordan man kan løse det problem, ser vi nærmere på i næste afsnit.
 
 ```{tikz fig.width=4, fig.height=4}
-%| echo: false
-%| label: fig-slack
-%| fig-cap: To klasser, der ikke kan adskilles af en linje.
+#| echo: false
+#| label: fig-slack
+#| fig-cap: To klasser, der ikke kan adskilles af en linje.
     \begin{tikzpicture}
         \draw[->] (-1,0) -- (2,0);
         \draw[->] (0,-1) -- (0,2);
@@ -383,8 +384,8 @@ $$ {#eq-M} med $$\frac{y_i(ax_{i1} + bx_{i2 } + c)}{\sqrt{a^2 + b^2}} \geq M(1-\
 Fortolkningen er illustreret på @fig-fortolk. Supportvektorerne er nu alle punkter, der ligger inden for eller på kanten af margin.
 
 ```{tikz fig.width=4, fig.height=4}
-%| echo: false
-%| label: fig-fortolk
+#| echo: false
+#| label: fig-fortolk
     \begin{tikzpicture}[scale=2]
         \draw[->] (-1,0) -- (2,0);
         \draw[->] (0,-1) -- (0,2);
@@ -451,8 +452,8 @@ Lad os sige, at vi vil lave en skillelinje mellem klasserne med ligningen $x_2-1
 Det er ikke altid, at en ret linje er det bedste til at adskille to klasser. På @fig-kurve er vist et eksempel, hvor det ville give mere mening at adskille klasserne med en blød kurve.
 
 ```{tikz fig.width=4, fig.height=4}
-%| echo: false
-%| label: fig-kurve
+#| echo: false
+#| label: fig-kurve
 \begin{tikzpicture}
     \draw[->] (-2,0) -- (2,0);
     \node at (2,-0.35) {$x_1$};
@@ -536,8 +537,8 @@ Da vores punkter er på formen $(x_1,x_2,x_3)=(x_1,x_2,x_1^2)$, klassificerer vi
 Hvis vi i dataeksemplet fra @fig-kurve indlejrer punkterne i $\mathbb{R}^3$ og adskiller dem med en plan, som vist på @fig-flade og @fig-plan, så svarer det altså til, at vi adskiller de oprindelige punkter i $\mathbb{R}^2$ med en parabel som vist på @fig-parabel.
 
 ```{tikz fig.width=4, fig.height=4}
-%| echo: false
-%| label: fig-parabel
+#| echo: false
+#| label: fig-parabel
 \begin{tikzpicture}
 
 

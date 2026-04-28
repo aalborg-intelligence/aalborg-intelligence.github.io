@@ -1,5 +1,5 @@
 ---
-title: "Simple kunstige neruale netværk til regression"
+title: "Simple kunstige neurale netværk til regression"
 aliases: 
   - "/materialer/simple_neurale_net_regression/simple_neurale_net_regression.html"
 from: markdown+emoji
@@ -114,7 +114,7 @@ hvor det nu så bare ikke er helt så tydeligt, at $E$ jo faktisk afhænger af a
 
 For at bestemme de værdier af vægtene, som minimerer tabsfunktionen, vil vi bruge en metode, som kaldes for gradientnedstigning. Vi har lavet videoer om både [funktioner af to variable](https://youtu.be/tlq2UYWF2Rw){target="blank"} og [gradientnedstigning](https://youtu.be/WcM8aEoPzf8){target="blank"}, hvis du vil vide mere.
 
-Idéen i gradientnedstigning er, at vi opdaterer alle vægtene ved at gå et lille stykke i den negative gradients retning. Det kommer til at se sådan her ud:
+Idéen i gradientnedstigning er, at vi starter med at vælge nogle tilfældige værdier af vægtene. For de valgte værdier af vægtene kan vi udregne gradienten, som er vektoren bestående af alle de partielle afledede $\frac{\partial E }{\partial w_0}$, $\frac{\partial E }{\partial w_1}, \dots, \frac{\partial E }{\partial w_n}$. Man kan vise, at denne gradient peger i den retning, hvor funktionsværdien vokser mest. Det kommer omvendt til at betyde, at den negative gradient peger i den retning, hvor funktionsværdien falder mest. Vi opdaterer derfor alle vægtene ved at gå et lille stykke i den negative gradients retning. Vi vælger, at skrive det sådan her:
 
 $$
 \begin{aligned}
@@ -209,7 +209,7 @@ Bruger vi denne app på datasættet om lejlighedssalg, hvor vi sætter alle star
 | $0.06375$ | $0.01951$ | $-0.002349$ | 
 : {.bordered}
 
-For eksempel kan vi se, at $w_1 = 0.01951$. Det vil sige, at ifølge modellen vil prisen på en lejlighed, som er præcis én kvadratmeter større end en anden tilsvarende[^2] lejlighed, være cirka $19510$ kroner højere (husk på at prisen er målt i millioner, så vi skal lige gange med en million, hvis vi skal have værdien oversat til kroner).
+For eksempel kan vi se, at $w_1 = 0.01951$. Det vil sige, at ifølge modellen vil prisen på en lejlighed, som er præcis én kvadratmeter større end en anden tilsvarende[^2] lejlighed, være cirka $19510$ kroner højere (husk på, at prisen er målt i millioner, så vi skal lige gange med en million, hvis vi skal have værdien oversat til kroner). Det viser også, at modellen er meget simpel. Det er for eksempel ikke sikkert i virkelighedens verden, at en ekstra kvadratmeter har samme effekt på prisen for nye såvel som for gamle lejligheder. 
 
 [^2]: En tilsvarende lejlighed vil her mere præcist betyde en lejlighed med den samme alder.
 
@@ -279,7 +279,7 @@ R^2 = 0.596
 $$
 ** $R^2$ mangler tjek med app!**
 
-Du er måske vant til at se $R^2$-værdier, som er meget større, men for en model baseret på et datasæt fra den virkelige verden er det såmen ikke helt tosset!
+Du er måske vant til at se $R^2$-værdier, som er meget større, men for en model baseret på et datasæt fra den virkelige verden, er det såmen ikke helt tosset! Det skyldes, at der altid vil være ting, som man ikke kan forklare, når man som her vil prædiktere huspriser. Det er for eksempel svært at sætte tal på udsigten, hvor fint lejligheden er renoveret, hvor meget naboerne larmer og så videre. Til sammenligning har vi meget bedre styr på de forskellige faktorer, som påvirker et forsøg i fysik, og her vil vi typisk se $R^2$-værdier, som er meget højere.
 
 :::
 
@@ -528,30 +528,34 @@ $$
    **$w$-vægtene:**
    $$
    \begin{aligned}
-   w_0^{\textrm{(ny)}} &\leftarrow w_0 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \\
-   w_1^{\textrm{(ny)}} &\leftarrow w_1 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot z_1^{(m)} \\
-   w_2^{\textrm{(ny)}} &\leftarrow w_2 + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot z_2^{(m)} 
+   w_0^{\textrm{(ny)}} &\leftarrow w_0 + \eta \cdot \sum_{m=1}^{M} \left ( t^{(m)}-o^{(m)} \right) \\
+   w_1^{\textrm{(ny)}} &\leftarrow w_1 + \eta \cdot \sum_{m=1}^{M} \left ( t^{(m)}-o^{(m)} \right) \cdot z_1^{(m)} \\
+   w_2^{\textrm{(ny)}} &\leftarrow w_2 + \eta \cdot \sum_{m=1}^{M} \left ( t^{(m)}-o^{(m)} \right) \cdot z_2^{(m)} 
    \end{aligned}
    $$
-   hvor
    
-   $$
-   \delta^{(m)} = t^{(m)}-o^{(m)}
-   $$
    **$v$-vægtene:**
    $$
-   v_i^{\textrm{(ny)}} \leftarrow 
+   v_i^{\textrm{(ny)}} \leftarrow v_i + \eta \cdot \sum_{m=1}^{M} \delta_v^{(m)} \cdot w_1  \cdot x_i^{(m)}
+   $$
+   hvor
+   $$
+   \delta_v^{(m)} = 
    \begin{cases}
-   v_i & \textrm{hvis } v_0 + v_1 \cdot x_1 + v_2 \cdot x_2 \leq 0 \\
-   v_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_1  \cdot x_i^{(m)} &    \textrm{ellers} \\
+   0 & \textrm{hvis } v_0 + v_1 \cdot x_1^{(m)} + v_2 \cdot x_2^{(m)} \leq 0 \\
+   t^{(m)}-o^{(m)} &    \textrm{ellers} \\
    \end{cases}
    $$
    **$u$-vægtene:**
    $$
-   u_i^{\textrm{(ny)}} \leftarrow 
+   u_i^{\textrm{(ny)}} \leftarrow u_i + \eta \cdot \sum_{m=1}^{M} \delta_u^{(m)} \cdot w_2  \cdot x_i^{(m)}
+   $$
+   hvor
+   $$
+   \delta_u^{(m)} = 
   \begin{cases}
-  u_i & \textrm{hvis } u_0 + u_1 \cdot x_1 + u_2 \cdot x_2 \leq 0 \\
-   u_i + \eta \cdot \sum_{m=1}^{M} \delta^{(m)} \cdot w_2  \cdot x_i^{(m)} &      \textrm{ellers} \\
+  0 & \textrm{hvis } u_0 + u_1 \cdot x_1^{(m)} + u_2 \cdot x_2^{(m)} \leq 0 \\
+  t^{(m)}-o^{(m)}  & \textrm{ellers} \\
   \end{cases}
    $$
    I alle tilfælde sætter vi $x_0^{(m)}=1$.
@@ -565,13 +569,14 @@ Alle vægtene er nu opdateret, og vi kan gentage punkt 2 og 3, hvor feedforward 
 I alle opdateringsreglerne indgår faktoren 
 
 $$
- \delta^{(m)} = t^{(m)}-o^{(m)}
+t^{(m)}-o^{(m)}
 $$
 
 Denne størrelse er et udtryk for den fejl, netværket begår med de nuværende værdier af vægtene (nemlig forskellen på den ønskede targetværdi $t^{(m)}$ og den prædikterede outputværdi $o^{(m)}$). Der er to ting, som er værd at bemærke i den forbindelse:
 
 * Hvis fejlen er stor, bliver vægtene opdateret forholdsvis meget -- og omvendt hvis fejlen er lille.
-* Når vi har opdateret $w$-vægtene, har vi allerede beregnet fejlen $\delta^{(m)}$. Denne \"fejlfaktor\" indgår også i opdateringsreglerne for $v$- og $u$-vægtene, og den allerede beregnede fejl kan altså genbruges, når $v$- og $u$-vægtene skal opdateres.
+* Når vi har opdateret $w$-vægtene, har vi allerede beregnet fejlen $t^{(m)}-o^{(m)}$. Denne \"fejlfaktor\" indgår også i opdateringsreglerne for $v$- og $u$-vægtene, og den allerede beregnede fejl kan altså genbruges, når $v$- og $u$-vægtene skal opdateres.
+* Konsekvensen ved at bruge ReLU er, at vi så at sige kan \"tænde\" eller \"slukke\" for om et træningseksempel kommer til at bidrage til opdateringen af enten $v$- eller $u$-vægtene. Hvis for eksempel $\delta_v^{(m)}=0$, så kommer det $m$'te træningseksempel ikke til at bidrage til opdateringen af $v$-vægten og omvendt, hvis $\delta_v^{(m)} \neq 0$. 
 
 Det kan her virke fuldstændig ligegyldigt, om vi skal beregne fejlen et par ekstra gange eller ej, men i virkelighedens anvendelser af kunstige neurale netværk, er det lige præcis denne beregningsmæssige finte, som gør, at det overhovedet kan lade sig gøre at bruge gradientnedstigning. Det sparer nemlig både tid og lagringsplads på computeren, at tidligere beregnede størrelser kan genbruges i de næste opdateringer.  
 
@@ -828,6 +833,8 @@ pp |>
 ```
 
 Det ses tydeligt, at det neurale netværk er bedre til at prædiktere lejlighedspriserne for de nyeste lejligheder med et forholdsvis stort areal sammenlignet med den kunstige neuron. Læg også mærke til, hvordan prædiktionsfladen baseret på det neurale netværk kan \"knække\" og på den måde modellere ikke lineære sammenhænge i data.
+
+**MANGLER**: Måske eksempel, hvor vi måler på den relative afvigelse i stedet for den absolutte. Evt. forslag om at modellere log(huspriser) i stedet for.
 
 :::
 
