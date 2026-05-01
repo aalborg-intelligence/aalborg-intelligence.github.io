@@ -322,6 +322,8 @@ For at finde en linje, der klassificerer alle vores punkter korrekt med en margi
 
 Dette er et såkaldt betinget optimeringsproblem. Man kan tænke på det som en funktion $f(a,b,c,M)=M$, der skal maksimeres. Ulighederne i (@eq-ulig) lægger nogle begrænsninger på definitionsmængden for $f$. Der er altså tale om optimering af en funktion på en begrænset definitionsmængde. Her afhænger funktionen dog ikke bare af en enkelt variabel, som I kender det fra gymnasieundervisningen, men af hele fire variable $a,b,c,M$, hvilket gør definitionsmængden kompliceret. Denne type problemer må derfor normalt løses numerisk. Nedenfor viser vi, hvordan de gøres i Excel.
 
+Når linjen er fundet, kan vi begynde at prædiktere effekten af lægemidlet for nye patienter. Vi måler patientens biomarkører $(x_1,x_2)$. Vi beregner så $ax_1+bx_2+c$. Hvis $ax_1+bx_2+c>0$ prædikterer vi klasse $1$, altså at lægemidlet har en effekt. Hvis $ax_1+bx_2+c<0$ prædikterer vi klasse $-1$ og dermed, at lægemidlet ikke har effekt.
+
 ## Løsning med Excel
 
 Som vi har formuleret vores optimeringsproblem ind til videre, har det mere end én løsning. Vi ville derfor få en fejlmeddelelse fra Excel, hvis vi prøvede at løse det direkte. For at se hvorfor, kan vi prøve at gange $a,b$ og $c$ med et $s>0$. Da bliver tælleren i (@eq-ulig) til
@@ -779,7 +781,7 @@ Det er ikke altid, at en ret linje er det bedste til at adskille to klasser. På
 \end{tikzpicture} 
 ```
 
-Hvis man ønsker en ikke-lineær adskillelse af klasserne, kan man indlejre punkterne i et højeredimensionalt rum og håbe på, at de bliver nemmere at adskille der. Betragt for eksempel funktionen af to variable $f(x_1,x_2)=x_1^2$. Vi kan bruge den til at indlejre det todimensionale punkt $(x_1,x_2)$ i et tredimensionalt koordinatsystem som det tilsvarende punkt på grafen for $f$, altså punktet $(x_1,x_2,f(x_1,x_2))=(x_1,x_2,x_1^2)$. Det er vist på @fig-flade.
+Hvis man ønsker en ikke-lineær adskillelse af klasserne, kan man indlejre punkterne i et højeredimensionalt rum og håbe på, at de bliver nemmere at adskille der. Betragt for eksempel funktionen af to variable $f(x_1,x_2)=x_1^2$. Vi kan bruge den til at indlejre det todimensionale punkt $(x_1,x_2)$ i et tredimensionalt koordinatsystem som punktet $(x_1,x_2,f(x_1,x_2))=(x_1,x_2,x_1^2)$ på grafen for $f$. Det er vist på @fig-flade.
 
 ```{r fig.width=4, fig.height=4}
 #| echo: false
@@ -829,20 +831,20 @@ plot3d(
 
 
 
-Lad os sige, at vi kommer frem til planen $ax_1+bx_2+cx_3+d=0$.
-Da vores punkter er på formen $(x_1,x_2,x_3)=(x_1,x_2,x_1^2)$, klassificerer vi dem efter fortegnet på $ax_1 + bx_2 + cx_1^2 +d$. Skellet mellem klasserne bliver de punkter, hvor $ax_1 + bx_2 + cx_1^2 +d=0$. Hvis $b\neq 0$, kan vi isolere $x_2$ og få
+Lad os sige, at vi har fundet planen $ax_1+bx_2+cx_3+d=0$.
+Da vores punkter er på formen $(x_1,x_2,x_3)=(x_1,x_2,x_1^2)$, klassificerer vi dem efter fortegnet på $ax_1+bx_2+cx_3+d=ax_1 + bx_2 + cx_1^2 +d$. Skellet mellem klasserne bliver de punkter, hvor $ax_1 + bx_2 + cx_1^2 +d=0$. Hvis $b\neq 0$, kan vi isolere $x_2$ og få
 
 $$
 x_2 = -\frac{c}{b}x_1^2 -\frac{a}{b}x_1 - \frac{d}{b}
 $$
 
-Vi genkender dette som ligningen for en parabel. Hvis $b>0$ og $ax_1 + bx_2 + cx_1^2 +d>0$ får vi tilsvarende, at
+Vi genkender dette som ligningen for en parabel. Hvis  $ax_1 + bx_2 + cx_1^2 +d>0$ og $b>0$ får vi tilsvarende, at
 
 $$
 x_2 > -\frac{c}{b}x_1^2 -\frac{a}{b}x_1 - \frac{d}{b}
 $$
 
-Det svarer til punkter, der ligger over parablen. Vi får altså, at klasse $1$ skal ligge over parablen. Tilsvarende skal klasse $-1$ ligge under. Hvis $b<0$ er det omvendt.
+Det svarer til punkter, der ligger over parablen. Vi ser altså, at klasse $1$ skal ligge over parablen. Tilsvarende skal klasse $-1$ ligge under. Hvis $b<0$ er det omvendt.
 
 Hvis vi i dataeksemplet fra @fig-kurve indlejrer punkterne i $\mathbb{R}^3$ og adskiller dem med en plan, som vist på @fig-flade og @fig-plan, så svarer det altså til, at vi adskiller de oprindelige punkter i $\mathbb{R}^2$ med en parabel som vist på @fig-parabel.
 
@@ -887,13 +889,13 @@ Der er mange måder at vælge funktionen $f$, der indlejrer punkterne i $\mathbb
 
 ## Opgave 8
 
-Antag, at vi indlejrer punkterne $(x_1,x_2)$ i $\mathbb{R}^3$ som punkterne $(x_1,x_2,x_1^2 + x_2^2)$. Vi adskiller punkterne i $\mathbb{R}^3$ med den vandrette plan $x_3-4=0$.
+Antag, at vi indlejrer punkterne $(x_1,x_2)$ i $\mathbb{R}^3$ som punkterne $(x_1,x_2,x_1^2 + x_2^2)$. Vi adskiller klasser i $\mathbb{R}^3$ med den vandrette plan $x_3-4=0$.
 
 -   Redegør for, at det svarer til at adskille de oprindelige punkter i $\mathbb{R}^2$ med en cirkel (Hint: indsæt punktet $(x_1,x_2,x_1^2 + x_2^2)$ i planens ligning).
 
 -   Hvad er centrum og radius for cirklen?
 
--   Hvilken af klasserne $1$ og $-1$ ligger inden for cirklen (Hint: Se på fortegnet for $x_3-4$ når punktet $(x_1,x_2,x_1^2 + x_2^2)$ indsættes)?
+-   Hvilken af klasserne $1$ og $-1$ ligger inden for cirklen? (Hint: Se på fortegnet for $x_3-4$ når punktet $(x_1,x_2,x_1^2 + x_2^2)$ indsættes)
 
 ## Opgave 9
 
@@ -919,7 +921,7 @@ Nedenstående datasæt blev brugt til at lave @fig-kurve.
 
 : {.bordered}
 
--   Løs optimeringsproblemet for at finde den bedste plan med hård margin  til at adskille klasserne i $\mathbb{R}^3$ ved hjælp af Excel (Se vejledning i Opgave 7. Bemærk at der skal laves en ekstra søjle indholdende variablen $x_3=x_1^2$). 
+-   Løs optimeringsproblemet for at finde den bedste plan med hård margin  til at adskille klasserne i $\mathbb{R}^3$ ved hjælp af Excel. Det kan gøres lige som i videoen ved at lave en ekstra søjle indeholdende værdierne af $x_3=x_1^2$ og tilføje en ekstra celle for den ukendte variabel $d$. Endelig skal formlerne (@eq-c) og (@eq-ab) erstattes af (@eq-d) og (@eq-abc).
 
 - Find ligningen for den tilsvarende parabel, der adskiller klasserne i $\mathbb{R}^2$.
 
