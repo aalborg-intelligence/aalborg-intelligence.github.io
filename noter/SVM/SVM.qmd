@@ -8,9 +8,13 @@ rgl::setupKnitr(autoprint = TRUE)
 options(rgl.useNULL = TRUE)
 ```
 
+Denne note handler om Support Vector Machines, som er en metode inden for kunstig intelligens, der kan bruges til at adskille forskellige grupper fra hinanden.
+
+## Klassifikation ved hjælp af rette linjer
+
 Som motiverende eksempel ser vi på et af de steder, hvor kunstig intelligens forventes at have stort potentiale, nemlig inden for personlig medicin. Når en læge behandler en patient med et lægemiddel, er det ikke altid, at lægemidlet har en effekt. Det formodes at skyldes biologiske forhold i kroppen så som patientens gener. Da de fleste lægemidler har bivirkninger, vil det som regel være bedst at spare patienten for behandling, hvis der alligevel ikke forventes en effekt. Lægen vil derfor gerne kunne forudsige på forhånd, om en patient har gavn af lægemidlet eller ej. For at finde ud af det,  tager lægen nogle blodprøver og bestemmer nogle biomarkører. Biomarkører er mål for blodets indhold af bestemte stoffer, der for eksempel siger noget om patientens genetik eller overordnede helbred.
 
-Ovenstående er et eksempel på et **klassifikationsproblem**. Lægen vil gerne kunne inddele patienterne i to grupper, nemlig "effekt" og "ikke effekt". Grupperne kalder vi også for **klasser**, og for nemheds skyld vil vi bare betegne de to klasser med $1$ og $-1$. Vi lader $t$ være en variabel, der angiver klassen, det vil sige $t\in \{-1,1\}$. Vi forestiller os desuden, at lægen måler to biologiske markører hos patienterne, som vi vil kalde $x_1$ og $x_2$.
+Ovenstående er et eksempel på et **klassifikationsproblem**. Lægen vil gerne kunne inddele patienterne i to grupper, nemlig \"effekt\" og \"ikke effekt\". Grupperne kalder vi også for **klasser**, og for nemheds skyld vil vi bare betegne de to klasser med $1$ og $-1$. Vi lader $t$ være en variabel, der angiver klassen, det vil sige $t\in \{-1,1\}$. Vi forestiller os desuden, at lægen måler to biologiske markører hos patienterne, som vi vil kalde $x_1$ og $x_2$. I forbindelse med kunstig intelligens kalder man $x_1$ og $x_2$ for **features** eller **inputvariable**, mens man kalder $t$ for **target** (det er den værdi, vi gerne vil \"ramme\").
 
 Vi ønsker at finde en klassifikationsalgoritme, der kan **prædiktere** (altså forudsige) klassen ud fra målinger af $x_1$ og $x_2$. For at hjælpe os med det, tager vi udgangspunkt i et **træningsdatasæt** bestående af $n$ patienter, der er blevet behandlet med lægemidlet og har fået målt de to biomarkører $x_1$ og $x_2$. Desuden har vi observeret, om lægemidlet havde en effekt. Vi har altså et datasæt på formen vist i @tbl-trainingdata, hvor hver række svarer til en patient:
 
@@ -79,7 +83,7 @@ Hvis vi nu kommer med en ny patient, som har fået målt $x_1$ og $x_2$, vil vi 
     \end{tikzpicture}
 ```
 
-Idéen med support vector machines er at tegne en linje, der adskiller de to klasser. Et nyt punkt klassificeres som lyseblåt, hvis det ligger på den ene side, og som lyserødt, hvis det ligger på den anden side. Det deler planen op i to klassifikationsområder som indikeret på @fig-regioner.
+Idéen med support vector machines er at tegne en linje, der adskiller de to klasser. Et nyt punkt klassificeres som lyseblåt, hvis det ligger på den ene side, og som lyserødt, hvis det ligger på den anden side. Det deler planen op i to klassifikationsområder, som indikeret på @fig-regioner.
 
 ```{tikz fig.width=4, fig.height=4}
 #| echo: false
@@ -136,6 +140,8 @@ Som vist på @fig-linjer er der mange måder at tegne sådan en skillelinje på.
 \end{tikzpicture}
 ```
 
+## Support Vector Machines algoritmen
+
 Så hvordan vælger vi, hvor vi skal tegne linjen?
 
 ::: {.highlight .centertext}
@@ -172,13 +178,22 @@ Afstanden fra en skillelinje til det nærmeste observerede punkt betegnes $M$. I
 \end{tikzpicture}
 ```
 
+De to punkter, som ligger på en af de stiplede linjer i @fig-margin, kaldes for **supportvektorer**.
+
 Hvordan finder vi så linjen med bredest mulig margin? Først får vi brug for lidt teori om afstanden fra et punkt til en linje. Husk på, at vi kan skrive ligningen for linjen $l$ som
 
 $$
 l: ax_1 + bx_2 + c = 0
 $$
 
-hvor $a$, $b$ og $c$ er konstanter, som skal fastlægges for at kende linjen. Vektoren $$\vec{n} = \begin{pmatrix} a\\ b \end{pmatrix}$$ {#eq-normal} er en normalvektor til linjen. I ved fra gymnasieundervisningen, at hvis $P = (z_1,z_2)$ er et punkt i planen, så er afstanden fra $P$ til linjen $l$ givet ved
+hvor $a$, $b$ og $c$ er konstanter, som skal fastlægges for at kende linjen. Vær opmærksom på, at du er vant til at se ligningen på denne måde:
+
+$$
+l: ax + by + c = 0
+$$
+
+
+Vektoren $$\vec{n} = \begin{pmatrix} a\\ b \end{pmatrix}$$ {#eq-normal} er en normalvektor til linjen. I ved fra gymnasieundervisningen, at hvis $P = (z_1,z_2)$ er et punkt i planen, så er afstanden fra $P$ til linjen $l$ givet ved
 
 $$
 \textrm{dist}(P,l)=\frac{|az_1 + bz_2 + c|}{\sqrt{a^2+b^2}}
@@ -219,8 +234,13 @@ På @fig-fortegn er det illustreret, at $ax_1 + bx_2 +c$ er positiv på den lyse
 
 Beviset minder om beviset for afstandsformlen, blot holder vi bedre øje med fortegn.
 
-::: bevis
+::: {.callout-tip collapse="true" appearance="minimal"}
+
+### Bevis for sætning 1
+
 [Bevis]{.fremhaev}
+
+::: {.moerkblaa}
 
 Lad $P_0=(w_1,w_2)$ være et punkt på linjen. Så opfylder $P_0$ linjens ligning, det vil sige $$
 0=aw_1 + bw_2 + c
@@ -238,12 +258,11 @@ $$
 
 På den anden side har vi formlen for vinklen $v$ mellem $\vec{n}$ og $\overrightarrow{P_0P}$ $$ 
 \vec{n} \cdot \overrightarrow{P_0P} =|\vec{n}| \cdot |\overrightarrow{P_0P}|\cdot \cos(v)
-$$ Vektorerne $\vec{n}$ og $\overrightarrow{P_0P}$ og vinklen mellem dem er illustreret på @fig-vinkel.
+$$ Vektorerne $\vec{n}$ og $\overrightarrow{P_0P}$ og vinklen mellem dem er illustreret på figuren her:
 
+::: {.text-center}
 ```{tikz fig.width=4, fig.height=4}
 #| echo: false
-#| label: fig-vinkel
-#| fig-cap: Vektorerne $\vec{n}$ og $\overrightarrow{P_0P}$ og vinklen $v$ mellem dem.
 \definecolor{mydarkblue}{HTML}{020873}
 \begin{tikzpicture}[scale=1.5]
 
@@ -269,6 +288,7 @@ $$ Vektorerne $\vec{n}$ og $\overrightarrow{P_0P}$ og vinklen mellem dem er illu
             \node[text=mydarkblue] at (1.1,0.7) {$v$};
         \end{tikzpicture}
 ```
+:::
 
 Antag, at $az_1 + bz_2 +c>0$. Så har vi altså, at
 
@@ -285,14 +305,35 @@ $$
 $$
 
 Vi må derfor have, at $\cos v <0$ svarende til, at vinklen $v$ må ligge i intervallet $]90^\circ,180^\circ[$. Det følger, at $P$ ligger på modsatte side af linjen i forhold til $\vec{n}$.
+
+:::
+
 :::
 
 Vi kan benytte sætningen til at lave vores klassifikationsalgoritme. Lad os lægge os fast på, at vi ønsker en ligning for linjen på formen $ax_1 + bx_2 +c = 0$, hvor normalvektoren peger i retning af den lyserøde klasse ($t=1$).
 
-Vi ser nu på data $\big(x_{1}^{(i)},x_{2}^{(i)},t^{(i)}\big)$ for den $i$te patient. Hvis $t^{(i)}=1$, så skal punktet $\big(x_{1}^{(i)},x_{2}^{(i)}\big)$ ligge på samme side af linjen som normalvektoren. Vi vil derfor gerne have at $0< ax_{1}^{(i)} + bx_{2}^{(i)} + c$. Hvis derimod $t^{(i)}=-1$, skal $0> ax_{1}^{(i)} + bx_{2}^{(i)} + c$. Hvis patienten er klassificeret rigtigt, skal $t^{(i)}$ og $ax_{1}^{(i)} + bx_{2}^{(i)} + c$ altså have samme fortegn. Det kan vi skrive kort som
+Vi ser nu på data $\big(x_{1}^{(i)},x_{2}^{(i)},t^{(i)}\big)$ for den $i$te patient. Der er nu to muligheder:
+
+* [Mulighed 1 ($t=1$)]{.fremhaev}
+
+   Hvis $t^{(i)}=1$, så skal punktet $\big(x_{1}^{(i)},x_{2}^{(i)}\big)$ ligge på samme side    af linjen som normalvektoren. Vi vil derfor gerne have, at 
+
+   $$
+   ax_{1}^{(i)} + bx_{2}^{(i)} + c >0
+   $$ 
+
+* [Mulighed 2 ($t=-1$)]{.fremhaev}
+
+   Hvis derimod $t^{(i)}=-1$, skal 
+
+   $$
+   ax_{1}^{(i)} + bx_{2}^{(i)} + c < 0
+   $$ 
+
+Hvis patienten er klassificeret rigtigt, skal $t^{(i)}$ og $ax_{1}^{(i)} + bx_{2}^{(i)} + c$ altså have samme fortegn. Det kan vi skrive kort som
 
 $$
-0<t^{(i)}\big(ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)
+t^{(i)} \cdot \big(ax_{1}^{(i)} + bx_{2}^{(i)} + c\big) > 0
 $$
 
 idet produktet $a \cdot b$ af to tal $a$ og $b$ er positivt, hvis og kun hvis $a$ og $b$ har samme fortegn.
@@ -300,53 +341,71 @@ idet produktet $a \cdot b$ af to tal $a$ og $b$ er positivt, hvis og kun hvis $a
 Da et positivt tal er lig sin numeriske værdi, og $t^{(i)}$ er enten $1$ eller $-1$, har vi desuden
 
 $$
-0<t^{(i)}\big(ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)=\big|t_i^{(i)}\big(ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)\big| = \big|ax_{1}^{(i)} + bx_{2}^{(i)} + c\big|.
+t^{(i)} \cdot \big(ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)=\big|t_i^{(i)}\big(ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)\big| = \big|ax_{1}^{(i)} + bx_{2}^{(i)} + c\big|.
 $$
 
-Vi kan derfor skrive afstanden fra $(x_{1}^{(i)},x_{2}^{(i)})$ til linjen som
+Vi kan derfor skrive afstanden fra punktet $(x_{1}^{(i)},x_{2}^{(i)})$ til linjen $l$ som
 
-$$\textrm{dist}\big(\big(x_{1}^{(i)},x_{2}^{(i)}\big),l\big) = \frac{\big|ax_{1}^{(i)} + bx_{2}^{(i)} + c\big|}{\sqrt{a^2+b^2}} =\frac{t^{(i)}\big(ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)}{\sqrt{a^2+b^2}}
+$$\textrm{dist}\big(\big(x_{1}^{(i)},x_{2}^{(i)}\big),l\big) = \frac{\big|ax_{1}^{(i)} + bx_{2}^{(i)} + c\big|}{\sqrt{a^2+b^2}} =\frac{t^{(i)} \cdot \big(ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)}{\sqrt{a^2+b^2}}
 $$
 
 Hvis vores linje skal have en margin på $M>0$, skal denne afstand være mindst $M$, det vil sige
 
 $$
-\textrm{dist}\big(\big(x_{1}^{(i)},x_{2}^{(i)}\big),l\big) =\frac{t^{(i)}(ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)}{\sqrt{a^2+b^2}}\geq M>0.
+\textrm{dist}\big(\big(x_{1}^{(i)},x_{2}^{(i)}\big),l\big) =\frac{t^{(i)} \cdot (ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)}{\sqrt{a^2+b^2}}\geq M>0.
 $$ {#eq-ul}
 
-Bemærk, at denne ulighed både sikrer, at punktet ligger på den rigtige side af linjen (da $t^{(i)}(ax_{1}^{(i)} + bx_{2}^{(i)} + c)$ er nødt til at være positiv) og, at afstanden til linjen er mindst $M$.
+Bemærk, at denne ulighed både sikrer, at punktet ligger på den rigtige side af linjen (da $t^{(i)} \cdot (ax_{1}^{(i)} + bx_{2}^{(i)} + c)$ er nødt til at være positiv) og, at afstanden til linjen er mindst $M$.
 
 For at finde en linje, der klassificerer alle vores punkter korrekt med en margin af bredde $M$, skal (@eq-ul) være opfyldt for alle punkter. For at finde linjen med maksimal margin, skal vi derfor løse følgende optimeringsproblem:
 
--   Find $a,b,c\in \mathbb{R}$ og $M>0$, der maksimerer $M$ under betingelserne $$\frac{t_i^{(i)}\big(ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)}{\sqrt{a^2+b^2}}\geq  M\qquad \text{ for alle } i=1,\ldots,n$$ {#eq-ulig}
+-   Find $a,b,c\in \mathbb{R}$ og $M>0$, der maksimerer $M$ under betingelserne 
 
-Dette er et såkaldt betinget optimeringsproblem. Man kan tænke på det som en funktion $f(a,b,c,M)=M$, der skal maksimeres. Ulighederne i (@eq-ulig) lægger nogle begrænsninger på definitionsmængden for $f$. Der er altså tale om optimering af en funktion på en begrænset definitionsmængde. Her afhænger funktionen dog ikke bare af en enkelt variabel, som I kender det fra gymnasieundervisningen, men af hele fire variable $a,b,c,M$, hvilket gør definitionsmængden kompliceret. Denne type problemer må derfor normalt løses numerisk. Nedenfor viser vi, hvordan de gøres i Excel.
+   $$
+   \frac{t_i^{(i)} \cdot \big(ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)}{\sqrt{a^2+b^2}}\geq  M\qquad \text{ for alle } i=1,\ldots,n
+   $$ {#eq-ulig}
+
+Dette er et såkaldt betinget optimeringsproblem. Man kan tænke på det som en funktion $f(a,b,c,M)=M$, der skal maksimeres. Ulighederne i (@eq-ulig) lægger nogle begrænsninger på definitionsmængden for $f$. Der er altså tale om optimering af en funktion på en begrænset definitionsmængde. Her afhænger funktionen dog ikke bare af en enkelt variabel, som I kender det fra gymnasieundervisningen, men af hele fire variable $a,b,c,M$, hvilket gør definitionsmængden kompliceret. Denne type problemer må derfor normalt løses numerisk. Nedenfor viser vi, hvordan det gøres i Excel.
 
 Når linjen er fundet, kan vi begynde at prædiktere effekten af lægemidlet for nye patienter. Vi måler patientens biomarkører $(x_1,x_2)$. Vi beregner så $ax_1+bx_2+c$. Hvis $ax_1+bx_2+c>0$ prædikterer vi klasse $1$, altså at lægemidlet har en effekt. Hvis $ax_1+bx_2+c<0$ prædikterer vi klasse $-1$ og dermed, at lægemidlet ikke har effekt.
 
 ## Løsning med Excel
 
-Som vi har formuleret vores optimeringsproblem ind til videre, har det mere end én løsning. Vi ville derfor få en fejlmeddelelse fra Excel, hvis vi prøvede at løse det direkte. For at se hvorfor, kan vi prøve at gange $a,b$ og $c$ med et $s>0$. Da bliver tælleren i (@eq-ulig) til
+Som vi har formuleret vores optimeringsproblem indtil videre, har det mere end én løsning. Vi ville derfor få en fejlmeddelelse fra Excel, hvis vi prøvede at løse det direkte. For at se hvorfor, kan vi prøve at gange $a,b$ og $c$ med et $s>0$. Da bliver tælleren i (@eq-ulig) til
 
 $$
-t^{(i)}\big(sax_{1}^{(i)} + sbx_{2}^{(i)} + sc\big) = st^{(i)}\big(ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)
+t^{(i)} \cdot \big(sax_{1}^{(i)} + sbx_{2}^{(i)} + sc\big) = s \cdot t^{(i)} \cdot \big(ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)
 $$
 
 Nævneren bliver
 
 $$
-\sqrt{(sa)^2 + (sb)^2}=\sqrt{s^2a^2 + s^2b^2}=\sqrt{s^2(a^2+b^2)}= \sqrt{s^2}\sqrt{a^2+b^2}=s\sqrt{a^2+b^2}
+\begin{aligned}
+\sqrt{(sa)^2 + (sb)^2} &=\sqrt{s^2a^2 + s^2b^2}=\sqrt{s^2(a^2+b^2)} \\ &= \sqrt{s^2}\sqrt{a^2+b^2}=s\sqrt{a^2+b^2}
+\end{aligned}
 $$
 
 Hele brøken bliver
 
 $$
-\frac{t^{(i)}\big(sax_{1}^{(i)} + sbx_{2}^{(i)} + sc\big)}{\sqrt{(sa)^2+(sb)^2}}=\frac{st^{(i)}\big(ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)}{s\sqrt{a^2+b^2}}=\frac{t^{(i)}\big(ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)}{\sqrt{a^2+b^2}}
+\begin{aligned}
+\frac{t^{(i)} \cdot \big(sax_{1}^{(i)} + sbx_{2}^{(i)} + sc\big)}{\sqrt{(sa)^2+(sb)^2}} &=\frac{s \cdot t^{(i)} \cdot \big(ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)}{s\sqrt{a^2+b^2}} \\ &=\frac{t^{(i)} \cdot \big(ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)}{\sqrt{a^2+b^2}}
+\end{aligned}
 $$
 
 Vores betingelser er derfor uændrede, når vi skalerer $a,b$ og $c$. Det betyder, at hvis $a,b,c$ er en løsning til vores problem, så er $sa,sb,sc$ det også. For at undgå problemet med flere løsninger, vil vi fastlægge skaleringen således at $a^2+b^2=1$. Så bliver nævneren i (@eq-ulig) $\sqrt{a^2+b^2}=\sqrt{1}=1$. Vi kan derfor omformulere vores optimeringsproblem til:
 
--   Find $a,b,c\in \mathbb{R}$ og $M>0$, der maksimerer $M$ under betingelserne $${y_i(ax_{i1} + bx_{i2 } + c)}\geq  M$$ {#eq-c} og $$a^2+b^2=1$$ {#eq-ab}
+-   Find $a,b,c\in \mathbb{R}$ og $M>0$, der maksimerer $M$ under betingelserne 
+
+$$
+t^{(i)} \cdot \big(ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)\geq  M
+$$ {#eq-c} 
+
+og 
+
+$$
+a^2+b^2=1
+$$ {#eq-ab}
 
 Dette problem kan løses i Excel.  Først og fremmest skal man sørge for, at man har aktiveret problemløser-værktøjet. Det gøres på følgende måde:
 
@@ -360,7 +419,7 @@ Dette problem kan løses i Excel.  Først og fremmest skal man sørge for, at ma
 
 Videoen nedenfor viser nu, hvordan optimeringen foregår i Excel.
 
-VIDEO
+{{< video https://youtu.be/B-Gy9upBChw?si=I-qkNuCRo2hi0b4z  >}}
 
 ## Problemer med algoritmen
 
@@ -471,68 +530,10 @@ Selv hvis linjen adskiller alle punkter i træningsdata korrekt, er det ikke sik
 
 Endelig er algoritmen baseret på afstande fra punkt til linje. Det betyder, at det ikke er lige meget, hvilke enheder variablene er målt i. Det kan du læse mere om i noten om [Feature-skalering](../afstande/feature_scaling.qmd){target="_blank"}.
 
-## Opgave 1
 
--   Indtegn linjen $2x_1-x_2 +1=0$ i et koordinatsystem.
 
--   Find en normalvektor til linjen ved at bruge (@eq-normal) og indtegn den i koordinatsystemet.
 
--   På hvilken side af linjen er $2x_1-x_2 +1>0$ og på hvilken side er $2x_1-x_2 +1<0$?
 
-## Opgave 2
-
-Betragt følgende datasæt med seks patienter.
-
-| Patient | $x_1$ | $x_2$ | $t$  |
-|:-------:|:-----:|:-----:|:----:|
-|    1    |  $0$  |  $3$  | $-1$ |
-|    2    |  $0$  |  $2$  | $1$  |
-|    3    |  $1$  |  $1$  | $1$  |
-|    4    |  $3$  | $0.5$ | $1$  |
-|    5    |  $2$  |  $3$  | $-1$ |
-|    6    |  $3$  | $1.5$ | $-1$ |
-
-: {.bordered}
-
--   Indtegn punkterne $\big(x_{1}^{(i)},x_{2}^{(i)}\big)$ for $i=1,\ldots,6$ i et koordinatsystem, og farv dem alt efter, hvilken klasse de tilhører.
-
--   Find ved at kigge på din tegning den linje, der adskiller de to klasser med størst margin. Bestem en ligning for linjen på formen $ax_1+bx_2 +c=0$.
-
--   Indtegn linjen i dit koordinatsystem.
-
--   På hvilken side er $ax_1+bx_2+c>0$ og på hvilken side er $ax_1+bx_2+c<0$?
-
--   Hvilke punkter er supportvektorer?
-
--   En ny patient har fået målt $(x_1,x_2)=(1,3)$. Kan lægemidlet forventes at have en effekt på patienten?
-
-## Opgave 3
-
-Betragt datasættet fra Opgave 2.
-
--   Find den optimale skillelinje ved hjælp af Excel og opskriv linjens ligning.
-
--   Indtegn linjen fra Excel i samme koordinatsystem som linjen fra Opgave 2. Havde du gættet rigtigt?
-
--   Sammenlign linjens ligning med resultatet fra Opgave 2 (Det er en god ide at gange med $\sqrt{5}$ på begge sider i ligningen fra Excel for at gøre det nemmere at sammenligne).
-
-## Opgave 4
-
-Prøv at finde den optimale linje for følgende datasæt fra @fig-slack ved hjælp af Excel. Hvad tror du, der går galt?
-
-| Observation | $x_1$  | $x_2$  | $t$  |
-|:-----------:|:------:|:------:|:----:|
-|      1      | $-0.6$ | $0.3$  | $1$  |
-|      2      | $0.2$  | $-0.5$ | $-1$ |
-|      3      | $-0.8$ |  $1$   | $-1$ |
-|      4      | $-0.2$ | $-0.2$ | $-1$ |
-|      5      | $0.8$  | $0.8$  | $1$  |
-|      6      | $0.9$  | $1.5$  | $1$  |
-|      7      | $1.5$  | $0.7$  | $1$  |
-|      8      | $1.4$  | $1.2$  | $-1$ |
-|      9      | $0.2$  | $0.2$  | $-1$ |
-
-: {.bordered}
 
 # Skillelinje med blød margin
 
@@ -571,7 +572,7 @@ Fortolkningen er illustreret på @fig-fortolk. Supportvektorerne er nu alle punk
         \draw (-1,2) -- (2,-1);
         \draw[dashed] (-1.3,1.7) -- (1.7,-1.3); 
         \draw[dashed] (-0.7,2.3) -- (2.3,-0.7);
-        \draw[fill,blue] (0.2,0.2) circle (0.05);
+        \draw[fill,myblue] (0.2,0.2) circle (0.05);
       \draw[] (0.2,0.2) circle (0.1);
         \draw[fill,myblue] (0.2,-0.5) circle (0.05);
         \draw[fill,myblue] (-0.8,1) circle (0.05);
@@ -648,7 +649,9 @@ x3= c(1,0,0,-1,-1.5,0.8,-1.5,-0.5,0.5,1.5)
 
 plot3d( 
   x=x1, y=x2, z=x3, 
-  col = y+3, 
+  col = ifelse(y == 1,
+               rgb(242, 136, 185, alpha = 0.6, maxColorValue = 255),
+               rgb(128, 134, 242, alpha = 0.6, maxColorValue = 255)), 
   type = 's', 
   radius = .1, xlim=c(-2,2), ylim = c(-2,2), zlim=c(-2,2),       xlab=expression(x[1]), ylab=expression(x[2]),  zlab=expression(x[3]))
 ```
@@ -678,7 +681,9 @@ x3= c(1,0,0,-1,-1.5,0.8,-1.5,-0.5,0.5,1.5)
 
 plot3d( 
   x=x1, y=x2, z=x3, 
-  col = y+3, 
+  col = ifelse(y == 1,
+               rgb(242, 136, 185, alpha = 0.6, maxColorValue = 255),
+               rgb(128, 134, 242, alpha = 0.6, maxColorValue = 255)),  
   type = 's', 
   radius = .1,add=T)
 ```
@@ -802,7 +807,9 @@ plot3d( f,
 
 plot3d( 
   x=x1, y=x2, z=x1^2, 
-  col = y, 
+  col = ifelse(y == 2,
+               rgb(242, 136, 185, alpha = 0.6, maxColorValue = 255),
+               rgb(128, 134, 242, alpha = 0.6, maxColorValue = 255)),  
   type = 's', 
   radius = .1,add=T)
 ```
@@ -824,7 +831,9 @@ plot3d( g,
 
 plot3d( 
   x=x1, y=x2, z=x1^2, 
-  col = y, 
+  col = ifelse(y == 2,
+               rgb(242, 136, 185, alpha = 0.6, maxColorValue = 255),
+               rgb(128, 134, 242, alpha = 0.6, maxColorValue = 255)),  
   type = 's', 
   radius = .1,add=T)
 ```
