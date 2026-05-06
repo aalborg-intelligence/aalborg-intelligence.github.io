@@ -634,26 +634,27 @@ Lad os sige, at vi vil lave en skillelinje mellem klasserne med ligningen $x_2-1
 # Support vector machines i tre dimensioner
 
 Det kunne også være, at vi havde målt tre biomarkører $(x_1,x_2,x_3)$ for at få mere information at lave prædiktionerne ud fra. Vores målinger kan nu plottes som punkter i et tredimensionalt koordinatsystem. Igen farves punkterne lyserøde, hvis lægemidlet havde en effekt og blå ellers. Det kunne se ud som på @fig-3D.
+```{r}
+library(rgl)
+```
 
 ```{r fig.width=4, fig.height=4}
 #| echo: false
 #| label: fig-3D
 #| fig-cap: Punkter i tre dimensioner.
 
-library(rgl)
-
 x1=c(0.5,1.5,-1.5,-0.5,1.5,-0.8,0.5,-0.5,0.5,-0.5)
 x2=c(1,0,0,-1,-1.5,0.8,0.5,1.5,-1.5,-0.5)
 x3= c(1,0,0,-1,-1.5,0.8,-1.5,-0.5,0.5,1.5) 
   y=c(1,-1,1,-1,-1,1,-1,1,-1,1)
 
-plot3d( 
+spheres3d( 
   x=x1, y=x2, z=x3, 
   col = ifelse(y == 1,
                rgb(242, 136, 185, alpha = 0.6, maxColorValue = 255),
                rgb(128, 134, 242, alpha = 0.6, maxColorValue = 255)), 
-  type = 's', 
-  radius = .1, xlim=c(-2,2), ylim = c(-2,2), zlim=c(-2,2),       xlab=expression(x[1]), ylab=expression(x[2]),  zlab=expression(x[3]))
+  radius = .05, xlim=c(-2,2), ylim = c(-2,2), zlim=c(-2,2),       xlab=expression(x[1]), ylab=expression(x[2]),  zlab=expression(x[3]), depth_mask = FALSE)
+box3d()
 ```
 
 
