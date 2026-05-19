@@ -1,6 +1,6 @@
 ---
-title: "Regressionsmodel for bilers brændstofforbrug"
-description: "Vi vil ses på almindelige regressionsmodeller og modeller med kunstige neuroner og neurale netværk til at bruge bilers brændstof forbrug ud fra hastighed mm." 
+title: "AI, klimaudfordringer og sammenstyrtede broer?"
+description: "Vi vil ses på regression, multipel regression og neurale net til at modellere betons brudstyrke" 
 image: ""
 categories:
   - "01_a-niveau"
@@ -12,8 +12,9 @@ categories:
 Forløbet kræver kendskab til:
 
 + Lineær regression
++ $\Sigma$ notation
 
-**Tidsforbrug:** 90 minutter.
+**Tidsforbrug:** 120 minutter.
 
 :::
 
@@ -21,304 +22,161 @@ Forløbet kræver kendskab til:
 
 ### Formål
 
-Formålet med dette forløb er at se på forskellige metoder til at lave en model for en bils brændstofforbrug ud fra dens hastighed og motorens omdrejninger per minut. Vi vil se på almindelige lineær regression, multipel lineær regression, kunstige neuroner og neurale netværk til at gøre dette.
+I 2018 styrtede dele af [Morandi broen](https://en.wikipedia.org/wiki/Ponte_Morandi_collapse?utm_source=chatgpt.com) i Genova, Italien sammen og 43 mennesker omkom. En del af grunden til katastrofen var for ringe beton.
+
+I 2021 styrtede dele af en [12-etagers bygning](https://en.wikipedia.org/wiki/Surfside_condominium_collapse?utm_source=chatgpt.com) sammen i Miami, Florida. 98 mennesker døde. Også her var betonens styrke en del af grunden til katastrofen.
+
+Cement er en betydelig del af beton, og produktionen af cement udgør [ca. 8%](https://en.wikipedia.org/wiki/Cement?utm_source=chatgpt.com) af verdens $\textrm{CO}_2$ produktion, og har derfor en betydelig indflydelse på klimakrisen.
+
+Den årlige produktion af beton er [ca. 30 mia tons](https://www.nature.com/articles/d41586-025-00568-4?utm_source=chatgpt.com), hvilket gør beton til det næstmest anvendte materiale efter vand.
+
+Det er derfor af flere grunde vigtigt at se på modeller for, hvordan beton kan laves med tilstrækkelig høj styrke men lavt indhold af cement.
+
+Kemiske laboratorieforsøg er naturligvis meget vigtige til dette - men de er også både dyre og tidskrævende. Så derfor ser man også på matematiske modeller.
+
+Formålet med dette forløb er derfor at se på forskellige metoder til at lave en model for en betons styrke ud fra cementindholdet, vandindholdet og alderen af betonen. Vi vil se på almindelige lineær regression, multipel lineær regression, kunstige neuroner og neurale netværk til at gøre dette.
 
 :::
 
 ## Introduktion
 
-Åben denne [Excel-fil](regressionsmodeller_filer/VED_fuel_speed_rpm_train). Det er en meget lille del af et stort datasæt [VED (Vehicle Energy Dataset](https://github.com/gsoh/VED?utm_source=chatgpt.com).
+Åben denne [Excel-fil](/undervisningsforlob/regressionsmodeller_filer/concrete_data_reduced_train.xlsx). Det er en  del af datasættet [Concrete Compressive Strength](https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength).
 
-I datasættet har vi information om brændstof forbrug i liter/time (fuel), hastighed i km/h (speed) og omdrejninger per minut (RPM).I det store datasæt er der flere information, men dem vil vi ikke anvende i dette forløb.
+I den del af datasættet vi ser på, har vi informationen om mængden af cement, mængden af vand, alderen i dage og betonens trykstyrke.
 
-Vi vil lave forskellige modeller til at forudsige brændstofforbruget ud fra hastiged og omdrejninger per minut.
+Vi vil lave forskellige modeller til at forudsige trykstyrken ud fra de øvrige tre variable, cement, vand og alder.
 
-Vi vil bruge [80% af datasættet](regressionsmodeller_filer/VED_fuel_speed_rpm_train) til at træne modellen og [20% af datasættet](regressionsmodeller_filer/VED_fuel_speed_rpm_test) til at teste, hvor god modellen så er blevet. Det gør vi for at undgå det, man kalder for *overfitting*, hvor modellen tilpasser sig de konkrete data for godt, og derfor bliver ringere til at *prediktere* for nye data.
+Vi vil bruge [80% af datasættet](/undervisningsforlob/regressionsmodeller_filer/concrete_train.xlsx) til at træne modellen og [20% af datasættet](/undervisningsforlob/regressionsmodeller_filer/concrete_test.xlsx) til at teste, hvor god modellen så er blevet. Det gør vi for at undgå det, man kalder for *overfitting*, hvor modellen tilpasser sig de konkrete data for godt, og derfor bliver ringere til at *prediktere* for nye data.
 
 ## Lineær regression
 
-Vi starter med helt almindelig lineær regression, hvor vi både forsøger med speed som forklarende variabel og med rpm som forklarende variabel.
+Vi starter med helt almindelig lineær regression, hvor vi både forsøger med cement, vand og alder som forklarende variabel.
 
+::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 1
 
- - Overvej og debatter om I forventer, at hastighed eller omdrejning er bedst til at forudsige brændstofforbrug. 
- - Lav lineær regression med hastighed som forklarende variabel på træningsdatasættet
- - Lav lineær regression med omdrejninger som forklarende variabel på træningsdatasættet
+ - Overvej og debatter, hvordan I forventer, at cement, vand og alder har indflydelse på styrken af betonen. 
+ - Lav lineær regression på træningsdatasættet med cement som forklarende variabel.
+ $$y_{styrke} = a_{cement} \cdot x_{cement} + b_{cement}$$
+ - Lav lineær regression på træningsdatasættet med vand som forklarende variabel.
+ $$y_{styrke} = a_{vand} \cdot x_{vand} + b_{vand}$$
+ - Lav lineær regression på træningsdatasættet med alder som forklarende variabel.
+ $$y_{styrke} = a_{alder} \cdot x_{alder} + b_{alder}$$
+
+:::
+
+Det skulle gerne være tydeligt, at ingen af de tre simple lineære modeller er særligt gode.
+Inden vi går videre til mere komplicerede modeller, vil vi lave det, man kalder for *feature-engineering*, hvor vi vil gøre to ting.
+
+Den første er, at vi vil se på $log(alder)$ som variabel i stedet for alder. Betons styrke bliver hurtigt bedre i starten, men derefter er virkningen af alder aftagende. Da grafen for $log(x)$ netop har den egenskab, at den vokser hurtigere i starten, og derefter flader ud, vil vi forvente, at $log(alder)$ giver en bedre forklaring.
+
+Den anden er, at mere cement i sig selv gør beton stærkere og mere vand gør beton svagere, men det betyder ikke, at man helt kan undvære vand, da det er kombinationen af cement og vand, som sammen bør beton stærkere. Vi vil derfor tilføje en ny varibel $\frac{vand}{cement}$. 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 2
-
-På @fig-opg2 er der andre $31$ punkter, samt en cirkel med radius $10$ omkring
-det grå punkt $P(15,15)$.
-
-- Tæl hvor mange røde, blå og grønne punkter, der ligger inde i cirklen.
-- Kan det bruges til at beslutte, hvilken farve det grå punkt bør have?
+- Lav en ny søjle i Excelarket (eller i dit CAS værktøj) med $log(alder)$.
+- Lav desuden en ny søjle med $\frac{vand}{cement}$.
+- Lav lineær regression på modellen 
+ $$y_{styrke} = a_{log(alder)} \cdot x_{log(alder)} + b_{log(alder)}$$
+ - Lav lineær regression på modellen 
+ $$y_{styrke} = a_{\frac{vand}{cement}} \cdot x_{\frac{vand}{cement}} + b_{\frac{vand}{cement}}$$
 
 :::
 
-![Koordinatsystem med $31$ punkter, samt en cirkel med radius $10$ omkring det grå punkt $P(15,15)$](hvem_ligner_du_mest_filer/image2.png){#fig-opg2}
+Vi har nu fire forklarende variable, hvoraf ingen af dem i sig selv er særligt gode til at forklare styrken, men mon det kan gøres bedre, hvis vi bruger alle fire samtidig?
+
+Til det skal vi bruge en ny type model, som kaldes for multipel lineær regression.
+$$y_{styrke} = a_{cement} \cdot x_{cement} + a_{vand} \cdot x_{vand} + a_{log(alder)} \cdot x_{log(alder)} + a_{\frac{vand}{cement}} \cdot x_{\frac{vand}{cement}} + b$$
+
+Man kan lave multipel lineær regression i mange forskellige værktøjer, f.eks. Excel, GeoGebra, Maple og NSpire. 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 3
-Vi arbejder videre med punkterne fra opgave 2. Brug den interaktive figur nedenfor.
-
-- Hvilket resultat giver det, hvis cirklens radius kun var halvt så stor?
-
+- Find ud af, hvordan du laver multipel lineær regression i dit foretrukne værktøj.
+- Lav den lineære multiple regression med de fire forklarende varible.
+- Overvej, hvad værdierne af de fire hældningkoefficienter $a_cement$, $a_vand$, $a_log(alder)$ og $a_\frac{vand}{cement}$ betyder for modellen.
 
 :::
 
-{{< include _geogebra/_hvem_ligner_du_mest_geogebra.qmd >}}
-::: {.ggbContainer style='width:100%; margin: auto'}
-::: {#ggbApplet1}
-:::
-:::
+For de almindelige lineære regressioner kunne vi lave et punktplot (scatterplot) med den forklarende variabel (feature) på x-aksen og den afhængige variabel (target) på y-aksen samt regressionslinjen. Den mulighed har vi ikke, når der nu er flere forklarende variable (features), så vi må lave et andet type plot.
+
+Vi vil lave et plot, hvor den rigtige værdi af styrke er på x-aksen og modellens predikterede værdi er på y-aksen. 
+
+Vi vil bruge de 5 modeller, vi har lavet - men nu vil vi inddrage de 20% af data, som vi netop havde taget fra til at teste modellerne.
+
+Lad os se et lille eksempel, inden du selv skal igang igen. Da vi så på modellen med cement som den eneste forklarende variabel, gav regressionen
+$$y_{styrke} = 0.0779 \cdot x_{cement} + 13.785$$
+I [Excel-filen med testdata](/undervisningsforlob/regressionsmodeller_filer/concrete_test.xlsx) er mængden af cement $266$ og styrken af betonen $52.9$. Indsættes $266$ i modellen, giver det
+$$y_{styrke} = 0.0779 \cdot 266 + 13.785 =34.5$$
+Vi skal derfor have et punkt $(y_data, y_model) = (52.9, 34.5)$ i plottet. Tilsvarende skal modellens y-værdien bestemmes for de øvrige linjer i testdata.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 4
+- Beregn de øvrige y-værdier for modellen med cement som eneste forklarende variabel.
+- Lav punktplottet med $(y_data, y_model)$.
+- Lav lineær regression på dette plot.
+- Hvilken forskrift ville regressionen få, hvis modellen perfekt kunne forudsige styrken?
 
-Det går nok ikke i længden blot at ville vurdere på øjemål, så du må til
-at regne lidt. I tabellen herunder er koordinater og farver på de $10$ punkter, der ligger
-tættest på det grå punkt i opgave 2 og 3. 
-
-- Udregn afstanden fra det grå punkt $P(15,15)$ til hver af de $4$ blå punkter. Hvis du er hurtig, kan du også regne afstanden til de øvrige $6$ punkter. 
-
-- Afgør så, hvor mange af hver farve, der ligger indenfor en cirkel med radius $5$ omkring det grå punkt. Det er nok specielt det blå punkt lige på kanten af cirklen, hvor beregningen er vigtig, men hvis en computer skal lave arbejdet automatisk, vil den jo beregne alle afstandene, da den ikke bare kan \"kigge på figuren\", som et menneske kan.
-
-- Hvilken farve tyder det på, at det grå punkt bør have? 
-
- 
 :::
 
-| Farve |  |  |  |  |
-|:---:|:---:|:---:|:---:|:---:|
-| Blå | $(13.8, 19.9)$ | $(8.2, 14.9)$ | $(16.4, 14.1)$ | $(15.5, 13.1)$|
-| Rød | $(10.6, 16.0)$ | $(16.3, 15.2)$ | $(15.6, 11.3)$ | |
-| Grøn | $(11.1, 18.6)$ | $(16.4, 17.5)$ | $(21.7, 13.4)$ | |
-: {.bordered}
-
-<!--
+Inden vi kan lave samme plot og regression for de øvrige modeller, skal du tilføje søjlerne med $log(alder)$ og $\frac{vand}{cement}$ til Excel arket med test-data.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 5
+- Beregn forventede y-værdier og lav punktplot + lineær regression for hver af de tre øvrige forklarende variable hver for sig (vand, log(alder) og vand/cement).
 
-- Overvej, hvad der sker, hvis cirklens radius vælges som en meget lille værdi eller som en meget stor værdi i forhold til at bruge metoden til at bestemme, hvilken farve det grå punkt bør have. Kan det give problemer?
 :::
+
+Det er, igen, åbenlyst, at en model med kun én forklarende variabel er betydeligt for ringe. Hældningskoefficienten for regressionen skulle optimalt være 1, men er i alle tilfælde langt under 1.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 6
-
-Jans oprindelige opgave: Lav et punktplot i dit CAS-værktøj med disse punkter.
-| Farve | 1 | 2 | 3 | 4| 5| 6| 7| 8| 9| 
-|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-  | Blå  |  $(15,25)$ |   $(10,20)$ |  $(15,30)$ |  $(8,16)$ |   $(6,10)$  |  $(17,15)$  | $(23,17)$  | $(15,14)$ |  $(14,4)$ | 
-  | Rød |   $(30, 5)$  | $(18,18)$ |  $(21,9)$ |    $(6,24)$ |   $(25,25)$ |  $(18,16)$  | $(12,11)$ |   $(8,10)$  |  $(16,13)$  | 
-  | Grøn  | $(8,28)$  |   $(12,20)$ |  $(16,20)$  |  $(21,14)$  | $(13,10)$ |  $(12,13)$  | $(20,18)$ |   $(14,16)$ |  $(18,10)$  |
-Jans: Indtegn en cirkel omkring det grå punkt $P(15,15)$ og brug cirklen til at
-vurdere, hvilken farve punktet bør have. 
-
-I den interaktive figur herunder er $27$ andre punkter indsat i et koordinatsystem, og der er tegnet en cirkel med centrum i det grå punkt $P(15,15)$. 
-
-- Undersøg, hivlken farve $P$ skal have ved forskellig valg af radius.
+- Beregn forventede y-værdier og lav punktplot + lineær regression for den multiple lineære regression.
 
 :::
 
-::: {.ggbContainer style='width:100%; margin: auto'}
-::: {#ggbApplet2}
-:::
-:::
-
--->
-
-### Opsamling
-
-Det bliver nok klart, at der er brug for en metode til at beslutte, hvor stor radius skal være for at få det bedste resultat. Kort og lidt simpelt forklaret, involverer det noget, som man kalder **træningsdata** og **testdata**. Man har for eksempel 1000 punkter, som man kender farven på. Man lader så som om, at man ikke kender farven på for eksempel 200 af punkterne (som man så kalder testdata). Så bruger man de øvrige 800 punkter (træningsdata) til at forudsige farven af hver af de 200 punkter i testdata. Dette gør man for forskellige værdier af radius, hvorefter man vælger den radius, der forudsiger flest af de 200 punkters farve korrekt. Hvis for eksempel radius 5 forudsiger 121 punkters farve korrekt, radius 10 forudsiger 135 punkters farve korrekt, og radius 20 kun forudsiger 87 punkters farve korrekt, så har radius 10 jo klaret sig bedst.
+Ok, det var betydeligt bedre, men stadig med plads til forbedrning. Måske du har tænkt på, at jeg lovede, at vi skulle bruge AI - og indtil videre har der jo ikke være skyggen af det. Men lad os se, om AI i form af et såkaldt neuralt netværk kan lave en model, som klarer opgaven bedre.
 
 
-## Manhattan-afstand
-
-I nogle situationer giver den almindelige afstand mellem punkter ikke så
-god mening. For eksempel er de fleste veje på Manhattan i New York enten
-nord-syd eller øst-vest, så man kan ikke bare gå eller køre \"på skrå\",
-men kun lodret eller vandret.
-
-Hvis vi ser på punkterne $P(2,3)$ og $Q(5,7)$, så er den almindelige afstand
-$5$ ved hjælp af Pythagoras, mens Manhattan-afstanden er $3+4=7$. Dette er illustreret på @fig-case2.
-
-![Den almindelige afstand mellem punkterne $P(2,3)$ og $Q(5,7)$ er $5$, mens Manhattan-afstanden er $7$.](hvem_ligner_du_mest_filer/image3.png){#fig-case2}
-
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 5
-
-- Indtegn punkterne $A(1,7)$, $B(3,4)$ og $C(5,6)$ i et koordinatsystem.
-
-- Udregn både almindelig afstand og Manhattan-afstand mellem hvert par af punkter.
-
-:::
-
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 6
-
-I eksemplet og i opgave 7 var Manhattan-afstanden større end den almindelige afstand, men kan Manhattan-afstanden være mindre end den almindelige afstand eller kan de to afstande være ens?
-
-:::
-
+RESTEN AF FORLØBET KAN IKKE RIGTIGT LAVET FÆRDIG, FØR APPEN ER KLAR
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 7
-
-Se på @fig-opg8 herunder fra opgave 2 igen. 
-
-Punkterne inde i cirklen har en almindelig afstand på under $10$ til det grå punkt, men hvilke af punkterne har mon en Manhattan-afstand på under $10$ til det grå punkt? 
-
-- Overvej, hvordan punkter med en Manhattan-afstand på præcis $10$ til det grå punkt ligger (måske er du nødt til at tegne lidt)?
-
-- Den almindelige afstand giver en cirkel med det grå punkt i centrum, men hvilken figur giver Manhattan-afstanden omkring det grå punkt? 
-
-- Hvilken farve bør det grå punkt derfor have, hvis Manhattan-afstanden benyttes? Giver det samme resultatet, som du fik i opgave 2?
+Brug app til at lave et NN, som trænes på træningsdata og testes på test data.
+Lav samme type plot og regression.
 
 :::
 
-![Koordinatsystem med $31$ punkter, samt en cirkel med radius $10$ omkring det grå punkt $P(15,15)$](hvem_ligner_du_mest_filer/image2.png){#fig-opg8}
+Som du kunne se, var det neurale netværk i stand til at klare opgaven en god del bedre end den multiple lineære regression.
 
+Lad os til sidst se, om vi kan lave en endnu mere præcis model, hvis vi inddrager flere forklarende variable (features). 
 
-<!--
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 10
-
-Opstil en formel for den almindelige afstand mellem to punkter med koordinaterne $(x_1, y_1)$ og $(x_2, y_2)$. Det er en formel, du kender i forvejen.
-
-Opstil tilsvarende en formel for Manhattan-afstanden. Det er nok ikke en formel, du har set før. 
-
--->
-
-Du kan læse mere om [Manhattan-afstanden her](../noter/afstande/AfstandeMellemPunkteriPlanen.qmd#sec-manhattan_afstand).
-
-
-
-## Hvilken politiker er du mest enig med?
-
-Op til både folketings-, kommunal- og regionalvalg kan man svare på en række spørgsmål, hvorefter ens svar bliver sammenlignet med
-politikernes svar på de samme spørgsmål. Herefter kan man så se, hvem man er mest enig med.
-
-Du skal enten bruge [Altinget](https://www.altinget.dk/kandidattest), som har flest forklaringer og muligheder, men ikke altid er tilgængelig, eller [DR.DK](https://www.dr.dk/nyheder/politik/kandidattest). 
-
+Her er træningsdata [80% af datasættet](/undervisningsforlob/regressionsmodeller_filer/concrete_full_train.xlsx) til at træne modellen og [20% af datasættet](/undervisningsforlob/regressionsmodeller_filer/concrete_full_test.xlsx) til at teste den.
+ 
+Åbn hver af de to filer. Lav en søjle med $log(alder)$ i stedet for alder og tilføj en søjle med $\frac{vand}{cement}$.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 8
-
-- Klik på linket ovenfor, vælg f.eks. det seneste kommunal- eller folketingsvalg, vælg din egen kommune i testen og besvar spørgsmålene. Se derefter, hvem du ifølge kandidattesten er mest enige med, og hvor mange procent enige I er. Klik også på \"Sammenlign svar\", hvor du i detaljer kan se, hvor I er enig eller uenige.
+- Lav multiple lineær regression med alle de forklarende variable.
+- Lav samme type plot og regression som før.
 
 :::
-
-Men hvordan virker det mon? Hvordan vurderes, hvilken kandidat du er mest enig med, og hvordan udregnes, hvor mange procent enige I er?
-
-Til hvert spørgsmål kan der svares \"helt uenig\", \"uenig\", \"enig\" eller
-\"helt enig\", men desuden er der en skjult \"neutral\" mulighed i midten,
-som man ikke kan vælge:
-
-  ------------ ------- --------- ------ -----------
-  Helt uenig   Uenig   Neutral   Enig   Helt enig
-  ------------ ------- --------- ------ -----------
-
-Afstanden mellem to svar regnes som antal \"felter\" i tabellen, så
-afstanden mellem \"Uenig\" og \"Enig\" er $2$, mens afstanden mellem \"Enig\" og \"Helt
-enig\" er $1$, og den største afstand er $4$.
-
-I @fig-kommunalvalg ses en persons svar og et partis kandidaters svar på $23$ spørgsmål. Opstillingen på figuren er lidt anderledes end på DRs side for at gøre det mere overskueligt, men indholdet er tilsvarende. Bemærk, at antallet af spørgsmål kan variere fra kommune til kommune, så du har måske færre eller flere spørgsmål.
-
-![En persons svar (sort) og et partis kandidaters svar (rød) på $23$ spørgsmål.](hvem_ligner_du_mest_filer/image5.png){#fig-kommunalvalg}
-
-Afstanden i det første spørgsmål er $1$, afstanden i det andet spørgsmål
-også $1$ og afstanden i det tredje spørgsmål er $2$ på grund af den skjulte \"neutral\" mulighed i midten.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 9
+Brug app til at lave et neuralt netværk på træningsdata fra det store datasæt med flere features.
 
-- De 3 første afstande er altså $1$, $1$ og $2$. Udregn afstanden for hver af de øvrige $20$ spørgsmål.
-
-- Læg så afstandene sammen, hvilket svarer til en form for Manhattan-afstand, da afstanden regnes for hvert enkelt spørgsmål for sig. Hvilken samlet afstand giver det?
-
-:::
-
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 10
-
-- Hvad er den mindst mulig samlede afstand for de $23$ spørgsmål? Hvordan skal svarene for partiet og for vælgeren se ud fra at få denne afstand?
-
-- Hvad er den størst mulige afstand, og hvordan skal svarene så se ud?
+Lav samme type plot og regression med brug af det trænede netværk og testdata.
 
 :::
 
-<!--
+Vi ender altså med en rimeligt præcist model, når vi tager alle variable med - hvor det neurale netværk gør det bedre end multipel lineær regression.
 
-Delene om enighed med parti er fjernet, da det ikke er tilgængeligt for KV25, som det var for KV21.
+Fordelen ved den multiple lineære model er, at vi kan tolke på værdierne af koefficienterne. Ulempen er, at modellen har sværere ved at fange ikke-lineære elementer i data.
 
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 1#
+Fordelen ved det neurale net er, at det kan er rigtigt godt til at fange ikke-lineære elementer. Ulempen er, at vægtene fra modellen ikke giver os nogen form for forklaring eller tolkning.
 
-På @fig-enighed ses det, at siden angiver, at enigheden med Socialdemokratiet er på $79 \%$.
-
-Overvej, hvordan den afstand du udregnede i opgave 15 og den største
-mulige afstand, som du fandt i opgave 16, kan betyde, at enigheden er
-$79 \%$.
-
-:::
-
-![På siden angives det, at enigheden med Socialdemokratiet er på $79 \%$.](hvem_ligner_du_mest_filer/image7.png){#fig-enighed}
-
--->
-
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 11
-
-Vend tilbage til dine egne svar på testen.
-
-* Beregn afstand i forhold til den kandidat, du var mest enig med.
-
-* For hver kandidat viser siden, hvor mange procent I er enige. Overvej, hvordan denne procent er regnet ud - tænk på afstanden som \"hvor uenige I er\" - og brug det til at regne en procent for \"enighed\".
-
-* Passer dine udregninger med sidens procenter?
-:::
-
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 12 (ekstra)
-
-Kandidattesten angiver, hvilken kandidat, du er mest enig med. Man kunne også ønske at vide, hvilket parti, man er mest enig med.
-
-* Overvej, hvordan du ville beregne, hvilket parti du er mest enig med. Diskutér gerne forskellige muligheder, og deres evt. fordele og ulemper.
-
-* Hvis I ikke allerede har overvejet det, så overvej den mulighed, at "enighed med parti" beregnes som et gennemsnit af, hvor enig med er med hver af partiets kandidater. Hvilke fordele og ulemper har denne metode?
-
-* Hvis I ikke allerede har overvejet det, så overvej den mulighed, at "enighed med parti" beregnes i forhold til det mest typiske svar fra partiets kandidater (som typetal i deskriptiv statistik, blot er det her type-svar). Hvike fordele og ulemper har denne metode?
-
-* I metoden med typesvar kan man være mere enig med partiets end med den kandidat, man er mest enig med. Hvorfor er det tilfældet?
-
-:::
-
-
-<!--
-
-Beregn desuden afstand og procent til det parti, du var mest enig med,
-og til det parti, du var mest uenig med.
-
-
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 19 (svær)
-
-Den kandidat, som svarene i opgave 15 var mest enig med, giver en
-procent på $76 \%$, så procenten for samtlige kandidater fra
-Socialdemokratiet er altså lavere end procenten for selve partiet.
-
-Det virker måske umiddelbart underligt. Overvej, hvorfor det faktisk er
-korrekt ud fra den metode, som siden anvender til beregningerne.
-
-Diskutér derefter, om procenten for partiet kunne være beregnet
-anderledes.
-
-:::
-
--->
 
 ##  Delvis facitliste
 
-[Facitliste](hvem_ligner_du_mest_filer/kandidattest_facit.qmd){target="_blank"}.
+[Facitliste](regressionsmodeller_filer/regressionsmodeller_facit.qmd){target="_blank"}.
