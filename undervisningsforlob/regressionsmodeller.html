@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Vi vil ses på almindelige regressionsmodeller og modeller med kunstige neuroner og neurale netværk til at bruge bilers brændstof forbrug ud fra hastighed mm.">
+<meta name="description" content="Vi vil ses på regression, multipel regression og neurale net til at modellere betons brudstyrke">
 
-<title>Regressionsmodel for bilers brændstofforbrug – AI MAT - matematikken bag magien</title>
+<title>AI, klimaudfordringer og sammenstyrtede broer? – AI MAT - matematikken bag magien</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -43,7 +43,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-d940ceb69343ec0f67b9f68cd27c0ad8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-3500d3d74b78b254085f69a7c9b12a05.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -118,7 +118,7 @@ window.Quarto = {
 
 </head>
 
-<body class="floating nav-fixed slimcontent quarto-light">
+<body class="floating nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -185,13 +185,7 @@ window.Quarto = {
   <ul>
   <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
   <li><a href="#introduktion" id="toc-introduktion" class="nav-link" data-scroll-target="#introduktion">Introduktion</a></li>
-  <li><a href="#lineær-regression" id="toc-lineær-regression" class="nav-link" data-scroll-target="#lineær-regression">Lineær regression</a>
-  <ul class="collapse">
-  <li><a href="#opgave-1" id="toc-opgave-1" class="nav-link" data-scroll-target="#opgave-1">Opgave 1</a></li>
-  <li><a href="#opsamling" id="toc-opsamling" class="nav-link" data-scroll-target="#opsamling">Opsamling</a></li>
-  </ul></li>
-  <li><a href="#manhattan-afstand" id="toc-manhattan-afstand" class="nav-link" data-scroll-target="#manhattan-afstand">Manhattan-afstand</a></li>
-  <li><a href="#hvilken-politiker-er-du-mest-enig-med" id="toc-hvilken-politiker-er-du-mest-enig-med" class="nav-link" data-scroll-target="#hvilken-politiker-er-du-mest-enig-med">Hvilken politiker er du mest enig med?</a></li>
+  <li><a href="#lineær-regression" id="toc-lineær-regression" class="nav-link" data-scroll-target="#lineær-regression">Lineær regression</a></li>
   <li><a href="#delvis-facitliste" id="toc-delvis-facitliste" class="nav-link" data-scroll-target="#delvis-facitliste">Delvis facitliste</a></li>
   </ul>
 </nav>
@@ -201,11 +195,11 @@ window.Quarto = {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content page-columns page-full" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Regressionsmodel for bilers brændstofforbrug</h1>
+<h1 class="title">AI, klimaudfordringer og sammenstyrtede broer?</h1>
   <div class="quarto-categories">
     <div class="quarto-category">01_a-niveau</div>
     <div class="quarto-category">04_Kort</div>
@@ -241,34 +235,58 @@ window.Quarto = {
 <p>Forløbet kræver kendskab til:</p>
 <ul>
 <li>Lineær regression</li>
+<li><span class="math inline">\(\Sigma\)</span> notation</li>
 </ul>
-<p><strong>Tidsforbrug:</strong> 90 minutter.</p>
+<p><strong>Tidsforbrug:</strong> 120 minutter.</p>
 </div>
 </div>
 </div>
 <section id="formål" class="level3 purpose">
 <h3 class="anchored" data-anchor-id="formål">Formål</h3>
-<p>Formålet med dette forløb er at se på forskellige metoder til at lave en model for en bils brændstofforbrug ud fra dens hastighed og motorens omdrejninger per minut. Vi vil se på almindelige lineær regression, multipel lineær regression, kunstige neuroner og neurale netværk til at gøre dette.</p>
+<p>I 2018 styrtede dele af <a href="https://en.wikipedia.org/wiki/Ponte_Morandi_collapse?utm_source=chatgpt.com">Morandi broen</a> i Genova, Italien sammen og 43 mennesker omkom. En del af grunden til katastrofen var for ringe beton.</p>
+<p>I 2021 styrtede dele af en <a href="https://en.wikipedia.org/wiki/Surfside_condominium_collapse?utm_source=chatgpt.com">12-etagers bygning</a> sammen i Miami, Florida. 98 mennesker døde. Også her var betonens styrke en del af grunden til katastrofen.</p>
+<p>Cement er en betydelig del af beton, og produktionen af cement udgør <a href="https://en.wikipedia.org/wiki/Cement?utm_source=chatgpt.com">ca. 8%</a> af verdens <span class="math inline">\(\textrm{CO}_2\)</span> produktion, og har derfor en betydelig indflydelse på klimakrisen.</p>
+<p>Den årlige produktion af beton er <a href="https://www.nature.com/articles/d41586-025-00568-4?utm_source=chatgpt.com">ca. 30 mia tons</a>, hvilket gør beton til det næstmest anvendte materiale efter vand.</p>
+<p>Det er derfor af flere grunde vigtigt at se på modeller for, hvordan beton kan laves med tilstrækkelig høj styrke men lavt indhold af cement.</p>
+<p>Kemiske laboratorieforsøg er naturligvis meget vigtige til dette - men de er også både dyre og tidskrævende. Så derfor ser man også på matematiske modeller.</p>
+<p>Formålet med dette forløb er derfor at se på forskellige metoder til at lave en model for en betons styrke ud fra cementindholdet, vandindholdet og alderen af betonen. Vi vil se på almindelige lineær regression, multipel lineær regression, kunstige neuroner og neurale netværk til at gøre dette.</p>
 </section>
 <section id="introduktion" class="level2">
 <h2 class="anchored" data-anchor-id="introduktion">Introduktion</h2>
-<p>Åben denne <a href="regressionsmodeller_filer/VED_fuel_speed_rpm_train">Excel-fil</a>. Det er en meget lille del af et stort datasæt <a href="https://github.com/gsoh/VED?utm_source=chatgpt.com">VED (Vehicle Energy Dataset</a>.</p>
-<p>I datasættet har vi information om brændstof forbrug i liter/time (fuel), hastighed i km/h (speed) og omdrejninger per minut (RPM).I det store datasæt er der flere information, men dem vil vi ikke anvende i dette forløb.</p>
-<p>Vi vil lave forskellige modeller til at forudsige brændstofforbruget ud fra hastiged og omdrejninger per minut.</p>
-<p>Vi vil bruge <a href="regressionsmodeller_filer/VED_fuel_speed_rpm_train">80% af datasættet</a> til at træne modellen og <a href="regressionsmodeller_filer/VED_fuel_speed_rpm_test">20% af datasættet</a> til at teste, hvor god modellen så er blevet. Det gør vi for at undgå det, man kalder for <em>overfitting</em>, hvor modellen tilpasser sig de konkrete data for godt, og derfor bliver ringere til at <em>prediktere</em> for nye data.</p>
+<p>Åben denne <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_data_reduced_train.xlsx">Excel-fil</a>. Det er en del af datasættet <a href="https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength">Concrete Compressive Strength</a>.</p>
+<p>I den del af datasættet vi ser på, har vi informationen om mængden af cement, mængden af vand, alderen i dage og betonens trykstyrke.</p>
+<p>Vi vil lave forskellige modeller til at forudsige trykstyrken ud fra de øvrige tre variable, cement, vand og alder.</p>
+<p>Vi vil bruge <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_train.xlsx">80% af datasættet</a> til at træne modellen og <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_test.xlsx">20% af datasættet</a> til at teste, hvor god modellen så er blevet. Det gør vi for at undgå det, man kalder for <em>overfitting</em>, hvor modellen tilpasser sig de konkrete data for godt, og derfor bliver ringere til at <em>prediktere</em> for nye data.</p>
 </section>
-<section id="lineær-regression" class="level2 page-columns page-full">
+<section id="lineær-regression" class="level2">
 <h2 class="anchored" data-anchor-id="lineær-regression">Lineær regression</h2>
-<p>Vi starter med helt almindelig lineær regression, hvor vi både forsøger med speed som forklarende variabel og med rpm som forklarende variabel.</p>
-<section id="opgave-1" class="level3 page-columns page-full">
-<h3 class="anchored" data-anchor-id="opgave-1">Opgave 1</h3>
-<ul>
-<li>Overvej og debatter om I forventer, at hastighed eller omdrejning er bedst til at forudsige brændstofforbrug.</li>
-<li>Lav lineær regression med hastighed som forklarende variabel på træningsdatasættet</li>
-<li>Lav lineær regression med omdrejninger som forklarende variabel på træningsdatasættet</li>
-</ul>
+<p>Vi starter med helt almindelig lineær regression, hvor vi både forsøger med cement, vand og alder som forklarende variabel.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Overvej og debatter, hvordan I forventer, at cement, vand og alder har indflydelse på styrken af betonen.</li>
+<li>Lav lineær regression på træningsdatasættet med cement som forklarende variabel. <span class="math display">\[y_{styrke} = a_{cement} \cdot x_{cement} + b_{cement}\]</span></li>
+<li>Lav lineær regression på træningsdatasættet med vand som forklarende variabel. <span class="math display">\[y_{styrke} = a_{vand} \cdot x_{vand} + b_{vand}\]</span></li>
+<li>Lav lineær regression på træningsdatasættet med alder som forklarende variabel. <span class="math display">\[y_{styrke} = a_{alder} \cdot x_{alder} + b_{alder}\]</span></li>
+</ul>
+</div>
+</div>
+</div>
+<p>Det skulle gerne være tydeligt, at ingen af de tre simple lineære modeller er særligt gode. Inden vi går videre til mere komplicerede modeller, vil vi lave det, man kalder for <em>feature-engineering</em>, hvor vi vil gøre to ting.</p>
+<p>Den første er, at vi vil se på <span class="math inline">\(log(alder)\)</span> som variabel i stedet for alder. Betons styrke bliver hurtigt bedre i starten, men derefter er virkningen af alder aftagende. Da grafen for <span class="math inline">\(log(x)\)</span> netop har den egenskab, at den vokser hurtigere i starten, og derefter flader ud, vil vi forvente, at <span class="math inline">\(log(alder)\)</span> giver en bedre forklaring.</p>
+<p>Den anden er, at mere cement i sig selv gør beton stærkere og mere vand gør beton svagere, men det betyder ikke, at man helt kan undvære vand, da det er kombinationen af cement og vand, som sammen bør beton stærkere. Vi vil derfor tilføje en ny varibel <span class="math inline">\(\frac{vand}{cement}\)</span>.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -277,28 +295,22 @@ window.Quarto = {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>På <a href="#fig-opg2" class="quarto-xref">figur&nbsp;1</a> er der andre <span class="math inline">\(31\)</span> punkter, samt en cirkel med radius <span class="math inline">\(10\)</span> omkring det grå punkt <span class="math inline">\(P(15,15)\)</span>.</p>
 <ul>
-<li>Tæl hvor mange røde, blå og grønne punkter, der ligger inde i cirklen.</li>
-<li>Kan det bruges til at beslutte, hvilken farve det grå punkt bør have?</li>
+<li>Lav en ny søjle i Excelarket (eller i dit CAS værktøj) med <span class="math inline">\(log(alder)\)</span>.</li>
+<li>Lav desuden en ny søjle med <span class="math inline">\(\frac{vand}{cement}\)</span>.</li>
+<li>Lav lineær regression på modellen <span class="math display">\[y_{styrke} = a_{log(alder)} \cdot x_{log(alder)} + b_{log(alder)}\]</span></li>
+<li>Lav lineær regression på modellen <span class="math display">\[y_{styrke} = a_{\frac{vand}{cement}} \cdot x_{\frac{vand}{cement}} + b_{\frac{vand}{cement}}\]</span></li>
 </ul>
 </div>
 </div>
 </div>
-<div id="fig-opg2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-opg2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="hvem_ligner_du_mest_filer/image2.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-opg2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;1: Koordinatsystem med <span class="math inline">\(31\)</span> punkter, samt en cirkel med radius <span class="math inline">\(10\)</span> omkring det grå punkt <span class="math inline">\(P(15,15)\)</span>
-</figcaption>
-</figure>
-</div>
+<p>Vi har nu fire forklarende variable, hvoraf ingen af dem i sig selv er særligt gode til at forklare styrken, men mon det kan gøres bedre, hvis vi bruger alle fire samtidig?</p>
+<p>Til det skal vi bruge en ny type model, som kaldes for multipel lineær regression. <span class="math display">\[y_{styrke} = a_{cement} \cdot x_{cement} + a_{vand} \cdot x_{vand} + a_{log(alder)} \cdot x_{log(alder)} + a_{\frac{vand}{cement}} \cdot x_{\frac{vand}{cement}} + b\]</span></p>
+<p>Man kan lave multipel lineær regression i mange forskellige værktøjer, f.eks. Excel, GeoGebra, Maple og NSpire.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -307,115 +319,22 @@ Figur&nbsp;1: Koordinatsystem med <span class="math inline">\(31\)</span> punkte
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Vi arbejder videre med punkterne fra opgave 2. Brug den interaktive figur nedenfor.</p>
 <ul>
-<li>Hvilket resultat giver det, hvis cirklens radius kun var halvt så stor?</li>
+<li>Find ud af, hvordan du laver multipel lineær regression i dit foretrukne værktøj.</li>
+<li>Lav den lineære multiple regression med de fire forklarende varible.</li>
+<li>Overvej, hvad værdierne af de fire hældningkoefficienter <span class="math inline">\(a_cement\)</span>, <span class="math inline">\(a_vand\)</span>, <span class="math inline">\(a_log(alder)\)</span> og <span class="math inline">\(a_\frac{vand}{cement}\)</span> betyder for modellen.</li>
 </ul>
 </div>
 </div>
 </div>
-
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta charset="utf-8">
-<script src="https://cdn.geogebra.org/apps/deployggb.js"></script>
-
-<script>
-var parameters1 = {
-"id": "ggbApplet",
-"scaleContainerClass": "ggbContainer",
-"showMenuBar":false,
-"showAlgebraInput":false,
-"showToolBar":false,
-"perspective": "G",
-"showToolBarHelp":false,
-"showResetIcon":false,
-"enableLabelDrags":false,
-"enableShiftDragZoom":false,
-"enableRightClick":false,
-"errorDialogsActive":false,
-"useBrowserForJS":false,
-"allowStyleBar":false,
-"preventFocus":false,
-"showZoomButtons":false,
-"capturingThreshold":3,
-// add code here to run when the applet starts
-"appletOnLoad":function(api){ /* api.evalCommand('Segment((1,2),(3,4))');*/ },
-"showFullscreenButton":true,
-"scale":1,
-"disableAutoScale":false,
-"allowUpscale":false,
-"clickToLoad":false,
-"appName":"classic",
-"buttonRounding":0.7,
-"buttonShadows":false,
-"language":"da",
-// use this instead of ggbBase64 to load a material from geogebra.org
-// "material_id":"RHYH3UQ8",
-// use this instead of ggbBase64 to load a .ggb file
-"filename":"_geogebra/opgave2.ggb",
-};
-// is3D=is 3D applet using 3D view, AV=Algebra View, SV=Spreadsheet View, CV=CAS View, EV2=Graphics View 2, CP=Construction Protocol, PC=Probability Calculator DA=Data Analysis, FI=Function Inspector, macro=Macros
-var views1 = {'is3D': 0,'AV': 0,'SV': 0,'CV': 0,'EV2': 0,'CP': 0,'PC': 0,'DA': 0,'FI': 0,'macro': 0};
-var applet1 = new GGBApplet(parameters1, '5.0', views1);
-</script>
-<script>
-var parameters2 = {
-"id": "ggbApplet2",
-"scaleContainerClass": "ggbContainer",
-"showMenuBar":false,
-"showAlgebraInput":false,
-"showToolBar":false,
-"perspective": "G",
-"showToolBarHelp":false,
-"showResetIcon":false,
-"enableLabelDrags":false,
-"enableShiftDragZoom":false,
-"enableRightClick":false,
-"errorDialogsActive":false,
-"useBrowserForJS":false,
-"allowStyleBar":false,
-"preventFocus":false,
-"showZoomButtons":false,
-"capturingThreshold":3,
-// add code here to run when the applet starts
-"appletOnLoad":function(api){ /* api.evalCommand('Segment((1,2),(3,4))');*/ },
-"showFullscreenButton":true,
-"scale":1,
-"disableAutoScale":false,
-"allowUpscale":false,
-"clickToLoad":false,
-"appName":"classic",
-"buttonRounding":0.7,
-"buttonShadows":false,
-"language":"da",
-// use this instead of ggbBase64 to load a material from geogebra.org
-// "material_id":"RHYH3UQ8",
-// use this instead of ggbBase64 to load a .ggb file
-"filename":"_geogebra/opgave5.ggb",
-};
-// is3D=is 3D applet using 3D view, AV=Algebra View, SV=Spreadsheet View, CV=CAS View, EV2=Graphics View 2, CP=Construction Protocol, PC=Probability Calculator DA=Data Analysis, FI=Function Inspector, macro=Macros
-var views2 = {'is3D': 0,'AV': 0,'SV': 0,'CV': 0,'EV2': 0,'CP': 0,'PC': 0,'DA': 0,'FI': 0,'macro': 0};
-var applet2 = new GGBApplet(parameters2, '5.0', views2);
-window.onload = function() {
-  applet1.inject('ggbApplet1');
-  applet2.inject('ggbApplet2');
-  }
-</script>
-<script>
-window.onload = function() {
-  applet1.inject('ggbApplet1');
-  applet2.inject('ggbApplet2');
-  }
-</script>
-<div class="ggbContainer" style="width:100%; margin: auto">
-<div id="ggbApplet1">
-
-</div>
-</div>
+<p>For de almindelige lineære regressioner kunne vi lave et punktplot (scatterplot) med den forklarende variabel (feature) på x-aksen og den afhængige variabel (target) på y-aksen samt regressionslinjen. Den mulighed har vi ikke, når der nu er flere forklarende variable (features), så vi må lave et andet type plot.</p>
+<p>Vi vil lave et plot, hvor den rigtige værdi af styrke er på x-aksen og modellens predikterede værdi er på y-aksen.</p>
+<p>Vi vil bruge de 5 modeller, vi har lavet - men nu vil vi inddrage de 20% af data, som vi netop havde taget fra til at teste modellerne.</p>
+<p>Lad os se et lille eksempel, inden du selv skal igang igen. Da vi så på modellen med cement som den eneste forklarende variabel, gav regressionen <span class="math display">\[y_{styrke} = 0.0779 \cdot x_{cement} + 13.785\]</span> I <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_test.xlsx">Excel-filen med testdata</a> er mængden af cement <span class="math inline">\(266\)</span> og styrken af betonen <span class="math inline">\(52.9\)</span>. Indsættes <span class="math inline">\(266\)</span> i modellen, giver det <span class="math display">\[y_{styrke} = 0.0779 \cdot 266 + 13.785 =34.5\]</span> Vi skal derfor have et punkt <span class="math inline">\((y_data, y_model) = (52.9, 34.5)\)</span> i plottet. Tilsvarende skal modellens y-værdien bestemmes for de øvrige linjer i testdata.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -424,112 +343,20 @@ window.onload = function() {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Det går nok ikke i længden blot at ville vurdere på øjemål, så du må til at regne lidt. I tabellen herunder er koordinater og farver på de <span class="math inline">\(10\)</span> punkter, der ligger tættest på det grå punkt i opgave 2 og 3.</p>
 <ul>
-<li><p>Udregn afstanden fra det grå punkt <span class="math inline">\(P(15,15)\)</span> til hver af de <span class="math inline">\(4\)</span> blå punkter. Hvis du er hurtig, kan du også regne afstanden til de øvrige <span class="math inline">\(6\)</span> punkter.</p></li>
-<li><p>Afgør så, hvor mange af hver farve, der ligger indenfor en cirkel med radius <span class="math inline">\(5\)</span> omkring det grå punkt. Det er nok specielt det blå punkt lige på kanten af cirklen, hvor beregningen er vigtig, men hvis en computer skal lave arbejdet automatisk, vil den jo beregne alle afstandene, da den ikke bare kan "kigge på figuren", som et menneske kan.</p></li>
-<li><p>Hvilken farve tyder det på, at det grå punkt bør have?</p></li>
+<li>Beregn de øvrige y-værdier for modellen med cement som eneste forklarende variabel.</li>
+<li>Lav punktplottet med <span class="math inline">\((y_data, y_model)\)</span>.</li>
+<li>Lav lineær regression på dette plot.</li>
+<li>Hvilken forskrift ville regressionen få, hvis modellen perfekt kunne forudsige styrken?</li>
 </ul>
 </div>
 </div>
 </div>
-<table class="table-bordered table">
-<colgroup>
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: center;">Farve</th>
-<th style="text-align: center;"></th>
-<th style="text-align: center;"></th>
-<th style="text-align: center;"></th>
-<th style="text-align: center;"></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">Blå</td>
-<td style="text-align: center;"><span class="math inline">\((13.8, 19.9)\)</span></td>
-<td style="text-align: center;"><span class="math inline">\((8.2, 14.9)\)</span></td>
-<td style="text-align: center;"><span class="math inline">\((16.4, 14.1)\)</span></td>
-<td style="text-align: center;"><span class="math inline">\((15.5, 13.1)\)</span></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">Rød</td>
-<td style="text-align: center;"><span class="math inline">\((10.6, 16.0)\)</span></td>
-<td style="text-align: center;"><span class="math inline">\((16.3, 15.2)\)</span></td>
-<td style="text-align: center;"><span class="math inline">\((15.6, 11.3)\)</span></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">Grøn</td>
-<td style="text-align: center;"><span class="math inline">\((11.1, 18.6)\)</span></td>
-<td style="text-align: center;"><span class="math inline">\((16.4, 17.5)\)</span></td>
-<td style="text-align: center;"><span class="math inline">\((21.7, 13.4)\)</span></td>
-<td style="text-align: center;"></td>
-</tr>
-</tbody>
-</table>
-<!--
-
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 5
-
-- Overvej, hvad der sker, hvis cirklens radius vælges som en meget lille værdi eller som en meget stor værdi i forhold til at bruge metoden til at bestemme, hvilken farve det grå punkt bør have. Kan det give problemer?
-:::
-
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 6
-
-Jans oprindelige opgave: Lav et punktplot i dit CAS-værktøj med disse punkter.
-| Farve | 1 | 2 | 3 | 4| 5| 6| 7| 8| 9| 
-|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-  | Blå  |  $(15,25)$ |   $(10,20)$ |  $(15,30)$ |  $(8,16)$ |   $(6,10)$  |  $(17,15)$  | $(23,17)$  | $(15,14)$ |  $(14,4)$ | 
-  | Rød |   $(30, 5)$  | $(18,18)$ |  $(21,9)$ |    $(6,24)$ |   $(25,25)$ |  $(18,16)$  | $(12,11)$ |   $(8,10)$  |  $(16,13)$  | 
-  | Grøn  | $(8,28)$  |   $(12,20)$ |  $(16,20)$  |  $(21,14)$  | $(13,10)$ |  $(12,13)$  | $(20,18)$ |   $(14,16)$ |  $(18,10)$  |
-Jans: Indtegn en cirkel omkring det grå punkt $P(15,15)$ og brug cirklen til at
-vurdere, hvilken farve punktet bør have. 
-
-I den interaktive figur herunder er $27$ andre punkter indsat i et koordinatsystem, og der er tegnet en cirkel med centrum i det grå punkt $P(15,15)$. 
-
-- Undersøg, hivlken farve $P$ skal have ved forskellig valg af radius.
-
-:::
-
-::: {.ggbContainer style='width:100%; margin: auto'}
-::: {#ggbApplet2}
-:::
-:::
-
--->
-</section>
-<section id="opsamling" class="level3">
-<h3 class="anchored" data-anchor-id="opsamling">Opsamling</h3>
-<p>Det bliver nok klart, at der er brug for en metode til at beslutte, hvor stor radius skal være for at få det bedste resultat. Kort og lidt simpelt forklaret, involverer det noget, som man kalder <strong>træningsdata</strong> og <strong>testdata</strong>. Man har for eksempel 1000 punkter, som man kender farven på. Man lader så som om, at man ikke kender farven på for eksempel 200 af punkterne (som man så kalder testdata). Så bruger man de øvrige 800 punkter (træningsdata) til at forudsige farven af hver af de 200 punkter i testdata. Dette gør man for forskellige værdier af radius, hvorefter man vælger den radius, der forudsiger flest af de 200 punkters farve korrekt. Hvis for eksempel radius 5 forudsiger 121 punkters farve korrekt, radius 10 forudsiger 135 punkters farve korrekt, og radius 20 kun forudsiger 87 punkters farve korrekt, så har radius 10 jo klaret sig bedst.</p>
-</section>
-</section>
-<section id="manhattan-afstand" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="manhattan-afstand">Manhattan-afstand</h2>
-<p>I nogle situationer giver den almindelige afstand mellem punkter ikke så god mening. For eksempel er de fleste veje på Manhattan i New York enten nord-syd eller øst-vest, så man kan ikke bare gå eller køre "på skrå", men kun lodret eller vandret.</p>
-<p>Hvis vi ser på punkterne <span class="math inline">\(P(2,3)\)</span> og <span class="math inline">\(Q(5,7)\)</span>, så er den almindelige afstand <span class="math inline">\(5\)</span> ved hjælp af Pythagoras, mens Manhattan-afstanden er <span class="math inline">\(3+4=7\)</span>. Dette er illustreret på <a href="#fig-case2" class="quarto-xref">figur&nbsp;2</a>.</p>
-<div id="fig-case2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-case2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="hvem_ligner_du_mest_filer/image3.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-case2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;2: Den almindelige afstand mellem punkterne <span class="math inline">\(P(2,3)\)</span> og <span class="math inline">\(Q(5,7)\)</span> er <span class="math inline">\(5\)</span>, mens Manhattan-afstanden er <span class="math inline">\(7\)</span>.
-</figcaption>
-</figure>
-</div>
+<p>Inden vi kan lave samme plot og regression for de øvrige modeller, skal du tilføje søjlerne med <span class="math inline">\(log(alder)\)</span> og <span class="math inline">\(\frac{vand}{cement}\)</span> til Excel arket med test-data.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -538,17 +365,17 @@ Figur&nbsp;2: Den almindelige afstand mellem punkterne <span class="math inline"
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li><p>Indtegn punkterne <span class="math inline">\(A(1,7)\)</span>, <span class="math inline">\(B(3,4)\)</span> og <span class="math inline">\(C(5,6)\)</span> i et koordinatsystem.</p></li>
-<li><p>Udregn både almindelig afstand og Manhattan-afstand mellem hvert par af punkter.</p></li>
+<li>Beregn forventede y-værdier og lav punktplot + lineær regression for hver af de tre øvrige forklarende variable hver for sig (vand, log(alder) og vand/cement).</li>
 </ul>
 </div>
 </div>
 </div>
+<p>Det er, igen, åbenlyst, at en model med kun én forklarende variabel er betydeligt for ringe. Hældningskoefficienten for regressionen skulle optimalt være 1, men er i alle tilfælde langt under 1.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -557,14 +384,18 @@ Figur&nbsp;2: Den almindelige afstand mellem punkterne <span class="math inline"
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>I eksemplet og i opgave 7 var Manhattan-afstanden større end den almindelige afstand, men kan Manhattan-afstanden være mindre end den almindelige afstand eller kan de to afstande være ens?</p>
+<ul>
+<li>Beregn forventede y-værdier og lav punktplot + lineær regression for den multiple lineære regression.</li>
+</ul>
 </div>
 </div>
 </div>
+<p>Ok, det var betydeligt bedre, men stadig med plads til forbedrning. Måske du har tænkt på, at jeg lovede, at vi skulle bruge AI - og indtil videre har der jo ikke være skyggen af det. Men lad os se, om AI i form af et såkaldt neuralt netværk kan lave en model, som klarer opgaven bedre.</p>
+<p>RESTEN AF FORLØBET KAN IKKE RIGTIGT LAVET FÆRDIG, FØR APPEN ER KLAR</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -573,45 +404,18 @@ Figur&nbsp;2: Den almindelige afstand mellem punkterne <span class="math inline"
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
+<div id="callout-8" class="callout-8-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Se på <a href="#fig-opg8" class="quarto-xref">figur&nbsp;3</a> herunder fra opgave 2 igen.</p>
-<p>Punkterne inde i cirklen har en almindelig afstand på under <span class="math inline">\(10\)</span> til det grå punkt, men hvilke af punkterne har mon en Manhattan-afstand på under <span class="math inline">\(10\)</span> til det grå punkt?</p>
-<ul>
-<li><p>Overvej, hvordan punkter med en Manhattan-afstand på præcis <span class="math inline">\(10\)</span> til det grå punkt ligger (måske er du nødt til at tegne lidt)?</p></li>
-<li><p>Den almindelige afstand giver en cirkel med det grå punkt i centrum, men hvilken figur giver Manhattan-afstanden omkring det grå punkt?</p></li>
-<li><p>Hvilken farve bør det grå punkt derfor have, hvis Manhattan-afstanden benyttes? Giver det samme resultatet, som du fik i opgave 2?</p></li>
-</ul>
+<p>Brug app til at lave et NN, som trænes på træningsdata og testes på test data. Lav samme type plot og regression.</p>
 </div>
 </div>
 </div>
-<div id="fig-opg8" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-opg8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="hvem_ligner_du_mest_filer/image2.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-opg8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;3: Koordinatsystem med <span class="math inline">\(31\)</span> punkter, samt en cirkel med radius <span class="math inline">\(10\)</span> omkring det grå punkt <span class="math inline">\(P(15,15)\)</span>
-</figcaption>
-</figure>
-</div>
-<!--
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 10
-
-Opstil en formel for den almindelige afstand mellem to punkter med koordinaterne $(x_1, y_1)$ og $(x_2, y_2)$. Det er en formel, du kender i forvejen.
-
-Opstil tilsvarende en formel for Manhattan-afstanden. Det er nok ikke en formel, du har set før. 
-
--->
-<p>Du kan læse mere om <a href="../noter/afstande/AfstandeMellemPunkteriPlanen.html#sec-manhattan_afstand">Manhattan-afstanden her</a>.</p>
-</section>
-<section id="hvilken-politiker-er-du-mest-enig-med" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="hvilken-politiker-er-du-mest-enig-med">Hvilken politiker er du mest enig med?</h2>
-<p>Op til både folketings-, kommunal- og regionalvalg kan man svare på en række spørgsmål, hvorefter ens svar bliver sammenlignet med politikernes svar på de samme spørgsmål. Herefter kan man så se, hvem man er mest enig med.</p>
-<p>Du skal enten bruge <a href="https://www.altinget.dk/kandidattest">Altinget</a>, som har flest forklaringer og muligheder, men ikke altid er tilgængelig, eller <a href="https://www.dr.dk/nyheder/politik/kandidattest">DR.DK</a>.</p>
+<p>Som du kunne se, var det neurale netværk i stand til at klare opgaven en god del bedre end den multiple lineære regression.</p>
+<p>Lad os til sidst se, om vi kan lave en endnu mere præcis model, hvis vi inddrager flere forklarende variable (features).</p>
+<p>Her er træningsdata <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_full_train.xlsx">80% af datasættet</a> til at træne modellen og <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_full_test.xlsx">20% af datasættet</a> til at teste den.</p>
+<p>Åbn hver af de to filer. Lav en søjle med <span class="math inline">\(log(alder)\)</span> i stedet for alder og tilføj en søjle med <span class="math inline">\(\frac{vand}{cement}\)</span>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -620,55 +424,11 @@ Opstil tilsvarende en formel for Manhattan-afstanden. Det er nok ikke en formel,
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<ul>
-<li>Klik på linket ovenfor, vælg f.eks. det seneste kommunal- eller folketingsvalg, vælg din egen kommune i testen og besvar spørgsmålene. Se derefter, hvem du ifølge kandidattesten er mest enige med, og hvor mange procent enige I er. Klik også på "Sammenlign svar", hvor du i detaljer kan se, hvor I er enig eller uenige.</li>
-</ul>
-</div>
-</div>
-</div>
-<p>Men hvordan virker det mon? Hvordan vurderes, hvilken kandidat du er mest enig med, og hvordan udregnes, hvor mange procent enige I er?</p>
-<p>Til hvert spørgsmål kan der svares "helt uenig", "uenig", "enig" eller "helt enig", men desuden er der en skjult "neutral" mulighed i midten, som man ikke kan vælge:</p>
-<table class="table">
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Helt uenig</td>
-<td style="text-align: left;">Uenig</td>
-<td style="text-align: left;">Neutral</td>
-<td style="text-align: left;">Enig</td>
-<td style="text-align: left;">Helt enig</td>
-</tr>
-</tbody>
-</table>
-<p>Afstanden mellem to svar regnes som antal "felter" i tabellen, så afstanden mellem "Uenig" og "Enig" er <span class="math inline">\(2\)</span>, mens afstanden mellem "Enig" og "Helt enig" er <span class="math inline">\(1\)</span>, og den største afstand er <span class="math inline">\(4\)</span>.</p>
-<p>I <a href="#fig-kommunalvalg" class="quarto-xref">figur&nbsp;4</a> ses en persons svar og et partis kandidaters svar på <span class="math inline">\(23\)</span> spørgsmål. Opstillingen på figuren er lidt anderledes end på DRs side for at gøre det mere overskueligt, men indholdet er tilsvarende. Bemærk, at antallet af spørgsmål kan variere fra kommune til kommune, så du har måske færre eller flere spørgsmål.</p>
-<div id="fig-kommunalvalg" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-kommunalvalg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="hvem_ligner_du_mest_filer/image5.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-kommunalvalg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;4: En persons svar (sort) og et partis kandidaters svar (rød) på <span class="math inline">\(23\)</span> spørgsmål.
-</figcaption>
-</figure>
-</div>
-<p>Afstanden i det første spørgsmål er <span class="math inline">\(1\)</span>, afstanden i det andet spørgsmål også <span class="math inline">\(1\)</span> og afstanden i det tredje spørgsmål er <span class="math inline">\(2\)</span> på grund af den skjulte "neutral" mulighed i midten.</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 9
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
 <div id="callout-9" class="callout-9-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li><p>De 3 første afstande er altså <span class="math inline">\(1\)</span>, <span class="math inline">\(1\)</span> og <span class="math inline">\(2\)</span>. Udregn afstanden for hver af de øvrige <span class="math inline">\(20\)</span> spørgsmål.</p></li>
-<li><p>Læg så afstandene sammen, hvilket svarer til en form for Manhattan-afstand, da afstanden regnes for hvert enkelt spørgsmål for sig. Hvilken samlet afstand giver det?</p></li>
+<li>Lav multiple lineær regression med alle de forklarende variable.</li>
+<li>Lav samme type plot og regression som før.</li>
 </ul>
 </div>
 </div>
@@ -679,106 +439,24 @@ Figur&nbsp;4: En persons svar (sort) og et partis kandidaters svar (rød) på <s
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 10
+<span class="screen-reader-only">Note</span>Opgave 9
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-10" class="callout-10-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<ul>
-<li><p>Hvad er den mindst mulig samlede afstand for de <span class="math inline">\(23\)</span> spørgsmål? Hvordan skal svarene for partiet og for vælgeren se ud fra at få denne afstand?</p></li>
-<li><p>Hvad er den størst mulige afstand, og hvordan skal svarene så se ud?</p></li>
-</ul>
+<p>Brug app til at lave et neuralt netværk på træningsdata fra det store datasæt med flere features.</p>
+<p>Lav samme type plot og regression med brug af det trænede netværk og testdata.</p>
 </div>
 </div>
 </div>
-<!--
-
-Delene om enighed med parti er fjernet, da det ikke er tilgængeligt for KV25, som det var for KV21.
-
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 1#
-
-På @fig-enighed ses det, at siden angiver, at enigheden med Socialdemokratiet er på $79 \%$.
-
-Overvej, hvordan den afstand du udregnede i opgave 15 og den største
-mulige afstand, som du fandt i opgave 16, kan betyde, at enigheden er
-$79 \%$.
-
-:::
-
-![På siden angives det, at enigheden med Socialdemokratiet er på $79 \%$.](hvem_ligner_du_mest_filer/image7.png){#fig-enighed}
-
--->
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 11
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-11" class="callout-11-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Vend tilbage til dine egne svar på testen.</p>
-<ul>
-<li><p>Beregn afstand i forhold til den kandidat, du var mest enig med.</p></li>
-<li><p>For hver kandidat viser siden, hvor mange procent I er enige. Overvej, hvordan denne procent er regnet ud - tænk på afstanden som "hvor uenige I er" - og brug det til at regne en procent for "enighed".</p></li>
-<li><p>Passer dine udregninger med sidens procenter?</p></li>
-</ul>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 12 (ekstra)
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-12" class="callout-12-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Kandidattesten angiver, hvilken kandidat, du er mest enig med. Man kunne også ønske at vide, hvilket parti, man er mest enig med.</p>
-<ul>
-<li><p>Overvej, hvordan du ville beregne, hvilket parti du er mest enig med. Diskutér gerne forskellige muligheder, og deres evt. fordele og ulemper.</p></li>
-<li><p>Hvis I ikke allerede har overvejet det, så overvej den mulighed, at “enighed med parti” beregnes som et gennemsnit af, hvor enig med er med hver af partiets kandidater. Hvilke fordele og ulemper har denne metode?</p></li>
-<li><p>Hvis I ikke allerede har overvejet det, så overvej den mulighed, at “enighed med parti” beregnes i forhold til det mest typiske svar fra partiets kandidater (som typetal i deskriptiv statistik, blot er det her type-svar). Hvike fordele og ulemper har denne metode?</p></li>
-<li><p>I metoden med typesvar kan man være mere enig med partiets end med den kandidat, man er mest enig med. Hvorfor er det tilfældet?</p></li>
-</ul>
-</div>
-</div>
-</div>
-<!--
-
-Beregn desuden afstand og procent til det parti, du var mest enig med,
-og til det parti, du var mest uenig med.
-
-
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 19 (svær)
-
-Den kandidat, som svarene i opgave 15 var mest enig med, giver en
-procent på $76 \%$, så procenten for samtlige kandidater fra
-Socialdemokratiet er altså lavere end procenten for selve partiet.
-
-Det virker måske umiddelbart underligt. Overvej, hvorfor det faktisk er
-korrekt ud fra den metode, som siden anvender til beregningerne.
-
-Diskutér derefter, om procenten for partiet kunne være beregnet
-anderledes.
-
-:::
-
--->
+<p>Vi ender altså med en rimeligt præcist model, når vi tager alle variable med - hvor det neurale netværk gør det bedre end multipel lineær regression.</p>
+<p>Fordelen ved den multiple lineære model er, at vi kan tolke på værdierne af koefficienterne. Ulempen er, at modellen har sværere ved at fange ikke-lineære elementer i data.</p>
+<p>Fordelen ved det neurale net er, at det kan er rigtigt godt til at fange ikke-lineære elementer. Ulempen er, at vægtene fra modellen ikke giver os nogen form for forklaring eller tolkning.</p>
 </section>
 <section id="delvis-facitliste" class="level2">
 <h2 class="anchored" data-anchor-id="delvis-facitliste">Delvis facitliste</h2>
-<p><a href="../undervisningsforlob/hvem_ligner_du_mest_filer/kandidattest_facit.html" target="_blank">Facitliste</a>.</p>
+<p><a href="../undervisningsforlob/regressionsmodeller_filer/regressionsmodeller_facit.html" target="_blank">Facitliste</a>.</p>
 
 
 </section>
