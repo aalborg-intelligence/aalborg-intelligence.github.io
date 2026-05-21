@@ -234,10 +234,10 @@ window.Quarto = {
 <div class="callout-body-container callout-body">
 <p>Forløbet kræver kendskab til:</p>
 <ul>
-<li>Lineær regression</li>
-<li><span class="math inline">\(\Sigma\)</span> notation</li>
+<li>Lineær regression.</li>
+<li>Notation med sumtegnet: <span class="math inline">\(\Sigma\)</span>.</li>
 </ul>
-<p><strong>Tidsforbrug:</strong> 120 minutter.</p>
+<p><strong>Tidsforbrug:</strong> 2 x 90 minutter.</p>
 </div>
 </div>
 </div>
@@ -246,17 +246,17 @@ window.Quarto = {
 <p>I 2018 styrtede dele af <a href="https://en.wikipedia.org/wiki/Ponte_Morandi_collapse?utm_source=chatgpt.com">Morandi broen</a> i Genova, Italien sammen og 43 mennesker omkom. En del af grunden til katastrofen var for ringe beton.</p>
 <p>I 2021 styrtede dele af en <a href="https://en.wikipedia.org/wiki/Surfside_condominium_collapse?utm_source=chatgpt.com">12-etagers bygning</a> sammen i Miami, Florida. 98 mennesker døde. Også her var betonens styrke en del af grunden til katastrofen.</p>
 <p>Cement er en betydelig del af beton, og produktionen af cement udgør <a href="https://en.wikipedia.org/wiki/Cement?utm_source=chatgpt.com">ca. 8%</a> af verdens <span class="math inline">\(\textrm{CO}_2\)</span> produktion, og har derfor en betydelig indflydelse på klimakrisen.</p>
-<p>Den årlige produktion af beton er <a href="https://www.nature.com/articles/d41586-025-00568-4?utm_source=chatgpt.com">ca. 30 mia tons</a>, hvilket gør beton til det næstmest anvendte materiale efter vand.</p>
-<p>Det er derfor af flere grunde vigtigt at se på modeller for, hvordan beton kan laves med tilstrækkelig høj styrke men lavt indhold af cement.</p>
-<p>Kemiske laboratorieforsøg er naturligvis meget vigtige til dette - men de er også både dyre og tidskrævende. Så derfor ser man også på matematiske modeller.</p>
-<p>Formålet med dette forløb er derfor at se på forskellige metoder til at lave en model for en betons styrke ud fra cementindholdet, vandindholdet og alderen af betonen. Vi vil se på almindelige lineær regression, multipel lineær regression, kunstige neuroner og neurale netværk til at gøre dette.</p>
+<p>Den årlige produktion af beton er <a href="https://www.nature.com/articles/d41586-025-00568-4?utm_source=chatgpt.com">ca. 30 mia. tons</a>, hvilket gør beton til det næstmest anvendte materiale efter vand.</p>
+<p>Det er derfor af flere grunde vigtigt at se på modeller for, hvordan beton kan laves med tilstrækkelig høj styrke, men samtidig med så lavt indhold af cement som muligt.</p>
+<p>Kemiske laboratorieforsøg er naturligvis meget vigtige til dette – men de er også både dyre og tidskrævende. Så derfor ser man også på matematiske modeller.</p>
+<p>Formålet med dette forløb er derfor at se på forskellige metoder til at lave en model for en betons styrke ud fra cementindholdet, vandindholdet og alderen af betonen. Vi vil se på almindelig lineær regression, multipel lineær regression, kunstige neuroner og neurale netværk til at gøre dette.</p>
 </section>
 <section id="introduktion" class="level2">
 <h2 class="anchored" data-anchor-id="introduktion">Introduktion</h2>
-<p>Åben denne <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_data_reduced_train.xlsx">Excel-fil</a>. Det er en del af datasættet <a href="https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength">Concrete Compressive Strength</a>.</p>
-<p>I den del af datasættet vi ser på, har vi informationen om mængden af cement, mængden af vand, alderen i dage og betonens trykstyrke.</p>
-<p>Vi vil lave forskellige modeller til at forudsige trykstyrken ud fra de øvrige tre variable, cement, vand og alder.</p>
-<p>Vi vil bruge <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_train.xlsx">80% af datasættet</a> til at træne modellen og <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_test.xlsx">20% af datasættet</a> til at teste, hvor god modellen så er blevet. Det gør vi for at undgå det, man kalder for <em>overfitting</em>, hvor modellen tilpasser sig de konkrete data for godt, og derfor bliver ringere til at <em>prediktere</em> for nye data.</p>
+<p>Åbn denne <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_train.xlsx">Excel-fil</a>. Det er en del af datasættet <a href="https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength">Concrete Compressive Strength</a>.</p>
+<p>I den del af datasættet vi ser på, har vi information om mængden af cement, mængden af vand, alderen i dage og betonens trykstyrke.</p>
+<p>Vi vil lave forskellige modeller til at forudsige trykstyrken ud fra de øvrige tre variable: cement, vand og alder.</p>
+<p>Vi vil bruge <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_train.xlsx">80% af datasættet</a> til at træne modellen og <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_test.xlsx">20% af datasættet</a> til at teste, hvor god modellen så er blevet. Det gør vi for at undgå det, man kalder for <a href="../noter/krydsvalidering/krydsvalidering.html#overfitting" target="_blank">overfitting</a>, hvor modellen tilpasser sig de konkrete data for godt og derfor bliver ringere til at <strong>prædiktere</strong> nye data.</p>
 </section>
 <section id="lineær-regression" class="level2">
 <h2 class="anchored" data-anchor-id="lineær-regression">Lineær regression</h2>
@@ -274,17 +274,32 @@ window.Quarto = {
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Overvej og debatter, hvordan I forventer, at cement, vand og alder har indflydelse på styrken af betonen.</li>
-<li>Lav lineær regression på træningsdatasættet med cement som forklarende variabel. <span class="math display">\[y_{styrke} = a_{cement} \cdot x_{cement} + b_{cement}\]</span></li>
-<li>Lav lineær regression på træningsdatasættet med vand som forklarende variabel. <span class="math display">\[y_{styrke} = a_{vand} \cdot x_{vand} + b_{vand}\]</span></li>
-<li>Lav lineær regression på træningsdatasættet med alder som forklarende variabel. <span class="math display">\[y_{styrke} = a_{alder} \cdot x_{alder} + b_{alder}\]</span></li>
+<li><p>Overvej og debatter, hvordan I forventer, at cement, vand og alder har indflydelse på styrken af betonen.</p></li>
+<li><p>Lav lineær regression på træningsdatasættet med cement som forklarende variabel:</p></li>
 </ul>
+<p><span class="math display">\[
+y_{\textrm{styrke}} = a_{\textrm{cement}} \cdot x_{\textrm{cement}} + b_{\textrm{cement}}
+\]</span></p>
+<ul>
+<li>Lav lineær regression på træningsdatasættet med vand som forklarende variabel:</li>
+</ul>
+<p><span class="math display">\[
+y_{\textrm{styrke}} = a_{\textrm{vand}} \cdot x_{\textrm{vand}} + b_{\textrm{vand}}
+\]</span></p>
+<ul>
+<li>Lav lineær regression på træningsdatasættet med alder som forklarende variabel:</li>
+</ul>
+<p><span class="math display">\[
+y_{\textrm{styrke}} = a_{\textrm{alder}} \cdot x_{\textrm{alder}} + b_{\textrm{alder}}
+\]</span></p>
 </div>
 </div>
 </div>
-<p>Det skulle gerne være tydeligt, at ingen af de tre simple lineære modeller er særligt gode. Inden vi går videre til mere komplicerede modeller, vil vi lave det, man kalder for <em>feature-engineering</em>, hvor vi vil gøre to ting.</p>
-<p>Den første er, at vi vil se på <span class="math inline">\(log(alder)\)</span> som variabel i stedet for alder. Betons styrke bliver hurtigt bedre i starten, men derefter er virkningen af alder aftagende. Da grafen for <span class="math inline">\(log(x)\)</span> netop har den egenskab, at den vokser hurtigere i starten, og derefter flader ud, vil vi forvente, at <span class="math inline">\(log(alder)\)</span> giver en bedre forklaring.</p>
-<p>Den anden er, at mere cement i sig selv gør beton stærkere og mere vand gør beton svagere, men det betyder ikke, at man helt kan undvære vand, da det er kombinationen af cement og vand, som sammen bør beton stærkere. Vi vil derfor tilføje en ny varibel <span class="math inline">\(\frac{vand}{cement}\)</span>.</p>
+<p>Det skulle gerne være tydeligt, at ingen af de tre simple lineære modeller er særligt gode. Inden vi går videre til mere komplicerede modeller, vil vi lave det, man kalder for <strong>feature-engineering</strong>, hvor vi vil gøre to ting:</p>
+<ul>
+<li><p>Den første er, at vi vil se på <span class="math inline">\(\log(\textrm{alder})\)</span> som variabel i stedet for alder. Betons styrke bliver hurtigt bedre i starten, men derefter er virkningen af alder aftagende. Da grafen for <span class="math inline">\(\log(\textrm{x})\)</span> netop har den egenskab, at den vokser hurtigere i starten, og derefter flader ud, vil vi forvente, at <span class="math inline">\(\log(\textrm{alder})\)</span> giver en bedre forklaring.</p></li>
+<li><p>Den anden er, at mere cement i sig selv gør beton stærkere og mere vand gør beton svagere, men det betyder ikke, at man helt kan undvære vand, da det er kombinationen af cement og vand, som sammen gør beton stærkere. Vi vil derfor tilføje en ny variabel <span class="math inline">\(\frac{\textrm{vand}}{\textrm{cement}}\)</span>.</p></li>
+</ul>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -298,17 +313,27 @@ window.Quarto = {
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Lav en ny søjle i Excelarket (eller i dit CAS værktøj) med <span class="math inline">\(log(alder)\)</span>.</li>
-<li>Lav desuden en ny søjle med <span class="math inline">\(\frac{vand}{cement}\)</span>.</li>
-<li>Lav lineær regression på modellen <span class="math display">\[y_{styrke} = a_{log(alder)} \cdot x_{log(alder)} + b_{log(alder)}\]</span></li>
-<li>Lav lineær regression på modellen <span class="math display">\[y_{styrke} = a_{\frac{vand}{cement}} \cdot x_{\frac{vand}{cement}} + b_{\frac{vand}{cement}}\]</span></li>
+<li><p>Start med at indsætte to nye søjler <em>mellem</em> søjlen med vand og alder – det bliver en fordel senere.</p></li>
+<li><p>I den første nye søjle beregner du <span class="math inline">\(\log(\textrm{alder})\)</span> (i Excel tager du <span class="math inline">\(10\)</span>-tals logaritmen til et tal ved at skrive <code>LOG10</code>).</p></li>
+<li><p>I den anden nye søjle beregner du <span class="math inline">\(\frac{\textrm{vand}}{\textrm{cement}}\)</span>.</p></li>
+<li><p>Lav lineær regression på modellen</p>
+<p><span class="math display">\[
+y_{\textrm{styrke}} = a_{\log(\textrm{alder})} \cdot x_{\log(\textrm{alder})} + b_{\log(\textrm{alder})}
+\]</span></p></li>
+<li><p>Lav lineær regression på modellen</p>
+<p><span class="math display">\[
+y_{\textrm{styrke}} = a_{\frac{\textrm{vand}}{\textrm{cement}}} \cdot x_{\frac{\textrm{vand}}{\textrm{cement}}} + b_{\frac{\textrm{vand}}{\textrm{cement}}}
+\]</span> <!-- $$ --> <!-- y_{\textrm{styrke}} = a_{\textrm{vand}/\textrm{cement}} \cdot x_{\textrm{vand}/\textrm{cement}} + b_{\textrm{vand}/\textrm{cement}} --> <!-- $$ --></p></li>
 </ul>
 </div>
 </div>
 </div>
-<p>Vi har nu fire forklarende variable, hvoraf ingen af dem i sig selv er særligt gode til at forklare styrken, men mon det kan gøres bedre, hvis vi bruger alle fire samtidig?</p>
-<p>Til det skal vi bruge en ny type model, som kaldes for multipel lineær regression. <span class="math display">\[y_{styrke} = a_{cement} \cdot x_{cement} + a_{vand} \cdot x_{vand} + a_{log(alder)} \cdot x_{log(alder)} + a_{\frac{vand}{cement}} \cdot x_{\frac{vand}{cement}} + b\]</span></p>
-<p>Man kan lave multipel lineær regression i mange forskellige værktøjer, f.eks. Excel, GeoGebra, Maple og NSpire.</p>
+<p>Vi har nu fire forklarende variable, hvoraf ingen af dem i sig selv er særligt god til at forklare styrken, men mon det kan gøres bedre, hvis vi bruger alle fire samtidig?</p>
+<p>Til det skal vi bruge en ny type model, som kaldes for <strong>multipel lineær regression</strong>.</p>
+<p><span class="math display">\[
+y_{\textrm{styrke}} = a_{\textrm{cement}} \cdot x_{\textrm{cement}} + a_{\textrm{vand}} \cdot x_{\textrm{vand}} + a_{\log(\textrm{alder})} \cdot x_{\log(\textrm{alder})} + a_{\frac{\textrm{vand}}{\textrm{cement}}} \cdot x_{\frac{\textrm{vand}}{\textrm{cement}}} + b
+\]</span></p>
+<p>Man kan lave multipel lineær regression i mange forskellige værktøjer for eksempel Excel, GeoGebra, Maple og NSpire.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -322,17 +347,48 @@ window.Quarto = {
 <div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Find ud af, hvordan du laver multipel lineær regression i dit foretrukne værktøj.</li>
-<li>Lav den lineære multiple regression med de fire forklarende varible.</li>
-<li>Overvej, hvad værdierne af de fire hældningkoefficienter <span class="math inline">\(a_cement\)</span>, <span class="math inline">\(a_vand\)</span>, <span class="math inline">\(a_log(alder)\)</span> og <span class="math inline">\(a_\frac{vand}{cement}\)</span> betyder for modellen.</li>
+<li>Lav den lineære multiple regression med de fire forklarende variable i dit foretrukne værktøj.</li>
+</ul>
+<details>
+<summary>
+Sådan gør du i Excel
+</summary>
+<p><br> Start med at aktivere "Dataanalyse"-værktøjet:</p>
+<ul>
+<li>Klik på "Filer" og vælg "Indstillinger".</li>
+<li>Tryk på "Tilføjelsesprogrammer".</li>
+<li>Under "Administrer" vælger du "Excel-tilføjelsesprogrammer" og trykker på "Udfør".</li>
+<li>Vælg her "Analysis ToolPak".</li>
+</ul>
+<p>Du kan nu gå i gang med at lave multipel lineær regression:</p>
+<ul>
+<li>Vælg fanen "Data" og tryk på "Dataanalyse".</li>
+<li>Vælg her "Regression".</li>
+<li>Ved "Input for Y-område" vælger du søjlen med styrken (sørg for også at vælge den øverste celle med overskriften).</li>
+<li>Ved "Input for X-område" vælger du søjlerne med cement, vand, log(alder) og vand/cement (sørg for også at vælge de øverste celler med overskriften). Vær opmærksom på at disse fire søjler skal stå i et sammenhængende område.</li>
+<li>Sæt flueben ved "Etiketter".</li>
+<li>Tryk på "OK".</li>
+<li>Resultatet bliver nu vist i en ny fane i Excel-arket.</li>
+</ul>
+</details>
+<ul>
+<li>Overvej, hvad værdierne af de fire hældningkoefficienter <span class="math inline">\(a_{\textrm{cement}}\)</span>, <span class="math inline">\(a_{\textrm{vand}}\)</span>, <span class="math inline">\(a_{\log(\textrm{alder})}\)</span> og <span class="math inline">\(a_{\frac{\textrm{vand}}{\textrm{cement}}}\)</span> betyder for modellen.</li>
 </ul>
 </div>
 </div>
 </div>
-<p>For de almindelige lineære regressioner kunne vi lave et punktplot (scatterplot) med den forklarende variabel (feature) på x-aksen og den afhængige variabel (target) på y-aksen samt regressionslinjen. Den mulighed har vi ikke, når der nu er flere forklarende variable (features), så vi må lave et andet type plot.</p>
-<p>Vi vil lave et plot, hvor den rigtige værdi af styrke er på x-aksen og modellens predikterede værdi er på y-aksen.</p>
-<p>Vi vil bruge de 5 modeller, vi har lavet - men nu vil vi inddrage de 20% af data, som vi netop havde taget fra til at teste modellerne.</p>
-<p>Lad os se et lille eksempel, inden du selv skal igang igen. Da vi så på modellen med cement som den eneste forklarende variabel, gav regressionen <span class="math display">\[y_{styrke} = 0.0779 \cdot x_{cement} + 13.785\]</span> I <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_test.xlsx">Excel-filen med testdata</a> er mængden af cement <span class="math inline">\(266\)</span> og styrken af betonen <span class="math inline">\(52.9\)</span>. Indsættes <span class="math inline">\(266\)</span> i modellen, giver det <span class="math display">\[y_{styrke} = 0.0779 \cdot 266 + 13.785 =34.5\]</span> Vi skal derfor have et punkt <span class="math inline">\((y_data, y_model) = (52.9, 34.5)\)</span> i plottet. Tilsvarende skal modellens y-værdien bestemmes for de øvrige linjer i testdata.</p>
+<p>For de almindelige lineære regressioner kunne vi lave et punktplot (scatterplot) med den forklarende variabel (feature) på <span class="math inline">\(x\)</span>-aksen og den afhængige variabel (target) på <span class="math inline">\(y\)</span>-aksen samt regressionslinjen. Den mulighed har vi ikke, når der nu er flere forklarende variable (features), så vi må lave et andet type plot.</p>
+<p>Vi vil lave et plot, hvor den rigtige værdi af styrke er på <span class="math inline">\(x\)</span>-aksen og modellens prædikterede værdi er på <span class="math inline">\(y\)</span>-aksen. Der skulle nemlig gerne være stor overensstemmelse mellem de to.</p>
+<p>Vi vil bruge de fem modeller, vi har lavet – men nu vil vi inddrage de 20% af data, som vi netop havde taget fra til at teste modellerne.</p>
+<p>Lad os se på et lille eksempel, inden du selv skal i gang igen. Da vi så på modellen med cement som den eneste forklarende variabel, gav regressionen</p>
+<p><span class="math display">\[
+y_{\textrm{styrke}} = 0.0779 \cdot x_{\textrm{cement}} + 13.785
+\]</span></p>
+<p>I <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_test.xlsx">Excel-filen med testdata</a>, ser vi i den første række, at mængden af cement er <span class="math inline">\(266\)</span> og styrken af betonen <span class="math inline">\(52.9\)</span>. Indsættes <span class="math inline">\(266\)</span> i modellen, giver det</p>
+<p><span class="math display">\[
+y_{\textrm{styrke}} = 0.0779 \cdot 266 + 13.785 =34.5
+\]</span></p>
+<p>Vi skal derfor have et punkt <span class="math inline">\((y_{\textrm{data}}, y_{\textrm{model}}) = (52.9, 34.5)\)</span> i plottet. Tilsvarende skal modellens <span class="math inline">\(y\)</span>-værdien bestemmes for de øvrige rækker i testdata.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -346,15 +402,15 @@ window.Quarto = {
 <div id="callout-5" class="callout-5-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Beregn de øvrige y-værdier for modellen med cement som eneste forklarende variabel.</li>
-<li>Lav punktplottet med <span class="math inline">\((y_data, y_model)\)</span>.</li>
+<li>Beregn de øvrige <span class="math inline">\(y\)</span>-værdier for modellen med cement som eneste forklarende variabel.</li>
+<li>Lav punktplottet med <span class="math inline">\((y_{\textrm{data}}, y_{\textrm{model}})\)</span>.</li>
 <li>Lav lineær regression på dette plot.</li>
-<li>Hvilken forskrift ville regressionen få, hvis modellen perfekt kunne forudsige styrken?</li>
+<li>Hvilken ligning ville regressionslinjen få, hvis modellen perfekt kunne forudsige styrken?</li>
 </ul>
 </div>
 </div>
 </div>
-<p>Inden vi kan lave samme plot og regression for de øvrige modeller, skal du tilføje søjlerne med <span class="math inline">\(log(alder)\)</span> og <span class="math inline">\(\frac{vand}{cement}\)</span> til Excel arket med test-data.</p>
+<p>Inden vi kan lave samme plot og regression for de øvrige modeller, skal du tilføje søjlerne med <span class="math inline">\(\log(\textrm{alder})\)</span> og <span class="math inline">\(\frac{\textrm{vand}}{\textrm{cement}}\)</span> til Excel-arket med testdata.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -368,12 +424,12 @@ window.Quarto = {
 <div id="callout-6" class="callout-6-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Beregn forventede y-værdier og lav punktplot + lineær regression for hver af de tre øvrige forklarende variable hver for sig (vand, log(alder) og vand/cement).</li>
+<li>Beregn forventede <span class="math inline">\(y\)</span>-værdier og lav <span class="math inline">\((y_{\textrm{data}}, y_{\textrm{model}})\)</span>-plot samt lineær regression for hver af de tre øvrige forklarende variable hver for sig: vand, log(alder) og vand/cement (modellerne lavede du i opgave 1 og 2).</li>
 </ul>
 </div>
 </div>
 </div>
-<p>Det er, igen, åbenlyst, at en model med kun én forklarende variabel er betydeligt for ringe. Hældningskoefficienten for regressionen skulle optimalt være 1, men er i alle tilfælde langt under 1.</p>
+<p>Det er, igen, åbenlyst, at en model med kun én forklarende variabel er betydeligt for ringe. Hældningskoefficienten for regressionen skulle optimalt være <span class="math inline">\(1\)</span>, men er i alle tilfælde langt under <span class="math inline">\(1\)</span>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -387,12 +443,12 @@ window.Quarto = {
 <div id="callout-7" class="callout-7-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Beregn forventede y-værdier og lav punktplot + lineær regression for den multiple lineære regression.</li>
+<li>Beregn forventede <span class="math inline">\(y\)</span>-værdier og lav <span class="math inline">\((y_{\textrm{data}}, y_{\textrm{model}})\)</span>-plot samt lineær regression for den multiple lineære regression, som du lavede i opgave 3.</li>
 </ul>
 </div>
 </div>
 </div>
-<p>Ok, det var betydeligt bedre, men stadig med plads til forbedrning. Måske du har tænkt på, at jeg lovede, at vi skulle bruge AI - og indtil videre har der jo ikke være skyggen af det. Men lad os se, om AI i form af et såkaldt neuralt netværk kan lave en model, som klarer opgaven bedre.</p>
+<p>Okay, det var betydeligt bedre, men stadig med plads til forbedringer. Måske du har tænkt på, at vi lovede, at vi skulle bruge AI – og indtil videre har der jo ikke været skyggen af det. Men lad os se, om AI i form af et såkaldt neuralt netværk kan lave en model, som klarer opgaven med at prædiktere betonens styrke bedre.</p>
 <p>RESTEN AF FORLØBET KAN IKKE RIGTIGT LAVET FÆRDIG, FØR APPEN ER KLAR</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
@@ -406,14 +462,14 @@ window.Quarto = {
 </div>
 <div id="callout-8" class="callout-8-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Brug app til at lave et NN, som trænes på træningsdata og testes på test data. Lav samme type plot og regression.</p>
+<p>Brug app’en (LINK) til at lave et NN, som trænes på træningsdata og testes på test data. Lav <span class="math inline">\((y_{\textrm{data}}, y_{\textrm{model}})\)</span>-plot samt lineær regression.</p>
 </div>
 </div>
 </div>
-<p>Som du kunne se, var det neurale netværk i stand til at klare opgaven en god del bedre end den multiple lineære regression.</p>
+<p>Som du lige har opdaget, er det neurale netværk i stand til at klare opgaven en del bedre end den multiple lineære regression.</p>
 <p>Lad os til sidst se, om vi kan lave en endnu mere præcis model, hvis vi inddrager flere forklarende variable (features).</p>
 <p>Her er træningsdata <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_full_train.xlsx">80% af datasættet</a> til at træne modellen og <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_full_test.xlsx">20% af datasættet</a> til at teste den.</p>
-<p>Åbn hver af de to filer. Lav en søjle med <span class="math inline">\(log(alder)\)</span> i stedet for alder og tilføj en søjle med <span class="math inline">\(\frac{vand}{cement}\)</span>.</p>
+<p>Åbn hver af de to filer. Tilføj to søjler inden alder, hvor du beregner <span class="math inline">\(\log(\textrm{alder})\)</span> og <span class="math inline">\(\frac{\textrm{vand}}{\textrm{cement}}\)</span> (på den måde kommer alle de forklarende variable til at stå i et sammenhængende område).</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -428,7 +484,7 @@ window.Quarto = {
 <div class="callout-body-container callout-body">
 <ul>
 <li>Lav multiple lineær regression med alle de forklarende variable.</li>
-<li>Lav samme type plot og regression som før.</li>
+<li>Lav <span class="math inline">\((y_{\textrm{data}}, y_{\textrm{model}})\)</span>-plot samt lineær regression.</li>
 </ul>
 </div>
 </div>
@@ -445,14 +501,16 @@ window.Quarto = {
 </div>
 <div id="callout-10" class="callout-10-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Brug app til at lave et neuralt netværk på træningsdata fra det store datasæt med flere features.</p>
-<p>Lav samme type plot og regression med brug af det trænede netværk og testdata.</p>
+<ul>
+<li><p>Brug app til at lave et neuralt netværk på træningsdata fra det store datasæt med flere features.</p></li>
+<li><p>Lav <span class="math inline">\((y_{\textrm{data}}, y_{\textrm{model}})\)</span>-plot samt lineær regression med brug af det trænede netværk og testdata.</p></li>
+</ul>
 </div>
 </div>
 </div>
-<p>Vi ender altså med en rimeligt præcist model, når vi tager alle variable med - hvor det neurale netværk gør det bedre end multipel lineær regression.</p>
-<p>Fordelen ved den multiple lineære model er, at vi kan tolke på værdierne af koefficienterne. Ulempen er, at modellen har sværere ved at fange ikke-lineære elementer i data.</p>
-<p>Fordelen ved det neurale net er, at det kan er rigtigt godt til at fange ikke-lineære elementer. Ulempen er, at vægtene fra modellen ikke giver os nogen form for forklaring eller tolkning.</p>
+<p>Vi ender altså med en rimeligt præcist model, når vi tager alle variable med – hvor det neurale netværk gør det bedre end multipel lineær regression.</p>
+<p>Fordelen ved den multiple lineære model er, at vi kan tolke på værdierne af koefficienterne. Ulempen er, at modellen har sværere ved at fange ikke-lineære tendenser i data.</p>
+<p>Fordelen ved det neurale net er, at det er rigtigt godt til at fange ikke-lineære tendenser. Ulempen er, at vægtene fra modellen ikke giver os nogen form for forklaring eller tolkning.</p>
 </section>
 <section id="delvis-facitliste" class="level2">
 <h2 class="anchored" data-anchor-id="delvis-facitliste">Delvis facitliste</h2>
