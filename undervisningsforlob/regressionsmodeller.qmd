@@ -11,10 +11,10 @@ categories:
 ### Forudsætninger og tidsforbrug
 Forløbet kræver kendskab til:
 
-+ Lineær regression
-+ $\Sigma$ notation
++ Lineær regression.
++ Notation med sumtegnet: $\Sigma$.
 
-**Tidsforbrug:** 120 minutter.
+**Tidsforbrug:** 2 x 90 minutter.
 
 :::
 
@@ -28,25 +28,25 @@ I 2021 styrtede dele af en [12-etagers bygning](https://en.wikipedia.org/wiki/Su
 
 Cement er en betydelig del af beton, og produktionen af cement udgør [ca. 8%](https://en.wikipedia.org/wiki/Cement?utm_source=chatgpt.com) af verdens $\textrm{CO}_2$ produktion, og har derfor en betydelig indflydelse på klimakrisen.
 
-Den årlige produktion af beton er [ca. 30 mia tons](https://www.nature.com/articles/d41586-025-00568-4?utm_source=chatgpt.com), hvilket gør beton til det næstmest anvendte materiale efter vand.
+Den årlige produktion af beton er [ca. 30 mia. tons](https://www.nature.com/articles/d41586-025-00568-4?utm_source=chatgpt.com), hvilket gør beton til det næstmest anvendte materiale efter vand.
 
-Det er derfor af flere grunde vigtigt at se på modeller for, hvordan beton kan laves med tilstrækkelig høj styrke men lavt indhold af cement.
+Det er derfor af flere grunde vigtigt at se på modeller for, hvordan beton kan laves med tilstrækkelig høj styrke, men samtidig med så lavt indhold af cement som muligt.
 
-Kemiske laboratorieforsøg er naturligvis meget vigtige til dette - men de er også både dyre og tidskrævende. Så derfor ser man også på matematiske modeller.
+Kemiske laboratorieforsøg er naturligvis meget vigtige til dette -- men de er også både dyre og tidskrævende. Så derfor ser man også på matematiske modeller.
 
-Formålet med dette forløb er derfor at se på forskellige metoder til at lave en model for en betons styrke ud fra cementindholdet, vandindholdet og alderen af betonen. Vi vil se på almindelige lineær regression, multipel lineær regression, kunstige neuroner og neurale netværk til at gøre dette.
+Formålet med dette forløb er derfor at se på forskellige metoder til at lave en model for en betons styrke ud fra cementindholdet, vandindholdet og alderen af betonen. Vi vil se på almindelig lineær regression, multipel lineær regression, kunstige neuroner og neurale netværk til at gøre dette.
 
 :::
 
 ## Introduktion
 
-Åben denne [Excel-fil](/undervisningsforlob/regressionsmodeller_filer/concrete_data_reduced_train.xlsx). Det er en  del af datasættet [Concrete Compressive Strength](https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength).
+Åbn denne [Excel-fil](/undervisningsforlob/regressionsmodeller_filer/concrete_train.xlsx). Det er en  del af datasættet [Concrete Compressive Strength](https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength).
 
-I den del af datasættet vi ser på, har vi informationen om mængden af cement, mængden af vand, alderen i dage og betonens trykstyrke.
+I den del af datasættet vi ser på, har vi information om mængden af cement, mængden af vand, alderen i dage og betonens trykstyrke.
 
-Vi vil lave forskellige modeller til at forudsige trykstyrken ud fra de øvrige tre variable, cement, vand og alder.
+Vi vil lave forskellige modeller til at forudsige trykstyrken ud fra de øvrige tre variable: cement, vand og alder.
 
-Vi vil bruge [80% af datasættet](/undervisningsforlob/regressionsmodeller_filer/concrete_train.xlsx) til at træne modellen og [20% af datasættet](/undervisningsforlob/regressionsmodeller_filer/concrete_test.xlsx) til at teste, hvor god modellen så er blevet. Det gør vi for at undgå det, man kalder for *overfitting*, hvor modellen tilpasser sig de konkrete data for godt, og derfor bliver ringere til at *prediktere* for nye data.
+Vi vil bruge [80% af datasættet](/undervisningsforlob/regressionsmodeller_filer/concrete_train.xlsx) til at træne modellen og [20% af datasættet](/undervisningsforlob/regressionsmodeller_filer/concrete_test.xlsx) til at teste, hvor god modellen så er blevet. Det gør vi for at undgå det, man kalder for [overfitting](../noter/krydsvalidering/krydsvalidering.qmd#overfitting){target="_blank"}, hvor modellen tilpasser sig de konkrete data for godt og derfor bliver ringere til at **prædiktere** nye data.
 
 ## Lineær regression
 
@@ -56,125 +56,181 @@ Vi starter med helt almindelig lineær regression, hvor vi både forsøger med c
 ### Opgave 1
 
  - Overvej og debatter, hvordan I forventer, at cement, vand og alder har indflydelse på styrken af betonen. 
- - Lav lineær regression på træningsdatasættet med cement som forklarende variabel.
- $$y_{styrke} = a_{cement} \cdot x_{cement} + b_{cement}$$
- - Lav lineær regression på træningsdatasættet med vand som forklarende variabel.
- $$y_{styrke} = a_{vand} \cdot x_{vand} + b_{vand}$$
- - Lav lineær regression på træningsdatasættet med alder som forklarende variabel.
- $$y_{styrke} = a_{alder} \cdot x_{alder} + b_{alder}$$
+ 
+ - Lav lineær regression på træningsdatasættet med cement som forklarende variabel:
+ 
+ $$
+ y_{\textrm{styrke}} = a_{\textrm{cement}} \cdot x_{\textrm{cement}} + b_{\textrm{cement}}
+ $$
+ 
+ - Lav lineær regression på træningsdatasættet med vand som forklarende variabel:
+ 
+ $$
+ y_{\textrm{styrke}} = a_{\textrm{vand}} \cdot x_{\textrm{vand}} + b_{\textrm{vand}}
+ $$
+ 
+ - Lav lineær regression på træningsdatasættet med alder som forklarende variabel:
+ 
+ $$
+ y_{\textrm{styrke}} = a_{\textrm{alder}} \cdot x_{\textrm{alder}} + b_{\textrm{alder}}
+ $$
 
 :::
 
 Det skulle gerne være tydeligt, at ingen af de tre simple lineære modeller er særligt gode.
-Inden vi går videre til mere komplicerede modeller, vil vi lave det, man kalder for *feature-engineering*, hvor vi vil gøre to ting.
+Inden vi går videre til mere komplicerede modeller, vil vi lave det, man kalder for **feature-engineering**, hvor vi vil gøre to ting:
 
-Den første er, at vi vil se på $log(alder)$ som variabel i stedet for alder. Betons styrke bliver hurtigt bedre i starten, men derefter er virkningen af alder aftagende. Da grafen for $log(x)$ netop har den egenskab, at den vokser hurtigere i starten, og derefter flader ud, vil vi forvente, at $log(alder)$ giver en bedre forklaring.
+* Den første er, at vi vil se på $\log(\textrm{alder})$ som variabel i stedet for alder. Betons styrke bliver hurtigt bedre i starten, men derefter er virkningen af alder aftagende. Da grafen for $\log(\textrm{x})$ netop har den egenskab, at den vokser hurtigere i starten, og derefter flader ud, vil vi forvente, at $\log(\textrm{alder})$ giver en bedre forklaring.
 
-Den anden er, at mere cement i sig selv gør beton stærkere og mere vand gør beton svagere, men det betyder ikke, at man helt kan undvære vand, da det er kombinationen af cement og vand, som sammen bør beton stærkere. Vi vil derfor tilføje en ny varibel $\frac{vand}{cement}$. 
+* Den anden er, at mere cement i sig selv gør beton stærkere og mere vand gør beton svagere, men det betyder ikke, at man helt kan undvære vand, da det er kombinationen af cement og vand, som sammen gør beton stærkere. Vi vil derfor tilføje en ny variabel $\frac{\textrm{vand}}{\textrm{cement}}$. 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 2
-- Lav en ny søjle i Excelarket (eller i dit CAS værktøj) med $log(alder)$.
-- Lav desuden en ny søjle med $\frac{vand}{cement}$.
+
+- Start med at indsætte to nye søjler *mellem* søjlen med vand og alder -- det bliver en fordel senere.
+- I den første nye søjle beregner du $\log(\textrm{alder})$ (i Excel tager du $10$-tals logaritmen til et tal ved at skrive `LOG10`). 
+- I den anden nye søjle beregner du $\frac{\textrm{vand}}{\textrm{cement}}$.
 - Lav lineær regression på modellen 
- $$y_{styrke} = a_{log(alder)} \cdot x_{log(alder)} + b_{log(alder)}$$
+
+   $$
+   y_{\textrm{styrke}} = a_{\log(\textrm{alder})} \cdot x_{\log(\textrm{alder})} + b_{\log(\textrm{alder})}
+   $$
  - Lav lineær regression på modellen 
- $$y_{styrke} = a_{\frac{vand}{cement}} \cdot x_{\frac{vand}{cement}} + b_{\frac{vand}{cement}}$$
+ 
+   $$
+   y_{\textrm{styrke}} = a_{\frac{\textrm{vand}}{\textrm{cement}}} \cdot x_{\frac{\textrm{vand}}{\textrm{cement}}} + b_{\frac{\textrm{vand}}{\textrm{cement}}}
+   $$
+   <!-- $$ -->
+   <!-- y_{\textrm{styrke}} = a_{\textrm{vand}/\textrm{cement}} \cdot x_{\textrm{vand}/\textrm{cement}} + b_{\textrm{vand}/\textrm{cement}} -->
+   <!-- $$ -->
 
 :::
 
-Vi har nu fire forklarende variable, hvoraf ingen af dem i sig selv er særligt gode til at forklare styrken, men mon det kan gøres bedre, hvis vi bruger alle fire samtidig?
+Vi har nu fire forklarende variable, hvoraf ingen af dem i sig selv er særligt god til at forklare styrken, men mon det kan gøres bedre, hvis vi bruger alle fire samtidig?
 
-Til det skal vi bruge en ny type model, som kaldes for multipel lineær regression.
-$$y_{styrke} = a_{cement} \cdot x_{cement} + a_{vand} \cdot x_{vand} + a_{log(alder)} \cdot x_{log(alder)} + a_{\frac{vand}{cement}} \cdot x_{\frac{vand}{cement}} + b$$
+Til det skal vi bruge en ny type model, som kaldes for **multipel lineær regression**.
 
-Man kan lave multipel lineær regression i mange forskellige værktøjer, f.eks. Excel, GeoGebra, Maple og NSpire. 
+$$
+y_{\textrm{styrke}} = a_{\textrm{cement}} \cdot x_{\textrm{cement}} + a_{\textrm{vand}} \cdot x_{\textrm{vand}} + a_{\log(\textrm{alder})} \cdot x_{\log(\textrm{alder})} + a_{\frac{\textrm{vand}}{\textrm{cement}}} \cdot x_{\frac{\textrm{vand}}{\textrm{cement}}} + b
+$$
+
+Man kan lave multipel lineær regression i mange forskellige værktøjer for eksempel Excel, GeoGebra, Maple og NSpire. 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 3
-- Find ud af, hvordan du laver multipel lineær regression i dit foretrukne værktøj.
-- Lav den lineære multiple regression med de fire forklarende varible.
-- Overvej, hvad værdierne af de fire hældningkoefficienter $a_cement$, $a_vand$, $a_log(alder)$ og $a_\frac{vand}{cement}$ betyder for modellen.
+
+* Lav den lineære multiple regression med de fire forklarende variable i dit foretrukne værktøj.
+
+<details>
+<summary> Sådan gør du i Excel </summary>
+<br>
+Start med at aktivere \"Dataanalyse\"-værktøjet:
+
++ Klik på \"Filer\" og vælg \"Indstillinger\".
++ Tryk på \"Tilføjelsesprogrammer\".
++ Under \"Administrer\" vælger du \"Excel-tilføjelsesprogrammer\" og trykker på \"Udfør\".
++ Vælg her \"Analysis ToolPak\".
+
+Du kan nu gå i gang med at lave multipel lineær regression:
+
++ Vælg fanen \"Data\" og tryk på \"Dataanalyse\".
++ Vælg her \"Regression\".
++ Ved \"Input for Y-område\" vælger du søjlen med styrken (sørg for også at vælge den øverste celle med overskriften).
++ Ved \"Input for X-område\" vælger du søjlerne med cement, vand, log(alder) og vand/cement (sørg for også at vælge de øverste celler med overskriften). Vær opmærksom på at disse fire søjler skal stå i et sammenhængende område.
++ Sæt flueben ved \"Etiketter\".
++ Tryk på \"OK\".
++ Resultatet bliver nu vist i en ny fane i Excel-arket.
+</details>
+
+* Overvej, hvad værdierne af de fire hældningkoefficienter $a_{\textrm{cement}}$, $a_{\textrm{vand}}$, $a_{\log(\textrm{alder})}$ og $a_{\frac{\textrm{vand}}{\textrm{cement}}}$ betyder for modellen.
 
 :::
 
-For de almindelige lineære regressioner kunne vi lave et punktplot (scatterplot) med den forklarende variabel (feature) på x-aksen og den afhængige variabel (target) på y-aksen samt regressionslinjen. Den mulighed har vi ikke, når der nu er flere forklarende variable (features), så vi må lave et andet type plot.
+For de almindelige lineære regressioner kunne vi lave et punktplot (scatterplot) med den forklarende variabel (feature) på $x$-aksen og den afhængige variabel (target) på $y$-aksen samt regressionslinjen. Den mulighed har vi ikke, når der nu er flere forklarende variable (features), så vi må lave et andet type plot.
 
-Vi vil lave et plot, hvor den rigtige værdi af styrke er på x-aksen og modellens predikterede værdi er på y-aksen. 
+Vi vil lave et plot, hvor den rigtige værdi af styrke er på $x$-aksen og modellens prædikterede værdi er på $y$-aksen. Der skulle nemlig gerne være stor overensstemmelse mellem de to.
 
-Vi vil bruge de 5 modeller, vi har lavet - men nu vil vi inddrage de 20% af data, som vi netop havde taget fra til at teste modellerne.
+Vi vil bruge de fem modeller, vi har lavet -- men nu vil vi inddrage de 20% af data, som vi netop havde taget fra til at teste modellerne.
 
-Lad os se et lille eksempel, inden du selv skal igang igen. Da vi så på modellen med cement som den eneste forklarende variabel, gav regressionen
-$$y_{styrke} = 0.0779 \cdot x_{cement} + 13.785$$
-I [Excel-filen med testdata](/undervisningsforlob/regressionsmodeller_filer/concrete_test.xlsx) er mængden af cement $266$ og styrken af betonen $52.9$. Indsættes $266$ i modellen, giver det
-$$y_{styrke} = 0.0779 \cdot 266 + 13.785 =34.5$$
-Vi skal derfor have et punkt $(y_data, y_model) = (52.9, 34.5)$ i plottet. Tilsvarende skal modellens y-værdien bestemmes for de øvrige linjer i testdata.
+Lad os se på et lille eksempel, inden du selv skal i gang igen. Da vi så på modellen med cement som den eneste forklarende variabel, gav regressionen
+
+$$
+y_{\textrm{styrke}} = 0.0779 \cdot x_{\textrm{cement}} + 13.785
+$$
+
+I [Excel-filen med testdata](/undervisningsforlob/regressionsmodeller_filer/concrete_test.xlsx), ser vi i den første række, at mængden af cement er $266$ og styrken af betonen $52.9$. Indsættes $266$ i modellen, giver det
+
+$$
+y_{\textrm{styrke}} = 0.0779 \cdot 266 + 13.785 =34.5
+$$
+
+Vi skal derfor have et punkt $(y_{\textrm{data}}, y_{\textrm{model}}) = (52.9, 34.5)$ i plottet. Tilsvarende skal modellens $y$-værdien bestemmes for de øvrige rækker i testdata.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 4
-- Beregn de øvrige y-værdier for modellen med cement som eneste forklarende variabel.
-- Lav punktplottet med $(y_data, y_model)$.
+- Beregn de øvrige $y$-værdier for modellen med cement som eneste forklarende variabel.
+- Lav punktplottet med $(y_{\textrm{data}}, y_{\textrm{model}})$.
 - Lav lineær regression på dette plot.
-- Hvilken forskrift ville regressionen få, hvis modellen perfekt kunne forudsige styrken?
+- Hvilken ligning ville regressionslinjen få, hvis modellen perfekt kunne forudsige styrken?
 
 :::
 
-Inden vi kan lave samme plot og regression for de øvrige modeller, skal du tilføje søjlerne med $log(alder)$ og $\frac{vand}{cement}$ til Excel arket med test-data.
+Inden vi kan lave samme plot og regression for de øvrige modeller, skal du tilføje søjlerne med $\log(\textrm{alder})$ og $\frac{\textrm{vand}}{\textrm{cement}}$ til Excel-arket med testdata.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 5
-- Beregn forventede y-værdier og lav punktplot + lineær regression for hver af de tre øvrige forklarende variable hver for sig (vand, log(alder) og vand/cement).
+- Beregn forventede $y$-værdier og lav $(y_{\textrm{data}}, y_{\textrm{model}})$-plot samt lineær regression for hver af de tre øvrige forklarende variable hver for sig: vand, log(alder) og vand/cement (modellerne lavede du i opgave 1 og 2).
 
 :::
 
-Det er, igen, åbenlyst, at en model med kun én forklarende variabel er betydeligt for ringe. Hældningskoefficienten for regressionen skulle optimalt være 1, men er i alle tilfælde langt under 1.
+Det er, igen, åbenlyst, at en model med kun én forklarende variabel er betydeligt for ringe. Hældningskoefficienten for regressionen skulle optimalt være $1$, men er i alle tilfælde langt under $1$.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 6
-- Beregn forventede y-værdier og lav punktplot + lineær regression for den multiple lineære regression.
+- Beregn forventede $y$-værdier og lav $(y_{\textrm{data}}, y_{\textrm{model}})$-plot samt lineær regression for den multiple lineære regression, som du lavede i opgave 3.
 
 :::
 
-Ok, det var betydeligt bedre, men stadig med plads til forbedrning. Måske du har tænkt på, at jeg lovede, at vi skulle bruge AI - og indtil videre har der jo ikke være skyggen af det. Men lad os se, om AI i form af et såkaldt neuralt netværk kan lave en model, som klarer opgaven bedre.
+Okay, det var betydeligt bedre, men stadig med plads til forbedringer. Måske du har tænkt på, at vi lovede, at vi skulle bruge AI -- og indtil videre har der jo ikke været skyggen af det. Men lad os se, om AI i form af et såkaldt neuralt netværk kan lave en model, som klarer opgaven med at prædiktere betonens styrke bedre.
 
 
 RESTEN AF FORLØBET KAN IKKE RIGTIGT LAVET FÆRDIG, FØR APPEN ER KLAR
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 7
-Brug app til at lave et NN, som trænes på træningsdata og testes på test data.
-Lav samme type plot og regression.
+Brug app'en (LINK) til at lave et NN, som trænes på træningsdata og testes på test data.
+Lav $(y_{\textrm{data}}, y_{\textrm{model}})$-plot samt lineær regression.
 
 :::
 
-Som du kunne se, var det neurale netværk i stand til at klare opgaven en god del bedre end den multiple lineære regression.
+Som du lige har opdaget, er det neurale netværk i stand til at klare opgaven en del bedre end den multiple lineære regression.
 
 Lad os til sidst se, om vi kan lave en endnu mere præcis model, hvis vi inddrager flere forklarende variable (features). 
 
 Her er træningsdata [80% af datasættet](/undervisningsforlob/regressionsmodeller_filer/concrete_full_train.xlsx) til at træne modellen og [20% af datasættet](/undervisningsforlob/regressionsmodeller_filer/concrete_full_test.xlsx) til at teste den.
  
-Åbn hver af de to filer. Lav en søjle med $log(alder)$ i stedet for alder og tilføj en søjle med $\frac{vand}{cement}$.
+Åbn hver af de to filer. Tilføj to søjler inden alder, hvor du beregner $\log(\textrm{alder})$ og  $\frac{\textrm{vand}}{\textrm{cement}}$ (på den måde kommer alle de forklarende variable til at stå i et sammenhængende område).
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 8
 - Lav multiple lineær regression med alle de forklarende variable.
-- Lav samme type plot og regression som før.
+- Lav $(y_{\textrm{data}}, y_{\textrm{model}})$-plot samt lineær regression.
 
 :::
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 9
-Brug app til at lave et neuralt netværk på træningsdata fra det store datasæt med flere features.
+- Brug app til at lave et neuralt netværk på træningsdata fra det store datasæt med flere features.
 
-Lav samme type plot og regression med brug af det trænede netværk og testdata.
+- Lav $(y_{\textrm{data}}, y_{\textrm{model}})$-plot samt lineær regression med brug af det trænede netværk og testdata.
 
 :::
 
-Vi ender altså med en rimeligt præcist model, når vi tager alle variable med - hvor det neurale netværk gør det bedre end multipel lineær regression.
+Vi ender altså med en rimeligt præcist model, når vi tager alle variable med -- hvor det neurale netværk gør det bedre end multipel lineær regression.
 
-Fordelen ved den multiple lineære model er, at vi kan tolke på værdierne af koefficienterne. Ulempen er, at modellen har sværere ved at fange ikke-lineære elementer i data.
+Fordelen ved den multiple lineære model er, at vi kan tolke på værdierne af koefficienterne. Ulempen er, at modellen har sværere ved at fange ikke-lineære tendenser i data.
 
-Fordelen ved det neurale net er, at det kan er rigtigt godt til at fange ikke-lineære elementer. Ulempen er, at vægtene fra modellen ikke giver os nogen form for forklaring eller tolkning.
+Fordelen ved det neurale net er, at det er rigtigt godt til at fange ikke-lineære tendenser. Ulempen er, at vægtene fra modellen ikke giver os nogen form for forklaring eller tolkning.
 
 
 ##  Delvis facitliste
