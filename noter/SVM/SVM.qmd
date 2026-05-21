@@ -146,13 +146,17 @@ Som vist på @fig-linjer er der mange måder at tegne sådan en skillelinje på.
 \end{tikzpicture}
 ```
 
-## Support Vector Machines algoritmen
+
 
 Så hvordan vælger vi, hvor vi skal tegne linjen?
 
 ::: {.highlight .centertext}
 **Support vector machines vælger den linje, der har størst mulig afstand til den nærmeste observation.**
 :::
+
+Hvordan det gøres i praksis, ser vi på i næste afsnit.
+
+## Support Vector Machines algoritmen
 
 Afstanden fra en skillelinje til det nærmeste observerede punkt betegnes $M$. I et bånd af bredde $M$ på begge sider af linjen vil der altså ikke ligge nogen punkter. Dette bånd kalder vi linjens **margin**. Det er illustreret på @fig-margin.
 
@@ -184,7 +188,7 @@ Afstanden fra en skillelinje til det nærmeste observerede punkt betegnes $M$. I
 \end{tikzpicture}
 ```
 
-De to punkter, som ligger på en af de stiplede linjer i @fig-margin, kaldes for **supportvektorer**.
+De punkter, som ligger på en af de stiplede linjer i @fig-margin, kaldes for **supportvektorer** --- deraf navnet **support vector machine**.
 
 Hvordan finder vi så linjen med bredest mulig margin? Først får vi brug for lidt teori om afstanden fra et punkt til en linje. Husk på, at vi kan skrive ligningen for linjen $l$ som
 
@@ -238,7 +242,7 @@ På @fig-fortegn er det illustreret, at $ax_1 + bx_2 +c$ er positiv på den lyse
     \end{tikzpicture}
 ```
 
-Beviset minder om beviset for afstandsformlen, blot holder vi bedre øje med fortegn.
+Beviset minder om beviset for afstanden fra punkt til linje, blot holder vi bedre øje med fortegn.
 
 ::: {.callout-tip collapse="true" appearance="minimal"}
 
@@ -361,7 +365,7 @@ $$
 \textrm{dist}\big(\big(x_{1}^{(i)},x_{2}^{(i)}\big),l\big) =\frac{t^{(i)} \cdot (ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)}{\sqrt{a^2+b^2}}\geq M>0.
 $$ {#eq-ul}
 
-Bemærk, at denne ulighed både sikrer, at punktet ligger på den rigtige side af linjen (da $t^{(i)} \cdot (ax_{1}^{(i)} + bx_{2}^{(i)} + c)$ er nødt til at være positiv) og, at afstanden til linjen er mindst $M$.
+Bemærk, at denne ulighed både sikrer, at punktet ligger på den rigtige side af linjen (da $t^{(i)} \cdot (ax_{1}^{(i)} + bx_{2}^{(i)} + c)$ er nødt til at være positiv), og at afstanden til linjen er mindst $M$.
 
 For at finde en linje, der klassificerer alle vores punkter korrekt med en margin af bredde $M$, skal (@eq-ul) være opfyldt for alle punkter. For at finde linjen med maksimal margin, skal vi derfor løse følgende optimeringsproblem:
 
@@ -377,7 +381,7 @@ $$ {#eq-ulig}
    
 :::
 
-Dette er et såkaldt betinget optimeringsproblem. Man kan tænke på det som en funktion $f(a,b,c,M)=M$, der skal maksimeres. Ulighederne i (@eq-ulig) lægger nogle begrænsninger på definitionsmængden for $f$. Der er altså tale om optimering af en funktion på en begrænset definitionsmængde. Her afhænger funktionen dog ikke bare af en enkelt variabel, som I kender det fra gymnasieundervisningen, men af hele fire variable $a,b,c,M$, hvilket gør definitionsmængden kompliceret. Denne type problemer må derfor normalt løses numerisk. Nedenfor viser vi, hvordan det gøres i Excel.
+Dette er et såkaldt betinget optimeringsproblem. Man kan tænke på det som en funktion $f(a,b,c,M)=M$, der skal maksimeres. Ulighederne i (@eq-ulig) lægger nogle begrænsninger på definitionsmængden for $f$. Der er altså tale om optimering af en funktion på en begrænset definitionsmængde. Her afhænger funktionen dog ikke bare af en enkelt variabel, som I kender det fra gymnasieundervisningen, men af hele fire variable $a,b,c,M$, hvilket gør definitionsmængden kompliceret. Denne type problemer må derfor løses numerisk. Nedenfor viser vi, hvordan det gøres i Excel.
 
 Når linjen er fundet, kan vi begynde at prædiktere effekten af lægemidlet for nye patienter. Vi måler patientens biomarkører $(x_1,x_2)$. Vi beregner så $ax_1+bx_2+c$. Hvis $ax_1+bx_2+c>0$ prædikterer vi klasse $1$, altså at lægemidlet har en effekt. Hvis $ax_1+bx_2+c<0$ prædikterer vi klasse $-1$ og dermed, at lægemidlet ikke har effekt.
 
@@ -441,7 +445,7 @@ Videoen nedenfor viser nu, hvordan optimeringen foregår i Excel.
 
 ## Problemer med algoritmen
 
-I praksis er linjens placering bestemt af de punkter, der ligger lige på kanten af linjens margin. Disse punkter kaldes **supportvektorer** --- deraf navnet **support vector machines**. Flytter man bare en lille smule på supportvektorerne, kan det ændre meget på linjens placering, se @fig-support. De øvrige punkter kan man godt flytte lidt, uden at det ændrer på linjen.
+I praksis er linjens placering bestemt af de punkter, der ligger lige på kanten af linjens margin kaldet **supportvektorerne**. Flytter man bare en lille smule på supportvektorerne, kan det ændre meget på linjens placering, se @fig-support. De øvrige punkter kan man godt flytte lidt, uden at det ændrer på linjen.
 
 ```{tikz fig.width=4, fig.height=4}
 #| echo: false
@@ -571,7 +575,7 @@ Vi har følgende fortolkning af slækkevariablene:
 
 -   Hvis $\varepsilon_i=0$, genfinder vi kravet (@eq-M) om, at punktet ligger på den rigtige side af linjen med afstand mindst $M$ til linjen.
 
--   Hvis $0<\varepsilon_i <1$, så er $0<M(1-\varepsilon_i)$. Det betyder, at vi stadig kræver, at punktet ligger på den rigtige side af linjen, men afstanden til linjen er nu $M(1-\varepsilon_i)<M$, så punktet ligger nu inden for margin.
+-   Hvis $0<\varepsilon_i <1$, så er $M(1-\varepsilon_i)$ positiv. Det betyder, at vi stadig kræver, at punktet ligger på den rigtige side af linjen, men afstanden til linjen er nu $M(1-\varepsilon_i)<M$, så punktet ligger inden for margin.
 
 -   Hvis $\varepsilon_i>1$, så er $M(1-\varepsilon_i)<0$. Her er $t^{(i)} \cdot \big(ax_{1}^{(i)} + bx_{2}^{(i)} + c\big)<0$ svarende til, at punktet ligger på den forkerte side af linjen. Afstanden til linjen er $|M(1-\varepsilon_i)|$.
 
@@ -635,7 +639,7 @@ $$
 
 :::
 
-Beregningerne kan i princippet laves som i tilfældet med hård margin, men der bliver rigtig mange ukendte variable, både $a,b,c,M$ og alle $\varepsilon_1,\ldots,\varepsilon_n$. Vi vil derfor ikke selv gøre det i Excel.
+Beregningerne kan i princippet laves som i tilfældet med hård margin, men der er rigtig mange ukendte variable, både $a,b,c,M$ og alle $\varepsilon_1,\ldots,\varepsilon_n$. Vi vil derfor ikke selv gøre det i Excel.
 
 
 
@@ -792,7 +796,7 @@ på grafen for $f$. Det er vist på @fig-flade.
 ```{r fig.width=4, fig.height=4}
 #| echo: false
 #| label: fig-flade
-#| fig-cap: De todimensionale punkter $(x_1,x_2)$ er her indlejret i et tredimensionalt koordinatsystem som punktet $(x_1,x_2,x_1^2)$.
+#| fig-cap: De todimensionale punkter $(x_1,x_2)$ er her indlejret i et tredimensionalt koordinatsystem som punktet $(x_1,x_2,x_1^2)$. Fladen er grafen for $f$.
 
 x1<-c(-1.5,-1,1.5,1,2,0,-1.4,-0.8,0.5,-0.5,1.5,0.1,0.3,0.5,0.9)
 x2<-c(0.5,1.25,0,-0.75,1.25,-0.75,1.5,0.2,2,1.5,1.5,0.7,1.7,0.5,1.2)
@@ -815,7 +819,7 @@ plot3d(
   radius = .1,add=T)
 ```
 
-Vi kan nu prøve at finde en plan i $\mathbb{R}^3$, der adskiller punkterne. I vores eksempel kunne punkterne ikke adskilles af en linje i to dimensioner, men som det ses på @fig-plan, er det muligt at finde en plan, der adskiller punkterne helt i tre dimensioner.
+Vi kan nu prøve at finde en plan i $\mathbb{R}^3$, der adskiller punkterne. I vores eksempel kunne punkterne ikke adskilles af en linje i to dimensioner, men som det ses på @fig-plan, er det muligt at finde en plan, der adskiller punkterne helt i tre dimensioner (prøv at rotere figuren for at se den lyserøde klasse).
 
 ```{r fig.width=4, fig.height=4}
 #| echo: false
