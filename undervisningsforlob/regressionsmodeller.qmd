@@ -1,5 +1,5 @@
 ---
-title: "AI, klimaudfordringer og sammenstyrtede broer?"
+title: "AI, klimaudfordringer og sammenstyrtede broer"
 description: "Vi vil ses på regression, multipel regression og neurale net til at modellere betons brudstyrke" 
 image: ""
 categories:
@@ -26,7 +26,7 @@ I 2018 styrtede dele af [Morandi broen](https://en.wikipedia.org/wiki/Ponte_Mora
 
 I 2021 styrtede dele af en [12-etagers bygning](https://en.wikipedia.org/wiki/Surfside_condominium_collapse?utm_source=chatgpt.com) sammen i Miami, Florida. 98 mennesker døde. Også her var betonens styrke en del af grunden til katastrofen.
 
-Cement er en betydelig del af beton, og produktionen af cement udgør [ca. 8%](https://en.wikipedia.org/wiki/Cement?utm_source=chatgpt.com) af verdens $\textrm{CO}_2$ produktion, og har derfor en betydelig indflydelse på klimakrisen.
+[Cement](https://en.wikipedia.org/wiki/Cement?utm_source=chatgpt.com) er en betydelig del af beton, og produktionen af cement udgør (https://en.wikipedia.org/wiki/Cement?utm_source=chatgpt.com) af verdens $\textrm{CO}_2$ udledning, og har derfor en betydelig indflydelse på klimakrisen.
 
 Den årlige produktion af beton er [ca. 30 mia. tons](https://www.nature.com/articles/d41586-025-00568-4?utm_source=chatgpt.com), hvilket gør beton til det næstmest anvendte materiale efter vand.
 
@@ -34,15 +34,15 @@ Det er derfor af flere grunde vigtigt at se på modeller for, hvordan beton kan 
 
 Kemiske laboratorieforsøg er naturligvis meget vigtige til dette -- men de er også både dyre og tidskrævende. Så derfor ser man også på matematiske modeller.
 
-Formålet med dette forløb er derfor at se på forskellige metoder til at lave en model for en betons styrke ud fra cementindholdet, vandindholdet og alderen af betonen. Vi vil se på almindelig lineær regression, multipel lineær regression, kunstige neuroner og neurale netværk til at gøre dette.
+Formålet med dette forløb er derfor at se på forskellige metoder til at lave en model for en betons styrke ud fra cementindholdet, vandindholdet og alderen af betonen. Vi vil se på almindelig lineær regression, multipel lineær regression og neurale netværk til at gøre dette.
 
 :::
 
 ## Introduktion
 
-Åbn denne [Excel-fil](/undervisningsforlob/regressionsmodeller_filer/concrete_train.xlsx). Det er en  del af datasættet [Concrete Compressive Strength](https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength).
+Vi vil bruge en del af datasættet [Concrete Compressive Strength](https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength).
 
-I den del af datasættet vi ser på, har vi information om mængden af cement, mængden af vand, alderen i dage og betonens trykstyrke.
+I den del af datasættet vi ser på, har vi information om mængden af cement, mængden af vand, hvor mange dage betonens har hærdet (alder) og betonens trykstyrke.
 
 Vi vil lave forskellige modeller til at forudsige trykstyrken ud fra de øvrige tre variable: cement, vand og alder.
 
@@ -55,7 +55,7 @@ Vi starter med helt almindelig lineær regression, hvor vi både forsøger med c
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 1
 
- - Overvej og debatter, hvordan I forventer, at cement, vand og alder har indflydelse på styrken af betonen. 
+ - Diskutér, hvordan I forventer, at cement, vand og alder har indflydelse på styrken af betonen. 
  
  - Lav lineær regression på træningsdatasættet med cement som forklarende variabel:
  
@@ -82,7 +82,7 @@ Inden vi går videre til mere komplicerede modeller, vil vi lave det, man kalder
 
 * Den første er, at vi vil se på $\log(\textrm{alder})$ som variabel i stedet for alder. Betons styrke bliver hurtigt bedre i starten, men derefter er virkningen af alder aftagende. Da grafen for $\log(\textrm{x})$ netop har den egenskab, at den vokser hurtigere i starten, og derefter flader ud, vil vi forvente, at $\log(\textrm{alder})$ giver en bedre forklaring.
 
-* Den anden er, at mere cement i sig selv gør beton stærkere og mere vand gør beton svagere, men det betyder ikke, at man helt kan undvære vand, da det er kombinationen af cement og vand, som sammen gør beton stærkere. Vi vil derfor tilføje en ny variabel $\frac{\textrm{vand}}{\textrm{cement}}$. 
+* Den anden pointe er, at mere cement i sig selv gør beton stærkere, mens mere vand gør beton svagere. Det betyder dog ikke, at man helt kan undvære vand, da det netop er blandingen af cement og vand, der skaber betonens styrke gennem hydratiseringsprocessen. Vi tilføjer derfor en ny variabel, $\frac{\textrm{vand}}{\textrm{cement}}$ (også kendt som vand-cement-forholdet), som udtrykker den præcise balance mellem de to ingredienser, der bestemmer betonens endelige kvalitet.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 2
@@ -106,7 +106,10 @@ Inden vi går videre til mere komplicerede modeller, vil vi lave det, man kalder
 
 :::
 
+## Multipel lineær regression
+
 Vi har nu fire forklarende variable, hvoraf ingen af dem i sig selv er særligt god til at forklare styrken, men mon det kan gøres bedre, hvis vi bruger alle fire samtidig?
+
 
 Til det skal vi bruge en ny type model, som kaldes for **multipel lineær regression**.
 
@@ -114,7 +117,7 @@ $$
 y_{\textrm{styrke}} = a_{\textrm{cement}} \cdot x_{\textrm{cement}} + a_{\textrm{vand}} \cdot x_{\textrm{vand}} + a_{\log(\textrm{alder})} \cdot x_{\log(\textrm{alder})} + a_{\frac{\textrm{vand}}{\textrm{cement}}} \cdot x_{\frac{\textrm{vand}}{\textrm{cement}}} + b
 $$
 
-Man kan lave multipel lineær regression i mange forskellige værktøjer for eksempel Excel, GeoGebra, Maple og NSpire. 
+Man kan lave multipel lineær regression i mange forskellige værktøjer for eksempel Excel, Maple eller NSpire. 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 3
@@ -183,7 +186,7 @@ Inden vi kan lave samme plot og regression for de øvrige modeller, skal du tilf
 
 :::
 
-Det er, igen, åbenlyst, at en model med kun én forklarende variabel er betydeligt for ringe. Hældningskoefficienten for regressionen skulle optimalt være $1$, men er i alle tilfælde langt under $1$.
+Det er, igen, åbenlyst, at en model med kun én forklarende variabel er utilstrækkelig. Hældningskoefficienten for regressionen skulle optimalt være $1$, men er i alle tilfælde langt under $1$.
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 6
@@ -191,10 +194,12 @@ Det er, igen, åbenlyst, at en model med kun én forklarende variabel er betydel
 
 :::
 
-Okay, det var betydeligt bedre, men stadig med plads til forbedringer. Måske du har tænkt på, at vi lovede, at vi skulle bruge AI -- og indtil videre har der jo ikke været skyggen af det. Men lad os se, om AI i form af et såkaldt neuralt netværk kan lave en model, som klarer opgaven med at prædiktere betonens styrke bedre.
+## Neuralt netværk
+
+Okay, det var betydeligt bedre, men stadig med plads til forbedringer. Måske du har tænkt på, at vi lovede, at vi skulle bruge AI,  lad os se på, om AI i form af et såkaldt neuralt netværk kan lave en model, som klarer opgaven med at prædiktere betonens styrke bedre.
 
 
-RESTEN AF FORLØBET KAN IKKE RIGTIGT LAVET FÆRDIG, FØR APPEN ER KLAR
+RESTEN AF FORLØBET KAN IKKE RIGTIGT LAVES FÆRDIG, FØR APPEN ER KLAR
 
 ::: {.callout-note collapse="false" appearance="minimal"}
 ### Opgave 7
@@ -204,6 +209,8 @@ Lav $(y_{\textrm{data}}, y_{\textrm{model}})$-plot samt lineær regression.
 :::
 
 Som du lige har opdaget, er det neurale netværk i stand til at klare opgaven en del bedre end den multiple lineære regression.
+
+## Flere forklarende variable
 
 Lad os til sidst se, om vi kan lave en endnu mere præcis model, hvis vi inddrager flere forklarende variable (features). 
 
@@ -230,7 +237,7 @@ Vi ender altså med en rimeligt præcist model, når vi tager alle variable med 
 
 Fordelen ved den multiple lineære model er, at vi kan tolke på værdierne af koefficienterne. Ulempen er, at modellen har sværere ved at fange ikke-lineære tendenser i data.
 
-Fordelen ved det neurale net er, at det er rigtigt godt til at fange ikke-lineære tendenser. Ulempen er, at vægtene fra modellen ikke giver os nogen form for forklaring eller tolkning.
+Fordelen ved det neurale net er, at det er rigtigt godt til at fange ikke-lineære tendenser. Ulempen er, at vi ikke får koefficienter, som vi kan forstå betydningen af.
 
 
 ##  Delvis facitliste
