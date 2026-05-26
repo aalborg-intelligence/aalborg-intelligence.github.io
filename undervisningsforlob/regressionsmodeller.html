@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="description" content="Vi vil ses på regression, multipel regression og neurale net til at modellere betons brudstyrke">
 
-<title>AI, klimaudfordringer og sammenstyrtede broer? – AI MAT - matematikken bag magien</title>
+<title>AI, klimaudfordringer og sammenstyrtede broer – AI MAT - matematikken bag magien</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -40,7 +40,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-3500d3d74b78b254085f69a7c9b12a05.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -186,6 +186,9 @@ window.Quarto = {
   <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
   <li><a href="#introduktion" id="toc-introduktion" class="nav-link" data-scroll-target="#introduktion">Introduktion</a></li>
   <li><a href="#lineær-regression" id="toc-lineær-regression" class="nav-link" data-scroll-target="#lineær-regression">Lineær regression</a></li>
+  <li><a href="#multipel-lineær-regression" id="toc-multipel-lineær-regression" class="nav-link" data-scroll-target="#multipel-lineær-regression">Multipel lineær regression</a></li>
+  <li><a href="#neuralt-netværk" id="toc-neuralt-netværk" class="nav-link" data-scroll-target="#neuralt-netværk">Neuralt netværk</a></li>
+  <li><a href="#flere-forklarende-variable" id="toc-flere-forklarende-variable" class="nav-link" data-scroll-target="#flere-forklarende-variable">Flere forklarende variable</a></li>
   <li><a href="#delvis-facitliste" id="toc-delvis-facitliste" class="nav-link" data-scroll-target="#delvis-facitliste">Delvis facitliste</a></li>
   </ul>
 </nav>
@@ -199,7 +202,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">AI, klimaudfordringer og sammenstyrtede broer?</h1>
+<h1 class="title">AI, klimaudfordringer og sammenstyrtede broer</h1>
   <div class="quarto-categories">
     <div class="quarto-category">01_a-niveau</div>
     <div class="quarto-category">04_Kort</div>
@@ -235,7 +238,6 @@ window.Quarto = {
 <p>Forløbet kræver kendskab til:</p>
 <ul>
 <li>Lineær regression.</li>
-<li>Notation med sumtegnet: <span class="math inline">\(\Sigma\)</span>.</li>
 </ul>
 <p><strong>Tidsforbrug:</strong> 2 x 90 minutter.</p>
 </div>
@@ -245,16 +247,16 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="formål">Formål</h3>
 <p>I 2018 styrtede dele af <a href="https://en.wikipedia.org/wiki/Ponte_Morandi_collapse?utm_source=chatgpt.com">Morandi broen</a> i Genova, Italien sammen og 43 mennesker omkom. En del af grunden til katastrofen var for ringe beton.</p>
 <p>I 2021 styrtede dele af en <a href="https://en.wikipedia.org/wiki/Surfside_condominium_collapse?utm_source=chatgpt.com">12-etagers bygning</a> sammen i Miami, Florida. 98 mennesker døde. Også her var betonens styrke en del af grunden til katastrofen.</p>
-<p>Cement er en betydelig del af beton, og produktionen af cement udgør <a href="https://en.wikipedia.org/wiki/Cement?utm_source=chatgpt.com">ca. 8%</a> af verdens <span class="math inline">\(\textrm{CO}_2\)</span> produktion, og har derfor en betydelig indflydelse på klimakrisen.</p>
+<p><a href="https://en.wikipedia.org/wiki/Cement?utm_source=chatgpt.com">Cement</a> er en betydelig del af beton, og produktionen af cement udgør (https://en.wikipedia.org/wiki/Cement?utm_source=chatgpt.com) af verdens <span class="math inline">\(\textrm{CO}_2\)</span> udledning, og har derfor en betydelig indflydelse på klimakrisen.</p>
 <p>Den årlige produktion af beton er <a href="https://www.nature.com/articles/d41586-025-00568-4?utm_source=chatgpt.com">ca. 30 mia. tons</a>, hvilket gør beton til det næstmest anvendte materiale efter vand.</p>
 <p>Det er derfor af flere grunde vigtigt at se på modeller for, hvordan beton kan laves med tilstrækkelig høj styrke, men samtidig med så lavt indhold af cement som muligt.</p>
 <p>Kemiske laboratorieforsøg er naturligvis meget vigtige til dette – men de er også både dyre og tidskrævende. Så derfor ser man også på matematiske modeller.</p>
-<p>Formålet med dette forløb er derfor at se på forskellige metoder til at lave en model for en betons styrke ud fra cementindholdet, vandindholdet og alderen af betonen. Vi vil se på almindelig lineær regression, multipel lineær regression, kunstige neuroner og neurale netværk til at gøre dette.</p>
+<p>Formålet med dette forløb er derfor at se på forskellige metoder til at lave en model for en betons styrke ud fra cementindholdet, vandindholdet og alderen af betonen. Vi vil se på almindelig lineær regression, multipel lineær regression og neurale netværk til at gøre dette.</p>
 </section>
 <section id="introduktion" class="level2">
 <h2 class="anchored" data-anchor-id="introduktion">Introduktion</h2>
-<p>Åbn denne <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_train.xlsx">Excel-fil</a>. Det er en del af datasættet <a href="https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength">Concrete Compressive Strength</a>.</p>
-<p>I den del af datasættet vi ser på, har vi information om mængden af cement, mængden af vand, alderen i dage og betonens trykstyrke.</p>
+<p>Vi vil bruge en del af datasættet <a href="https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength">Concrete Compressive Strength</a>.</p>
+<p>I den del af datasættet vi ser på, har vi information om mængden af cement, mængden af vand, hvor mange dage betonen har hærdet (alder) og betonens trykstyrke.</p>
 <p>Vi vil lave forskellige modeller til at forudsige trykstyrken ud fra de øvrige tre variable: cement, vand og alder.</p>
 <p>Vi vil bruge <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_train.xlsx">80% af datasættet</a> til at træne modellen og <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_test.xlsx">20% af datasættet</a> til at teste, hvor god modellen så er blevet. Det gør vi for at undgå det, man kalder for <a href="../noter/krydsvalidering/krydsvalidering.html#overfitting" target="_blank">overfitting</a>, hvor modellen tilpasser sig de konkrete data for godt og derfor bliver ringere til at <strong>prædiktere</strong> nye data.</p>
 </section>
@@ -274,7 +276,7 @@ window.Quarto = {
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li><p>Overvej og debatter, hvordan I forventer, at cement, vand og alder har indflydelse på styrken af betonen.</p></li>
+<li><p>Diskutér, hvordan I forventer, at cement, vand og alder har indflydelse på styrken af betonen.</p></li>
 <li><p>Lav lineær regression på træningsdatasættet med cement som forklarende variabel:</p></li>
 </ul>
 <p><span class="math display">\[
@@ -298,7 +300,7 @@ y_{\textrm{styrke}} = a_{\textrm{alder}} \cdot x_{\textrm{alder}} + b_{\textrm{a
 <p>Det skulle gerne være tydeligt, at ingen af de tre simple lineære modeller er særligt gode. Inden vi går videre til mere komplicerede modeller, vil vi lave det, man kalder for <strong>feature-engineering</strong>, hvor vi vil gøre to ting:</p>
 <ul>
 <li><p>Den første er, at vi vil se på <span class="math inline">\(\log(\textrm{alder})\)</span> som variabel i stedet for alder. Betons styrke bliver hurtigt bedre i starten, men derefter er virkningen af alder aftagende. Da grafen for <span class="math inline">\(\log(\textrm{x})\)</span> netop har den egenskab, at den vokser hurtigere i starten, og derefter flader ud, vil vi forvente, at <span class="math inline">\(\log(\textrm{alder})\)</span> giver en bedre forklaring.</p></li>
-<li><p>Den anden er, at mere cement i sig selv gør beton stærkere og mere vand gør beton svagere, men det betyder ikke, at man helt kan undvære vand, da det er kombinationen af cement og vand, som sammen gør beton stærkere. Vi vil derfor tilføje en ny variabel <span class="math inline">\(\frac{\textrm{vand}}{\textrm{cement}}\)</span>.</p></li>
+<li><p>Den anden pointe er, at mere cement i sig selv gør beton stærkere, mens mere vand gør beton svagere. Det betyder dog ikke, at man helt kan undvære vand, da det netop er blandingen af cement og vand, der skaber betonens styrke gennem hydratiseringsprocessen. Vi tilføjer derfor en ny variabel, <span class="math inline">\(\frac{\textrm{vand}}{\textrm{cement}}\)</span> (også kendt som vand-cement-forholdet), som udtrykker den præcise balance mellem de to ingredienser, der bestemmer betonens endelige kvalitet.</p></li>
 </ul>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
@@ -328,12 +330,15 @@ y_{\textrm{styrke}} = a_{\frac{\textrm{vand}}{\textrm{cement}}} \cdot x_{\frac{\
 </div>
 </div>
 </div>
+</section>
+<section id="multipel-lineær-regression" class="level2">
+<h2 class="anchored" data-anchor-id="multipel-lineær-regression">Multipel lineær regression</h2>
 <p>Vi har nu fire forklarende variable, hvoraf ingen af dem i sig selv er særligt god til at forklare styrken, men mon det kan gøres bedre, hvis vi bruger alle fire samtidig?</p>
 <p>Til det skal vi bruge en ny type model, som kaldes for <strong>multipel lineær regression</strong>.</p>
 <p><span class="math display">\[
 y_{\textrm{styrke}} = a_{\textrm{cement}} \cdot x_{\textrm{cement}} + a_{\textrm{vand}} \cdot x_{\textrm{vand}} + a_{\log(\textrm{alder})} \cdot x_{\log(\textrm{alder})} + a_{\frac{\textrm{vand}}{\textrm{cement}}} \cdot x_{\frac{\textrm{vand}}{\textrm{cement}}} + b
 \]</span></p>
-<p>Man kan lave multipel lineær regression i mange forskellige værktøjer for eksempel Excel, GeoGebra, Maple og NSpire.</p>
+<p>Man kan lave multipel lineær regression i mange forskellige værktøjer for eksempel Excel, Maple eller NSpire.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -429,7 +434,7 @@ y_{\textrm{styrke}} = 0.0779 \cdot 266 + 13.785 =34.5
 </div>
 </div>
 </div>
-<p>Det er, igen, åbenlyst, at en model med kun én forklarende variabel er betydeligt for ringe. Hældningskoefficienten for regressionen skulle optimalt være <span class="math inline">\(1\)</span>, men er i alle tilfælde langt under <span class="math inline">\(1\)</span>.</p>
+<p>Det er, igen, åbenlyst, at en model med kun én forklarende variabel er utilstrækkelig. Hældningskoefficienten for regressionen skulle optimalt være <span class="math inline">\(1\)</span>, men er i alle tilfælde langt under <span class="math inline">\(1\)</span>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -448,8 +453,11 @@ y_{\textrm{styrke}} = 0.0779 \cdot 266 + 13.785 =34.5
 </div>
 </div>
 </div>
-<p>Okay, det var betydeligt bedre, men stadig med plads til forbedringer. Måske du har tænkt på, at vi lovede, at vi skulle bruge AI – og indtil videre har der jo ikke været skyggen af det. Men lad os se, om AI i form af et såkaldt neuralt netværk kan lave en model, som klarer opgaven med at prædiktere betonens styrke bedre.</p>
-<p>RESTEN AF FORLØBET KAN IKKE RIGTIGT LAVET FÆRDIG, FØR APPEN ER KLAR</p>
+</section>
+<section id="neuralt-netværk" class="level2">
+<h2 class="anchored" data-anchor-id="neuralt-netværk">Neuralt netværk</h2>
+<p>Okay, det var betydeligt bedre, men stadig med plads til forbedringer. Måske du har tænkt på, at vi lovede, at vi skulle bruge AI, lad os se på, om AI i form af et såkaldt neuralt netværk kan lave en model, som klarer opgaven med at prædiktere betonens styrke bedre.</p>
+<p>RESTEN AF FORLØBET KAN IKKE RIGTIGT LAVES FÆRDIG, FØR APPEN ER KLAR</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -467,6 +475,9 @@ y_{\textrm{styrke}} = 0.0779 \cdot 266 + 13.785 =34.5
 </div>
 </div>
 <p>Som du lige har opdaget, er det neurale netværk i stand til at klare opgaven en del bedre end den multiple lineære regression.</p>
+</section>
+<section id="flere-forklarende-variable" class="level2">
+<h2 class="anchored" data-anchor-id="flere-forklarende-variable">Flere forklarende variable</h2>
 <p>Lad os til sidst se, om vi kan lave en endnu mere præcis model, hvis vi inddrager flere forklarende variable (features).</p>
 <p>Her er træningsdata <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_full_train.xlsx">80% af datasættet</a> til at træne modellen og <a href="../undervisningsforlob/regressionsmodeller_filer/concrete_full_test.xlsx">20% af datasættet</a> til at teste den.</p>
 <p>Åbn hver af de to filer. Tilføj to søjler inden alder, hvor du beregner <span class="math inline">\(\log(\textrm{alder})\)</span> og <span class="math inline">\(\frac{\textrm{vand}}{\textrm{cement}}\)</span> (på den måde kommer alle de forklarende variable til at stå i et sammenhængende område).</p>
@@ -510,7 +521,7 @@ y_{\textrm{styrke}} = 0.0779 \cdot 266 + 13.785 =34.5
 </div>
 <p>Vi ender altså med en rimeligt præcist model, når vi tager alle variable med – hvor det neurale netværk gør det bedre end multipel lineær regression.</p>
 <p>Fordelen ved den multiple lineære model er, at vi kan tolke på værdierne af koefficienterne. Ulempen er, at modellen har sværere ved at fange ikke-lineære tendenser i data.</p>
-<p>Fordelen ved det neurale net er, at det er rigtigt godt til at fange ikke-lineære tendenser. Ulempen er, at vægtene fra modellen ikke giver os nogen form for forklaring eller tolkning.</p>
+<p>Fordelen ved det neurale net er, at det er rigtigt godt til at fange ikke-lineære tendenser. Ulempen er, at vi ikke får koefficienter, som vi kan forstå betydningen af.</p>
 </section>
 <section id="delvis-facitliste" class="level2">
 <h2 class="anchored" data-anchor-id="delvis-facitliste">Delvis facitliste</h2>
