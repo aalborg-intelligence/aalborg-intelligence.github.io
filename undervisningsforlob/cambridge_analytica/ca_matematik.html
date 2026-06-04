@@ -187,6 +187,7 @@ window.Quarto = {
   <li><a href="#sigmoid-aktiveringsfunktion" id="toc-sigmoid-aktiveringsfunktion" class="nav-link" data-scroll-target="#sigmoid-aktiveringsfunktion">Sigmoid-aktiveringsfunktion</a></li>
   <li><a href="#tilbage-til-ocean" id="toc-tilbage-til-ocean" class="nav-link" data-scroll-target="#tilbage-til-ocean">Tilbage til OCEAN</a></li>
   </ul></li>
+  <li><a href="#delvis-facitliste" id="toc-delvis-facitliste" class="nav-link" data-scroll-target="#delvis-facitliste">Delvis facitliste</a></li>
   </ul>
 </nav>
 </nav>
@@ -216,17 +217,17 @@ window.Quarto = {
 </header>
 
 
-<p>I denne del er formålet at lave en model, som på baggrund af data fra sociale medier, kan bruges til at prædiktere ens personlighed.</p>
+<p>I denne del er formålet at lave en model, som på baggrund af data fra sociale medier, kan bruges til at prædiktere personlighed.</p>
 <section id="træningsdata" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="træningsdata">Træningsdata</h2>
 <p>Vi skal starte med at forstå, hvordan man kan lave en model, som kan prædiktere menneskers personlighed på baggrund af data fra sociale medier:</p>
 <div class="lyseblaa_boks">
 <p><em>Kogan sold Cambridge Analytica access to 270,000 personality tests completed by Facebook users through an online app he had created for research purposes. Providing the data to Cambridge Analytica was, it seems, against Facebook’s internal code of conduct, but only now in March 2018 has Kogan been banned by Facebook from the platform. In addition, Kogan’s data also came with a bonus: he had reportedly collected Facebook data from the test-takers’ friends – and, at an average of 200 friends per person, that added up to some 50m people.</em></p>
-<p><em>While not all of these people had provided personality test responses, it is possible to reverse-engineer a personality profile from Facebook activity. Decades of psychological research has formed around the lexical hypothesis, that personality traits can be inferred by studying the subject’s use of language. Facebook patented a process to do just this in 2012, as part of its commercial aims to provide more targeted advertising, by mapping the contents of posts and likes against the “Big Five” model of psychological traits, sometimes known as OCEAN (openness, conscientiousness, extroversion, agreeableness, neuroticism). Whether you choose to like pictures of sunsets, puppies or people apparently says a lot about your personality: a 2015 study by other academics from the Cambridge psychology lab found that the model of predicting personality traits using Facebook data could generate a personality profile with the same accuracy as a spouse with just 300 likes.</em></p>
+<p><em>While not all of these people had provided personality test responses, it is possible to reverse-engineer a personality profile from Facebook activity. Decades of psychological research has formed around the lexical hypothesis, that personality traits can be inferred by studying the subject’s use of language. Facebook patented a process to do just this in 2012, as part of its commercial aims to provide more targeted advertising, by mapping the contents of posts and likes against the "Big Five" model of psychological traits, sometimes known as OCEAN (openness, conscientiousness, extroversion, agreeableness, neuroticism). Whether you choose to like pictures of sunsets, puppies or people apparently says a lot about your personality: a 2015 study by other academics from the Cambridge psychology lab found that the model of predicting personality traits using Facebook data could generate a personality profile with the same accuracy as a spouse with just 300 likes.</em></p>
 </div>
 <p><span class="kilde">Kilde: <a href="https://theconversation.com/psychographics-the-behavioural-analysis-that-helped-cambridge-analytica-know-voters-minds-93675">Psychographics: the behavioural analysis that helped Cambridge Analytica know voters’ minds</a>.</span></p>
-<p>Det betyder med andre ord, at man har haft adgang til <span class="math inline">\(270000\)</span> menneskers Facebook data <em>samtidig</em> med, at disse mennesker frivilligt har taget en personlighedstest (som vi gør det i <a href="../../undervisningsforlob/cambridge_analytica/ca_informatik.html">informatik-delen</a> af dette forløb). Altså kender man disse menneskers OCEAN scores. Det er alle disse data, som udgør det, man kalder for et <strong>træningsdatasæt</strong>.</p>
-<p>Vi forestiller os nu et tænkt eksempel med et træningsdatasæt<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> bestående af <span class="math inline">\(300\)</span> personer. Hver person i træningsdatasættet har taget en OCEAN test, og om hver person har vi registreret det gennemsnitlige antal likes per uge, som personen – på eksempelvis Facebook – har givet til opslag, som handler om:</p>
+<p>Ovenstående betyder, at Cambridge Analytica har haft adgang til <span class="math inline">\(270000\)</span> menneskers Facebook data <em>samtidig</em> med, at disse mennesker frivilligt har taget en personlighedstest (som vi gør det i <a href="../../undervisningsforlob/cambridge_analytica/ca_informatik.html">informatik-delen</a> af dette forløb). Altså kender man disse menneskers OCEAN scores. Det er alle disse data, som udgør det, man kalder for et <strong>træningsdatasæt</strong>.</p>
+<p>Vi forestiller os nu et tænkt eksempel med et træningsdatasæt<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> bestående af <span class="math inline">\(300\)</span> personer. Idéen er, at hver person i træningsdatasættet har taget en OCEAN test, samtidig med at vi om hver person har registreret det gennemsnitlige antal likes pr. uge, som personen – på eksempelvis Facebook – har givet til opslag, som handler om:</p>
 <div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Data er 100% fiktive og genereret ved hjælp af CoPilot.</p></div></div><ul>
 <li><code>likes_art_culture</code>: kunst og kultur (<span class="math inline">\(x_1\)</span>)</li>
 <li><code>likes_science_tech</code>: videnskab og teknologi (<span class="math inline">\(x_2\)</span>)</li>
@@ -245,7 +246,7 @@ window.Quarto = {
 <p><span id="eq-vaegtet_sum"><span class="math display">\[
 w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6
 \tag{1}\]</span></span></p>
-<p>Her er kaldes <span class="math inline">\(w_0, w_1, \dots, w_6\)</span> for vægte, og det er i sidste ende dem vi skal finde "gode" værdier for, så vi får en god model. Det kommer vi tilbage til.</p>
+<p>Hvor <span class="math inline">\(w_0, w_1, \dots, w_6\)</span> kaldes for vægte, og det er i sidste ende dem vi skal finde "gode" værdier for, så vi får en god model. Det kommer vi tilbage til.</p>
 <p>Nu vil ovenstående udtryk give et reelt tal, som kan antage en hvilken som helst værdi og som kan være negativ eller positiv. Til gengæld er hver persons grad af openness målt på en skala fra <span class="math inline">\(0\)</span> til <span class="math inline">\(1\)</span>. Det råder vi bod på ved at bruge en såkaldt <strong>aktiveringsfunktion</strong>. Vi bruger her en aktiveringsfunktion, som kaldes for <strong>sigmoid</strong>.</p>
 <section id="sigmoid-aktiveringsfunktion" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="sigmoid-aktiveringsfunktion">Sigmoid-aktiveringsfunktion</h3>
@@ -473,7 +474,8 @@ Vm(\sigma) \subseteq (0,1).
 <p><span class="math display">\[
 o = \sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6)
 \]</span></p>
-<p>Her står <span class="math inline">\(o\)</span> for <strong>outputværdi</strong> (og ikke for openness, selvom det også vil give mening her). Opgaven er nu "blot" at bestemmer værdier af vægtende <span class="math inline">\(w_0, w_1, \dots, w_6\)</span>, så vores beregnede outputværdi <span class="math inline">\(o\)</span> kommer så tæt på vores målte targetværdi <span class="math inline">\(t\)</span> som muligt.</p>
+<p>Her står <span class="math inline">\(o\)</span> for <strong>outputværdi</strong> (og ikke for openness, selvom det også vil give mening her). Fordelen er nu, at <span class="math inline">\(o\)</span> ligger mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span> (fordi vi har brugt sigmoid-funktionen) ligesom graden af openness måles på en skala fra <span class="math inline">\(0\)</span> til <span class="math inline">\(1\)</span>.</p>
+<p>Opgaven er nu "blot" at bestemmer værdier af vægtende <span class="math inline">\(w_0, w_1, \dots, w_6\)</span>, så vores beregnede outputværdi <span class="math inline">\(o\)</span> kommer så tæt på vores målte targetværdi <span class="math inline">\(t\)</span> som muligt.</p>
 <p>Det gør vi ved for hvert træningseksempel at se på den kvadrerede forskel mellem <span class="math inline">\(t\)</span> og <span class="math inline">\(o\)</span>:</p>
 <p><span class="math display">\[
 (t-o)^2  = (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6))^2
@@ -487,11 +489,76 @@ E = \frac{1}{2} \sum (t-o)^2
 <p><span class="math display">\[
 E(w_0, w_1, \dots, w_6) = \frac{1}{2} \sum (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6))^2
 \]</span></p>
-<p>Opgave hvor man skal differentiere med hensyn til <span class="math inline">\(w_1\)</span>. Evt. uden sumtegn og så kan sumtegnet være en ekstra opgave.</p>
-<p>Husk at indsætte delvis facitliste.</p>
-
-
+<p>Hele idéen er nu, at bestemme de værdier af vægtene <span class="math inline">\(w_0, w_1, \dots, w_6\)</span> som minimerer tabsfunktionen. Hvis <span class="math inline">\(E\)</span> kun afhænger af én vægt <span class="math inline">\(w\)</span>, så ved vi godt, hvordan man finder minimum. Vi skal nemlig løse:</p>
+<p><span class="math display">\[
+E'(w)=0
+\]</span> og så lige sikre os, at det er et minimumssted, vi har fundet. Nu afhænger <span class="math inline">\(E\)</span> ikke af én, men af syv variable. Man får derfor brug for noget, som kaldes for <strong>partielle afledede</strong>. Se derfor denne video, hvor vi forklarer, hvad det går ud på:</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/tlq2UYWF2Rw" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 3: Differentiation af <span class="math inline">\(E\)</span>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Vi vil nu bestemme den partielle afledede af <span class="math inline">\(E\)</span> med hensyng til <span class="math inline">\(w_1\)</span>. Vi gør det et trin ad gangen:</p>
+<ul>
+<li><p>Bestem <span class="math display">\[
+\frac{\partial}{\partial w_1} (w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6)
+\]</span></p></li>
+<li><p>Bestem <span class="math display">\[
+\frac{\partial}{\partial w_1} \sigma (w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6)
+\]</span></p>
+<p>Brug resultatet fra opgave 2, kædereglen og det du netop er kommet frem til.</p></li>
+</ul>
+<p>Vi holder tingene simple og forestiller os, at vi kun har ét træningsdatasæt så tabsfunktionen bliver:</p>
+<p><span class="math display">\[
+E(w_0, w_1, \dots, w_6) = \frac{1}{2} (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6))^2
+\]</span> - Bestem <span class="math display">\[
+   \frac{\partial E}{\partial w_1} \sigma (w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6)
+   \]</span></p>
+</div>
+</div>
+</div>
+<p>I virkelighedens verden løser man sjældent ligningerne</p>
+<p><span class="math display">\[
+\frac{\partial E}{\partial w_0} = 0, \frac{\partial E}{\partial w_1} = 0, \cdots, \frac{\partial E}{\partial w_6} = 0
+\]</span></p>
+<p>I stedet bruger man en numerisk metode til at bestemme minimum for <span class="math inline">\(E\)</span>, som kaldes for <strong>gradientnedstigning</strong>. Det behøver du ikke at vide mere om, men hvis du alligevel er nysgerrig, kan du se denne <a href="https://youtu.be/WcM8aEoPzf8?si=Vvma-MXxNl4YBsF1">video</a>.</p>
+<p>Vi skal ikke selv bestemme minimum for tabsfunktionen, men i stedet bruge en app til formålet.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 4: Træning af AI
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Det fiktive datasæt om antal likes på eksempelvis Facebook og graden af openness kan hentes <a href="cambridge_analytica/data/social_media_openness_content_dataset.xlsx">her</a>.</p>
+<p>Brug denne <a href="">app</a>. Du skal nu gøre følgende:</p>
+<ul>
+<li>Under fanen "Data" uploader du datasættet og trykker på "Næste".</li>
+<li>Under fanen "Variable" vælger du</li>
+</ul>
+</div>
+</div>
+</div>
 </section>
+</section>
+<section id="delvis-facitliste" class="level2">
+<h2 class="anchored" data-anchor-id="delvis-facitliste">Delvis facitliste</h2>
+<p><a href="cambridge_analytica/ca_matematik_facit.qmd" target="_blank">Facitliste</a>.</p>
+
+
 </section>
 
 
