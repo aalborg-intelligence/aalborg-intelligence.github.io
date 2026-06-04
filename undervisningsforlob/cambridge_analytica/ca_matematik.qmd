@@ -4,7 +4,7 @@ description: ""
 image: "images/ca_mat.png"
 ---
 
-I denne del er formålet at lave en model, som på baggrund af data fra sociale medier, kan bruges til at prædiktere ens personlighed.
+I denne del er formålet at lave en model, som på baggrund af data fra sociale medier, kan bruges til at prædiktere personlighed.
 
 ## Træningsdata
 
@@ -14,14 +14,14 @@ Vi skal starte med at forstå, hvordan man kan lave en model, som kan prædikter
 
 *Kogan sold Cambridge Analytica access to 270,000 personality tests completed by Facebook users through an online app he had created for research purposes. Providing the data to Cambridge Analytica was, it seems, against Facebook’s internal code of conduct, but only now in March 2018 has Kogan been banned by Facebook from the platform. In addition, Kogan’s data also came with a bonus: he had reportedly collected Facebook data from the test-takers’ friends – and, at an average of 200 friends per person, that added up to some 50m people.*
 
-*While not all of these people had provided personality test responses, it is possible to reverse-engineer a personality profile from Facebook activity. Decades of psychological research has formed around the lexical hypothesis, that personality traits can be inferred by studying the subject’s use of language. Facebook patented a process to do just this in 2012, as part of its commercial aims to provide more targeted advertising, by mapping the contents of posts and likes against the “Big Five” model of psychological traits, sometimes known as OCEAN (openness, conscientiousness, extroversion, agreeableness, neuroticism). Whether you choose to like pictures of sunsets, puppies or people apparently says a lot about your personality: a 2015 study by other academics from the Cambridge psychology lab found that the model of predicting personality traits using Facebook data could generate a personality profile with the same accuracy as a spouse with just 300 likes.*
+*While not all of these people had provided personality test responses, it is possible to reverse-engineer a personality profile from Facebook activity. Decades of psychological research has formed around the lexical hypothesis, that personality traits can be inferred by studying the subject’s use of language. Facebook patented a process to do just this in 2012, as part of its commercial aims to provide more targeted advertising, by mapping the contents of posts and likes against the \"Big Five\" model of psychological traits, sometimes known as OCEAN (openness, conscientiousness, extroversion, agreeableness, neuroticism). Whether you choose to like pictures of sunsets, puppies or people apparently says a lot about your personality: a 2015 study by other academics from the Cambridge psychology lab found that the model of predicting personality traits using Facebook data could generate a personality profile with the same accuracy as a spouse with just 300 likes.*
 
 :::
 [Kilde: [Psychographics: the behavioural analysis that helped Cambridge Analytica know voters’ minds](https://theconversation.com/psychographics-the-behavioural-analysis-that-helped-cambridge-analytica-know-voters-minds-93675).]{.kilde}
 
-Det betyder med andre ord, at man har haft adgang til $270000$ menneskers Facebook data *samtidig* med, at disse mennesker frivilligt har taget en personlighedstest (som vi gør det i [informatik-delen](ca_informatik.qmd) af dette forløb). Altså kender man disse menneskers OCEAN scores. Det er alle disse data, som udgør det, man kalder for et **træningsdatasæt**.
+Ovenstående betyder, at Cambridge Analytica har haft adgang til $270000$ menneskers Facebook data *samtidig* med, at disse mennesker frivilligt har taget en personlighedstest (som vi gør det i [informatik-delen](ca_informatik.qmd) af dette forløb). Altså kender man disse menneskers OCEAN scores. Det er alle disse data, som udgør det, man kalder for et **træningsdatasæt**.
 
-Vi forestiller os nu et tænkt eksempel med et træningsdatasæt[^copilot] bestående af $300$ personer. Hver person i træningsdatasættet har taget en OCEAN test, og om hver person har vi registreret det gennemsnitlige antal likes per uge, som personen -- på eksempelvis Facebook --  har givet til opslag, som handler om:
+Vi forestiller os nu et tænkt eksempel med et træningsdatasæt[^copilot] bestående af $300$ personer. Idéen er, at hver person i træningsdatasættet har taget en OCEAN test, samtidig med at vi om hver person har registreret det gennemsnitlige antal likes pr. uge, som personen -- på eksempelvis Facebook --  har givet til opslag, som handler om:
 
 [^copilot]: Data er 100% fiktive og genereret ved hjælp af CoPilot.
 
@@ -46,7 +46,7 @@ $$
 w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6
 $$ {#eq-vaegtet_sum}
 
-Her er kaldes $w_0, w_1, \dots, w_6$ for vægte, og det er i sidste ende dem vi skal finde \"gode\" værdier for, så vi får en god model. Det kommer vi tilbage til.
+Hvor $w_0, w_1, \dots, w_6$ kaldes for vægte, og det er i sidste ende dem vi skal finde \"gode\" værdier for, så vi får en god model. Det kommer vi tilbage til.
 
 Nu vil ovenstående udtryk give et reelt tal, som kan antage en hvilken som helst værdi og som kan være negativ eller positiv. Til gengæld er hver persons grad af openness målt på en skala fra $0$ til $1$. Det råder vi bod på ved at bruge en såkaldt **aktiveringsfunktion**. Vi bruger her en aktiveringsfunktion, som kaldes for **sigmoid**. 
 
@@ -63,7 +63,9 @@ $$
 o = \sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6)
 $$
 
-Her står $o$ for **outputværdi** (og ikke for openness, selvom det også vil give mening her). Opgaven er nu \"blot\" at bestemmer værdier af vægtende $w_0, w_1, \dots, w_6$, så vores beregnede outputværdi $o$ kommer så tæt på vores målte targetværdi $t$ som muligt.
+Her står $o$ for **outputværdi** (og ikke for openness, selvom det også vil give mening her). Fordelen er nu, at $o$ ligger mellem $0$ og $1$ (fordi vi har brugt sigmoid-funktionen) ligesom graden af openness måles på en skala fra $0$ til $1$.
+
+Opgaven er nu \"blot\" at bestemmer værdier af vægtende $w_0, w_1, \dots, w_6$, så vores beregnede outputværdi $o$ kommer så tæt på vores målte targetværdi $t$ som muligt.
 
 Det gør vi ved for hvert træningseksempel at se på den kvadrerede forskel mellem $t$ og $o$:
 
@@ -86,12 +88,72 @@ $$
 E(w_0, w_1, \dots, w_6) = \frac{1}{2} \sum (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6))^2 
 $$
 
-Opgave hvor man skal differentiere med hensyn til $w_1$. Evt. uden sumtegn og så kan sumtegnet være en ekstra opgave.
+Hele idéen er nu, at bestemme de værdier af vægtene $w_0, w_1, \dots, w_6$ som minimerer tabsfunktionen. Hvis $E$ kun afhænger af én vægt $w$, så ved vi godt, hvordan man finder minimum. Vi skal nemlig løse:
 
-Husk at indsætte delvis facitliste.
+$$
+E'(w)=0
+$$
+og så lige sikre os, at det er et minimumssted, vi har fundet. Nu afhænger $E$ ikke af én, men af syv variable. Man får derfor brug for noget, som kaldes for **partielle afledede**. Se derfor denne video, hvor vi forklarer, hvad det går ud på:
+
+{{< video https://www.youtube.com/embed/tlq2UYWF2Rw >}}
 
 
 
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 3: Differentiation af $E$
+
+Vi vil nu bestemme den partielle afledede af $E$ med hensyng til $w_1$. Vi gør det et trin ad gangen:
+
+- Bestem 
+   $$
+   \frac{\partial}{\partial w_1} (w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6)
+   $$
+
+- Bestem 
+   $$
+   \frac{\partial}{\partial w_1} \sigma (w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6)
+   $$
+   
+   Brug resultatet fra opgave 2, kædereglen og det du netop er kommet frem til.
+   
+   
+Vi holder tingene simple og forestiller os, at vi kun har ét træningsdatasæt så tabsfunktionen bliver:
+
+$$
+E(w_0, w_1, \dots, w_6) = \frac{1}{2} (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6))^2 
+$$
+- Bestem
+   $$
+   \frac{\partial E}{\partial w_1} \sigma (w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6)
+   $$
+:::
+
+I virkelighedens verden løser man sjældent ligningerne
+
+$$
+\frac{\partial E}{\partial w_0} = 0, \frac{\partial E}{\partial w_1} = 0, \cdots, \frac{\partial E}{\partial w_6} = 0
+$$
+
+I stedet bruger man en numerisk metode til at bestemme minimum for $E$, som kaldes for **gradientnedstigning**. Det behøver du ikke at vide mere om, men hvis du alligevel er nysgerrig, kan du se denne [video](https://youtu.be/WcM8aEoPzf8?si=Vvma-MXxNl4YBsF1).
+
+
+Vi skal ikke selv bestemme minimum for tabsfunktionen, men i stedet bruge en app til formålet.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 4: Træning af AI
+
+Det fiktive datasæt om antal likes på eksempelvis Facebook og graden af openness kan hentes [her](cambridge_analytica/data/social_media_openness_content_dataset.xlsx).
+
+Brug denne [app](). Du skal nu gøre følgende:
+
+- Under fanen \"Data\" uploader du datasættet og trykker på \"Næste\".
+- Under fanen \"Variable\" vælger du 
+
+:::
+
+## Delvis facitliste
+
+[Facitliste](cambridge_analytica/ca_matematik_facit.qmd){target="_blank"}.
 
 
 
