@@ -1,6 +1,6 @@
 ---
 title: "Kan vi genkende håndskrevne tal?"
-description: "Hvordan får man en computer til at genkende håndskrevne tal? I dette forløb skal vi se på, hvordan man ud fra et billede af et håndskrevet tal kan lave en algortime, som kan genkende tallet."
+description: "Hvordan får man en computer til at genkende håndskrevne tal? I dette forløb skal vi se på, hvordan man ud fra et billede af et håndskrevet tal kan lave en algoritme, som kan genkende tallet."
 image: "mnist_filer/lok-max3_vandret.png"
 categories:
   - "03_C-niveau"
@@ -31,9 +31,9 @@ Nogle gange har man brug for, at håndskrevet tekst kan digitaliseres. Det kan f
 
 ## RGB-farvemodellen
 
-Vi skal først se lidt på, hvordan billeder bliver repræsenteret i en computer. Prøv at finde et billede på din computer og zoom ind så meget som muligt. Du vil opdage, at billedet i virkeligheden består en masse små kvadrater, som hver især har én farve. Sådan et kvadrat kaldes for en **pixel**.
+Vi skal først se lidt på, hvordan billeder bliver repræsenteret i en computer. Prøv at finde et billede på din computer og zoom ind så meget som muligt. Du vil opdage, at billedet i virkeligheden består af en masse små kvadrater, som hver især har én farve. Sådan et kvadrat kaldes for en **pixel**.
 
-Hver pixel består af tre **subpixels**. Den første subpixel kan lyse **R**ød, den anden **G**røn og den trejde **B**lå:
+Hver pixel består af tre **subpixels**. Den første subpixel kan lyse **R**ød, den anden **G**røn og den tredje **B**lå:
 
 ![Subpixel.](mnist_filer/subpixel.png){#fig-subpixel width=10% fig-align="center"}
 
@@ -43,7 +43,7 @@ Vi kan skrue på lysstyrken i hver af de tre subpixels. Hvis der er skruet fuldt
 
 [^1]: Tallene fra 0 til 255 kan i det binære talsystem repræsenteres ved 8 bits svarende til 1 byte, fordi $2^8=256$.
 
-Vores øje opfatter ikke farven på de tre subpixels individuelt, men vi ser i stedet se en blandingsfarve. Hvis der for eksempel er skruet fuldt op på alle tre farver, så vil vores øje opfatte det som hvid. Det vil sige, at den pixel, som er vist i @fig-subpixel vil lyse hvid for os!
+Vores øje opfatter ikke farven på de tre subpixels individuelt, men vi ser i stedet en blandingsfarve. Hvis der for eksempel er skruet fuldt op på alle tre farver, så vil vores øje opfatte det som hvid. Det vil sige, at den pixel, som er vist i @fig-subpixel vil lyse hvid for os!
 
 Skruer vi helt op for rød og blå, men slukker for grøn fås en pink farve (som kaldes for magenta):
 
@@ -92,11 +92,11 @@ Vi skal nu prøve, om vi ud fra de 784 gråskalaværdier kan \"udvinde\" nogle f
 
 Det første, vi vil gøre, er at lave billederne i en lavere opløsning svarende til, at billederne bliver mere pixeleret. Vi vil for eksempel lave et $7 \times 7$ pixel billede ved at inddele det oprindelige $28 \times 28$ pixel billede i $2 \times 2$ pixels, hvor vi så tager gennemsnittet af de fire pixelværdier. Et eksempel på det ses i @fig-pixeleret0:
 
-![Et billede af et 0 med en oprindelige opløsning på $28 \times 28$ pixels og det samme billede i en opløsning på $7 \times 7$ pixels.](mnist_filer/pixeleret0.png){#fig-pixeleret0 width=80% fig-align="center"}
+![Et billede af et 0 med en oprindelig opløsning på $28 \times 28$ pixels og det samme billede i en opløsning på $7 \times 7$ pixels.](mnist_filer/pixeleret0.png){#fig-pixeleret0 width=80% fig-align="center"}
 
 Til trods for at billedet er meget mere pixeleret, kan man faktisk stadigvæk tydeligt se konturerne af 0'et. Til sammenligning er et billede af et 1-tal vist i @fig-pixeleret1:
 
-![Et billede af 1 med en oprindelige opløsning på $28 \times 28$ pixels og det samme billede i en opløsning på $7 \times 7$ pixels.](mnist_filer/pixeleret1.png){#fig-pixeleret1 width=80% fig-align="center"}
+![Et billede af 1 med en oprindelig opløsning på $28 \times 28$ pixels og det samme billede i en opløsning på $7 \times 7$ pixels.](mnist_filer/pixeleret1.png){#fig-pixeleret1 width=80% fig-align="center"}
 
 ## Kan vi kende forskel på 0 og 1?
 
@@ -303,7 +303,7 @@ Brug igen [app'en](https://apps01.math.aau.dk/ai/cifre/){target="_blank"}, som v
 
 :::
 
-Det er ret tydeligt, at den gennemsnitlige pixelværdi og antallet af hvide pixels i billedet på ingen måde kan bruges til at kende forskel på 0 og 3. Det skyldes, at man åbenbart bruger cirka lige meget \"blyantsfarve\" på at skrive 0, som man gør på at skrive 3. Det viser med al tydelighed, at de features, som er gode at vælge, er fuldstændig afhængig af det klassifikationsproblem, som man står med. To features kan være formidable til ét klassifikationsproblem (at kende forskel på 0 og 1), mens de er elendige til at andet klassifikationsproblem (at kende forskel på 0 og 3). Det betyder, at vi må på jagt efter nye features!
+Det er ret tydeligt, at den gennemsnitlige pixelværdi og antallet af hvide pixels i billedet på ingen måde kan bruges til at kende forskel på 0 og 3. Det skyldes, at man åbenbart bruger cirka lige meget \"blyantsfarve\" på at skrive 0, som man gør på at skrive 3. Det viser med al tydelighed, at de features, som er gode at vælge, er fuldstændige afhængige af det klassifikationsproblem, som man står med. To features kan være formidable til ét klassifikationsproblem (at kende forskel på 0 og 1), mens de er elendige til et andet klassifikationsproblem (at kende forskel på 0 og 3). Det betyder, at vi må på jagt efter nye features!
 
 ### Vandrette lokale maksima
 
@@ -423,7 +423,7 @@ I opgave 11 så vi, at de håndskrevne tal ikke altid helt opfører sig, som vi 
 <details>
 <summary> Sådan gør du i GeoGebra </summary>
 
-Åbn datasættet i Excel og kopiere det hele over i et \"Regneark\" i GeoGebra (tryk på \"Vis\" $\rightarrow$ \"Regneark\").
+Åbn datasættet i Excel og kopier det hele over i et \"Regneark\" i GeoGebra (tryk på \"Vis\" $\rightarrow$ \"Regneark\").
 
 
 + Stil dig i celle `I2` (det skulle gerne være den første tomme celle i anden række).
@@ -516,7 +516,7 @@ For alle de grønne punkter er det lige omvendt:
 
 [De grønne punkter]{.fremhaev}
 
-* Skriv i celle `K102` (som nok er den første celle for de grønne pnkter) følgende: `=Hvis(J102 < 0, 1, 0)`. Det betyder, at der skrives 1 i celle `K102`, hvis forskellen i `J102` er negativ og ellers skrives der 0.
+* Skriv i celle `K102` (som nok er den første celle for de grønne punkter) følgende: `=Hvis(J102 < 0, 1, 0)`. Det betyder, at der skrives 1 i celle `K102`, hvis forskellen i `J102` er negativ og ellers skrives der 0.
 
 [Alle punkter]{.fremhaev}
 
