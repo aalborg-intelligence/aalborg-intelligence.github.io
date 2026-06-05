@@ -8,7 +8,7 @@ I denne del er formålet at lave en model, som på baggrund af data fra sociale 
 
 ## Træningsdata
 
-Vi skal starte med at forstå, hvordan man kan lave en model, som kan prædiktere menneskers personlighed på baggrund af data fra sociale medier:
+Vi skal starte med at forstå, hvordan man overhovedet kan lave en model, som kan prædiktere menneskers personlighed på baggrund af data fra sociale medier. Det beskrives i citatet her:
 
 ::: {.lyseblaa_boks}
 
@@ -19,9 +19,9 @@ Vi skal starte med at forstå, hvordan man kan lave en model, som kan prædikter
 :::
 [Kilde: [Psychographics: the behavioural analysis that helped Cambridge Analytica know voters’ minds](https://theconversation.com/psychographics-the-behavioural-analysis-that-helped-cambridge-analytica-know-voters-minds-93675).]{.kilde}
 
-Ovenstående betyder, at Cambridge Analytica har haft adgang til $270000$ menneskers Facebook data *samtidig* med, at disse mennesker frivilligt har taget en personlighedstest (som vi gør det i [informatik-delen](ca_informatik.qmd) af dette forløb). Altså kender man disse menneskers OCEAN scores. Det er alle disse data, som udgør det, man kalder for et **træningsdatasæt**.
+Ovenstående betyder, at Cambridge Analytica har haft adgang til $270000$ menneskers Facebook data *samtidig* med, at disse mennesker frivilligt har taget en personlighedstest (som vi gør det i [informatik-delen](ca_informatik.qmd){target="_blank"} af dette forløb). Altså kender man disse menneskers OCEAN scores. Det er alle disse data, som udgør det, man kalder for et **træningsdatasæt**.
 
-Vi forestiller os nu et tænkt eksempel med et træningsdatasæt[^copilot] bestående af $300$ personer. Idéen er, at hver person i træningsdatasættet har taget en OCEAN test, samtidig med at vi om hver person har registreret det gennemsnitlige antal likes pr. uge, som personen -- på eksempelvis Facebook --  har givet til opslag, som handler om:
+Vi forestiller os nu et tænkt eksempel med et træningsdatasæt[^copilot] bestående af $300$ personer. Idéen er, at hver person i træningsdatasættet har taget en OCEAN test samtidig med, at vi om hver person har registreret det gennemsnitlige antal likes pr. uge, som personen -- på eksempelvis Facebook --  har givet til opslag, som handler om:
 
 [^copilot]: Data er 100% fiktive og genereret ved hjælp af CoPilot.
 
@@ -38,7 +38,7 @@ Vi forestiller os -- for at holde tingene simple -- at vi kun er interesseret i 
 
 * `O_openness`: personens grad af openness på en skala fra $0$ til $1$ ($t$).
 
-Her kaldes $t$ for **target**, fordi det er den værdi, vil gerne vil prøve at \"ramme\".
+Her kaldes $t$ for **target**, fordi det er den værdi, vil gerne vil prøve at \"ramme\" med vores model.
 
 Idéen er nu, at vi ud fra de seks features $x_1, x_2, \dots, x_6$ skal kunne forudsige targetværdien $t$ så godt som muligt. Det gør vi ved først at udregne en vægtet sum af de seks features:
 
@@ -46,16 +46,19 @@ $$
 w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6
 $$ {#eq-vaegtet_sum}
 
-Hvor $w_0, w_1, \dots, w_6$ kaldes for vægte, og det er i sidste ende dem vi skal finde \"gode\" værdier for, så vi får en god model. Det kommer vi tilbage til.
+Hvor $w_0, w_1, \dots, w_6$ kaldes for vægte[^1], og det er i sidste ende dem vi skal finde \"gode\" værdier for, så vi får en god model. Det kommer vi tilbage til.
 
-Nu vil ovenstående udtryk give et reelt tal, som kan antage en hvilken som helst værdi og som kan være negativ eller positiv. Til gengæld er hver persons grad af openness målt på en skala fra $0$ til $1$. Det råder vi bod på ved at bruge en såkaldt **aktiveringsfunktion**. Vi bruger her en aktiveringsfunktion, som kaldes for **sigmoid**. 
+[^1]: Ofte kalder man også $w_0$ for **bias**.
 
-### Sigmoid-aktiveringsfunktion
+Nu vil ovenstående udtryk give et reelt tal, som kan antage en hvilken som helst værdi og som kan være negativ eller positiv. Til gengæld er hver persons grad af openness målt på en skala fra $0$ til $1$. Så udtrykket i (@eq-vaegtet_sum) kan ikke direkte bruges til at modellere graden af openness. Det råder vi bod på ved at bruge en såkaldt **aktiveringsfunktion**. Vi bruger her en aktiveringsfunktion, som kaldes for **sigmoid**. 
 
-{{< include ../aktiveringsfunktioner/sigmoid.qmd >}}
+## Sigmoid-aktiveringsfunktion
 
+**Sigmoid**-funktionen har forskrift
 
-### Tilbage til OCEAN
+$$
+\sigma(x)=\frac{1}{1+\mathrm{e}^{-x}},
+$$ {#eq-sigmoid}
 
 Vi bruger nu sigmoid-funktionen på den vægtede sum i (@eq-vaegtet_sum):
 
@@ -63,11 +66,29 @@ $$
 o = \sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6)
 $$
 
-Her står $o$ for **outputværdi** (og ikke for openness, selvom det også vil give mening her). Fordelen er nu, at $o$ ligger mellem $0$ og $1$ (fordi vi har brugt sigmoid-funktionen) ligesom graden af openness måles på en skala fra $0$ til $1$.
+Her står $o$ for **outputværdi** (og ikke for openness, selvom det også vil give mening her). 
 
-Opgaven er nu \"blot\" at bestemmer værdier af vægtende $w_0, w_1, \dots, w_6$, så vores beregnede outputværdi $o$ kommer så tæt på vores målte targetværdi $t$ som muligt.
+Men hvad skal den sigmoid-funktion nu gøre godt for? Det undersøger vi i den første opgave:
 
-Det gør vi ved for hvert træningseksempel at se på den kvadrerede forskel mellem $t$ og $o$:
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 1: Sigmoid-funktionen
+
+* Tegn grafen for sigmoid-funktionen med forskrift:
+   $$
+   \sigma(x)=\frac{1}{1+\mathrm{e}^{-x}},
+   $$
+   
+* Hvad vil du på baggrund af grafen for sigmoid-funktionen mene, at værdimængden er (det vil sige: i hvilket interval ligger funktionsværdierne)?
+
+* Hvorfor kan sigmoid-funktionen bruges til at modellere graden af openness?
+
+:::
+
+Som du lige har set, har sigmoid-funktionen nogle egenskaber, som gør den velegnet til at modellere graden af openness.
+
+Opgaven er nu \"blot\" at bestemme værdier af vægtene $w_0, w_1, \dots, w_6$, så vores beregnede outputværdi $o$ kommer så tæt på vores målte targetværdi $t$ som muligt (altså den faktiske grad af openness).
+
+Det gør vi ved for hver person i træningsdatasættet at se på den kvadrerede forskel mellem $t$ og $o$:
 
 $$
 (t-o)^2  = (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6))^2
@@ -75,32 +96,190 @@ $$
 
 Bemærk, at hvis vores model er god, så er denne forskel tæt på $0$ (svarende til at $o \approx t$). Hvis vores model er dårlig -- for eksempel hvis $t$ er tæt på $1$, mens $o$ er tæt på $0$ -- så vil $(t-o)^2$ være tæt på $1$. 
 
-Nu har vi $300$ personer i vores træningsdata. For hver af dem kan vi beregne en kvadreret forskel mellem $t$ og $o$ og lægger vi dem alle sammen (og ganger med $1/2$, men det er ikke så afgørende) får vi:
+Nu har vi $300$ personer i vores træningsdata. For hver af dem kan vi beregne en kvadreret forskel mellem $t$ og $o$ og så lægger vi dem alle sammen (og ganger med $1/2$, men det er ikke så afgørende). Det giver:
 
 $$
 E = \frac{1}{2} \sum (t-o)^2 
 $$
-Ovenstående kaldes for en **tabsfunktion**, fordi den måler hvor god vores model er. En lille værdi af tabsfunktionen $E$ svarer til en god model (mange af de kvadrerede afvigelser er små, som ønsket) og omvendt vil en stor værdi af $E$ svarer til en dårlig model.
+Ovenstående kaldes for en **tabsfunktion**, fordi den måler hvor god vores model er. En lille værdi af tabsfunktionen $E$ svarer til en god model (mange af de kvadrerede afvigelser er små, som ønsket), og omvendt vil en stor værdi af $E$ svare til en dårlig model.
 
 Tabsfunktionen $E$ afhænger i virkeligheden af alle vægtene, fordi outputværdien $o$ afhænger af alle vægtene:
 
 $$
 E(w_0, w_1, \dots, w_6) = \frac{1}{2} \sum (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6))^2 
-$$
+$$ {#eq-tab}
 
 Hele idéen er nu, at bestemme de værdier af vægtene $w_0, w_1, \dots, w_6$ som minimerer tabsfunktionen. Hvis $E$ kun afhænger af én vægt $w$, så ved vi godt, hvordan man finder minimum. Vi skal nemlig løse:
 
 $$
 E'(w)=0
 $$
-og så lige sikre os, at det er et minimumssted, vi har fundet. Nu afhænger $E$ ikke af én, men af syv variable. Man får derfor brug for noget, som kaldes for **partielle afledede**. Se derfor denne video, hvor vi forklarer, hvad det går ud på:
+og så lige sikre os, at det er et minimumssted, vi har fundet. Nu afhænger $E$ ikke af én, men af syv variable. Derfor bliver det lidt mere besværligt at bestemme minimum for $E$. Den gode nyhed er, at vi ikke selv skal gøre det, men i stedet bruge en app til formålet. Afsnittet [Ekstra udfordring: Hvordan bestemmer man minimum for tabsfunktionen?](#hvordan-bestemmer-man-minimum-for-tabsfunktionen) handler om netop det -- så det kan du jo glæde dig til, hvis du når så langt!
 
-{{< video https://www.youtube.com/embed/tlq2UYWF2Rw >}}
+## Træning af AI model
 
+Når man bestemmer de værdier af vægtene, som minimerer tabsfunktionen, så siger man, at man **træner** sin AI model. Det gør vi i opgave 2. 
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 2: Træning af AI model
+
+Det fiktive datasæt om antal likes på eksempelvis Facebook og graden af openness kan hentes [her](cambridge_analytica/data/social_media_openness_content_dataset.xlsx).
+
+Brug denne [app](https://apps01.math.aau.dk/ai/sandsynlighedsneuron/){target="_blank"}. Du skal gøre følgende:
+
+- Under fanen \"Data\" uploader du datasættet og trykker på \"Næste\".
+- Under fanen \"Variable\" vælger du `O_openness` som \"Target-variabel\" og `likes_art_culture`, `likes_science_tech`, `likes_travel_nature`, `likes_entertainment`, `likes_sports` og `likes_political_social` som \"Feature-variable\". Tryk på \"Næste\".
+- Under fanen \"Træning\" kan man vælge en række forskellige indstillinger, som du ikke behøver at tænke så meget over. Men du kan for eksempel se, at der under \"Tabsfunktion\" står \"Squared\" -- det svarer til tabsfunktionen i (@eq-tab). Under \"Aktiveringsfunktion\" står der \"Sigmoid\", som betyder, at sigmoid-funktionen i (@eq-sigmoid) benyttes. Tryk nu på \"Træn\" model.
+
+
+På grafen til højre i app'en kan du se, hvordan værdien af tabsfunktionen har ændret sig i takt med, at vi har opdateret vægtene for at bestemme et minimum. Læg mærke til at grafen flader ud, og vi forventer derfor, at vi har fundet et (eventuelt lokalt) minimum for tabsfunktionen.
+
+- Noter de fundne værdier af vægtene $w_0, w_1, \cdots w_6$, som står i tabellen nederst til højre i app'en. 
+
+- Tryk på fanen \"Evaluering & Prædiktion\" og noter værdien af $R^2$ og RMSE (bemærk, at vi gerne vil have $R^2$-værdien tæt på $1$ og RMSE tæt på $0$). Du kan læse mere om disse mål [her](../../noter/vurdering_model/vurdering_model.qmd#modeller-til-prædiktion-af-numeriske-værdier){target="_blank"}.
+
+:::
+
+I virkeligheden gør Facebook og firmaer som Cambridge Analytica selvfølgelig noget, som er meget mere kompliceret, end det vi har gjort her. Desuden er der en kæmpe stor opgave i at finde ud af, hvordan man overhovedet oversætter Facebook aktivitet til tal: 
+
+* Hvordan afgør man for eksempel om et billede er i en af de seks kategorier, som vi ser på her? 
+* Hvordan oversætter man kommentarer på Facebook til tal, som man kan regne på og lave en model på baggrund af? 
+
+Det er klart, at det på ingen måde er en triviel opgave, og samtidig er det også for de firmaer, som arbejder med den slags, forretningshemmeligheder, så vi ved strengt taget ikke præcis, hvordan det foregår. Alligevel giver vores meget simple model en idé om, hvordan den kan bruges.
+
+## Prædiktion af openness-score
+
+![](images/molly.jpg){style='float:right; margin-left: 1em; margin-bottom: 1em;' width='40%'}
+
+Vi forestiller os nu en Facebook bruger Molly, som går op i kunst, kultur, politik og samfund. Til gengæld går hun lidt mindre op i videnskab, rejser, underholdning og sport.  Vi har for Molly registreret følgende antal likes pr. uge:
+
+|  | Feature | Antal likes pr. uge |
+|:---:|:---:|:---:|
+| $x_1$ | `likes_art_culture` | $45$ |
+| $x_2$ | `likes_science_tech` | $18$ |
+| $x_3$ | `likes_travel_nature` | $10$ |
+| $x_4$ | `likes_entertainment` | $15$ |
+| $x_5$ | `likes_sports` |  $17$ |
+| $x_6$ | `likes_political_social` |  $46$ |
+: {.bordered}
+
+
+For Molly kan vi nu udregne den vægtede sum i (@eq-vaegtet_sum):
+
+$$
+\begin{aligned}
+w_0 + w_1 \cdot x_1 &+ w_2 \cdot x_2 + \cdots + w_6 \cdot x_6 = \\
+&-3.666 + 0.05245 \cdot 45 \\ &+ 0.03711 \cdot 18 \\ &+ 0.02928 \cdot 10 + 0.003369 \cdot 15 \\ &-0.01699 \cdot 17 + 0.04105 \cdot 46 \\ &\approx 1.305  
+\end{aligned}
+$$
+
+Denne værdi indsætter vi nu i sigmoid-funktionen for at beregne vores prædikterede openness-score:
+
+$$
+o = \sigma(1.305) \approx 0.787
+$$
+
+Vi får altså en forholdsvis høj openness-score. Bemærk, at Molly [ikke]{.underline} har taget en OCEAN-test. Alligevel kan vi på baggrund af vores model og informationen om Mollys Facebook aktivitet komme med et kvalificeret bud på Mollys grad af openness. Det vi har gjort her, er derfor et eksempel på det, der beskrives i citatet:
+
+::: {.lyseblaa_boks}
+
+*While not all of these people had provided personality test responses, it is possible to reverse-engineer a personality profile from Facebook activity.*
+
+:::
+[Kilde: [Psychographics: the behavioural analysis that helped Cambridge Analytica know voters’ minds](https://theconversation.com/psychographics-the-behavioural-analysis-that-helped-cambridge-analytica-know-voters-minds-93675).]{.kilde}
+
+Det er klart, at vores model og fremgangsmåde er ekstremt forsimplet i forhold til, hvad rigtige firmaer som Facebook og Cambridge Analytica har gjort. Alligevel giver det en meget overordnet idé om, hvordan man kan *reverse-engineer a personality profile from Facebook activity*.
 
 
 ::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 3: Differentiation af $E$
+### Opgave 3: Openness-score for Peter
+
+![](images/peter.jpg){style='float:right; margin-left: 1em; margin-bottom: 1em;' width='40%'}
+
+Sig hej til Peter! Peter elsker at se fodbold og underholdsningsprogrammer i fjernsynet. Til gengæld interesserer han sig ikke meget for kunst, kultur og politik. Vi har følgende oplysninger om Peters likes pr. uge:
+
+|  | Feature | Antal likes pr. uge |
+|:---:|:---:|:---:|
+| $x_1$ | `likes_art_culture` | $11$ |
+| $x_2$ | `likes_science_tech` | $17$ |
+| $x_3$ | `likes_travel_nature` | $6$ |
+| $x_4$ | `likes_entertainment` | $43$ |
+| $x_5$ | `likes_sports` |  $21$ |
+| $x_6$ | `likes_political_social` |  $7$ |
+: {.bordered}
+
+For Peter skal du nu:
+
+* Beregne den vægtede sum.
+* Beregne den prædikterede openness-score.
+* Hvad kan du sige om Peters grad af openness sammenlignet med Mollys?
+
+:::
+
+## Betydning af vægtene
+
+Hvis du ser på de vægte, som du fandt i opgave 2, kan du se, at det er vægten for `likes_art_culture`, som har den højeste positive værdi, mens vægten for `likes_sports` har den laveste, negative værdi. Vi vil nu undersøge hvilken betydning, det har, for den prædikterede openness-score.
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 4: Betydning af vægtene
+
+Vi forestiller os en person, Sebastian, med følgende likes pr. uge:
+
+|  | Feature | Antal likes pr. uge |
+|:---:|:---:|:---:|
+| $x_1$ | `likes_art_culture` | $15$ |
+| $x_2$ | `likes_science_tech` | $24$ |
+| $x_3$ | `likes_travel_nature` | $16$ |
+| $x_4$ | `likes_entertainment` | $31$ |
+| $x_5$ | `likes_sports` |  $22$ |
+| $x_6$ | `likes_political_social` |  $23$ |
+: {.bordered}
+
+* Beregn openness-scoren for Sebastian.
+
+[Betydning af `likes_art_culture`]{.fremhaev_underline}
+
+Bettina har præcis samme antal likes som Sebastian bortset fra, at Bettina har 10 ekstra likes til kunst og kultur.
+
+* Beregn Bettinas openness-score.
+
+
+[Betydning af `likes_sports`]{.fremhaev_underline}
+
+Viggo har præcis samme antal likes som Sebastian bortset fra, at Viggo har 10 ekstra likes til sport.
+
+* Beregn Viggos openness-score.
+
+* Hvad kan du sige om betydningen af en feature, hvis vægten er henholdsvis positiv og negativ (vær opmærksom på, at du skal være varsom med at sige noget om de absolutte størrelser, som openness-scoren stiger eller falder med)?
+
+:::
+
+Du kan [her](../../noter/logistisk/log-reg.qmd#fortolkning-af-parametrene-i-den-logistiske-regressionsmodel){target="_blank"} læse mere om, hvordan man kan give en mere konkret fortolkning af vægtene.
+
+## Ekstra udfordring: Hvordan bestemmer man minimum for tabsfunktionen?
+
+Vi har tidligere set, at tabsfunktionen er defineret sådan her:
+
+$$
+E(w_0, w_1, \dots, w_6) = \frac{1}{2} \sum (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6))^2 
+$$ 
+
+Og vi skulle altså finde minimum for denne funktion. Problemet er, at $E$ ikke kun afhænger af én, men hele syv vægte. Når man skal bestemme minimum for en funktion, som afhænger af mere end én variabel, får man brug for noget, som kaldes for **partielle afledede**. Se derfor denne video, hvor vi forklarer, hvad det går ud på:
+
+{{< video https://www.youtube.com/embed/tlq2UYWF2Rw >}}
+
+Når man skal bestemme partielle afledede for $E$, får man også brug for at kunne differentiere sigmoid-funktionen. Man kan vise, at:
+
+::: {.highlight .centertext}
+
+$$
+\sigma'(x) = \sigma(x) \cdot (1-\sigma(x))
+$$
+
+:::
+
+::: {.callout-note collapse="false" appearance="minimal"}
+### Opgave 5: Differentiation af $E$
 
 Vi vil nu bestemme den partielle afledede af $E$ med hensyng til $w_1$. Vi gør det et trin ad gangen:
 
@@ -114,17 +293,18 @@ Vi vil nu bestemme den partielle afledede af $E$ med hensyng til $w_1$. Vi gør 
    \frac{\partial}{\partial w_1} \sigma (w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6)
    $$
    
-   Brug resultatet fra opgave 2, kædereglen og det du netop er kommet frem til.
+   Brug udtrykket for $\sigma'(x)$, kædereglen og det du netop er kommet frem til.
    
    
-Vi holder tingene simple og forestiller os, at vi kun har ét træningsdatasæt så tabsfunktionen bliver:
+Vi holder tingene simple og forestiller os, at vi kun har én person i træningsdatasæt, så tabsfunktionen bliver:
 
 $$
 E(w_0, w_1, \dots, w_6) = \frac{1}{2} (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6))^2 
 $$
+
 - Bestem
    $$
-   \frac{\partial E}{\partial w_1} \sigma (w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6)
+   \frac{\partial E}{\partial w_1} 
    $$
 :::
 
@@ -134,22 +314,9 @@ $$
 \frac{\partial E}{\partial w_0} = 0, \frac{\partial E}{\partial w_1} = 0, \cdots, \frac{\partial E}{\partial w_6} = 0
 $$
 
-I stedet bruger man en numerisk metode til at bestemme minimum for $E$, som kaldes for **gradientnedstigning**. Det behøver du ikke at vide mere om, men hvis du alligevel er nysgerrig, kan du se denne [video](https://youtu.be/WcM8aEoPzf8?si=Vvma-MXxNl4YBsF1).
+I stedet bruger man en numerisk metode til at bestemme minimum for $E$, som kaldes for **gradientnedstigning**. Idéen er, at man hele tiden opdaterer værdien af vægtene, sådan at tabsfunktionen bliver mindre og mindre. Det bliver man ved med, indtil man har fundet et (lokalt) minimum for tabsfunktionen. Det behøver du ikke at vide mere om, men hvis du alligevel er nysgerrig, kan du se denne [video](https://youtu.be/WcM8aEoPzf8?si=Vvma-MXxNl4YBsF1){target="_blank"}.
 
-
-Vi skal ikke selv bestemme minimum for tabsfunktionen, men i stedet bruge en app til formålet.
-
-::: {.callout-note collapse="false" appearance="minimal"}
-### Opgave 4: Træning af AI
-
-Det fiktive datasæt om antal likes på eksempelvis Facebook og graden af openness kan hentes [her](cambridge_analytica/data/social_media_openness_content_dataset.xlsx).
-
-Brug denne [app](). Du skal nu gøre følgende:
-
-- Under fanen \"Data\" uploader du datasættet og trykker på \"Næste\".
-- Under fanen \"Variable\" vælger du 
-
-:::
+Hvis du vil arbejde videre med sigmoid-funktionen og dennes egenskaber, kan du finde opgaver [her](../aktiveringsfunktioner.qmd#sigmoid){target="_blank"}.
 
 ## Delvis facitliste
 
