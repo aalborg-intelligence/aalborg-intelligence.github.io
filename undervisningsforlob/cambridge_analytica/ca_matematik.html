@@ -182,11 +182,12 @@ window.Quarto = {
     <h2 id="toc-title">Indhold</h2>
    
   <ul>
-  <li><a href="#træningsdata" id="toc-træningsdata" class="nav-link active" data-scroll-target="#træningsdata">Træningsdata</a>
-  <ul class="collapse">
+  <li><a href="#træningsdata" id="toc-træningsdata" class="nav-link active" data-scroll-target="#træningsdata">Træningsdata</a></li>
   <li><a href="#sigmoid-aktiveringsfunktion" id="toc-sigmoid-aktiveringsfunktion" class="nav-link" data-scroll-target="#sigmoid-aktiveringsfunktion">Sigmoid-aktiveringsfunktion</a></li>
-  <li><a href="#tilbage-til-ocean" id="toc-tilbage-til-ocean" class="nav-link" data-scroll-target="#tilbage-til-ocean">Tilbage til OCEAN</a></li>
-  </ul></li>
+  <li><a href="#træning-af-ai-model" id="toc-træning-af-ai-model" class="nav-link" data-scroll-target="#træning-af-ai-model">Træning af AI model</a></li>
+  <li><a href="#prædiktion-af-openness-score" id="toc-prædiktion-af-openness-score" class="nav-link" data-scroll-target="#prædiktion-af-openness-score">Prædiktion af openness-score</a></li>
+  <li><a href="#betydning-af-vægtene" id="toc-betydning-af-vægtene" class="nav-link" data-scroll-target="#betydning-af-vægtene">Betydning af vægtene</a></li>
+  <li><a href="#ekstra-udfordring-hvordan-bestemmer-man-minimum-for-tabsfunktionen" id="toc-ekstra-udfordring-hvordan-bestemmer-man-minimum-for-tabsfunktionen" class="nav-link" data-scroll-target="#ekstra-udfordring-hvordan-bestemmer-man-minimum-for-tabsfunktionen">Ekstra udfordring: Hvordan bestemmer man minimum for tabsfunktionen?</a></li>
   <li><a href="#delvis-facitliste" id="toc-delvis-facitliste" class="nav-link" data-scroll-target="#delvis-facitliste">Delvis facitliste</a></li>
   </ul>
 </nav>
@@ -220,14 +221,14 @@ window.Quarto = {
 <p>I denne del er formålet at lave en model, som på baggrund af data fra sociale medier, kan bruges til at prædiktere personlighed.</p>
 <section id="træningsdata" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="træningsdata">Træningsdata</h2>
-<p>Vi skal starte med at forstå, hvordan man kan lave en model, som kan prædiktere menneskers personlighed på baggrund af data fra sociale medier:</p>
+<p>Vi skal starte med at forstå, hvordan man overhovedet kan lave en model, som kan prædiktere menneskers personlighed på baggrund af data fra sociale medier. Det beskrives i citatet her:</p>
 <div class="lyseblaa_boks">
 <p><em>Kogan sold Cambridge Analytica access to 270,000 personality tests completed by Facebook users through an online app he had created for research purposes. Providing the data to Cambridge Analytica was, it seems, against Facebook’s internal code of conduct, but only now in March 2018 has Kogan been banned by Facebook from the platform. In addition, Kogan’s data also came with a bonus: he had reportedly collected Facebook data from the test-takers’ friends – and, at an average of 200 friends per person, that added up to some 50m people.</em></p>
 <p><em>While not all of these people had provided personality test responses, it is possible to reverse-engineer a personality profile from Facebook activity. Decades of psychological research has formed around the lexical hypothesis, that personality traits can be inferred by studying the subject’s use of language. Facebook patented a process to do just this in 2012, as part of its commercial aims to provide more targeted advertising, by mapping the contents of posts and likes against the "Big Five" model of psychological traits, sometimes known as OCEAN (openness, conscientiousness, extroversion, agreeableness, neuroticism). Whether you choose to like pictures of sunsets, puppies or people apparently says a lot about your personality: a 2015 study by other academics from the Cambridge psychology lab found that the model of predicting personality traits using Facebook data could generate a personality profile with the same accuracy as a spouse with just 300 likes.</em></p>
 </div>
 <p><span class="kilde">Kilde: <a href="https://theconversation.com/psychographics-the-behavioural-analysis-that-helped-cambridge-analytica-know-voters-minds-93675">Psychographics: the behavioural analysis that helped Cambridge Analytica know voters’ minds</a>.</span></p>
-<p>Ovenstående betyder, at Cambridge Analytica har haft adgang til <span class="math inline">\(270000\)</span> menneskers Facebook data <em>samtidig</em> med, at disse mennesker frivilligt har taget en personlighedstest (som vi gør det i <a href="../../undervisningsforlob/cambridge_analytica/ca_informatik.html">informatik-delen</a> af dette forløb). Altså kender man disse menneskers OCEAN scores. Det er alle disse data, som udgør det, man kalder for et <strong>træningsdatasæt</strong>.</p>
-<p>Vi forestiller os nu et tænkt eksempel med et træningsdatasæt<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> bestående af <span class="math inline">\(300\)</span> personer. Idéen er, at hver person i træningsdatasættet har taget en OCEAN test, samtidig med at vi om hver person har registreret det gennemsnitlige antal likes pr. uge, som personen – på eksempelvis Facebook – har givet til opslag, som handler om:</p>
+<p>Ovenstående betyder, at Cambridge Analytica har haft adgang til <span class="math inline">\(270000\)</span> menneskers Facebook data <em>samtidig</em> med, at disse mennesker frivilligt har taget en personlighedstest (som vi gør det i <a href="../../undervisningsforlob/cambridge_analytica/ca_informatik.html" target="_blank">informatik-delen</a> af dette forløb). Altså kender man disse menneskers OCEAN scores. Det er alle disse data, som udgør det, man kalder for et <strong>træningsdatasæt</strong>.</p>
+<p>Vi forestiller os nu et tænkt eksempel med et træningsdatasæt<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> bestående af <span class="math inline">\(300\)</span> personer. Idéen er, at hver person i træningsdatasættet har taget en OCEAN test samtidig med, at vi om hver person har registreret det gennemsnitlige antal likes pr. uge, som personen – på eksempelvis Facebook – har givet til opslag, som handler om:</p>
 <div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Data er 100% fiktive og genereret ved hjælp af CoPilot.</p></div></div><ul>
 <li><code>likes_art_culture</code>: kunst og kultur (<span class="math inline">\(x_1\)</span>)</li>
 <li><code>likes_science_tech</code>: videnskab og teknologi (<span class="math inline">\(x_2\)</span>)</li>
@@ -241,160 +242,321 @@ window.Quarto = {
 <ul>
 <li><code>O_openness</code>: personens grad af openness på en skala fra <span class="math inline">\(0\)</span> til <span class="math inline">\(1\)</span> (<span class="math inline">\(t\)</span>).</li>
 </ul>
-<p>Her kaldes <span class="math inline">\(t\)</span> for <strong>target</strong>, fordi det er den værdi, vil gerne vil prøve at "ramme".</p>
+<p>Her kaldes <span class="math inline">\(t\)</span> for <strong>target</strong>, fordi det er den værdi, vil gerne vil prøve at "ramme" med vores model.</p>
 <p>Idéen er nu, at vi ud fra de seks features <span class="math inline">\(x_1, x_2, \dots, x_6\)</span> skal kunne forudsige targetværdien <span class="math inline">\(t\)</span> så godt som muligt. Det gør vi ved først at udregne en vægtet sum af de seks features:</p>
 <p><span id="eq-vaegtet_sum"><span class="math display">\[
 w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6
 \tag{1}\]</span></span></p>
-<p>Hvor <span class="math inline">\(w_0, w_1, \dots, w_6\)</span> kaldes for vægte, og det er i sidste ende dem vi skal finde "gode" værdier for, så vi får en god model. Det kommer vi tilbage til.</p>
-<p>Nu vil ovenstående udtryk give et reelt tal, som kan antage en hvilken som helst værdi og som kan være negativ eller positiv. Til gengæld er hver persons grad af openness målt på en skala fra <span class="math inline">\(0\)</span> til <span class="math inline">\(1\)</span>. Det råder vi bod på ved at bruge en såkaldt <strong>aktiveringsfunktion</strong>. Vi bruger her en aktiveringsfunktion, som kaldes for <strong>sigmoid</strong>.</p>
-<section id="sigmoid-aktiveringsfunktion" class="level3 page-columns page-full">
-<h3 class="anchored" data-anchor-id="sigmoid-aktiveringsfunktion">Sigmoid-aktiveringsfunktion</h3>
+<p>Hvor <span class="math inline">\(w_0, w_1, \dots, w_6\)</span> kaldes for vægte<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, og det er i sidste ende dem vi skal finde "gode" værdier for, så vi får en god model. Det kommer vi tilbage til.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Ofte kalder man også <span class="math inline">\(w_0\)</span> for <strong>bias</strong>.</p></div></div><p>Nu vil ovenstående udtryk give et reelt tal, som kan antage en hvilken som helst værdi og som kan være negativ eller positiv. Til gengæld er hver persons grad af openness målt på en skala fra <span class="math inline">\(0\)</span> til <span class="math inline">\(1\)</span>. Så udtrykket i (<a href="#eq-vaegtet_sum" class="quarto-xref">1</a>) kan ikke direkte bruges til at modellere graden af openness. Det råder vi bod på ved at bruge en såkaldt <strong>aktiveringsfunktion</strong>. Vi bruger her en aktiveringsfunktion, som kaldes for <strong>sigmoid</strong>.</p>
+</section>
+<section id="sigmoid-aktiveringsfunktion" class="level2">
+<h2 class="anchored" data-anchor-id="sigmoid-aktiveringsfunktion">Sigmoid-aktiveringsfunktion</h2>
 <p><strong>Sigmoid</strong>-funktionen har forskrift</p>
 <p><span id="eq-sigmoid"><span class="math display">\[
 \sigma(x)=\frac{1}{1+\mathrm{e}^{-x}},
 \tag{2}\]</span></span></p>
-<p>som også kan skrives</p>
-<p><span id="eq-sigmoid2"><span class="math display">\[
-\sigma(x)=\frac{\mathrm{e}^x}{1+\mathrm{e}^x},
-\tag{3}\]</span></span></p>
-<p>hvilket ses ved at gange med <span class="math inline">\(\mathrm{e}^x\)</span> i både tæller og nævner i (<a href="#eq-sigmoid" class="quarto-xref">2</a>).</p>
-<p>Grafen for Sigmoid-funktionen ses i <a href="#fig-sigmoid" class="quarto-xref">figur&nbsp;1</a>.</p>
-<div id="fig-sigmoid" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-sigmoid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../undervisningsforlob/aktiveringsfunktioner/sigmoid.png" class="img-fluid figure-img" style="width:75.0%">
-</div>
-<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-sigmoid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figur&nbsp;1: Grafen for sigmoid-funktionen.
-</figcaption>
-</figure>
-</div>
-<p>Det ser på <a href="#fig-sigmoid" class="quarto-xref">figur&nbsp;1</a> ud som om, at værdimængden for <span class="math inline">\(\sigma\)</span> er det åbne interval<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> <span class="math inline">\((0,1)\)</span>. Det skrives</p>
-<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Bemærk, at det åbne interval <span class="math inline">\((0,1)\)</span> også kan skrives <span class="math inline">\(]0,1[\)</span>.</p></div></div><p><span class="math display">\[
-Vm(\sigma)=(0,1).
+<p>Vi bruger nu sigmoid-funktionen på den vægtede sum i (<a href="#eq-vaegtet_sum" class="quarto-xref">1</a>):</p>
+<p><span class="math display">\[
+o = \sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6)
 \]</span></p>
-<p>Hvis du vil have et lidt bedre argument for det, kan du læse i boksen herunder.</p>
-<div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<p>Her står <span class="math inline">\(o\)</span> for <strong>outputværdi</strong> (og ikke for openness, selvom det også vil give mening her).</p>
+<p>Men hvad skal den sigmoid-funktion nu gøre godt for? Det undersøger vi i den første opgave:</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Argument for værdimængden for <span class="math inline">\(\sigma\)</span>
+<span class="screen-reader-only">Note</span>Opgave 1: Sigmoid-funktionen
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Vi vil her argumentere for, at værdimængden for <span class="math inline">\(\sigma\)</span> er <span class="math inline">\((0,1)\)</span>. Vi vil starte med at se, at funktionsværdierne for <span class="math inline">\(\sigma\)</span> ligger mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>.</p>
-<p>Da både tæller og nævner i (<a href="#eq-sigmoid" class="quarto-xref">2</a>) er positive, så må <span class="math inline">\(\sigma(x)&gt;0\)</span>. Og da</p>
-<p><span class="math display">\[
-1&lt;1+\mathrm{e}^{-x}
-\]</span> så må</p>
-<p><span class="math display">\[
-\frac{1}{1+\mathrm{e}^{-x}}&lt;\frac{1+\mathrm{e}^{-x}}{1+\mathrm{e}^{-x}}=1.
-\]</span></p>
-<p>Det vil sige, at <span class="math display">\[
-0 &lt; \sigma(x) &lt; 1
-\]</span> og derfor må værdimængden for <span class="math inline">\(\sigma\)</span> være en del af intervallet <span class="math inline">\((0,1)\)</span>. Det kan skrives sådan her</p>
-<p><span class="math display">\[
-Vm(\sigma) \subseteq (0,1).
-\]</span> Vi vil nu vise, at vi kan komme lige så tæt på <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>, som det skal være. Det vil med andre ord sige, at værdimængden for <span class="math inline">\(\sigma\)</span> "fylder" hele intervallet <span class="math inline">\((0,1)\)</span> ud.</p>
-<p>På figuren herunder ses grafen for <span class="math inline">\(\mathrm{e}^{-x}\)</span>.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../../undervisningsforlob/aktiveringsfunktioner/exp_minusx.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
-</figure>
-</div>
-<p>Da <span class="math inline">\(\mathrm{e}^{-x}\)</span> er en aftagende eksponentialfunktion vil</p>
-<p><span class="math display">\[
-\mathrm{e}^{-x} \rightarrow 0 \quad \textrm{når} \quad x \rightarrow \infty
-\]</span> og</p>
-<p><span class="math display">\[
-\mathrm{e}^{-x} \rightarrow \infty \quad \textrm{når} \quad x \rightarrow -\infty.
-\]</span></p>
-<p>Det betyder, at <span class="math display">\[
-\frac{1}{1+\mathrm{e}^{-x}} \rightarrow 1 \quad \textrm{når} \quad x \rightarrow \infty
-\]</span></p>
-<p>og</p>
-<p><span class="math display">\[
-\frac{1}{1+\mathrm{e}^{-x}} \rightarrow 0 \quad \textrm{når} \quad x \rightarrow -\infty.
-\]</span></p>
-<p>Endelig er <span class="math inline">\(\mathrm{e}^{-x}\)</span> en kontinuert funktion, så <span class="math inline">\(\sigma\)</span> er kontinuert, og dermed fås alle værdier fra <span class="math inline">\(0\)</span> til <span class="math inline">\(1\)</span>.</p>
-<p>Alt i alt har vi altså argumenteret for, at værdimængden for <span class="math inline">\(\sigma\)</span> er <span class="math inline">\((0,1)\)</span>.</p>
+<ul>
+<li><p>Tegn grafen for sigmoid-funktionen med forskrift: <span class="math display">\[
+\sigma(x)=\frac{1}{1+\mathrm{e}^{-x}},
+\]</span></p></li>
+<li><p>Hvad vil du på baggrund af grafen for sigmoid-funktionen mene, at værdimængden er (det vil sige: i hvilket interval ligger funktionsværdierne)?</p></li>
+<li><p>Hvorfor kan sigmoid-funktionen bruges til at modellere graden af openness?</p></li>
+</ul>
 </div>
 </div>
 </div>
-<p>De følgende opgaver går ud på at vise, at</p>
+<p>Som du lige har set, har sigmoid-funktionen nogle egenskaber, som gør den velegnet til at modellere graden af openness.</p>
+<p>Opgaven er nu "blot" at bestemme værdier af vægtene <span class="math inline">\(w_0, w_1, \dots, w_6\)</span>, så vores beregnede outputværdi <span class="math inline">\(o\)</span> kommer så tæt på vores målte targetværdi <span class="math inline">\(t\)</span> som muligt (altså den faktiske grad af openness).</p>
+<p>Det gør vi ved for hver person i træningsdatasættet at se på den kvadrerede forskel mellem <span class="math inline">\(t\)</span> og <span class="math inline">\(o\)</span>:</p>
 <p><span class="math display">\[
-\sigma'(x)= \frac{\mathrm{e}^{-x}}{(1+\mathrm{e}^{-x})^2}
-\]</span> og at <span class="math inline">\(\sigma'(x)\)</span> kan udtrykkes ved hjælp af <span class="math inline">\(\sigma(x)\)</span> på denne måde</p>
-<p><span class="math display">\[
-\sigma'(x)= \sigma(x)\cdot (1-\sigma(x)).
+(t-o)^2  = (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6))^2
 \]</span></p>
+<p>Bemærk, at hvis vores model er god, så er denne forskel tæt på <span class="math inline">\(0\)</span> (svarende til at <span class="math inline">\(o \approx t\)</span>). Hvis vores model er dårlig – for eksempel hvis <span class="math inline">\(t\)</span> er tæt på <span class="math inline">\(1\)</span>, mens <span class="math inline">\(o\)</span> er tæt på <span class="math inline">\(0\)</span> – så vil <span class="math inline">\((t-o)^2\)</span> være tæt på <span class="math inline">\(1\)</span>.</p>
+<p>Nu har vi <span class="math inline">\(300\)</span> personer i vores træningsdata. For hver af dem kan vi beregne en kvadreret forskel mellem <span class="math inline">\(t\)</span> og <span class="math inline">\(o\)</span> og så lægger vi dem alle sammen (og ganger med <span class="math inline">\(1/2\)</span>, men det er ikke så afgørende). Det giver:</p>
+<p><span class="math display">\[
+E = \frac{1}{2} \sum (t-o)^2
+\]</span> Ovenstående kaldes for en <strong>tabsfunktion</strong>, fordi den måler hvor god vores model er. En lille værdi af tabsfunktionen <span class="math inline">\(E\)</span> svarer til en god model (mange af de kvadrerede afvigelser er små, som ønsket), og omvendt vil en stor værdi af <span class="math inline">\(E\)</span> svare til en dårlig model.</p>
+<p>Tabsfunktionen <span class="math inline">\(E\)</span> afhænger i virkeligheden af alle vægtene, fordi outputværdien <span class="math inline">\(o\)</span> afhænger af alle vægtene:</p>
+<p><span id="eq-tab"><span class="math display">\[
+E(w_0, w_1, \dots, w_6) = \frac{1}{2} \sum (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6))^2
+\tag{3}\]</span></span></p>
+<p>Hele idéen er nu, at bestemme de værdier af vægtene <span class="math inline">\(w_0, w_1, \dots, w_6\)</span> som minimerer tabsfunktionen. Hvis <span class="math inline">\(E\)</span> kun afhænger af én vægt <span class="math inline">\(w\)</span>, så ved vi godt, hvordan man finder minimum. Vi skal nemlig løse:</p>
+<p><span class="math display">\[
+E'(w)=0
+\]</span> og så lige sikre os, at det er et minimumssted, vi har fundet. Nu afhænger <span class="math inline">\(E\)</span> ikke af én, men af syv variable. Derfor bliver det lidt mere besværligt at bestemme minimum for <span class="math inline">\(E\)</span>. Den gode nyhed er, at vi ikke selv skal gøre det, men i stedet bruge en app til formålet. Afsnittet <a href="#hvordan-bestemmer-man-minimum-for-tabsfunktionen">Ekstra udfordring: Hvordan bestemmer man minimum for tabsfunktionen?</a> handler om netop det – så det kan du jo glæde dig til, hvis du når så langt!</p>
+</section>
+<section id="træning-af-ai-model" class="level2">
+<h2 class="anchored" data-anchor-id="træning-af-ai-model">Træning af AI model</h2>
+<p>Når man bestemmer de værdier af vægtene, som minimerer tabsfunktionen, så siger man, at man <strong>træner</strong> sin AI model. Det gør vi i opgave 2.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 1: Differentiation af sigmoid-funktionen
+<span class="screen-reader-only">Note</span>Opgave 2: Træning af AI model
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Vis, at <span class="math display">\[
-\sigma'(x)= \frac{\mathrm{e}^{-x}}{(1+\mathrm{e}^{-x})^2}.
-\]</span></p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-caution no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Caution</span>Hints til opgave 1 (uden brug af kvotientreglen)
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Vi skal starte med at se, at vi kan tænke på sigmoid-funktionen <span class="math display">\[
-\sigma(x)=\frac{1}{1+\mathrm{e}^{-x}}.
-\]</span> som en "dobbelt sammensat" funktion. Sigmoid-funktionen består nemlig af en brøk på formen <span class="math inline">\(\frac{1}{x}\)</span> og af eksponentialfunktionen <span class="math inline">\(\mathrm{e}^{-x}\)</span>.</p>
-<p>Gør følgende:</p>
+<p>Det fiktive datasæt om antal likes på eksempelvis Facebook og graden af openness kan hentes <a href="cambridge_analytica/data/social_media_openness_content_dataset.xlsx">her</a>.</p>
+<p>Brug denne <a href="https://apps01.math.aau.dk/ai/sandsynlighedsneuron/" target="_blank">app</a>. Du skal gøre følgende:</p>
 <ul>
-<li><p>Start med at opskrive differentialkvotienten for <span class="math display">\[\frac{1}{x} \quad \textrm{og} \quad \mathrm{e}^{-x}.\]</span></p></li>
-<li><p>Brug ovenstående til at vise, at <span class="math display">\[
-\sigma'(x)= \frac{\mathrm{e}^{-x}}{(1+\mathrm{e}^{-x})^2}.
-\]</span></p></li>
+<li>Under fanen "Data" uploader du datasættet og trykker på "Næste".</li>
+<li>Under fanen "Variable" vælger du <code>O_openness</code> som "Target-variabel" og <code>likes_art_culture</code>, <code>likes_science_tech</code>, <code>likes_travel_nature</code>, <code>likes_entertainment</code>, <code>likes_sports</code> og <code>likes_political_social</code> som "Feature-variable". Tryk på "Næste".</li>
+<li>Under fanen "Træning" kan man vælge en række forskellige indstillinger, som du ikke behøver at tænke så meget over. Men du kan for eksempel se, at der under "Tabsfunktion" står "Squared" – det svarer til tabsfunktionen i (<a href="#eq-tab" class="quarto-xref">3</a>). Under "Aktiveringsfunktion" står der "Sigmoid", som betyder, at sigmoid-funktionen i (<a href="#eq-sigmoid" class="quarto-xref">2</a>) benyttes. Tryk nu på "Træn" model.</li>
+</ul>
+<p>På grafen til højre i app’en kan du se, hvordan værdien af tabsfunktionen har ændret sig i takt med, at vi har opdateret vægtene for at bestemme et minimum. Læg mærke til at grafen flader ud, og vi forventer derfor, at vi har fundet et (eventuelt lokalt) minimum for tabsfunktionen.</p>
+<ul>
+<li><p>Noter de fundne værdier af vægtene <span class="math inline">\(w_0, w_1, \cdots w_6\)</span>, som står i tabellen nederst til højre i app’en.</p></li>
+<li><p>Tryk på fanen "Evaluering &amp; Prædiktion" og noter værdien af <span class="math inline">\(R^2\)</span> og RMSE (bemærk, at vi gerne vil have <span class="math inline">\(R^2\)</span>-værdien tæt på <span class="math inline">\(1\)</span> og RMSE tæt på <span class="math inline">\(0\)</span>). Du kan læse mere om disse mål <a href="../../noter/vurdering_model/vurdering_model.html#modeller-til-prædiktion-af-numeriske-værdier" target="_blank">her</a>.</p></li>
 </ul>
 </div>
 </div>
 </div>
-<div class="callout callout-style-simple callout-caution no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<p>I virkeligheden gør Facebook og firmaer som Cambridge Analytica selvfølgelig noget, som er meget mere kompliceret, end det vi har gjort her. Desuden er der en kæmpe stor opgave i at finde ud af, hvordan man overhovedet oversætter Facebook aktivitet til tal:</p>
+<ul>
+<li>Hvordan afgør man for eksempel om et billede er i en af de seks kategorier, som vi ser på her?</li>
+<li>Hvordan oversætter man kommentarer på Facebook til tal, som man kan regne på og lave en model på baggrund af?</li>
+</ul>
+<p>Det er klart, at det på ingen måde er en triviel opgave, og samtidig er det også for de firmaer, som arbejder med den slags, forretningshemmeligheder, så vi ved strengt taget ikke præcis, hvordan det foregår. Alligevel giver vores meget simple model en idé om, hvordan den kan bruges.</p>
+</section>
+<section id="prædiktion-af-openness-score" class="level2">
+<h2 class="anchored" data-anchor-id="prædiktion-af-openness-score">Prædiktion af openness-score</h2>
+<p><img src="images/molly.jpg" class="img-fluid" style="float:right; margin-left: 1em; margin-bottom: 1em;;width:40.0%"></p>
+<p>Vi forestiller os nu en Facebook bruger Molly, som går op i kunst, kultur, politik og samfund. Til gengæld går hun lidt mindre op i videnskab, rejser, underholdning og sport. Vi har for Molly registreret følgende antal likes pr. uge:</p>
+<table class="table-bordered table">
+<thead>
+<tr class="header">
+<th style="text-align: center;"></th>
+<th style="text-align: center;">Feature</th>
+<th style="text-align: center;">Antal likes pr. uge</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(x_1\)</span></td>
+<td style="text-align: center;"><code>likes_art_culture</code></td>
+<td style="text-align: center;"><span class="math inline">\(45\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(x_2\)</span></td>
+<td style="text-align: center;"><code>likes_science_tech</code></td>
+<td style="text-align: center;"><span class="math inline">\(18\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(x_3\)</span></td>
+<td style="text-align: center;"><code>likes_travel_nature</code></td>
+<td style="text-align: center;"><span class="math inline">\(10\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(x_4\)</span></td>
+<td style="text-align: center;"><code>likes_entertainment</code></td>
+<td style="text-align: center;"><span class="math inline">\(15\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(x_5\)</span></td>
+<td style="text-align: center;"><code>likes_sports</code></td>
+<td style="text-align: center;"><span class="math inline">\(17\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(x_6\)</span></td>
+<td style="text-align: center;"><code>likes_political_social</code></td>
+<td style="text-align: center;"><span class="math inline">\(46\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>For Molly kan vi nu udregne den vægtede sum i (<a href="#eq-vaegtet_sum" class="quarto-xref">1</a>):</p>
+<p><span class="math display">\[
+\begin{aligned}
+w_0 + w_1 \cdot x_1 &amp;+ w_2 \cdot x_2 + \cdots + w_6 \cdot x_6 = \\
+&amp;-3.666 + 0.05245 \cdot 45 \\ &amp;+ 0.03711 \cdot 18 \\ &amp;+ 0.02928 \cdot 10 + 0.003369 \cdot 15 \\ &amp;-0.01699 \cdot 17 + 0.04105 \cdot 46 \\ &amp;\approx 1.305  
+\end{aligned}
+\]</span></p>
+<p>Denne værdi indsætter vi nu i sigmoid-funktionen for at beregne vores prædikterede openness-score:</p>
+<p><span class="math display">\[
+o = \sigma(1.305) \approx 0.787
+\]</span></p>
+<p>Vi får altså en forholdsvis høj openness-score. Bemærk, at Molly <u>ikke</u> har taget en OCEAN-test. Alligevel kan vi på baggrund af vores model og informationen om Mollys Facebook aktivitet komme med et kvalificeret bud på Mollys grad af openness. Det vi har gjort her, er derfor et eksempel på det, der beskrives i citatet:</p>
+<div class="lyseblaa_boks">
+<p><em>While not all of these people had provided personality test responses, it is possible to reverse-engineer a personality profile from Facebook activity.</em></p>
+</div>
+<p><span class="kilde">Kilde: <a href="https://theconversation.com/psychographics-the-behavioural-analysis-that-helped-cambridge-analytica-know-voters-minds-93675">Psychographics: the behavioural analysis that helped Cambridge Analytica know voters’ minds</a>.</span></p>
+<p>Det er klart, at vores model og fremgangsmåde er ekstremt forsimplet i forhold til, hvad rigtige firmaer som Facebook og Cambridge Analytica har gjort. Alligevel giver det en meget overordnet idé om, hvordan man kan <em>reverse-engineer a personality profile from Facebook activity</em>.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Caution</span>Hints til opgave 1 (med brug af kvotientreglen)
+<span class="screen-reader-only">Note</span>Opgave 3: Openness-score for Peter
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Vis i stedet, at</p>
+<p><img src="images/peter.jpg" class="img-fluid" style="float:right; margin-left: 1em; margin-bottom: 1em;;width:40.0%"></p>
+<p>Sig hej til Peter! Peter elsker at se fodbold og underholdsningsprogrammer i fjernsynet. Til gengæld interesserer han sig ikke meget for kunst, kultur og politik. Vi har følgende oplysninger om Peters likes pr. uge:</p>
+<table class="table-bordered table">
+<thead>
+<tr class="header">
+<th style="text-align: center;"></th>
+<th style="text-align: center;">Feature</th>
+<th style="text-align: center;">Antal likes pr. uge</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(x_1\)</span></td>
+<td style="text-align: center;"><code>likes_art_culture</code></td>
+<td style="text-align: center;"><span class="math inline">\(11\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(x_2\)</span></td>
+<td style="text-align: center;"><code>likes_science_tech</code></td>
+<td style="text-align: center;"><span class="math inline">\(17\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(x_3\)</span></td>
+<td style="text-align: center;"><code>likes_travel_nature</code></td>
+<td style="text-align: center;"><span class="math inline">\(6\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(x_4\)</span></td>
+<td style="text-align: center;"><code>likes_entertainment</code></td>
+<td style="text-align: center;"><span class="math inline">\(43\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(x_5\)</span></td>
+<td style="text-align: center;"><code>likes_sports</code></td>
+<td style="text-align: center;"><span class="math inline">\(21\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(x_6\)</span></td>
+<td style="text-align: center;"><code>likes_political_social</code></td>
+<td style="text-align: center;"><span class="math inline">\(7\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>For Peter skal du nu:</p>
+<ul>
+<li>Beregne den vægtede sum.</li>
+<li>Beregne den prædikterede openness-score.</li>
+<li>Hvad kan du sige om Peters grad af openness sammenlignet med Mollys?</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="betydning-af-vægtene" class="level2">
+<h2 class="anchored" data-anchor-id="betydning-af-vægtene">Betydning af vægtene</h2>
+<p>Hvis du ser på de vægte, som du fandt i opgave 2, kan du se, at det er vægten for <code>likes_art_culture</code>, som har den højeste positive værdi, mens vægten for <code>likes_sports</code> har den laveste, negative værdi. Vi vil nu undersøge hvilken betydning, det har, for den prædikterede openness-score.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Opgave 4: Betydning af vægtene
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Vi forestiller os en person, Sebastian, med følgende likes pr. uge:</p>
+<table class="table-bordered table">
+<thead>
+<tr class="header">
+<th style="text-align: center;"></th>
+<th style="text-align: center;">Feature</th>
+<th style="text-align: center;">Antal likes pr. uge</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(x_1\)</span></td>
+<td style="text-align: center;"><code>likes_art_culture</code></td>
+<td style="text-align: center;"><span class="math inline">\(15\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(x_2\)</span></td>
+<td style="text-align: center;"><code>likes_science_tech</code></td>
+<td style="text-align: center;"><span class="math inline">\(24\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(x_3\)</span></td>
+<td style="text-align: center;"><code>likes_travel_nature</code></td>
+<td style="text-align: center;"><span class="math inline">\(16\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(x_4\)</span></td>
+<td style="text-align: center;"><code>likes_entertainment</code></td>
+<td style="text-align: center;"><span class="math inline">\(31\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(x_5\)</span></td>
+<td style="text-align: center;"><code>likes_sports</code></td>
+<td style="text-align: center;"><span class="math inline">\(22\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(x_6\)</span></td>
+<td style="text-align: center;"><code>likes_political_social</code></td>
+<td style="text-align: center;"><span class="math inline">\(23\)</span></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Beregn openness-scoren for Sebastian.</li>
+</ul>
+<p><span class="fremhaev_underline">Betydning af <code>likes_art_culture</code></span></p>
+<p>Bettina har præcis samme antal likes som Sebastian bortset fra, at Bettina har 10 ekstra likes til kunst og kultur.</p>
+<ul>
+<li>Beregn Bettinas openness-score.</li>
+</ul>
+<p><span class="fremhaev_underline">Betydning af <code>likes_sports</code></span></p>
+<p>Viggo har præcis samme antal likes som Sebastian bortset fra, at Viggo har 10 ekstra likes til sport.</p>
+<ul>
+<li><p>Beregn Viggos openness-score.</p></li>
+<li><p>Hvad kan du sige om betydningen af en feature, hvis vægten er henholdsvis positiv og negativ (vær opmærksom på, at du skal være varsom med at sige noget om de absolutte størrelser, som openness-scoren stiger eller falder med)?</p></li>
+</ul>
+</div>
+</div>
+</div>
+<p>Du kan <a href="../../noter/logistisk/log-reg.html#fortolkning-af-parametrene-i-den-logistiske-regressionsmodel" target="_blank">her</a> læse mere om, hvordan man kan give en mere konkret fortolkning af vægtene.</p>
+</section>
+<section id="ekstra-udfordring-hvordan-bestemmer-man-minimum-for-tabsfunktionen" class="level2">
+<h2 class="anchored" data-anchor-id="ekstra-udfordring-hvordan-bestemmer-man-minimum-for-tabsfunktionen">Ekstra udfordring: Hvordan bestemmer man minimum for tabsfunktionen?</h2>
+<p>Vi har tidligere set, at tabsfunktionen er defineret sådan her:</p>
 <p><span class="math display">\[
-\sigma'(x)= \frac{\mathrm{e}^x \cdot (1+\mathrm{e}^x) - (\mathrm{e}^x)^2}{(1+\mathrm{e}^x)^2}.
+E(w_0, w_1, \dots, w_6) = \frac{1}{2} \sum (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6))^2
 \]</span></p>
-<p>Det gøres ved at bruge kvotientreglen på udtrykket for <span class="math inline">\(\sigma(x)\)</span> i (<a href="#eq-sigmoid2" class="quarto-xref">3</a>).</p>
-</div>
-</div>
+<p>Og vi skulle altså finde minimum for denne funktion. Problemet er, at <span class="math inline">\(E\)</span> ikke kun afhænger af én, men hele syv vægte. Når man skal bestemme minimum for en funktion, som afhænger af mere end én variabel, får man brug for noget, som kaldes for <strong>partielle afledede</strong>. Se derfor denne video, hvor vi forklarer, hvad det går ud på:</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/tlq2UYWF2Rw" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<p>Når man skal bestemme partielle afledede for <span class="math inline">\(E\)</span>, får man også brug for at kunne differentiere sigmoid-funktionen. Man kan vise, at:</p>
+<div class="highlight centertext">
+<p><span class="math display">\[
+\sigma'(x) = \sigma(x) \cdot (1-\sigma(x))
+\]</span></p>
 </div>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
@@ -402,109 +564,11 @@ Vm(\sigma) \subseteq (0,1).
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 2: Omskrivning af <span class="math inline">\(\sigma'(x)\)</span> for sigmoid-funktionen
+<span class="screen-reader-only">Note</span>Opgave 5: Differentiation af <span class="math inline">\(E\)</span>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Vis, at <span class="math display">\[
-\sigma'(x)= \sigma(x)\cdot (1-\sigma(x)).
-\]</span> når <span class="math display">\[
-\sigma(x)=\frac{1}{1+\mathrm{e}^{-x}}.
-\]</span></p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-caution no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Caution</span>Hints til opgave 2 (hvis du ikke har brugt kvotientreglen)
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Der er flere fremgangsmåder for at løse opgaven:</p>
-<p><strong>Fremgangsmåde 1</strong></p>
-<ul>
-<li><p>Isolér <span class="math inline">\(\mathrm{e}^{-x}\)</span> i <span class="math display">\[
-\sigma(x)=\frac{1}{1+\mathrm{e}^{-x}}.
-\]</span></p></li>
-<li><p>Indsæt dette udtryk for <span class="math inline">\(\mathrm{e}^{-x}\)</span> i <span class="math display">\[
-\sigma'(x)= \frac{\mathrm{e}^{-x}}{(1+\mathrm{e}^{-x})^2}
-\]</span> og reducer.</p>
-<p><em>Hint! Du får brug for at sætte på fælles brøkstreg. Husk også, at man dividerer med en brøk ved at gange med den omvendte.</em></p></li>
-</ul>
-<p><strong>Fremgangsmåde 2</strong></p>
-<ul>
-<li><p>Start med at udregne <span class="math display">\[1-\sigma(x).\]</span> <em>Hint! Sæt på fælles brøkstreg ved at skrive <span class="math inline">\(1\)</span> som <span class="math inline">\(\frac{1+\mathrm{e}^{-x}}{1+\mathrm{e}^{-x}}\)</span></em>.</p></li>
-<li><p>Vis nu at <span class="math display">\[
-\sigma(x)\cdot (1-\sigma(x)) = \frac{\mathrm{e}^{-x}}{(1+\mathrm{e}^{-x})^2}=\sigma'(x).
-\]</span> <em>Husk, at man ganger to brøker med hinanden ved at gange tæller med tæller og nævner med nævner.</em></p></li>
-</ul>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-caution no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Caution</span>Hints til opgave 2 (hvis du har brugt kvotientreglen)
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<ul>
-<li>Tag udtrykket, som du fik for <span class="math inline">\(\sigma'(x)\)</span> og dividér <span class="math inline">\((1+\mathrm{e}^x)^2\)</span> op i hvert led. Herefter kan du sætte "noget" uden for en parentes.</li>
-</ul>
-</div>
-</div>
-</div>
-</section>
-<section id="tilbage-til-ocean" class="level3">
-<h3 class="anchored" data-anchor-id="tilbage-til-ocean">Tilbage til OCEAN</h3>
-<p>Vi bruger nu sigmoid-funktionen på den vægtede sum i (<a href="#eq-vaegtet_sum" class="quarto-xref">1</a>):</p>
-<p><span class="math display">\[
-o = \sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6)
-\]</span></p>
-<p>Her står <span class="math inline">\(o\)</span> for <strong>outputværdi</strong> (og ikke for openness, selvom det også vil give mening her). Fordelen er nu, at <span class="math inline">\(o\)</span> ligger mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span> (fordi vi har brugt sigmoid-funktionen) ligesom graden af openness måles på en skala fra <span class="math inline">\(0\)</span> til <span class="math inline">\(1\)</span>.</p>
-<p>Opgaven er nu "blot" at bestemmer værdier af vægtende <span class="math inline">\(w_0, w_1, \dots, w_6\)</span>, så vores beregnede outputværdi <span class="math inline">\(o\)</span> kommer så tæt på vores målte targetværdi <span class="math inline">\(t\)</span> som muligt.</p>
-<p>Det gør vi ved for hvert træningseksempel at se på den kvadrerede forskel mellem <span class="math inline">\(t\)</span> og <span class="math inline">\(o\)</span>:</p>
-<p><span class="math display">\[
-(t-o)^2  = (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6))^2
-\]</span></p>
-<p>Bemærk, at hvis vores model er god, så er denne forskel tæt på <span class="math inline">\(0\)</span> (svarende til at <span class="math inline">\(o \approx t\)</span>). Hvis vores model er dårlig – for eksempel hvis <span class="math inline">\(t\)</span> er tæt på <span class="math inline">\(1\)</span>, mens <span class="math inline">\(o\)</span> er tæt på <span class="math inline">\(0\)</span> – så vil <span class="math inline">\((t-o)^2\)</span> være tæt på <span class="math inline">\(1\)</span>.</p>
-<p>Nu har vi <span class="math inline">\(300\)</span> personer i vores træningsdata. For hver af dem kan vi beregne en kvadreret forskel mellem <span class="math inline">\(t\)</span> og <span class="math inline">\(o\)</span> og lægger vi dem alle sammen (og ganger med <span class="math inline">\(1/2\)</span>, men det er ikke så afgørende) får vi:</p>
-<p><span class="math display">\[
-E = \frac{1}{2} \sum (t-o)^2
-\]</span> Ovenstående kaldes for en <strong>tabsfunktion</strong>, fordi den måler hvor god vores model er. En lille værdi af tabsfunktionen <span class="math inline">\(E\)</span> svarer til en god model (mange af de kvadrerede afvigelser er små, som ønsket) og omvendt vil en stor værdi af <span class="math inline">\(E\)</span> svarer til en dårlig model.</p>
-<p>Tabsfunktionen <span class="math inline">\(E\)</span> afhænger i virkeligheden af alle vægtene, fordi outputværdien <span class="math inline">\(o\)</span> afhænger af alle vægtene:</p>
-<p><span class="math display">\[
-E(w_0, w_1, \dots, w_6) = \frac{1}{2} \sum (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6))^2
-\]</span></p>
-<p>Hele idéen er nu, at bestemme de værdier af vægtene <span class="math inline">\(w_0, w_1, \dots, w_6\)</span> som minimerer tabsfunktionen. Hvis <span class="math inline">\(E\)</span> kun afhænger af én vægt <span class="math inline">\(w\)</span>, så ved vi godt, hvordan man finder minimum. Vi skal nemlig løse:</p>
-<p><span class="math display">\[
-E'(w)=0
-\]</span> og så lige sikre os, at det er et minimumssted, vi har fundet. Nu afhænger <span class="math inline">\(E\)</span> ikke af én, men af syv variable. Man får derfor brug for noget, som kaldes for <strong>partielle afledede</strong>. Se derfor denne video, hvor vi forklarer, hvad det går ud på:</p>
-<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/tlq2UYWF2Rw" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 3: Differentiation af <span class="math inline">\(E\)</span>
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Vi vil nu bestemme den partielle afledede af <span class="math inline">\(E\)</span> med hensyng til <span class="math inline">\(w_1\)</span>. Vi gør det et trin ad gangen:</p>
 <ul>
@@ -514,14 +578,17 @@ E'(w)=0
 <li><p>Bestem <span class="math display">\[
 \frac{\partial}{\partial w_1} \sigma (w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6)
 \]</span></p>
-<p>Brug resultatet fra opgave 2, kædereglen og det du netop er kommet frem til.</p></li>
+<p>Brug udtrykket for <span class="math inline">\(\sigma'(x)\)</span>, kædereglen og det du netop er kommet frem til.</p></li>
 </ul>
-<p>Vi holder tingene simple og forestiller os, at vi kun har ét træningsdatasæt så tabsfunktionen bliver:</p>
+<p>Vi holder tingene simple og forestiller os, at vi kun har én person i træningsdatasæt, så tabsfunktionen bliver:</p>
 <p><span class="math display">\[
 E(w_0, w_1, \dots, w_6) = \frac{1}{2} (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6))^2
-\]</span> - Bestem <span class="math display">\[
-   \frac{\partial E}{\partial w_1} \sigma (w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6)
-   \]</span></p>
+\]</span></p>
+<ul>
+<li>Bestem <span class="math display">\[
+\frac{\partial E}{\partial w_1}
+\]</span></li>
+</ul>
 </div>
 </div>
 </div>
@@ -529,30 +596,8 @@ E(w_0, w_1, \dots, w_6) = \frac{1}{2} (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot 
 <p><span class="math display">\[
 \frac{\partial E}{\partial w_0} = 0, \frac{\partial E}{\partial w_1} = 0, \cdots, \frac{\partial E}{\partial w_6} = 0
 \]</span></p>
-<p>I stedet bruger man en numerisk metode til at bestemme minimum for <span class="math inline">\(E\)</span>, som kaldes for <strong>gradientnedstigning</strong>. Det behøver du ikke at vide mere om, men hvis du alligevel er nysgerrig, kan du se denne <a href="https://youtu.be/WcM8aEoPzf8?si=Vvma-MXxNl4YBsF1">video</a>.</p>
-<p>Vi skal ikke selv bestemme minimum for tabsfunktionen, men i stedet bruge en app til formålet.</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 4: Træning af AI
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Det fiktive datasæt om antal likes på eksempelvis Facebook og graden af openness kan hentes <a href="cambridge_analytica/data/social_media_openness_content_dataset.xlsx">her</a>.</p>
-<p>Brug denne <a href="">app</a>. Du skal nu gøre følgende:</p>
-<ul>
-<li>Under fanen "Data" uploader du datasættet og trykker på "Næste".</li>
-<li>Under fanen "Variable" vælger du</li>
-</ul>
-</div>
-</div>
-</div>
-</section>
+<p>I stedet bruger man en numerisk metode til at bestemme minimum for <span class="math inline">\(E\)</span>, som kaldes for <strong>gradientnedstigning</strong>. Idéen er, at man hele tiden opdaterer værdien af vægtene, sådan at tabsfunktionen bliver mindre og mindre. Det bliver man ved med, indtil man har fundet et (lokalt) minimum for tabsfunktionen. Det behøver du ikke at vide mere om, men hvis du alligevel er nysgerrig, kan du se denne <a href="https://youtu.be/WcM8aEoPzf8?si=Vvma-MXxNl4YBsF1" target="_blank">video</a>.</p>
+<p>Hvis du vil arbejde videre med sigmoid-funktionen og dennes egenskaber, kan du finde opgaver <a href="../../undervisningsforlob/aktiveringsfunktioner.html#sigmoid" target="_blank">her</a>.</p>
 </section>
 <section id="delvis-facitliste" class="level2">
 <h2 class="anchored" data-anchor-id="delvis-facitliste">Delvis facitliste</h2>
