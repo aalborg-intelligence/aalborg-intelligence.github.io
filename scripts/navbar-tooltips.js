@@ -22,3 +22,24 @@ document.addEventListener('DOMContentLoaded', () => {
     searchBtn.setAttribute('aria-label', 'Søg');
   }
 });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".collapsible").forEach(function (h) {
+    const content = h.nextElementSibling;
+
+    if (content && content.classList.contains("collapse-content")) {
+      
+      // sørg for korrekt initial state
+      content.style.display = "none";
+      h.classList.remove("open");
+
+      h.addEventListener("click", function () {
+        const isOpen = content.style.display === "block";
+
+        content.style.display = isOpen ? "none" : "block";
+        h.classList.toggle("open");
+      });
+    }
+  });
+});
