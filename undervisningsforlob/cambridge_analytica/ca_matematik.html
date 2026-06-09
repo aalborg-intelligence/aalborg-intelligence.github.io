@@ -227,8 +227,8 @@ window.Quarto = {
 <p><em>While not all of these people had provided personality test responses, it is possible to reverse-engineer a personality profile from Facebook activity. Decades of psychological research has formed around the lexical hypothesis, that personality traits can be inferred by studying the subject’s use of language. Facebook patented a process to do just this in 2012, as part of its commercial aims to provide more targeted advertising, by mapping the contents of posts and likes against the "Big Five" model of psychological traits, sometimes known as OCEAN (openness, conscientiousness, extroversion, agreeableness, neuroticism). Whether you choose to like pictures of sunsets, puppies or people apparently says a lot about your personality: a 2015 study by other academics from the Cambridge psychology lab found that the model of predicting personality traits using Facebook data could generate a personality profile with the same accuracy as a spouse with just 300 likes.</em></p>
 </div>
 <p><span class="kilde">Kilde: <a href="https://theconversation.com/psychographics-the-behavioural-analysis-that-helped-cambridge-analytica-know-voters-minds-93675">Psychographics: the behavioural analysis that helped Cambridge Analytica know voters’ minds</a>.</span></p>
-<p>Ovenstående betyder, at Cambridge Analytica har haft adgang til <span class="math inline">\(270000\)</span> menneskers Facebook data <em>samtidig</em> med, at disse mennesker frivilligt har taget en personlighedstest (som vi gør det i <a href="../../undervisningsforlob/cambridge_analytica/ca_informatik.html" target="_blank">informatik-delen</a> af dette forløb). Altså kender man disse menneskers OCEAN scores. Det er alle disse data, som udgør det, man kalder for et <strong>træningsdatasæt</strong>.</p>
-<p>Vi forestiller os nu et tænkt eksempel med et træningsdatasæt<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> bestående af <span class="math inline">\(300\)</span> personer. Idéen er, at hver person i træningsdatasættet har taget en OCEAN test samtidig med, at vi om hver person har registreret det gennemsnitlige antal likes pr. uge, som personen – på eksempelvis Facebook – har givet til opslag, som handler om:</p>
+<p>Ovenstående betyder, at Cambridge Analytica har haft adgang til <span class="math inline">\(270000\)</span> menneskers Facebook data <em>samtidig</em> med, at disse mennesker frivilligt har taget en personlighedstest (som du har gjort det i opgave 3 i <a href="../../undervisningsforlob/cambridge_analytica.html" target="_blank">fælles delen</a> af dette forløb). Altså kender man disse menneskers OCEAN scores. Det er alle disse data, som udgør det, man kalder for et <strong>træningsdatasæt</strong>.</p>
+<p>Vi forestiller os nu et tænkt eksempel med et træningsdatasæt<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> bestående af <span class="math inline">\(300\)</span> personer. Idéen er, at hver person i træningsdatasættet har taget en OCEAN test. Derudover har vi for hver person registreret det gennemsnitlige antal likes pr. uge, som personen – på eksempelvis Facebook – har givet til opslag, som handler om:</p>
 <div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Data er 100% fiktive og genereret ved hjælp af CoPilot.</p></div></div><ul>
 <li><code>likes_art_culture</code>: kunst og kultur (<span class="math inline">\(x_1\)</span>)</li>
 <li><code>likes_science_tech</code>: videnskab og teknologi (<span class="math inline">\(x_2\)</span>)</li>
@@ -247,7 +247,7 @@ window.Quarto = {
 <p><span id="eq-vaegtet_sum"><span class="math display">\[
 w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6
 \tag{1}\]</span></span></p>
-<p>Hvor <span class="math inline">\(w_0, w_1, \dots, w_6\)</span> kaldes for vægte<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, og det er i sidste ende dem vi skal finde "gode" værdier for, så vi får en god model. Det kommer vi tilbage til.</p>
+<p>Hvor <span class="math inline">\(w_0, w_1, \dots, w_6\)</span> kaldes for vægte<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, og det er i sidste ende dem, vi skal finde passende værdier for, så vi får en god model. Det kommer vi tilbage til.</p>
 <div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Ofte kalder man også <span class="math inline">\(w_0\)</span> for <strong>bias</strong>.</p></div></div><p>Nu vil ovenstående udtryk give et reelt tal, som kan antage en hvilken som helst værdi og som kan være negativ eller positiv. Til gengæld er hver persons grad af openness målt på en skala fra <span class="math inline">\(0\)</span> til <span class="math inline">\(1\)</span>. Så udtrykket i (<a href="#eq-vaegtet_sum" class="quarto-xref">1</a>) kan ikke direkte bruges til at modellere graden af openness. Det råder vi bod på ved at bruge en såkaldt <strong>aktiveringsfunktion</strong>. Vi bruger her en aktiveringsfunktion, som kaldes for <strong>sigmoid</strong>.</p>
 </section>
 <section id="sigmoid-aktiveringsfunktion" class="level2">
@@ -285,7 +285,7 @@ o = \sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6)
 </div>
 </div>
 <p>Som du lige har set, har sigmoid-funktionen nogle egenskaber, som gør den velegnet til at modellere graden af openness.</p>
-<p>Opgaven er nu "blot" at bestemme værdier af vægtene <span class="math inline">\(w_0, w_1, \dots, w_6\)</span>, så vores beregnede outputværdi <span class="math inline">\(o\)</span> kommer så tæt på vores målte targetværdi <span class="math inline">\(t\)</span> som muligt (altså den faktiske grad af openness).</p>
+<p>Opgaven er nu at bestemme værdier af vægtene <span class="math inline">\(w_0, w_1, \dots, w_6\)</span>, så vores beregnede outputværdi <span class="math inline">\(o\)</span> kommer så tæt på vores målte targetværdi <span class="math inline">\(t\)</span> som muligt (altså den faktiske grad af openness).</p>
 <p>Det gør vi ved for hver person i træningsdatasættet at se på den kvadrerede forskel mellem <span class="math inline">\(t\)</span> og <span class="math inline">\(o\)</span>:</p>
 <p><span class="math display">\[
 (t-o)^2  = (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_6 \cdot x_6))^2
@@ -302,7 +302,7 @@ E(w_0, w_1, \dots, w_6) = \frac{1}{2} \sum (t-\sigma(w_0 + w_1 \cdot x_1 + w_2 \
 <p>Hele idéen er nu, at bestemme de værdier af vægtene <span class="math inline">\(w_0, w_1, \dots, w_6\)</span> som minimerer tabsfunktionen. Hvis <span class="math inline">\(E\)</span> kun afhænger af én vægt <span class="math inline">\(w\)</span>, så ved vi godt, hvordan man finder minimum. Vi skal nemlig løse:</p>
 <p><span class="math display">\[
 E'(w)=0
-\]</span> og så lige sikre os, at det er et minimumssted, vi har fundet. Nu afhænger <span class="math inline">\(E\)</span> ikke af én, men af syv variable. Derfor bliver det lidt mere besværligt at bestemme minimum for <span class="math inline">\(E\)</span>. Den gode nyhed er, at vi ikke selv skal gøre det, men i stedet bruge en app til formålet. Afsnittet <a href="#hvordan-bestemmer-man-minimum-for-tabsfunktionen">Ekstra udfordring: Hvordan bestemmer man minimum for tabsfunktionen?</a> handler om netop det – så det kan du jo glæde dig til, hvis du når så langt!</p>
+\]</span> og så lige sikre os, at det er et minimumssted, vi har fundet. Nu afhænger <span class="math inline">\(E\)</span> ikke af én, men af syv variable. Derfor bliver det lidt mere besværligt at bestemme minimum for <span class="math inline">\(E\)</span>. Den gode nyhed er, at vi ikke selv skal gøre det, men i stedet bruge en app til formålet. Afsnittet <a href="#hvordan-bestemmer-man-minimum-for-tabsfunktionen">Ekstra udfordring: Hvordan bestemmer man minimum for tabsfunktionen?</a> handler om den matematik, som bruges i app’en – så det kan du jo glæde dig til, hvis du når så langt!</p>
 </section>
 <section id="træning-af-ai-model" class="level2">
 <h2 class="anchored" data-anchor-id="træning-af-ai-model">Træning af AI model</h2>
@@ -324,12 +324,12 @@ E'(w)=0
 <ul>
 <li>Under fanen "Data" uploader du datasættet og trykker på "Næste".</li>
 <li>Under fanen "Variable" vælger du <code>O_openness</code> som "Target-variabel" og <code>likes_art_culture</code>, <code>likes_science_tech</code>, <code>likes_travel_nature</code>, <code>likes_entertainment</code>, <code>likes_sports</code> og <code>likes_political_social</code> som "Feature-variable". Tryk på "Næste".</li>
-<li>Under fanen "Træning" kan man vælge en række forskellige indstillinger, som du ikke behøver at tænke så meget over. Men du kan for eksempel se, at der under "Tabsfunktion" står "Squared" – det svarer til tabsfunktionen i (<a href="#eq-tab" class="quarto-xref">3</a>). Under "Aktiveringsfunktion" står der "Sigmoid", som betyder, at sigmoid-funktionen i (<a href="#eq-sigmoid" class="quarto-xref">2</a>) benyttes. Tryk nu på "Træn" model.</li>
+<li>Under fanen "Træning" kan man vælge en række forskellige indstillinger, som du ikke behøver at tænke så meget over. Men du kan for eksempel se, at der under "Tabsfunktion" står "Squared" – det svarer til tabsfunktionen i (<a href="#eq-tab" class="quarto-xref">3</a>). Tryk nu på "Træn" model.</li>
 </ul>
 <p>På grafen til højre i app’en kan du se, hvordan værdien af tabsfunktionen har ændret sig i takt med, at vi har opdateret vægtene for at bestemme et minimum. Læg mærke til at grafen flader ud, og vi forventer derfor, at vi har fundet et (eventuelt lokalt) minimum for tabsfunktionen.</p>
 <ul>
 <li><p>Noter de fundne værdier af vægtene <span class="math inline">\(w_0, w_1, \cdots w_6\)</span>, som står i tabellen nederst til højre i app’en.</p></li>
-<li><p>Tryk på fanen "Evaluering &amp; Prædiktion" og noter værdien af <span class="math inline">\(R^2\)</span> og RMSE (bemærk, at vi gerne vil have <span class="math inline">\(R^2\)</span>-værdien tæt på <span class="math inline">\(1\)</span> og RMSE tæt på <span class="math inline">\(0\)</span>). Du kan læse mere om disse mål <a href="../../noter/vurdering_model/vurdering_model.html#modeller-til-prædiktion-af-numeriske-værdier" target="_blank">her</a>.</p></li>
+<li><p>Tryk på fanen "Evaluering &amp; Prædiktion" og tryk derefter på knappen "Kør evaluering". Noter værdien af <span class="math inline">\(R^2\)</span> og RMSE (bemærk, at vi gerne vil have <span class="math inline">\(R^2\)</span>-værdien tæt på <span class="math inline">\(1\)</span> og RMSE tæt på <span class="math inline">\(0\)</span>). Du kan læse mere om disse mål <a href="../../noter/vurdering_model/vurdering_model.html#modeller-til-prædiktion-af-numeriske-værdier" target="_blank">her</a>.</p></li>
 </ul>
 </div>
 </div>
@@ -542,6 +542,7 @@ o = \sigma(1.305) \approx 0.787
 </div>
 </div>
 </div>
+<p>Bemærk, at modellen bygger på fiktive data, så det du kom frem til i opgave 4, vil sikkert ikke kunne genfindes i autentiske data!</p>
 <p>Du kan <a href="../../noter/logistisk/log-reg.html#fortolkning-af-parametrene-i-den-logistiske-regressionsmodel" target="_blank">her</a> læse mere om, hvordan man kan give en mere konkret fortolkning af vægtene.</p>
 </section>
 <section id="ekstra-udfordring-hvordan-bestemmer-man-minimum-for-tabsfunktionen" class="level2">
