@@ -1,0 +1,46 @@
+#### [Indstillinger]{.fremhaev}
+
+![](images/indstillinger.png){style='float:right; margin-left:1rem;'  width=5%}
+
+Under indstillinger kan man fjerne fluebenet ved **Brug feature-skalering**. Default indstillingen er, at feature-skalering er slået til. Det er som regel nødvendigt for at få gradientnedstigning til at konvergere.
+
+Alle AI modeller trænes ved at minimere en tabsfunktion, hvor en linear kombination af en række features $x_1, x_2, \dots, x_n$ indgår:
+
+$$
+w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n
+$$
+
+For at bringe alle features på sammen skala anvender vi følgende standardisering:
+
+$$
+\frac{x-\mu}{\sigma}
+$$
+hvor $\mu$ er et bud på middelværdien for featuren $X$ og $\sigma$ er et bud på spredningen. Du kan læse mere om [feature-skalering i noten her](/noter/afstande/feature_scaling.qmd#mindre-naivt-mere-bøvlet-feature-skalering). Gør man ovenstående for alle $n$ features vil de fleste værdier ligge mellem $-2$ og $2$. 
+
+Det betyder, at de vægte, vi finder, i virkeligheden passer til følgende linear kombination:
+
+$$
+\begin{aligned}
+w_0 + w_1 \cdot \left (\frac{x_1-\mu_1}{\sigma_1} \right ) & + w_2 \cdot \left (\frac{x_2-\mu_2}{\sigma_2} \right ) \\ &+ \cdots + w_n \cdot \left (\frac{x_n-\mu_n}{\sigma_n} \right )
+\end{aligned}
+$$
+
+hvilket kan omskrives til
+
+$$
+\begin{aligned}
+&\left ( w_0 -\frac{w_1}{\sigma_1}\cdot \mu_1 -  \frac{w_2}{\sigma_2}\cdot \mu_2- \cdots - \frac{w_n}{\sigma_n}\cdot \mu_n\right) \\ & \qquad \qquad \qquad \qquad + \frac{w_1}{\sigma_1} \cdot x_1 + \frac{w_2}{\sigma_2} \cdot x_2 + \cdots + \frac{w_n}{\sigma_n} \cdot x_n
+\end{aligned}
+$$
+De vægte som returneres i app'en er:
+
+| Feature | Vægt | 
+|:---:|:---:|
+| Bias | $w_0 -\frac{w_1}{\sigma_1}\cdot \mu_1 -  \frac{w_2}{\sigma_2}\cdot \mu_2- \cdots - \frac{w_n}{\sigma_n}\cdot \mu_n$ |
+| $x_1$ |$\frac{w_1}{\sigma_1}$ |
+| $x_2$ |$\frac{w_2}{\sigma_2}$ |
+| $\vdots$ | $\vdots$ |
+| $x_n$ |$\frac{w_n}{\sigma_n}$ |
+: {.bordered}
+
+Det vil altså sige, at de returnerede vægte svarer til de vægte, man ville få, hvis man ikke havde feature-skaleret. Man behøver således ikke at bekymre sig om feature-skalering, men man kan bruge vægtene direkte, selvom vi \"nedenunder motorhjelmen\" anvender feature-skalering for at få gradientnedstigning til at konvergere.
