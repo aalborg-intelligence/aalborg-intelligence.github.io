@@ -290,21 +290,21 @@ window.Quarto = {
 <p><span class="math display">\[
 w^{(\textrm{ny})} \leftarrow  w - \eta \cdot \frac{\partial E }{\partial w}
 \]</span></p>
-<p>her er <span class="math inline">\(\eta\)</span> det som kaldes for en <strong>learning rate</strong>. Hvis <span class="math inline">\(\eta\)</span> vælges for stor, kan man risikere at "træde henover" minimum (det ses typisk ved at grafen for tabsfunktionen som funktion af antal iterationer fluktuerer). Vælges <span class="math inline">\(\eta\)</span> for lille går opdateringen for langsom, som ses ved at værdien af tabsfunktionen næsten ikke ændrer sig.</p>
+<p>her er <span class="math inline">\(\eta\)</span> det, som kaldes for en <strong>learning rate</strong>. Hvis <span class="math inline">\(\eta\)</span> vælges for stor, kan man risikere at "træde henover" minimum (det ses typisk ved at grafen for tabsfunktionen som funktion af antal iterationer – til højre i skærmbilledet – fluktuerer). Vælges <span class="math inline">\(\eta\)</span> for lille går opdateringen for langsom, som ses ved at værdien af tabsfunktionen næsten ikke ændrer sig.</p>
 <p><br>
 </p>
 </section>
-<section id="antal-iterationer" class="level4">
-<h4 class="anchored" data-anchor-id="antal-iterationer"><span class="fremhaev">Antal iterationer</span></h4>
+<section id="iterationer" class="level4">
+<h4 class="anchored" data-anchor-id="iterationer"><span class="fremhaev">Iterationer</span></h4>
 <p><img src="images/antal_iterationer.png" class="img-fluid" style="float:right; margin-left:1rem;;width:50.0%"></p>
-<p><strong>Antal iterationer</strong> angiver det antal gange vægtene opdateres i forbindelse med gradientnedstigning. Antal iterationer skal sættes stort nok til at grafen for tabsfunktionen, som funktion af antal iterationer begynder at flade ud.</p>
+<p><strong>Iterationer</strong> angiver det antal gange vægtene opdateres i forbindelse med gradientnedstigning. Antal iterationer skal sættes stort nok til, at grafen for tabsfunktionen som funktion af antal iterationer begynder at flade ud.</p>
 <p><br>
 </p>
 </section>
 <section id="tabsfunktion" class="level4">
 <h4 class="anchored" data-anchor-id="tabsfunktion"><span class="fremhaev">Tabsfunktion</span></h4>
 <p><img src="images/tabsfunktion.png" class="img-fluid" style="float:right; margin-left:1rem;;width:50.0%"></p>
-<p>Her kan vælges den <strong>tabsfunktion</strong>, som minimeres. <strong>Squared</strong> svarer til <a href="../noter/tabsfunktioner/tabsfunktioner.html#squared-error-tabsfunktionen" target="_blank">squared error tabsfuntkionen</a>, som måler de kvadrerede fejl:</p>
+<p>Her kan vælges den <strong>tabsfunktion</strong>, som minimeres. <strong>Squared</strong> svarer til <a href="../noter/tabsfunktioner/tabsfunktioner.html#squared-error-tabsfunktionen" target="_blank">squared error tabsfuntkionen</a>, som måler summen af de kvadrerede fejl:</p>
 <p><span class="math display">\[
 \begin{aligned}
 E(w_0, w_1, &amp;\dots, w_n) = \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
@@ -318,9 +318,86 @@ E(w_0, w_1, \dots, &amp; w_n) = \\ &amp;- \sum_{m=1}^{M} \left (t^{(m)} \cdot \l
 \end{aligned}
 \]</span></p>
 <p>I forbindelse med binær klassifikation kan <strong>squared error</strong> have problemer med <a href="../noter/tabsfunktioner/tabsfunktioner.html#slow-learning" target="_blank">slow learning</a> som ikke på samme måde ses, hvis <strong>cross-entropy</strong> i stedet vælges.</p>
+<p>Uanset hvilken tabsfunktion man vælger, skal man være opmærksom på, at gradientnedstigning konvergerer. Det ses ved, at grafen for tabsfunktionen i højre side af skærmen flader ud.</p>
 <p><br>
 </p>
-<!-- {{< include aktiveringsfunktion.qmd >}} -->
+<div class="callout callout-style-simple callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Indstillinger
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><img src="images/indstillinger.png" class="img-fluid" style="float:right; margin-left:1rem;;width:5.0%"></p>
+<p>Under indstillinger kan man fjerne fluebenet ved <strong>Brug feature-skalering</strong>. Default indstillingen er, at feature-skalering er slået til. Det er som regel nødvendigt for at få gradientnedstigning til at konvergere.</p>
+<p>Alle AI modeller trænes ved at minimere en tabsfunktion, hvor en linear kombination af en række features <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> indgår:</p>
+<p><span class="math display">\[
+w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n
+\]</span></p>
+<p>For at bringe alle features på sammen skala anvender vi følgende standardisering:</p>
+<p><span class="math display">\[
+\frac{x-\mu}{\sigma}
+\]</span> hvor <span class="math inline">\(\mu\)</span> er et bud på middelværdien for featuren <span class="math inline">\(X\)</span> og <span class="math inline">\(\sigma\)</span> er et bud på spredningen. Du kan læse mere om <a href="../noter/afstande/feature_scaling.html#mindre-naivt-mere-bøvlet-feature-skalering">feature-skalering i noten her</a>. Gør man ovenstående for alle <span class="math inline">\(n\)</span> features vil de fleste værdier ligge mellem <span class="math inline">\(-2\)</span> og <span class="math inline">\(2\)</span>.</p>
+<p>Det betyder, at de vægte, vi finder, i virkeligheden passer til følgende linear kombination:</p>
+<p><span class="math display">\[
+\begin{aligned}
+w_0 + w_1 \cdot \left (\frac{x_1-\mu_1}{\sigma_1} \right ) &amp; + w_2 \cdot \left (\frac{x_2-\mu_2}{\sigma_2} \right ) \\ &amp;+ \cdots + w_n \cdot \left (\frac{x_n-\mu_n}{\sigma_n} \right )
+\end{aligned}
+\]</span></p>
+<p>hvilket kan omskrives til</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\left ( w_0 -\frac{w_1}{\sigma_1}\cdot \mu_1 -  \frac{w_2}{\sigma_2}\cdot \mu_2- \cdots - \frac{w_n}{\sigma_n}\cdot \mu_n\right) \\ &amp; \qquad \qquad \qquad \qquad + \frac{w_1}{\sigma_1} \cdot x_1 + \frac{w_2}{\sigma_2} \cdot x_2 + \cdots + \frac{w_n}{\sigma_n} \cdot x_n
+\end{aligned}
+\]</span> De vægte som returneres i app’en er:</p>
+<table class="table-bordered table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Feature</th>
+<th style="text-align: center;">Vægt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Bias</td>
+<td style="text-align: center;"><span class="math inline">\(w_0 -\frac{w_1}{\sigma_1}\cdot \mu_1 -  \frac{w_2}{\sigma_2}\cdot \mu_2- \cdots - \frac{w_n}{\sigma_n}\cdot \mu_n\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(x_1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{w_1}{\sigma_1}\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(x_2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{w_2}{\sigma_2}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(x_n\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{w_n}{\sigma_n}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Det vil altså sige, at de returnerede vægte svarer til de vægte, man ville få, hvis man ikke havde feature-skaleret. Man behøver således ikke at bekymre sig om feature-skalering, men man kan bruge vægtene direkte, selvom vi "nedenunder motorhjelmen" anvender feature-skalering for at få gradientnedstigning til at konvergere.</p>
+</div>
+</div>
+</div>
+<p><br>
+</p>
+<p>Tryk herefter på <strong>Træn model</strong>-knappen.</p>
+<p><br>
+</p>
 </section>
 </div>
 </section>
@@ -335,10 +412,16 @@ E(w_0, w_1, \dots, &amp; w_n) = \\ &amp;- \sum_{m=1}^{M} \left (t^{(m)} \cdot \l
 <li>Evalueringer på bruger-uploadet testdata</li>
 <li>Evaluering via krydsvalidering</li>
 </ul>
-<p>Vælges <strong>Evaluering på træningsdata</strong> beregnes følgende: <a href="../noter/vurdering_model/vurdering_model.html#klassifikationsnøjagtighed" target="_blank">Klassifikationsnøjagtighed (CA)</a> og en <a href="../noter/vurdering_model/vurdering_model.html#confusion-matrix" target="_blank">confusion matrix</a>. Desuden vises <strong>targetfordelingen</strong> i træningsdatasættet. Her skal man være opmærksom på at sammenholde <strong>CA</strong> med denne fordeling, som det også er beskrevet i afsnittet <a href="../noter/vurdering_model/vurdering_model.html#klassifikationsnøjagtighed" target="_blank">Klassifikationsnøjagtighed (CA)</a>.</p>
-<p>Endelig er det muligt at downloade et datasæt, hvor træningsdatasættet er udvidet med to ekstra kolonner: en kolonne med den prædikterede sandsynlighed (outputværdien <span class="math inline">\(o\)</span>) for hvert træningseksempel og en kolonne med den deraf følgende prædiktion (hvis <span class="math inline">\(o \geq 0.5\)</span> prædikteres det, at targetværdien var <span class="math inline">\(1\)</span> og <span class="math inline">\(0\)</span> ellers).</p>
-<p>Vælges <strong>Evaluering på bruger-uploadet testdata</strong> beregnes det samme som for <strong>Evaluering på træningsdata</strong> blot med udgangspunkt i et uploadet testdatasæt i stedet for.</p>
-<p>Endelig kan <strong>Evaluering via krydsvalidering</strong> vælges. Her beregnes <a href="../noter/vurdering_model/vurdering_model.html#klassifikationsnøjagtighed" target="_blank">Klassifikationsnøjagtighed (CA)</a> baseret på <a href="../noter/krydsvalidering/krydsvalidering.html#sec-krydsvalidering" target="_blank">krydsvalidering</a>.</p>
+<p>Når evalueringsmetoden er valgt, trykkes der på <strong>Kør evaluering</strong>-knappen.</p>
+<p>Vælges <strong>Evaluering på træningsdata</strong> beregnes følgende:</p>
+<ul>
+<li><a href="../noter/vurdering_model/vurdering_model.html#root-mean-squared-error-rmse">Root Mean Squared Error (RMSE)</a></li>
+<li><a href="../noter/vurdering_model/vurdering_model.html##mean-absolute-error-mae">Mean Absolute Error (MAE)</a></li>
+<li><a href="../noter/vurdering_model/vurdering_model.html#forklaringsgraden-r2-værdien"><span class="math inline">\(R^2\)</span>-værdien</a></li>
+</ul>
+<p>Endelig er det muligt at downloade et datasæt, hvor træningsdatasættet er udvidet med en ekstra kolonne, hvor den prædikterede outputværdien <span class="math inline">\(o\)</span> er beregnet for hvert træningseksempel.</p>
+<p>Vælges <strong>Evaluering på bruger-uploadet testdata</strong> beregnes det samme som for <strong>Evaluering på træningsdata</strong> blot med udgangspunkt i et uploadet testdatasæt.</p>
+<p>Endelig kan <strong>Evaluering via krydsvalidering</strong> vælges. Her beregnes RMSE og MAE baseret på <a href="../noter/krydsvalidering/krydsvalidering.html#sec-krydsvalidering" target="_blank">krydsvalidering</a>. Bemærk, at <span class="math inline">\(R^2\)</span>-værdien <em>ikke</em> beregnes, da det viser sig, at denne værdi ikke giver mening i forbindelse med krydsvalidering. For eksempel kan værdien gå hen og blive negativ.</p>
 <p><br>
 </p>
 </section>
