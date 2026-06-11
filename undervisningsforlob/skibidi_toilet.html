@@ -184,7 +184,7 @@ window.Quarto = {
    
   <ul>
   <li><a href="#formål" id="toc-formål" class="nav-link active" data-scroll-target="#formål">Formål</a></li>
-  <li><a href="#træn-neuralt-netværk" id="toc-træn-neuralt-netværk" class="nav-link" data-scroll-target="#træn-neuralt-netværk">Træn neuralt netværk</a></li>
+  <li><a href="#træning-af-et-neuralt-netværk" id="toc-træning-af-et-neuralt-netværk" class="nav-link" data-scroll-target="#træning-af-et-neuralt-netværk">Træning af et neuralt netværk</a></li>
   <li><a href="#lille-eksempel" id="toc-lille-eksempel" class="nav-link" data-scroll-target="#lille-eksempel">Lille eksempel</a></li>
   <li><a href="#generalisering" id="toc-generalisering" class="nav-link" data-scroll-target="#generalisering">Generalisering</a></li>
   <li><a href="#det-store-datasæt-igen" id="toc-det-store-datasæt-igen" class="nav-link" data-scroll-target="#det-store-datasæt-igen">Det store datasæt igen</a></li>
@@ -249,12 +249,12 @@ window.Quarto = {
 <section id="formål" class="level3 purpose">
 <h3 class="anchored" data-anchor-id="formål">Formål</h3>
 <p>Formålet med dette forløb er at se på, hvordan man kan vurdere værdien af tabsfunktionen og værdien af <a href="../noter/vurdering_model/vurdering_model.html#klassifikationsnøjagtighed" target="_blank">klassifikationsnøjagtigheden</a>, når man har trænet en kunstig neuron på et datasæt.</p>
-<p>Hvis værdierne vurderes utilfredsstillende, må man forsøge, om andre startvægte, en anden learning rate eller flere iterationer giver et bedre resultat.</p>
+<p>Hvis værdierne vurderes utilfredsstillende, kan man undersøge, om andre startvægte, en anden learning rate eller flere iterationer giver et bedre resultat.</p>
 </section>
 <p><br>
 </p><div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/evx6CTvkYwQ?si=BmiTqSrLlbEMNMRs" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div><p></p>
-<section id="træn-neuralt-netværk" class="level2">
-<h2 class="anchored" data-anchor-id="træn-neuralt-netværk">Træn neuralt netværk</h2>
+<section id="træning-af-et-neuralt-netværk" class="level2">
+<h2 class="anchored" data-anchor-id="træning-af-et-neuralt-netværk">Træning af et neuralt netværk</h2>
 <p><img src="../undervisningsforlob/skibidi_filer/skibidi.jpg" class="img-fluid" style="float:right;;width:30.0%"></p>
 <p>Vi vil se på data fra 200 fiktive personer, der efter et besøg på et museum om internetfænomener bliver spurgt, om de ved, hvad "skibidi toilet" betyder.</p>
 <p>Der er to feature variable, <span class="math inline">\(x_1\)</span> er personens alder, og <span class="math inline">\(x_2\)</span> er besøgets længde i minutter, samt en target variabel <span class="math inline">\(t\)</span>, som angiver, om personen har lært, hvad "skibidi toilet" betyder (1 betyder "Ja", 0 betyder "Nej").</p>
@@ -265,7 +265,7 @@ window.Quarto = {
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 1: Udregn værdi af tabsfunktionen
+<span class="screen-reader-only">Note</span>Opgave 1: Udregn værdien af tabsfunktionen
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -274,7 +274,7 @@ window.Quarto = {
 <ul>
 <li>Åbn appen og indlæs datasættet.</li>
 <li>Vælg <span class="math inline">\(t\)</span> som target-variabel (target-værdien sættes til 1) og <span class="math inline">\(x_1\)</span> og <span class="math inline">\(x_2\)</span> som feature-variable.</li>
-<li>Sæt startvægtene til -23.</li>
+<li>Sæt alle startvægtene til -23.</li>
 <li>Behold learning-raten på 0,001.</li>
 <li>Sæt antal iterationer til 50000.</li>
 <li>Behold <em>Squared</em> som tabsfunktion, <em>Sigmoid</em> som aktiveringsfunktion og behold fluebenet ved feature-skalering.</li>
@@ -285,7 +285,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Det er ikke åbenlyst, om modellen er trænet godt nok, men i det følgende vil vi se på, hvad man i hvert fald kan bruge til at se, at det nok ikke er særligt godt endnu.</p>
+<p>Det er ikke umiddelbart klart, om modellen er trænet godt nok, men i det følgende vil vi se på, hvad man i hvert fald kan bruge til at se, at det nok ikke er særligt godt endnu.</p>
 </section>
 <section id="lille-eksempel" class="level2">
 <h2 class="anchored" data-anchor-id="lille-eksempel">Lille eksempel</h2>
@@ -293,14 +293,14 @@ window.Quarto = {
 <p>Vi skal så ud fra en eller flere feature variable for hver person træne en kunstig neuron til at kunne klassificere, om en ny person ved, hvad "skibidi toilet" betyder.</p>
 <p>Vi vil dog ikke fokusere på netværket, men på mulige værdier af tabsfunktionen, idet vi bruger <em>squared error</em> som tabsfunktion: <span id="eq-tabsfunktion"><span class="math display">\[
 E = \frac{1}{2} \sum \left (t-o \right)^2
-\tag{1}\]</span></span> hvor der summeres over alle træningsdata. Husk, at <span class="math inline">\(t\)</span> kun kan værdierne <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>, mens <span class="math inline">\(o\)</span> er et reelt tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>.</p>
+\tag{1}\]</span></span> hvor der summeres over alle træningsdata. Husk, at <span class="math inline">\(t\)</span> kun kan antage værdierne <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>, mens <span class="math inline">\(o\)</span> er et reelt tal mellem <span class="math inline">\(0\)</span> og <span class="math inline">\(1\)</span>.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 2: Udregn værdi af tabsfunktionen i eksemplet
+<span class="screen-reader-only">Note</span>Opgave 2: Udregn værdien af tabsfunktionen i eksemplet
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -323,7 +323,7 @@ E = \frac{1}{2} \sum \left (t-o \right)^2
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Opgave 3: Udregn E for andre værdier end $o=0.5
+<span class="screen-reader-only">Note</span>Opgave 3: Udregn E for andre værdier end <span class="math inline">\(o=0.5\)</span>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -388,7 +388,7 @@ E = \frac{1}{2} \sum \left (t-o \right)^2
 </section>
 <section id="det-store-datasæt-igen" class="level2">
 <h2 class="anchored" data-anchor-id="det-store-datasæt-igen">Det store datasæt igen</h2>
-<p>Med disse overvejelser skal vi tilbage til datasættet med de 200 person om "skibidi toilet". Vi skal se, om den model, vi trænede med appen, ser ud til måske at være trænet godt nok.</p>
+<p>Med disse overvejelser skal vi tilbage til datasættet med de 200 personer om "skibidi toilet". Vi skal se, om den model, vi trænede med appen, ser ud til at være trænet godt nok.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -402,7 +402,7 @@ E = \frac{1}{2} \sum \left (t-o \right)^2
 <div id="callout-7" class="callout-7-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Bestem værdien <span class="math inline">\(q\)</span> ud fra datasættet ved at tælle, hvor mange dom har svaret "Ja" og dividere med det samlede antal.</li>
+<li>Bestem værdien <span class="math inline">\(q\)</span> ud fra datasættet ved at tælle, hvor mange dem har svaret "Ja" og dividere med det samlede antal.</li>
 <li>Udregn værdien af <span class="math inline">\(E\)</span> ud fra <span class="math inline">\(n\)</span> og <span class="math inline">\(q\)</span>.</li>
 <li>Sammenlign med den værdi af tabsfunktionen, som træningen i opgave 1 gav. Hvad fortæller det om den trænede model?</li>
 <li>Brug app’en med andre værdier på start-vægtene, learning-rate og/eller antal iterationer for at få værdien af tabsfunktionen så lav som mulig.</li>
@@ -410,7 +410,7 @@ E = \frac{1}{2} \sum \left (t-o \right)^2
 </div>
 </div>
 </div>
-<p>I opgave 6 har du nok set, at du ved hjælp af app’en kan træne en model, hvor værdien af tabsfunktionen er væsentligt mindre end den mindste værdi af tabsfunktionen, som du kan få, hvis <span class="math inline">\(p\)</span> er sat til en fast værdi for alle input. Det skyldes selvfølgelig, at den nye model også tager højde for de to feature variable alder (<span class="math inline">\(x_1\)</span>) og tid (<span class="math inline">\(x_2\)</span>), så <span class="math inline">\(p\)</span> nu ikke længere er et fast tal, men afhænger af alder og tid.</p>
+<p>I opgave 6 har du nok set, at du ved hjælp af app’en kan træne en model, hvor værdien af tabsfunktionen er væsentligt mindre end den mindste værdi af tabsfunktionen, som du kan få, hvis <span class="math inline">\(p\)</span> er sat til en fast værdi for alle input. Det skyldes selvfølgelig, at den nye model også tager højde for de to feature variable alder (<span class="math inline">\(x_1\)</span>) og tid (<span class="math inline">\(x_2\)</span>), så <span class="math inline">\(p\)</span> nu ikke længere er et fast tal, men afhænger af personens alder og tid.</p>
 </section>
 <section id="klassifikationsnøjagtigheden" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="klassifikationsnøjagtigheden">Klassifikationsnøjagtigheden</h2>

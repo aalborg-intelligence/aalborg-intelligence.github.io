@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Del 3: Word2vec – et eksempel – AI MAT - matematikken bag magien</title>
+<title>Del 3: Word2Vec – et eksempel – AI MAT - matematikken bag magien</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -198,7 +198,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Del 3: Word2vec – et eksempel</h1>
+<h1 class="title">Del 3: Word2Vec – et eksempel</h1>
 </div>
 
 
@@ -218,10 +218,10 @@ window.Quarto = {
 <div class="estimeret_tid">
 <p>Forventet tid ca. 90 min.</p>
 </div>
-<p>Formålet med denne del er dels at gennemføre beregningerne i Word2vec for et meget lille korpus af data, men også at forstå, hvad det vil sige at optimere vektorerne, så tabsfunktionen minimeres.</p>
+<p>Formålet med denne del er dels at gennemføre beregningerne i Word2Vec for et meget lille tekstkorpus, dels at forstå, hvad det vil sige at optimere vektorerne, så tabsfunktionen minimeres.</p>
 <section id="et-meget-lille-tekstkorpus" class="level2">
 <h2 class="anchored" data-anchor-id="et-meget-lille-tekstkorpus">Et meget lille tekstkorpus</h2>
-<p>Vi vi anvende følgende meget simple tekstkorpus med 12 sætninger, som kun anvender 5 forskellige ord:</p>
+<p>Vi vil anvende følgende meget simple tekstkorpus med 12 sætninger, som kun anvender 5 forskellige ord:</p>
 <ul>
 <li>Hunden sover.</li>
 <li>Katten sover.</li>
@@ -244,8 +244,8 @@ window.Quarto = {
 <div class="llm_saetninger">
 <p><span class="boxed_inline">Hunden <strong>sover</strong></span></p>
 </div>
-<p>I det første vindue er "Hunden" fokusord, mens "sover" er kontekstord. I det andet vindue er "Hunden" kontekstord, mens "sover" er fokusord. Vi ser altså bort fra punktummer, og vi forestiller os heller ikke, at teksten fortsætter på næste linje. Bemærk, at det er forsimplet i forhold det, hvordan det gøres i Word2vec.</p>
-<p>Helt overordnet er idéen så, at vi skal bestemme værdier til fokus- og kontekstvektorer for alle fem ord, så værdien af tabfunktionen minimeres.</p>
+<p>I det første vindue er "Hunden" fokusord, mens "sover" er kontekstord. I det andet vindue er "Hunden" kontekstord, mens "sover" er fokusord. Vi ser altså bort fra punktummer, og vi forestiller os heller ikke, at teksten fortsætter på næste linje. Bemærk, at det er forsimplet i forhold til, hvordan det gøres i Word2Vec.</p>
+<p>Helt overordnet er idéen så, at vi skal bestemme værdier til fokus- og kontekstvektorer for alle fem ord, så værdien af tabsfunktionen minimeres.</p>
 <p><br>
 </p>
 </section>
@@ -270,7 +270,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Nu vælger vi indledningsvist tilfældige værdier til alle disse vektorer – vi venter med optimering. For at gøre det simplere, vil vi dog begrænse os til enhedsvektorer, hvor længden i Word2vec ellers generelt er variabel.</p>
+<p>Nu vælger vi indledningsvist tilfældige værdier til alle disse vektorer – vi venter med optimering. For at gøre det simplere, vil vi dog begrænse os til enhedsvektorer, hvor længden i Word2Vec ellers generelt er variabel.</p>
 <p>Vi vælger for fokusvektorerne: <span class="math display">\[
 \color{#F288B9}
 \begin{aligned}
@@ -359,13 +359,13 @@ Figur&nbsp;1: Interaktiv figur til opgave 2.
 <ul>
 <li>Kontroller, at vektorerne i <a href="#fig-opg2" class="quarto-xref">figur&nbsp;1</a> passer til de værdier, vi valgte ovenfor.</li>
 <li>Skriv ned, hvad værdien af tabsfunktionen er i udgangspunktet.</li>
-<li>Ændr vektorerne, og bemærk af værdien af tabsfunktionen <span class="math inline">\(L\)</span> ændrer sig.</li>
+<li>Ændr vektorerne, og bemærk at værdien af tabsfunktionen <span class="math inline">\(L\)</span> ændrer sig.</li>
 <li><u>Overvej</u>, hvordan du kan ændre vektorerne, så tabsfunktionen bliver mindst mulig. Vi vender tilbage til dette senere.</li>
 </ul>
 </div>
 </div>
 </div>
-<p>Som det næste skal sandsynlighederne for, at et eller andet ord er kontekstord til et andet, udregnes. For eksempel udregnes sandsynligheden for at "sover" er kontekst til "hunden" på denne måde:</p>
+<p>Som det næste skal sandsynlighederne for, at et ord er kontekstord til et andet, udregnes. For eksempel udregnes sandsynligheden for at "sover" er kontekst til "hunden" på denne måde:</p>
 <p><span id="eq-ssh"><span class="math display">\[
 \begin{multline}
 P(\text{kontekst = sover} \mid \text{fokus = hunden}) = \\
@@ -393,7 +393,7 @@ P(\text{kontekst = sover} \mid \text{fokus = hunden}) = \\
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
-<li>Kig grundigt på de 12 linjer i vores tekstkorpus, og overvej, hvilke sandsynligheder, der er relevante at udregne, fordi de optræder i teksten. Det er betydeligt færre end alle 25 kombinationer af de 5 ord, fordi mange af kombinationer slet ikke optræder – for eksempel indeholder tekstkorpus ikke kombinationen "Hunden spinder".</li>
+<li>Kig grundigt på de 12 linjer i vores tekstkorpus, og overvej, hvilke sandsynligheder, der er relevante at udregne, fordi de optræder i teksten. Det er betydeligt færre end alle 25 kombinationer af de 5 ord, fordi mange af kombinationerne slet ikke optræder – for eksempel indeholder tekstkorpus ikke kombinationen "Hunden spinder".</li>
 <li>Udregn de sandsynligheder, som er relevante.</li>
 </ul>
 </div>
@@ -404,7 +404,7 @@ P(\text{kontekst = sover} \mid \text{fokus = hunden}) = \\
 </section>
 <section id="aktivitet-3---tabsfunktion" class="level2 aimat page-columns page-full">
 <h2 class="aimat anchored" data-anchor-id="aktivitet-3---tabsfunktion">Aktivitet 3 - Tabsfunktion</h2>
-<p>Endeligt skal værdien af tabsfunktionen beregnes. Her skal vi bruge den naturlige logaritme på de beregnede sandsynligheder. Da "Hunden sover" optræder to gange, kan værdien for <span class="math inline">\(\ln(P(\text{kontekst = sover} \mid \text{fokus = hunden}))\)</span> og for <span class="math inline">\(\ln(P(\text{kontekst = hunden} \mid \text{fokus = sover}))\)</span> ganges med 2, "Hunden gør" optræder 3 gange, så her gælder noget tilsvarende. Vi får:</p>
+<p>Endelig skal værdien af tabsfunktionen beregnes. Her skal vi bruge den naturlige logaritme på de beregnede sandsynligheder. Da "Hunden sover" optræder to gange, kan værdien for <span class="math inline">\(\ln(P(\text{kontekst = sover} \mid \text{fokus = hunden}))\)</span> og for <span class="math inline">\(\ln(P(\text{kontekst = hunden} \mid \text{fokus = sover}))\)</span> ganges med 2, "Hunden gør" optræder 3 gange, så her gælder noget tilsvarende. Vi får:</p>
 <p><span id="eq-tabsfkt"><span class="math display">\[
 \begin{aligned}
 L=&amp; -2 \cdot \ln(P(\text{kontekst = sover} \mid \text{fokus = hunden})) \\
