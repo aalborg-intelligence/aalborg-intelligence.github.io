@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Neuralt netværk til regression app – AI MAT - matematikken bag magien</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-a3803eda77a6f991cd477e5129d6e95a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-Y219BCPS45"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+ 
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'analytics_storage': 'denied'
+  });
+gtag('config', 'G-Y219BCPS45', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo light-content">
+    <img src="../logo/PNG/Logo_multi_AIMAT_RGB_2024.png" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../undervisningsforlob/index.html"> 
+<span class="menu-text">Undervisningsforløb</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../noter/index.html"> 
+<span class="menu-text">Noter</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../srp/index.html"> 
+<span class="menu-text">SRP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../apps/index.html"> 
+<span class="menu-text">Apps</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../til_laererne.html"> 
+<span class="menu-text">Til lærerne</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> <i class="bi bi-envelope" role="img" aria-label="Om os">
+</i> 
+<span class="menu-text">Om os</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@ai-mat" target="_blank"> <i class="bi bi-youtube" role="img" aria-label="YouTube">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indhold</h2>
+   
+  <ul>
+  <li><a href="#data" id="toc-data" class="nav-link active" data-scroll-target="#data"><span class="toggle-icon">Data</span></a></li>
+  <li><a href="#variable" id="toc-variable" class="nav-link" data-scroll-target="#variable"><span class="toggle-icon">Variable</span></a></li>
+  <li><a href="#træning" id="toc-træning" class="nav-link" data-scroll-target="#træning"><span class="toggle-icon">Træning</span></a></li>
+  <li><a href="#evaluering-prædiktion" id="toc-evaluering-prædiktion" class="nav-link" data-scroll-target="#evaluering-prædiktion"><span class="toggle-icon">Evaluering &amp; Prædiktion</span></a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Neuralt netværk til regression app</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Herunder gives en gennemgang af hver af fanerne i <a href="https://apps01.math.aau.dk/ai/nn-regression/" target="_blank">Neuralt Netværk til Regression App</a>. Du kan læse mere om matematikken bag i <a href="../noter/simple_neurale_net_regression/simple_neurale_net_regression.html">noten om simple kunstige neurale netværk til regression</a>.</p>
+<!-- ## <span class="toggle-icon">Data</span> {.collapsible} -->
+<section id="data" class="level2 collapsible">
+<h2 class="collapsible anchored" data-anchor-id="data"><span class="toggle-icon">Data</span></h2>
+<div class="collapse-content">
+<p><img src="images/data.png" class="img-fluid" style="float:right; margin-left:1rem;;width:50.0%"></p>
+<p>Tryk på <strong>Browse…</strong> og vælg den datafil, du vil uploade. Det skal enten være en csv- eller excel-fil.</p>
+<p><br>
+</p>
+<p>Hvis du uploader en fil i <strong>CSV format</strong>, kommer følgende frem:</p>
+<p><img src="images/csv-format.png" class="img-fluid" style="float:right; margin-left:1rem;;width:50.0%"></p>
+<p>Her skal du vælge, hvordan data er separeret. Der er følgende muligheder:</p>
+<ul>
+<li>Auto</li>
+<li>Komma (,)</li>
+<li>Semikolon (; - Dansk/Excel)</li>
+</ul>
+<p>Ved "Auto" prøver app’en selv at finde ud af, hvordan data er separeret. Hvis du ikke ved, hvad du skal vælge, så prøv alle muligheder og se efter, hvordan data bliver indlæst i højre side af skærmen.</p>
+<p><br>
+</p>
+<p>Tryk herefter på <strong>Næste</strong>-knappen.</p>
+<p><br>
+</p>
+</div>
+</section>
+<section id="variable" class="level2 collapsible">
+<h2 class="collapsible anchored" data-anchor-id="variable"><span class="toggle-icon">Variable</span></h2>
+<div class="collapse-content">
+<section id="target-variabel" class="level4">
+<h4 class="anchored" data-anchor-id="target-variabel"><span class="fremhaev">Target-variabel</span></h4>
+<p><img src="images/target-variabel.png" class="img-fluid" style="float:right; margin-left:1rem;;width:50.0%"></p>
+<p>Under <strong>Target-variabel</strong> vælger du den kolonne i dit datasæt, som angiver den klasse, der skal prædikteres. Du skal altså her vælge den kolonne, hvor <strong>target-værdierne</strong> står.</p>
+<p><br>
+</p>
+</section>
+<section id="feature-variable" class="level4">
+<h4 class="anchored" data-anchor-id="feature-variable"><span class="fremhaev">Feature-variable</span></h4>
+<p><img src="images/feature-variable.png" class="img-fluid" style="float:right; margin-left:1rem;;width:50.0%"></p>
+<p>Under <strong>feature-variable</strong> vælges alle de feature-/input-variable, som skal være en del af modellen.</p>
+<p><br>
+</p>
+<p>Tryk herefter på <strong>Næste</strong>-knappen.</p>
+<p><br>
+</p>
+</section>
+</div>
+</section>
+<section id="træning" class="level2 collapsible">
+<h2 class="collapsible anchored" data-anchor-id="træning"><span class="toggle-icon">Træning</span></h2>
+<div class="collapse-content">
+<section id="antal-neuroner-i-første-skjulte-lag" class="level4">
+<h4 class="anchored" data-anchor-id="antal-neuroner-i-første-skjulte-lag"><span class="fremhaev">Antal neuroner i første skjulte lag</span></h4>
+<p><img src="images/lag1.png" class="img-fluid" style="float:right; margin-left:1rem;;width:50.0%"></p>
+<p>Her vælges antallet af neuroner i det første skjulte lag.</p>
+<p><br>
+</p>
+</section>
+<section id="antal-neuroner-i-andet-skjulte-lag" class="level4">
+<h4 class="anchored" data-anchor-id="antal-neuroner-i-andet-skjulte-lag"><span class="fremhaev">Antal neuroner i andet skjulte lag</span></h4>
+<p><img src="images/lag2.png" class="img-fluid" style="float:right; margin-left:1rem;;width:50.0%"></p>
+<p>Her vælges antallet af neuroner i det andet skjulte lag.</p>
+<p><br>
+</p>
+</section>
+<section id="learning-rate" class="level4">
+<h4 class="anchored" data-anchor-id="learning-rate"><span class="fremhaev">Learning rate</span></h4>
+<p><img src="images/learning_rate.png" class="img-fluid" style="float:right; margin-left:1rem;;width:50.0%"></p>
+<p>Når vægtene opdateres ved hjælp af <a href="../noter/gradientnedstigning/gradientnedstigning.html#optimering-ved-hjælp-af-gradientnedstigning" target="_blank">gradientnedstigning</a> benyttes denne opdateringsregel (hvor <span class="math inline">\(E\)</span> er tabsfunktionen)</p>
+<p><span class="math display">\[
+w^{(\textrm{ny})} \leftarrow  w - \eta \cdot \frac{\partial E }{\partial w}
+\]</span></p>
+<p>her er <span class="math inline">\(\eta\)</span> det, som kaldes for en <strong>learning rate</strong>. Hvis <span class="math inline">\(\eta\)</span> vælges for stor, kan man risikere at "træde henover" minimum (det ses typisk ved at grafen for tabsfunktionen som funktion af antal iterationer – til højre i skærmbilledet – fluktuerer eller "stikker af"). Vælges <span class="math inline">\(\eta\)</span> for lille går opdateringen for langsom, som ses ved at værdien af tabsfunktionen næsten ikke ændrer sig.</p>
+<p><br>
+</p>
+</section>
+<section id="iterationer" class="level4">
+<h4 class="anchored" data-anchor-id="iterationer"><span class="fremhaev">Iterationer</span></h4>
+<p><img src="images/antal_iterationer.png" class="img-fluid" style="float:right; margin-left:1rem;;width:50.0%"></p>
+<p><strong>Iterationer</strong> angiver det antal gange vægtene opdateres i forbindelse med gradientnedstigning. Antal iterationer skal sættes stort nok til, at grafen for tabsfunktionen som funktion af antal iterationer begynder at flade ud.</p>
+<p><br>
+</p>
+</section>
+<section id="aktiveringsfunktion-i-skjulte-lag" class="level4">
+<h4 class="anchored" data-anchor-id="aktiveringsfunktion-i-skjulte-lag"><span class="fremhaev">Aktiveringsfunktion i skjulte lag</span></h4>
+<p><img src="images/aktiveringsfunktion.png" class="img-fluid" style="float:right; margin-left:1rem;;width:50.0%"></p>
+<p>Under <strong>Aktiveringsfunktion i skjulte lag</strong> kan man vælge den aktiveringsfunktion, som bruges i alle de skjulte lag. Der kan vælges blandt:</p>
+<ul>
+<li><a href="../undervisningsforlob/aktiveringsfunktioner.html#sigmoid" target="_blank">Sigmoid</a></li>
+<li><a href="../undervisningsforlob/aktiveringsfunktioner.html#hyperbolsk-tangens" target="_blank">Tangenshyperbolsk</a></li>
+<li><a href="../undervisningsforlob/aktiveringsfunktioner.html#relu" target="_blank">ReLu</a></li>
+<li><a href="../undervisningsforlob/aktiveringsfunktioner.html#softsign" target="_blank">Softsign</a></li>
+<li>Identitet med forskrift <span class="math inline">\(f(x)=x\)</span></li>
+</ul>
+<p><br>
+</p>
+<div class="callout callout-style-simple callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Indstillinger
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><br>
+</p>
+<p><span class="fremhaev_underline">Brug feature-skalering</span></p>
+<p>Under indstillinger kan man fjerne fluebenet ved <strong>Brug feature-skalering</strong>. Default indstillingen er, at feature-skalering er slået til. Det er som regel nødvendigt for at få gradientnedstigning til at konvergere.</p>
+<p>Alle AI modeller trænes ved at minimere en tabsfunktion, hvor en linear kombination af en række features <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> indgår:</p>
+<p><span class="math display">\[
+w_0 + w_1 \cdot x_1 + w_2 \cdot x_2 + \cdots + w_n \cdot x_n
+\]</span></p>
+<p>For at bringe alle features på sammen skala anvender vi følgende standardisering:</p>
+<p><span class="math display">\[
+\frac{x-\mu}{\sigma}
+\]</span> hvor <span class="math inline">\(\mu\)</span> er et bud på middelværdien for featuren <span class="math inline">\(X\)</span> og <span class="math inline">\(\sigma\)</span> er et bud på spredningen. Du kan læse mere om <a href="../noter/afstande/feature_scaling.html#mindre-naivt-mere-bøvlet-feature-skalering">feature-skalering i noten her</a>. Gør man ovenstående for alle <span class="math inline">\(n\)</span> features vil de fleste værdier ligge mellem <span class="math inline">\(-2\)</span> og <span class="math inline">\(2\)</span>.</p>
+<p>Det betyder, at de vægte, vi finder, i virkeligheden passer til følgende linear kombination:</p>
+<p><span class="math display">\[
+\begin{aligned}
+w_0 + w_1 \cdot \left (\frac{x_1-\mu_1}{\sigma_1} \right ) &amp; + w_2 \cdot \left (\frac{x_2-\mu_2}{\sigma_2} \right ) \\ &amp;+ \cdots + w_n \cdot \left (\frac{x_n-\mu_n}{\sigma_n} \right )
+\end{aligned}
+\]</span></p>
+<p>hvilket kan omskrives til</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\left ( w_0 -\frac{w_1}{\sigma_1}\cdot \mu_1 -  \frac{w_2}{\sigma_2}\cdot \mu_2- \cdots - \frac{w_n}{\sigma_n}\cdot \mu_n\right) \\ &amp; \qquad \qquad \qquad \qquad + \frac{w_1}{\sigma_1} \cdot x_1 + \frac{w_2}{\sigma_2} \cdot x_2 + \cdots + \frac{w_n}{\sigma_n} \cdot x_n
+\end{aligned}
+\]</span> De vægte som returneres i app’en er:</p>
+<table class="table-bordered table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Feature</th>
+<th style="text-align: center;">Vægt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Bias</td>
+<td style="text-align: center;"><span class="math inline">\(w_0 -\frac{w_1}{\sigma_1}\cdot \mu_1 -  \frac{w_2}{\sigma_2}\cdot \mu_2- \cdots - \frac{w_n}{\sigma_n}\cdot \mu_n\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(x_1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{w_1}{\sigma_1}\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(x_2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{w_2}{\sigma_2}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(x_n\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{w_n}{\sigma_n}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Det vil altså sige, at de returnerede vægte svarer til de vægte, man ville få, hvis man ikke havde feature-skaleret. Man behøver således ikke at bekymre sig om feature-skalering, men man kan bruge vægtene direkte, selvom vi "nedenunder motorhjelmen" anvender feature-skalering for at få gradientnedstigning til at konvergere.</p>
+<p><br>
+</p>
+<p><span class="fremhaev_underline">Reproducerbar træning</span></p>
+<p>Under indstillinger kan man også fjerne fluebenet ved <strong>Reproducerbar træning</strong>.</p>
+<p>Default indstillingen er, at reproducerbar træning er slået til. Det betyder, at startværdien af alle vægtene er sat til en tilfældig værdi baseret på et <strong>seed</strong> (bemærk, at de forskellige vægte får forskellige startværdier). Hver gang man trykker på <strong>Træn model</strong>-knappen gentages den præcis samme træning, fordi de tilfældige startværdier vælges ens hver gang.</p>
+<p>Hvis man derimod fjerner fluebenet ved <strong>Reproducerbar træning</strong>, genereres startværdierne tilfældigt hver gang, man trykker på <strong>Træn model</strong>-knappen, fordi startværdierne ikke er genereret ved hjælp af et seed.</p>
+<p><br>
+</p>
+</div>
+</div>
+</div>
+<p><br>
+</p>
+<p>Tryk herefter på <strong>Træn model</strong>-knappen.</p>
+<p><br>
+</p>
+</section>
+<section id="output-fra-modellen" class="level4">
+<h4 class="anchored" data-anchor-id="output-fra-modellen"><span class="fremhaev">Output fra modellen</span></h4>
+<p>Når modellen er trænet ses outputtet i højre side af skærmen. Følgende vises:</p>
+<ul>
+<li><p>Grafen for værdien af tabsfunktionen som funktion af antal iterationer. Her skal du holde øje med, at grafen flader ud svarende til, at gradientnedstigning er konvergeret.</p></li>
+<li><p>Slutværdien af tabsfunktionen. Hvis du vil vide mere om, hvordan størrelsen af denne værdi kan vurderes, så se <a href="../undervisningsforlob/skibidi_toilet.html">dette forløb</a>.</p></li>
+</ul>
+</section>
+</div>
+</section>
+<section id="evaluering-prædiktion" class="level2 collapsible">
+<h2 class="collapsible anchored" data-anchor-id="evaluering-prædiktion"><span class="toggle-icon">Evaluering &amp; Prædiktion</span></h2>
+<section id="evaluering" class="level4 collapse-content">
+<h4 class="anchored" data-anchor-id="evaluering"><span class="fremhaev">Evaluering</span></h4>
+<p><img src="images/evaluering.png" class="img-fluid" style="float:right; margin-left:1rem;;width:50.0%"></p>
+<p>Der kan her vælges mellem tre evalueringsmetoder:</p>
+<ul>
+<li>Evaluering på træningsdata</li>
+<li>Evaluering på bruger-uploadet testdata</li>
+<li>Evaluering via krydsvalidering</li>
+</ul>
+<p>Når evalueringsmetoden er valgt, trykkes der på <strong>Kør evaluering</strong>-knappen.</p>
+<p>Vælges <strong>Evaluering på træningsdata</strong> beregnes følgende:</p>
+<ul>
+<li><a href="../noter/vurdering_model/vurdering_model.html#root-mean-squared-error-rmse">Root Mean Squared Error (RMSE)</a></li>
+<li><a href="../noter/vurdering_model/vurdering_model.html##mean-absolute-error-mae">Mean Absolute Error (MAE)</a></li>
+<li><a href="../noter/vurdering_model/vurdering_model.html#forklaringsgraden-r2-værdien"><span class="math inline">\(R^2\)</span>-værdien</a></li>
+</ul>
+<p>Endelig er det muligt at downloade et datasæt, hvor træningsdatasættet er udvidet med en ekstra kolonne, hvor den prædikterede outputværdien <span class="math inline">\(o\)</span> er beregnet for hvert træningseksempel.</p>
+<p>Vælges <strong>Evaluering på bruger-uploadet testdata</strong> beregnes det samme som for <strong>Evaluering på træningsdata</strong> blot med udgangspunkt i et uploadet testdatasæt.</p>
+<p>Endelig kan <strong>Evaluering via krydsvalidering</strong> vælges. Her beregnes RMSE og MAE baseret på <a href="../noter/krydsvalidering/krydsvalidering.html#sec-krydsvalidering" target="_blank">krydsvalidering</a>. Bemærk, at <span class="math inline">\(R^2\)</span>-værdien <em>ikke</em> beregnes, da det viser sig, at denne værdi ikke giver mening i forbindelse med krydsvalidering. For eksempel kan værdien gå hen og blive negativ.</p>
+<p><br>
+</p>
+</section>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p><img src="../logo/SVG/Bomaerke_03_AIMAT_2024.svg" class="footer-logo"> aimat.dk er finansieret af Novo Nordisk Fonden</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+<script src="../scripts/navbar-tooltips.js"></script>
+<script src="../scripts/trim-categories.js"></script>
+
+
+
+
+</body></html>
