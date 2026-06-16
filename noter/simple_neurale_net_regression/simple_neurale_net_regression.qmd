@@ -108,7 +108,7 @@ $$
 E(w_0, w_1, &\dots, w_n) \\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
 o^{(m)} \right)^2
 \end{aligned}
-$$
+$$ {#eq-tabsfunktion}
 
 hvor det nu så bare ikke er helt så tydeligt, at $E$ jo faktisk afhænger af alle vægtene.
 
@@ -275,10 +275,8 @@ $$
 Uden sammenligning med andre modeller er det svært at vide, om det tal er godt eller skidt. Til gengæld kan vi udregne $R^2$-værdien, som er
 
 $$
-R^2 = 0.596
+R^2 = 0.5962
 $$
-** $R^2$ mangler tjek med app!**
-
 Du er måske vant til at se $R^2$-værdier, som er meget større, men for en model baseret på et datasæt fra den virkelige verden, er det såmen ikke helt tosset! Det skyldes, at der altid vil være ting, som man ikke kan forklare, når man som her vil prædiktere huspriser. Det er for eksempel svært at sætte tal på udsigten, hvor fint lejligheden er renoveret, hvor meget naboerne larmer og så videre. Til sammenligning har vi som regel målt alle de forskellige faktorer, som påvirker et forsøg i fysik, og her vil vi typisk se $R^2$-værdier, som er meget højere.
 
 :::
@@ -364,7 +362,7 @@ Det viser sig, at det ikke giver så meget mening, at udregne $R^2$-værdien i f
 Vi vil nu udregne RMSE baseret på $5$-folds krydsvalidering. Det giver
 
 $$
-\mathrm{RMSE} = 0.4987
+\mathrm{RMSE} = 0.499
 $$
 
 Bemærk, at hvis vi sammenligner med RMSE, som ikke er baseret på krydsvalidering fra @exm-lejlighed3, så er RMSE blevet en smule højere her. Det er helt forventeligt, at modellen vil klare sig bedre, når den er testet på de data, som den også er trænet på.
@@ -691,18 +689,17 @@ Vi vender nu tilbage til eksemplet med lejlighedspriser i Aalborg.
 
 ## Lejlighedspriser med neuralt netværk
 
-Vi har trænet et kunstigt neuralt netværk med ét skjult lag med henholdsvis to og ti neuroner. Det kan man gøre ved at bruge [Neuralt netværk app til regression](https://apps01.math.aau.dk/ai/nn_regression/). Vi har her valgt... **mangler**
+Vi har trænet et kunstigt neuralt netværk med ét skjult lag med henholdsvis to og ti neuroner. Det kan man gøre ved at bruge [Neuralt netværk app til regression](https://apps01.math.aau.dk/ai/nn-regression/). Vi har her valgt henholdsvis $2$ og $10$ neuroner i det første skjulte lag og $0$ i det andet skjulte lag. Learning rate er sat til $0.0001$, antal iterationer til $1000$ og ReLu er valgt om aktiveringsfunktion i de skjulte lag.
 
 Til sammenligning har vi igen også trænet en kunstig neuron. I alle tre tilfælde har vi beregnet RMSE baseret på træningsdata og på fem folds krydsvalidering.
 
 | Model | RMSE <br> (træningsdata) | RMSE <br> (krydsvalidering) | 
 |:---|:---:|:---:|
-| Kunstig neuron | $0.4972$ | $0.4987$ |
-| Neuralt netværk (2) | $0.556$ |  $0.497$ |
-| Neuralt netværk (10) | $0.446$ |  $0.463$ |
+| Kunstig neuron | $0.4972$ | $0.499$ |
+| Neuralt netværk (2) | $0.4732$ |  $0.4827$ |
+| Neuralt netværk (10) | $0.4203$ |  $0.4449$ |
 : {.bordered}
 
-*Ovenstående er baseret på Orange - skal rettes til så det passe med vores app. Man kan falde i mange forskellige små minima som ændrer RMSE en del * **mangler**
 
 Ser vi på RMSE fra krydsvalidering, kan vi se, at begge neurale netværk har en mindre RMSE sammenlignet med en kunstig neuron. Det betyder, at et neuralt netværk med skjulte lag i dette eksempel er bedre til at forudsige lejlighedspriser end, hvis vi blot bruger en simpel kunstig neuron (som jo svarer til multipel lineær regression). Det er fordi, at vi med de skjulte lag kan fange nogle ikke-lineære tendenser i data. 
 
@@ -834,9 +831,60 @@ pp |>
 
 Det ses tydeligt, at det neurale netværk er bedre til at prædiktere lejlighedspriserne for de nyeste lejligheder med et forholdsvis stort areal sammenlignet med den kunstige neuron. Læg også mærke til, hvordan prædiktionsfladen baseret på det neurale netværk kan \"knække\" og på den måde modellere ikke lineære sammenhænge i data.
 
-**MANGLER**: Måske eksempel, hvor vi måler på den relative afvigelse i stedet for den absolutte. Evt. forslag om at modellere log(huspriser) i stedet for.
-
 :::
+
+## Logaritme-transformerede priser
+
+Uanset hvilken model vi bruger, minimerer vi tabsfunktionen i (@eq-tabsfunktion). Lidt forenklet kan den skrives:
+
+$$
+E = \frac{1}{2} \sum \left (t-o \right)^2
+$$
+hvor vi altså summerer over hele træningsdatasættet. Her er $t$ den faktiske lejlighedspris i millioner kroner for en given lejlighed i vores træningsdatasæt, og $o$ er den tilhørende prædikterede pris, som så kan være baseret på en mere eller mindre kompliceret model.
+
+Vi forestiller os, at vi har to lejligheder, hvor vores model i begge tilfælde skyder $100000$ kr. forkert. Den ene lejlighed koster $1.1$ million, mens den anden koster $10.1$ millioner. Det er skitseret i tabellen herunder:
+
+| Faktisk pris $(t)$ | Prædikteret pris $(o)$ | Absolut afvigelse  | Procentvis afvigelse |
+|:---:|:---:|:---:|:---:|
+| $1.1$ | $1$ | $0.1$ | $10 \%$ | 
+| $10.1$ | $10$ | $0.1$ | $1 \%$ | 
+: {.bordered}
+
+Når vi minimerer tabsfunktionen $E$, ser vi på forskellen $t-o$ (det vil sige den absolutte afvigelse). I vores model er der derfor ingen forskel på de to lejligheder, fordi den **absolute afvigelse** er ens. Man kan sige, at \"straffen\" for at prædiktere $100000$ kr. forkert er den samme uanset, om det er en lejlighed til $1$ million eller til $10$ millioner. Omvendt kan man se, at den **relative afvigelse** er på $10 \%$ for den billige lejlighed, men kun på $1 \%$ for den dyre lejlighed. Det, kan man nok godt synes, er lidt urimeligt. Det er OK at skyde $100000$ forkert på en lejlighed til $10$ millioner, men det er langt værre, hvis lejligheden kun koster $1$ million. 
+
+Lad os se på, hvad der sker, hvis vi logaritme-transformerer $t$ og $o$ i tabellen ovenfor:
+
+| Faktisk pris $(t)$ | Prædikteret pris $(o)$ | $\log(t)$  | $\log(o)$ | $\log(t)-\log(o)$ | 
+|:---:|:---:|:---:|:---:|:---:|
+| $1.1$ | $1$ | $0.0414$ | $0$ |  $0.0414$ | 
+| $10.1$ | $10$ | $1.0043$ | $1$ |  $0.0043$ | 
+: {.bordered}
+
+Her kan vi se, at $\log(t)-\log(o)$ afspejler, at det ikke er så slemt at skyde $100000$ forkert, hvis der er tale om en dyr lejlighed i sammenligning med en billig lejlighed. Simpelthen fordi $\log(t)-\log(o)$ er mindre for den dyre lejlighed sammenlignet med den billige.
+
+Den idé vil vi udnytte. I stedet for at minimere tabsfunktionen hvor de kvadrerede **absolutte afvigelser** $(t-o)^2$ indgår, vil vi i stedet starte med at tage logaritmen til de faktiske lejlighedspriser $\log(t)$. Så kommer vi helt automatisk til at modellere en outputværdi, som svarer til logaritme-transformerede prædikterede priser $\log(o)$. Det vil sige, at vi på den måde kommer til at minimere tabsfunktionen:
+
+$$
+E = \frac{1}{2} \sum \left (\log(t)- \log(o) \right)^2
+$$
+
+Bruger vi logartime-regnereglen $\log(a/b) = \log(a)-\log(b)$, kan det omskrives til
+
+$$
+E = \frac{1}{2} \sum \left (\log \left (\frac{t}{o} \right )\right)^2
+$$
+
+Det vil sige, at vi her grundlæggende minimerer den **relative afvigelse** mellem den faktiske lejlighedspris og den prædikterede.
+
+Lad og igen se på et eksempel med to lejligheder som koster henholdsvis $1$ og $10$ millioner. Men lad os nu sige, at modellen skyder $10 \%$ under den faktiske pris. Så får vi:
+
+| Faktisk pris i mio. <br> $t$ | Prædikteret pris i mio. <br> $o$ | $\frac{t}{o}$ | $\log \left (\frac{t}{o} \right )$ | 
+|:---:|:---:|:---:|:---:|
+| $1$ | $0.9$ | $0.9$ | $0.04576$ |
+| $10$ | $9$ | $0.9$ | $0.04576$ |
+: {.bordered}
+
+Her kan vi se, at bidraget til tabsfunktionen er den samme, fordi den **relative afvigelse** mellem den faktiske og den prædikterede pris er den samme.
 
 ## Relaterede forløb
 
