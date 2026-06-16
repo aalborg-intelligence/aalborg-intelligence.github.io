@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Kunstig neuron app til multipel klassifikation – AI MAT - matematikken bag magien</title>
+<title>Neuralt netværk app til multipel klassifikation – AI MAT - matematikken bag magien</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -198,7 +198,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Kunstig neuron app til multipel klassifikation</h1>
+<h1 class="title">Neuralt netværk app til multipel klassifikation</h1>
 </div>
 
 
@@ -215,7 +215,7 @@ window.Quarto = {
 </header>
 
 
-<p>Herunder gives en gennemgang af hver af fanerne i <a href="https://apps01.math.aau.dk/ai/multi-neuron/" target="_blank">Kunstig Neuron App til Multipel klassifikation</a>. Du kan læse mere om matematikken bag <a href="../noter/softmax/softmax.html">i noten om simple kunstige neurale netværk til multipel klassifikation</a>.</p>
+<p>Herunder gives en gennemgang af hver af fanerne i <a href="https://apps01.math.aau.dk/ai/multi-neuron/" target="_blank">Neuralt Netværk App til Multipel klassifikation</a>. Du kan læse mere om matematikken bag <a href="../noter/softmax/softmax.html" target="_blank">i noten om simple kunstige neurale netværk til multipel klassifikation</a> – her beskriver vi dog ikke, hvordan skjulte lag håndteres. Det kan du læse mere om i <a href="../noter/neurale_net/neurale_net.html" target="_blank">noten om kunstige neurale netværk</a>. Denne note behandler dog kun binær klassifikation.</p>
 <!-- ## <span class="toggle-icon">Data</span> {.collapsible} -->
 <section id="data" class="level2 collapsible">
 <h2 class="collapsible anchored" data-anchor-id="data"><span class="toggle-icon">Data</span></h2>
@@ -265,11 +265,17 @@ window.Quarto = {
 <section id="træning" class="level2 collapsible">
 <h2 class="collapsible anchored" data-anchor-id="træning"><span class="toggle-icon">Træning</span></h2>
 <div class="collapse-content">
-<section id="startvægte" class="level4">
-<h4 class="anchored" data-anchor-id="startvægte"><span class="fremhaev">Startvægte</span></h4>
-<p><img src="images/startvaegte.png" class="img-fluid" style="float:right; margin-left:1rem;;width:50.0%"></p>
-<p>AI modellen trænes ved at finde minimum for en tabsfunktion, som gøres ved hjælp af <a href="../noter/gradientnedstigning/gradientnedstigning.html#optimering-ved-hjælp-af-gradientnedstigning" target="_blank">gradientnedstigning</a> (som også er forklaret i denne <a href="https://youtu.be/WcM8aEoPzf8?si=FgxIjWm-nFyGAnkn" target="_blank">video</a>).</p>
-<p>Under <strong>Startvægte</strong> er det muligt at vælge hvilke værdier af vægtene, gradientnedstigning skal tage sit udgangspunkt i. Bemærk, at alle vægte starter i den samme værdi.</p>
+<section id="antal-neuroner-i-første-skjulte-lag" class="level4">
+<h4 class="anchored" data-anchor-id="antal-neuroner-i-første-skjulte-lag"><span class="fremhaev">Antal neuroner i første skjulte lag</span></h4>
+<p><img src="images/lag1.png" class="img-fluid" style="float:right; margin-left:1rem;;width:50.0%"></p>
+<p>Her vælges antallet af neuroner i det første skjulte lag.</p>
+<p><br>
+</p>
+</section>
+<section id="antal-neuroner-i-andet-skjulte-lag" class="level4">
+<h4 class="anchored" data-anchor-id="antal-neuroner-i-andet-skjulte-lag"><span class="fremhaev">Antal neuroner i andet skjulte lag</span></h4>
+<p><img src="images/lag2.png" class="img-fluid" style="float:right; margin-left:1rem;;width:50.0%"></p>
+<p>Her vælges antallet af neuroner i det andet skjulte lag.</p>
 <p><br>
 </p>
 </section>
@@ -288,6 +294,20 @@ w^{(\textrm{ny})} \leftarrow  w - \eta \cdot \frac{\partial E }{\partial w}
 <h4 class="anchored" data-anchor-id="iterationer"><span class="fremhaev">Iterationer</span></h4>
 <p><img src="images/antal_iterationer.png" class="img-fluid" style="float:right; margin-left:1rem;;width:50.0%"></p>
 <p><strong>Iterationer</strong> angiver det antal gange vægtene opdateres i forbindelse med gradientnedstigning. Antal iterationer skal sættes stort nok til, at grafen for tabsfunktionen som funktion af antal iterationer begynder at flade ud.</p>
+<p><br>
+</p>
+</section>
+<section id="aktiveringsfunktion-i-skjulte-lag" class="level4">
+<h4 class="anchored" data-anchor-id="aktiveringsfunktion-i-skjulte-lag"><span class="fremhaev">Aktiveringsfunktion i skjulte lag</span></h4>
+<p><img src="images/aktiveringsfunktion.png" class="img-fluid" style="float:right; margin-left:1rem;;width:50.0%"></p>
+<p>Under <strong>Aktiveringsfunktion i skjulte lag</strong> kan man vælge den aktiveringsfunktion, som bruges i alle de skjulte lag. Der kan vælges blandt:</p>
+<ul>
+<li><a href="../undervisningsforlob/aktiveringsfunktioner.html#sigmoid" target="_blank">Sigmoid</a></li>
+<li><a href="../undervisningsforlob/aktiveringsfunktioner.html#hyperbolsk-tangens" target="_blank">Tangenshyperbolsk</a></li>
+<li><a href="../undervisningsforlob/aktiveringsfunktioner.html#relu" target="_blank">ReLu</a></li>
+<li><a href="../undervisningsforlob/aktiveringsfunktioner.html#softsign" target="_blank">Softsign</a></li>
+<li>Identitet med forskrift <span class="math inline">\(f(x)=x\)</span></li>
+</ul>
 <p><br>
 </p>
 <div class="callout callout-style-simple callout-caution no-icon callout-titled">
@@ -363,6 +383,12 @@ w_0 + w_1 \cdot \left (\frac{x_1-\mu_1}{\sigma_1} \right ) &amp; + w_2 \cdot \le
 <p>Det vil altså sige, at de returnerede vægte svarer til de vægte, man ville få, hvis man ikke havde feature-skaleret. Man behøver således ikke at bekymre sig om feature-skalering, men man kan bruge vægtene direkte, selvom vi "nedenunder motorhjelmen" anvender feature-skalering for at få gradientnedstigning til at konvergere.</p>
 <p><br>
 </p>
+<p><span class="fremhaev_underline">Reproducerbar træning</span></p>
+<p>Under indstillinger kan man også fjerne fluebenet ved <strong>Reproducerbar træning</strong>.</p>
+<p>Default indstillingen er, at reproducerbar træning er slået til. Det betyder, at startværdien af alle vægtene er sat til en tilfældig værdi baseret på et <strong>seed</strong> (bemærk, at de forskellige vægte får forskellige startværdier). Hver gang man trykker på <strong>Træn model</strong>-knappen gentages den præcis samme træning, fordi de tilfældige startværdier vælges ens hver gang.</p>
+<p>Hvis man derimod fjerner fluebenet ved <strong>Reproducerbar træning</strong>, genereres startværdierne tilfældigt hver gang, man trykker på <strong>Træn model</strong>-knappen, fordi startværdierne ikke er genereret ved hjælp af et seed.</p>
+<p><br>
+</p>
 </div>
 </div>
 </div>
@@ -378,10 +404,7 @@ w_0 + w_1 \cdot \left (\frac{x_1-\mu_1}{\sigma_1} \right ) &amp; + w_2 \cdot \le
 <ul>
 <li><p>Grafen for værdien af tabsfunktionen som funktion af antal iterationer. Her skal du holde øje med, at grafen flader ud svarende til, at gradientnedstigning er konvergeret.</p></li>
 <li><p>Slutværdien af tabsfunktionen. Hvis du vil vide mere om, hvordan størrelsen af denne værdi kan vurderes, så se <a href="../undervisningsforlob/skibidi_toilet.html">dette forløb</a>.</p></li>
-<li><p>En tabel med de vægte, som er estimeret ved hjælp af gradientnedstigning.</p></li>
 </ul>
-<p><br>
-</p>
 </section>
 </div>
 </section>
