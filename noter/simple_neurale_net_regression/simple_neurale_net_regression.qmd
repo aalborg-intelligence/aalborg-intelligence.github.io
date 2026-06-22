@@ -33,7 +33,7 @@ Og vi vil lade targetvariablen $t$ være
 
 * $t$: boligens pris i kroner
 
-I eksemplet her har vi information om $1140$ salg af lejligheder og i $4$ tilfælde har vi ikke information om lejlighedens alder, vi vil derfor i det følgende begrænse os til $1136$ salg. Dette datasæt kaldes for **træningsdata**.
+I eksemplet her har vi information om $1136$ salg af lejligheder. Dette datasæt kaldes for **træningsdata**.
 
 :::
 
@@ -45,7 +45,7 @@ $$
 
 Her kaldes $w_0, w_1, w_2, \dots, w_n$ for vægte.
 
-Hvis du har læst noten om [kunstige neuroner](../kunstige_neuroner/kunstige_neuroner.qmd), så er den eneste forskel her, at vi ikke længere bruger sigmoid-funktionen som aktiveringsfunktion[^1], fordi vi ikke her har brug for at få en outputværdi, som ligger mellem $0$ og $1$.
+Hvis du har læst noten om [kunstige neuroner](../kunstige_neuroner/kunstige_neuroner.qmd){target="_blank"}, så er den eneste forskel her, at vi ikke længere bruger sigmoid-funktionen som aktiveringsfunktion[^1], fordi vi ikke her har brug for at få en outputværdi, som ligger mellem $0$ og $1$.
 
 [^1]: Vi bruger sådan set stadig en aktiveringsfunktion -- det bare den funktion, som kaldes for *identiteten* med forskrift $f(x)=x$.
 
@@ -112,7 +112,7 @@ $$ {#eq-tabsfunktion}
 
 hvor det nu så bare ikke er helt så tydeligt, at $E$ jo faktisk afhænger af alle vægtene.
 
-For at bestemme de værdier af vægtene, som minimerer tabsfunktionen, vil vi bruge en metode, som kaldes for gradientnedstigning. Vi har lavet videoer om både [funktioner af to variable](https://youtu.be/tlq2UYWF2Rw){target="blank"} og [gradientnedstigning](https://youtu.be/WcM8aEoPzf8){target="blank"}, hvis du vil vide mere.
+For at bestemme de værdier af vægtene, som minimerer tabsfunktionen, vil vi bruge en metode, som kaldes for gradientnedstigning. Vi har lavet videoer om både [funktioner af to variable](https://youtu.be/tlq2UYWF2Rw){target="_blank"} og [gradientnedstigning](https://youtu.be/WcM8aEoPzf8){target="_blank"}, hvis du vil vide mere. Du kan også læse i noterne om [funktioner af flere variable](/noter/funktioner_af_flere_variable/funktioner_af_flere_variable.qmd){target="_blank"} og [gradientnedstigning](/noter/gradientnedstigning/gradientnedstigning.qmd){target="_blank"}.
 
 Idéen i gradientnedstigning er, at vi starter med at vælge nogle tilfældige værdier af vægtene, som vi kalder $w_0, w_1, \dots, w_n$. For de valgte værdier af vægtene kan vi udregne gradienten, som er vektoren bestående af alle de partielle afledede $\frac{\partial E }{\partial w_0}$, $\frac{\partial E }{\partial w_1}, \dots, \frac{\partial E }{\partial w_n}$. Man kan vise, at denne gradient peger i den retning, hvor funktionsværdien vokser mest. Det kommer omvendt til at betyde, at den negative gradient peger i den retning, hvor funktionsværdien falder mest. Vi opdaterer derfor alle vægtene til $w_0^{(\textrm{ny})}, w_1^{(\textrm{ny})}, \dots, w_n^{(\textrm{ny})}$ ved at gå et lille stykke i den negative gradients retning. Vi vælger, at skrive det sådan her:
 
@@ -200,7 +200,7 @@ Vi illustrerer dette med et eksempel:
 
 ## Lejlighedspriser -- fortolkning af vægtene
 
-Man kan træne en kunstig neuron til regression ved at bruge [Kunstig neuron til regression app](https://apps01.math.aau.dk/ai/regressionsneuron/).
+Man kan træne en kunstig neuron til regression ved at bruge [Kunstig neuron til regression app](https://apps01.math.aau.dk/ai/regressionsneuron/){target="_blank"}.
 
 Bruger vi denne app på datasættet om lejlighedssalg, hvor vi sætter alle startvægte til $0$, vælger en learning rate på $0.001$ og antal iterationer til $1000$, får vi følgende værdier af vægtene:
 
@@ -241,7 +241,7 @@ dat |>
   labs(x = "Faktisk pris (mio. kr.)", y = "Prædikteret pris (mio. kr.)") +
   theme(strip.background = element_rect(fill = "white", color = "white"), strip.text = element_text(size = 20))
 ```
-Hvis vi har en perfekt model, så vil den prædikterede pris være lig med den faktiske pris. Det vil svare til, at alle punkterne i @fig-pred_versus_price vil ligge på linjen med ligning $y=x$ (som er indtegnet med lyseblå i figuren). På figuren kan vi derfor se, at for lejligheder, som koster under $3$ millioner er modellen ikke helt dårlig. Til gengæld er modellen ikke super god til at prædiktere salgsprisen for de dyrere lejligheder: For nogle lejligheder er den prædikterede salgspris for høj, mens det omvendte også gør sig gældende -- specielt de meget dyre lejligheder, som koster over $5$ millioner, prædikterer modellen for lavt.
+Hvis vi har en perfekt model, så vil den prædikterede pris være lig med den faktiske pris. Det vil svare til, at alle punkterne i @fig-pred_versus_price vil ligge på linjen med ligning $y=x$ (som er indtegnet med lyseblå i figuren). På figuren kan vi derfor se, at for lejligheder, som koster under $3$ millioner er modellen ikke helt dårlig. Det kunne dog godt se ud som om, at modellen prædikterer en for høj salgspris for de helt billige lejligheder (det ses ved, at der for de billige lejligheder er flere punkter i figuren, som ligger over linjen, end der ligger under). Til gengæld er modellen ikke super god til at prædiktere salgsprisen for de dyrere lejligheder: For nogle lejligheder er den prædikterede salgspris for høj, mens det omvendte også gør sig gældende -- specielt de meget dyre lejligheder, som koster over $5$ millioner, prædikterer modellen for lavt. Der er altså noget her, som tyder på, at vores model er lidt for simpel.
 
 :::
 
@@ -249,11 +249,11 @@ Hvis vi har en perfekt model, så vil den prædikterede pris være lig med den f
 
 Når man træner en kunstig neuron, har man brug for et mål for, hvor god modellen er. Det bliver for eksempel vigtigt, når vi senere gerne vil sammenligne flere forskellige modeller. 
 
-Du kender nok allerede $R^2$-værdien fra lineær regression, som et tal mellem $0$ og $1$, hvor vi gerne vil have tallet så tæt på $1$ som muligt[^R2]. Hvis du vil vide mere om, hvordan $R^2$-værdien rent faktisk regnes ud, kan du læse mere [her](../vurdering_model/vurdering_model.qmd#forklaringsgraden-r2-værdien).
+Du kender nok allerede $R^2$-værdien fra lineær regression, som et tal mellem $0$ og $1$, hvor vi gerne vil have tallet så tæt på $1$ som muligt[^R2]. Hvis du vil vide mere om, hvordan $R^2$-værdien rent faktisk regnes ud, kan du læse mere [her](../vurdering_model/vurdering_model.qmd#forklaringsgraden-r2-værdien){target="_blank"}.
 
 [^R2]:  Og så alligevel ikke helt -- det kommer vi tilbage til senere.
 
-Et andet mål, som kan bruges til at sammenligne modeller, er **root mean squared error (RMSE)**. Du kan læse en lidt længere forklaring [her](../vurdering_model/vurdering_model.qmd#root-mean-squared-error-rmse), men målet er defineret således:
+Et andet mål, som kan bruges til at sammenligne modeller, er **root mean squared error (RMSE)**. Du kan læse en lidt længere forklaring [her](../vurdering_model/vurdering_model.qmd#root-mean-squared-error-rmse){target="_blank"}, men målet er defineret således:
 
 $$
 \mathrm{RMSE} = \sqrt{\frac{1}{M} \sum_{m=1}^{M} \left (t^{(m)}-o^{(m)} \right)^2}
@@ -368,6 +368,8 @@ $$
 Bemærk, at hvis vi sammenligner med RMSE, som ikke er baseret på krydsvalidering fra @exm-lejlighed3, så er RMSE blevet en smule højere her. Det er helt forventeligt, at modellen vil klare sig bedre, når den er testet på de data, som den også er trænet på.
 
 :::
+
+Du kan lære mere om risikoen for overfitting i forløbet om [Overfitting og krydsvalidering med polynomiel regression](/undervisningsforlob/OverfitPoly.qmd){target="_blank"}.
 
 
 ## Prædiktion af lejlighedspriser -- med skjulte lag!
@@ -656,7 +658,7 @@ $$
 \frac{\partial E^{(m)}}{\partial v_i} = \frac{\partial E^{(m)}}{\partial z_1^{(m)}}\cdot\frac{\partial z_1^{(m)}}{\partial v_i}
 $$
 
-Hvis du har brug for lidt mere information om kædereglen og den notation, som vi har anvendt ovenfor, kan du eventuelt se [denne video](https://www.youtube.com/watch?v=nVaAIVXiUjs).
+Hvis du har brug for lidt mere information om kædereglen og den notation, som vi har anvendt ovenfor, kan du eventuelt se [denne video](https://www.youtube.com/watch?v=nVaAIVXiUjs){target="_blank"}.
 
 Når du skal bestemme 
 
@@ -689,7 +691,7 @@ Vi vender nu tilbage til eksemplet med lejlighedspriser i Aalborg.
 
 ## Lejlighedspriser med neuralt netværk
 
-Vi har trænet et kunstigt neuralt netværk med ét skjult lag med henholdsvis to og ti neuroner. Det kan man gøre ved at bruge [Neuralt netværk app til regression](https://apps01.math.aau.dk/ai/nn-regression/). Vi har her valgt henholdsvis $2$ og $10$ neuroner i det første skjulte lag og $0$ i det andet skjulte lag. Learning rate er sat til $0.0001$, antal iterationer til $1000$ og ReLu er valgt om aktiveringsfunktion i de skjulte lag.
+Vi har trænet et kunstigt neuralt netværk med ét skjult lag med henholdsvis to og ti neuroner. Det kan man gøre ved at bruge [Neuralt netværk app til regression](https://apps01.math.aau.dk/ai/nn-regression/){target="_blank"}. Vi har her valgt henholdsvis $2$ og $10$ neuroner i det første skjulte lag og $0$ i det andet skjulte lag. Learning rate er sat til $0.0001$, antal iterationer til $1000$ og ReLu er valgt om aktiveringsfunktion i de skjulte lag.
 
 Til sammenligning har vi igen også trænet en kunstig neuron. I alle tre tilfælde har vi beregnet RMSE baseret på træningsdata og på fem folds krydsvalidering.
 
