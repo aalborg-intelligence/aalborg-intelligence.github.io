@@ -255,8 +255,8 @@ Figur&nbsp;1: Punkter med en targetværdi på <span class="math inline">\(1\)</s
 </figcaption>
 </figure>
 </div>
-<p>Det er tydeligt, at punkterne er lineært separable og den indtegnede linje er også den som ADALINE giver<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Du kan selv prøve <a href="https://apps01.math.aau.dk/ai/neuron/">ADALINE her</a> (sørg blot for at vælge "Identitet" som aktiveringsfunktion under fanen "Træning"). De estimerede vægte er <span class="math inline">\(w_0=-0.9346, w_1=-2.838\)</span> og <span class="math inline">\(w_2=1.668\)</span>.Det vil sige, at den indtegnede linje har ligning</p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Her er alle startvægte sat til <span class="math inline">\(0\)</span>, learning rate er på <span class="math inline">\(0.1\)</span>, stop-kriterie er på <span class="math inline">\(0.000001\)</span> og maksimalt antal iterationer er sat til <span class="math inline">\(50000\)</span>.</p></div></div><p><span class="math display">\[
+<p>Det er tydeligt, at punkterne er lineært separable og den indtegnede linje er også den som ADALINE giver. De estimerede vægte bliver <span class="math inline">\(w_0=-0.9346, w_1=-2.838\)</span> og <span class="math inline">\(w_2=1.668\)</span>. Det vil sige, at den indtegnede linje har ligning</p>
+<p><span class="math display">\[
 -0.9346-2.838 x_1 + 1.668x_2=0
 \]</span></p>
 <p>Det er alt sammen meget fint, men lad os nu prøve at indtegne et nyt rødt punkt:</p>
@@ -299,8 +299,8 @@ Figur&nbsp;3: Et nyt rødt punkt er indtegnet og den linje, som ADALINE finder.
 </figure>
 </div>
 <p>Det er jo ikke ligefrem super overbevisende. Data er lineært separabel og alligevel kan ADALINE ikke finde ud af at finde en ret linje, som kan adskille de røde punkter fra de blå!</p>
-<p>Hvis vi skal forstå, hvad der sker, må vi se lidt nærmere på den tabsfunktion, som ADALINE forsøger at mininere. Fra <a href="../../noter/perceptron/perceptron.html#sec-ADALINE">afsnittet om ADALINE</a> ved vi, at tabsfunktionen<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> er</p>
-<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Bemærk her, at det ikke er afgørende, at der er ganget med <span class="math inline">\(1/2\)</span> – det viser sig bare smartere senere.</p></div></div><p><span id="eq-tabsfuntion"><span class="math display">\[
+<p>Hvis vi skal forstå, hvad der sker, må vi se lidt nærmere på den tabsfunktion, som ADALINE forsøger at mininere. Fra <a href="../../noter/perceptron/perceptron.html#sec-ADALINE">afsnittet om ADALINE</a> ved vi, at tabsfunktionen<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> er</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Bemærk her, at det ikke er afgørende, at der er ganget med <span class="math inline">\(1/2\)</span> – det viser sig bare smartere senere.</p></div></div><p><span id="eq-tabsfuntion"><span class="math display">\[
 \begin{aligned}
 E(w_0, w_1, &amp;\dots, w_n)\\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
 (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right)^2
@@ -315,8 +315,8 @@ E(w_0, w_1, &amp;\dots, w_n)\\ &amp;= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
 1- \left (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} \right) =0
 \]</span> og for et rødt punkt med <span class="math inline">\(t^{(m)}=-1\)</span> er bidraget til tabsfunktionen præcis <span class="math inline">\(0,\)</span> hvis <span class="math display">\[
 -1- \left (w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)} \right)=0
-\]</span> Nu er <span class="math inline">\(1- (w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)=0\)</span> og <span class="math inline">\(-1- (w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)=0\)</span> jo bare ligninger for rette linjer<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. Disse linjer ses indtegnet på <a href="#fig-eks1_2" class="quarto-xref">figur&nbsp;4</a> (som henholdsvis en blå og rød stiplet linje) sammen med de oprindelige seks punkter og den linje, som ADALINE fandt baseret på disse seks punkter. Samtidig er det for hvert punkt markeret, hvor meget dette punkt bidrager til tabsfunktionen.</p>
-<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Det er i hvert tilfælde "bare linjer", når <span class="math inline">\(n=2\)</span>. Hvis <span class="math inline">\(n=3\)</span>, er der tale om ligningen for en plan, og hvis <span class="math inline">\(n&gt;3\)</span>, kalder man det for ligningen for en "hyperplan". Men sidstnævnte er visuelt svære at forestille sig, fordi koordinatsystemet, disse hyperplaner skal tegnes i, har en dimension større end <span class="math inline">\(3\)</span>. Og de er ikke så nemme at tegne!</p></div></div><div id="fig-eks1_2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+\]</span> Nu er <span class="math inline">\(1- (w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)=0\)</span> og <span class="math inline">\(-1- (w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)=0\)</span> jo bare ligninger for rette linjer<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Disse linjer ses indtegnet på <a href="#fig-eks1_2" class="quarto-xref">figur&nbsp;4</a> (som henholdsvis en blå og rød stiplet linje) sammen med de oprindelige seks punkter og den linje, som ADALINE fandt baseret på disse seks punkter. Samtidig er det for hvert punkt markeret, hvor meget dette punkt bidrager til tabsfunktionen.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Det er i hvert tilfælde "bare linjer", når <span class="math inline">\(n=2\)</span>. Hvis <span class="math inline">\(n=3\)</span>, er der tale om ligningen for en plan, og hvis <span class="math inline">\(n&gt;3\)</span>, kalder man det for ligningen for en "hyperplan". Men sidstnævnte er visuelt svære at forestille sig, fordi koordinatsystemet, disse hyperplaner skal tegnes i, har en dimension større end <span class="math inline">\(3\)</span>. Og de er ikke så nemme at tegne!</p></div></div><div id="fig-eks1_2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-eks1_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/fig-eks1_2.png" class="img-fluid figure-img" style="width:75.0%">
@@ -326,8 +326,8 @@ Figur&nbsp;4: Punkter med en targetværdi på <span class="math inline">\(1\)</s
 </figcaption>
 </figure>
 </div>
-<p>Det ses nu på <a href="#fig-eks1_2" class="quarto-xref">figur&nbsp;4</a>, at blå punkter, som ligger tæt på den blå stiplede linje, bidrager mindst til tabsfunktionen, mens røde punkter, som ligger tæt på den røde stiplede linje, ligeledes bidrager mindst til tabsfunktionen. Den samlede værdi af tabsfunktionen<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> er her <span class="math inline">\(0.75\)</span>.</p>
-<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Værdien udregnes ved at lægge alle bidragene sammen og gange med <span class="math inline">\(\frac{1}{2}\)</span>. Jævnfør udtrykket for tabsfunktionen i (<a href="#eq-tabsfuntion" class="quarto-xref">1</a>).</p></div></div><p>Laver vi nu samme øvelse med det ekstra punkt fås resultat i <a href="#fig-eks2_4" class="quarto-xref">figur&nbsp;5</a>.</p>
+<p>Det ses nu på <a href="#fig-eks1_2" class="quarto-xref">figur&nbsp;4</a>, at blå punkter, som ligger tæt på den blå stiplede linje, bidrager mindst til tabsfunktionen, mens røde punkter, som ligger tæt på den røde stiplede linje, ligeledes bidrager mindst til tabsfunktionen. Den samlede værdi af tabsfunktionen<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> er her <span class="math inline">\(0.75\)</span>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Værdien udregnes ved at lægge alle bidragene sammen og gange med <span class="math inline">\(\frac{1}{2}\)</span>. Jævnfør udtrykket for tabsfunktionen i (<a href="#eq-tabsfuntion" class="quarto-xref">1</a>).</p></div></div><p>Laver vi nu samme øvelse med det ekstra punkt fås resultat i <a href="#fig-eks2_4" class="quarto-xref">figur&nbsp;5</a>.</p>
 <div id="fig-eks2_4" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-eks2_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -513,6 +513,7 @@ o = \sigma(-6.046 - 16.69x_1+10.94x_2)
 </tbody>
 </table>
 <p>Der er her fin overensstemmelse mellem targetværdien og den beregnede sandsynlighed (outputværdien <span class="math inline">\(o\)</span>). Læg også mærke til at det ekstreme punkt har en beregnet sandsynlighed på <span class="math inline">\(0.00\)</span> og dermed bliver prædikteret til klart at være et <em>ikke</em> blåt – det vil sige et rødt – punkt.</p>
+<!-- [^1]: Her er alle startvægte sat til $0$, learning rate er på $0.1$, stop-kriterie er på $0.000001$ og maksimalt antal iterationer er sat til $50000$. -->
 
 
 </section>
