@@ -59,7 +59,7 @@ At bestemme om patienten har kræft eller ej -- det vil sige, om targetværdien 
 
 Targetværdien $t$ er altså en slags facitliste for, hvad det rigtige svar er. AI-modellen skal så trænes til at forudsige (eller **prædiktere**), hvad det korrekte svar er. 
 
-I @fig-data ses et eksempel på et fiktivt [datasæt](data/data.xlsx), hvor en biomarkør er målt på en skala fra 0 til 50 ($x$-aksen) samtidig med, at det ved hjælp af targetværdien er angivet, om patienten har kræft eller ej ($y$-aksen). Det ser her ud som om, at en lav værdi af biomarkøren (cirka under 25) indikerer, at patienten ikke har kræft, men en bestemt skæringsværdi findes ikke. 
+I [@fig-data]{.nolink} ses et eksempel på et fiktivt [datasæt](data/data.xlsx), hvor en biomarkør er målt på en skala fra 0 til 50 ($x$-aksen) samtidig med, at det ved hjælp af targetværdien er angivet, om patienten har kræft eller ej ($y$-aksen). Det ser her ud som om, at en lav værdi af biomarkøren (cirka under 25) indikerer, at patienten ikke har kræft, men en bestemt skæringsværdi findes ikke. 
 
 
 ```{r echo=FALSE}
@@ -372,7 +372,7 @@ Grafen for
 $$
 \sigma(-7.455+0.2539 \cdot x) = \frac{1}{1+\mathrm{e}^{-(-7.455+0.2539 \cdot x)}}
 $$
-ses indtegnet sammen med datapunkterne i @fig-eksempel_squared_error:
+ses indtegnet sammen med datapunkterne i [@fig-eksempel_squared_error]{.nolink}:
 
 ```{r echo=FALSE}
 #| fig-cap: Her ses et plot af data med biomarkør på $x$-aksen og sygdomsstatus på $y$-aksen sammen med grafen for den fundne sigmoid-funktion baseret på at minimere *squared error* tabsfunktionen. De to mørkeblå punkter illustrerer to nye, fiktive patienter.
@@ -404,7 +404,7 @@ $$
 \end{aligned}
 $$
 
-Det vil sige, at hvis patient 1 har en målt biomarkør på 20, så vil vi prædiktere, at der er 8.5% risiko for, at patienten har kræft. Og tilsvarende hvis patient 2 har en målt biomarkør på 35, så vil vi prædiktere, at risikoen for kræft er steget til 80.7%. Disse to patienter ses også indtegnet på @fig-eksempel_squared_error.
+Det vil sige, at hvis patient 1 har en målt biomarkør på 20, så vil vi prædiktere, at der er 8.5% risiko for, at patienten har kræft. Og tilsvarende hvis patient 2 har en målt biomarkør på 35, så vil vi prædiktere, at risikoen for kræft er steget til 80.7%. Disse to patienter ses også indtegnet på [@fig-eksempel_squared_error]{.nolink}.
 
 :::
 
@@ -573,7 +573,7 @@ Grafen for
 $$
 \sigma(-9.413+0.3218 \cdot x) = \frac{1}{1+\mathrm{e}^{-(-9.413+0.3218 \cdot x)}}
 $$
-ses indtegnet sammen med datapunkterne i @fig-eksempel_cross-entropy:
+ses indtegnet sammen med datapunkterne i [@fig-eksempel_cross-entropy]{.nolink}:
 
 ```{r echo=FALSE}
 #| fig-cap: Her ses et plot af data med biomarkør på $x$-aksen og sygdomsstatus på $y$-aksen sammen med grafen for den fundne sigmoid-funktion baseret på at minimere *cross-entropy* tabsfunktionen. De to lyseblå punkter illustrerer to nye, fiktive patienter.
@@ -614,7 +614,7 @@ $$
 \end{aligned}
 $$
 
-Det vil sige, at hvis patient 1 har en målt biomarkør på 20, så vil vi nu prædiktere, at der er 4.8% risiko for, at patienten har kræft. Og tilsvarende hvis patient 2 har en målt biomarkør på 35, så er vores bud på risikoen for kræft nu helt oppe på 86.4%. Disse to patienter ses også indtegnet på @fig-eksempel_cross-entropy.
+Det vil sige, at hvis patient 1 har en målt biomarkør på 20, så vil vi nu prædiktere, at der er 4.8% risiko for, at patienten har kræft. Og tilsvarende hvis patient 2 har en målt biomarkør på 35, så er vores bud på risikoen for kræft nu helt oppe på 86.4%. Disse to patienter ses også indtegnet på [@fig-eksempel_cross-entropy]{.nolink}.
 
 :::
 
@@ -652,7 +652,7 @@ legend(8,0.9,          # Position
 ```
 
 
-I @fig-eksempel_squared-error-versus-cross-entropy har vi tegnet de to grafer for de to forskellige sigmoid-funktioner ind i samme koordinatsystem. Her kan man se, at de to grafer, som er baseret på at minimere henholdsvis *cross-entropy* tabsfunktionen (lyseblå) og *squared error* tabsfunktionen (mørkeblå), ikke er sammenfaldende. Det fremgår også af de sandsynligheder, som vi beregnede i @exm-squared_error og @exm-cross_entropy, og som er opsummeret herunder. 
+I [@fig-eksempel_squared-error-versus-cross-entropy]{.nolink} har vi tegnet de to grafer for de to forskellige sigmoid-funktioner ind i samme koordinatsystem. Her kan man se, at de to grafer, som er baseret på at minimere henholdsvis *cross-entropy* tabsfunktionen (lyseblå) og *squared error* tabsfunktionen (mørkeblå), ikke er sammenfaldende. Det fremgår også af de sandsynligheder, som vi beregnede i @exm-squared_error og @exm-cross_entropy, og som er opsummeret herunder. 
 
 ::: {#tbl-praedssh .bordered}
 | | Patient 1 ($x=20$) | Patient 2 ($x=35$)  |
@@ -680,7 +680,7 @@ $$
 
 Problemet opstår, fordi man i forbindelse med gradientnedstigning starter i et tilfældigt punkt $(w_0, w_1, \dots, w_n)$. Hvis dette punkt svarer til vægte, som resulterer i forkerte prædiktioner, så for eksempel $o^{(m)} \approx 0$, men $t^{(m)} = 1$, så vil faktoren $o^{(m)} \cdot (1-o^{(m)})$ være tæt på $0$. Det betyder, at vægtene næsten ikke bliver opdateret, når vi bruger *squared error*, fordi opdateringsleddene alle er tæt på $0$. Noget tilsvarende gør sig gældende, hvis $o^{(m)} \approx 1$ og $t^{(m)} = 0$. Dette fænomen kalder man for **slow learning**. 
 
-I @fig-squared ses grafen for *squared error* tabsfunktionen fra eksemplet om biomarkører og prædiktion af kræft. Her er det ret tydeligt, at der findes værdier af vægtene $w_0$ og $w_1$, hvor grafen flader helt ud. Hvis man får startet sin gradientnedstigning her, så kan der gå lang tid inden, man ender i minimum.
+I [@fig-squared]{.nolink} ses grafen for *squared error* tabsfunktionen fra eksemplet om biomarkører og prædiktion af kræft. Her er det ret tydeligt, at der findes værdier af vægtene $w_0$ og $w_1$, hvor grafen flader helt ud. Hvis man får startet sin gradientnedstigning her, så kan der gå lang tid inden, man ender i minimum.
 
 
 ```{r message=FALSE, warning=FALSE}
@@ -711,7 +711,7 @@ Noget tilsvarende opstår ikke med *cross-entropy*, da faktoren $o^{(m)} \cdot (
 $$
 w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot \sum_{m=1}^{M} (t^{(m)}- o^{(m)})\cdot x_i^{(m)}
 $$
-Det ses også på grafen for *cross-entropy* tabsfunktionen i @fig-cross. Her er der ingen steder, hvor grafen flader ud. Det vil sige, at man ikke på samme måde kan komme til at starte et uheldigt sted på grafen.  Derimod vil man ret hurtigt \"lande\" i minimum uanset, hvor man starter. 
+Det ses også på grafen for *cross-entropy* tabsfunktionen i [@fig-cross]{.nolink}. Her er der ingen steder, hvor grafen flader ud. Det vil sige, at man ikke på samme måde kan komme til at starte et uheldigt sted på grafen.  Derimod vil man ret hurtigt \"lande\" i minimum uanset, hvor man starter. 
 
 
 ```{r message=FALSE, warning=FALSE}

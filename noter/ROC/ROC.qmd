@@ -10,7 +10,7 @@ Langt de fleste algoritmer, som vi behandler her på siden, handler om, hvordan 
 
 Når man skal vælge en god algoritme, som kan anvendes til den form for klassifikation, har man brug for at kunne sammenligne, hvor godt forskellige algoritmer prædikterer. Man er derfor nødt til at have et mål for, hvor god en algoritme er til at forudsige klasser (fx rød eller blå blok). Det mest oplagte er at tælle, hvor mange observationer algoritmen klassificerer forkert. Man kan så beregne, hvor stor en andel af alle observationerne, der klassificeres forkert. Denne andel kaldes *fejlklassifikationsraten*. Det er dog ikke altid det bedste mål at bruge. Det handler denne note om.
 
-Som eksempel ser vi på et lille dataeksempel med $20$ datapunkter, der kan have klasserne rød og blå, hvor rød er meget sjældnere end blå. Desuden er der målt en inputvariabel $x$. Vi ønsker at finde en algoritme, der kan prædiktere farven på en observation på baggrund af $x$. Datapunkternes klasser og $x$-værdier er angivet på @fig-data_eksempel. Ud fra figuren kunne det godt se ud til, at sandsynligheden for den røde klasse stiger, når $x$ stiger. Der er dog også flest blå med meget høje $x$-værdier.
+Som eksempel ser vi på et lille dataeksempel med $20$ datapunkter, der kan have klasserne rød og blå, hvor rød er meget sjældnere end blå. Desuden er der målt en inputvariabel $x$. Vi ønsker at finde en algoritme, der kan prædiktere farven på en observation på baggrund af $x$. Datapunkternes klasser og $x$-værdier er angivet på [@fig-data_eksempel]{.nolink}. Ud fra figuren kunne det godt se ud til, at sandsynligheden for den røde klasse stiger, når $x$ stiger. Der er dog også flest blå med meget høje $x$-værdier.
 
 ```{r , fig.height=3}
 #| echo: false
@@ -27,7 +27,7 @@ fejl[t]<-sum(tf!=y)
 }
 ```
 
-Mange prædiktionsalgoritmer benytter en tærskelværdi $t$, således at klassen prædikteres som rød, når $x> t$, og blå når $x\leq t$. På @fig-t10 ses et eksempel med $t=10$. De første $10$ observationer klassificeres korrekt til at være blå. De næste $10$ observationer prædikteres røde, selv om kun $3$ af dem faktisk er røde. Vi får altså $7$ fejlklassifikationer i alt. Det giver en fejlklassifikationsrate på $7/20=0.35$. 
+Mange prædiktionsalgoritmer benytter en tærskelværdi $t$, således at klassen prædikteres som rød, når $x> t$, og blå når $x\leq t$. På [@fig-t10]{.nolink} ses et eksempel med $t=10$. De første $10$ observationer klassificeres korrekt til at være blå. De næste $10$ observationer prædikteres røde, selv om kun $3$ af dem faktisk er røde. Vi får altså $7$ fejlklassifikationer i alt. Det giver en fejlklassifikationsrate på $7/20=0.35$. 
 
 ```{r , fig.height=3}
 #| echo: false
@@ -81,7 +81,7 @@ Hvordan vælger man så den bedste tærskelværdi? Det vil sige, hvordan finder 
 ## Sensitivitet og specificitet
 
 Lad os igen se på situationen, hvor vi har en prædiktionsalgoritme, der prædikterer klasserne rød og blå. For at få et overblik over, hvor godt algoritmen prædikterer, kan man lave en [confusion matrix](/noter/vurdering_model/vurdering_model.qmd#confusion-matrix){target="_blank"}
-, som skitseret på @fig-confusion, hvor et positivt resultat svarer til klassen rød[^1]. Diagonalen (de grønne celler) svarer til observationer, der er klassificeret korrekt.
+, som skitseret på [@fig-confusion]{.nolink}, hvor et positivt resultat svarer til klassen rød[^1]. Diagonalen (de grønne celler) svarer til observationer, der er klassificeret korrekt.
 En god algoritme skal have så mange observationer som muligt på diagonalen.
 
 [^1]: Ordene positiv og negativ stammer fra medicin, hvor man bruger en test til at klassificere patienter som syge eller raske. En positiv test indikerer, at patienten er syg. I andre sammenhænge svarer et positivt resultat til, at man har prædikteret den sjældne klasse.
@@ -167,7 +167,7 @@ Lad os se på eksemplet fra @fig-data_eksempel igen, hvor vi sætter tærskelvæ
 
 ```
 
-Sensitiviteten beregnes som andelen af det samlede antal sande røde, der bliver prædikteret røde. Ved at se på første søjle i @fig-t15 finder vi, at der er $2+1=3$ sande røde, hvoraf $2$ bliver prædikteret røde. Det giver sensitiviteten
+Sensitiviteten beregnes som andelen af det samlede antal sande røde, der bliver prædikteret røde. Ved at se på første søjle i [@fig-t15]{.nolink} finder vi, at der er $2+1=3$ sande røde, hvoraf $2$ bliver prædikteret røde. Det giver sensitiviteten
 
 $$
 \textrm{sensitivitet} = \frac{\textrm{antal røde der prædikteres røde}}{\textrm{antal sande røde}} = \frac{2}{3} = 0.667.
@@ -179,7 +179,7 @@ $$
 \textrm{specificitet} = \frac{\textrm{antal blå der prædikteres blå}}{\textrm{antal sande blå}} = \frac{14}{3+14}= 0.824.
 $$
 
-Algoritmen er altså bedst til at finde blå, da specificiteten er højere end sensitiviteten.   Lad os prøve, om vi kan få højere sensitivitet med en anden værdi af $t$. Værdien $t=12$ var den største værdi, der kunne finde alle de røde -- se igen @fig-data_eksempel. Det giver os confusion matricen i @fig-t12.
+Algoritmen er altså bedst til at finde blå, da specificiteten er højere end sensitiviteten.   Lad os prøve, om vi kan få højere sensitivitet med en anden værdi af $t$. Værdien $t=12$ var den største værdi, der kunne finde alle de røde -- se igen @fig-data_eksempel. Det giver os confusion matricen i [@fig-t12]{.nolink}.
 
 ```{tikz, fig.width=4, fig.height=4}
 #| echo: false
@@ -220,7 +220,7 @@ og
 $$\textrm{specificitet} = \frac{\textrm{antal blå der prædikteres blå}}{\textrm{antal sande blå}} = \frac{12}{5+12}= 0.706.$$
 Vi ser altså, at prisen for at få en højere sensitivitet er en lavere specificitet. 
 
-Endelig kan vi prøve med værdien $t=20$, som var den, der gav den laveste fejlklassifikationsrate. Denne værdi giver confusion matricen i @fig-t20.
+Endelig kan vi prøve med værdien $t=20$, som var den, der gav den laveste fejlklassifikationsrate. Denne værdi giver confusion matricen i [@fig-t20]{.nolink}.
 
 ```{tikz, fig.width=4, fig.height=4}
 #| echo: false
@@ -364,7 +364,7 @@ Så hvordan vælger man en tærskelværdi, der giver en god afvejning mellem sen
 
 : Sensitivitet og specificitet for forskellige tærskelværdier. {#tbl-sensitivitet .bordered}
 
-Man kan så gå ind i @tbl-sensitivitet og lede efter et godt $t$, hvor både sensitivitet og specificitet er høj. En tabel som ovenfor bliver dog hurtigt uoverskuelig, hvis man har et stort datasæt. For at få overblik kan man i stedet vælge at tegne samhørende værdier af sensitivitet og specificitet ind i et koordinatsystem. Traditionelt vælger man at have $1-\textrm{specificitet}$ på $x$-aksen og $\textrm{sensitivitet}$ på $y$-aksen. Den kurve, der fremkommer, når punkterne forbindes, kaldes en *ROC-kurve*[^2]. På @fig-roc er ROC-kurven fra dataeksemplet i @fig-data_eksempel indtegnet.
+Man kan så gå ind i @tbl-sensitivitet og lede efter et godt $t$, hvor både sensitivitet og specificitet er høj. En tabel som ovenfor bliver dog hurtigt uoverskuelig, hvis man har et stort datasæt. For at få overblik kan man i stedet vælge at tegne samhørende værdier af sensitivitet og specificitet ind i et koordinatsystem. Traditionelt vælger man at have $1-\textrm{specificitet}$ på $x$-aksen og $\textrm{sensitivitet}$ på $y$-aksen. Den kurve, der fremkommer, når punkterne forbindes, kaldes en *ROC-kurve*[^2]. På [@fig-roc]{.nolink} er ROC-kurven fra dataeksemplet i @fig-data_eksempel indtegnet.
  
 [^2]: ROC står for *Receiver Operating Characteristic*. 
  
@@ -410,7 +410,7 @@ Husk på, at ROC-kurven gerne skulle ligge så tæt op mod punktet  $(0,1)$ og s
 
 [^11]: AUC står for *Area Under Curve*.
 
-Optimalt set skulle ROC-kurven stige lodret op til punktet $(0,1)$ og derefter fortsætte vandret over mod $(1,1)$ (den orange kurve på @fig-auc), svarende til, at der er en $t$-værdi, der giver perfekt prædiktion. I denne situation er $AUC=1$. Omvendt så vi, at identitetslinjen (den grønne kurve på @fig-auc) svarer til fuldstændig tilfældig prædiktion uden brug af $x$. Dette svarer til $AUC=1/2$. En fornuftig algoritme skal således gerne have et $AUC$ mellem $1/2$ og $1$, hvor høje tal er bedst.  I vores dataeksempel (den sorte kurve på @fig-auc) kan man udregne $AUC=0.804$.
+Optimalt set skulle ROC-kurven stige lodret op til punktet $(0,1)$ og derefter fortsætte vandret over mod $(1,1)$ (den orange kurve på [@fig-auc]{.nolink}), svarende til, at der er en $t$-værdi, der giver perfekt prædiktion. I denne situation er $AUC=1$. Omvendt så vi, at identitetslinjen (den grønne kurve på [@fig-auc]{.nolink}) svarer til fuldstændig tilfældig prædiktion uden brug af $x$. Dette svarer til $AUC=1/2$. En fornuftig algoritme skal således gerne have et $AUC$ mellem $1/2$ og $1$, hvor høje tal er bedst.  I vores dataeksempel (den sorte kurve på [@fig-auc]{.nolink}) kan man udregne $AUC=0.804$.
 
 ```{r fig.height=5,fig.width=5}
 #| echo: false
@@ -462,7 +462,7 @@ hvor $t$ er en passende tærskelværdi. Ofte bruger algoritmen som udgangspunkt 
 
 ### Overfitting
 
-I eksemplet fra @fig-data_eksempel fandt vi, at $t=15$ virkede som et fornuftigt valg. Det var i hvert fald et $t$, der passede godt på det datasæt, vi havde. Det betyder dog ikke, at det er det $t$, der generaliserer bedst til nye data. Lad os sige, at vi får et nyt datasæt og gerne vil bruge prædiktionsalgoritmen på det. På @fig-test-data ses et eksempel på, hvordan et nyt datasæt kunne se ud. 
+I eksemplet fra @fig-data_eksempel fandt vi, at $t=15$ virkede som et fornuftigt valg. Det var i hvert fald et $t$, der passede godt på det datasæt, vi havde. Det betyder dog ikke, at det er det $t$, der generaliserer bedst til nye data. Lad os sige, at vi får et nyt datasæt og gerne vil bruge prædiktionsalgoritmen på det. På [@fig-test-data]{.nolink} ses et eksempel på, hvordan et nyt datasæt kunne se ud. 
 ```{r }
 #| echo: false
 #| fig-cap: Det oprindelige data fra @fig-data_eksempel og et nyt datasæt klassificeret ud fra tærskelværdien $t=15$.

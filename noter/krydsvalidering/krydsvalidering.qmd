@@ -86,7 +86,7 @@ kvadraters metode*.
 
 Hvad nu hvis det slet ikke ligner, at der er en lineær sammenhæng, når vi
 tegner vores datapunkter ind i et koordinatsystem? Er det så overhovedet
-en god idé at forsøge med en lineær regression? På @fig-ret_linje ser
+en god idé at forsøge med en lineær regression? På [@fig-ret_linje]{.nolink} ser
 det for eksempel ikke ud til at punkterne følger en ret linje.
 
 ```{r fig.width=8, fig.height=4}
@@ -108,7 +108,7 @@ axis(1,at=c(0,0.5,1,1.5,2,2.5,3) ,labels=c(0,"",1,"",2,"",3), pos=0)
 
 ::: {.callout-caution collapse="true" appearance="minimal"}
 ### Datasættet
-Datasættet fra @fig-ret_linje ses i tabellen herunder, hvis du selv vil prøve at lave lineær regression på data. Data kan også hentes som en [Excel-fil her](data/data.xlsx).
+Datasættet fra [@fig-ret_linje]{.nolink} ses i tabellen herunder, hvis du selv vil prøve at lave lineær regression på data. Data kan også hentes som en [Excel-fil her](data/data.xlsx).
 ```{r}
 #| echo: false  
 #| label: tabel_med_data
@@ -123,7 +123,7 @@ pander(dataTable)
 ```
 :::
 
-I @fig-residualplot ses et såkaldt residualplot. Her kan vi tydeligt se, at der er et mønster i den måde, residualerne fordeler sig omkring $x$-aksen. Det er altså tegn på, at en ret linje ikke er velegnet til at beskrive datapunkterne.
+I [@fig-residualplot]{.nolink} ses et såkaldt residualplot. Her kan vi tydeligt se, at der er et mønster i den måde, residualerne fordeler sig omkring $x$-aksen. Det er altså tegn på, at en ret linje ikke er velegnet til at beskrive datapunkterne.
 
 ```{r fig.width=5, fig.height=4}
 #| echo: false
@@ -140,7 +140,7 @@ axis(1, at=c(-1,0.5,1,1.5,2,2.5,3),labels=c(-1,"",1,"",2,"",3) , pos=0)
 
 Når $x$ ligger mellem 0 og 1, kunne der godt se ud til at være en svagt
 stigende tendens i @fig-ret_linje, mens der ser ud til at være en aftagende tendens for
-$x>1.5$. Det svarer til, at residualerne i @fig-residualplot først er negative, så positive og dernæst negative igen. Den rette linje i @fig-ret_linje ser heller ikke ud til at følge punkterne særlig godt. Måske en parabel passer bedre på data? 
+$x>1.5$. Det svarer til, at residualerne i [@fig-residualplot]{.nolink} først er negative, så positive og dernæst negative igen. Den rette linje i @fig-ret_linje ser heller ikke ud til at følge punkterne særlig godt. Måske en parabel passer bedre på data? 
 
 ```{r degree2, fig.width=4, fig.height=4}
 #| echo: false
@@ -154,7 +154,7 @@ axis(2, at=c(0,0.5,1,1.5,2,2.5,3), labels=c(0,"",1,"",2,"",3), pos=0)
 axis(1,at=c(0,0.5,1,1.5,2,2.5,3) ,labels=c(0,"",1,"",2,"",3), pos=0)
 ```
 
-Det ser ud til, at parablen i @fig-parabel følger datapunkterne langt bedre. Vi kunne
+Det ser ud til, at parablen i [@fig-parabel]{.nolink} følger datapunkterne langt bedre. Vi kunne
 således prøve at modellere $y$ ved hjælp af et andengradspolynomium i
 $x$. Lad $f$ betegne andengradspolynomiet[^2] 
 
@@ -194,7 +194,7 @@ $$
 Det bedste tredjegradspolynomium er igen det, der minimerer kvadratsummen
 $$E=\sum_{i=1}^n (y_i - f(x_i))^2 = \sum_{i=1}^n \left(y_i - (a_0 + a_1x_i + a_2x_i^2 + a_3x_i^3 )\right)^2.$$
 Grafen for det bedste tredjegradspolynomium er indtegnet med grøn for vores
-dataeksempel i @fig-2grad_3grad. Andengradspolynomiet er indtegnet med rød til
+dataeksempel i [@fig-2grad_3grad]{.nolink}. Andengradspolynomiet er indtegnet med rød til
 sammenligning.
 
 ```{r fig.height=4, fig.width=4}
@@ -216,12 +216,12 @@ axis(1,at=c(0,0.5,1,1.5,2,2.5,3) ,labels=c(0,"",1,"",2,"",3), pos=0)
 ```
 
 Det er ikke så let at se forskel. De to polynomier ser ud til at passe
-nogenlunde lige godt på vores data. Men i @fig-2grad_3grad_zoom har vi zoomet ud på figuren
+nogenlunde lige godt på vores data. Men i [@fig-2grad_3grad_zoom]{.nolink} har vi zoomet ud på figuren
 ovenfor, og her er der en klar forskel:
 
 ```{r extrapolate, fig.width=4, fig.height=4}
 #| echo: false
-#| fig-cap: Plottet fra @fig-2grad_3grad, men hvor der nu er zoomet lidt ud. Her ses det tydeligt, at der i "enderne" bliver stor forskel på anden- og tredjegradspolynomiet.
+#| fig-cap: Plottet fra [@fig-2grad_3grad]{.nolink}, men hvor der nu er zoomet lidt ud. Her ses det tydeligt, at der i "enderne" bliver stor forskel på anden- og tredjegradspolynomiet.
 #| label: fig-2grad_3grad_zoom
 par(mar=c(4,4,1,1))
 model3<-lm(y ~ x + I(x^2) + I(x^3))
@@ -275,7 +275,7 @@ os prøve med et syvendegradspolynomium. Vi søger
 $$f(x) = a_0 + a_1x + a_2x^2 +a_3x^3 + a_4x^4 + a_5x^5 +a_6x^6 +a_7x^7,$$
 der minimerer kvadratsummen $$E=\sum_{i=1}^n (y_i - f(x_i))^2 .$$ Det
 bedste syvendegradspolynomium i vores lille dataeksempel er indtegnet
-med blå på @fig-2grad_7grad nedenfor:
+med blå på [@fig-2grad_7grad]{.nolink} nedenfor:
 
 ```{r degree7, fig.width=4, fig.height=4}
 #| echo: false
@@ -300,7 +300,7 @@ en meget bedre model. Der er dog visse problemer. Det ses, at grafen
 bugter sig meget for at komme så tæt som muligt på datapunkterne. Dels
 virker det urealistisk, at den faktiske sammenhæng mellem $x$ og $y$
 skulle være så kompliceret. Dels opstår der et problem, hvis vi kommer
-med nye datapunkter. I @fig-2grad_7grad_nypunkter er polynomierne fra før tegnet sammen med 20
+med nye datapunkter. I [@fig-2grad_7grad_nypunkter]{.nolink} er polynomierne fra før tegnet sammen med 20
 nye datapunkter i grøn (som stammer fra den samme underliggende fordeling). Nu beskriver syvendegradspolynomiet pludselig
 ikke datapunkterne så godt længere.
 
@@ -445,7 +445,7 @@ krydsvalidering deler man data op i $k$ lige store og *tilfældige* dele. I før
 træner man modellen på alt data undtagen den første del og bruger første
 del som testdata. Det given en tabsfunktion $E_1(p)$. Dette gentages så
 $k$ gange, hvor man i den $i$'te fold bruger den $i$'te del af data som
-testdata og resten som træningsdata og får en tabsfunktion $E_i(p)$. Idéen er illustreret i @fig-krydsvalidering.
+testdata og resten som træningsdata og får en tabsfunktion $E_i(p)$. Idéen er illustreret i [@fig-krydsvalidering]{.nolink}.
 
 ```{tikz}
 #| echo: false

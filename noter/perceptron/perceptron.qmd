@@ -139,7 +139,7 @@ Det kunne godt se ud som om, at det vil være muligt at indtegne en ret
 linje på en sådan måde, at alle punkter som ligger over linjen skulle
 farves blå (svarende til \"her stemmer vi på blå blok\"), mens alle
 punkter under linjen skulle farves røde (svarende til \"her stemmer vi
-på rød blok\"). En tilfældig indtegnet linje ses på @fig-punkter_kandidattest_graf1.
+på rød blok\"). En tilfældig indtegnet linje ses på [@fig-punkter_kandidattest_graf1]{.nolink}.
 
 ```{r}
 #| echo: false
@@ -161,7 +161,7 @@ Herunder ser du et bud på en linje, som ser ud til at være god til at adskille
 fig + geom_abline(slope=-1.2,intercept=1.5,size=1)
 ```
 
-Linjen på @fig-punkter_kandidattest_graf2 har ligning $$\begin{aligned}
+Linjen på [@fig-punkter_kandidattest_graf2]{.nolink} har ligning $$\begin{aligned}
 y=-1.2 \cdot x+1.5.\end{aligned}$$ Men nu kaldte vi jo faktisk ikke de
 to variable for $x$ og $y$, men derimod for $x_1$ og $x_2$. Med denne
 notation får vi altså, at
@@ -323,22 +323,22 @@ $$
 \end{aligned}
 $$
 
--   Udregn fejlen $error$ (som er forskellen mellem den ønskede
+-   Udregn fejlen $\textrm{error}$ (som er forskellen mellem den ønskede
     target-værdi $t$ og den beregnede outputværdi $o$):
 $$
 \begin{aligned}
-error = t-o
+\textrm{error} = t-o
 \end{aligned}
 $$
 
 -   Opdatér alle vægtene:
 $$
 \begin{aligned}
-    w_0^{(\textrm{ny})} \leftarrow w_0 + & \eta \cdot error \\
-    w_1^{(\textrm{ny})} \leftarrow w_1 + & \eta \cdot  error \cdot x_1 \\
-    w_2^{(\textrm{ny})} \leftarrow w_2 + & \eta \cdot  error \cdot x_2 \\
+    w_0^{(\textrm{ny})} \leftarrow w_0 + & \eta \cdot \textrm{error} \\
+    w_1^{(\textrm{ny})} \leftarrow w_1 + & \eta \cdot  \textrm{error} \cdot x_1 \\
+    w_2^{(\textrm{ny})} \leftarrow w_2 + & \eta \cdot  \textrm{error} \cdot x_2 \\
     & \vdots  \\
-    w_n^{(\textrm{ny})} \leftarrow w_n + & \eta \cdot  error \cdot x_n \\
+    w_n^{(\textrm{ny})} \leftarrow w_n + & \eta \cdot  \textrm{error} \cdot x_n \\
 \end{aligned}
 $$
 Her er $\eta$ (udtales "eta") et tal mellem $0$ og $1$, som kaldes for en *learning rate* (på dansk: en læringsrate). Værdien af $\eta$ afgør hvor hurtigt, vi skal opdatere vægtene. Hvis $\eta$ er tæt på $0$ opdateres vægtene langsomt, hvorimod en værdi af $\eta$ tæt på $1$ vil betyde, at vægtene opdateres hurtigt.
@@ -389,16 +389,16 @@ Da denne værdi er positiv, bliver $o=1$. Vores target-værdi $t$ er også
 $1$. Det betyder, at med disse værdier af vægtene bliver træningseksempel nr. $1$ faktisk klassificeret korrekt. Derfor bliver fejlen også
 $$
 \begin{aligned}
-error = t-o=1-1=0
+\textrm{error} = t-o=1-1=0
 \end{aligned}
 $$
 og derfor ender vi også med ikke at opdatere nogle af vægtene, fordi vi generelt har (hvor $x_0=1$):
 $$
 \begin{aligned}
-w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot error \cdot x_i,
+w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot \textrm{error} \cdot x_i,
 \end{aligned}
 $$
-men når $error=0$ ender vi bare med 
+men når $\textrm{error}=0$ ender vi bare med 
 $$
 \begin{aligned}
 w_i^{(\textrm{ny})} \leftarrow w_i.
@@ -417,7 +417,7 @@ $t=-1$. Det vil altså sige, at dette træningseksempel klassificeres
 forkert, og derfor bliver fejlen også 
 $$
 \begin{aligned}
-error = t-o=-1-1=-2.
+\textrm{error} = t-o=-1-1=-2.
 \end{aligned}
 $$
 Vores vægte skal derfor opdateres til
@@ -441,7 +441,7 @@ $t=-1$. Altså har vi igen en korrekt klassificering. Fejlen er derfor
 også: 
 $$
 \begin{aligned}
-error = t-o=-1-(-1)=0.
+\textrm{error} = t-o=-1-(-1)=0.
 \end{aligned}
 $$
 Og ingen af vægtene skal derfor opdateres.
@@ -494,7 +494,7 @@ $$
 $$
 Nu har vi en værdi, som er mindre end $0$, og derfor sætter vi $o=-1$. Det vil
 sige, at vores anbefaling til denne vælger nu vil være at stemme på rød
-blok! Det kan måske virke overraskende, men @fig-punkter_kandidattest_graf4 illustrerer hvorfor, vi ikke får det samme i de to tilfælde.
+blok! Det kan måske virke overraskende, men [@fig-punkter_kandidattest_graf4] illustrerer hvorfor, vi ikke får det samme i de to tilfælde.
 
 ```{r}
 #| echo: false
@@ -525,7 +525,7 @@ korrekt kan klassificere vores træningsdata -- det vil sige, at $t=o$,
 så bliver fejlen
 $$
 \begin{aligned}
-error = t-o=0
+\textrm{error} = t-o=0
 \end{aligned}
 $$
 og vi kommer slet ikke til at opdatere
@@ -538,8 +538,8 @@ $$
 Hvis vi derimod står i den situation, at vores træningsdata ikke klassificeres korrekt, så vil $t \neq o$. Der er her to muligheder:
 $$
 \begin{aligned}
-\text{Mulighed 1:} \quad \quad &t=1 \quad \text{og} \quad o=-1 \quad \Rightarrow \quad error = t-o=2 \\
-\text{Mulighed 2:} \quad \quad &t=-1 \quad \text{og} \quad o=1 \quad \Rightarrow \quad error = t-o=-2 \\
+\text{Mulighed 1:} \quad \quad &t=1 \quad \text{og} \quad o=-1 \quad \Rightarrow \quad \textrm{error} = t-o=2 \\
+\text{Mulighed 2:} \quad \quad &t=-1 \quad \text{og} \quad o=1 \quad \Rightarrow \quad \textrm{error} = t-o=-2 \\
 \end{aligned}
 $$
 Lad os starte med mulighed $1$. Her er target-værdien $t=1$, men
@@ -557,11 +557,11 @@ y_{old} = w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n.
 $$
 Vi ville egentlig gerne have, at denne værdi $y_{old}$ havde været
 positiv, fordi så ville vi have fået en rigtig klassificering. Vi ser nu
-på, hvad der sker efter opdateringen af vægtene. Da $error=2$ i mulighed
+på, hvad der sker efter opdateringen af vægtene. Da $\textrm{error}=2$ i mulighed
 $1$ har vi opdateringsreglen (hvor $x_0=1$): 
 $$
 \begin{aligned}
-w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot error \cdot x_i = w_i + \eta \cdot 2 \cdot x_i.
+w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot \textrm{error} \cdot x_i = w_i + \eta \cdot 2 \cdot x_i.
 \end{aligned}
 $$
 Det vil sige, at næste gang vi skal beregne vores outputværdi, så skal
@@ -607,10 +607,10 @@ w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n \geq 0,
 \end{aligned}
 $$
 hvor vi egentlig gerne ville have haft, at denne værdi havde været negativ. I
-mulighed $2$ er fejlen $error=-2$ og opdateringsreglen bliver derfor
+mulighed $2$ er fejlen $\textrm{error}=-2$ og opdateringsreglen bliver derfor
 $$
 \begin{aligned}
-w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot error \cdot x_i = w_i -\eta \cdot 2 \cdot x_i.
+w_i^{(\textrm{ny})} \leftarrow w_i + \eta \cdot \textrm{error} \cdot x_i = w_i -\eta \cdot 2 \cdot x_i.
 \end{aligned}
 $$
 Med et helt tilsvarende argument som ovenfor, kan man nu vise, at
@@ -654,16 +654,16 @@ og de blå punkter ikke kan adskilles af en ret linje. Det er der to
 grunde til:
 
 1.  Hvis der er små fejl i data -- eksempelvis en targetværdi der er
-    forkert. Et eksempel herpå ses i figur @fig-punkter_graf4_5-1. 
+    forkert. Et eksempel herpå ses i figur [@fig-punkter_graf4_5-1]{.nolink}. 
     Her er et enkelt datapunkt fejlagtigt farvet rødt. Denne ene fejl får den konsekvens,at
     datapunkterne ikke længere er lineært separable. Perceptron learning
     algoritmen vil derfor ikke konvergere. Her ville det være smart med en algoritme, 
     som  vil give et fornuftigt svar, selvom der er små fejl i datasættet.
 
 2.  Verden er sjældent lineær separabel! Antag, at der ingen fejl er i
-    datasættet i figur @fig-punkter_graf4_5-1. Alligevel vil det stadig give
+    datasættet i figur [@fig-punkter_graf4_5-1]{.nolink}. Alligevel vil det stadig give
     mening at indtegne en ret linje som i figur
-    @fig-punkter_graf4_5-2, der kan bruges til klassificering.
+    [@fig-punkter_graf4_5-2]{.nolink}, der kan bruges til klassificering.
     Med en enkelt undtagelse vil man klassificere alle træningsdata
     korrekt ved hjælp af denne linje.
 
@@ -749,34 +749,34 @@ Så hvis vi skal rette op på perceptron learning algoritmen må vi gå fra
 at se på fejlen
 $$
 \begin{aligned}
-error = t-o
+\textrm{error} = t-o
 \end{aligned}
 $$
 til at se på
 $$
 \begin{aligned}
-error = t - (w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)
+\textrm{error} = t - (w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)
 \end{aligned}
 $$
 Bemærk, at i vores lille eksempel så vil perceptron learning algoritmen
 give fejlen
 $$
 \begin{aligned}
-error = t-o=1-(-1)=2
+\textrm{error} = t-o=1-(-1)=2
 \end{aligned}
 $$
-i begge tilfælde. Hvis vi i stedet bruger $error = t - (w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)$ får vi:
+i begge tilfælde. Hvis vi i stedet bruger $\textrm{error} = t - (w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)$ får vi:
 $$
 \begin{aligned}
-&\text{Tilfælde 1:} \quad error = 1-(-0.1)=1.1 \\
-&\text{Tilfælde 2:} \quad error = 1-(-5000)=5001
+&\text{Tilfælde 1:} \quad \textrm{error} = 1-(-0.1)=1.1 \\
+&\text{Tilfælde 2:} \quad \textrm{error} = 1-(-5000)=5001
 \end{aligned}
 $$
 Her bliver det meget tydeligt, at fejlen er lille i tilfælde 1 og stor i
 tilfælde 2. Hvis vi skal tage højde for det i vores
 opdateringsalgoritme, så må vi altså væk fra den meget simple måde, at
 definere fejlen på og i stedet se på fejlen som:
-$error = t - (w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)$. Dette er
+$\textrm{error} = t - (w_0 + w_1 \cdot x_1 + \cdots + w_n \cdot x_n)$. Dette er
 præcis, hvad man gør i ADAPTIVE LINEAR neuroner (ADALINE).
 
 For at forstå læringsalgoritmen i ADALINE må vi først indføre en
@@ -975,20 +975,20 @@ Vi kan altså sammenfatte gradientnedstigningsalgoritmen (ADALINE) på denne må
 -   Udregn på baggrund af alle træningsdata fejlene: 
 $$
 \begin{aligned}
-    error_0 &= \sum_{m=1}^{M} \left (t^{(m)}-(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \\
-    error_1 &= \sum_{m=1}^{M} \left (t^{(m)}-(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \cdot x_1^{(m)} \\
+    \textrm{error}_0 &= \sum_{m=1}^{M} \left (t^{(m)}-(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \\
+    \textrm{error}_1 &= \sum_{m=1}^{M} \left (t^{(m)}-(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \cdot x_1^{(m)} \\
     &\vdots \\
-    error_n &= \sum_{m=1}^{M} \left (t^{(m)}-(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \cdot x_n^{(m)} 
+    \textrm{error}_n &= \sum_{m=1}^{M} \left (t^{(m)}-(w_0 + w_1 \cdot x_1^{(m)} + \cdots + w_n \cdot x_n^{(m)}) \right) \cdot x_n^{(m)} 
 \end{aligned}
 $$
 
 -   Opdatér alle vægtene:
 $$
 \begin{aligned}
-    w_0^{(\textrm{ny})}  \leftarrow & w_0 + \eta \cdot error_0 \\
-    w_1^{(\textrm{ny})}  \leftarrow & w_1 + \eta \cdot error_1 \\
+    w_0^{(\textrm{ny})}  \leftarrow & w_0 + \eta \cdot \textrm{error}_0 \\
+    w_1^{(\textrm{ny})}  \leftarrow & w_1 + \eta \cdot \textrm{error}_1 \\
     & \vdots \\
-    w_n^{(\textrm{ny})}  \leftarrow & w_n + \eta \cdot error_n 
+    w_n^{(\textrm{ny})}  \leftarrow & w_n + \eta \cdot \textrm{error}_n 
 \end{aligned}
 $$
 
@@ -1025,7 +1025,7 @@ $$
  -0.0769 + 0.6410 \cdot x_1 - 0.0598 \cdot x_2 = 0.
  \end{aligned}
  $$
-Linjen er indtegnet sammen med træningsdata i @fig-punkter_kandidattest_gradientdescent.
+Linjen er indtegnet sammen med træningsdata i [@fig-punkter_kandidattest_gradientdescent]{.nolink}.
 
 ```{r}
 #| echo: false

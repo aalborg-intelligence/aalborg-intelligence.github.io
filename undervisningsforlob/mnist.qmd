@@ -43,7 +43,7 @@ Vi kan skrue på lysstyrken i hver af de tre subpixels. Hvis der er skruet fuldt
 
 [^1]: Tallene fra 0 til 255 kan i det binære talsystem repræsenteres ved 8 bits svarende til 1 byte, fordi $2^8=256$.
 
-Vores øje opfatter ikke farven på de tre subpixels individuelt, men vi ser i stedet en blandingsfarve. Hvis der for eksempel er skruet fuldt op på alle tre farver, så vil vores øje opfatte det som hvid. Det vil sige, at den pixel, som er vist i @fig-subpixel vil lyse hvid for os!
+Vores øje opfatter ikke farven på de tre subpixels individuelt, men vi ser i stedet en blandingsfarve. Hvis der for eksempel er skruet fuldt op på alle tre farver, så vil vores øje opfatte det som hvid. Det vil sige, at den pixel, som er vist i [@fig-subpixel]{.nolink} vil lyse hvid for os!
 
 Skruer vi helt op for rød og blå, men slukker for grøn fås en pink farve (som kaldes for magenta):
 
@@ -64,7 +64,7 @@ Hvis der er skruet lige meget op for den røde, grønne og blå subpixel, fås f
 Det betyder, at hvis man udelukkende er interesseret i gråskalaværdier, så kan vi nøjes med én værdi, som er den fælles værdi for rød, grøn og blå:
 
 
-![Forskellige toner af grå repræsenteret ved én værdi.](mnist_filer/grays2.png){#fig-grays width=30% fig-align="center"}
+![Forskellige toner af grå repræsenteret ved én værdi.](mnist_filer/grays2.png){#fig-grays2 width=30% fig-align="center"}
 
 ## MNIST datasættet
 
@@ -73,7 +73,7 @@ Der findes et stort datasæt -- det såkaldte [MNIST datasæt](https://www.kaggl
 [^2]: MNIST står for \"Modified National Institute of Standards\".
 
 
-På @fig-mnist0_original ses et håndskrevet \"0\" fra MNIST datasættet. 
+På [@fig-mnist0_original]{.nolink} ses et håndskrevet \"0\" fra MNIST datasættet. 
 
 ![Et håndskrevet \"0\" fra MNIST datasættet.](mnist_filer/mnist_0_white_on_black.png){#fig-mnist0_original width=30% fig-align="center"}
 
@@ -83,18 +83,18 @@ $$
 255-x
 $$
 
-Det betyder, at vi i stedet for sort viser hvid og omvendt. Dette er illustreret på @fig-mnist0.
+Det betyder, at vi i stedet for sort viser hvid og omvendt. Dette er illustreret på [@fig-mnist0]{.nolink}.
 
 ![Et håndskrevet \"0\" fra MNIST datasættet, men hvor farveskalaen er vendt om.](mnist_filer/mnist_0_black_on_white.png){#fig-mnist0 width=30% fig-align="center"}
 
 
 Vi skal nu prøve, om vi ud fra de 784 gråskalaværdier kan \"udvinde\" nogle få, men sigende værdier, som kan bruges til at forudsige, hvilket ciffer der er på billedet. I første omgang vil vi prøve, om vi kan kende forskel på 0- og 1-taller.
 
-Det første, vi vil gøre, er at lave billederne i en lavere opløsning svarende til, at billederne bliver mere pixeleret. Vi vil for eksempel lave et $7 \times 7$ pixel billede ved at inddele det oprindelige $28 \times 28$ pixel billede i $2 \times 2$ pixels, hvor vi så tager gennemsnittet af de fire pixelværdier. Et eksempel på det ses i @fig-pixeleret0:
+Det første, vi vil gøre, er at lave billederne i en lavere opløsning svarende til, at billederne bliver mere pixeleret. Vi vil for eksempel lave et $7 \times 7$ pixel billede ved at inddele det oprindelige $28 \times 28$ pixel billede i $2 \times 2$ pixels, hvor vi så tager gennemsnittet af de fire pixelværdier. Et eksempel på det ses i [@fig-pixeleret0]{.nolink}:
 
 ![Et billede af et 0 med en oprindelig opløsning på $28 \times 28$ pixels og det samme billede i en opløsning på $7 \times 7$ pixels.](mnist_filer/pixeleret0.png){#fig-pixeleret0 width=80% fig-align="center"}
 
-Til trods for at billedet er meget mere pixeleret, kan man faktisk stadigvæk tydeligt se konturerne af 0'et. Til sammenligning er et billede af et 1-tal vist i @fig-pixeleret1:
+Til trods for at billedet er meget mere pixeleret, kan man faktisk stadigvæk tydeligt se konturerne af 0'et. Til sammenligning er et billede af et 1-tal vist i [@fig-pixeleret1]{.nolink}:
 
 ![Et billede af 1 med en oprindelig opløsning på $28 \times 28$ pixels og det samme billede i en opløsning på $7 \times 7$ pixels.](mnist_filer/pixeleret1.png){#fig-pixeleret1 width=80% fig-align="center"}
 
@@ -274,7 +274,7 @@ I opgave 6 ovenfor kom du formentlig frem til, at hvis vi alene skal adskille 0'
 
 ## Hvad med 0 og 3?
 
-Det går jo strygende! Tæl antallet af hvide pixels i billedet, og du kan kende forskel på 0 og 1. Men hvad nu, hvis vi vil kende forskel på 0 og 3. Går det mon lige så nemt? Et eksempel på et håndskrevet 0 og 3-tal er vist i @fig-pixel03.
+Det går jo strygende! Tæl antallet af hvide pixels i billedet, og du kan kende forskel på 0 og 1. Men hvad nu, hvis vi vil kende forskel på 0 og 3. Går det mon lige så nemt? Et eksempel på et håndskrevet 0 og 3-tal er vist i [@fig-pixel03]{.nolink}.
 
 ![Et billede af et håndskrevet 0 og 3-tal med en opløsning på $28 \times 28$ pixels.](mnist_filer/pixel03.png){#fig-pixel03 width=80% fig-align="center"}
 
@@ -307,37 +307,37 @@ Det er ret tydeligt, at den gennemsnitlige pixelværdi og antallet af hvide pixe
 
 ### Vandrette lokale maksima
 
-På @fig-pixel03_7x7 ses et billede af et håndskrevet 0 og 3-tal i en opløsning på $7 \times 7$ pixels, og vi skal prøve at finde nogle karakteristika ved de to billeder, som kan bruges til at adskille dem. 
+På [@fig-pixel03_7x7]{.nolink} ses et billede af et håndskrevet 0 og 3-tal i en opløsning på $7 \times 7$ pixels, og vi skal prøve at finde nogle karakteristika ved de to billeder, som kan bruges til at adskille dem. 
 
 ![Et billede af et håndskrevet 0 og 3-tal med en opløsning på $7 \times 7$ pixels.](mnist_filer/pixel03_7x7.png){#fig-pixel03_7x7 width=80% fig-align="center"}
 
-På @fig-pixel03_7x7_vandret har vi lagt et vandret vindue ind over en enkelt række af pixels på de to billeder. 
+På [@fig-pixel03_7x7_vandret]{.nolink} har vi lagt et vandret vindue ind over en enkelt række af pixels på de to billeder. 
 
 ![Et billede af et håndskrevet 0 og 3-tal med et vandret vindue indlagt.](mnist_filer/pixel03_7x7_vandret.png){#fig-pixel03_7x7_vandret width=80% fig-align="center"}
 
 Vi vil her tælle, hvor mange gange pixelværdierne \"topper\". En sådan \"top\" kalder vi for et lokalt maksimum. På billedet af 0, kan vi se, at der er to lokale maksima, mens der på billedet af 3-tallet kun er ét lokalt maksimum. 
 
-Men antallet af \"toppe\" ændrer sig alt efter, hvor vi placerer det vandrette vindue. På et billede af et 0 er dette illustreret på @fig-lok-max0_vandret. Hvis vi ser på de vandrette pixelværdier, vil vi i \"toppen\" og \"bunden\" af 0'et forvente ét lokalt maksimum, mens vi for mange af de vandrette vinduer i midten af 0'et vil tænke, at der ofte vil være to lokale maksima. 
+Men antallet af \"toppe\" ændrer sig alt efter, hvor vi placerer det vandrette vindue. På et billede af et 0 er dette illustreret på [@fig-lok-max0_vandret]{.nolink}. Hvis vi ser på de vandrette pixelværdier, vil vi i \"toppen\" og \"bunden\" af 0'et forvente ét lokalt maksimum, mens vi for mange af de vandrette vinduer i midten af 0'et vil tænke, at der ofte vil være to lokale maksima. 
 
 ![Antallet af vandrette lokale maksima på et billede af et håndskrevet 0.](mnist_filer/lok-max0_vandret.png){#fig-lok-max0_vandret width=60% fig-align="center"}
 
 
-Ser vi derimod på vandrette pixelværdier på et billede af et 3-tal, vil der både være ét og to lokale maksima, som illustreret på @fig-lok-max3_vandret.
+Ser vi derimod på vandrette pixelværdier på et billede af et 3-tal, vil der både være ét og to lokale maksima, som illustreret på [@fig-lok-max3_vandret]{.nolink}.
 
 ![Antallet af vandrette lokale maksima på et billede af et håndskrevet 3-tal.](mnist_filer/lok-max3_vandret.png){#fig-lok-max3_vandret width=60% fig-align="center"}
 
 
 ### Lodrette lokale maksima
 
-Lægger vi derimod et lodret vindue ind, vil der på et 0 typisk være ét eller to lokale maksima (se @fig-lok-max0_lodret).
+Lægger vi derimod et lodret vindue ind, vil der på et 0 typisk være ét eller to lokale maksima (se [@fig-lok-max0_lodret]{.nolink}).
 
 ![Antallet af lodrette lokale maksima på et billede af et håndskrevet 0.](mnist_filer/lok-max0_lodret.png){#fig-lok-max0_lodret width=60% fig-align="center"}
 
-På et 3-tal kan der derimod være mellem ét og tre lokale maksima (se @fig-lok-max3_lodret).
+På et 3-tal kan der derimod være mellem ét og tre lokale maksima (se [@fig-lok-max3_lodret]{.nolink}).
 
 ![Antallet af lodrette lokale maksima på et billede af et håndskrevet 3.](mnist_filer/lok-max3_lodret.png){#fig-lok-max3_lodret width=60% fig-align="center"}
 
-Et konkret eksempel er vist i @fig-pixel03_7x7_lodret. På billedet af 0'et til venstre er der som forventet to lokale maksima, mens der på billedet af 3-tallet til højre som forventet er tre lokale maksima.
+Et konkret eksempel er vist i [@fig-pixel03_7x7_lodret]{.nolink}. På billedet af 0'et til venstre er der som forventet to lokale maksima, mens der på billedet af 3-tallet til højre som forventet er tre lokale maksima.
 
 ![Et billede af et håndskrevet 0 og 3-tal med et lodret vindue indlagt.](mnist_filer/pixel03_7x7_lodret.png){#fig-pixel03_7x7_lodret width=80% fig-align="center"}
 
@@ -448,11 +448,11 @@ I opgave 11 så vi, at de håndskrevne tal ikke altid helt opfører sig, som vi 
 
 :::
 
-Når vi ser på nogle af de cifre, som vi ikke fik klassificeret korrekt, kan det måske godt undre, hvad der går galt. På @fig-misklas0_id8 kan vi se et 0 (med id 8), som vi ikke får klassificeret korrekt. I forhold til det punktplot, du lige har lavet, ligger dette ciffer for langt til højre. Det vil sige, at det gennemsnitlige antal lodrette maksima er for stort (vi forventer måske en værdi på omkring $1.8$). Det kan vi også se på @fig-misklas0_id8. Der er flere søjler med $3$ og $4$ lodrette maksima, hvilket samlet set resulterer i et gennemsnit på $3.33$. Men hvorfor egentlig? Det er da et nydeligt, rundt 0! Forklaringen skal findes i tykkelsen af stregen og den måde, tallet er tegnet på. Personen, der har tegnet 0'et, har tegnet tykt, men ikke været i stand til at lægge et jævnt tryk hele vejen rundt. Det betyder, at der lodret er opstået flere lokale maksima, end vi vil forvente.
+Når vi ser på nogle af de cifre, som vi ikke fik klassificeret korrekt, kan det måske godt undre, hvad der går galt. På [@fig-misklas0_id8]{.nolink} kan vi se et 0 (med id 8), som vi ikke får klassificeret korrekt. I forhold til det punktplot, du lige har lavet, ligger dette ciffer for langt til højre. Det vil sige, at det gennemsnitlige antal lodrette maksima er for stort (vi forventer måske en værdi på omkring $1.8$). Det kan vi også se på [@fig-misklas0_id8]{.nolink}. Der er flere søjler med $3$ og $4$ lodrette maksima, hvilket samlet set resulterer i et gennemsnit på $3.33$. Men hvorfor egentlig? Det er da et nydeligt, rundt 0! Forklaringen skal findes i tykkelsen af stregen og den måde, tallet er tegnet på. Personen, der har tegnet 0'et, har tegnet tykt, men ikke været i stand til at lægge et jævnt tryk hele vejen rundt. Det betyder, at der lodret er opstået flere lokale maksima, end vi vil forvente.
 
 ![Et billede af et 0 (id'et er 8) med en pixel-opløsning på $28$. ](mnist_filer/misklas0_id8.png){#fig-misklas0_id8 width=80% fig-align="center"}
 
-Man kunne derfor få den tanke, at dette fænomen, som jo ikke kan bruges til at kendetegne cifret, måske kan undgås, hvis vi ser på en lavere pixel-opløsning. I figur @fig-lavere_pixel0_id8 ses det samme ciffer, men med en pixel-opløsning på henholdsvis $7$ og $14$. 
+Man kunne derfor få den tanke, at dette fænomen, som jo ikke kan bruges til at kendetegne cifret, måske kan undgås, hvis vi ser på en lavere pixel-opløsning. I figur [@fig-lavere_pixel0_id8]{.nolink} ses det samme ciffer, men med en pixel-opløsning på henholdsvis $7$ og $14$. 
 
 ![Et billede af det samme 0 som ses i @fig-misklas0_id8, men med en pixel-opløsning på henholdsvis $7$ og $14$.](mnist_filer/lavere_pixel0_id8.png){#fig-lavere_pixel0_id8 width=100% fig-align="center"}
 
@@ -478,11 +478,11 @@ Nogle gange er det svært med øjemål at se, om et punkt lige præcis ligger ov
 
 [^3]: Med mindre skillelinjen er lodret!
 
-Dette er illustreret i @fig-lodret_afstand:
+Dette er illustreret i [@fig-lodret_afstand]{.nolink}:
 
 ![Beregning af den lodrette forskel fra et punkt til en linje.](ALS_filer/lodret_afstand.png){#fig-lodret_afstand width=75% fig-align="center"}
 
-Den lodrette forskel fra punktet $P(x_1,y_1)$ ned til linjen med ligning $y= a \cdot x + b$ må være (se @fig-lodret_afstand):
+Den lodrette forskel fra punktet $P(x_1,y_1)$ ned til linjen med ligning $y= a \cdot x + b$ må være (se [@fig-lodret_afstand]{.nolink}):
 
 $$
 y_1 - (a \cdot x_1 + b)
