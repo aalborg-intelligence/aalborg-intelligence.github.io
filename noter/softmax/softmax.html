@@ -890,32 +890,51 @@ Figur&nbsp;6: Neuralt netværk hvor vægtene fra de <span class="math inline">\(
 \frac{\partial E}{\partial z_j} = - \sum_{i=1}^J t_i \cdot \frac{1}{o_i} \cdot \frac{\partial o_i}{\partial z_j},
 \tag{13}\]</span></span></p>
 <p>hvor vi har brugt kædereglen og, at <span class="math inline">\(\ln(o_i)\)</span> differentieret er <span class="math inline">\(\frac{1}{o_i}\)</span>.</p>
-<p>Nu er</p>
+<p>Når <span class="math inline">\(o_i\)</span> skal differentieres med hensyn til <span class="math inline">\(z_j\)</span>, er der to muligheder alt efter om <span class="math inline">\(i=j\)</span> eller <span class="math inline">\(i \neq j\)</span>.</p>
+<p>Hvis <span class="math inline">\(i \neq j\)</span>, kan man vise (se hints i nedenstående boks), at</p>
+<p><span id="eq-oizj"><span class="math display">\[
+\frac{\partial o_i}{\partial z_j} = - o_i \cdot o_j, \quad \quad i \neq j
+\tag{14}\]</span></span></p>
+<p>og hvis <span class="math inline">\(i=j\)</span>, er</p>
+<p><span id="eq-oizi"><span class="math display">\[
+\frac{\partial o_i}{\partial z_j} = o_j(1-o_j), \quad \quad i = j
+\tag{15}\]</span></span></p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Differentiation af softmax-funktionen
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>For at differentiere <span class="math inline">\(o_i\)</span>, skal vi bruge, at</p>
 <p><span class="math display">\[
 o_i = \frac{\mathrm{e}^{z_i}}{\sum_{l=1}^J \mathrm{e}^{z_l}}.
 \]</span></p>
-<p>Da <span class="math inline">\(o_i\)</span> er udtrykt ved en brøk, får vi brug for kvotientreglen, når vi skal differentiere <span class="math inline">\(o_i\)</span>:</p>
+<p>Da <span class="math inline">\(o_i\)</span> er udtrykt ved en brøk, får vi brug for kvotientreglen:</p>
 <p><span class="math display">\[
 \left ( \frac{f}{g} \right )'(x)= \frac{f'(x)  \cdot g(x) - f(x) \cdot g'(x)}{(g(x))^2}
 \]</span></p>
-<p>Når <span class="math inline">\(o_i\)</span> skal differentieres med hensyn til <span class="math inline">\(z_j\)</span>, er der to muligheder alt efter om <span class="math inline">\(i=j\)</span> eller <span class="math inline">\(i \neq j\)</span>.</p>
-<p>Hvis <span class="math inline">\(i \neq j\)</span>, får vi</p>
+<p>Brug denne regel til at differentiere <span class="math inline">\(o_i\)</span> med hensyn til <span class="math inline">\(z_j\)</span>, når <span class="math inline">\(i \neq j\)</span> og med hensyn til <span class="math inline">\(z_i\)</span>.</p>
+<p>Hvis du vil gøre det lidt nemmere, så nøjes med at se på det tilfælde, hvor <span class="math inline">\(J=3\)</span>. Da er:</p>
 <p><span class="math display">\[
-\begin{aligned}
-\frac{\partial o_i}{\partial z_j} &amp;= \frac{0 \cdot (\sum_{l=1}^J \mathrm{e}^{z_l}) - \mathrm{e}^{z_i} \cdot \mathrm{e}^{z_j}}{\left ( \sum_{l=1}^J \mathrm{e}^{z_l} \right )^2} \\
-&amp;= - \frac{\mathrm{e}^{z_i}}{\sum_{l=1}^J \mathrm{e}^{z_l}} \cdot \frac{\mathrm{e}^{z_j}}{\sum_{l=1}^J \mathrm{e}^{z_l}} = - o_i \cdot o_j, \quad \quad i \neq j
-\end{aligned}
-\]</span></p>
-<p>hvor sidste lighedstegn følger af definitionen i (<a href="#eq-o_j" class="quarto-xref">5</a>).</p>
-<p>Hvis <span class="math inline">\(i=j\)</span>, får vi</p>
+o_i = \frac{\mathrm{e}^{z_i}}{\mathrm{e}^{z_1}+\mathrm{e}^{z_2}+\mathrm{e}^{z_3}}
+\]</span> Bestem så for eksempel</p>
 <p><span class="math display">\[
-\begin{aligned}
-\frac{\partial o_i}{\partial z_j} &amp;= \frac{\partial o_j}{\partial z_j} = \frac{\mathrm{e}^{z_j} \cdot (\sum_{l=1}^J \mathrm{e}^{z_l}) - \mathrm{e}^{z_j} \cdot \mathrm{e}^{z_j}}{\left ( \sum_{l=1}^J \mathrm{e}^{z_l} \right )^2} \\
-&amp;= \frac{\mathrm{e}^{z_j} \cdot (\sum_{l=1}^J \mathrm{e}^{z_l})}{\left ( \sum_{l=1}^J \mathrm{e}^{z_l} \right )^2} - \frac{(\mathrm{e}^{z_j})^2}{\left ( \sum_{l=1}^J \mathrm{e}^{z_l} \right )^2} \\
-&amp;= \frac{\mathrm{e}^{z_j}}{\sum_{l=1}^J \mathrm{e}^{z_l}} - \left ( \frac{\mathrm{e}^{z_j}}{\sum_{l=1}^J \mathrm{e}^{z_l}} \right)^2 \\
-&amp; = o_j-o_j^2 = o_j(1-o_j), \quad \quad i = j
-\end{aligned}
+\frac{\partial o_1}{\partial z_1}
 \]</span></p>
+<p>og</p>
+<p><span class="math display">\[
+\frac{\partial o_1}{\partial z_2}
+\]</span></p>
+<p>Sammenlign dit resultat med udtrykkene i (<a href="#eq-oizj" class="quarto-xref">14</a>) og (<a href="#eq-oizi" class="quarto-xref">15</a>) og se, at det stemmer.</p>
+</div>
+</div>
+</div>
 <p>Vi kan nu indsætte i (<a href="#eq-partialE_z_j" class="quarto-xref">13</a>):</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -939,10 +958,10 @@ o_i = \frac{\mathrm{e}^{z_i}}{\sum_{l=1}^J \mathrm{e}^{z_l}}.
 <p>Vi indsætter i (<a href="#eq-partialE_w_jk" class="quarto-xref">11</a>) og får</p>
 <p><span id="eq-partialE_partial_wjk_final"><span class="math display">\[
 \frac{\partial E}{\partial w_{j,k}} = \underbrace{-(t_j - o_j)}_{\frac{\partial E}{\partial z_j}} \cdot \underbrace{x_k}_{\frac{\partial z_j}{\partial w_{j,k}}}
-\tag{14}\]</span></span></p>
+\tag{16}\]</span></span></p>
 <p>Bruger vi opdateringsreglen for <span class="math inline">\(w_{j,k}\)</span>-vægten i (<a href="#eq-w_jk-opdatering_grad" class="quarto-xref">10</a>), ender vi med følgende:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -951,7 +970,7 @@ o_i = \frac{\mathrm{e}^{z_i}}{\sum_{l=1}^J \mathrm{e}^{z_l}}.
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Vægten fra det <span class="math inline">\(k\)</span>’te input <span class="math inline">\(x_k\)</span> til den <span class="math inline">\(j\)</span>’te outputneuron opdateres således:</p>
 <p><span class="math display">\[
@@ -1006,7 +1025,7 @@ E = \sum_{m=1}^M E^{(m)}
 \]</span> Vi kan heldigvis differentiere ledvist og får derfor</p>
 <p><span class="math display">\[
 \frac{\partial E}{\partial w_{j,k}} = \sum_{m=1}^M \frac{\partial E^{(m)}}{\partial w_{j,k}}
-\]</span> I det foregående afsnit var det netop <span class="math inline">\(\frac{\partial E^{(m)}}{\partial w_{j,k}}\)</span> vi udledte i (<a href="#eq-partialE_partial_wjk_final" class="quarto-xref">14</a>) – dog uden at specificere nummeret på træningseksemplet:</p>
+\]</span> I det foregående afsnit var det netop <span class="math inline">\(\frac{\partial E^{(m)}}{\partial w_{j,k}}\)</span> vi udledte i (<a href="#eq-partialE_partial_wjk_final" class="quarto-xref">16</a>) – dog uden at specificere nummeret på træningseksemplet:</p>
 <p><span class="math display">\[
 \frac{\partial E^{(m)}}{\partial w_{j,k}} = -(t_j^{(m)} - o_j^{(m)}) \cdot x_k^{(m)}
 \]</span></p>
@@ -1014,7 +1033,7 @@ E = \sum_{m=1}^M E^{(m)}
 \frac{\partial E}{\partial w_{j,k}} = \sum_{m=1}^M \frac{\partial E^{(m)}}{\partial w_{j,k}} = - \sum_{m=1}^M (t_j^{(m)} - o_j^{(m)}) \cdot x_k^{(m)}
 \]</span> Opdateringsreglen for <span class="math inline">\(w_{j,k}\)</span>-vægten bliver i det tilfælde:</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1023,7 +1042,7 @@ E = \sum_{m=1}^M E^{(m)}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Vægten fra det <span class="math inline">\(k\)</span>’te input <span class="math inline">\(x_k\)</span> til den <span class="math inline">\(j\)</span>’te outputneuron opdateres således:</p>
 <p><span class="math display">\[
@@ -1319,7 +1338,7 @@ Figur&nbsp;7: Punktplot af træningsdata fra <a href="#tbl-prediction" class="qu
 </table>
 <p>Vejledning til udregning af outputværdierne for Anton kan du se i boksen herunder.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1328,7 +1347,7 @@ Figur&nbsp;7: Punktplot af træningsdata fra <a href="#tbl-prediction" class="qu
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Fra <a href="https://apps01.math.aau.dk/ai/multi-neuron/">app’en</a> fås følgende vægte:</p>
 <table class="table-bordered table">
