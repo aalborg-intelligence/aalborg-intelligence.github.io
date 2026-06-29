@@ -792,6 +792,303 @@ p(x_i) &amp;= \frac{\mathrm{e}^{ax_i + b}}{1+\mathrm{e}^{ax_i +b}} = \frac{odds}
     </div>
   </div>
 </footer>
+<style>
+.custom-xref-tooltip {
+  position: absolute;
+  z-index: 99999;
+  max-width: 430px;
+  background: white;
+  color: #222;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 6px;
+  padding: 8px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.custom-xref-tooltip img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.custom-xref-tooltip-caption {
+  margin-top: 0.45em;
+  color: #555;
+}
+
+.custom-xref-tooltip.hidden {
+  display: none;
+}
+</style>
+
+<script>
+(function () {
+  /*
+    Register interactive figures that should use static screenshots
+    in cross-reference hover previews.
+
+    Keys can be:
+      - just the figure id: "fig-surface"
+      - or page + figure id: "analysis.html#fig-surface"
+
+    If figure IDs are unique across the whole website, use only the id.
+  */
+  const xrefPreviewConfig = {
+    "fig-E": {
+      image: "fig-E.png",
+      caption: ""
+    }//,
+
+  };
+
+  const initialized = new WeakSet();
+  let tooltip = null;
+
+  function getSiteRootPrefix() {
+    /*
+      Infer the relative path to the site root from Quarto's site_libs path.
+
+      On a root-level page this is usually:
+        site_libs/...
+
+      On a nested page it may be:
+        ../site_libs/...
+        ../../site_libs/...
+    */
+    const candidates = Array.from(document.querySelectorAll("script[src], link[href]"));
+
+    for (const el of candidates) {
+      const path = el.getAttribute("src") || el.getAttribute("href") || "";
+      const match = path.match(/^(.*)site_libs\//);
+      if (match) {
+        return match[1];
+      }
+    }
+
+    return "";
+  }
+
+  const siteRootPrefix = getSiteRootPrefix();
+  const previewBase = siteRootPrefix + "assets/xref-previews/";
+
+  function getFigureIdFromAnchor(anchor) {
+    const href = anchor.getAttribute("href");
+    if (!href || !href.includes("#")) return null;
+    return decodeURIComponent(href.split("#").pop());
+  }
+
+  function getFilenameFromPath(pathname) {
+    const parts = pathname.split("/");
+    return parts[parts.length - 1];
+  }
+
+  function normalizeRelativeHref(href) {
+    return href
+      .replace(/^\.\//, "")
+      .replace(/^\//, "");
+  }
+
+  function getConfigForAnchor(anchor) {
+    const href = anchor.getAttribute("href");
+    if (!href || !href.includes("#")) return null;
+
+    const figId = getFigureIdFromAnchor(anchor);
+    if (!figId) return null;
+
+    const normalizedHref = normalizeRelativeHref(href);
+
+    let url;
+    try {
+      url = new URL(href, document.baseURI);
+    } catch (e) {
+      url = null;
+    }
+
+    const candidates = [];
+
+    // Most specific: literal href from the rendered document
+    candidates.push(normalizedHref);
+
+    if (url) {
+      const filename = getFilenameFromPath(url.pathname);
+      candidates.push(filename + "#" + figId);
+
+      const pathParts = url.pathname.split("/");
+      const lastTwo = pathParts.slice(-2).join("/");
+      candidates.push(lastTwo + "#" + figId);
+    }
+
+    // Least specific: figure id only
+    candidates.push(figId);
+
+    for (const key of candidates) {
+      if (xrefPreviewConfig[key]) {
+        return {
+          key: key,
+          figId: figId,
+          config: xrefPreviewConfig[key]
+        };
+      }
+    }
+
+    return null;
+  }
+
+  function getCaption(figId, config) {
+    if (config.caption) {
+      return config.caption;
+    }
+
+    // Same-page fallback: try to read the original figure caption from the DOM.
+    const figure = document.getElementById(figId);
+    if (!figure) return "";
+
+    const caption =
+      figure.querySelector(".quarto-figure-caption") ||
+      figure.querySelector("figcaption");
+
+    return caption ? caption.textContent.trim() : "";
+  }
+
+  function ensureTooltip() {
+    if (tooltip) return tooltip;
+
+    tooltip = document.createElement("div");
+    tooltip.className = "custom-xref-tooltip hidden";
+    document.body.appendChild(tooltip);
+
+    tooltip.addEventListener("mouseenter", function () {
+      tooltip.classList.remove("hidden");
+    });
+
+    tooltip.addEventListener("mouseleave", function () {
+      tooltip.classList.add("hidden");
+    });
+
+    return tooltip;
+  }
+
+  function positionTooltip(anchor) {
+    const box = anchor.getBoundingClientRect();
+    const tip = ensureTooltip();
+
+    const scrollX = window.scrollX || window.pageXOffset;
+    const scrollY = window.scrollY || window.pageYOffset;
+
+    let left = box.left + scrollX;
+    let top = box.bottom + scrollY + 8;
+
+    tip.style.left = left + "px";
+    tip.style.top = top + "px";
+
+    const tipBox = tip.getBoundingClientRect();
+    const maxRight = window.innerWidth - 16;
+
+    if (tipBox.right > maxRight) {
+      const adjustedLeft = Math.max(16, window.innerWidth - tipBox.width - 16);
+      tip.style.left = adjustedLeft + scrollX + "px";
+    }
+  }
+
+  function showCustomPreview(anchor) {
+    const match = getConfigForAnchor(anchor);
+    if (!match) return;
+
+    const tip = ensureTooltip();
+    const imgPath = previewBase + match.config.image;
+    const captionText = getCaption(match.figId, match.config);
+
+    tip.innerHTML = "";
+
+    const img = document.createElement("img");
+    img.src = imgPath;
+    img.alt = "Static preview for " + match.figId;
+    tip.appendChild(img);
+
+    if (captionText) {
+      const caption = document.createElement("div");
+      caption.className = "custom-xref-tooltip-caption";
+      caption.textContent = captionText;
+      tip.appendChild(caption);
+    }
+
+    tip.classList.remove("hidden");
+    positionTooltip(anchor);
+  }
+
+  function hideCustomPreview() {
+    if (tooltip) {
+      tooltip.classList.add("hidden");
+    }
+  }
+
+  function disableQuartoTooltip(anchor) {
+    if (anchor._tippy) {
+      anchor._tippy.destroy();
+    }
+
+    anchor.classList.remove("quarto-xref");
+    anchor.classList.add("custom-xref");
+  }
+
+  function initializeCustomPreview(anchor) {
+    if (initialized.has(anchor)) return;
+
+    const match = getConfigForAnchor(anchor);
+    if (!match) return;
+
+    initialized.add(anchor);
+    disableQuartoTooltip(anchor);
+
+    anchor.addEventListener("mouseenter", function () {
+      showCustomPreview(anchor);
+    });
+
+    anchor.addEventListener("focus", function () {
+      showCustomPreview(anchor);
+    });
+
+    anchor.addEventListener("mouseleave", function () {
+      window.setTimeout(function () {
+        if (!tooltip || !tooltip.matches(":hover")) {
+          hideCustomPreview();
+        }
+      }, 100);
+    });
+
+    anchor.addEventListener("blur", hideCustomPreview);
+
+    anchor.addEventListener("mousemove", function () {
+      if (tooltip && !tooltip.classList.contains("hidden")) {
+        positionTooltip(anchor);
+      }
+    });
+  }
+
+  function initializeAllCustomPreviews() {
+    const anchors = document.querySelectorAll("a[href*='#']");
+    anchors.forEach(function (anchor) {
+      if (getConfigForAnchor(anchor)) {
+        initializeCustomPreview(anchor);
+      }
+    });
+  }
+
+  window.addEventListener("DOMContentLoaded", initializeAllCustomPreviews);
+
+  window.addEventListener("load", function () {
+    initializeAllCustomPreviews();
+
+    // Quarto may attach its own Tippy handlers after our script has run,
+    // so repeat a few times. No MutationObserver, to avoid feedback loops.
+    window.setTimeout(initializeAllCustomPreviews, 250);
+    window.setTimeout(initializeAllCustomPreviews, 1000);
+    window.setTimeout(initializeAllCustomPreviews, 2000);
+  });
+})();
+</script>
 <script src="../../scripts/navbar-tooltips.js"></script>
 <script src="../../scripts/trim-categories.js"></script>
 
