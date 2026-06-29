@@ -284,11 +284,11 @@ Du er måske vant til at se $R^2$-værdier, som er meget større, men for en mod
 
 ### Krydsvalidering
 
-Når en models anvendelighed vurderes ved hjælp af mål som RMSE og $R^2$-værdi, så vil det altid være sådan, at jo mere kompliceret en model, man bruger, desto bedre mål vil man få (det vil sige en lille værdi af RMSE og en værdi af $R^2$, som er tæt på $1$). Hvorfor det er tilfældet, kan du læse meget mere om i noten [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd){target="_blank"}). Men kort fortalt går det ud på, at en meget kompliceret model kan fange tendenser i data, som i virkeligheden ikke er reelle -- det er bare støj. Et eksempel ses i @fig-overfitting. Her er ti punkter indtegnet, hvor der er anvendt lineær regression (den lyseblå linje) og 9. grads polynomiel regression (den lyserøde kurve).
+Når en models anvendelighed vurderes ved hjælp af mål som RMSE og $R^2$-værdi, så vil det altid være sådan, at jo mere kompliceret en model, man bruger, desto bedre mål vil man få (det vil sige en lille værdi af RMSE og en værdi af $R^2$, som er tæt på $1$). Hvorfor det er tilfældet, kan du læse meget mere om i noten [Overfitting, modeludvælgelse og krydsvalidering](../krydsvalidering/krydsvalidering.qmd){target="_blank"}). Men kort fortalt går det ud på, at en meget kompliceret model kan fange tendenser i data, som i virkeligheden ikke er reelle -- det er bare støj. Et eksempel ses i [@fig-overfitting]{.nolink}. Her er ti punkter indtegnet, hvor der er anvendt lineær regression (den lyseblå linje) og 9. grads polynomiel regression (den lyserøde kurve).
 
 ![Ti punkter hvor der er anvendt lineær regression (den lyseblå linje) og 9. grads polynomiel regression (den lyserøde kurve).](images/overfitting.png){width='80%' #fig-overfitting}
 
-Det kan her ses, at en ret linje beskriver punkterne udmærket. Et 9. grads polynomium har til gengæld så meget fleksibilitet, at grafen for polynomiet kan gå igennem alle ti punkter. Det ses tydeligt på @fig-overfitting, at det bliver alt for mærkeligt, og vi har ingen forventninger om, at dette polynomium vil kunne bruges til at beskrive nye punkter, som ikke kommer fra datasættet. Men bruger vi for eksempel $R^2$-værdien til at sammenligne de to modeller, så får vi:
+Det kan her ses, at en ret linje beskriver punkterne udmærket. Et 9. grads polynomium har til gengæld så meget fleksibilitet, at grafen for polynomiet kan gå igennem alle ti punkter. Det ses tydeligt på [@fig-overfitting]{.nolink}, at det bliver alt for mærkeligt, og vi har ingen forventninger om, at dette polynomium vil kunne bruges til at beskrive nye punkter, som ikke kommer fra datasættet. Men bruger vi for eksempel $R^2$-værdien til at sammenligne de to modeller, så får vi:
 
 | Model | $R^2$-værdi | RMSE | 
 |:---|:---:|:---:|
@@ -376,13 +376,13 @@ Du kan lære mere om risikoen for overfitting i forløbet om [Overfitting og kry
 
 Når man skal sælge en lejlighed, skal der helst ikke være skjulte fejl og mangler. Det kan til gengæld være en rigtig god idé med nogle skjulte lag, når man skal prædiktere lejlighedspriser! Det vil vi se på nu.
 
-I det ovenstående kommer den prædikterede pris til at afhænge lineært af inputvariablene. Men verden er sjældent lineær -- og en af styrkerne ved kunstige neurale netværk er netop, at de kan prædiktere størrelser eller kategorier ved hjælp af funktioner, som ikke er lineære. Vi skal derfor nu opstille et simpelt kunstigt neuralt netværk til prædiktion af lejlighedspriser. Vi vil lave et netværk med to features $x_1, x_2$ men nu med noget, som vi vil kalde for et skjult lag, som her består af et antal neuroner. Det kan illustreres, som vist i @fig-neuralt_net_regression:
+I det ovenstående kommer den prædikterede pris til at afhænge lineært af inputvariablene. Men verden er sjældent lineær -- og en af styrkerne ved kunstige neurale netværk er netop, at de kan prædiktere størrelser eller kategorier ved hjælp af funktioner, som ikke er lineære. Vi skal derfor nu opstille et simpelt kunstigt neuralt netværk til prædiktion af lejlighedspriser. Vi vil lave et netværk med to features $x_1, x_2$ men nu med noget, som vi vil kalde for et skjult lag, som her består af et antal neuroner. Det kan illustreres, som vist i [@fig-neuralt_net_regression]{.nolink}:
 
 ![Simpelt kunstigt neuralt netværk til prædiktion af lejlighedspriser. Netværket har inputvariable $x_1, x_2$ og ét skjult lag med to neuroner (her vist som de to grønne cirkler i midten).](images/neuralt_net_regression.png){#fig-neuralt_net_regression width=70% fig-align='center'}
 
-Som det ses i @fig-neuralt_net_regression, er der til hver pil knyttet en vægt (for eksempel $v_1, u_1, w_1$ og så videre), som skal bruges til at udregne outputværdien $o$. Hvis vi for en stund forestiller os, at vi kender alle vægtene, så udregner vi outputværdien $o$ på følgende måde:
+Som det ses i [@fig-neuralt_net_regression]{.nolink}, er der til hver pil knyttet en vægt (for eksempel $v_1, u_1, w_1$ og så videre), som skal bruges til at udregne outputværdien $o$. Hvis vi for en stund forestiller os, at vi kender alle vægtene, så udregner vi outputværdien $o$ på følgende måde:
 
-Ved hjælp af inputvariablene og $v$-vægtene (de lysegrønne pile på @fig-neuralt_net_regression) beregner vi $z_1$:
+Ved hjælp af inputvariablene og $v$-vægtene (de lysegrønne pile på [@fig-neuralt_net_regression]{.nolink}) beregner vi $z_1$:
 
 $$
 z_1 = f(v_0 + v_1 \cdot x_1 + v_2 \cdot x_2)
@@ -415,7 +415,7 @@ Lad os se nærmere på aktiveringsfunktionen $f$. Hvis du har læst nogle af vor
 $$
 \sigma (x) = \frac{1}{1+\mathrm{e}^{-x}}
 $$
-Grafen for sigmoid-funktionen ses i @fig-sigmoid.
+Grafen for sigmoid-funktionen ses i [@fig-sigmoid]{.nolink}.
 
 ![Grafen for sigmoid-funktionen.](../kunstige_neuroner/images/sigmoid.png){width=75% #fig-sigmoid}
 
@@ -436,7 +436,7 @@ x & \textrm {hvis } x > 0
 \end{cases}
 $$
 
-Grafen for ReLU-funktionen ses i @fig-relu.
+Grafen for ReLU-funktionen ses i [@fig-relu]{.nolink}.
 
 ![Grafen for ReLU-funktionen.](images/ReLu.png){width=75% #fig-relu}
 
@@ -452,7 +452,7 @@ $$
 \end{cases}
 $$
 
-Det ses nemt, ved at se på tangenthældningerne i @fig-relu. Og så definerer vi os simpelthen ud af tilfældet, hvor $x=0$, og siger, at i $0$ skal differentialkvotienten også være $0$:
+Det ses nemt, ved at se på tangenthældningerne i [@fig-relu]{.nolink}. Og så definerer vi os simpelthen ud af tilfældet, hvor $x=0$, og siger, at i $0$ skal differentialkvotienten også være $0$:
 
 $$
 \textrm{ReLU}'(0) = 0.
