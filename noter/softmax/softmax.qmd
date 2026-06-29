@@ -557,41 +557,59 @@ $$ {#eq-partialE_z_j}
 
 hvor vi har brugt kædereglen og, at $\ln(o_i)$ differentieret er $\frac{1}{o_i}$.
 
-Nu er
+Når $o_i$ skal differentieres med hensyn til $z_j$, er der to muligheder alt efter om $i=j$ eller $i \neq j$. 
+
+Hvis $i \neq j$, kan man vise (se hints i nedenstående boks), at
+
+$$
+\frac{\partial o_i}{\partial z_j} = - o_i \cdot o_j, \quad \quad i \neq j
+$$ {#eq-oizj}
+
+og hvis $i=j$, er
+
+$$
+\frac{\partial o_i}{\partial z_j} = o_j(1-o_j), \quad \quad i = j
+$$ {#eq-oizi}
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+
+## Differentiation af softmax-funktionen
+
+For at differentiere $o_i$, skal vi bruge, at
 
 $$
 o_i = \frac{\mathrm{e}^{z_i}}{\sum_{l=1}^J \mathrm{e}^{z_l}}.
 $$
 
-Da $o_i$ er udtrykt ved en brøk, får vi brug for kvotientreglen, når vi skal differentiere $o_i$:
+Da $o_i$ er udtrykt ved en brøk, får vi brug for kvotientreglen:
 
 $$
 \left ( \frac{f}{g} \right )'(x)= \frac{f'(x)  \cdot g(x) - f(x) \cdot g'(x)}{(g(x))^2}
 $$
 
-Når $o_i$ skal differentieres med hensyn til $z_j$, er der to muligheder alt efter om $i=j$ eller $i \neq j$. 
+Brug denne regel til at differentiere $o_i$ med hensyn til $z_j$, når $i \neq j$ og med hensyn til $z_i$. 
 
-Hvis $i \neq j$, får vi
-
-$$
-\begin{aligned}
-\frac{\partial o_i}{\partial z_j} &= \frac{0 \cdot (\sum_{l=1}^J \mathrm{e}^{z_l}) - \mathrm{e}^{z_i} \cdot \mathrm{e}^{z_j}}{\left ( \sum_{l=1}^J \mathrm{e}^{z_l} \right )^2} \\
-&= - \frac{\mathrm{e}^{z_i}}{\sum_{l=1}^J \mathrm{e}^{z_l}} \cdot \frac{\mathrm{e}^{z_j}}{\sum_{l=1}^J \mathrm{e}^{z_l}} = - o_i \cdot o_j, \quad \quad i \neq j
-\end{aligned}
-$$
-
-hvor sidste lighedstegn følger af definitionen i (@eq-o_j). 
-
-Hvis $i=j$, får vi
+Hvis du vil gøre det lidt nemmere, så nøjes med at se på det tilfælde, hvor $J=3$. Da er:
 
 $$
-\begin{aligned}
-\frac{\partial o_i}{\partial z_j} &= \frac{\partial o_j}{\partial z_j} = \frac{\mathrm{e}^{z_j} \cdot (\sum_{l=1}^J \mathrm{e}^{z_l}) - \mathrm{e}^{z_j} \cdot \mathrm{e}^{z_j}}{\left ( \sum_{l=1}^J \mathrm{e}^{z_l} \right )^2} \\
-&= \frac{\mathrm{e}^{z_j} \cdot (\sum_{l=1}^J \mathrm{e}^{z_l})}{\left ( \sum_{l=1}^J \mathrm{e}^{z_l} \right )^2} - \frac{(\mathrm{e}^{z_j})^2}{\left ( \sum_{l=1}^J \mathrm{e}^{z_l} \right )^2} \\
-&= \frac{\mathrm{e}^{z_j}}{\sum_{l=1}^J \mathrm{e}^{z_l}} - \left ( \frac{\mathrm{e}^{z_j}}{\sum_{l=1}^J \mathrm{e}^{z_l}} \right)^2 \\
-& = o_j-o_j^2 = o_j(1-o_j), \quad \quad i = j
-\end{aligned}
+o_i = \frac{\mathrm{e}^{z_i}}{\mathrm{e}^{z_1}+\mathrm{e}^{z_2}+\mathrm{e}^{z_3}}
 $$
+Bestem så for eksempel
+
+$$
+\frac{\partial o_1}{\partial z_1}
+$$
+
+og 
+
+$$
+\frac{\partial o_1}{\partial z_2}
+$$
+
+Sammenlign dit resultat med udtrykkene i (@eq-oizj) og (@eq-oizi) og se, at det stemmer.
+
+:::
+
 
 Vi kan nu indsætte i (@eq-partialE_z_j):
 
