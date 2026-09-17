@@ -31,7 +31,7 @@ Vi vil specielt se på følgende features:
 
 Og vi vil lade targetvariablen $t$ være 
 
-* $t$: boligens pris i kroner
+* $t$: boligens salgspris målt i millioner kroner
 
 I eksemplet her har vi information om $1136$ salg af lejligheder. Dette datasæt kaldes for **træningsdata**.
 
@@ -452,11 +452,7 @@ $$
 \end{cases}
 $$
 
-Det ses nemt, ved at se på tangenthældningerne i [@fig-relu]{.nolink}. Og så definerer vi os simpelthen ud af tilfældet, hvor $x=0$, og siger, at i $0$ skal differentialkvotienten også være $0$:
-
-$$
-\textrm{ReLU}'(0) = 0.
-$$
+Det ses nemt, ved at se på tangenthældningerne i [@fig-relu]{.nolink}. Til gengæld er ReLU-funktionen ikke differentiabel i $x=0$, fordi grafen har et knæk her. Det er selvfølgelig uheldigt, når man skal implementere et kunstigt neuralt netværk. Heldigvis vil det utrolig sjældent ske, at inputværdien til ReLU er præcis $0$, og hvis det alligevel sker, så vil vi vælge at sætte tangenthældningen i $0$ til at være $0$. 
 
 ### Feedforward udtryk
 
@@ -491,7 +487,7 @@ Tabsfunktionen definerer vi nu som før
 
 $$
 \begin{aligned}
-E(v_0, v_1, \dots, v_4, & u_0, u_1, \dots, u_4,w_0, w_1, w_2) \\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
+E(v_0, v_1, v_2, & u_0, u_1, u_2,w_0, w_1, w_2) \\ &= \frac{1}{2} \sum_{m=1}^{M} \left (t^{(m)}-
 o^{(m)} \right)^2
 \end{aligned}
 $$
