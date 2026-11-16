@@ -4,11 +4,9 @@ format: html
 ---
 
 ```{r, results='asis'}
-  files <- list.files(".", pattern="pdf$", full.names =
-TRUE)
-  for (f in files) {
-    cat(sprintf("- [%s](%s)\n", basename(f), f))
-  }
+files <- list.files(".", pattern="(html|pdf)$", full.names = TRUE)
+files <- c(files, file.path(dirname(files[1]), "3.1_Anbefalingssystemer.html"))
+for (f in sort(unique(files))) {
+  cat(sprintf("- [%s](%s)\n", basename(f), f))
+}
 ```
-
-<!-- kurser/Aalborg2026/slides -->
