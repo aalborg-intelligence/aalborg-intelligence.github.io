@@ -54,10 +54,10 @@ Sandsynligheden for det næste ord i sætningen \"Jeg går en tur i\".
 
 ## Tekst-korpus
 
-- På <https://aimat.dk/materialer/sprogmodeller/data/bog.txt> ligger 1247 forskellige sætninger i "børnebogs-stil". F.eks:
+- På <https://aimat.dk/noter/sprogmodeller/data/bog.txt> ligger 1247 forskellige sætninger i "børnebogs-stil". F.eks:
 
 ```{r echo=FALSE, results='asis'}
-tmp <- readLines(here::here("kurser", "Aalborg2026", "slides", "bog.txt"))
+tmp <- readLines(here::here("noter", "sprogmodeller", "data", "bog.txt"))
 cat(head(tmp), sep = "\n\n")
 ```
 
@@ -289,6 +289,34 @@ $$
 :::
 
 ::::
+
+
+
+## Tabsfunktion for Word2Vec {.smaller}
+
+$$
+\begin{aligned}
+P(\text{data})  &= P(\text{kontekst = }c^{(1)}\mid \text{fokus = }w^{(1)})\\
+                  & \cdot \dotsm \\
+                  & \cdot P(\text{kontekst = }c^{(M)}\mid \text{fokus = }w^{(M)})
+\end{aligned}
+$$
+<hr>
+$$
+\begin{aligned}
+\ln (P(\text{data})) &= \ln(P(\text{kontekst = }c^{(1)}\mid \text{fokus = }w^{(1)})) \\
+& + \dotsm \\
+&+ \ln(P(\text{kontekst = }c^{(M)}\mid \text{fokus = }w^{(M)}))
+\end{aligned}
+$$
+<hr>
+$$
+\begin{aligned}
+L = &-\ln\left(\frac{\mathrm{e}^{\vec{v}_{w^{(1)}}\cdot \vec{k}_{c^{(1)}}}}{\mathrm{e}^{\vec{v}_{w^{(1)}}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w^{(1)}}\cdot \vec{k}_{\text{ord}_V}}}\right)\\
+&- \dotsm \\ 
+&- \ln\left(\frac{\mathrm{e}^{\vec{v}_{w^{(M)}}\cdot \vec{k}_{c^{(M)}}}}{\mathrm{e}^{\vec{v}_{w^{(M)}}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w^{(M)}}\cdot \vec{k}_{\text{ord}_V}}}\right) 
+\end{aligned}
+$$
 
 
 ## Word2Vec for børnebogen
