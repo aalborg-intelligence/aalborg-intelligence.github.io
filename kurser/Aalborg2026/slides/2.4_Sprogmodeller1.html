@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<link href="../../../logo/SVG/Bomaerke_05_AIMAT_2024.svg" rel="icon" type="image/svg+xml">
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.11.9">
+
+  <title>AI MAT - matematikken bag magien – Sprogmodeller 1</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../../../site_libs/revealjs/dist/theme/quarto-00ad5a49dff614330cd349bcec985ec3.css">
+  <link href="../../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../../site_libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="../../../site_libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="../../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <link href="../../../site_libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
+  <script src="../../../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+  <script src="../../../site_libs/plotly-binding-4.12.1/plotly.js"></script>
+  <script src="../../../site_libs/typedarray-0.1/typedarray.min.js"></script>
+  <script src="../../../site_libs/jquery-3.5.1/jquery.min.js"></script>
+  <link href="../../../site_libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+  <script src="../../../site_libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+  <link href="../../../site_libs/plotly-htmlwidgets-css-2.25.2/plotly-htmlwidgets.css" rel="stylesheet">
+  <script src="../../../site_libs/plotly-main-2.25.2/plotly-latest.min.js"></script>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Sprogmodeller 1</h1>
+
+<div class="quarto-title-authors">
+</div>
+
+</section>
+<section id="materiale-på-aimat.dk" class="slide level2">
+<h2>Materiale på aimat.dk</h2>
+<ul>
+<li>Fem noter
+<ul>
+<li>Introduktion til sprogmodeller</li>
+<li>Simple sprogmodeller</li>
+<li>Word2Vec</li>
+<li>Neurale netværk til tekstgenerering</li>
+<li>Transformeren</li>
+</ul></li>
+<li>Et lang forløb med fem dele (vi fokuserer på del 2-4)</li>
+</ul>
+</section>
+<section id="sprogmodeller" class="slide level2">
+<h2>Sprogmodeller</h2>
+
+<img data-src="images/Copilot-2024-12-04.png" class="margin-caption r-stretch"></section>
+<section id="sprogmodeller-1" class="slide level2">
+<h2>Sprogmodeller</h2>
+<p>Generativ AI virker ved at bygge sætninger op et ord ad gangen, hvor hvert ord vælges på baggrund af de foregående ord.</p>
+<p>Hvad kunne næste ord være i følgende sætning?</p>
+<p><br>
+</p>
+<div class="llm_saetninger">
+<p>"Jeg går en tur i —"</p>
+</div>
+</section>
+<section id="sandsynligheden-for-næste-ord" class="slide level2">
+<h2>Sandsynligheden for næste ord</h2>
+<p>Vi har brug for en funktion der kan give <strong>betingede sandsynligheder</strong> i stil med:</p>
+<div id="tbl-pred" class="bordered margin-caption quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-tbl">
+<div aria-describedby="tbl-pred-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table-bordered">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Næste ord</th>
+<th style="text-align: center;">Sandsynlighed</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">skoven</td>
+<td style="text-align: center;"><span class="math inline">\(0.385\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">byen</td>
+<td style="text-align: center;"><span class="math inline">\(0.326\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">guitar</td>
+<td style="text-align: center;"><span class="math inline">\(0.001\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-tbl" id="tbl-pred-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabel&nbsp;1: Sandsynligheden for det næste ord i sætningen "Jeg går en tur i".
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="tekst-korpus" class="slide level2">
+<h2>Tekst-korpus</h2>
+<ul>
+<li>På <a href="https://aimat.dk/materialer/sprogmodeller/data/bog.txt" class="uri">https://aimat.dk/materialer/sprogmodeller/data/bog.txt</a> ligger 1247 forskellige sætninger i “børnebogs-stil”. F.eks:</li>
+</ul>
+<p>Anne har en ko.</p>
+<p>Ole får et grønt æsel.</p>
+<p>Anne ser et marsvin.</p>
+<p>Kim har en grøn cykel.</p>
+<p>Mia og Bo får en blå bil.</p>
+<p>Mia og Bo har en blå cykel.</p>
+</section>
+<section id="tekst-korpus-1" class="slide level2">
+<h2>Tekst-korpus</h2>
+<p>Denne “børnebog” med 1247 sætninger (8510 ord) bruger kun 27 forskellige “ord” (her tæller “.” også som et ord):</p>
+<div class="fremhaev">
+<p>artikel: en, et</p>
+<p>bindeord: og</p>
+<p>dyr: æsel, hest, ko, marsvin</p>
+<p>farve: blå, blåt, grøn, grønt</p>
+<p>person: Anne, Bo, Eva, Ib, Ida, Kim, Mia, Ole</p>
+<p>tegnsætning: .</p>
+<p>ting: bil, cykel, hus, skur</p>
+<p>verbum: får, har, ser</p>
+</div>
+</section>
+<section id="data-til-prædiktion-af-næste-ord" class="slide level2">
+<h2>Data til prædiktion af næste ord</h2>
+<div class="cell">
+<div class="cell-output-display margin-caption">
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">ord1</th>
+<th style="text-align: left;">ord2</th>
+<th style="text-align: left;">ord3</th>
+<th style="text-align: left;">output</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Anne</td>
+<td style="text-align: left;">har</td>
+<td style="text-align: left;">en</td>
+<td style="text-align: left;">ko</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">har</td>
+<td style="text-align: left;">en</td>
+<td style="text-align: left;">ko</td>
+<td style="text-align: left;">.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">en</td>
+<td style="text-align: left;">ko</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">Ole</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ko</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">Ole</td>
+<td style="text-align: left;">får</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">Ole</td>
+<td style="text-align: left;">får</td>
+<td style="text-align: left;">et</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ole</td>
+<td style="text-align: left;">får</td>
+<td style="text-align: left;">et</td>
+<td style="text-align: left;">grønt</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">får</td>
+<td style="text-align: left;">et</td>
+<td style="text-align: left;">grønt</td>
+<td style="text-align: left;">æsel</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">et</td>
+<td style="text-align: left;">grønt</td>
+<td style="text-align: left;">æsel</td>
+<td style="text-align: left;">.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="neuralt-netværk-med-sandsynlighedsvektor-som-output" class="slide level2">
+<h2>Neuralt netværk med sandsynlighedsvektor som output</h2>
+
+<img data-src="images/netvaerk_generelt.png" class="margin-caption r-stretch"></section>
+<section id="numeriske-data" class="slide level2 scrollable">
+<h2>Numeriske data</h2>
+<p>Et neuralt netværk skal have tal at arbejde med, så vi prøver at repræsentere hvert ord med 1, 2, 3, osv. (dårlig ide):</p>
+<div class="columns">
+<div class="column" style="width:48%;">
+<div class="cell">
+<div class="cell-output-display margin-caption">
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">ord1</th>
+<th style="text-align: left;">ord2</th>
+<th style="text-align: left;">ord3</th>
+<th style="text-align: left;">output</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Anne</td>
+<td style="text-align: left;">har</td>
+<td style="text-align: left;">en</td>
+<td style="text-align: left;">ko</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">har</td>
+<td style="text-align: left;">en</td>
+<td style="text-align: left;">ko</td>
+<td style="text-align: left;">.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">en</td>
+<td style="text-align: left;">ko</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">Ole</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ko</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">Ole</td>
+<td style="text-align: left;">får</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">Ole</td>
+<td style="text-align: left;">får</td>
+<td style="text-align: left;">et</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ole</td>
+<td style="text-align: left;">får</td>
+<td style="text-align: left;">et</td>
+<td style="text-align: left;">grønt</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div><div class="column" style="width:4%;">
+
+</div><div class="column" style="width:48%;">
+<div class="cell">
+<div class="cell-output-display margin-caption">
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: right;">ord1</th>
+<th style="text-align: right;">ord2</th>
+<th style="text-align: right;">ord3</th>
+<th style="text-align: left;">output</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">ko</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: left;">.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Ole</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: left;">får</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">et</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">grønt</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div></div>
+</section>
+<section id="softmax-aktiveringsfunktion" class="slide level2">
+<h2>Softmax aktiveringsfunktion</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><img data-src="images/netvaerk_generelt_wj.png" class="margin-caption"></p>
+</div><div class="column" style="width:60%;">
+<p><span class="math display">\[
+z_j = w_{j,0} + w_{j,1} \cdot x_1  \cdots + w_{j,n} \cdot x_n
+\]</span></p>
+<p><span class="math display">\[
+o_j = \alpha(z_1, \dots, z_J) = \frac{\mathrm{e}^{z_j}}{\sum_{i=1}^J \mathrm{e}^{z_i}}
+\]</span> <span class="math display">\[
+j = 1, \dots, J
+\]</span></p>
+</div></div>
+</section>
+<section id="targetvektor" class="slide level2">
+<h2>Targetvektor</h2>
+<p>For hvert eksempel af træningsdata kender vi target-ordet, hvilket kodes som en sandsynlighedsvektor med al sandsynlighed på det kendte ord (også kaldet one-hot encoding af ordet).</p>
+<ul>
+<li>F.eks. hvis ord nr. 3 er target: <span class="math display">\[
+t = (0, 0, 1, 0, \dots, 0)^\top
+\]</span></li>
+<li>Et neuralt netværk med godt indstillede vægte (et lille bidrag til tabsfunktion) kunne f.eks. give sandsynlighedsvektoren <span class="math display">\[
+o = (0.05, 0.03, 0.90, 0.02, 0, \dots, 0)^\top
+\]</span></li>
+</ul>
+</section>
+<section>
+<section id="hvordan-repræsenteres-ordene-smart" class="title-slide slide level1 center">
+<h1>Hvordan repræsenteres ordene smart?</h1>
+
+</section>
+<section id="problemer-med-alfabetisk-rækkefølge" class="slide level2">
+<h2>Problemer med alfabetisk rækkefølge</h2>
+<ul>
+<li>For Anne er <span class="math inline">\(x=2\)</span>, men for Ole er <span class="math inline">\(x=24\)</span></li>
+<li>Sandsynligheder (%) for input “Anne har en” vs “Ole har en”:</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display margin-caption">
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">ord</th>
+<th style="text-align: right;">Anne</th>
+<th style="text-align: right;">Ole</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">bil</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">3.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">blå</td>
+<td style="text-align: right;">1.8</td>
+<td style="text-align: right;">4.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">8</td>
+<td style="text-align: left;">cykel</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">3.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">13</td>
+<td style="text-align: left;">grøn</td>
+<td style="text-align: right;">1.6</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">16</td>
+<td style="text-align: left;">hest</td>
+<td style="text-align: right;">1.3</td>
+<td style="text-align: right;">3.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">21</td>
+<td style="text-align: left;">ko</td>
+<td style="text-align: right;">1.7</td>
+<td style="text-align: right;">3.1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="betydning-afgøres-af-kontekst" class="slide level2">
+<h2>Betydning afgøres af kontekst</h2>
+<div class="highlight centertext">
+<p><strong>Betydningen af et ord er bestemt af den kontekst, ordet indgår i.</strong></p>
+</div>
+<ul>
+<li>Hvilke ord passer i disse sætninger?</li>
+</ul>
+<div class="llm_saetninger">
+<p>"Min — har spist af sin madskål"</p>
+</div>
+<p>og</p>
+<div class="llm_saetninger">
+<p>"Sikken en blød pels, din — har"</p>
+</div>
+<ul>
+<li>Hvad med denne?</li>
+</ul>
+<div class="llm_saetninger">
+<p>"Den lille — har hvide knurhår"</p>
+</div>
+</section>
+<section id="word2vec" class="slide level2">
+<h2>Word2Vec</h2>
+
+<img data-src="images/Word2Vec_3D.png" class="margin-caption r-stretch"></section>
+<section id="fokus--og-kontekst-vektorer" class="slide level2 smaller">
+<h2>Fokus- og kontekst-vektorer</h2>
+<ul>
+<li><p>Hvert ord <span class="math inline">\(w\)</span> repræsenteres af to vektorer: <span class="math inline">\(\vec{v}_{w}\)</span> og <span class="math inline">\(\vec{k}_{w}\)</span></p></li>
+<li><p>Hvis <span class="math inline">\(w\)</span> ofte har <span class="math inline">\(c\)</span> som kontekst, så skal <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span> være stort.</p></li>
+<li><p>Omvendt indikerer en meget negativ værdi af <span class="math inline">\(\vec{v}_{w}\cdot \vec{k}_{c}\)</span>, at <span class="math inline">\(w\)</span> sjældent har <span class="math inline">\(c\)</span> som kontekst.</p></li>
+<li><p>Sandsynlighedsmodel: <span class="math display">\[
+\begin{aligned}
+P(\text{kontekst = ord}_i\mid \text{fokus = }w) = \frac{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_i}}}{\mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_1}} + \dotsm + \mathrm{e}^{\vec{v}_{w}\cdot \vec{k}_{\text{ord}_V}}}
+\end{aligned}
+\]</span></p></li>
+</ul>
+</section>
+<section id="træningsdata-til-word2vec" class="slide level2 smaller">
+<h2>Træningsdata til Word2Vec</h2>
+<!-- - Eksempel på 5-ords vindue: -->
+<div class="columns">
+<div class="column" style="width:45%;">
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Fokus</th>
+<th style="text-align: center;">Kontekst</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(w^{(1)}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(c^{(1)}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(w^{(2)}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(c^{(2)}\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(w^{(3)}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(c^{(3)}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(w^{(j)}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(c^{(j)}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(w^{(M)}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(c^{(M)}\)</span></td>
+</tr>
+</tbody>
+</table>
+</div><div class="column" style="width:45%;">
+<div class="llm_saetninger">
+<p><span class="boxed_inline">Den sorte <strong>hund</strong> logrer med</span> halen</p>
+</div>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Fokus-ord</th>
+<th style="text-align: center;">Kontekst-ord</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">sorte</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">sorte</td>
+<td style="text-align: center;">Den</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">sorte</td>
+<td style="text-align: center;">hund</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">sorte</td>
+<td style="text-align: center;">logrer</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>hund</strong></td>
+<td style="text-align: center;">Den</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><strong>hund</strong></td>
+<td style="text-align: center;">sorte</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>hund</strong></td>
+<td style="text-align: center;">logrer</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><strong>hund</strong></td>
+<td style="text-align: center;">med</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">logrer</td>
+<td style="text-align: center;">sorte</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\vdots\)</span></td>
+</tr>
+</tbody>
+</table>
+</div></div>
+</section>
+<section id="word2vec-for-børnebogen" class="slide level2">
+<h2>Word2Vec for børnebogen</h2>
+<div class="columns">
+<div class="column" style="width:45%;">
+<div class="cell">
+<div class="cell-output-display margin-caption">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-003358732c237cede714" style="width:100%;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-003358732c237cede714">{"x":{"visdat":{"1ae94bb9841a":["function () ","plotlyVisDat"]},"cur_data":"1ae94bb9841a","attrs":{"1ae94bb9841a":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":{},"y":{},"type":"scatter","mode":"lines","line":{"width":2},"color":{},"text":{},"inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"V1"},"yaxis":{"domain":[0,1],"automargin":true,"title":"V2"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false,"displayModeBar":false},"data":[{"x":[0.42116806773573817,0],"y":[-0.39131919684813637,0],"type":"scatter","mode":"lines","line":{"color":"rgba(102,194,165,1)","width":2},"text":[".","."],"name":".","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[-0.92367579281395862,0,null,-2.2673707775520291,0],"y":[0.18275988409733765,0,null,-0.92070553232996299,0],"type":"scatter","mode":"lines","line":{"color":"rgba(252,141,98,1)","width":2},"text":["en","en",null,"et","et"],"name":"artikel","marker":{"color":"rgba(252,141,98,1)","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)"},"error_y":{"color":"rgba(252,141,98,1)"},"error_x":{"color":"rgba(252,141,98,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[0.46141711117648831,0,null,0.52310740511328768,0,null,-0.23119661994181684,0,null,-0.065957331655352919,0],"y":[1.2365918556807727,0,null,1.2749615876712539,0,null,0.41893559456845153,0,null,0.51893150427076151,0],"type":"scatter","mode":"lines","line":{"color":"rgba(141,160,203,1)","width":2},"text":["hest","hest",null,"ko","ko",null,"marsvin","marsvin",null,"æsel","æsel"],"name":"dyr","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[1.012886386375673,0,null,-0.21355544928452022,0,null,1.0305971198315711,0,null,-0.11286104144281728,0],"y":[0.57460544520123613,0,null,-1.6841614814336046,0,null,0.55401103203848034,0,null,-1.6528565586374881,0],"type":"scatter","mode":"lines","line":{"color":"rgba(231,138,195,1)","width":2},"text":["blå","blå",null,"blåt","blåt",null,"grøn","grøn",null,"grønt","grønt"],"name":"farve","marker":{"color":"rgba(231,138,195,1)","line":{"color":"rgba(231,138,195,1)"}},"textfont":{"color":"rgba(231,138,195,1)"},"error_y":{"color":"rgba(231,138,195,1)"},"error_x":{"color":"rgba(231,138,195,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[1.5900109996642173,0],"y":[-0.58591425822987442,0],"type":"scatter","mode":"lines","line":{"color":"rgba(166,216,84,1)","width":2},"text":["og","og"],"name":"og","marker":{"color":"rgba(166,216,84,1)","line":{"color":"rgba(166,216,84,1)"}},"textfont":{"color":"rgba(166,216,84,1)"},"error_y":{"color":"rgba(166,216,84,1)"},"error_x":{"color":"rgba(166,216,84,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[-1.274678714857872,0,null,-1.125391217385679,0,null,-1.3031792233142601,0,null,-1.2013422249893442,0,null,-1.8122698950714657,0,null,-1.1265904205228658,0,null,-1.3214917968735156,0,null,-1.4090036667843955,0],"y":[1.4124034384730058,0,null,1.3918126288057731,0,null,1.4950455156041711,0,null,1.437120954365533,0,null,1.7751955715162624,0,null,1.396020283176544,0,null,1.4956998820782021,0,null,1.4606086429867342,0],"type":"scatter","mode":"lines","line":{"color":"rgba(255,217,47,1)","width":2},"text":["Anne","Anne",null,"Bo","Bo",null,"Eva","Eva",null,"Ib","Ib",null,"Ida","Ida",null,"Kim","Kim",null,"Mia","Mia",null,"Ole","Ole"],"name":"person","marker":{"color":"rgba(255,217,47,1)","line":{"color":"rgba(255,217,47,1)"}},"textfont":{"color":"rgba(255,217,47,1)"},"error_y":{"color":"rgba(255,217,47,1)"},"error_x":{"color":"rgba(255,217,47,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[0.60418750258595799,0,null,0.52648705359968273,0,null,-0.040845524494849482,0,null,-0.31830382784865779,0],"y":[1.3648577499383026,0,null,1.2975666412420883,0,null,0.49299775582138139,0,null,0.37684385296490053,0],"type":"scatter","mode":"lines","line":{"color":"rgba(229,196,148,1)","width":2},"text":["bil","bil",null,"cykel","cykel",null,"hus","hus",null,"skur","skur"],"name":"ting","marker":{"color":"rgba(229,196,148,1)","line":{"color":"rgba(229,196,148,1)"}},"textfont":{"color":"rgba(229,196,148,1)"},"error_y":{"color":"rgba(229,196,148,1)"},"error_x":{"color":"rgba(229,196,148,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2.2813802014061189,0,null,2.1808779200773758,0,null,2.2305528395441425,0],"y":[-0.85593310455724159,0,null,-0.78932099612990658,0,null,-0.80284763968597006,0],"type":"scatter","mode":"lines","line":{"color":"rgba(179,179,179,1)","width":2},"text":["får","får",null,"har","har",null,"ser","ser"],"name":"verbum","marker":{"color":"rgba(179,179,179,1)","line":{"color":"rgba(179,179,179,1)"}},"textfont":{"color":"rgba(179,179,179,1)"},"error_y":{"color":"rgba(179,179,179,1)"},"error_x":{"color":"rgba(179,179,179,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</div><div class="column" style="width:45%;">
+<div class="cell">
+<div class="cell-output-display margin-caption">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-102166d84eed4e707b57" style="width:100%;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-102166d84eed4e707b57">{"x":{"visdat":{"1ae9135fdeee":["function () ","plotlyVisDat"]},"cur_data":"1ae9135fdeee","attrs":{"1ae9135fdeee":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":{},"y":{},"type":"scatter","mode":"lines","line":{"width":2},"color":{},"text":{},"inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"V1"},"yaxis":{"domain":[0,1],"automargin":true,"title":"V2"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false,"displayModeBar":false},"data":[{"x":[-0.34275498942436844,0],"y":[3.372455417062111,0],"type":"scatter","mode":"lines","line":{"color":"rgba(102,194,165,1)","width":2},"text":[".","."],"name":".","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2.324870908793319,0,null,0.7518543789715747,0],"y":[1.6517528817745739,0,null,-2.4376681238798406,0],"type":"scatter","mode":"lines","line":{"color":"rgba(252,141,98,1)","width":2},"text":["en","en",null,"et","et"],"name":"artikel","marker":{"color":"rgba(252,141,98,1)","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)"},"error_y":{"color":"rgba(252,141,98,1)"},"error_x":{"color":"rgba(252,141,98,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[0.15652722616712073,0,null,0.07583220882290069,0,null,-0.41067080614857843,0,null,-0.38148825462914104,0],"y":[0.19101115730494206,0,null,-0.15699421400301455,0,null,-1.3867996309515878,0,null,-1.5885493556711472,0],"type":"scatter","mode":"lines","line":{"color":"rgba(141,160,203,1)","width":2},"text":["hest","hest",null,"ko","ko",null,"marsvin","marsvin",null,"æsel","æsel"],"name":"dyr","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[-0.47757203733130477,0,null,-1.117745983801129,0,null,-0.56358577077879357,0,null,-1.1759719912446609,0],"y":[1.1276991932169738,0,null,-0.50915133998781126,0,null,0.88719824391455193,0,null,-0.25488542074681497,0],"type":"scatter","mode":"lines","line":{"color":"rgba(231,138,195,1)","width":2},"text":["blå","blå",null,"blåt","blåt",null,"grøn","grøn",null,"grønt","grønt"],"name":"farve","marker":{"color":"rgba(231,138,195,1)","line":{"color":"rgba(231,138,195,1)"}},"textfont":{"color":"rgba(231,138,195,1)"},"error_y":{"color":"rgba(231,138,195,1)"},"error_x":{"color":"rgba(231,138,195,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[-1.394861846435272,0],"y":[2.494046034644855,0],"type":"scatter","mode":"lines","line":{"color":"rgba(166,216,84,1)","width":2},"text":["og","og"],"name":"og","marker":{"color":"rgba(166,216,84,1)","line":{"color":"rgba(166,216,84,1)"}},"textfont":{"color":"rgba(166,216,84,1)"},"error_y":{"color":"rgba(166,216,84,1)"},"error_x":{"color":"rgba(166,216,84,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[1.1170031894098926,0,null,1.1544764037309756,0,null,1.0690065625240182,0,null,1.191295476336528,0,null,1.2164818137752336,0,null,1.2083616801876356,0,null,1.2978336652169056,0,null,1.1221001739191354,0],"y":[-0.57145026449627379,0,null,-0.59902364601974356,0,null,-0.64480302211673746,0,null,-0.3311345236465329,0,null,-0.29959377001059156,0,null,-0.31066155133012302,0,null,-0.18614176356475981,0,null,-0.55807207481301746,0],"type":"scatter","mode":"lines","line":{"color":"rgba(255,217,47,1)","width":2},"text":["Anne","Anne",null,"Bo","Bo",null,"Eva","Eva",null,"Ib","Ib",null,"Ida","Ida",null,"Kim","Kim",null,"Mia","Mia",null,"Ole","Ole"],"name":"person","marker":{"color":"rgba(255,217,47,1)","line":{"color":"rgba(255,217,47,1)"}},"textfont":{"color":"rgba(255,217,47,1)"},"error_y":{"color":"rgba(255,217,47,1)"},"error_x":{"color":"rgba(255,217,47,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[0.1520582026498061,0,null,0.2076006589603745,0,null,-0.45158925293363167,0,null,-0.44531165132956174,0],"y":[0.11808232548731599,0,null,0.13119412951530937,0,null,-1.2920621788453868,0,null,-1.3666594178767795,0],"type":"scatter","mode":"lines","line":{"color":"rgba(229,196,148,1)","width":2},"text":["bil","bil",null,"cykel","cykel",null,"hus","hus",null,"skur","skur"],"name":"ting","marker":{"color":"rgba(229,196,148,1)","line":{"color":"rgba(229,196,148,1)"}},"textfont":{"color":"rgba(229,196,148,1)"},"error_y":{"color":"rgba(229,196,148,1)"},"error_x":{"color":"rgba(229,196,148,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[-1.9434565744457573,0,null,-1.907787749084475,0,null,-1.9784036396203539,0],"y":[1.1052040098585734,0,null,1.101010485056068,0,null,1.1325542106673772,0],"type":"scatter","mode":"lines","line":{"color":"rgba(179,179,179,1)","width":2},"text":["får","får",null,"har","har",null,"ser","ser"],"name":"verbum","marker":{"color":"rgba(179,179,179,1)","line":{"color":"rgba(179,179,179,1)"}},"textfont":{"color":"rgba(179,179,179,1)"},"error_y":{"color":"rgba(179,179,179,1)"},"error_x":{"color":"rgba(179,179,179,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</div></div>
+</section>
+<section id="forudsigelse-af-næste-ord" class="slide level2">
+<h2>Forudsigelse af næste ord</h2>
+
+
+
+<img data-src="images/NN_tekstgenerering.png" style="width:100.0%" class="r-stretch quarto-figure-center" id="fig-NN_tekst"><p class="caption">
+Figur&nbsp;1: Kunstigt neuralt netværk som kan bruges til tekstgenerering.
+</p></section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"\u003ci class=\"fas fa-gear\">\u003c/i>","content":"\u003cul class=\"slide-menu-items\">\n\u003cli class=\"slide-tool-item active\" data-item=\"0\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\">\u003ckbd>f\u003c/kbd> Fullscreen\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"1\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\">\u003ckbd>s\u003c/kbd> Speaker View\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"2\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\">\u003ckbd>o\u003c/kbd> Slide Overview\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"3\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\">\u003ckbd>e\u003c/kbd> PDF Export Mode\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"4\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\">\u003ckbd>r\u003c/kbd> Scroll View Mode\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"5\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\">\u003ckbd>b\u003c/kbd> Toggle Chalkboard\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"6\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\">\u003ckbd>c\u003c/kbd> Toggle Notes Canvas\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"7\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\">\u003ckbd>d\u003c/kbd> Download Drawings\u003c/a>\u003c/li>\n\u003cli class=\"slide-tool-item\" data-item=\"8\">\u003ca href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\">\u003ckbd>?\u003c/kbd> Keyboard Help\u003c/a>\u003c/li>\n\u003c/ul>"}],"openButton":true,"openButtonLabel":"Slide menu"},
+'chalkboard': {"buttons":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 30,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+          window.quartoDecorateExternalLinks = function (root) {
+         var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+              if (!link.classList.contains('no-external-icon')) {
+              }
+            }
+          }
+          };
+          window.quartoDecorateExternalLinks(window.document);
+        // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+        // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+        const hideOnEscAndFocusOut = {
+          name: 'hideOnEscAndFocusOut',
+          defaultValue: true,
+          fn(instance) {
+            const dismiss = () => {
+              // A show scheduled by the trigger delay would otherwise reopen it
+              instance.clearDelayTimeouts();
+              instance.hide();
+            };
+            const onKeyDown = (event) => {
+              if (event.key !== 'Escape') {
+                return;
+              }
+              // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+              // except an open reveal.js slide menu, which Esc should close too.
+              // The menu handles keys only when its keyboard option is on.
+              const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+                window.Reveal.getConfig().menu?.keyboard !== false;
+              if (!menuHandlesEsc) {
+                event.stopPropagation();
+              }
+              if (instance.popper.contains(window.document.activeElement)) {
+                // Disabled while refocusing so the focus trigger does not reopen it
+                instance.disable();
+                instance.reference.focus();
+                instance.enable();
+              }
+              dismiss();
+            };
+            const onFocusOut = (event) => {
+              const target = event.relatedTarget;
+              if (target && !instance.reference.contains(target) &&
+                  !instance.popper.contains(target)) {
+                dismiss();
+              }
+            };
+            // On the trigger too: a click trigger (code-annotations: select) has no
+            // blur handling. Attached for the instance's lifetime so leaving the
+            // trigger also cancels a show still pending on the trigger delay.
+            instance.reference.addEventListener('focusout', onFocusOut);
+            return {
+              onShow() {
+                window.document.addEventListener('keydown', onKeyDown, true);
+                instance.popper.addEventListener('focusout', onFocusOut);
+              },
+              onHide() {
+                window.document.removeEventListener('keydown', onKeyDown, true);
+                instance.popper.removeEventListener('focusout', onFocusOut);
+              },
+              onDestroy() {
+                instance.reference.removeEventListener('focusout', onFocusOut);
+              },
+            };
+          },
+        };
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+            plugins: [hideOnEscAndFocusOut],
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
